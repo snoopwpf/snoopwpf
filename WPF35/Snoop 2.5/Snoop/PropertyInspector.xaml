@@ -1,0 +1,69 @@
+﻿<Grid 
+	xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' 
+	xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml' 
+	x:Class='Snoop.PropertyInspector'
+	xmlns:my='clr-namespace:Snoop'
+	x:Name='propertyInspector'
+	MinHeight="0" MinWidth="0">
+
+	<Grid.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="Icons.xaml"/>
+				<ResourceDictionary Source="ValueEditors\EditorTemplates.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+
+			<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+		</ResourceDictionary>
+
+	</Grid.Resources>
+
+	<Grid.RowDefinitions>
+		<RowDefinition Height='22'/>
+		<RowDefinition Height='22'/>
+		<RowDefinition Height='*'/>
+	</Grid.RowDefinitions>
+
+	<Grid Grid.Row='1'>
+		<TextBox
+			Text='{Binding ElementName=propertyInspector, Path=StringFilter, UpdateSourceTrigger=PropertyChanged}'
+			Margin="0,0,142,2"
+			MinHeight="0"
+			MinWidth="0"
+			x:Name="PropertiesFilter"
+			Padding='0'
+		/>
+		<ToggleButton
+			IsChecked='{Binding ElementName=propertyInspector, Path=ShowDefaults}'
+			Width='18'
+			Height='18'
+			HorizontalAlignment='Right'
+			Margin='0,1,0,2'
+		/>
+		<Button
+			Command='{x:Static my:PropertyInspector.PopTargetCommand}'
+			Margin='0,1,20,2'
+			Width='18'
+			Height='18'
+			MinWidth='0'
+			MinHeight='0'
+			HorizontalAlignment='Right'
+		>
+			<!--<Image Source='{StaticResource ScopeUp}'/>-->^
+		</Button>
+
+		<!-- DHDH added comboBox of pre-defined filter sets -->
+		<ComboBox
+			HorizontalAlignment='Right'
+			Margin='0,0,40,2'
+			Width="100"
+			ItemsSource="{Binding Path=FilterSets, ElementName=propertyInspector}"  
+			SelectedItem="{Binding Path=SelectedFilterSet, ElementName=propertyInspector}"
+			DisplayMemberPath="DisplayName"
+		/>
+	</Grid>
+	<TextBlock Margin='2' Text='{Binding ElementName=propertyInspector, Path=Type}'/>
+
+	<my:PropertyGrid2 x:Name='PropertyGrid' Target='{Binding ElementName=propertyInspector, Path=Target}' MinHeight="0" MinWidth="0" Grid.Column="1" Grid.Row="2"/>
+	
+</Grid>

@@ -1,0 +1,257 @@
+<!-- Copyright 2006 Microsoft Corporation.  All Rights Reserved -->
+<Window
+	x:Class="Snoop.SnoopUI"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:local="clr-namespace:Snoop"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:d="http://schemas.microsoft.com/expression/interactivedesigner/2006"
+	mc:Ignorable="d"
+	Icon="Snoop.ico"
+	Title="Snoop"
+	Background="#FFE0DFE3"
+	ShowInTaskbar="False"
+	SnapsToDevicePixels="True"
+	Focusable="False"
+	DataContext="{Binding RelativeSource={RelativeSource Self}}"
+>
+	<Window.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="ProperTreeViewResources.xaml"/>
+				<ResourceDictionary Source="Icons.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+
+			<Style x:Key="refreshButton" TargetType="{x:Type Button}">
+				<Setter Property="FocusVisualStyle">
+					<Setter.Value>
+						<Style>
+							<Setter Property="Control.Template">
+								<Setter.Value>
+									<ControlTemplate>
+										<Rectangle
+											Stroke="#FF000000"
+											StrokeThickness="1"
+											Margin="3,3,3,3"
+											SnapsToDevicePixels="True"
+											StrokeDashArray="1 2"
+										/>
+									</ControlTemplate>
+								</Setter.Value>
+							</Setter>
+						</Style>
+					</Setter.Value>
+				</Setter>
+				<Setter Property="Background">
+					<Setter.Value>
+						<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+							<GradientStop Color="#FF69E861" Offset="0"/>
+							<GradientStop Color="#FFE3E5F0" Offset="0.5"/>
+							<GradientStop Color="#FF1CC211" Offset="1"/>
+						</LinearGradientBrush>
+					</Setter.Value>
+				</Setter>
+				<Setter Property="BorderBrush" Value="#FF003C74"/>
+				<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+				<Setter Property="HorizontalContentAlignment" Value="Center"/>
+				<Setter Property="VerticalContentAlignment" Value="Center"/>
+				<Setter Property="Template">
+					<Setter.Value>
+						<ControlTemplate TargetType="{x:Type ButtonBase}">
+							<Grid Width="Auto" Height="Auto">
+								<Border
+									x:Name="border"
+									BorderBrush="#FF696969"
+									BorderThickness="1,1,1,1"
+									CornerRadius="4,4,4,4"
+								/>
+								<ContentPresenter Margin="2,2,2,2"/>
+							</Grid>
+							<ControlTemplate.Triggers>
+								<Trigger Property="IsEnabled" Value="False">
+									<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+								</Trigger>
+								<Trigger Property="IsMouseOver" Value="True">
+									<Setter Property="Background" TargetName="border">
+										<Setter.Value>
+											<LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
+												<GradientStop Color="#FFCEFFCF" Offset="0"/>
+												<GradientStop Color="#FFE1FFE3" Offset="0.43888888888888888"/>
+												<GradientStop Color="#FFC4FFC8" Offset="1"/>
+											</LinearGradientBrush>
+										</Setter.Value>
+									</Setter>
+								</Trigger>
+							</ControlTemplate.Triggers>
+						</ControlTemplate>
+					</Setter.Value>
+				</Setter>
+			</Style>
+
+			<local:ObjectToStringConverter x:Key="niceNamer"/>
+		</ResourceDictionary>
+	</Window.Resources>
+
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="5*"/>
+			<RowDefinition Height="1*"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="1*"/>
+			<ColumnDefinition Width="2*"/>
+		</Grid.ColumnDefinitions>
+
+		<!-- Filter Combo Box -->
+		<ComboBox
+			IsEditable="True"
+			Text="{Binding Path=Filter, UpdateSourceTrigger=PropertyChanged}"
+			ToolTip="Filter tree view by name or type"
+			Margin="2,2,22,2"
+		>
+			<ComboBoxItem>Clear filter</ComboBoxItem>
+			<ComboBoxItem>Visuals with binding errors</ComboBoxItem>
+		</ComboBox>
+
+		<!-- Refresh Button -->
+		<Button
+			Style="{StaticResource refreshButton}"
+			Width="18"
+			Height="18"
+			HorizontalAlignment="Right"
+			VerticalAlignment="Center"
+			Margin="0,2,2,2"
+			ToolTip="Refresh"
+			Command="{x:Static local:SnoopUI.RefreshCommand}"
+		>
+			<Image Source="{StaticResource reloadImage}"/>
+		</Button>
+
+		<!-- Visual Tree TreeView -->
+		<local:ProperTreeView
+			x:Name="Tree"
+			Grid.Row="1"
+			Grid.RowSpan="2"
+			MinHeight="0"
+			MinWidth="0"
+			Margin="2,0,2,0"
+			ItemsSource="{Binding Filtered}"
+			ToolTip="Hold down Ctrl-Shift and mouse over elements in the target app to select them."
+		>
+			<TreeView.Resources>
+				<HierarchicalDataTemplate DataType="{x:Type local:VisualTreeItem}" ItemsSource="{Binding Children}">
+					<TextBlock Text="{Binding}" Background="Transparent"/>
+				</HierarchicalDataTemplate>
+
+				<!-- DHDH make the selected item be blue, even when not focused -->
+				<SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="LightBlue"/>
+			</TreeView.Resources>
+
+			<TreeView.ItemContainerStyle>
+				<Style BasedOn="{StaticResource ProperTreeViewItemStyle}" TargetType="{x:Type local:ProperTreeViewItem}">
+					<Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+					<Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+					<Setter Property="Background" Value="{Binding TreeBackgroundBrush}"/>
+					<Setter Property="ToolTip" Value="{Binding VisualBrush}">
+					</Setter>
+					
+					<Style.Resources>
+						<Style TargetType="{x:Type ToolTip}">
+							<Setter Property="Template">
+								<Setter.Value>
+									<ControlTemplate TargetType="{x:Type ToolTip}">
+										<Grid Width="200" Height="200">
+											<Rectangle Fill="{TemplateBinding Content}" RadiusX="10" RadiusY="10" Margin="10"/>
+
+											<Grid.Effect>
+												<DropShadowEffect/>
+											</Grid.Effect>
+										</Grid>
+									</ControlTemplate>
+								</Setter.Value>
+							</Setter>
+						</Style>
+					</Style.Resources>
+				</Style>
+			</TreeView.ItemContainerStyle>
+		</local:ProperTreeView>
+
+		<!-- Vertical GridSplitter (between the visual tree tree view and the tab control (with the property grid/events view)) -->
+		<GridSplitter
+			x:Name="GridSplitter"
+			Grid.Row="0"
+			Grid.RowSpan="3"
+			Grid.Column="1"
+			Grid.ColumnSpan="1"
+			Width="4"
+			MinHeight="0"
+			HorizontalAlignment="Left"
+			Margin="-2,0,0,0"
+		/>
+
+		<!-- Tab Control (for the property grid and the events view) -->
+		<TabControl
+			Grid.Column="1"
+			Grid.RowSpan="2"
+			Margin="2,2,2,0"
+		>
+			<TabItem Header="Properties">
+				<local:PropertyInspector x:Name="PropertyGrid" RootTarget="{Binding Path=CurrentSelection.Target}"/>
+			</TabItem>
+			<TabItem Header="Events">
+				<local:EventsView Scope="{Binding Root.MainVisual}"/>
+			</TabItem>
+		</TabControl>
+
+		<!-- Horizontal GridSplitter (between the tab control (with the property grid/events view) and the previewer) -->
+		<GridSplitter
+			Grid.Row="2"
+			Grid.Column="1"
+			Height="4"
+			VerticalAlignment="Top"
+			Margin="2,0,2,0"
+		/>
+
+		<!-- Previewer -->
+		<local:Previewer
+			x:Name="PreviewArea"
+			Grid.Row="2"
+			Grid.Column="1"
+			Margin="2,4,2,0"
+			Target="{Binding CurrentSelection.Target}"
+		/>
+
+		<!-- StatusBar -->
+		<StatusBar Grid.Row="3" Grid.ColumnSpan="4">
+			<StackPanel Orientation="Horizontal">
+				<TextBlock Text="Keyboard.FocusedElement:"/>
+				<TextBlock Margin="3,0,0,0">
+					<local:NoFocusHyperlink
+						Focusable="False"
+						Command="{x:Static local:SnoopUI.SelectFocusCommand}"
+						CommandParameter="{Binding CurrentFocus}"
+					>
+						<!--
+						-->
+						<TextBlock Text="{Binding CurrentFocus, Converter={StaticResource niceNamer}}"/>
+					</local:NoFocusHyperlink>
+				</TextBlock>
+
+				<TextBlock Text="; Current FocusScope:"/>
+				<TextBlock Margin="3,0,0,0">
+					<local:NoFocusHyperlink
+						Focusable="False"
+						Command="{x:Static local:SnoopUI.SelectFocusCommand}"
+						CommandParameter="{Binding CurrentFocusScope}"
+					>
+						<!--
+						-->
+						<TextBlock Text="{Binding CurrentFocusScope, Converter={StaticResource niceNamer}}"/>
+					</local:NoFocusHyperlink>
+				</TextBlock>
+			</StackPanel>
+		</StatusBar>
+	</Grid>
+</Window>
