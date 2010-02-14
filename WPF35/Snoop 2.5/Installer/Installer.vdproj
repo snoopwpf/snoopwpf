@@ -21,20 +21,8 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_BA428572C1C1EBFF7919B84A766FF715"
-        "OwnerKey" = "8:_225B35581A664F3D8F11F91AE78F34D0"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_225B35581A664F3D8F11F91AE78F34D0"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_BA428572C1C1EBFF7919B84A766FF715"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -127,37 +115,6 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_BA428572C1C1EBFF7919B84A766FF715"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ManagedInjector, Version=1.0.3670.23663, Culture=neutral, processorArchitecture=x86"
-                "ScatterAssemblies"
-                {
-                    "_BA428572C1C1EBFF7919B84A766FF715"
-                    {
-                    "Name" = "8:ManagedInjector.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:ManagedInjector.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_C46CF69C04BA4077995A1F01F2C0C8A8"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
         }
         "FileType"
         {
@@ -224,19 +181,19 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:Snoop x86"
-        "ProductCode" = "8:{43CA0633-28E1-4099-BD9E-1DA8804622AF}"
-        "PackageCode" = "8:{4770F8D4-83C8-4CB6-A3B5-B1DF79C03A79}"
-        "UpgradeCode" = "8:{9FE66B9B-C836-42D1-8550-319CD7610A32}"
+        "ProductName" = "8:Snoop x86 for WPF 3.5"
+        "ProductCode" = "8:{93307DAF-5DDC-48E4-A66E-64D804210E0D}"
+        "PackageCode" = "8:{B24FBD77-7CAD-46BE-BFC4-52B1903A0EFD}"
+        "UpgradeCode" = "8:{F8853FFF-AE34-48DB-ACA3-DA3827FD57AC}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:2.5.0"
         "Manufacturer" = "8:Pete Blois"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
-        "Title" = "8:Snoop x86"
+        "Title" = "8:Snoop x86 for WPF 3.5"
         "Subject" = "8:"
         "ARPCONTACT" = "8:Pete Blois"
         "Keywords" = "8:"
@@ -760,7 +717,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_225B35581A664F3D8F11F91AE78F34D0"
             {
-            "SourcePath" = "8:..\\Intermediate\\Snoop\\x86\\Debug\\Snoop.exe"
+            "SourcePath" = "8:..\\Intermediate\\Snoop\\x64\\Debug\\Snoop.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C46CF69C04BA4077995A1F01F2C0C8A8"

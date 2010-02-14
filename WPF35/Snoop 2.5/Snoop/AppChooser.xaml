@@ -328,7 +328,7 @@ All other rights reserved.
 		</Grid.RowDefinitions>
 
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="110"/>
+			<ColumnDefinition Width="150"/>
 			<ColumnDefinition Width="*"/>
 			<ColumnDefinition Width="Auto"/>
 			<ColumnDefinition Width="Auto"/>
@@ -379,6 +379,20 @@ All other rights reserved.
 				TextAlignment="Center"
 				IsEnabled="True"
 				Opacity="0.745" Text="(32-bit)"
+			/>
+			<TextBlock
+				Margin="4,0,0,0"
+				VerticalAlignment="Center"
+				Width="Auto"
+				Height="Auto"
+				FontFamily="VDub"
+				FontSize="10"
+				FontWeight="Normal"
+				Foreground="#B2FFFFFF"
+				TextAlignment="Center"
+				IsEnabled="True"
+				Opacity="0.745"
+				Text="(WPF 3.5)"
 			/>
 		</StackPanel>
 

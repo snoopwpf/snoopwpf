@@ -15,18 +15,18 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_36770DAE481692EFD031F492D964DFEF"
-        "OwnerKey" = "8:_741A81C0F7A446C8AD860A42AA26CC43"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_741A81C0F7A446C8AD860A42AA26CC43"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
+        "MsmKey" = "8:_9CA2D50153464DBA0E94FFE961725F20"
+        "OwnerKey" = "8:_741A81C0F7A446C8AD860A42AA26CC43"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_741A81C0F7A446C8AD860A42AA26CC43"
         "MsmSig" = "8:_UNDEFINED"
@@ -34,7 +34,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_36770DAE481692EFD031F492D964DFEF"
+        "OwnerKey" = "8:_9CA2D50153464DBA0E94FFE961725F20"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -134,7 +134,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "Version" = "8:3.5.30729"
+                "FrameworkVersion" = "8:3.5.30729"
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=76617"
                 }
@@ -142,14 +142,14 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_36770DAE481692EFD031F492D964DFEF"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9CA2D50153464DBA0E94FFE961725F20"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ManagedInjector, Version=1.0.3670.23663, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:ManagedInjector, Version=1.0.3697.19319, Culture=neutral, processorArchitecture=AMD64"
                 "ScatterAssemblies"
                 {
-                    "_36770DAE481692EFD031F492D964DFEF"
+                    "_9CA2D50153464DBA0E94FFE961725F20"
                     {
                     "Name" = "8:ManagedInjector.dll"
                     "Attributes" = "3:512"
@@ -203,7 +203,7 @@
             }
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_D6A93129C8A84BB5AD51FC4C8D61081A"
             {
-            "DefaultLocation" = "8:[ProgramFiles64Folder]\\Snoop"
+            "DefaultLocation" = "8:[ProgramFiles64Folder]\\SnoopWPF4"
             "Name" = "8:#1925"
             "AlwaysCreate" = "11:FALSE"
             "Condition" = "8:"
@@ -228,19 +228,20 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:Snoop x64"
-        "ProductCode" = "8:{B13162F0-4328-4AA9-870B-3F98E702B680}"
-        "PackageCode" = "8:{786D899F-C0F2-413C-9377-14EE7E75CFEC}"
-        "UpgradeCode" = "8:{7FA19536-563F-4E05-8C96-35B746797CEC}"
+        "ProductName" = "8:Snoop x64 for WPF4"
+        "ProductCode" = "8:{8C3CA3EE-996C-4A4D-B9C5-37394560447D}"
+        "PackageCode" = "8:{EBDD90F8-01D8-4A42-9B03-512C22ECB91A}"
+        "UpgradeCode" = "8:{0A1BCE6F-691E-493C-997A-5CF2D27F0BBF}"
+        "AspNetVersion" = "8:4.0.21006.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:2.5.0"
         "Manufacturer" = "8:Pete Blois"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
-        "Title" = "8:Snoop x64"
+        "Title" = "8:Snoop x64 for WPF4"
         "Subject" = "8:"
         "ARPCONTACT" = "8:Pete Blois"
         "Keywords" = "8:"
@@ -778,7 +779,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_741A81C0F7A446C8AD860A42AA26CC43"
             {
-            "SourcePath" = "8:..\\Intermediate\\Snoop\\x86\\Debug\\Snoop.exe"
+            "SourcePath" = "8:..\\Intermediate\\Snoop\\x64\\Release\\Snoop.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_D6A93129C8A84BB5AD51FC4C8D61081A"

@@ -21,7 +21,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_BA428572C1C1EBFF7919B84A766FF715"
+        "MsmKey" = "8:_828035D448667B9A22846DD8C222DC35"
         "OwnerKey" = "8:_225B35581A664F3D8F11F91AE78F34D0"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -34,7 +34,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_BA428572C1C1EBFF7919B84A766FF715"
+        "OwnerKey" = "8:_828035D448667B9A22846DD8C222DC35"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -96,6 +96,16 @@
             "ComponentsUrl" = "8:"
                 "Items"
                 {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.0"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.0"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
+                    {
+                    "Name" = "8:Windows Installer 3.1"
+                    "ProductCode" = "8:Microsoft.Windows.Installer.3.1"
+                    }
                 }
             }
         }
@@ -119,7 +129,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "Version" = "8:2.0.50727"
+                "FrameworkVersion" = "8:2.0.50727"
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=9832"
                 }
@@ -127,14 +137,14 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_BA428572C1C1EBFF7919B84A766FF715"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_828035D448667B9A22846DD8C222DC35"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ManagedInjector, Version=1.0.3670.23663, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:ManagedInjector, Version=1.0.3697.19298, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
-                    "_BA428572C1C1EBFF7919B84A766FF715"
+                    "_828035D448667B9A22846DD8C222DC35"
                     {
                     "Name" = "8:ManagedInjector.dll"
                     "Attributes" = "3:512"
@@ -199,7 +209,7 @@
             }
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_C46CF69C04BA4077995A1F01F2C0C8A8"
             {
-            "DefaultLocation" = "8:[ProgramFilesFolder]\\Snoop"
+            "DefaultLocation" = "8:[ProgramFilesFolder]\\SnoopWPF4"
             "Name" = "8:#1925"
             "AlwaysCreate" = "11:FALSE"
             "Condition" = "8:"
@@ -224,19 +234,20 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:Snoop x86"
-        "ProductCode" = "8:{43CA0633-28E1-4099-BD9E-1DA8804622AF}"
-        "PackageCode" = "8:{4770F8D4-83C8-4CB6-A3B5-B1DF79C03A79}"
-        "UpgradeCode" = "8:{9FE66B9B-C836-42D1-8550-319CD7610A32}"
+        "ProductName" = "8:Snoop x86 for WPF4"
+        "ProductCode" = "8:{53DB70A1-7DAD-4189-9281-30B32AF9C90F}"
+        "PackageCode" = "8:{26190129-A639-440A-8DCD-781DC219FCEF}"
+        "UpgradeCode" = "8:{A17DF93C-9C2D-4CE2-8B0F-2C28CF32C55E}"
+        "AspNetVersion" = "8:4.0.21006.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:2.5.0"
         "Manufacturer" = "8:Pete Blois"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
-        "Title" = "8:Snoop x86"
+        "Title" = "8:Snoop x86 for WPF4"
         "Subject" = "8:"
         "ARPCONTACT" = "8:Pete Blois"
         "Keywords" = "8:"
@@ -760,7 +771,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_225B35581A664F3D8F11F91AE78F34D0"
             {
-            "SourcePath" = "8:..\\Intermediate\\Snoop\\x86\\Debug\\Snoop.exe"
+            "SourcePath" = "8:..\\Intermediate\\Snoop\\x64\\Release\\Snoop.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C46CF69C04BA4077995A1F01F2C0C8A8"

@@ -328,7 +328,7 @@ All other rights reserved.
 		</Grid.RowDefinitions>
 
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="110"/>
+			<ColumnDefinition Width="150"/>
 			<ColumnDefinition Width="*"/>
 			<ColumnDefinition Width="Auto"/>
 			<ColumnDefinition Width="Auto"/>
@@ -378,7 +378,22 @@ All other rights reserved.
 				Foreground="#B2FFFFFF"
 				TextAlignment="Center"
 				IsEnabled="True"
-				Opacity="0.745" Text="(32-bit)"
+				Opacity="0.745"
+				Text="(32-bit)"
+			/>
+			<TextBlock
+				Margin="4,0,0,0"
+				VerticalAlignment="Center"
+				Width="Auto"
+				Height="Auto"
+				FontFamily="VDub"
+				FontSize="10"
+				FontWeight="Normal"
+				Foreground="#B2FFFFFF"
+				TextAlignment="Center"
+				IsEnabled="True"
+				Opacity="0.745"
+				Text="(WPF 4.0)"
 			/>
 		</StackPanel>
 
@@ -447,7 +462,7 @@ All other rights reserved.
 				Grid.Column="2"
 				ToolTip="Magnify"
 				Command="{x:Static my:AppChooser.MagnifyCommand}"
-				>
+			>
 				<Viewbox Height="16">
 					<Canvas Width="53.613" Height="26.017" Margin="0,3,0,0">
 						<Ellipse Stroke="#FF000000" Width="22" Grid.Column="3" Height="22" Canvas.Left="4.046" Canvas.Top="-2.627">
