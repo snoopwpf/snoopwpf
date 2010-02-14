@@ -1,9 +1,9 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snoop", "Snoop\Snoop.csproj", "{6ADE40E1-7624-475C-80C5-9883AA4712EF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ManagedInjector", "ManagedInjector\ManagedInjector.vcproj", "{C29817A9-3696-421D-89BD-F66681657C37}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ManagedInjector", "ManagedInjector\ManagedInjector.vcxproj", "{C29817A9-3696-421D-89BD-F66681657C37}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Installer_x86", "Installer\Installer.vdproj", "{A2B1B889-F28D-4BC3-B1B3-3EF3A325E05B}"
 EndProject
@@ -21,12 +21,12 @@ Global
 		SccProjectUniqueName2 = Installer_x64\\Installer_x64.vdproj
 		SccProjectName2 = Installer_x64
 		SccLocalPath2 = Installer_x64
-		SccProjectUniqueName3 = ManagedInjector\\ManagedInjector.vcproj
-		SccProjectName3 = ManagedInjector
-		SccLocalPath3 = ManagedInjector
-		SccProjectUniqueName4 = Snoop\\Snoop.csproj
-		SccProjectName4 = Snoop
-		SccLocalPath4 = Snoop
+		SccProjectUniqueName3 = Snoop\\Snoop.csproj
+		SccProjectName3 = Snoop
+		SccLocalPath3 = Snoop
+		SccProjectUniqueName4 = ManagedInjector\\ManagedInjector.vcxproj
+		SccProjectName4 = ManagedInjector
+		SccLocalPath4 = ManagedInjector
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
