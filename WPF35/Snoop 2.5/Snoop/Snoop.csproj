@@ -144,6 +144,7 @@
   <ItemGroup>
     <Compile Include="AdornerContainer.cs" />
     <Compile Include="ApplicationTreeItem.cs" />
+    <Compile Include="BringIntoViewBehavior.cs" />
     <Compile Include="DelayedCall.cs" />
     <Compile Include="EditTextBox.cs" />
     <Compile Include="EventsListener.cs" />
