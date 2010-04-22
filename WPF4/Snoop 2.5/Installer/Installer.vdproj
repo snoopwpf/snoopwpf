@@ -21,7 +21,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_828035D448667B9A22846DD8C222DC35"
+        "MsmKey" = "8:_69C9780E7C982AE5C669E7BB664E3620"
         "OwnerKey" = "8:_225B35581A664F3D8F11F91AE78F34D0"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -34,7 +34,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_828035D448667B9A22846DD8C222DC35"
+        "OwnerKey" = "8:_69C9780E7C982AE5C669E7BB664E3620"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -129,7 +129,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "FrameworkVersion" = "8:2.0.50727"
+                "FrameworkVersion" = "8:2.0.50727 "
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=9832"
                 }
@@ -137,14 +137,14 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_828035D448667B9A22846DD8C222DC35"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_69C9780E7C982AE5C669E7BB664E3620"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ManagedInjector, Version=1.0.3697.19298, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:ManagedInjector, Version=1.0.3764.26910, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
-                    "_828035D448667B9A22846DD8C222DC35"
+                    "_69C9780E7C982AE5C669E7BB664E3620"
                     {
                     "Name" = "8:ManagedInjector.dll"
                     "Attributes" = "3:512"
@@ -205,6 +205,17 @@
             "Property" = "8:ProgramMenuFolder"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_9472CB869F2B40F18C261587645653CC"
+                    {
+                    "Name" = "8:Snoop"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_EF3A79DFE3864349BE063CB60EBD72A5"
+                        "Folders"
+                        {
+                        }
+                    }
                 }
             }
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_C46CF69C04BA4077995A1F01F2C0C8A8"
@@ -356,16 +367,30 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_B476384F4BBD43EC9517108DF0CDCC6D"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_058011FBB96D4DB7BD9F42078F2DC7DA"
             {
-            "Name" = "8:Snoop"
+            "Name" = "8:Snoop x86 (WPF 4.0)"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
             "IconIndex" = "3:32512"
             "Transitive" = "11:FALSE"
             "Target" = "8:_225B35581A664F3D8F11F91AE78F34D0"
-            "Folder" = "8:_BAB3471806B9409DA7ADAC5198F55F1A"
+            "Folder" = "8:_77554A1FDCD847ED9A24E79BE60F1D05"
+            "WorkingFolder" = "8:_C46CF69C04BA4077995A1F01F2C0C8A8"
+            "Icon" = "8:_225B35581A664F3D8F11F91AE78F34D0"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_B476384F4BBD43EC9517108DF0CDCC6D"
+            {
+            "Name" = "8:Snoop x86 (WPF 4.0)"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:32512"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_225B35581A664F3D8F11F91AE78F34D0"
+            "Folder" = "8:_9472CB869F2B40F18C261587645653CC"
             "WorkingFolder" = "8:_C46CF69C04BA4077995A1F01F2C0C8A8"
             "Icon" = "8:_225B35581A664F3D8F11F91AE78F34D0"
             "Feature" = "8:"
@@ -771,7 +796,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_225B35581A664F3D8F11F91AE78F34D0"
             {
-            "SourcePath" = "8:..\\Intermediate\\Snoop\\x64\\Release\\Snoop.exe"
+            "SourcePath" = "8:..\\Intermediate\\Snoop\\x64\\Debug\\Snoop.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C46CF69C04BA4077995A1F01F2C0C8A8"
