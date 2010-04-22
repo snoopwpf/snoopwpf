@@ -15,6 +15,12 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_130744972C92F6C927FF0095135E06E7"
+        "OwnerKey" = "8:_225B35581A664F3D8F11F91AE78F34D0"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_225B35581A664F3D8F11F91AE78F34D0"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -23,6 +29,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_225B35581A664F3D8F11F91AE78F34D0"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_130744972C92F6C927FF0095135E06E7"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -115,6 +127,37 @@
         }
         "File"
         {
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_130744972C92F6C927FF0095135E06E7"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:ManagedInjector, Version=1.0.3764.27975, Culture=neutral, processorArchitecture=x86"
+                "ScatterAssemblies"
+                {
+                    "_130744972C92F6C927FF0095135E06E7"
+                    {
+                    "Name" = "8:ManagedInjector.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:ManagedInjector.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_C46CF69C04BA4077995A1F01F2C0C8A8"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
         }
         "FileType"
         {
@@ -152,6 +195,17 @@
             "Property" = "8:ProgramMenuFolder"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_C290B4A7DE5C4DD1938BE22F16CB11F8"
+                    {
+                    "Name" = "8:Snoop"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_89DEB6FD7B3E48B4A74C879AC559AF9D"
+                        "Folders"
+                        {
+                        }
+                    }
                 }
             }
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_C46CF69C04BA4077995A1F01F2C0C8A8"
@@ -183,7 +237,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Snoop x86 for WPF 3.5"
         "ProductCode" = "8:{93307DAF-5DDC-48E4-A66E-64D804210E0D}"
-        "PackageCode" = "8:{B24FBD77-7CAD-46BE-BFC4-52B1903A0EFD}"
+        "PackageCode" = "8:{8EF21C2A-55E5-4D5D-8E8C-59D31126055F}"
         "UpgradeCode" = "8:{F8853FFF-AE34-48DB-ACA3-DA3827FD57AC}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
@@ -302,16 +356,30 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_B476384F4BBD43EC9517108DF0CDCC6D"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_A63874104ACB4972BAFE87CDF85A269A"
             {
-            "Name" = "8:Snoop"
+            "Name" = "8:Snoop x86 (WPF 3.5)"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
             "IconIndex" = "3:32512"
             "Transitive" = "11:FALSE"
             "Target" = "8:_225B35581A664F3D8F11F91AE78F34D0"
-            "Folder" = "8:_BAB3471806B9409DA7ADAC5198F55F1A"
+            "Folder" = "8:_C290B4A7DE5C4DD1938BE22F16CB11F8"
+            "WorkingFolder" = "8:_C46CF69C04BA4077995A1F01F2C0C8A8"
+            "Icon" = "8:_225B35581A664F3D8F11F91AE78F34D0"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_B476384F4BBD43EC9517108DF0CDCC6D"
+            {
+            "Name" = "8:Snoop x86 (WPF 3.5)"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:32512"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_225B35581A664F3D8F11F91AE78F34D0"
+            "Folder" = "8:_77554A1FDCD847ED9A24E79BE60F1D05"
             "WorkingFolder" = "8:_C46CF69C04BA4077995A1F01F2C0C8A8"
             "Icon" = "8:_225B35581A664F3D8F11F91AE78F34D0"
             "Feature" = "8:"
@@ -717,7 +785,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_225B35581A664F3D8F11F91AE78F34D0"
             {
-            "SourcePath" = "8:..\\Intermediate\\Snoop\\x64\\Debug\\Snoop.exe"
+            "SourcePath" = "8:..\\Intermediate\\Snoop\\x86\\Release\\Snoop.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C46CF69C04BA4077995A1F01F2C0C8A8"
