@@ -32,6 +32,7 @@ namespace Snoop
 		public static readonly RoutedCommand HelpCommand = new RoutedCommand("Help", typeof(SnoopUI));
 		public static readonly RoutedCommand InspectCommand = new RoutedCommand("Inspect", typeof(SnoopUI));
 		public static readonly RoutedCommand SelectFocusCommand = new RoutedCommand("SelectFocus", typeof(SnoopUI));
+		public static readonly RoutedCommand SelectFocusScopeCommand = new RoutedCommand("SelectFocusScope", typeof(SnoopUI));
 		#endregion
 
 		#region Static Constructor
@@ -59,6 +60,7 @@ namespace Snoop
 			this.CommandBindings.Add(new CommandBinding(SnoopUI.HelpCommand, this.HandleHelp));
 			this.CommandBindings.Add(new CommandBinding(SnoopUI.InspectCommand, this.HandleInspect));
 			this.CommandBindings.Add(new CommandBinding(SnoopUI.SelectFocusCommand, this.HandleSelectFocus));
+			this.CommandBindings.Add(new CommandBinding(SnoopUI.SelectFocusScopeCommand, this.HandleSelectFocusScope));
 
 			InputManager.Current.PreProcessInput += this.HandlePreProcessInput;
 			this.Tree.SelectedItemChanged += this.HandleTreeSelectedItemChanged;
@@ -193,7 +195,18 @@ namespace Snoop
 
 		public IInputElement CurrentFocus
 		{
-			get { return Keyboard.FocusedElement; }
+			get
+			{
+				var newFocus = Keyboard.FocusedElement;
+				if (newFocus != this.currentFocus)
+				{
+					// Store reference to previously focused element only if focused element was changed.
+					this.previousFocus = this.currentFocus;
+				}
+				this.currentFocus = newFocus;
+
+				return this.returnPreviousFocus ? this.previousFocus : this.currentFocus;
+			}
 		}
 
 		public object CurrentFocusScope
@@ -360,10 +373,23 @@ namespace Snoop
 		}
 		private void HandleSelectFocus(object sender, ExecutedRoutedEventArgs e)
 		{
-			DependencyObject target = e.Parameter as DependencyObject;
-			if (target != null)
+			// We know we've stolen focus here. Let's use previously focused element.
+			this.returnPreviousFocus = true;
+			SelectItem(CurrentFocus as DependencyObject);
+			this.returnPreviousFocus = false;
+			OnPropertyChanged("CurrentFocus");
+		}
+
+		private void HandleSelectFocusScope(object sender, ExecutedRoutedEventArgs e)
+		{
+			SelectItem(e.Parameter as DependencyObject);
+		}
+
+		private void SelectItem(DependencyObject item)
+		{
+			if (item != null)
 			{
-				VisualTreeItem node = this.FindItem(target);
+				VisualTreeItem node = this.FindItem(item);
 				if (node != null)
 					this.CurrentSelection = node;
 			}
@@ -375,8 +401,7 @@ namespace Snoop
 		{
 			this.OnPropertyChanged("CurrentFocus");
 
-			KeyboardDevice keyboard = System.Windows.Input.InputManager.Current.PrimaryKeyboardDevice;
-			ModifierKeys currentModifiers = InputManager.Current.PrimaryKeyboardDevice.Modifiers;
+		  ModifierKeys currentModifiers = InputManager.Current.PrimaryKeyboardDevice.Modifiers;
 			if (!((currentModifiers & ModifierKeys.Control) != 0 && (currentModifiers & ModifierKeys.Shift) != 0))
 				return;
 
@@ -451,9 +476,23 @@ namespace Snoop
 				Visual visual = target as Visual;
 				if (visual != null && rootVisual != null)
 				{
+					// If target is a part of the SnoopUI, let's get out of here.
+					if (visual.IsDescendantOf(this))
+					{
+						return null;
+					}
+
 					// If not in the root tree, make the root be the tree the visual is in.
 					if (!visual.IsDescendantOf(rootVisual))
-						this.root = new VisualItem(PresentationSource.FromVisual(visual).RootVisual, null);
+					{
+						var presentationSource = PresentationSource.FromVisual(visual);
+						if (presentationSource == null)
+						{
+							return null; // Something went wrong. At least we will not crash with null ref here.
+						}
+
+						this.root = new VisualItem(presentationSource.RootVisual, null);
+					}
 				}
 
 				this.root.Reload();
@@ -520,6 +559,15 @@ namespace Snoop
 		private DelayedCall filterCall;
 
 		private VisualTreeItem m_reducedDepthRoot;
+
+		private IInputElement currentFocus;
+		private IInputElement previousFocus;
+
+		/// <summary>
+		/// Indicates whether CurrentFocus should retur previously focused element.
+		/// This fixes problem where Snoop steals the focus from snooped app.
+		/// </summary>
+		private bool returnPreviousFocus;
 		#endregion
 
 		#region Private Delegates

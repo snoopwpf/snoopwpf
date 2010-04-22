@@ -7,7 +7,7 @@ All other rights reserved.
 <Window
 	x:Class="Snoop.SnoopUI"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
 	xmlns:local="clr-namespace:Snoop"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:d="http://schemas.microsoft.com/expression/interactivedesigner/2006"
@@ -143,11 +143,18 @@ All other rights reserved.
 			MinWidth="0"
 			Margin="2,0,2,0"
 			ItemsSource="{Binding Filtered}"
+			HorizontalAlignment="Stretch"
 			ToolTip="Hold down Ctrl-Shift and mouse over elements in the target app to select them."
+			TextElement.Foreground="DarkRed"
 		>
 			<TreeView.Resources>
 				<HierarchicalDataTemplate DataType="{x:Type local:VisualTreeItem}" ItemsSource="{Binding Children}">
-					<TextBlock Text="{Binding}" Background="Transparent"/>
+					<TextBlock
+						Text="{Binding}"
+						HorizontalAlignment="Stretch" 
+						local:BringIntoViewBehavior.IsActive="{Binding IsSelected}"
+						Background="Transparent"
+					/>
 				</HierarchicalDataTemplate>
 
 				<!-- DHDH make the selected item be blue, even when not focused -->
@@ -182,7 +189,7 @@ All other rights reserved.
 				</Style>
 			</TreeView.ItemContainerStyle>
 		</local:ProperTreeView>
-
+		
 		<!-- Vertical GridSplitter (between the visual tree tree view and the tab control (with the property grid/events view)) -->
 		<GridSplitter
 			x:Name="GridSplitter"
@@ -227,7 +234,6 @@ All other rights reserved.
 			Margin="2,4,2,0"
 			Target="{Binding CurrentSelection.Target}"
 		/>
-
 		<!-- StatusBar -->
 		<StatusBar Grid.Row="3" Grid.ColumnSpan="4">
 			<StackPanel Orientation="Horizontal">
@@ -238,8 +244,6 @@ All other rights reserved.
 						Command="{x:Static local:SnoopUI.SelectFocusCommand}"
 						CommandParameter="{Binding CurrentFocus}"
 					>
-						<!--
-						-->
 						<TextBlock Text="{Binding CurrentFocus, Converter={StaticResource niceNamer}}"/>
 					</local:NoFocusHyperlink>
 				</TextBlock>
@@ -248,11 +252,9 @@ All other rights reserved.
 				<TextBlock Margin="3,0,0,0">
 					<local:NoFocusHyperlink
 						Focusable="False"
-						Command="{x:Static local:SnoopUI.SelectFocusCommand}"
+						Command="{x:Static local:SnoopUI.SelectFocusScopeCommand}"
 						CommandParameter="{Binding CurrentFocusScope}"
 					>
-						<!--
-						-->
 						<TextBlock Text="{Binding CurrentFocusScope, Converter={StaticResource niceNamer}}"/>
 					</local:NoFocusHyperlink>
 				</TextBlock>
