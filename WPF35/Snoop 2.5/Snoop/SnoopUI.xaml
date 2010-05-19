@@ -8,7 +8,7 @@ All other rights reserved.
 	x:Class="Snoop.SnoopUI"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-	xmlns:local="clr-namespace:Snoop"
+	xmlns:local="clr-namespace:Snoop;assembly="
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:d="http://schemas.microsoft.com/expression/interactivedesigner/2006"
 	mc:Ignorable="d"

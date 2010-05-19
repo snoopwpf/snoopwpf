@@ -8,7 +8,7 @@ All other rights reserved.
 	xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' 
 	xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml' 
 	x:Class='Snoop.EventsView'
-	xmlns:my='clr-namespace:Snoop'
+	xmlns:my='clr-namespace:Snoop;assembly='
 	x:Name='Events'
 	MinHeight="0" MinWidth="0" xmlns:d="http://schemas.microsoft.com/expression/interactivedesigner/2006" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
 
