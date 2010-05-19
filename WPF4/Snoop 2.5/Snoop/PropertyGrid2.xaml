@@ -99,6 +99,7 @@ All other rights reserved.
 					</DataTrigger>
 					<DataTrigger Binding='{Binding IsInvalidBinding}' Value='True'>
 						<Setter Property='Background' Value='Red'/>
+						<Setter Property="Foreground" Value="White"/>
 					</DataTrigger>
 					<DataTrigger Binding='{Binding IsVisible}' Value='False'>
 						<Setter Property='Visibility' Value='Collapsed'/>
