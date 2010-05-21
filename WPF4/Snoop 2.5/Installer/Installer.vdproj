@@ -45,7 +45,7 @@
         "DisplayName" = "8:Debug"
         "IsDebugOnly" = "11:TRUE"
         "IsReleaseOnly" = "11:FALSE"
-        "OutputFilename" = "8:..\\Build\\x86\\Debug\\Snoop_x86.msi"
+        "OutputFilename" = "8:..\\Build\\x86\\Debug\\Snoop_WPF4_x86.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -64,10 +64,10 @@
             "ComponentsUrl" = "8:"
                 "Items"
                 {
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Net.Framework.2.0"
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.0"
                     {
-                    "Name" = "8:Microsoft .NET Framework 2.0"
-                    "ProductCode" = "8:Microsoft.Net.Framework.2.0"
+                    "Name" = "8:Microsoft .NET Framework 4 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.0"
                     }
                 }
             }
@@ -77,7 +77,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:..\\Build\\x86\\Release\\Snoop_x86.msi"
+        "OutputFilename" = "8:..\\Build\\x86\\Release\\Snoop_WPF4_x86.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -141,7 +141,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ManagedInjector, Version=1.0.3793.28369, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:ManagedInjector, Version=1.0.3793.29549, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_E5689E1B05BD6FAC00D5218CD9AACD66"
@@ -247,7 +247,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Snoop x86 for WPF4"
         "ProductCode" = "8:{CFD4027F-A5AE-45C3-AEB6-374BA059409B}"
-        "PackageCode" = "8:{629955CC-07BD-4638-A3DF-25400E350D01}"
+        "PackageCode" = "8:{0634639A-2D0E-4D29-9515-C819031296C1}"
         "UpgradeCode" = "8:{A17DF93C-9C2D-4CE2-8B0F-2C28CF32C55E}"
         "AspNetVersion" = "8:4.0.21006.0"
         "RestartWWWService" = "11:FALSE"
