@@ -146,7 +146,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ManagedInjector, Version=1.0.3764.27957, Culture=neutral, processorArchitecture=AMD64"
+            "AssemblyAsmDisplayName" = "8:ManagedInjector, Version=1.0.3793.28347, Culture=neutral, processorArchitecture=AMD64"
                 "ScatterAssemblies"
                 {
                     "_CA6A27BC333329721625A81FA2EBB614"
@@ -240,14 +240,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Snoop x64 for WPF 3.5"
-        "ProductCode" = "8:{7CB74BD4-535F-423C-BAEC-6C49C26F5BC6}"
-        "PackageCode" = "8:{849334F0-DCF5-4F5B-A3EB-58A4B7B0805C}"
+        "ProductCode" = "8:{BF55917E-917E-414B-8353-ACB2071A24BB}"
+        "PackageCode" = "8:{E82174DD-A46A-4483-A809-4B1B868F96B8}"
         "UpgradeCode" = "8:{0B430723-F346-454A-9741-2D64B84346A9}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:2.5.0"
+        "ProductVersion" = "8:2.5.1"
         "Manufacturer" = "8:Pete Blois"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -817,7 +817,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_741A81C0F7A446C8AD860A42AA26CC43"
             {
-            "SourcePath" = "8:..\\Intermediate\\Snoop\\x86\\Release\\Snoop.exe"
+            "SourcePath" = "8:..\\Intermediate\\Snoop\\x64\\Release\\Snoop.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_D6A93129C8A84BB5AD51FC4C8D61081A"
