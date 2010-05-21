@@ -16,11 +16,31 @@ All other rights reserved.
 		<ResourceDictionary>
 
 			<ContextMenu x:Key='PropertyMenu'>
-				<MenuItem Header='Delve' Command='{x:Static my:PropertyInspector.DelveCommand}' CommandParameter='{Binding}'/>
-				<MenuItem Header='Delve Binding' Command='{x:Static my:PropertyInspector.DelveBindingCommand}' CommandParameter='{Binding}'/>
-				<MenuItem Header='Delve BindingExpression' Command='{x:Static my:PropertyInspector.DelveBindingExpressionCommand}' CommandParameter='{Binding}'/>
-				<MenuItem Header='Display Binding Errors' Command='{x:Static my:PropertyGrid2.ShowBindingErrorsCommand}' CommandParameter='{Binding}' />
-				<MenuItem Header='Clear/Reset' Command='{x:Static my:PropertyGrid2.ClearCommand}' CommandParameter='{Binding}'/>
+				<MenuItem Command='{x:Static my:PropertyInspector.DelveCommand}' CommandParameter='{Binding}'>
+					<MenuItem.Header>
+						<TextBlock Style="{x:Null}" Text="Delve"/>
+					</MenuItem.Header>
+				</MenuItem>
+				<MenuItem Command='{x:Static my:PropertyInspector.DelveBindingCommand}' CommandParameter='{Binding}'>
+					<MenuItem.Header>
+						<TextBlock Style="{x:Null}" Text="Delve Binding"/>
+					</MenuItem.Header>
+				</MenuItem>
+				<MenuItem Command='{x:Static my:PropertyInspector.DelveBindingExpressionCommand}' CommandParameter='{Binding}'>
+					<MenuItem.Header>
+						<TextBlock Style="{x:Null}" Text="Delve BindingExpression"/>
+					</MenuItem.Header>
+				</MenuItem>
+				<MenuItem Command='{x:Static my:PropertyGrid2.ShowBindingErrorsCommand}' CommandParameter='{Binding}'>
+					<MenuItem.Header>
+						<TextBlock Style="{x:Null}" Text="Display Binding Errors"/>
+					</MenuItem.Header>
+				</MenuItem>
+				<MenuItem Command='{x:Static my:PropertyGrid2.ClearCommand}' CommandParameter='{Binding}'>
+					<MenuItem.Header>
+						<TextBlock Style="{x:Null}" Text="Clear/Reset"/>
+					</MenuItem.Header>
+				</MenuItem>
 			</ContextMenu>
 
 			<Style TargetType='{x:Type GridViewColumnHeader}'>
@@ -65,11 +85,17 @@ All other rights reserved.
 			</my:ValueEditorTemplateSelector>
 
 			<DataTemplate x:Key='ValueSourceTemplate'>
-				<TextBlock Text='{Binding ValueSource.BaseValueSource}' ToolTip='{Binding ValueSource}' Height='16' ContextMenu='{StaticResource PropertyMenu}'/>
+				<TextBlock Style="{x:Null}" Text='{Binding ValueSource.BaseValueSource}' Height='16' ContextMenu='{StaticResource PropertyMenu}'>
+					<TextBlock.ToolTip>
+						<TextBlock Style="{x:Null}" Text="{Binding ValueSource.BaseValueSource}"/>
+					</TextBlock.ToolTip>
+				</TextBlock>
 			</DataTemplate>
 
+			<DataTemplate x:Key="textBlockDataTemplate">
+				<TextBlock Style="{x:Null}" Text="{Binding}"/>
+			</DataTemplate>
 		</ResourceDictionary>
-
 	</Grid.Resources>
 
 	<Grid.RowDefinitions>
@@ -114,18 +140,26 @@ All other rights reserved.
 			</Style>
 		</ListView.ItemContainerStyle>
 		<ListView.View>
-			<GridView>
+			<GridView ColumnHeaderTemplate="{StaticResource textBlockDataTemplate}">
 				<GridViewColumn Width='25'>
 					<GridViewColumn.CellTemplate>
 						<DataTemplate>
-							<CheckBox IsChecked='{Binding BreakOnChange}' ToolTip='Set a debug breakpoint' Template='{StaticResource BreakpointTemplate}'/>
+							<CheckBox IsChecked='{Binding BreakOnChange}' Template='{StaticResource BreakpointTemplate}'>
+								<CheckBox.ToolTip>
+									<TextBlock Style="{x:Null}" Text="Set a debug breakpoint"/>
+								</CheckBox.ToolTip>
+							</CheckBox>
 						</DataTemplate>
 					</GridViewColumn.CellTemplate>
 				</GridViewColumn>
 				<GridViewColumn Header="Name" Width='200' >
 					<GridViewColumn.CellTemplate>
 						<DataTemplate>
-							<TextBlock Text='{Binding DisplayName}' ToolTip='{Binding DisplayName}' Height='15' MouseLeftButtonDown='HandleNameClick' ContextMenu='{StaticResource PropertyMenu}'/>
+							<TextBlock Style="{x:Null}" Text='{Binding DisplayName}' Height='15' MouseLeftButtonDown='HandleNameClick' ContextMenu='{StaticResource PropertyMenu}'>
+								<TextBlock.ToolTip>
+									<TextBlock Style="{x:Null}" Text="{Binding DisplayName}"/>
+								</TextBlock.ToolTip>
+							</TextBlock>
 						</DataTemplate>
 					</GridViewColumn.CellTemplate>
 				</GridViewColumn>
@@ -142,7 +176,11 @@ All other rights reserved.
 				<GridViewColumn Header="Binding Errors" Width='200'>
 					<GridViewColumn.CellTemplate>
 						<DataTemplate>
-							<TextBlock Text='{Binding BindingError}' ToolTip='{Binding BindingError}' Height='15'/>
+							<TextBlock Style="{x:Null}" Text='{Binding BindingError}' Height='15'>
+								<TextBlock.ToolTip>
+									<TextBlock Style="{x:Null}" Text="{Binding BindingError}"/>
+								</TextBlock.ToolTip>
+							</TextBlock>
 						</DataTemplate>
 					</GridViewColumn.CellTemplate>
 				</GridViewColumn>

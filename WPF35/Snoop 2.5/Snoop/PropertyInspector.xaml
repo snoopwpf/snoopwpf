@@ -20,6 +20,10 @@ All other rights reserved.
 			</ResourceDictionary.MergedDictionaries>
 
 			<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
+			<DataTemplate x:Key="textBlockDataTemplate">
+				<TextBlock Style="{x:Null}" Text="{Binding DisplayName}"/>
+			</DataTemplate>
 		</ResourceDictionary>
 
 	</Grid.Resources>
@@ -55,7 +59,8 @@ All other rights reserved.
 			MinHeight='0'
 			HorizontalAlignment='Right'
 		>
-			<!--<Image Source='{StaticResource ScopeUp}'/>-->^
+			<!--<Image Source='{StaticResource ScopeUp}'/>-->
+			<TextBlock Style="{x:Null}" Text="^"/>
 		</Button>
 
 		<!-- DHDH added comboBox of pre-defined filter sets -->
@@ -65,7 +70,7 @@ All other rights reserved.
 			Width="100"
 			ItemsSource="{Binding Path=FilterSets, ElementName=propertyInspector}"  
 			SelectedItem="{Binding Path=SelectedFilterSet, ElementName=propertyInspector}"
-			DisplayMemberPath="DisplayName"
+			ItemTemplate="{StaticResource textBlockDataTemplate}"
 		/>
 	</Grid>
 	<TextBlock Margin='2' Text='{Binding ElementName=propertyInspector, Path=Type}'/>
