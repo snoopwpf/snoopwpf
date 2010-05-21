@@ -236,6 +236,7 @@ All other rights reserved.
 			Grid.Row="2"
 			Grid.Column="1"
 			Height="4"
+			HorizontalAlignment="Stretch"
 			VerticalAlignment="Top"
 			Margin="2,0,2,0"
 		/>
