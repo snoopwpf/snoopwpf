@@ -94,6 +94,10 @@ All other rights reserved.
 			</Style>
 
 			<local:ObjectToStringConverter x:Key="niceNamer"/>
+
+			<DataTemplate x:Key="textBlockDataTemplate">
+				<TextBlock Style="{x:Null}" Text="{Binding}"/>
+			</DataTemplate>
 		</ResourceDictionary>
 	</Window.Resources>
 
@@ -113,11 +117,17 @@ All other rights reserved.
 		<ComboBox
 			IsEditable="True"
 			Text="{Binding Path=Filter, UpdateSourceTrigger=PropertyChanged}"
-			ToolTip="Filter tree view by name or type"
 			Margin="2,2,22,2"
 		>
-			<ComboBoxItem>Clear filter</ComboBoxItem>
-			<ComboBoxItem>Visuals with binding errors</ComboBoxItem>
+			<ComboBoxItem>
+				<TextBlock Style="{x:Null}" Text="Clear filter"/>
+			</ComboBoxItem>
+			<ComboBoxItem>
+				<TextBlock Style="{x:Null}" Text="Visuals with binding errors"/>
+			</ComboBoxItem>
+			<ComboBox.ToolTip>
+				<TextBlock Style="{x:Null}" Text="Filter tree view by name or type"/>
+			</ComboBox.ToolTip>
 		</ComboBox>
 
 		<!-- Refresh Button -->
@@ -128,10 +138,12 @@ All other rights reserved.
 			HorizontalAlignment="Right"
 			VerticalAlignment="Center"
 			Margin="0,2,2,2"
-			ToolTip="Refresh"
 			Command="{x:Static local:SnoopUI.RefreshCommand}"
 		>
 			<Image Source="{StaticResource reloadImage}"/>
+			<Button.ToolTip>
+				<TextBlock Style="{x:Null}" Text="Refresh"/>
+			</Button.ToolTip>
 		</Button>
 
 		<!-- Visual Tree TreeView -->
@@ -144,8 +156,6 @@ All other rights reserved.
 			Margin="2,0,2,0"
 			ItemsSource="{Binding Filtered}"
 			HorizontalAlignment="Stretch"
-			ToolTip="Hold down Ctrl-Shift and mouse over elements in the target app to select them."
-			TextElement.Foreground="DarkRed"
 		>
 			<TreeView.Resources>
 				<HierarchicalDataTemplate DataType="{x:Type local:VisualTreeItem}" ItemsSource="{Binding Children}">
@@ -154,6 +164,7 @@ All other rights reserved.
 						HorizontalAlignment="Stretch" 
 						local:BringIntoViewBehavior.IsActive="{Binding IsSelected}"
 						Background="Transparent"
+						Foreground="Black"
 					/>
 				</HierarchicalDataTemplate>
 
@@ -188,6 +199,9 @@ All other rights reserved.
 					</Style.Resources>
 				</Style>
 			</TreeView.ItemContainerStyle>
+			<local:ProperTreeView.ToolTip>
+				<TextBlock Style="{x:Null}" Text="Hold down Ctrl-Shift and mouse over elements in the target app to select them."/>
+			</local:ProperTreeView.ToolTip>
 		</local:ProperTreeView>
 		
 		<!-- Vertical GridSplitter (between the visual tree tree view and the tab control (with the property grid/events view)) -->
@@ -209,10 +223,10 @@ All other rights reserved.
 			Grid.RowSpan="2"
 			Margin="2,2,2,0"
 		>
-			<TabItem Header="Properties">
+			<TabItem Header="Properties" HeaderTemplate="{StaticResource textBlockDataTemplate}">
 				<local:PropertyInspector x:Name="PropertyGrid" RootTarget="{Binding Path=CurrentSelection.Target}"/>
 			</TabItem>
-			<TabItem Header="Events">
+			<TabItem Header="Events" HeaderTemplate="{StaticResource textBlockDataTemplate}">
 				<local:EventsView Scope="{Binding Root.MainVisual}"/>
 			</TabItem>
 		</TabControl>
@@ -222,6 +236,7 @@ All other rights reserved.
 			Grid.Row="2"
 			Grid.Column="1"
 			Height="4"
+			HorizontalAlignment="Stretch"
 			VerticalAlignment="Top"
 			Margin="2,0,2,0"
 		/>

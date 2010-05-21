@@ -21,26 +21,31 @@ All other rights reserved.
 		<my:ObjectToStringConverter x:Key='NiceNamer'/>
 
 		<DataTemplate x:Key='CategoryTemplate'>
-			<TextBlock Text='{Binding Path=Name}' FontWeight='Bold' Margin="2,5,0,0"/>
+			<TextBlock Style="{x:Null}" Text='{Binding Path=Name}' FontWeight='Bold' Margin="2,5,0,0"/>
 		</DataTemplate>
 
 		<DataTemplate DataType='{x:Type RoutedEventArgs}'>
-			<TextBlock Text='{Binding RoutedEvent.Name}'/>
+			<TextBlock Style="{x:Null}" Text='{Binding RoutedEvent.Name}'/>
 		</DataTemplate>
 
 		<DataTemplate DataType='{x:Type ExecutedRoutedEventArgs}'>
 			<StackPanel Orientation='Horizontal'>
-				<TextBlock Text='{Binding Command, Converter={StaticResource NiceNamer}}'/>
+				<TextBlock Style="{x:Null}" Text='{Binding Command, Converter={StaticResource NiceNamer}}'/>
 			</StackPanel>
 		</DataTemplate>
 
 		<DataTemplate DataType='{x:Type my:EventTracker}'>
-			<CheckBox IsChecked='{Binding IsEnabled}' Content='{Binding RoutedEvent.Name}'/>
+			<CheckBox IsChecked='{Binding IsEnabled}'>
+				<TextBlock Style="{x:Null}" Text="{Binding RoutedEvent.Name}"/>
+			</CheckBox>
 		</DataTemplate>
 
 
 			<HierarchicalDataTemplate ItemsSource='{Binding Stack}' DataType='{x:Type my:TrackedEvent}'>
-				<Grid Name='Grid' Background='Transparent' ToolTip='Double-click to select the element that handled this' MouseLeftButtonDown='InspectHandler'>
+				<Grid Name='Grid' Background='Transparent' MouseLeftButtonDown='InspectHandler'>
+					<Grid.ToolTip>
+						<TextBlock Style="{x:Null}" Text="Double-click to select the element that handled this"/>
+					</Grid.ToolTip>
 					<!--<Grid.InputBindings>
 					<MouseBinding MouseAction='LeftDoubleClick' Command='{x:Static my:SnoopUI.InspectCommand}' CommandParameter='{Binding EventArgs}'/>
 				</Grid.InputBindings>-->
@@ -54,14 +59,14 @@ All other rights reserved.
 					</Grid.RowDefinitions>
 					<StackPanel Orientation='Horizontal'>
 						<ContentControl Content='{Binding EventArgs}'/>
-						<!--<TextBlock Text='{Binding EventArgs.RoutedEvent.Name}'/>-->
-						<TextBlock Text=' on '/>
-						<TextBlock Text='{Binding Originator.Handler, Converter={StaticResource NiceNamer}}' Grid.Column='1'/>
+						<!--<TextBlock Style="{x:Null}" Text='{Binding EventArgs.RoutedEvent.Name}'/>-->
+						<TextBlock Style="{x:Null}" Text=' on '/>
+						<TextBlock Style="{x:Null}" Text='{Binding Originator.Handler, Converter={StaticResource NiceNamer}}' Grid.Column='1'/>
 					</StackPanel>
 					<ContentControl Name='Handler' Visibility='Collapsed' Grid.Row='1' Grid.ColumnSpan='2'>
 						<StackPanel Orientation='Horizontal'>
-							<TextBlock Text='Handled by: '/>
-							<TextBlock Text='{Binding HandledBy, Converter={StaticResource NiceNamer}}'/>
+							<TextBlock Style="{x:Null}" Text='Handled by: '/>
+							<TextBlock Style="{x:Null}" Text='{Binding HandledBy, Converter={StaticResource NiceNamer}}'/>
 						</StackPanel>
 					</ContentControl>
 				</Grid>
@@ -73,11 +78,14 @@ All other rights reserved.
 			</HierarchicalDataTemplate>
 
 			<HierarchicalDataTemplate DataType='{x:Type my:EventEntry}'>
-				<Grid Name='Grid' Background='Transparent' ToolTip='Double-click to select the element that handled this' MouseLeftButtonDown='InspectHandler'>
+				<Grid Name='Grid' Background='Transparent' MouseLeftButtonDown='InspectHandler'>
+					<Grid.ToolTip>
+						<TextBlock Style="{x:Null}" Text="Double-click to select the element that handled this"/>
+					</Grid.ToolTip>
 					<StackPanel Orientation='Horizontal'>
-						<TextBlock Text='{Binding Handler, Converter={StaticResource NiceNamer}}'/>
-						<TextBlock Text=' handled: '/>
-						<TextBlock Text='{Binding Handled}' Grid.Column='1'/>
+						<TextBlock Style="{x:Null}" Text='{Binding Handler, Converter={StaticResource NiceNamer}}'/>
+						<TextBlock Style="{x:Null}" Text=' handled: '/>
+						<TextBlock Style="{x:Null}" Text='{Binding Handled}' Grid.Column='1'/>
 					</StackPanel>
 				</Grid>
 			</HierarchicalDataTemplate>
@@ -91,7 +99,7 @@ All other rights reserved.
 								<ColumnDefinition Width="*"/>
 								<ColumnDefinition Width="Auto" SharedSizeGroup="ComboBoxButton"/>
 							</Grid.ColumnDefinitions>
-							<TextBlock Margin="3,4.36166666666667,3.41060513164848E-13,2.36166666666664" Height="13.2766666666667" Grid.Column="1" Grid.ColumnSpan="2" x:Name="TextBlock" Text="Common events"/>
+							<TextBlock Style="{x:Null}" Margin="3,4.36166666666667,3.41060513164848E-13,2.36166666666664" Height="13.2766666666667" Grid.Column="1" Grid.ColumnSpan="2" x:Name="TextBlock" Text="Common events"/>
 							<ToggleButton Grid.ColumnSpan="3" x:Name="ToggleButton" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource Mode=TemplatedParent, AncestorType={x:Null}}}">
 								<ToggleButton.Style>
 									<Style TargetType="{x:Type ToggleButton}">
@@ -262,7 +270,12 @@ All other rights reserved.
 	</Grid.RowDefinitions>
 
 	<ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="EventChooser" Template="{StaticResource NoSelectionComboBox}" ItemsSource='{Binding ElementName=Events, Path=AvailableEvents}' IsSynchronizedWithCurrentItem="True" Margin='0,0,20,0'/>
-	<Button Content='X' Width='18' Height='18' Padding='0,-2,0,0' Command='{x:Static my:EventsView.ClearCommand}' HorizontalAlignment='Right' ToolTip='Clear'/>
+	<Button Width='18' Height='18' Padding='0,-2,0,0' Command='{x:Static my:EventsView.ClearCommand}' HorizontalAlignment='Right'>
+		<TextBlock Style="{x:Null}" Text="X"/>
+		<Button.ToolTip>
+			<TextBlock Style="{x:Null}" Text="Clear"/>
+		</Button.ToolTip>
+	</Button>
 
 	<my:ProperTreeView x:Name='EventTree' Grid.Row='1' ItemsSource='{Binding ElementName=Events, Path=InterestingEvents}' HorizontalContentAlignment='Stretch'>
 		<my:ProperTreeView.ItemContainerStyle>

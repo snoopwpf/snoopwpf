@@ -13,7 +13,7 @@ All other rights reserved.
 	<Style TargetType='{x:Type my:StandardValueEditor}'>
 		<Style.Resources>
 			<DataTemplate x:Key='UnselectedValueTemplate'>
-				<TextBlock Text='{Binding StringValue}'/>
+				<TextBlock Style="{x:Null}" Text='{Binding StringValue}'/>
 			</DataTemplate>
 
 			<DataTemplate x:Key='SelectedValueTemplate'>
@@ -24,7 +24,11 @@ All other rights reserved.
 		<Setter Property='Template'>
 			<Setter.Value>
 				<ControlTemplate TargetType='{x:Type my:StandardValueEditor}'>
-					<ContentPresenter Name='ValueHolder' ContentTemplate='{StaticResource UnselectedValueTemplate}' Content='{Binding RelativeSource={RelativeSource TemplatedParent}}' ToolTip='{TemplateBinding StringValue}'/>
+					<ContentPresenter Name='ValueHolder' ContentTemplate='{StaticResource UnselectedValueTemplate}' Content='{Binding RelativeSource={RelativeSource TemplatedParent}}'>
+						<ContentPresenter.ToolTip>
+							<TextBlock Style="{x:Null}" Text="{TemplateBinding StringValue}"/>
+						</ContentPresenter.ToolTip>
+					</ContentPresenter>
 
 					<ControlTemplate.Triggers>
 						<MultiTrigger>
@@ -86,7 +90,7 @@ All other rights reserved.
 	<Style TargetType='{x:Type my:EnumValueEditor}'>
 		<Style.Resources>
 			<DataTemplate x:Key='UnselectedValueTemplate'>
-				<TextBlock Text='{Binding Value}'/>
+				<TextBlock Style="{x:Null}" Text='{Binding Value}'/>
 			</DataTemplate>
 
 			<DataTemplate x:Key='SelectedValueTemplate'>
