@@ -82,7 +82,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:..\\Build\\x64\\Release\\Snoop_x64.msi"
+        "OutputFilename" = "8:..\\Build\\x64\\Release\\Snoop_WPF35_x64.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -146,7 +146,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ManagedInjector, Version=1.0.3793.28347, Culture=neutral, processorArchitecture=AMD64"
+            "AssemblyAsmDisplayName" = "8:ManagedInjector, Version=1.0.3793.29379, Culture=neutral, processorArchitecture=AMD64"
                 "ScatterAssemblies"
                 {
                     "_CA6A27BC333329721625A81FA2EBB614"
@@ -241,7 +241,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Snoop x64 for WPF 3.5"
         "ProductCode" = "8:{BF55917E-917E-414B-8353-ACB2071A24BB}"
-        "PackageCode" = "8:{E82174DD-A46A-4483-A809-4B1B868F96B8}"
+        "PackageCode" = "8:{EC5C37B7-8222-489E-8D7E-96B7069FA196}"
         "UpgradeCode" = "8:{0B430723-F346-454A-9741-2D64B84346A9}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"

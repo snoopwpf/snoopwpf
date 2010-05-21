@@ -77,7 +77,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:..\\Build\\x86\\Release\\Snoop_x86.msi"
+        "OutputFilename" = "8:..\\Build\\x86\\Release\\Snoop_WPF35_x86.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
