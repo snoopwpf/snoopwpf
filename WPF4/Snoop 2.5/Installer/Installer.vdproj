@@ -21,7 +21,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_69C9780E7C982AE5C669E7BB664E3620"
+        "MsmKey" = "8:_E5689E1B05BD6FAC00D5218CD9AACD66"
         "OwnerKey" = "8:_225B35581A664F3D8F11F91AE78F34D0"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -34,7 +34,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_69C9780E7C982AE5C669E7BB664E3620"
+        "OwnerKey" = "8:_E5689E1B05BD6FAC00D5218CD9AACD66"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -129,7 +129,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "FrameworkVersion" = "8:2.0.50727 "
+                "FrameworkVersion" = "8:2.0.50727  "
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=9832"
                 }
@@ -137,14 +137,14 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_69C9780E7C982AE5C669E7BB664E3620"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_E5689E1B05BD6FAC00D5218CD9AACD66"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ManagedInjector, Version=1.0.3764.26910, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:ManagedInjector, Version=1.0.3793.28369, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
-                    "_69C9780E7C982AE5C669E7BB664E3620"
+                    "_E5689E1B05BD6FAC00D5218CD9AACD66"
                     {
                     "Name" = "8:ManagedInjector.dll"
                     "Attributes" = "3:512"
@@ -246,15 +246,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Snoop x86 for WPF4"
-        "ProductCode" = "8:{53DB70A1-7DAD-4189-9281-30B32AF9C90F}"
-        "PackageCode" = "8:{26190129-A639-440A-8DCD-781DC219FCEF}"
+        "ProductCode" = "8:{CFD4027F-A5AE-45C3-AEB6-374BA059409B}"
+        "PackageCode" = "8:{629955CC-07BD-4638-A3DF-25400E350D01}"
         "UpgradeCode" = "8:{A17DF93C-9C2D-4CE2-8B0F-2C28CF32C55E}"
         "AspNetVersion" = "8:4.0.21006.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:2.5.0"
+        "ProductVersion" = "8:2.5.1"
         "Manufacturer" = "8:Pete Blois"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -796,7 +796,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_225B35581A664F3D8F11F91AE78F34D0"
             {
-            "SourcePath" = "8:..\\Intermediate\\Snoop\\x64\\Debug\\Snoop.exe"
+            "SourcePath" = "8:..\\Intermediate\\Snoop\\x64\\Release\\Snoop.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C46CF69C04BA4077995A1F01F2C0C8A8"
