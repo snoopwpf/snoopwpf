@@ -3,19 +3,22 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
+using System.Collections.ObjectModel;
 
-namespace Snoop {
-	using System.Collections.ObjectModel;
+namespace Snoop
+{
 
-	public partial class ExpressionsView {
-
+	public partial class ExpressionsView
+	{
 		private ObservableCollection<Expression> expressions = new ObservableCollection<Expression>();
 
-		public ExpressionsView() {
+		public ExpressionsView()
+		{
 			this.InitializeComponent();
 		}
 
-		public ObservableCollection<Expression> Expressions {
+		public ObservableCollection<Expression> Expressions
+		{
 			get { return this.expressions; }
 		}
 	}

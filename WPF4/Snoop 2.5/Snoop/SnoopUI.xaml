@@ -140,7 +140,7 @@ All other rights reserved.
 			Margin="0,2,2,2"
 			Command="{x:Static local:SnoopUI.RefreshCommand}"
 		>
-			<Image Source="{StaticResource reloadImage}"/>
+			<Image Source="{StaticResource reloadDrawingImage}"/>
 			<Button.ToolTip>
 				<TextBlock Style="{x:Null}" Text="Refresh"/>
 			</Button.ToolTip>
