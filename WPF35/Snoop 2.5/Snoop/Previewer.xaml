@@ -190,14 +190,14 @@ All other rights reserved.
 		<!--<Rectangle Fill='{StaticResource poo_sniffer_xpr}'/>-->
 		<Rectangle Fill='{Binding Brush}' x:Name="PreviewArea" d:LayoutOverrides="GridBox" />
 		<ToggleButton HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,0,1" Width="20" Height="16" Grid.Column="0" Grid.Row="0" x:Name="MiniViewButton" Template="{DynamicResource ButtonRight}" IsChecked='{Binding IsActive}'>
-			<Image x:Name="Image1" Source="{DynamicResource Power}"/>
+			<Image x:Name="Image1" Source="{DynamicResource powerDrawingImage}"/>
 			<ToggleButton.ToolTip>
 				<TextBlock Style="{x:Null}" Text="Enable/Disable preview"/>
 			</ToggleButton.ToolTip>
 		</ToggleButton>
 
 		<Button Width='20' Height='16' Grid.Column='0' Grid.ColumnSpan='1' Grid.Row='0' HorizontalAlignment='Right' VerticalAlignment='Bottom' Command='{x:Static my:Previewer.MagnifyCommand}' d:LayoutOverrides="GridBox" Margin="0,0,20,1" x:Name="MagnifyButton" Template="{DynamicResource ButtonLeft}">
-			<Image x:Name="Image" Source="{DynamicResource Magnifying}"/>
+			<Image x:Name="Image" Source="{DynamicResource magnifyingGlassDrawingImage}"/>
 			<Button.ToolTip>
 				<TextBlock Style="{x:Null}" Text="Magnify"/>
 			</Button.ToolTip>
