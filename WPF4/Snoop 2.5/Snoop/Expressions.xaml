@@ -9,7 +9,6 @@ All other rights reserved.
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:xv="clr-namespace:Snoop"
 	x:Class="Snoop.ExpressionsView"
-	Name="RootWindow"
 	Icon="Snoop.ico"
 	Title="Expressions"
 	Width="400"

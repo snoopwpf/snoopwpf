@@ -16,22 +16,17 @@ using ManagedInjector;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
 
-namespace Snoop {
-
+namespace Snoop
+{
 	public partial class AppChooser
 	{
-		public static readonly RoutedCommand InspectCommand = new RoutedCommand();
-		public static readonly RoutedCommand RefreshCommand = new RoutedCommand();
-		public static readonly RoutedCommand MagnifyCommand = new RoutedCommand();
-
-		private ObservableCollection<WindowInfo> windows = new ObservableCollection<WindowInfo>();
-		private ICollectionView windowsView;
-
-		static AppChooser() {
+		static AppChooser()
+		{
 			AppChooser.RefreshCommand.InputGestures.Add(new KeyGesture(Key.F5));
 		}
 
-		public AppChooser() {
+		public AppChooser()
+		{
 			this.windowsView = CollectionViewSource.GetDefaultView(this.windows);
 
 			this.InitializeComponent();
@@ -70,9 +65,18 @@ namespace Snoop {
 			);
 		}
 
-		public ICollectionView Windows {
+
+		public static readonly RoutedCommand InspectCommand = new RoutedCommand();
+		public static readonly RoutedCommand RefreshCommand = new RoutedCommand();
+		public static readonly RoutedCommand MagnifyCommand = new RoutedCommand();
+
+
+		public ICollectionView Windows
+		{
 			get { return this.windowsView; }
 		}
+		private ICollectionView windowsView;
+		private ObservableCollection<WindowInfo> windows = new ObservableCollection<WindowInfo>();
 
 		public bool AutoRefresh { get; set; }
 
@@ -100,52 +104,6 @@ namespace Snoop {
 			}
 		}
 
-		private bool HasProcess(Process process) {
-			foreach (WindowInfo window in this.windows)
-				if (window.OwningProcess.Id == process.Id)
-					return true;
-			return false;
-		}
-
-		private void HandleCanInspectCommand(object sender, CanExecuteRoutedEventArgs e) {
-			if (this.windowsView.CurrentItem != null)
-				e.CanExecute = true;
-			e.Handled = true;
-		}
-
-		private void HandleInspectCommand(object sender, ExecutedRoutedEventArgs e) {
-			WindowInfo window = (WindowInfo)this.windowsView.CurrentItem;
-			if (window != null)
-				window.Snoop();
-		}
-
-		private void HandleMagnifyCommand(object sender, ExecutedRoutedEventArgs e) {
-			WindowInfo window = (WindowInfo)this.windowsView.CurrentItem;
-			if (window != null)
-				window.Magnify();
-		}
-
-		private void HandleRefreshCommand(object sender, ExecutedRoutedEventArgs e) {
-			// Clear out cached process info to make the force refresh do the process check over again.
-			WindowInfo.ClearCachedProcessInfo();
-			this.Refresh();
-		}
-
-		private void HandleRefreshTimer(object sender, EventArgs e)
-		{
-			if (AutoRefresh)
-			{
-				this.Refresh();
-			}
-		}
-
-		private void HandleClose(object sender, MouseButtonEventArgs e) {
-			this.Close();
-		}
-
-		private void HandleMouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
-			this.DragMove();
-		}
 
 		protected override void OnSourceInitialized(EventArgs e)
 		{
@@ -176,28 +134,73 @@ namespace Snoop {
 			Properties.Settings.Default.AppChooserWindowPlacement = wp;
 			Properties.Settings.Default.Save();
 		}
+
+
+		private bool HasProcess(Process process)
+		{
+			foreach (WindowInfo window in this.windows)
+				if (window.OwningProcess.Id == process.Id)
+					return true;
+			return false;
+		}
+
+		private void HandleCanInspectCommand(object sender, CanExecuteRoutedEventArgs e)
+		{
+			if (this.windowsView.CurrentItem != null)
+				e.CanExecute = true;
+			e.Handled = true;
+		}
+		private void HandleInspectCommand(object sender, ExecutedRoutedEventArgs e)
+		{
+			WindowInfo window = (WindowInfo)this.windowsView.CurrentItem;
+			if (window != null)
+				window.Snoop();
+		}
+		private void HandleMagnifyCommand(object sender, ExecutedRoutedEventArgs e)
+		{
+			WindowInfo window = (WindowInfo)this.windowsView.CurrentItem;
+			if (window != null)
+				window.Magnify();
+		}
+		private void HandleRefreshCommand(object sender, ExecutedRoutedEventArgs e)
+		{
+			// clear out cached process info to make the force refresh do the process check over again.
+			WindowInfo.ClearCachedProcessInfo();
+			this.Refresh();
+		}
+		private void HandleRefreshTimer(object sender, EventArgs e)
+		{
+			if (AutoRefresh)
+			{
+				this.Refresh();
+			}
+		}
+		private void HandleMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			this.DragMove();
+		}
+		private void HandleClose(object sender, MouseButtonEventArgs e)
+		{
+			this.Close();
+		}
 	}
 
 	public class WindowInfo
 	{
-		private static Dictionary<int, bool> processIDToValidityMap = new Dictionary<int, bool>();
-
-		private IntPtr hwnd;
-		private AppChooser appChooser;
-
-		public WindowInfo(IntPtr hwnd, AppChooser appChooser) {
+		public WindowInfo(IntPtr hwnd, AppChooser appChooser)
+		{
 			this.hwnd = hwnd;
 			this.appChooser = appChooser;
 		}
 
-		public static void ClearCachedProcessInfo() {
-			WindowInfo.processIDToValidityMap.Clear();
-		}
 
-		public bool IsValidProcess {
-			get {
+		public bool IsValidProcess
+		{
+			get
+			{
 				bool isValid = false;
-				try {
+				try
+				{
 					if (this.hwnd == IntPtr.Zero)
 						return false;
 
@@ -210,7 +213,8 @@ namespace Snoop {
 
 					if (process.Id == Process.GetCurrentProcess().Id)
 						isValid = false;
-					else {
+					else
+					{
 						foreach (ProcessModule module in process.Modules)
 						{
 							if (module.ModuleName.Contains("PresentationFramework.dll") ||
@@ -228,48 +232,64 @@ namespace Snoop {
 				return isValid;
 			}
 		}
-
-		public Process OwningProcess {
+		public Process OwningProcess
+		{
 			get { return NativeMethods.GetWindowThreadProcess(this.hwnd); }
 		}
-
-		public IntPtr HWnd {
+		public IntPtr HWnd
+		{
 			get { return this.hwnd; }
 		}
-
-		public string Description {
-			get {
+		private IntPtr hwnd;
+		public string Description
+		{
+			get
+			{
 				Process process = this.OwningProcess;
 				return process.MainWindowTitle + " - " + process.ProcessName + " [" + process.Id.ToString() + "]";
 			}
 		}
-
-		public override string ToString() {
+		public override string ToString()
+		{
 			return this.Description;
 		}
 
-		public void Snoop() {
+
+		public static void ClearCachedProcessInfo()
+		{
+			WindowInfo.processIDToValidityMap.Clear();
+		}
+		public void Snoop()
+		{
 			Mouse.OverrideCursor = Cursors.Wait;
-			try {
+			try
+			{
 				Injector.Launch(this.HWnd, typeof(SnoopUI).Assembly, typeof(SnoopUI).FullName, "GoBabyGo");
 			}
-			catch (Exception) {
+			catch (Exception)
+			{
+				if (this.appChooser != null)
+					this.appChooser.Refresh();
+			}
+			Mouse.OverrideCursor = null;
+		}
+		public void Magnify()
+		{
+			Mouse.OverrideCursor = Cursors.Wait;
+			try
+			{
+				Injector.Launch(this.HWnd, typeof(Zoomer).Assembly, typeof(Zoomer).FullName, "GoBabyGo");
+			}
+			catch (Exception)
+			{
 				if (this.appChooser != null)
 					this.appChooser.Refresh();
 			}
 			Mouse.OverrideCursor = null;
 		}
 
-		public void Magnify() {
-			Mouse.OverrideCursor = Cursors.Wait;
-			try {
-				Injector.Launch(this.HWnd, typeof(Zoomer).Assembly, typeof(Zoomer).FullName, "GoBabyGo");
-			}
-			catch (Exception) {
-				if (this.appChooser != null)
-					this.appChooser.Refresh();
-			}
-			Mouse.OverrideCursor = null;
-		}
+
+		private AppChooser appChooser;
+		private static Dictionary<int, bool> processIDToValidityMap = new Dictionary<int, bool>();
 	}
 }
