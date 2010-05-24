@@ -9,7 +9,6 @@ All other rights reserved.
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:xv="clr-namespace:Snoop;assembly="
 	x:Class="Snoop.Zoomer"
-	Name="RootWindow"
 	Icon="Snoop.ico"
 	Title="Zoomer"
 	Width="400"
