@@ -237,7 +237,31 @@ namespace Snoop
 
 			if (Application.Current != null)
 			{
-				this.Owner = Application.Current.MainWindow;
+				Window owner = Application.Current.MainWindow;
+				if (owner.Visibility != Visibility.Visible)
+				{
+					foreach (Window w in Application.Current.Windows)
+					{
+						if (w.Visibility == Visibility.Visible)
+						{
+							owner = w;
+							break;
+						}
+					}
+				}
+
+				if (owner.Visibility == Visibility.Visible)
+					this.Owner = owner;
+				else
+				{
+					MessageBox.Show
+					(
+						"Can't find a visible window to own Snoop",
+						"Can't Snoop",
+						MessageBoxButton.OK,
+						MessageBoxImage.Exclamation
+					);
+				}
 			}
 			else
 			{
