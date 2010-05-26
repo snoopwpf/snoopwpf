@@ -71,12 +71,18 @@ namespace Snoop
 		public static void GoBabyGo()
 		{
 			object root = null;
-			if (Application.Current != null && Application.Current.MainWindow != null)
+			if (Application.Current != null)
 			{
 				root = Application.Current;
 			}
 			else
 			{
+				// if we don't have a current application,
+				// then we must be in an interop scenario (win32 -> wpf or windows forms -> wpf).
+
+				// in this case, let's iterate over PresentationSource.CurrentSources,
+				// and use the first non-null RootVisual we find as root to inspect.
+
 				foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
 				{
 					if (presentationSource.RootVisual != null)
@@ -96,7 +102,7 @@ namespace Snoop
 			{
 				MessageBox.Show
 				(
-					"Can't find a current application, main window, or non-null PresentationSource root visual!",
+					"Can't find a current application or a PresentationSource root visual!",
 					"Can't Snoop",
 					MessageBoxButton.OK,
 					MessageBoxImage.Exclamation
@@ -237,21 +243,24 @@ namespace Snoop
 
 			if (Application.Current != null)
 			{
-				Window owner = Application.Current.MainWindow;
-				if (owner.Visibility != Visibility.Visible)
+				// search for a visible window to own the main Snoop UI window
+				Window owningWindow = Application.Current.MainWindow;
+				if (owningWindow == null || owningWindow.Visibility != Visibility.Visible)
 				{
-					foreach (Window w in Application.Current.Windows)
+					foreach (Window window in Application.Current.Windows)
 					{
-						if (w.Visibility == Visibility.Visible)
+						if (window.Visibility == Visibility.Visible)
 						{
-							owner = w;
+							owningWindow = window;
 							break;
 						}
 					}
 				}
 
-				if (owner.Visibility == Visibility.Visible)
-					this.Owner = owner;
+				if (owningWindow != null && owningWindow.Visibility == Visibility.Visible)
+				{
+					this.Owner = owningWindow;
+				}
 				else
 				{
 					MessageBox.Show
@@ -265,14 +274,21 @@ namespace Snoop
 			}
 			else
 			{
-				// cplotts note:
-				// assume that if we don't have a current application, we must be in a wpf interop scenario.
-				// is this a good assumption? if so, the open forms count should be greater than 0.
-				System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.OpenForms.Count > 0);
+				// if we don't have a current application,
+				// then we must be in an interop scenario (win32 -> wpf or windows forms -> wpf).
+	
+				if (System.Windows.Forms.Application.OpenForms.Count > 0)
+				{
+					// this is windows forms -> wpf interop
 
-				ElementHost.EnableModelessKeyboardInterop(this);
+					// call ElementHost.EnableModelessKeyboardInterop to allow the Snoop UI window
+					// to receive keyboard messages. if you don't call this method,
+					// you will be unable to edit properties in the property grid for windows forms interop.
+					ElementHost.EnableModelessKeyboardInterop(this);
+				}
 			}
 			this.Show();
+			this.Activate();
 		}
 
 		public void ApplyReduceDepthFilter(VisualTreeItem newRoot)

@@ -38,7 +38,8 @@ namespace Snoop
 			this.SetValue(Previewer.BrushPropertyKey, pooSniffer);
 		}
 
-		public object Target {
+		public object Target
+		{
 			get { return this.GetValue(Previewer.TargetProperty); }
 			set { this.SetValue(Previewer.TargetProperty, value); }
 		}
@@ -86,12 +87,10 @@ namespace Snoop
 			e.Handled = true;
 		}
 
-		private void HandleMagnify(object sender, ExecutedRoutedEventArgs e) {
+		private void HandleMagnify(object sender, ExecutedRoutedEventArgs e)
+		{
 			Zoomer zoomer = new Zoomer();
-			zoomer.Target = this.Target;
-			if (Application.Current != null)
-				zoomer.Owner = Application.Current.MainWindow;
-			zoomer.Show();
+			zoomer.Magnify(this.Target);
 			e.Handled = true;
 		}
 	}
