@@ -15,9 +15,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhiteForegroundIssue", "Tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InvisibleOwnerWindowIssue", "TestHarnesses\InvisibleOwnerWindowIssue\InvisibleOwnerWindowIssue.csproj", "{23C695A9-F79F-454A-9A00-2897DBAF2933}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsToWPFInterop", "TestHarnesses\WindowsFormsToWPFInterop\WindowsFormsToWPFInterop.csproj", "{232FA543-BF42-4C4F-8EFC-4A99EE374AED}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 7
+		SccNumberOfProjects = 8
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs09.codeplex.com/
 		SccLocalPath0 = .
@@ -41,6 +43,10 @@ Global
 		SccProjectTopLevelParentUniqueName6 = Snoop.sln
 		SccProjectName6 = TestHarnesses/InvisibleOwnerWindowIssue
 		SccLocalPath6 = TestHarnesses\\InvisibleOwnerWindowIssue
+		SccProjectUniqueName7 = TestHarnesses\\WindowsFormsToWPFInterop\\WindowsFormsToWPFInterop.csproj
+		SccProjectTopLevelParentUniqueName7 = Snoop.sln
+		SccProjectName7 = TestHarnesses/WindowsFormsToWPFInterop
+		SccLocalPath7 = TestHarnesses\\WindowsFormsToWPFInterop
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -107,6 +113,16 @@ Global
 		{23C695A9-F79F-454A-9A00-2897DBAF2933}.Release|Any CPU.Build.0 = Release|Any CPU
 		{23C695A9-F79F-454A-9A00-2897DBAF2933}.Release|x64.ActiveCfg = Release|x64
 		{23C695A9-F79F-454A-9A00-2897DBAF2933}.Release|x86.ActiveCfg = Release|x86
+		{232FA543-BF42-4C4F-8EFC-4A99EE374AED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{232FA543-BF42-4C4F-8EFC-4A99EE374AED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{232FA543-BF42-4C4F-8EFC-4A99EE374AED}.Debug|x64.ActiveCfg = Debug|x64
+		{232FA543-BF42-4C4F-8EFC-4A99EE374AED}.Debug|x64.Build.0 = Debug|x64
+		{232FA543-BF42-4C4F-8EFC-4A99EE374AED}.Debug|x86.ActiveCfg = Debug|x86
+		{232FA543-BF42-4C4F-8EFC-4A99EE374AED}.Debug|x86.Build.0 = Debug|x86
+		{232FA543-BF42-4C4F-8EFC-4A99EE374AED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{232FA543-BF42-4C4F-8EFC-4A99EE374AED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{232FA543-BF42-4C4F-8EFC-4A99EE374AED}.Release|x64.ActiveCfg = Release|x64
+		{232FA543-BF42-4C4F-8EFC-4A99EE374AED}.Release|x86.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -114,5 +130,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{1296CCA0-673F-434D-BC2C-8C4718EB57B6} = {BB8D54DB-52E9-4757-BDC5-760C6426FCDC}
 		{23C695A9-F79F-454A-9A00-2897DBAF2933} = {BB8D54DB-52E9-4757-BDC5-760C6426FCDC}
+		{232FA543-BF42-4C4F-8EFC-4A99EE374AED} = {BB8D54DB-52E9-4757-BDC5-760C6426FCDC}
 	EndGlobalSection
 EndGlobal
