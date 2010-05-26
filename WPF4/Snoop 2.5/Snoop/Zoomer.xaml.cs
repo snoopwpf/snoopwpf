@@ -83,45 +83,60 @@ namespace Snoop {
 			this.Viewbox.RenderTransform = this.transform;
 		}
 
+		private delegate void Action();
+
 		public static void GoBabyGo()
 		{
-			object root = null;
-			if (Application.Current != null)
-			{
-				root = Application.Current;
-			}
+			Dispatcher dispatcher;
+			if (Application.Current == null)
+				dispatcher = Dispatcher.CurrentDispatcher;
 			else
+				dispatcher = Application.Current.Dispatcher;
+
+			if (dispatcher.CheckAccess())
 			{
-				// if we don't have a current application,
-				// then we must be in an interop scenario (win32 -> wpf or windows forms -> wpf).
-
-				// in this case, let's iterate over PresentationSource.CurrentSources,
-				// and use the first non-null RootVisual we find as the root to magnify.
-
-				foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
+				object root = null;
+				if (Application.Current != null)
 				{
-					if (presentationSource.RootVisual != null)
+					root = Application.Current;
+				}
+				else
+				{
+					// if we don't have a current application,
+					// then we must be in an interop scenario (win32 -> wpf or windows forms -> wpf).
+
+					// in this case, let's iterate over PresentationSource.CurrentSources,
+					// and use the first non-null RootVisual we find as the root to magnify.
+
+					foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
 					{
-						root = presentationSource.RootVisual;
-						break;
+						if (presentationSource.RootVisual != null)
+						{
+							root = presentationSource.RootVisual;
+							break;
+						}
 					}
 				}
-			}
 
-			if (root != null)
-			{
-				Zoomer zoomer = new Zoomer();
-				zoomer.Magnify(root);
+				if (root != null)
+				{
+					Zoomer zoomer = new Zoomer();
+					zoomer.Magnify(root);
+				}
+				else
+				{
+					MessageBox.Show
+					(
+						"Can't find a current application or a PresentationSource root visual!",
+						"Can't Magnify",
+						MessageBoxButton.OK,
+						MessageBoxImage.Exclamation
+					);
+				}
 			}
 			else
 			{
-				MessageBox.Show
-				(
-					"Can't find a current application or a PresentationSource root visual!",
-					"Can't Magnify",
-					MessageBoxButton.OK,
-					MessageBoxImage.Exclamation
-				);
+				dispatcher.Invoke((Action)GoBabyGo);
 			}
 		}
 

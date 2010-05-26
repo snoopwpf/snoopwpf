@@ -20,6 +20,7 @@ using System.Windows.Threading;
 using System.Windows.Forms.Integration;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
+using System.Threading;
 
 namespace Snoop
 {
@@ -68,45 +69,61 @@ namespace Snoop
 		#endregion
 
 		#region Public Static Methods
+		private delegate void Action();
+
 		public static void GoBabyGo()
 		{
-			object root = null;
-			if (Application.Current != null)
-			{
-				root = Application.Current;
-			}
+			Dispatcher dispatcher;
+			if (Application.Current == null)
+				dispatcher = Dispatcher.CurrentDispatcher;
 			else
+				dispatcher = Application.Current.Dispatcher;
+
+			if (dispatcher.CheckAccess())
 			{
-				// if we don't have a current application,
-				// then we must be in an interop scenario (win32 -> wpf or windows forms -> wpf).
+				object root = null;
 
-				// in this case, let's iterate over PresentationSource.CurrentSources,
-				// and use the first non-null RootVisual we find as root to inspect.
-
-				foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
+				if (Application.Current != null)
 				{
-					if (presentationSource.RootVisual != null)
+					root = Application.Current;
+				}
+				else
+				{
+					// if we don't have a current application,
+					// then we must be in an interop scenario (win32 -> wpf or windows forms -> wpf).
+
+					// in this case, let's iterate over PresentationSource.CurrentSources,
+					// and use the first non-null RootVisual we find as root to inspect.
+
+					foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
 					{
-						root = presentationSource.RootVisual;
-						break;
+						if (presentationSource.RootVisual != null)
+						{
+							root = presentationSource.RootVisual;
+							break;
+						}
 					}
 				}
-			}
 
-			if (root != null)
-			{
-				SnoopUI snoop = new SnoopUI();
-				snoop.Inspect(root);
+				if (root != null)
+				{
+					SnoopUI snoop = new SnoopUI();
+					snoop.Inspect(root);
+				}
+				else
+				{
+					MessageBox.Show
+					(
+						"Can't find a current application or a PresentationSource root visual!",
+						"Can't Snoop",
+						MessageBoxButton.OK,
+						MessageBoxImage.Exclamation
+					);
+				}
 			}
 			else
 			{
-				MessageBox.Show
-				(
-					"Can't find a current application or a PresentationSource root visual!",
-					"Can't Snoop",
-					MessageBoxButton.OK,
-					MessageBoxImage.Exclamation
-				);
+				dispatcher.Invoke((Action)GoBabyGo);
 			}
 		}
 		#endregion
