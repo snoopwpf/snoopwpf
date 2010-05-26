@@ -17,9 +17,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InvisibleOwnerWindowIssue",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsToWPFInterop", "TestHarnesses\WindowsFormsToWPFInterop\WindowsFormsToWPFInterop.csproj", "{5B73FBB9-BA20-4ED7-BA54-52C49EE37C00}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Win32ToWPFInterop", "Win32ToWPFInterop", "{BD5BAB06-EF80-4A66-953E-826FD369044A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "win32clock", "TestHarnesses\Win32ToWPFInterop\Win32Clock\win32clock.vcxproj", "{8625A303-646D-4D87-BC14-29CD4D079CD9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A447BFAE-E087-463A-ABAF-2C6F01CB775E} = {A447BFAE-E087-463A-ABAF-2C6F01CB775E}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfClock", "TestHarnesses\Win32ToWPFInterop\WPFClock\WpfClock.csproj", "{A447BFAE-E087-463A-ABAF-2C6F01CB775E}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 8
+		SccNumberOfProjects = 10
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs09.codeplex.com/
 		SccLocalPath0 = .
@@ -47,6 +56,14 @@ Global
 		SccProjectTopLevelParentUniqueName7 = Snoop.sln
 		SccProjectName7 = TestHarnesses/WindowsFormsToWPFInterop
 		SccLocalPath7 = TestHarnesses\\WindowsFormsToWPFInterop
+		SccProjectUniqueName8 = TestHarnesses\\Win32ToWPFInterop\\Win32Clock\\win32clock.vcxproj
+		SccProjectTopLevelParentUniqueName8 = Snoop.sln
+		SccProjectName8 = TestHarnesses/Win32ToWPFInterop/Win32Clock
+		SccLocalPath8 = TestHarnesses\\Win32ToWPFInterop\\Win32Clock
+		SccProjectUniqueName9 = TestHarnesses\\Win32ToWPFInterop\\WPFClock\\WpfClock.csproj
+		SccProjectTopLevelParentUniqueName9 = Snoop.sln
+		SccProjectName9 = TestHarnesses/Win32ToWPFInterop/WPFClock
+		SccLocalPath9 = TestHarnesses\\Win32ToWPFInterop\\WPFClock
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -123,6 +140,24 @@ Global
 		{5B73FBB9-BA20-4ED7-BA54-52C49EE37C00}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5B73FBB9-BA20-4ED7-BA54-52C49EE37C00}.Release|x64.ActiveCfg = Release|x64
 		{5B73FBB9-BA20-4ED7-BA54-52C49EE37C00}.Release|x86.ActiveCfg = Release|x86
+		{8625A303-646D-4D87-BC14-29CD4D079CD9}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{8625A303-646D-4D87-BC14-29CD4D079CD9}.Debug|x64.ActiveCfg = Debug|x64
+		{8625A303-646D-4D87-BC14-29CD4D079CD9}.Debug|x64.Build.0 = Debug|x64
+		{8625A303-646D-4D87-BC14-29CD4D079CD9}.Debug|x86.ActiveCfg = Debug|Win32
+		{8625A303-646D-4D87-BC14-29CD4D079CD9}.Debug|x86.Build.0 = Debug|Win32
+		{8625A303-646D-4D87-BC14-29CD4D079CD9}.Release|Any CPU.ActiveCfg = Release|Win32
+		{8625A303-646D-4D87-BC14-29CD4D079CD9}.Release|x64.ActiveCfg = Release|x64
+		{8625A303-646D-4D87-BC14-29CD4D079CD9}.Release|x86.ActiveCfg = Release|Win32
+		{A447BFAE-E087-463A-ABAF-2C6F01CB775E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A447BFAE-E087-463A-ABAF-2C6F01CB775E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A447BFAE-E087-463A-ABAF-2C6F01CB775E}.Debug|x64.ActiveCfg = Debug|x64
+		{A447BFAE-E087-463A-ABAF-2C6F01CB775E}.Debug|x64.Build.0 = Debug|x64
+		{A447BFAE-E087-463A-ABAF-2C6F01CB775E}.Debug|x86.ActiveCfg = Debug|x86
+		{A447BFAE-E087-463A-ABAF-2C6F01CB775E}.Debug|x86.Build.0 = Debug|x86
+		{A447BFAE-E087-463A-ABAF-2C6F01CB775E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A447BFAE-E087-463A-ABAF-2C6F01CB775E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A447BFAE-E087-463A-ABAF-2C6F01CB775E}.Release|x64.ActiveCfg = Release|x64
+		{A447BFAE-E087-463A-ABAF-2C6F01CB775E}.Release|x86.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -131,5 +166,8 @@ Global
 		{65E7541A-B1A7-4C90-8EDF-022CB9B800DE} = {4EAA2216-FEF3-4AD8-800E-751117636D6F}
 		{4B964EFB-099E-4C53-99CA-A779AA57477E} = {4EAA2216-FEF3-4AD8-800E-751117636D6F}
 		{5B73FBB9-BA20-4ED7-BA54-52C49EE37C00} = {4EAA2216-FEF3-4AD8-800E-751117636D6F}
+		{BD5BAB06-EF80-4A66-953E-826FD369044A} = {4EAA2216-FEF3-4AD8-800E-751117636D6F}
+		{8625A303-646D-4D87-BC14-29CD4D079CD9} = {BD5BAB06-EF80-4A66-953E-826FD369044A}
+		{A447BFAE-E087-463A-ABAF-2C6F01CB775E} = {BD5BAB06-EF80-4A66-953E-826FD369044A}
 	EndGlobalSection
 EndGlobal
