@@ -31,9 +31,9 @@ namespace Snoop
 
 			this.InitializeComponent();
 
-			this.CommandBindings.Add(new CommandBinding(AppChooser.InspectCommand, this.HandleInspectCommand, this.HandleCanInspectCommand));
+			this.CommandBindings.Add(new CommandBinding(AppChooser.InspectCommand, this.HandleInspectCommand, this.HandleCanInspectOrMagnifyCommand));
 			this.CommandBindings.Add(new CommandBinding(AppChooser.RefreshCommand, this.HandleRefreshCommand));
-			this.CommandBindings.Add(new CommandBinding(AppChooser.MagnifyCommand, this.HandleMagnifyCommand, this.HandleCanInspectCommand));
+			this.CommandBindings.Add(new CommandBinding(AppChooser.MagnifyCommand, this.HandleMagnifyCommand, this.HandleCanInspectOrMagnifyCommand));
 
 #if X86
 			this.snoopTextBlock.Text = "(32-bit)";
@@ -144,7 +144,7 @@ namespace Snoop
 			return false;
 		}
 
-		private void HandleCanInspectCommand(object sender, CanExecuteRoutedEventArgs e)
+		private void HandleCanInspectOrMagnifyCommand(object sender, CanExecuteRoutedEventArgs e)
 		{
 			if (this.windowsView.CurrentItem != null)
 				e.CanExecute = true;
@@ -168,6 +168,7 @@ namespace Snoop
 			WindowInfo.ClearCachedProcessInfo();
 			this.Refresh();
 		}
+
 		private void HandleRefreshTimer(object sender, EventArgs e)
 		{
 			if (AutoRefresh)

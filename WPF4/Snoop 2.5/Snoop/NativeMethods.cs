@@ -29,7 +29,6 @@ namespace Snoop
 				}
 
 				return windowList.ToArray();
-
 			}
 		}
 
@@ -49,10 +48,10 @@ namespace Snoop
 		}
 
 		private delegate bool EnumWindowsCallBackDelegate(IntPtr hwnd, IntPtr lParam);
-		[DllImport("user32.Dll")]
+		[DllImport("user32.dll")]
 		private static extern int EnumWindows(EnumWindowsCallBackDelegate callback, IntPtr lParam);
 
-		[DllImport("user32.Dll")]
+		[DllImport("user32.dll")]
 		private static extern int GetWindowThreadProcessId(IntPtr hwnd, out int processId);
 
 		private static bool EnumWindowsCallback(IntPtr hwnd, IntPtr lParam)

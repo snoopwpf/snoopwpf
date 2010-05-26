@@ -89,8 +89,8 @@ namespace Snoop
 
 			if (root != null)
 			{
-				SnoopUI snoops = new SnoopUI();
-				snoops.Inspect(root);
+				SnoopUI snoop = new SnoopUI();
+				snoop.Inspect(root);
 			}
 			else
 			{
