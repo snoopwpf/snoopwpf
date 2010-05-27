@@ -95,7 +95,7 @@ All other rights reserved.
 
 			<local:ObjectToStringConverter x:Key="niceNamer"/>
 
-			<DataTemplate x:Key="textBlockDataTemplate">
+			<DataTemplate x:Key="stylelessTextBlockDataTemplate">
 				<TextBlock Style="{x:Null}" Text="{Binding}"/>
 			</DataTemplate>
 		</ResourceDictionary>
@@ -115,18 +115,19 @@ All other rights reserved.
 
 		<!-- Filter Combo Box -->
 		<ComboBox
+			x:Name="filterComboBox"
 			IsEditable="True"
 			Text="{Binding Path=Filter, UpdateSourceTrigger=PropertyChanged}"
 			Margin="2,2,22,2"
 		>
 			<ComboBoxItem>
-				<TextBlock Style="{x:Null}" Text="Clear filter"/>
+				<TextBlock Style="{x:Null}" Text="Clear any filter applied to the tree view"/>
 			</ComboBoxItem>
 			<ComboBoxItem>
-				<TextBlock Style="{x:Null}" Text="Visuals with binding errors"/>
+				<TextBlock Style="{x:Null}" Text="Show only visuals with binding errors"/>
 			</ComboBoxItem>
 			<ComboBox.ToolTip>
-				<TextBlock Style="{x:Null}" Text="Filter tree view by name or type"/>
+				<TextBlock Style="{x:Null}" Text="Enter text in the combo box to filter the tree view by name or type"/>
 			</ComboBox.ToolTip>
 		</ComboBox>
 
@@ -142,7 +143,7 @@ All other rights reserved.
 		>
 			<Image Source="{StaticResource reloadDrawingImage}"/>
 			<Button.ToolTip>
-				<TextBlock Style="{x:Null}" Text="Refresh"/>
+				<TextBlock Style="{x:Null}" Text="Refresh the tree view"/>
 			</Button.ToolTip>
 		</Button>
 
@@ -223,10 +224,33 @@ All other rights reserved.
 			Grid.RowSpan="2"
 			Margin="2,2,2,0"
 		>
-			<TabItem Header="Properties" HeaderTemplate="{StaticResource textBlockDataTemplate}">
+			<TabItem>
+				<TabItem.Header>
+					<TextBlock Style="{x:Null}" Text="Properties">
+						<TextBlock.ToolTip>
+							<StackPanel>
+								<TextBlock Style="{x:Null}" Text="Properties View"/>
+								<TextBlock Style="{x:Null}" Text="Lists all the properties on currently selected object."/>
+								<TextBlock Style="{x:Null}" Text="You can even edit these properties or right-click and"/>
+								<TextBlock Style="{x:Null}" Text="then delve into them."/>
+							</StackPanel>
+						</TextBlock.ToolTip>
+					</TextBlock>
+				</TabItem.Header>
 				<local:PropertyInspector x:Name="PropertyGrid" RootTarget="{Binding Path=CurrentSelection.Target}"/>
 			</TabItem>
-			<TabItem Header="Events" HeaderTemplate="{StaticResource textBlockDataTemplate}">
+			<TabItem>
+				<TabItem.Header>
+					<TextBlock Style="{x:Null}" Text="Events">
+						<TextBlock.ToolTip>
+							<StackPanel>
+								<TextBlock Style="{x:Null}" Text="Events View"/>
+								<TextBlock Style="{x:Null}" Text="Lists all the all routed events in the application, so you"/>
+								<TextBlock Style="{x:Null}" Text="can see how they route, and where and/or whether they are handled."/>
+							</StackPanel>
+						</TextBlock.ToolTip>
+					</TextBlock>
+				</TabItem.Header>
 				<local:EventsView Scope="{Binding Root.MainVisual}"/>
 			</TabItem>
 		</TabControl>
@@ -249,30 +273,48 @@ All other rights reserved.
 			Margin="2,4,2,0"
 			Target="{Binding CurrentSelection.Target}"
 		/>
+
 		<!-- StatusBar -->
 		<StatusBar Grid.Row="3" Grid.ColumnSpan="4">
 			<StackPanel Orientation="Horizontal">
-				<TextBlock Text="Keyboard.FocusedElement:"/>
-				<TextBlock Margin="3,0,0,0">
-					<local:NoFocusHyperlink
-						Focusable="False"
-						Command="{x:Static local:SnoopUI.SelectFocusCommand}"
-						CommandParameter="{Binding CurrentFocus}"
-					>
-						<TextBlock Text="{Binding CurrentFocus, Converter={StaticResource niceNamer}}"/>
-					</local:NoFocusHyperlink>
-				</TextBlock>
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Text="Keyboard.FocusedElement:"/>
+					<TextBlock Margin="3,0,0,0">
+						<local:NoFocusHyperlink
+							Focusable="False"
+							Command="{x:Static local:SnoopUI.SelectFocusCommand}"
+							CommandParameter="{Binding CurrentFocus}"
+						>
+							<TextBlock Text="{Binding CurrentFocus, Converter={StaticResource niceNamer}}"/>
+						</local:NoFocusHyperlink>
+					</TextBlock>
+					<TextBlock Text="; "/>
+					<StackPanel.ToolTip>
+						<StackPanel>
+							<TextBlock Text="This is the object that has keyboard focus."/>
+							<TextBlock Text="Click the link to select this object."/>
+						</StackPanel>
+					</StackPanel.ToolTip>
+				</StackPanel>
 
-				<TextBlock Text="; Current FocusScope:"/>
-				<TextBlock Margin="3,0,0,0">
-					<local:NoFocusHyperlink
-						Focusable="False"
-						Command="{x:Static local:SnoopUI.SelectFocusScopeCommand}"
-						CommandParameter="{Binding CurrentFocusScope}"
-					>
-						<TextBlock Text="{Binding CurrentFocusScope, Converter={StaticResource niceNamer}}"/>
-					</local:NoFocusHyperlink>
-				</TextBlock>
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Text="Current FocusScope:"/>
+					<TextBlock Margin="3,0,0,0">
+						<local:NoFocusHyperlink
+							Focusable="False"
+							Command="{x:Static local:SnoopUI.SelectFocusScopeCommand}"
+							CommandParameter="{Binding CurrentFocusScope}"
+						>
+							<TextBlock Text="{Binding CurrentFocusScope, Converter={StaticResource niceNamer}}"/>
+						</local:NoFocusHyperlink>
+					</TextBlock>
+					<StackPanel.ToolTip>
+						<StackPanel>
+							<TextBlock Text="This is the object that is the root of the current focus scope."/>
+							<TextBlock Text="Click the link to select this object."/>
+						</StackPanel>
+					</StackPanel.ToolTip>
+				</StackPanel>
 			</StackPanel>
 		</StatusBar>
 	</Grid>
