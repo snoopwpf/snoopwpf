@@ -505,7 +505,7 @@ namespace Snoop
 				);
 				return;
 			}
-			else if (this.filter == "Visuals with binding errors")
+			else if (this.filter == "Show only visuals with binding errors")
 			{
 				this.FilterBindings(this.root);
 			}

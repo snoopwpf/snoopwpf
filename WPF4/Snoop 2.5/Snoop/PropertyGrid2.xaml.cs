@@ -159,7 +159,8 @@ namespace Snoop
 				if (headerClicked == this.lastHeaderClicked && this.lastDirection == ListSortDirection.Ascending)
 					direction = ListSortDirection.Descending;
 
-				switch ((string)headerClicked.Column.Header) {
+				switch (((TextBlock)headerClicked.Column.Header).Text)
+				{
 					case "Name":
 						this.Sort(PropertyGrid2.CompareNames, direction);
 						break;

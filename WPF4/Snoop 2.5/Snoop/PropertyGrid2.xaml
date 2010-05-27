@@ -92,10 +92,6 @@ All other rights reserved.
 					</TextBlock.ToolTip>
 				</TextBlock>
 			</DataTemplate>
-
-			<DataTemplate x:Key="textBlockDataTemplate">
-				<TextBlock Style="{x:Null}" Text="{Binding}"/>
-			</DataTemplate>
 		</ResourceDictionary>
 	</Grid.Resources>
 
@@ -103,12 +99,16 @@ All other rights reserved.
 		<RowDefinition Height="*"/>
 	</Grid.RowDefinitions>
 
-	<ListView MinHeight="0" MinWidth="0" x:Name="ListView" IsSynchronizedWithCurrentItem="True"
-						ItemsSource="{Binding ElementName=PropertyGrid, Path=Properties}"
-						HorizontalContentAlignment="Stretch"
-						SelectedItem="{Binding ElementName=PropertyGrid, Path=Selection, Mode=TwoWay}"
-						Grid.RowSpan="2"
-						>
+	<ListView
+		x:Name="ListView"
+		Grid.RowSpan="2"
+		MinHeight="0"
+		MinWidth="0"
+		HorizontalContentAlignment="Stretch"
+		ItemsSource="{Binding ElementName=PropertyGrid, Path=Properties}"
+		SelectedItem="{Binding ElementName=PropertyGrid, Path=Selection, Mode=TwoWay}"
+		IsSynchronizedWithCurrentItem="True"
+	>
 		<ListView.ItemContainerStyle>
 			<Style TargetType="{x:Type ListViewItem}">
 				<Setter Property="ContextMenu" Value="{StaticResource PropertyMenu}"/>
@@ -142,19 +142,27 @@ All other rights reserved.
 			</Style>
 		</ListView.ItemContainerStyle>
 		<ListView.View>
-			<GridView ColumnHeaderTemplate="{StaticResource textBlockDataTemplate}">
+			<GridView>
 				<GridViewColumn Width="25">
 					<GridViewColumn.CellTemplate>
 						<DataTemplate>
 							<CheckBox IsChecked="{Binding BreakOnChange}" Template="{StaticResource BreakpointTemplate}">
 								<CheckBox.ToolTip>
-									<TextBlock Style="{x:Null}" Text="Set a debug breakpoint"/>
+									<TextBlock Style="{x:Null}" Text="Click here to toggle a debug breakpoint on and off."/>
 								</CheckBox.ToolTip>
 							</CheckBox>
 						</DataTemplate>
 					</GridViewColumn.CellTemplate>
 				</GridViewColumn>
-				<GridViewColumn Header="Name" Width="200" >
+
+				<GridViewColumn Width="200">
+					<GridViewColumn.Header>
+						<TextBlock Style="{x:Null}" Text="Name">
+							<TextBlock.ToolTip>
+								<TextBlock Style="{x:Null}" Text="The name of the property"/>
+							</TextBlock.ToolTip>
+						</TextBlock>
+					</GridViewColumn.Header>
 					<GridViewColumn.CellTemplate>
 						<DataTemplate>
 							<TextBlock Style="{x:Null}" Text="{Binding DisplayName}" Height="15" MouseLeftButtonDown="HandleNameClick">
@@ -165,9 +173,28 @@ All other rights reserved.
 						</DataTemplate>
 					</GridViewColumn.CellTemplate>
 				</GridViewColumn>
-				<GridViewColumn Header="Value" Width="143" CellTemplateSelector="{StaticResource EditorSelector}"/>
 
-				<GridViewColumn Header="ValueSource" Width="143">
+				<GridViewColumn Width="143" CellTemplateSelector="{StaticResource EditorSelector}">
+					<GridViewColumn.Header>
+						<TextBlock Style="{x:Null}" Text="Value">
+							<TextBlock.ToolTip>
+								<TextBlock Style="{x:Null}" Text="The value of the property"/>
+							</TextBlock.ToolTip>
+						</TextBlock>
+					</GridViewColumn.Header>
+				</GridViewColumn>
+
+				<GridViewColumn Width="143">
+					<GridViewColumn.Header>
+						<TextBlock Style="{x:Null}" Text="Value Source">
+							<TextBlock.ToolTip>
+								<StackPanel>
+									<TextBlock Style="{x:Null}" Text="This is the value source of the property,"/>
+									<TextBlock Style="{x:Null}" Text="i.e. from where the property gets its value."/>
+								</StackPanel>
+							</TextBlock.ToolTip>
+						</TextBlock>
+					</GridViewColumn.Header>
 					<GridViewColumn.CellTemplate>
 						<DataTemplate>
 							<ContentControl x:Name="ContentHost" Content="{Binding}" ContentTemplate="{StaticResource ValueSourceTemplate}"/>
@@ -175,7 +202,18 @@ All other rights reserved.
 					</GridViewColumn.CellTemplate>
 				</GridViewColumn>
 
-				<GridViewColumn Header="Binding Errors" Width="200">
+				<GridViewColumn Width="200">
+					<GridViewColumn.Header>
+						<TextBlock Style="{x:Null}" Text="Binding Errors">
+							<TextBlock.ToolTip>
+								<StackPanel>
+									<TextBlock Style="{x:Null}" Text="This column gives additional info on any binding errors."/>
+									<TextBlock Style="{x:Null}" Text="Note: the row for any property with binding errors will"/>
+									<TextBlock Style="{x:Null}" Text="have a red background."/>
+								</StackPanel>
+							</TextBlock.ToolTip>
+						</TextBlock>
+					</GridViewColumn.Header>
 					<GridViewColumn.CellTemplate>
 						<DataTemplate>
 							<TextBlock Style="{x:Null}" Text="{Binding BindingError}" Height="15">
@@ -186,7 +224,6 @@ All other rights reserved.
 						</DataTemplate>
 					</GridViewColumn.CellTemplate>
 				</GridViewColumn>
-
 			</GridView>
 		</ListView.View>
 	</ListView>
