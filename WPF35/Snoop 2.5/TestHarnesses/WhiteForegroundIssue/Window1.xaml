@@ -9,6 +9,6 @@
 	TextElement.FontSize="48"
 >
 	<Grid>
-		<TextBlock Text="Hello World" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding DNE}"/>
+		<TextBlock Text="Hello World" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding}"/>
 	</Grid>
 </Window>
