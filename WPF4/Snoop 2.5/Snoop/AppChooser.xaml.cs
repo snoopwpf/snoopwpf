@@ -178,6 +178,10 @@ namespace Snoop
 		{
 			this.DragMove();
 		}
+		private void HandleMinimize(object sender, MouseButtonEventArgs e)
+		{
+			this.WindowState = System.Windows.WindowState.Minimized;
+		}
 		private void HandleClose(object sender, MouseButtonEventArgs e)
 		{
 			this.Close();

@@ -14,8 +14,6 @@ All other rights reserved.
 	x:Class="Snoop.AppChooser"
 	Icon="Snoop.ico"
 	Title="Snoop"
-	Background="{x:Null}"
-	Foreground="{x:Null}"
 	SizeToContent="Width"
 	Height="26"
 	ResizeMode="NoResize"
@@ -25,7 +23,7 @@ All other rights reserved.
 	WindowStyle="None"
 	Topmost="True"
 	DataContext="{Binding RelativeSource={RelativeSource Self}}"
-	Style="{DynamicResource windowStyle}"
+	Style="{DynamicResource windowStyle}" Background="{x:Null}" Foreground="{x:Null}"
 >
 	<Window.Resources>
 		<ResourceDictionary>
@@ -159,15 +157,22 @@ All other rights reserved.
 			<!-- closeButton Show/Hide Storyboards -->
 			<Storyboard x:Key="closeButtonShow">
 				<ThicknessAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="closeButton" Storyboard.TargetProperty="(FrameworkElement.Margin)">
-					<SplineThicknessKeyFrame KeyTime="00:00:00.3000000" Value="0,0,-13,0"/>
+					<SplineThicknessKeyFrame KeyTime="00:00:00.4000000" Value="0,0,-32,0" KeySpline="0,1,1,1"/>
+				</ThicknessAnimationUsingKeyFrames>
+				<ThicknessAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="minimizeButton" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+					<SplineThicknessKeyFrame KeyTime="00:00:00.4000000" Value="0,0,-16,0" KeySpline="0,1,1,1"/>
 				</ThicknessAnimationUsingKeyFrames>
 			</Storyboard>
 			<Storyboard x:Key="closeButtonHide">
 				<ThicknessAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="closeButton" Storyboard.TargetProperty="(FrameworkElement.Margin)">
-					<SplineThicknessKeyFrame KeyTime="00:00:01.0000000" Value="0,0,-13,0"/>
-					<SplineThicknessKeyFrame KeyTime="00:00:01.3000000" Value="0,0,4,0"/>
+					<SplineThicknessKeyFrame KeyTime="00:00:01.3000000" Value="0,0,4,0" KeySpline="0,1,1,1"/>
+				</ThicknessAnimationUsingKeyFrames>
+				<ThicknessAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="minimizeButton" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+					<SplineThicknessKeyFrame KeyTime="00:00:01.3000000" Value="0,0,22,0" KeySpline="0,1,1,1"/>
 				</ThicknessAnimationUsingKeyFrames>
 			</Storyboard>
+
+			<!-- windowStyle (that makes the app chooser look selected/activated) -->
 			<ControlTemplate x:Key="WindowTemplateKey" TargetType="{x:Type Window}">
 				<Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
 					<Grid>
@@ -187,7 +192,6 @@ All other rights reserved.
 					</MultiTrigger>
 				</ControlTemplate.Triggers>
 			</ControlTemplate>
-
 			<Style x:Key="windowStyle" TargetType="{x:Type Window}">
 				<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>
 				<Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
@@ -203,20 +207,30 @@ All other rights reserved.
 									<Grid>
 										<ContentPresenter/>
 										<Rectangle
-											x:Name="rectangle"
+											x:Name="borderHighlight"
 											Stroke="#FFB2B2B2"
-											Width="Auto"
-											Visibility="Collapsed"
-											Margin="0,0,14,1"
+											Margin="0,0,37,1"
 											RadiusX="2"
 											RadiusY="2"
+											Visibility="Collapsed"
+										/>
+										<Rectangle
+											x:Name="fillHighlight"
+											Fill="#39FFFFFF"
+											Width="147"
+											HorizontalAlignment="Left"
+											Margin="1,1,0,2"
+											RadiusX="1.5"
+											RadiusY="1.5"
+											Visibility="Collapsed"
 										/>
 									</Grid>
 								</AdornerDecorator>
 							</Border>
 							<ControlTemplate.Triggers>
 								<Trigger Property="IsKeyboardFocusWithin" Value="True">
-									<Setter Property="Visibility" TargetName="rectangle" Value="Visible"/>
+									<Setter Property="Visibility" TargetName="borderHighlight" Value="Visible"/>
+									<Setter Property="Visibility" TargetName="fillHighlight" Value="Visible"/>
 								</Trigger>
 								<Trigger Property="AllowsTransparency" Value="False"/>
 							</ControlTemplate.Triggers>
@@ -241,7 +255,7 @@ All other rights reserved.
 		</EventTrigger>
 	</Window.Triggers>
 
-	<Grid Margin="0,0,13,0" ClipToBounds="False" Width="Auto">
+	<Grid x:Name="grid">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
@@ -251,6 +265,7 @@ All other rights reserved.
 			<ColumnDefinition Width="Auto"/>
 			<ColumnDefinition Width="Auto"/>
 			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="36"/>
 		</Grid.ColumnDefinitions>
 
 		<!-- semi-transparent black background (is this needed?) -->
@@ -653,6 +668,34 @@ All other rights reserved.
 				</Viewbox>
 			</Button>
 		</StackPanel>
+		<Grid
+			x:Name="minimizeButton"
+			Grid.Column="4"
+			Width="18"
+			Height="18"
+			HorizontalAlignment="Right"
+			Margin="0,0,22,0"
+			Panel.ZIndex="-5"
+			MouseLeftButtonDown="HandleMinimize"
+			ToolTip="Minimize"
+		>
+			<Rectangle Margin="0,-4">
+				<Rectangle.Fill>
+					<SolidColorBrush Color="#01FFFFFF"/>
+				</Rectangle.Fill>
+			</Rectangle>
+			<Ellipse Fill="#FF5B0000"/>
+			<Path
+				Stretch="Fill"
+				Stroke="#FFFFFFFF"
+				StrokeThickness="3"
+				Margin="3"
+				Data="M0,0 L1,0"
+				Canvas.Left="4"
+				Canvas.Top="4"
+				SnapsToDevicePixels="True"
+			/>
+		</Grid>
 
 		<!-- closeButton -->
 		<Grid
@@ -666,6 +709,11 @@ All other rights reserved.
 			MouseLeftButtonDown="HandleClose"
 			ToolTip="Close"
 		>
+			<Rectangle Margin="0,-4,-4,-4">
+				<Rectangle.Fill>
+					<SolidColorBrush Color="#01FFFFFF"/>
+				</Rectangle.Fill>
+			</Rectangle>
 			<Ellipse Fill="#FF5B0000"/>
 			<Path
 				Stretch="Fill"
