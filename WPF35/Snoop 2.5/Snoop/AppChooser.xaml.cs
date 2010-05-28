@@ -31,8 +31,8 @@ namespace Snoop
 
 			this.InitializeComponent();
 
-			this.CommandBindings.Add(new CommandBinding(AppChooser.InspectCommand, this.HandleInspectCommand, this.HandleCanInspectOrMagnifyCommand));
 			this.CommandBindings.Add(new CommandBinding(AppChooser.RefreshCommand, this.HandleRefreshCommand));
+			this.CommandBindings.Add(new CommandBinding(AppChooser.InspectCommand, this.HandleInspectCommand, this.HandleCanInspectOrMagnifyCommand));
 			this.CommandBindings.Add(new CommandBinding(AppChooser.MagnifyCommand, this.HandleMagnifyCommand, this.HandleCanInspectOrMagnifyCommand));
 
 #if X86
@@ -43,26 +43,15 @@ namespace Snoop
 #endif
 
 			AutoRefresh = false;
-
-			Dispatcher.BeginInvoke
-			(
-				System.Windows.Threading.DispatcherPriority.Loaded,
-				(DispatcherOperationCallback)delegate
-				{
-					this.Refresh();
-
-					DispatcherTimer timer =
-						new DispatcherTimer
-						(
-							TimeSpan.FromSeconds(20),
-							DispatcherPriority.Background,
-							this.HandleRefreshTimer,
-							Dispatcher.CurrentDispatcher
-						);
-					return null;
-				},
-				null
-			);
+			DispatcherTimer timer =
+				new DispatcherTimer
+				(
+					TimeSpan.FromSeconds(20),
+					DispatcherPriority.Background,
+					this.HandleRefreshTimer,
+					Dispatcher.CurrentDispatcher
+				);
+			this.Refresh();
 		}
 
 
@@ -84,24 +73,33 @@ namespace Snoop
 		{
 			this.windows.Clear();
 
-			try
-			{
-				Mouse.OverrideCursor = Cursors.Wait;
-
-				foreach (IntPtr windowHandle in NativeMethods.ToplevelWindows)
+			Dispatcher.BeginInvoke
+			(
+				System.Windows.Threading.DispatcherPriority.Loaded,
+				(DispatcherOperationCallback)delegate
 				{
-					WindowInfo window = new WindowInfo(windowHandle, this);
-					if (window.IsValidProcess && !this.HasProcess(window.OwningProcess))
-						this.windows.Add(window);
-				}
+					try
+					{
+						Mouse.OverrideCursor = Cursors.Wait;
 
-				if (this.windows.Count > 0)
-					this.windowsView.MoveCurrentTo(this.windows[0]);
-			}
-			finally
-			{
-				Mouse.OverrideCursor = null;
-			}
+						foreach (IntPtr windowHandle in NativeMethods.ToplevelWindows)
+						{
+							WindowInfo window = new WindowInfo(windowHandle, this);
+							if (window.IsValidProcess && !this.HasProcess(window.OwningProcess))
+								this.windows.Add(window);
+						}
+
+						if (this.windows.Count > 0)
+							this.windowsView.MoveCurrentTo(this.windows[0]);
+					}
+					finally
+					{
+						Mouse.OverrideCursor = null;
+					}
+					return null;
+				},
+				null
+			);
 		}
 
 
