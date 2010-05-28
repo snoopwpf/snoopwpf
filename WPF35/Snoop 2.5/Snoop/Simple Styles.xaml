@@ -597,7 +597,7 @@ All other rights reserved.
 				</Rectangle.Fill>
 			</Rectangle>
 			<Border Margin="1,1,1,0" Background="{DynamicResource ShineBrush1}" CornerRadius="3,0,0,3"/>
-			<Path Fill="{x:Null}" Stretch="Fill" Stroke="{DynamicResource DeepBlueColorBrush}" StrokeDashCap="Flat" StrokeEndLineCap="Round" StrokeLineJoin="Round" StrokeMiterLimit="20" StrokeStartLineCap="Round" StrokeThickness="2" HorizontalAlignment="Center" Margin="0,0,0,0" x:Name="path" VerticalAlignment="Center" Grid.Column="1" Data="M276.75,15.25 L282.25,21 287.25,15.5" Width="12" Height="8" Grid.RowSpan="2"/>
+			<Path Fill="{x:Null}" Stretch="Fill" Stroke="{DynamicResource DeepBlueColorBrush}" StrokeDashCap="Flat" StrokeEndLineCap="Round" StrokeLineJoin="Round" StrokeMiterLimit="20" StrokeStartLineCap="Round" StrokeThickness="2" HorizontalAlignment="Center" Margin="0,0,0,0" x:Name="path" VerticalAlignment="Center" Grid.Column="1" Data="M276.75,15.25 L282.25,21 287.25,15.25" Width="12" Height="8" Grid.RowSpan="2"/>
 		</Grid>
 		<ControlTemplate.Triggers>
 			<EventTrigger RoutedEvent="FrameworkElement.Loaded"/>

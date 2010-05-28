@@ -211,17 +211,32 @@ namespace Snoop
 					if (process == null)
 						return false;
 
+					// see if we have cached the process validity previously, if so, return it.
 					if (WindowInfo.processIDToValidityMap.TryGetValue(process.Id, out isValid))
 						return isValid;
 
+					// else determine the process validity and cache it.
 					if (process.Id == Process.GetCurrentProcess().Id)
+					{
 						isValid = false;
+
+						// the above line stops the user from snooping on snoop, since we assume that ... that isn't their goal.
+						// to get around this, the user can bring up two snoops and use the second snoop ... to snoop the first snoop.
+						// well, that let's you snoop the app chooser. in order to snoop the main snoop ui, you have to bring up three snoops.
+						// in this case, bring up two snoops, as before, and then bring up the third snoop, using it to snoop the first snoop.
+						// since the second snoop inserted itself into the first snoop's process, you can now spy the main snoop ui from the
+						// second snoop (bring up another main snoop ui to do so). pretty tricky, huh! and useful!
+					}
 					else
 					{
+						// a process is valid to snoop if it contains a dependency on PresentationFramework.dll
 						foreach (ProcessModule module in process.Modules)
 						{
-							if (module.ModuleName.Contains("PresentationFramework.dll") ||
-								module.ModuleName.Contains("PresentationFramework.ni.dll"))
+							if
+							(
+								module.ModuleName.Contains("PresentationFramework.dll") ||
+								module.ModuleName.Contains("PresentationFramework.ni.dll")
+							)
 							{
 								isValid = true;
 								break;

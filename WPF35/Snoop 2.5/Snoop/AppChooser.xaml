@@ -22,8 +22,10 @@ All other rights reserved.
 	AllowsTransparency="True"
 	WindowStyle="None"
 	Topmost="True"
+	Background="{x:Null}"
+	Foreground="{x:Null}"
+	Style="{DynamicResource windowStyle}"
 	DataContext="{Binding RelativeSource={RelativeSource Self}}"
-	Style="{DynamicResource windowStyle}" Background="{x:Null}" Foreground="{x:Null}"
 >
 	<Window.Resources>
 		<ResourceDictionary>
@@ -243,6 +245,19 @@ All other rights reserved.
 					</Trigger>
 				</Style.Triggers>
 			</Style>
+
+			<!-- simpleComboBoxFocusStyle -->
+			<Style x:Key="simpleComboBoxFocusStyle" TargetType="{x:Type Control}">
+				<Setter Property="Template">
+					<Setter.Value>
+						<ControlTemplate TargetType="{x:Type Control}">
+							<Border>
+								<Rectangle Margin="2" Stroke="#AFFFFFFF" StrokeThickness="1" StrokeDashArray="1 2"/>
+							</Border>
+						</ControlTemplate>
+					</Setter.Value>
+				</Setter>
+			</Style>
 		</ResourceDictionary>
 	</Window.Resources>
 
@@ -292,11 +307,10 @@ All other rights reserved.
 		<StackPanel Orientation="Horizontal">
 			<TextBlock
 				Text="SNOOP"
-				Margin="4,0,0,0"
+				Margin="4,0,0,4"
 				VerticalAlignment="Center"
 				Width="Auto"
 				Height="Auto"
-				FontFamily="VDub"
 				FontSize="18"
 				FontWeight="Normal"
 				Foreground="#B2FFFFFF"
@@ -310,7 +324,6 @@ All other rights reserved.
 				VerticalAlignment="Center"
 				Width="Auto"
 				Height="Auto"
-				FontFamily="VDub"
 				FontSize="10"
 				FontWeight="Normal"
 				Foreground="#B2FFFFFF"
@@ -324,7 +337,6 @@ All other rights reserved.
 				VerticalAlignment="Center"
 				Width="Auto"
 				Height="Auto"
-				FontFamily="VDub"
 				FontSize="10"
 				FontWeight="Normal"
 				Foreground="#B2FFFFFF"
@@ -348,6 +360,8 @@ All other rights reserved.
 			BorderThickness="0,0,0,0"
 			ItemsSource="{Binding Windows}"
 			IsSynchronizedWithCurrentItem="True"
+			FontSize="10.667"
+			FocusVisualStyle="{DynamicResource simpleComboBoxFocusStyle}"
 		/>
 
 		<!-- refresh button -->
@@ -668,6 +682,8 @@ All other rights reserved.
 				</Viewbox>
 			</Button>
 		</StackPanel>
+
+		<!-- minimizeButton -->
 		<Grid
 			x:Name="minimizeButton"
 			Grid.Column="4"
