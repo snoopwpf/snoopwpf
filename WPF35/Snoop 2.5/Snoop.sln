@@ -28,9 +28,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFClock", "TestHarnesses\W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DepthReducer", "TestHarnesses\DepthReducer\DepthReducer.csproj", "{E8DD5B56-4415-4E09-AC70-5581848CE65A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicTestHarness", "TestHarnesses\BasicTestHarness\BasicTestHarness.csproj", "{2EFFF130-C3B4-4271-8C0F-67F92CF46376}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 11
+		SccNumberOfProjects = 12
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs09.codeplex.com/
 		SccLocalPath0 = .
@@ -70,6 +72,10 @@ Global
 		SccProjectTopLevelParentUniqueName10 = Snoop.sln
 		SccProjectName10 = TestHarnesses/DepthReducer
 		SccLocalPath10 = TestHarnesses\\DepthReducer
+		SccProjectUniqueName11 = TestHarnesses\\BasicTestHarness\\BasicTestHarness.csproj
+		SccProjectTopLevelParentUniqueName11 = Snoop.sln
+		SccProjectName11 = TestHarnesses/BasicTestHarness
+		SccLocalPath11 = TestHarnesses\\BasicTestHarness
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -174,6 +180,16 @@ Global
 		{E8DD5B56-4415-4E09-AC70-5581848CE65A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E8DD5B56-4415-4E09-AC70-5581848CE65A}.Release|x64.ActiveCfg = Release|x64
 		{E8DD5B56-4415-4E09-AC70-5581848CE65A}.Release|x86.ActiveCfg = Release|x86
+		{2EFFF130-C3B4-4271-8C0F-67F92CF46376}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EFFF130-C3B4-4271-8C0F-67F92CF46376}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EFFF130-C3B4-4271-8C0F-67F92CF46376}.Debug|x64.ActiveCfg = Debug|x64
+		{2EFFF130-C3B4-4271-8C0F-67F92CF46376}.Debug|x64.Build.0 = Debug|x64
+		{2EFFF130-C3B4-4271-8C0F-67F92CF46376}.Debug|x86.ActiveCfg = Debug|x86
+		{2EFFF130-C3B4-4271-8C0F-67F92CF46376}.Debug|x86.Build.0 = Debug|x86
+		{2EFFF130-C3B4-4271-8C0F-67F92CF46376}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EFFF130-C3B4-4271-8C0F-67F92CF46376}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EFFF130-C3B4-4271-8C0F-67F92CF46376}.Release|x64.ActiveCfg = Release|x64
+		{2EFFF130-C3B4-4271-8C0F-67F92CF46376}.Release|x86.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -184,6 +200,7 @@ Global
 		{232FA543-BF42-4C4F-8EFC-4A99EE374AED} = {BB8D54DB-52E9-4757-BDC5-760C6426FCDC}
 		{6EBA5155-C683-4AF0-9D83-136653BA93D4} = {BB8D54DB-52E9-4757-BDC5-760C6426FCDC}
 		{E8DD5B56-4415-4E09-AC70-5581848CE65A} = {BB8D54DB-52E9-4757-BDC5-760C6426FCDC}
+		{2EFFF130-C3B4-4271-8C0F-67F92CF46376} = {BB8D54DB-52E9-4757-BDC5-760C6426FCDC}
 		{8625A303-646D-4D87-BC14-29CD4D079CD9} = {6EBA5155-C683-4AF0-9D83-136653BA93D4}
 		{2EBE7CF7-6A70-4770-9F65-4937F36C265F} = {6EBA5155-C683-4AF0-9D83-136653BA93D4}
 	EndGlobalSection
