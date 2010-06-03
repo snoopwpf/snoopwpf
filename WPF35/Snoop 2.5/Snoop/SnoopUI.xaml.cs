@@ -59,7 +59,10 @@ namespace Snoop
 			this.CommandBindings.Add(new CommandBinding(SnoopUI.IntrospectCommand, this.HandleIntrospection));
 			this.CommandBindings.Add(new CommandBinding(SnoopUI.RefreshCommand, this.HandleRefresh));
 			this.CommandBindings.Add(new CommandBinding(SnoopUI.HelpCommand, this.HandleHelp));
+
+			// cplotts todo: how does this inspect command work? seems tied into the events view.
 			this.CommandBindings.Add(new CommandBinding(SnoopUI.InspectCommand, this.HandleInspect));
+
 			this.CommandBindings.Add(new CommandBinding(SnoopUI.SelectFocusCommand, this.HandleSelectFocus));
 			this.CommandBindings.Add(new CommandBinding(SnoopUI.SelectFocusScopeCommand, this.HandleSelectFocusScope));
 
@@ -130,7 +133,66 @@ namespace Snoop
 
 		#region Public Properties
 		/// <summary>
-		/// Pluggable interface for additional VisualTree filters. 
+		/// Root element of the visual tree
+		/// </summary>
+		public VisualTreeItem Root
+		{
+			get { return this.rootVisualTreeItem; }
+		}
+		/// <summary>
+		/// rootVisualTreeItem is the VisualTreeItem for the root you are inspecting.
+		/// </summary>
+		private VisualTreeItem rootVisualTreeItem;
+		/// <summary>
+		/// root is the object you are inspecting.
+		/// </summary>
+		private object root;
+
+
+		/// <summary>
+		/// Currently selected item in the tree view.
+		/// </summary>
+		public VisualTreeItem CurrentSelection
+		{
+			get { return this.currentSelection; }
+			set
+			{
+				if (this.currentSelection != value)
+				{
+					if (this.currentSelection != null)
+						this.currentSelection.IsSelected = false;
+
+					this.currentSelection = value;
+
+					if (this.currentSelection != null)
+						this.currentSelection.IsSelected = true;
+
+					this.OnPropertyChanged("CurrentSelection");
+					this.OnPropertyChanged("CurrentFocusScope");
+
+					if (this.filtered.Count > 1 || this.filtered.Count == 1 && this.filtered[0] != this.rootVisualTreeItem)
+					{
+						// Check whether the selected item is filtered out by the filter,
+						// in which case reset the filter.
+						VisualTreeItem tmp = this.currentSelection;
+						while (tmp != null && !this.filtered.Contains(tmp))
+						{
+							tmp = tmp.Parent;
+						}
+						if (tmp == null)
+						{
+							// The selected item is not a descendant of any root.
+							RefreshCommand.Execute(null, this);
+						}
+					}
+				}
+			}
+		}
+		private VisualTreeItem currentSelection = null;
+
+
+		/// <summary>
+		/// Pluggable interface for additional VisualTree filters.
 		/// Used to enable searching for Sparkle automation IDs.
 		/// </summary>
 		public Predicate<VisualTreeItem> AdditionalFilter
@@ -139,14 +201,6 @@ namespace Snoop
 			set { this.externalFilter = value; }
 		}
 		private Predicate<VisualTreeItem> externalFilter;
-
-		/// <summary>
-		/// Root element of the visual tree
-		/// </summary>
-		public VisualTreeItem Root
-		{
-			get { return this.root; }
-		}
 
 		public ObservableCollection<VisualTreeItem> Filtered
 		{
@@ -173,46 +227,6 @@ namespace Snoop
 			{
 				this.eventFilter = value;
 				EventsListener.Filter = value;
-			}
-		}
-
-		/// <summary>
-		/// Currently selected item in the tree view.
-		/// </summary>
-		public VisualTreeItem CurrentSelection
-		{
-			get { return this.currentSelection; }
-			set
-			{
-				if (this.currentSelection != value)
-				{
-					if (this.currentSelection != null)
-						this.currentSelection.IsSelected = false;
-
-					this.currentSelection = value;
-
-					if (this.currentSelection != null)
-						this.currentSelection.IsSelected = true;
-
-					this.OnPropertyChanged("CurrentSelection");
-					this.OnPropertyChanged("CurrentFocusScope");
-
-					if (this.filtered.Count > 1 || this.filtered.Count == 1 && this.filtered[0] != this.root)
-					{
-						// Check whether the selected item is filtered out by the filter,
-						// in which case reset the filter.
-						VisualTreeItem tmp = this.currentSelection;
-						while (tmp != null && !this.filtered.Contains(tmp))
-						{
-							tmp = tmp.Parent;
-						}
-						if (tmp == null)
-						{
-							// The selected item is not a descendant of any root.
-							RefreshCommand.Execute(null, this);
-						}
-					}
-				}
 			}
 		}
 
@@ -250,11 +264,12 @@ namespace Snoop
 		#endregion
 
 		#region Public Methods
-		public void Inspect(object target)
+		public void Inspect(object root)
 		{
-			this.rootObject = target;
-			this.Load(target);
-			this.CurrentSelection = this.root;
+			this.root = root;
+
+			this.Load(root);
+			this.CurrentSelection = this.rootVisualTreeItem;
 
 			this.OnPropertyChanged("Root");
 
@@ -390,10 +405,11 @@ namespace Snoop
 
 				this.filtered.Clear();
 
-				this.root = VisualTreeItem.Construct(this.rootObject, null);
+				this.rootVisualTreeItem = VisualTreeItem.Construct(this.root, null);
 
-				this.root.Reload();
-				this.root.UpdateVisualChildrenCount();
+				// cplotts todo: is this reload really necessary?
+				this.rootVisualTreeItem.Reload();
+				this.rootVisualTreeItem.UpdateVisualChildrenCount();
 
 				if (currentTarget != null)
 				{
@@ -425,6 +441,10 @@ namespace Snoop
 			}
 			else if (e.Parameter != null)
 			{
+				// cplotts todo:
+				// if i click on the event, versus the visual it is routing through (in the events view),
+				// then i get here, and the property grid seems stuck forever on it.
+				// hmmm. does it make sense to delete this else statment?
 				this.PropertyGrid.RootTarget = e.Parameter;
 			}
 		}
@@ -458,7 +478,7 @@ namespace Snoop
 		{
 			this.OnPropertyChanged("CurrentFocus");
 
-		  ModifierKeys currentModifiers = InputManager.Current.PrimaryKeyboardDevice.Modifiers;
+			ModifierKeys currentModifiers = InputManager.Current.PrimaryKeyboardDevice.Modifiers;
 			if (!((currentModifiers & ModifierKeys.Control) != 0 && (currentModifiers & ModifierKeys.Shift) != 0))
 				return;
 
@@ -507,15 +527,15 @@ namespace Snoop
 			}
 			else if (this.filter == "Show only visuals with binding errors")
 			{
-				this.FilterBindings(this.root);
+				this.FilterBindings(this.rootVisualTreeItem);
 			}
 			else if (this.filter.Length == 0)
 			{
-				this.filtered.Add(this.root);
+				this.filtered.Add(this.rootVisualTreeItem);
 			}
 			else
 			{
-				this.FilterTree(this.root, this.filter.ToLower());
+				this.FilterTree(this.rootVisualTreeItem, this.filter.ToLower());
 			}
 		}
 
@@ -526,8 +546,8 @@ namespace Snoop
 		/// </summary>
 		private VisualTreeItem FindItem(object target)
 		{
-			VisualTreeItem node = this.root.FindNode(target);
-			Visual rootVisual = this.root.MainVisual;
+			VisualTreeItem node = this.rootVisualTreeItem.FindNode(target);
+			Visual rootVisual = this.rootVisualTreeItem.MainVisual;
 			if (node == null)
 			{
 				Visual visual = target as Visual;
@@ -548,13 +568,13 @@ namespace Snoop
 							return null; // Something went wrong. At least we will not crash with null ref here.
 						}
 
-						this.root = new VisualItem(presentationSource.RootVisual, null);
+						this.rootVisualTreeItem = new VisualItem(presentationSource.RootVisual, null);
 					}
 				}
 
-				this.root.Reload();
-				this.root.UpdateVisualChildrenCount();
-				node = this.root.FindNode(target);
+				this.rootVisualTreeItem.Reload();
+				this.rootVisualTreeItem.UpdateVisualChildrenCount();
+				node = this.rootVisualTreeItem.FindNode(target);
 
 				this.Filter = this.filter;
 			}
@@ -590,29 +610,27 @@ namespace Snoop
 			}
 		}
 
-		private void Load(object rootTarget)
+		private void Load(object root)
 		{
 			this.filtered.Clear();
 
-			this.root = VisualTreeItem.Construct(rootTarget, null);
-			this.root.Reload();
+			this.rootVisualTreeItem = VisualTreeItem.Construct(root, null);
 
-			this.root.UpdateVisualChildrenCount();
+			// cplotts todo: is this reload really necessary?
+			this.rootVisualTreeItem.Reload();
+			this.rootVisualTreeItem.UpdateVisualChildrenCount();
+
 			this.Filter = this.filter;
 		}
 		#endregion
 
 		#region Private Fields
-		private VisualTreeItem root;
-		private object rootObject;
 		private ObservableCollection<VisualTreeItem> filtered = new ObservableCollection<VisualTreeItem>();
 
 		private string filter = string.Empty;
-
 		private string propertyFilter = string.Empty;
 		private string eventFilter = string.Empty;
 
-		private VisualTreeItem currentSelection = null;
 		private DelayedCall filterCall;
 
 		private VisualTreeItem m_reducedDepthRoot;

@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Snoop.VisualTreeItem">
+    <Position X="5" Y="0.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>gAAAEQAQQAAAkAZUIAAEQGAAgBIUAAAgSAAAIIACAIE=</HashCode>
+      <FileName>VisualTreeItem.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Snoop.ResourceContainerItem">
+    <Position X="3" Y="9.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>ResourceContainerItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Snoop.ResourceDictionaryItem">
+    <Position X="6.75" Y="9.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAEAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>ResourceDictionaryItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Snoop.ResourceItem">
+    <Position X="9" Y="9.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ResourceDictionaryItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Snoop.ApplicationTreeItem">
+    <Position X="1.75" Y="11.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAAAQAAAAAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>ApplicationTreeItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Snoop.VisualItem">
+    <Position X="4" Y="11.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>gAAAEAAAQAAAAAIQAQAAAAAAAAAAAAAACAAAAICCAAA=</HashCode>
+      <FileName>VisualItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
