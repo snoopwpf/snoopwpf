@@ -7,25 +7,33 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
 
-namespace Snoop {
-	public class ResourceDictionaryItem: VisualTreeItem {
-
-		private ResourceDictionary dictionary;
-
-		public ResourceDictionaryItem(ResourceDictionary dictionary, VisualTreeItem parent): base(dictionary, parent) {
+namespace Snoop
+{
+	public class ResourceDictionaryItem : VisualTreeItem
+	{
+		public ResourceDictionaryItem(ResourceDictionary dictionary, VisualTreeItem parent): base(dictionary, parent)
+		{
 			this.dictionary = dictionary;
 		}
 
-		protected override void Reload(List<VisualTreeItem> toBeRemoved) {
+		public override string ToString()
+		{
+			return this.dictionary.Count + " Resources";
+		}
+
+		protected override void Reload(List<VisualTreeItem> toBeRemoved)
+		{
 			base.Reload(toBeRemoved);
 
-			foreach (object key in this.dictionary.Keys) {
-
+			foreach (object key in this.dictionary.Keys)
+			{
 				object target = this.dictionary[key];
 
 				bool foundItem = false;
-				foreach (VisualTreeItem item in toBeRemoved) {
-					if (item.Target == target) {
+				foreach (VisualTreeItem item in toBeRemoved)
+				{
+					if (item.Target == target)
+					{
 						toBeRemoved.Remove(item);
 						item.Reload();
 						foundItem = true;
@@ -38,21 +46,21 @@ namespace Snoop {
 			}
 		}
 
-		public override string ToString() {
-			return this.dictionary.Count + " Resources";
-		}
+		private ResourceDictionary dictionary;
 	}
 
-	public class ResourceItem : VisualTreeItem {
-
-		private object key;
-
-		public ResourceItem(object target, object key, VisualTreeItem parent): base(target, parent) {
+	public class ResourceItem : VisualTreeItem
+	{
+		public ResourceItem(object target, object key, VisualTreeItem parent): base(target, parent)
+		{
 			this.key = key;
 		}
 
-		public override string ToString() {
+		public override string ToString()
+		{
 			return this.key.ToString() + " (" + this.Target.GetType().Name + ")";
 		}
+
+		private object key;
 	}
 }
