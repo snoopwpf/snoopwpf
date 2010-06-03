@@ -26,9 +26,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "win32clock", "TestHarnesses
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfClock", "TestHarnesses\Win32ToWPFInterop\WPFClock\WpfClock.csproj", "{A447BFAE-E087-463A-ABAF-2C6F01CB775E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DepthReducer", "TestHarnesses\DepthReducer\DepthReducer.csproj", "{AB81D171-A776-42F4-83C5-20ADB4927FA2}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 10
+		SccNumberOfProjects = 11
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs09.codeplex.com/
 		SccLocalPath0 = .
@@ -64,6 +66,10 @@ Global
 		SccProjectTopLevelParentUniqueName9 = Snoop.sln
 		SccProjectName9 = TestHarnesses/Win32ToWPFInterop/WPFClock
 		SccLocalPath9 = TestHarnesses\\Win32ToWPFInterop\\WPFClock
+		SccProjectUniqueName10 = TestHarnesses\\DepthReducer\\DepthReducer.csproj
+		SccProjectTopLevelParentUniqueName10 = Snoop.sln
+		SccProjectName10 = TestHarnesses/DepthReducer
+		SccLocalPath10 = TestHarnesses\\DepthReducer
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -158,6 +164,16 @@ Global
 		{A447BFAE-E087-463A-ABAF-2C6F01CB775E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A447BFAE-E087-463A-ABAF-2C6F01CB775E}.Release|x64.ActiveCfg = Release|x64
 		{A447BFAE-E087-463A-ABAF-2C6F01CB775E}.Release|x86.ActiveCfg = Release|x86
+		{AB81D171-A776-42F4-83C5-20ADB4927FA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB81D171-A776-42F4-83C5-20ADB4927FA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB81D171-A776-42F4-83C5-20ADB4927FA2}.Debug|x64.ActiveCfg = Debug|x64
+		{AB81D171-A776-42F4-83C5-20ADB4927FA2}.Debug|x64.Build.0 = Debug|x64
+		{AB81D171-A776-42F4-83C5-20ADB4927FA2}.Debug|x86.ActiveCfg = Debug|x86
+		{AB81D171-A776-42F4-83C5-20ADB4927FA2}.Debug|x86.Build.0 = Debug|x86
+		{AB81D171-A776-42F4-83C5-20ADB4927FA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB81D171-A776-42F4-83C5-20ADB4927FA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB81D171-A776-42F4-83C5-20ADB4927FA2}.Release|x64.ActiveCfg = Release|x64
+		{AB81D171-A776-42F4-83C5-20ADB4927FA2}.Release|x86.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -167,6 +183,7 @@ Global
 		{4B964EFB-099E-4C53-99CA-A779AA57477E} = {4EAA2216-FEF3-4AD8-800E-751117636D6F}
 		{5B73FBB9-BA20-4ED7-BA54-52C49EE37C00} = {4EAA2216-FEF3-4AD8-800E-751117636D6F}
 		{BD5BAB06-EF80-4A66-953E-826FD369044A} = {4EAA2216-FEF3-4AD8-800E-751117636D6F}
+		{AB81D171-A776-42F4-83C5-20ADB4927FA2} = {4EAA2216-FEF3-4AD8-800E-751117636D6F}
 		{8625A303-646D-4D87-BC14-29CD4D079CD9} = {BD5BAB06-EF80-4A66-953E-826FD369044A}
 		{A447BFAE-E087-463A-ABAF-2C6F01CB775E} = {BD5BAB06-EF80-4A66-953E-826FD369044A}
 	EndGlobalSection
