@@ -26,9 +26,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "win32clock", "TestHarnesses
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFClock", "TestHarnesses\Win32ToWPFInterop\WPFClock\WPFClock.csproj", "{2EBE7CF7-6A70-4770-9F65-4937F36C265F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DepthReducer", "TestHarnesses\DepthReducer\DepthReducer.csproj", "{E8DD5B56-4415-4E09-AC70-5581848CE65A}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 10
+		SccNumberOfProjects = 11
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs09.codeplex.com/
 		SccLocalPath0 = .
@@ -64,6 +66,10 @@ Global
 		SccProjectTopLevelParentUniqueName9 = Snoop.sln
 		SccProjectName9 = TestHarnesses/Win32ToWPFInterop/WPFClock
 		SccLocalPath9 = TestHarnesses\\Win32ToWPFInterop\\WPFClock
+		SccProjectUniqueName10 = TestHarnesses\\DepthReducer\\DepthReducer.csproj
+		SccProjectTopLevelParentUniqueName10 = Snoop.sln
+		SccProjectName10 = TestHarnesses/DepthReducer
+		SccLocalPath10 = TestHarnesses\\DepthReducer
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -158,6 +164,16 @@ Global
 		{2EBE7CF7-6A70-4770-9F65-4937F36C265F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2EBE7CF7-6A70-4770-9F65-4937F36C265F}.Release|x64.ActiveCfg = Release|x64
 		{2EBE7CF7-6A70-4770-9F65-4937F36C265F}.Release|x86.ActiveCfg = Release|x86
+		{E8DD5B56-4415-4E09-AC70-5581848CE65A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8DD5B56-4415-4E09-AC70-5581848CE65A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8DD5B56-4415-4E09-AC70-5581848CE65A}.Debug|x64.ActiveCfg = Debug|x64
+		{E8DD5B56-4415-4E09-AC70-5581848CE65A}.Debug|x64.Build.0 = Debug|x64
+		{E8DD5B56-4415-4E09-AC70-5581848CE65A}.Debug|x86.ActiveCfg = Debug|x86
+		{E8DD5B56-4415-4E09-AC70-5581848CE65A}.Debug|x86.Build.0 = Debug|x86
+		{E8DD5B56-4415-4E09-AC70-5581848CE65A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8DD5B56-4415-4E09-AC70-5581848CE65A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8DD5B56-4415-4E09-AC70-5581848CE65A}.Release|x64.ActiveCfg = Release|x64
+		{E8DD5B56-4415-4E09-AC70-5581848CE65A}.Release|x86.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -167,6 +183,7 @@ Global
 		{23C695A9-F79F-454A-9A00-2897DBAF2933} = {BB8D54DB-52E9-4757-BDC5-760C6426FCDC}
 		{232FA543-BF42-4C4F-8EFC-4A99EE374AED} = {BB8D54DB-52E9-4757-BDC5-760C6426FCDC}
 		{6EBA5155-C683-4AF0-9D83-136653BA93D4} = {BB8D54DB-52E9-4757-BDC5-760C6426FCDC}
+		{E8DD5B56-4415-4E09-AC70-5581848CE65A} = {BB8D54DB-52E9-4757-BDC5-760C6426FCDC}
 		{8625A303-646D-4D87-BC14-29CD4D079CD9} = {6EBA5155-C683-4AF0-9D83-136653BA93D4}
 		{2EBE7CF7-6A70-4770-9F65-4937F36C265F} = {6EBA5155-C683-4AF0-9D83-136653BA93D4}
 	EndGlobalSection
