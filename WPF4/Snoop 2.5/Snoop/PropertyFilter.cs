@@ -38,7 +38,6 @@ namespace Snoop
 			set { this.showDefaults = value; }
 		}
 
-		//DHDH - PropertyFilter support
 		public PropertyFilterSet SelectedFilterSet { get; set; }
 
 		public bool IsPropertyFilterSet
@@ -65,7 +64,7 @@ namespace Snoop
 					this.filterRegex.IsMatch(property.Property.ComponentType.Name));
 			}
 
-			//DHDH - check if filter set is applied
+			// check if filter set is applied
 			if (IsPropertyFilterSet)
 			{
 				if (SelectedFilterSet.IsPropertyInFilter(property.DisplayName))

@@ -48,10 +48,10 @@ namespace Snoop
 			this.CommandBindings.Add(new CommandBinding(PropertyInspector.DelveBindingCommand, this.HandleDelveBinding, this.CanDelveBinding));
 			this.CommandBindings.Add(new CommandBinding(PropertyInspector.DelveBindingExpressionCommand, this.HandleDelveBindingExpression, this.CanDelveBindingExpression));
 
-			//DHDH - want this button OFF by default
+			// don't show properties at their default values ... by default
 			this.ShowDefaults = false;
 
-			//DHDH - watch for Mouse "back" button
+			// watch for mouse "back" button
 			this.MouseDown += new MouseButtonEventHandler(MouseDownHandler);
 			this.KeyDown += new KeyEventHandler(PropertyInspector_KeyDown);
 		}
@@ -78,7 +78,6 @@ namespace Snoop
 			this.Target = target;
 		}
 
-		//DHDH - selected pre-defined filter
 		/// <summary>
 		/// Hold the SelectedFilterSet in the PropertyFilter class, but track it here, so we know
 		/// when to "refresh" the filtering with filterCall.Enqueue
@@ -164,7 +163,6 @@ namespace Snoop
 			e.Handled = true;
 		}
 
-		//DHDH expose PropertyFilter for showing FilterSets
 		public PropertyFilter PropertyFilter
 		{
 			get { return propertyFilter; }
@@ -218,7 +216,7 @@ namespace Snoop
 
 		#region DH (Dan Added)
 		/// <summary>
-		/// DHDH Added by Dan.  Looking for "browse back" mouse button. 
+		/// Looking for "browse back" mouse button.
 		/// Pop properties context when clicked.
 		/// </summary>
 		void MouseDownHandler(object sender, MouseButtonEventArgs e)
