@@ -407,10 +407,6 @@ namespace Snoop
 
 				this.rootVisualTreeItem = VisualTreeItem.Construct(this.root, null);
 
-				// cplotts todo: is this reload really necessary?
-				this.rootVisualTreeItem.Reload();
-				this.rootVisualTreeItem.UpdateVisualChildrenCount();
-
 				if (currentTarget != null)
 				{
 					VisualTreeItem visualItem = this.FindItem(currentTarget);
@@ -573,7 +569,7 @@ namespace Snoop
 				}
 
 				this.rootVisualTreeItem.Reload();
-				this.rootVisualTreeItem.UpdateVisualChildrenCount();
+
 				node = this.rootVisualTreeItem.FindNode(target);
 
 				this.Filter = this.filter;
@@ -615,10 +611,6 @@ namespace Snoop
 			this.filtered.Clear();
 
 			this.rootVisualTreeItem = VisualTreeItem.Construct(root, null);
-
-			// cplotts todo: is this reload really necessary?
-			this.rootVisualTreeItem.Reload();
-			this.rootVisualTreeItem.UpdateVisualChildrenCount();
 
 			this.Filter = this.filter;
 		}

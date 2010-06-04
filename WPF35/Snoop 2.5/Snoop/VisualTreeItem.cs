@@ -47,34 +47,49 @@ namespace Snoop
 		public override string ToString()
 		{
 			StringBuilder sb = new StringBuilder(50);
+
+			// [depth] name (type) numberOfChildren
 			sb.AppendFormat("[{0}] {1} ({2})", this.depth.ToString("D3"), this.name, this.Target.GetType().Name);
 			if (this.visualChildrenCount != 0)
 			{
 				sb.Append(' ');
 				sb.Append(this.visualChildrenCount.ToString());
 			}
+
 			return sb.ToString();
 		}
 
 
+		/// <summary>
+		/// The WPF object that this VisualTreeItem is wrapping
+		/// </summary>
 		public object Target
 		{
 			get { return this.target; }
 		}
 		private object target;
 
+		/// <summary>
+		/// The VisualTreeItem parent of this VisualTreeItem
+		/// </summary>
 		public VisualTreeItem Parent
 		{
 			get { return this.parent; }
 		}
 		private VisualTreeItem parent;
 
+		/// <summary>
+		/// The depth (in the visual tree) of this VisualTreeItem
+		/// </summary>
 		public int Depth
 		{
 			get { return this.depth; }
 		}
 		private int depth;
 
+		/// <summary>
+		/// The VisualTreeItem children of this VisualTreeItem
+		/// </summary>
 		public ObservableCollection<VisualTreeItem> Children
 		{
 			get { return this.children; }
@@ -170,9 +185,18 @@ namespace Snoop
 
 			List<VisualTreeItem> toBeRemoved = new List<VisualTreeItem>(this.Children);
 			this.Reload(toBeRemoved);
-
 			foreach (VisualTreeItem item in toBeRemoved)
 				this.RemoveChild(item);
+
+
+			// calculate the number of visual children
+			foreach (VisualTreeItem child in this.Children)
+			{
+				if (child is VisualItem)
+					this.visualChildrenCount++;
+
+				this.visualChildrenCount += child.visualChildrenCount;
+			}
 		}
 		protected virtual void Reload(List<VisualTreeItem> toBeRemoved)
 		{
@@ -197,19 +221,6 @@ namespace Snoop
 			return null;
 		}
 
-		public int UpdateVisualChildrenCount()
-		{
-			this.visualChildrenCount = 0;
-			foreach (VisualTreeItem child in this.Children)
-			{
-				if (child is VisualItem)
-					this.visualChildrenCount += child.UpdateVisualChildrenCount();
-			}
-			if (this is VisualItem)
-				return this.visualChildrenCount + 1;
-
-			return this.visualChildrenCount;
-		}
 
 		/// <summary>
 		/// Used for tree search.
@@ -239,7 +250,7 @@ namespace Snoop
 		private string name;
 		private string nameLower = string.Empty;
 		private string typeNameLower = string.Empty;
-		private int visualChildrenCount;
+		private int visualChildrenCount = 0;
 
 
 		public event PropertyChangedEventHandler PropertyChanged;
