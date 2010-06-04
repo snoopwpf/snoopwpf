@@ -162,14 +162,14 @@ All other rights reserved.
 				<HierarchicalDataTemplate DataType="{x:Type local:VisualTreeItem}" ItemsSource="{Binding Children}">
 					<TextBlock
 						Text="{Binding}"
-						HorizontalAlignment="Stretch" 
+						HorizontalAlignment="Stretch"
 						local:BringIntoViewBehavior.IsActive="{Binding IsSelected}"
 						Background="Transparent"
 						Foreground="Black"
 					/>
 				</HierarchicalDataTemplate>
 
-				<!-- DHDH make the selected item be blue, even when not focused -->
+				<!-- make the selected item be blue, even when not focused -->
 				<SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="LightBlue"/>
 			</TreeView.Resources>
 
@@ -178,9 +178,8 @@ All other rights reserved.
 					<Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
 					<Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
 					<Setter Property="Background" Value="{Binding TreeBackgroundBrush}"/>
-					<Setter Property="ToolTip" Value="{Binding VisualBrush}">
-					</Setter>
-					
+					<Setter Property="ToolTip" Value="{Binding VisualBrush}"/>
+
 					<Style.Resources>
 						<Style TargetType="{x:Type ToolTip}">
 							<Setter Property="Template">
@@ -200,6 +199,7 @@ All other rights reserved.
 					</Style.Resources>
 				</Style>
 			</TreeView.ItemContainerStyle>
+
 			<local:ProperTreeView.ToolTip>
 				<TextBlock Style="{x:Null}" Text="Hold down Ctrl-Shift and mouse over elements in the target app to select them."/>
 			</local:ProperTreeView.ToolTip>

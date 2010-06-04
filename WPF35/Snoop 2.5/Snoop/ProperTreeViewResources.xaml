@@ -9,9 +9,8 @@ All other rights reserved.
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:System="clr-namespace:System;assembly=mscorlib"
 	xmlns:my='clr-namespace:Snoop;assembly='
-	>
-
-	<!-- Styles & Templates to make treeview select the whole width wide and not scroll horizontally-->
+>
+	<!-- styles & templates to make treeview select the whole width wide and not scroll horizontally-->
 
 	<my:IndentToMarginConverter x:Key='IndentToMarginConverter'/>
 
@@ -22,15 +21,33 @@ All other rights reserved.
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type ToggleButton}">
-					<Border Width="19" Height="13" Background="#00FFFFFF" x:Name="Border">
-						<Border Width="9" Height="9" x:Name="Border1" SnapsToDevicePixels="True" BorderBrush="#FF9495A2" BorderThickness="1,1,1,1" CornerRadius="1,1,1,1">
+					<Border
+						x:Name="Border"
+						Width="19"
+						Height="13"
+						Background="#00FFFFFF"
+					>
+						<Border
+							x:Name="Border1"
+							Width="9"
+							Height="9"
+							SnapsToDevicePixels="True"
+							BorderBrush="#FF9495A2"
+							BorderThickness="1,1,1,1"
+							CornerRadius="1,1,1,1"
+						>
 							<Border.Background>
 								<LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
 									<GradientStop Color="#FFFFFFFF" Offset="0.4"/>
 									<GradientStop Color="#FFC6CEDA" Offset="1"/>
 								</LinearGradientBrush>
 							</Border.Background>
-							<Path Fill="#FF000000" Margin="1,1,1,1" x:Name="ExpandPath" Data="M0,2L0,3 2,3 2,5 3,5 3,3 5,3 5,2 3,2 3,0 2,0 2,2z"/>
+							<Path
+								x:Name="ExpandPath"
+								Fill="#FF000000"
+								Margin="1,1,1,1"
+								Data="M0,2L0,3 2,3 2,5 3,5 3,3 5,3 5,2 3,2 3,0 2,0 2,2z"
+							/>
 						</Border>
 					</Border>
 					<ControlTemplate.Triggers>
@@ -56,7 +73,13 @@ All other rights reserved.
 						<Setter.Value>
 							<ControlTemplate>
 								<Border x:Name="Border">
-									<Rectangle Opacity="0" Stroke="#FF000000" StrokeThickness="5" Margin="0,0,0,0" x:Name="Rectangle">
+									<Rectangle
+										x:Name="Rectangle"
+										Margin="0,0,0,0"
+										Stroke="#FF000000"
+										StrokeThickness="5"
+										Opacity="0"
+									>
 										<Rectangle.StrokeDashArray>
 											<DoubleCollection>
 												<System:Double>1</System:Double>
@@ -79,14 +102,42 @@ All other rights reserved.
 							<RowDefinition Height="Auto"/>
 							<RowDefinition/>
 						</Grid.RowDefinitions>
-						<Border Grid.Column="1" Background="{TemplateBinding Background}" x:Name="PART_Header" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}">
-							<StackPanel Orientation='Horizontal' Margin='{Binding Indent, Converter={StaticResource IndentToMarginConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type my:ProperTreeViewItem}}}'>
-								<ToggleButton x:Name="Expander" Style='{StaticResource TreeViewToggleStyle}' IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press"/>
-								<ContentPresenter DataContext="{x:Null}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Content="{TemplateBinding Header}" ContentTemplate="{TemplateBinding HeaderTemplate}" ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}" ContentSource="Header"/>
+						<Border
+							x:Name="PART_Header"
+							Grid.Column="1"
+							Background="{TemplateBinding Background}"
+							BorderBrush="{TemplateBinding BorderBrush}"
+							BorderThickness="{TemplateBinding BorderThickness}"
+							Padding="{TemplateBinding Padding}"
+						>
+							<StackPanel
+								Orientation='Horizontal'
+								Margin='{Binding Indent, Converter={StaticResource IndentToMarginConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type my:ProperTreeViewItem}}}'
+							>
+								<ToggleButton
+									x:Name="Expander"
+									Style='{StaticResource TreeViewToggleStyle}'
+									IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
+									ClickMode="Press"
+								/>
+								<ContentPresenter
+									DataContext="{x:Null}"
+									HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+									Content="{TemplateBinding Header}"
+									ContentTemplate="{TemplateBinding HeaderTemplate}"
+									ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}"
+									ContentSource="Header"
+								/>
 							</StackPanel>
 						</Border>
-						<ItemsPresenter Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" x:Name="ItemsHost"/>
+						<ItemsPresenter
+							x:Name="ItemsHost"
+							Grid.Row="1"
+							Grid.Column="1"
+							Grid.ColumnSpan="2"
+						/>
 					</Grid>
+
 					<ControlTemplate.Triggers>
 						<Trigger Property="IsExpanded" Value="False">
 							<Setter Property="Visibility" Value="Collapsed" TargetName="ItemsHost"/>
