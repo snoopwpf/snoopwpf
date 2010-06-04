@@ -34,12 +34,17 @@ namespace Snoop
 		private Visual visual;
 
 
-		public override bool HasBindingError {
-			get {
-				PropertyDescriptorCollection propertyDescriptors = TypeDescriptor.GetProperties(this.Visual, new Attribute[] { new PropertyFilterAttribute(PropertyFilterOptions.All) });
-				foreach (PropertyDescriptor property in propertyDescriptors) {
+		public override bool HasBindingError
+		{
+			get
+			{
+				PropertyDescriptorCollection propertyDescriptors =
+					TypeDescriptor.GetProperties(this.Visual, new Attribute[] { new PropertyFilterAttribute(PropertyFilterOptions.All) });
+				foreach (PropertyDescriptor property in propertyDescriptors)
+				{
 					DependencyPropertyDescriptor dpd = DependencyPropertyDescriptor.FromProperty(property);
-					if (dpd != null) {
+					if (dpd != null)
+					{
 						BindingExpressionBase expression = BindingOperations.GetBindingExpressionBase(this.Visual, dpd.DependencyProperty);
 						if (expression != null && (expression.HasError || expression.Status != BindingStatus.Active))
 							return true;
@@ -48,14 +53,18 @@ namespace Snoop
 				return false;
 			}
 		}
-		public override Visual MainVisual {
+		public override Visual MainVisual
+		{
 			get { return this.Visual; }
 		}
-		public override Brush TreeBackgroundBrush {
+		public override Brush TreeBackgroundBrush
+		{
 			get { return Brushes.Transparent; }
 		}
-		public override Brush VisualBrush {
-			get { 
+		public override Brush VisualBrush
+		{
+			get
+			{
 				VisualBrush brush = new VisualBrush(this.Visual);
 				brush.Stretch = Stretch.Uniform;
 				return brush;
@@ -108,14 +117,16 @@ namespace Snoop
 		}
 		protected override void Reload(List<VisualTreeItem> toBeRemoved)
 		{
-			// Remove items that are no longer in tree, add new ones.
+			// having the call to base.Reload here ... puts the application resources at the very top of the tree view.
+			// this used to be at the bottom. putting it here makes it consistent (and easier to use) with ApplicationTreeItem
+			base.Reload(toBeRemoved);
+
+			// remove items that are no longer in tree, add new ones.
 			for (int i = 0; i < VisualTreeHelper.GetChildrenCount(this.Visual); i++)
 			{
-
 				DependencyObject child = VisualTreeHelper.GetChild(this.Visual, i);
 				if (child != null)
 				{
-
 					bool foundItem = false;
 					foreach (VisualTreeItem item in toBeRemoved)
 					{
@@ -140,8 +151,6 @@ namespace Snoop
 				foreach (ColumnDefinition column in grid.ColumnDefinitions)
 					this.Children.Add(VisualTreeItem.Construct(column, this));
 			}
-
-			base.Reload(toBeRemoved);
 		}
 
 
