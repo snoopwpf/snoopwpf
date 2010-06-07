@@ -243,6 +243,7 @@
     <Compile Include="ResourceDictionaryItem.cs" />
     <Compile Include="SettingBindingExtension.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="SnoopWindowUtils.cs" />
     <Compile Include="TrackballBehavior.cs" />
     <Compile Include="ValueEditors\BoolValueEditor.cs" />
     <Compile Include="ValueEditors\BrushValueEditor.cs" />
