@@ -17,6 +17,7 @@ namespace Snoop {
 	using System.Windows.Threading;
 	using System.Runtime.InteropServices;
 	using System.Windows.Interop;
+	using System.Windows.Forms.Integration;
 
 	public partial class Zoomer {
 
@@ -95,44 +96,8 @@ namespace Snoop {
 
 			if (dispatcher.CheckAccess())
 			{
-				object root = null;
-				if (Application.Current != null)
-				{
-					root = Application.Current;
-				}
-				else
-				{
-					// if we don't have a current application,
-					// then we must be in an interop scenario (win32 -> wpf or windows forms -> wpf).
-
-					// in this case, let's iterate over PresentationSource.CurrentSources,
-					// and use the first non-null RootVisual we find as the root to magnify.
-
-					foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
-					{
-						if (presentationSource.RootVisual != null)
-						{
-							root = presentationSource.RootVisual;
-							break;
-						}
-					}
-				}
-
-				if (root != null)
-				{
-					Zoomer zoomer = new Zoomer();
-					zoomer.Magnify(root);
-				}
-				else
-				{
-					MessageBox.Show
-					(
-						"Can't find a current application or a PresentationSource root visual!",
-						"Can't Magnify",
-						MessageBoxButton.OK,
-						MessageBoxImage.Exclamation
-					);
-				}
+				Zoomer zoomer = new Zoomer();
+				zoomer.Magnify();
 			}
 			else
 			{
@@ -140,50 +105,143 @@ namespace Snoop {
 			}
 		}
 
-		public void Magnify(object root)
+		private object FindRoot()
 		{
-			object rootVisual = root;
+			object root = null;
 
 			if (Application.Current != null)
 			{
-				// search for a visible window to own the magnify window
-				Window owningWindow = Application.Current.MainWindow;
-				if (owningWindow == null || owningWindow.Visibility != Visibility.Visible)
+				// try to use the application's main window (if visible) as the root
+				if (Application.Current.MainWindow != null && Application.Current.MainWindow.Visibility == Visibility.Visible)
 				{
+					root = Application.Current.MainWindow;
+				}
+				else
+				{
+					// else search for the first visible window in the list of the application's windows
 					foreach (Window window in Application.Current.Windows)
 					{
 						if (window.Visibility == Visibility.Visible)
 						{
-							owningWindow = window;
+							root = window;
 							break;
 						}
 					}
 				}
+			}
+			else
+			{
+				// if we don't have a current application,
+				// then we must be in an interop scenario (win32 -> wpf or windows forms -> wpf).
 
-				if (owningWindow != null && owningWindow.Visibility == Visibility.Visible)
+				if (System.Windows.Forms.Application.OpenForms.Count > 0)
 				{
-					this.Owner = owningWindow;
-					if (rootVisual is Application)
-						rootVisual = owningWindow;
-				}
-				else
-				{
-					MessageBox.Show
-					(
-						"Can't find a visible window to own Snoop",
-						"Can't Snoop",
-						MessageBoxButton.OK,
-						MessageBoxImage.Exclamation
-					);
+					// this is windows forms -> wpf interop
+
+					// call ElementHost.EnableModelessKeyboardInterop
+					// to allow the Zoomer window to receive keyboard messages.
+					ElementHost.EnableModelessKeyboardInterop(this);
 				}
 			}
 
-			// if the root visual is a window, let's magnify the window's content.
-			// this is better, as otherwise, you will have window background along with the window's content.
-			if (rootVisual is Window)
-				rootVisual = ((Window)rootVisual).Content;
+			if (root == null)
+			{
+				// if we still don't have a root to magnify
 
-			this.Target = rootVisual;
+				// let's iterate over PresentationSource.CurrentSources,
+				// and use the first non-null, visible RootVisual we find as root to inspect.
+				foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
+				{
+					if
+					(
+						presentationSource.RootVisual != null &&
+						presentationSource.RootVisual is UIElement &&
+						((UIElement)presentationSource.RootVisual).Visibility == Visibility.Visible
+					)
+					{
+						root = presentationSource.RootVisual;
+						break;
+					}
+				}
+			}
+
+			// if the root is a window, let's magnify the window's content.
+			// this is better, as otherwise, you will have window background along with the window's content.
+			if (root is Window && ((Window)root).Content != null)
+				root = ((Window)root).Content;
+
+			return root;
+		}
+		private void SetOwnerWindow()
+		{
+			Window ownerWindow = null;
+			if (Application.Current != null)
+			{
+				if (Application.Current.MainWindow != null && Application.Current.MainWindow.Visibility == Visibility.Visible)
+				{
+					// first: set the owner window as the current application's main window, if visible.
+					ownerWindow = Application.Current.MainWindow;
+				}
+				else
+				{
+					// second: try and find a visible window in the list of the current application's windows
+					foreach (Window window in Application.Current.Windows)
+					{
+						if (window.Visibility == Visibility.Visible)
+						{
+							ownerWindow = window;
+							break;
+						}
+					}
+				}
+			}
+
+			if (ownerWindow == null)
+			{
+				// third: try and find a visible window in the list of current presentation sources
+				foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
+				{
+					if
+					(
+						presentationSource.RootVisual is Window &&
+						((Window)presentationSource.RootVisual).Visibility == Visibility.Visible
+					)
+					{
+						ownerWindow = (Window)presentationSource.RootVisual;
+						break;
+					}
+				}
+			}
+
+			if (ownerWindow != null)
+				this.Owner = ownerWindow;
+		}
+
+		public void Magnify()
+		{
+			object root = FindRoot();
+			if (root == null)
+			{
+				MessageBox.Show
+				(
+					"Can't find a current application or a PresentationSource root visual!",
+					"Can't Magnify",
+					MessageBoxButton.OK,
+					MessageBoxImage.Exclamation
+				);
+			}
+
+			Magnify(root);
+		}
+
+		public void Magnify(object root)
+		{
+			this.Target = root;
+
+			Window ownerWindow = SnoopWindowUtils.FindOwnerWindow();
+			if (ownerWindow != null)
+				this.Owner = ownerWindow;
+
 			this.Show();
 			this.Activate();
 		}

@@ -84,45 +84,8 @@ namespace Snoop
 
 			if (dispatcher.CheckAccess())
 			{
-				object root = null;
-
-				if (Application.Current != null)
-				{
-					root = Application.Current;
-				}
-				else
-				{
-					// if we don't have a current application,
-					// then we must be in an interop scenario (win32 -> wpf or windows forms -> wpf).
-
-					// in this case, let's iterate over PresentationSource.CurrentSources,
-					// and use the first non-null RootVisual we find as root to inspect.
-
-					foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
-					{
-						if (presentationSource.RootVisual != null)
-						{
-							root = presentationSource.RootVisual;
-							break;
-						}
-					}
-				}
-
-				if (root != null)
-				{
-					SnoopUI snoop = new SnoopUI();
-					snoop.Inspect(root);
-				}
-				else
-				{
-					MessageBox.Show
-					(
-						"Can't find a current application or a PresentationSource root visual!",
-						"Can't Snoop",
-						MessageBoxButton.OK,
-						MessageBoxImage.Exclamation
-					);
-				}
+				SnoopUI snoop = new SnoopUI();
+				snoop.Inspect();
 			}
 			else
 			{
@@ -264,63 +227,28 @@ namespace Snoop
 		#endregion
 
 		#region Public Methods
-		public void Inspect(object root)
+		public void Inspect()
 		{
-			this.root = root;
-
-			this.Load(root);
-			this.CurrentSelection = this.rootVisualTreeItem;
-
-			this.OnPropertyChanged("Root");
-
-			if (Application.Current != null)
+			object root = FindRoot();
+			if (root == null)
 			{
-				// search for a visible window to own the main Snoop UI window
-				Window owningWindow = Application.Current.MainWindow;
-				if (owningWindow == null || owningWindow.Visibility != Visibility.Visible)
-				{
-					foreach (Window window in Application.Current.Windows)
-					{
-						if (window.Visibility == Visibility.Visible)
-						{
-							owningWindow = window;
-							break;
-						}
-					}
-				}
-
-				if (owningWindow != null && owningWindow.Visibility == Visibility.Visible)
-				{
-					this.Owner = owningWindow;
-				}
-				else
-				{
-					MessageBox.Show
-					(
-						"Can't find a visible window to own Snoop",
-						"Can't Snoop",
-						MessageBoxButton.OK,
-						MessageBoxImage.Exclamation
-					);
-				}
+				MessageBox.Show
+				(
+					"Can't find a current application or a PresentationSource root visual!",
+					"Can't Snoop",
+					MessageBoxButton.OK,
+					MessageBoxImage.Exclamation
+				);
+				return;
 			}
-			else
-			{
-				// if we don't have a current application,
-				// then we must be in an interop scenario (win32 -> wpf or windows forms -> wpf).
-	
-				if (System.Windows.Forms.Application.OpenForms.Count > 0)
-				{
-					// this is windows forms -> wpf interop
+			Load(root);
 
-					// call ElementHost.EnableModelessKeyboardInterop to allow the Snoop UI window
-					// to receive keyboard messages. if you don't call this method,
-					// you will be unable to edit properties in the property grid for windows forms interop.
-					ElementHost.EnableModelessKeyboardInterop(this);
-				}
-			}
-			this.Show();
-			this.Activate();
+			Window ownerWindow = SnoopWindowUtils.FindOwnerWindow();
+			if (ownerWindow != null)
+				this.Owner = ownerWindow;
+
+			Show();
+			Activate();
 		}
 
 		public void ApplyReduceDepthFilter(VisualTreeItem newRoot)
@@ -393,7 +321,7 @@ namespace Snoop
 		/// </summary>
 		private void HandleIntrospection(object sender, ExecutedRoutedEventArgs e)
 		{
-			this.Inspect(this);
+			this.Load(this);
 		}
 		private void HandleRefresh(object sender, ExecutedRoutedEventArgs e)
 		{
@@ -606,13 +534,62 @@ namespace Snoop
 			}
 		}
 
+		private object FindRoot()
+		{
+			object root = null;
+
+			if (Application.Current != null)
+			{
+				root = Application.Current;
+			}
+			else
+			{
+				// if we don't have a current application,
+				// then we must be in an interop scenario (win32 -> wpf or windows forms -> wpf).
+
+
+				// in this case, let's iterate over PresentationSource.CurrentSources,
+				// and use the first non-null, visible RootVisual we find as root to inspect.
+				foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
+				{
+					if
+					(
+						presentationSource.RootVisual != null &&
+						presentationSource.RootVisual is UIElement &&
+						((UIElement)presentationSource.RootVisual).Visibility == Visibility.Visible
+					)
+					{
+						root = presentationSource.RootVisual;
+						break;
+					}
+				}
+
+
+				if (System.Windows.Forms.Application.OpenForms.Count > 0)
+				{
+					// this is windows forms -> wpf interop
+
+					// call ElementHost.EnableModelessKeyboardInterop to allow the Snoop UI window
+					// to receive keyboard messages. if you don't call this method,
+					// you will be unable to edit properties in the property grid for windows forms interop.
+					ElementHost.EnableModelessKeyboardInterop(this);
+				}
+			}
+
+			return root;
+		}
 		private void Load(object root)
 		{
+			this.root = root;
+
 			this.filtered.Clear();
 
 			this.rootVisualTreeItem = VisualTreeItem.Construct(root, null);
+			this.CurrentSelection = this.rootVisualTreeItem;
 
 			this.Filter = this.filter;
+
+			this.OnPropertyChanged("Root");
 		}
 		#endregion
 
