@@ -15,8 +15,15 @@ All other rights reserved.
 	Height="400"
 	FocusManager.FocusedElement="{Binding ElementName=DocumentRoot}"
 >
-	<Grid Name="DocumentRoot" Cursor="SizeAll" Focusable="True" 
-			Mouse.MouseMove="Content_MouseMove" Mouse.MouseDown="Content_MouseDown" Mouse.MouseUp="Content_MouseUp" Mouse.MouseWheel="Content_MouseWheel">
+	<Grid
+		x:Name="DocumentRoot"
+		Cursor="SizeAll"
+		Focusable="True"
+		Mouse.MouseMove="Content_MouseMove"
+		Mouse.MouseDown="Content_MouseDown"
+		Mouse.MouseUp="Content_MouseUp"
+		Mouse.MouseWheel="Content_MouseWheel"
+	>
 		<Grid.Background>
 			<Binding ElementName="ColorSlider" Path="Value">
 				<Binding.Converter>
@@ -46,28 +53,78 @@ All other rights reserved.
 			</ContextMenu>
 		</Grid.ContextMenu>
 
-		<Viewbox Name="Viewbox"/>
+		<Viewbox x:Name="Viewbox"/>
 
-		<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2,2,0,0" Opacity="0.5">
-			<RadioButton Style="{DynamicResource {x:Type ToggleButton}}" MinWidth="0" MinHeight="0" Cursor="Arrow" Focusable="False" Command="{x:Static xv:Zoomer.SwitchTo2DCommand}" IsChecked="True">
+		<StackPanel
+			Orientation="Horizontal"
+			HorizontalAlignment="Left"
+			VerticalAlignment="Top"
+			Margin="2,2,0,0"
+			Opacity="0.5"
+		>
+			<RadioButton
+				Style="{DynamicResource {x:Type ToggleButton}}"
+				MinWidth="0"
+				MinHeight="0"
+				Cursor="Arrow"
+				Focusable="False"
+				IsChecked="True"
+				Command="{x:Static xv:Zoomer.SwitchTo2DCommand}"
+			>
 				<TextBlock Style="{x:Null}" Text="2D"/>
 				<RadioButton.ToolTip>
 					<TextBlock Style="{x:Null}" Text="2D view (F2)"/>
 				</RadioButton.ToolTip>
 			</RadioButton>
-			<RadioButton Style="{DynamicResource {x:Type ToggleButton}}" MinWidth="0" MinHeight="0" Cursor="Arrow" Focusable="False" Command="{x:Static xv:Zoomer.SwitchTo3DCommand}" Margin="2,0,0,0">
+			<RadioButton
+				Style="{DynamicResource {x:Type ToggleButton}}"
+				MinWidth="0"
+				MinHeight="0"
+				Margin="2,0,0,0"
+				Cursor="Arrow"
+				Focusable="False"
+				Command="{x:Static xv:Zoomer.SwitchTo3DCommand}"
+			>
 				<TextBlock Style="{x:Null}" Text="3D"/>
 				<RadioButton.ToolTip>
 					<TextBlock Style="{x:Null}" Text="3D view (F3)"/>
 				</RadioButton.ToolTip>
 			</RadioButton>
 		</StackPanel>
-		<Slider Name="ColorSlider" Width="100" Margin="0,2,2,0" Minimum="0" Maximum="1" Value="1" HorizontalAlignment="Right" VerticalAlignment="Top" Opacity=".5" Cursor="Arrow" Focusable="False">
+
+		<Slider
+			x:Name="ColorSlider"
+			Width="100"
+			HorizontalAlignment="Right"
+			VerticalAlignment="Top"
+			Margin="0,2,2,0"
+			Minimum="0"
+			Maximum="1"
+			Value="1"
+			Opacity=".5"
+			Cursor="Arrow"
+			Focusable="False"
+		>
 			<Slider.ToolTip>
 				<TextBlock Style="{x:Null}" Text="Background brightness"/>
 			</Slider.ToolTip>
 		</Slider>
-		<Slider Name="ZScaleSlider" Visibility="Collapsed" Width="100" Margin="0,0,2,2" Minimum="-1.2" Maximum="1.2" Value="0" HorizontalAlignment="Right" VerticalAlignment="Bottom" Opacity=".5" Cursor="Arrow" Focusable="False" ValueChanged="ZScaleSlider_ValueChanged">
+
+		<Slider
+			x:Name="ZScaleSlider"
+			Width="100"
+			HorizontalAlignment="Right"
+			VerticalAlignment="Bottom"
+			Margin="0,0,2,2"
+			Minimum="-1.2"
+			Maximum="1.2"
+			Value="0"
+			Opacity=".5"
+			Cursor="Arrow"
+			Focusable="False"
+			ValueChanged="ZScaleSlider_ValueChanged"
+			Visibility="Collapsed"
+		>
 			<Slider.ToolTip>
 				<TextBlock Style="{x:Null}" Text="3D separation"/>
 			</Slider.ToolTip>
