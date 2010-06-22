@@ -1,0 +1,142 @@
+<Grid 
+	xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' 
+	xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml' 
+	x:Class='Snoop.PropertyGrid2'
+	xmlns:my='clr-namespace:Snoop'
+	x:Name='PropertyGrid'
+	MinHeight="0" MinWidth="0">
+
+	<Grid.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="Icons.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+
+			<DataTemplate x:Key='UnselectedValueTemplate'>
+				<TextBlock Text='{Binding Value}'/>
+			</DataTemplate>
+
+			<DataTemplate x:Key='SelectedValueTemplate'>
+				<my:EditTextBox Height='15' Text='{Binding StringValue}' HorizontalAlignment='Left' Padding='1' BorderThickness='0' Background='White' VerticalContentAlignment='Center'/>
+			</DataTemplate>
+
+			<ContextMenu x:Key='PropertyMenu'>
+				<MenuItem Header='Delve' Command='{x:Static my:PropertyGrid2.DelveCommand}' CommandParameter='{Binding}'/>
+				<MenuItem Header='Delve Binding' Command='{x:Static my:PropertyGrid2.DelveBindingCommand}' CommandParameter='{Binding}'/>
+				<MenuItem Header='Delve BindingExpression' Command='{x:Static my:PropertyGrid2.DelveBindingExpressionCommand}' CommandParameter='{Binding}'/>
+				<MenuItem Header='Clear/Reset' Command='{x:Static my:PropertyGrid2.ClearCommand}' CommandParameter='{Binding}'/>
+			</ContextMenu>
+
+			<Style TargetType='{x:Type GridViewColumnHeader}'>
+				<Setter Property='Command' Value='{x:Static my:PropertyGrid2.SortCommand}'/>
+			</Style>
+
+			<ControlTemplate x:Key='BreakpointTemplate' TargetType="{x:Type CheckBox}">
+				<Grid>
+					<Image Name='Icon' Source='{StaticResource NoBreakpoint}' Width='12' Height='12'/>
+				</Grid>
+				<!--<Ellipse Fill="sc#1, 0.7081221, 0.7081221, 0.7081221" Width="12" Height='12' HorizontalAlignment="Left" Margin="0,0,0,0" MinHeight="0" x:Name="Ellipse"/>-->
+				<ControlTemplate.Triggers>
+					<Trigger Property="IsChecked" Value="True">
+						<!--<Setter Property="Shape.Fill" Value="sc#1, 0.5522868, 0, 0" TargetName="Ellipse"/>-->
+						<Setter Property="Source" Value="{StaticResource Breakpoint}" TargetName="Icon"/>
+					</Trigger>
+				</ControlTemplate.Triggers>
+			</ControlTemplate>
+
+		</ResourceDictionary>
+
+	</Grid.Resources>
+
+	<Grid.RowDefinitions>
+		<RowDefinition Height='22'/>
+		<RowDefinition Height='20'/>
+		<RowDefinition Height='*'/>
+	</Grid.RowDefinitions>
+
+	<Grid Grid.Row='1'>
+		<TextBox Text='{Binding ElementName=PropertyGrid, Path=StringFilter, UpdateSourceTrigger=PropertyChanged}' Margin="0,0,42,2" MinHeight="0" MinWidth="0" x:Name="PropertiesFilter" Padding='0'/>
+		<ToggleButton IsChecked='{Binding ElementName=PropertyGrid, Path=ShowDefaults}' Width='18' Height='18' HorizontalAlignment='Right' Margin='0,0,22,2'/>
+		<Button Command='{x:Static my:PropertyGrid2.PopTargetCommand}' Margin='0,0,0,2' Width='18' Height='18' MinWidth='0' MinHeight='0' HorizontalAlignment='Right'>
+			<!--<Image Source='{StaticResource ScopeUp}'/>-->^
+		</Button>
+	</Grid>
+	<TextBlock Margin='2' Text='{Binding ElementName=PropertyGrid, Path=Type}'/>
+
+	<ListView MinHeight="0" MinWidth="0" x:Name="ListView" Grid.Column="1" Grid.Row="2" IsSynchronizedWithCurrentItem="True"
+						ItemsSource='{Binding ElementName=PropertyGrid, Path=Properties}'
+						HorizontalContentAlignment='Stretch'
+						SelectedItem='{Binding ElementName=PropertyGrid, Path=Selection, Mode=TwoWay}'
+						Grid.RowSpan="2"
+						>
+		<ListView.ItemContainerStyle>
+			<Style TargetType='{x:Type ListViewItem}'>
+				<Style.Triggers>
+					<DataTrigger Binding='{Binding IsLocallySet}' Value='False'>
+						<Setter Property='Foreground' Value='Gray'/>
+					</DataTrigger>
+					<DataTrigger Binding='{Binding IsExpression}' Value='True'>
+						<Setter Property='Background' Value='LightGreen'/>
+					</DataTrigger>
+					<DataTrigger Binding='{Binding IsAnimated}' Value='True'>
+						<Setter Property='Background' Value='LightSalmon'/>
+					</DataTrigger>
+					<DataTrigger Binding='{Binding IsInvalidBinding}' Value='True'>
+						<Setter Property='Background' Value='Red'/>
+					</DataTrigger>
+					<DataTrigger Binding='{Binding IsVisible}' Value='False'>
+						<Setter Property='Visibility' Value='Collapsed'/>
+					</DataTrigger>
+					<Trigger Property='IsSelected' Value='True'>
+						<Setter Property='Background' Value='LightGray'/>
+					</Trigger>
+					<DataTrigger Binding='{Binding HasChangedRecently}' Value='True'>
+						<Setter Property='Background' Value='Yellow'/>
+					</DataTrigger>
+				</Style.Triggers>
+			</Style>
+		</ListView.ItemContainerStyle>
+		<ListView.View>
+			<GridView>
+				<GridViewColumn Width='25'>
+					<GridViewColumn.CellTemplate>
+						<DataTemplate>
+							<CheckBox IsChecked='{Binding BreakOnChange}' ToolTip='Set a debug breakpoint' Template='{StaticResource BreakpointTemplate}'/>
+						</DataTemplate>
+					</GridViewColumn.CellTemplate>
+				</GridViewColumn>
+				<GridViewColumn Header="Name" Width='200' >
+					<GridViewColumn.CellTemplate>
+						<DataTemplate>
+							<TextBlock Text='{Binding DisplayName}' ToolTip='{Binding DisplayName}' Height='15' MouseLeftButtonDown='HandleNameClick' ContextMenu='{StaticResource PropertyMenu}'/>
+						</DataTemplate>
+					</GridViewColumn.CellTemplate>
+				</GridViewColumn>
+				<GridViewColumn Header="Value" Width='143'>
+					<GridViewColumn.CellTemplate>
+						<DataTemplate>
+							<ContentControl Name='ValueHolder' ToolTip='{Binding StringValue}' ContentTemplate='{StaticResource UnselectedValueTemplate}' Content='{Binding}'/>
+							<DataTemplate.Triggers>
+								<MultiDataTrigger>
+									<MultiDataTrigger.Conditions>
+										<Condition Binding='{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}' Value='True'/>
+										<Condition Binding='{Binding CanEdit}' Value='True'/>
+									</MultiDataTrigger.Conditions>
+									<Setter TargetName='ValueHolder' Property='ContentTemplate' Value='{StaticResource SelectedValueTemplate}'/>
+								</MultiDataTrigger>
+							</DataTemplate.Triggers>
+						</DataTemplate>
+					</GridViewColumn.CellTemplate>
+				</GridViewColumn>
+
+				<GridViewColumn Header="ValueSource" Width='143'>
+					<GridViewColumn.CellTemplate>
+						<DataTemplate>
+							<TextBlock Text='{Binding ValueSource.BaseValueSource}' ToolTip='{Binding ValueSource}' Height='15'/>
+						</DataTemplate>
+					</GridViewColumn.CellTemplate>
+				</GridViewColumn>
+			</GridView>
+		</ListView.View>
+	</ListView>
+</Grid>

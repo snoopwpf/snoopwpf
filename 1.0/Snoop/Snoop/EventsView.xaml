@@ -1,0 +1,277 @@
+<Grid
+	xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' 
+	xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml' 
+	x:Class='Snoop.EventsView'
+	xmlns:my='clr-namespace:Snoop'
+	x:Name='Events'
+	MinHeight="0" MinWidth="0" xmlns:d="http://schemas.microsoft.com/expression/interactivedesigner/2006" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
+
+	<Grid.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="ProperTreeViewResources.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+		
+		<my:ObjectToStringConverter x:Key='NiceNamer'/>
+
+		<DataTemplate x:Key='CategoryTemplate'>
+			<TextBlock Text='{Binding Path=Name}' FontWeight='Bold' Margin="2,5,0,0"/>
+		</DataTemplate>
+
+		<DataTemplate DataType='{x:Type RoutedEventArgs}'>
+			<TextBlock Text='{Binding RoutedEvent.Name}'/>
+		</DataTemplate>
+
+		<DataTemplate DataType='{x:Type ExecutedRoutedEventArgs}'>
+			<StackPanel Orientation='Horizontal'>
+				<TextBlock Text='{Binding Command, Converter={StaticResource NiceNamer}}'/>
+			</StackPanel>
+		</DataTemplate>
+
+		<DataTemplate DataType='{x:Type my:EventTracker}'>
+			<CheckBox IsChecked='{Binding IsEnabled}' Content='{Binding RoutedEvent.Name}'/>
+		</DataTemplate>
+
+
+			<HierarchicalDataTemplate ItemsSource='{Binding Stack}' DataType='{x:Type my:TrackedEvent}'>
+				<Grid Name='Grid' Background='Transparent' ToolTip='Double-click to select the element that handled this' MouseLeftButtonDown='InspectHandler'>
+					<!--<Grid.InputBindings>
+					<MouseBinding MouseAction='LeftDoubleClick' Command='{x:Static my:SnoopUI.InspectCommand}' CommandParameter='{Binding EventArgs}'/>
+				</Grid.InputBindings>-->
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width='*'/>
+						<ColumnDefinition Width='*'/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height='*'/>
+						<RowDefinition Height='*'/>
+					</Grid.RowDefinitions>
+					<StackPanel Orientation='Horizontal'>
+						<ContentControl Content='{Binding EventArgs}'/>
+						<!--<TextBlock Text='{Binding EventArgs.RoutedEvent.Name}'/>-->
+						<TextBlock Text=' on '/>
+						<TextBlock Text='{Binding Originator.Handler, Converter={StaticResource NiceNamer}}' Grid.Column='1'/>
+					</StackPanel>
+					<ContentControl Name='Handler' Visibility='Collapsed' Grid.Row='1' Grid.ColumnSpan='2'>
+						<StackPanel Orientation='Horizontal'>
+							<TextBlock>Handled By: </TextBlock>
+							<TextBlock Text='{Binding HandledBy, Converter={StaticResource NiceNamer}}'/>
+						</StackPanel>
+					</ContentControl>
+				</Grid>
+				<HierarchicalDataTemplate.Triggers>
+					<DataTrigger Binding='{Binding Handled}' Value='True'>
+						<Setter TargetName='Handler' Property='Visibility' Value='Visible'/>
+					</DataTrigger>
+				</HierarchicalDataTemplate.Triggers>
+			</HierarchicalDataTemplate>
+
+			<HierarchicalDataTemplate DataType='{x:Type my:EventEntry}'>
+				<Grid Name='Grid' Background='Transparent' ToolTip='Double-click to select the element that handled this' MouseLeftButtonDown='InspectHandler'>
+					<StackPanel Orientation='Horizontal'>
+						<TextBlock Text='{Binding Handler, Converter={StaticResource NiceNamer}}'/>
+						<TextBlock Text=' handled: '/>
+						<TextBlock Text='{Binding Handled}' Grid.Column='1'/>
+					</StackPanel>
+				</Grid>
+			</HierarchicalDataTemplate>
+
+			<ControlTemplate x:Key="NoSelectionComboBox" TargetType="{x:Type ComboBox}">
+				<Grid x:Name="Grid">
+					<Border Background="{x:Null}" x:Name="Border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+						<Grid Grid.IsSharedSizeScope="True" x:Name="Grid1">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="1"/>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="Auto" SharedSizeGroup="ComboBoxButton"/>
+							</Grid.ColumnDefinitions>
+							<TextBlock Margin="3,4.36166666666667,3.41060513164848E-13,2.36166666666664" Height="13.2766666666667" Grid.Column="1" Grid.ColumnSpan="2" x:Name="TextBlock" Text="Common events"/>
+							<ToggleButton Grid.ColumnSpan="3" x:Name="ToggleButton" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource Mode=TemplatedParent, AncestorType={x:Null}}}">
+								<ToggleButton.Style>
+									<Style TargetType="{x:Type ToggleButton}">
+										<Setter Property="MinWidth" Value="0"/>
+										<Setter Property="MinHeight" Value="0"/>
+										<Setter Property="Width" Value="Auto"/>
+										<Setter Property="Height" Value="Auto"/>
+										<Setter Property="Background" Value="#00FFFFFF"/>
+										<Setter Property="Focusable" Value="False"/>
+										<Setter Property="ClickMode" Value="Press"/>
+										<Setter Property="Template">
+											<Setter.Value>
+												<ControlTemplate TargetType="{x:Type ToggleButton}">
+													<Grid Background="{TemplateBinding Background}" x:Name="Grid">
+														<Grid.ColumnDefinitions>
+															<ColumnDefinition Width="*"/>
+															<ColumnDefinition Width="Auto" SharedSizeGroup="ComboBoxButton"/>
+														</Grid.ColumnDefinitions>
+														<Border HorizontalAlignment="Left" Margin="2,2,2,2" Width="14.6791723969389" Grid.Column="1" x:Name="Border" BorderThickness="1,1,1,1" CornerRadius="3,3,3,3">
+															<Border.BorderBrush>
+																<LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+																	<LinearGradientBrush.RelativeTransform>
+																		<TransformGroup>
+																			<TranslateTransform X="-0.5" Y="-0.5"/>
+																			<ScaleTransform ScaleX="1.2938731180987744" ScaleY="1.2938731180987744"/>
+																			<SkewTransform AngleX="0" AngleY="0"/>
+																			<RotateTransform Angle="137.35598639732007"/>
+																			<TranslateTransform X="0.5" Y="0.5"/>
+																			<TranslateTransform X="-0.052250302263790425" Y="0.061724038623558443"/>
+																		</TransformGroup>
+																	</LinearGradientBrush.RelativeTransform>
+																	<GradientStop Offset="0.41025641025641024" Color="sc#1, 0.0884037539, 0.0884037539, 0.0884037539"/>
+																	<GradientStop Offset="1" Color="sc#1, 0.3278404, 0.3278404, 0.3278404"/>
+																	<GradientStop Offset="0" Color="sc#1, 0.398262918, 0.398262918, 0.398262918"/>
+																</LinearGradientBrush>
+															</Border.BorderBrush>
+															<Canvas Width="16" Height="16" x:Name="Canvas">
+																<Path d:LastTangent="0,0" Stroke="sc#1, 0.102488264, 0.102488264, 0.102488264" Fill="{x:Null}" StrokeThickness="2" StrokeEndLineCap="Round" StrokeStartLineCap="Round" StrokeLineJoin="Round" Width="10.0079642791082" Height="7.69193004565297" Canvas.Left="1.41917012579142" Canvas.Top="3.53853164614431" x:Name="Path" RenderTransformOrigin="0.5,0.5" Stretch="Fill" Data="M1.6594606,3.3776513 L7.9633767,11.712949 14.601148,3.4108349">
+																	<Path.RenderTransform>
+																		<TransformGroup>
+																			<TranslateTransform X="0" Y="0"/>
+																			<ScaleTransform ScaleX="1" ScaleY="1"/>
+																			<SkewTransform AngleX="0" AngleY="0"/>
+																			<RotateTransform Angle="0"/>
+																			<TranslateTransform X="0" Y="0"/>
+																			<TranslateTransform X="0" Y="0"/>
+																		</TransformGroup>
+																	</Path.RenderTransform>
+																</Path>
+															</Canvas>
+														</Border>
+													</Grid>
+													<ControlTemplate.Triggers>
+														<MultiTrigger>
+															<MultiTrigger.Conditions>
+																<Condition Property="IsMouseOver" Value="True"/>
+																<Condition Property="IsChecked" Value="False"/>
+															</MultiTrigger.Conditions>
+															<!--<Setter Property="Shape.Fill" TargetName="Chrome">
+															<Setter.Value>
+																<LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+																	<GradientStop Offset="0" Color="#FFFFFFFF"/>
+																	<GradientStop Offset="0.7" Color="#FFE3E5F0"/>
+																	<GradientStop Offset="1" Color="#FFC6C5D7"/>
+																</LinearGradientBrush>
+															</Setter.Value>
+														</Setter>-->
+															<!--<Setter Property="Microsoft_Windows_Themes:ScrollChrome.OuterBorder" TargetName="Chrome">
+															<Setter.Value>
+																<Pen Brush="#FF5B6665" Thickness="1"/>
+															</Setter.Value>
+														</Setter>-->
+															<!--<Setter Property="Microsoft_Windows_Themes:ScrollChrome.Glyph" Value="#FF202020" TargetName="Chrome"/>-->
+														</MultiTrigger>
+														<Trigger Property="IsPressed" Value="True">
+															<!--<Setter Property="Shape.Fill" TargetName="Chrome">
+															<Setter.Value>
+																<LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+																	<GradientStop Offset="0" Color="#FFADAABD"/>
+																	<GradientStop Offset="0.5" Color="#FFDEDBE7"/>
+																	<GradientStop Offset="1" Color="#FFFFFFFF"/>
+																</LinearGradientBrush>
+															</Setter.Value>
+														</Setter>-->
+															<!--<Setter Property="Microsoft_Windows_Themes:ScrollChrome.OuterBorder" TargetName="Chrome">
+															<Setter.Value>
+																<Pen Brush="#FF5B6665" Thickness="1"/>
+															</Setter.Value>
+														</Setter>
+														<Setter Property="Microsoft_Windows_Themes:ScrollChrome.Glyph" Value="#FF202020" TargetName="Chrome"/>-->
+														</Trigger>
+														<Trigger Property="IsEnabled" Value="False">
+															<!--<Setter Property="Shape.Fill" TargetName="Chrome">
+															<Setter.Value>
+																<LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+																	<GradientStop Offset="0" Color="#FFF7F7F7"/>
+																	<GradientStop Offset="0.3" Color="#FFF0F0F0"/>
+																	<GradientStop Offset="0.6" Color="#FFECECEC"/>
+																	<GradientStop Offset="1" Color="#FFE3E3E3"/>
+																</LinearGradientBrush>
+															</Setter.Value>
+														</Setter>-->
+															<!--<Setter Property="Microsoft_Windows_Themes:ScrollChrome.Glyph" Value="#FFC9C9C2" TargetName="Chrome"/>-->
+														</Trigger>
+													</ControlTemplate.Triggers>
+												</ControlTemplate>
+											</Setter.Value>
+										</Setter>
+									</Style>
+								</ToggleButton.Style>
+							</ToggleButton>
+						</Grid>
+					</Border>
+					<Popup IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource Mode=TemplatedParent, AncestorType={x:Null}}}" Focusable="False" Placement="Bottom" x:Name="PART_Popup" PopupAnimation="Slide" AllowsTransparency="True">
+						<Grid MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}" x:Name="DropDown">
+							<Border Background="{TemplateBinding Background}" x:Name="DropDownBorder" BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" BorderThickness="1,1,1,1"/>
+							<ScrollViewer Margin="1,1,1,1" x:Name="ScrollViewer">
+								<ItemsControl ItemsSource='{Binding ItemsSource, RelativeSource={RelativeSource TemplatedParent}}' KeyboardNavigation.DirectionalNavigation="Contained">
+									<ItemsControl.GroupStyle>
+										<GroupStyle HeaderTemplate='{StaticResource CategoryTemplate}'/>
+									</ItemsControl.GroupStyle>
+								</ItemsControl>
+							</ScrollViewer>
+						</Grid>
+					</Popup>
+				</Grid>
+				<ControlTemplate.Triggers>
+					<MultiTrigger>
+						<MultiTrigger.Conditions>
+							<Condition Property="IsKeyboardFocusWithin" Value="True"/>
+							<Condition Property="IsDropDownOpen" Value="False"/>
+						</MultiTrigger.Conditions>
+						<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}"/>
+					</MultiTrigger>
+					<Trigger Property="Popup.HasDropShadow" SourceName="PART_Popup" Value="True">
+						<Setter Property="Margin" Value="0,0,3,3" TargetName="DropDown"/>
+						<Setter Property="SnapsToDevicePixels" Value="True" TargetName="DropDown"/>
+						<Setter Property="BitmapEffect" TargetName="DropDownBorder">
+							<Setter.Value>
+								<DropShadowBitmapEffect ShadowDepth="1.5" Softness="0.15"/>
+							</Setter.Value>
+						</Setter>
+					</Trigger>
+					<Trigger Property="HasItems" Value="False">
+						<Setter Property="MinHeight" Value="95" TargetName="DropDownBorder"/>
+					</Trigger>
+					<Trigger Property="IsEnabled" Value="False">
+						<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+						<Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+					</Trigger>
+					<Trigger Property="IsGrouping" Value="True">
+						<Setter Property="ScrollViewer.CanContentScroll" Value="False"/>
+					</Trigger>
+					<Trigger Property="Width" Value="Auto">
+						<Setter Property="MinWidth" Value="150"/>
+					</Trigger>
+					<Trigger Property="Height" Value="Auto">
+						<Setter Property="MinHeight" Value="20"/>
+					</Trigger>
+				</ControlTemplate.Triggers>
+			</ControlTemplate>
+		</ResourceDictionary>
+	</Grid.Resources>
+	
+	<Grid.RowDefinitions>
+		<RowDefinition Height='22'/>
+		<RowDefinition Height='*'/>
+	</Grid.RowDefinitions>
+
+	<ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="EventChooser" Template="{StaticResource NoSelectionComboBox}" ItemsSource='{Binding ElementName=Events, Path=AvailableEvents}' IsSynchronizedWithCurrentItem="True" Margin='0,0,20,0'/>
+	<Button Content='X' Width='18' Height='18' Padding='0,-2,0,0' Command='{x:Static my:EventsView.ClearCommand}' HorizontalAlignment='Right' ToolTip='Clear'/>
+
+	<my:ProperTreeView x:Name='EventTree' Grid.Row='1' ItemsSource='{Binding ElementName=Events, Path=InterestingEvents}' HorizontalContentAlignment='Stretch'>
+		<my:ProperTreeView.ItemContainerStyle>
+			<Style BasedOn='{StaticResource ProperTreeViewItemStyle}' TargetType='{x:Type my:ProperTreeViewItem}'>
+				<Setter Property='HorizontalContentAlignment' Value='Stretch'/>
+				<Setter Property='HorizontalAlignment' Value='Stretch'/>
+				<Style.Triggers>
+					<DataTrigger Binding='{Binding Handled}' Value='True'>
+						<Setter Property='Background' Value='LightGreen'/>
+					</DataTrigger>
+					<Trigger Property='IsSelected' Value='True'>
+						<Setter Property='Background' Value='LightGray'/>
+					</Trigger>
+				</Style.Triggers>
+			</Style>
+		</my:ProperTreeView.ItemContainerStyle>
+	</my:ProperTreeView>
+</Grid>

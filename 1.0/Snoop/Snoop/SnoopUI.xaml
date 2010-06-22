@@ -1,0 +1,142 @@
+<Window 
+	xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' 
+	xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml' 
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	x:Class='Snoop.SnoopUI'
+	xmlns:my='clr-namespace:Snoop'
+	Title='Snoop'
+	ShowInTaskbar='false'
+	DataContext='{Binding RelativeSource={RelativeSource Self}}'
+	Width='700' Height='580' xmlns:d="http://schemas.microsoft.com/expression/interactivedesigner/2006" mc:Ignorable="d" Background="#FFE0DFE3"
+	InheritanceBehavior='SkipToThemeNext' Focusable='False'
+	>
+	<Window.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="ProperTreeViewResources.xaml"/>
+				<ResourceDictionary Source="Icons.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+
+			<Style TargetType="{x:Type Button}" x:Key="RefreshButton">
+				<Setter Property="FocusVisualStyle">
+					<Setter.Value>
+						<Style>
+							<Setter Property="Control.Template">
+								<Setter.Value>
+									<ControlTemplate>
+										<Rectangle Stroke="#FF000000" StrokeThickness="1" Margin="3,3,3,3" x:Name="Rectangle" SnapsToDevicePixels="True" StrokeDashArray="1 2"/>
+									</ControlTemplate>
+								</Setter.Value>
+							</Setter>
+						</Style>
+					</Setter.Value>
+				</Setter>
+				<Setter Property="Background">
+					<Setter.Value>
+						<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+							<GradientStop Color="#FF69E861" Offset="0"/>
+							<GradientStop Color="#FFE3E5F0" Offset="0.5"/>
+							<GradientStop Color="#FF1CC211" Offset="1"/>
+						</LinearGradientBrush>
+					</Setter.Value>
+				</Setter>
+				<Setter Property="BorderBrush" Value="#FF003C74"/>
+				<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+				<Setter Property="HorizontalContentAlignment" Value="Center"/>
+				<Setter Property="VerticalContentAlignment" Value="Center"/>
+				<Setter Property="Template">
+					<Setter.Value>
+						<ControlTemplate TargetType="{x:Type ButtonBase}">
+							<Grid Width="Auto" Height="Auto">
+								<Border x:Name="border" BorderBrush="#FF696969" BorderThickness="1,1,1,1" CornerRadius="4,4,4,4"/>
+								<ContentPresenter Margin="2,2,2,2"/>
+							</Grid>
+							<ControlTemplate.Triggers>
+								<Trigger Property="IsKeyboardFocused" Value="True"/>
+								<Trigger Property="ToggleButton.IsChecked" Value="True"/>
+								<Trigger Property="IsEnabled" Value="False">
+									<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+								</Trigger>
+								<Trigger Property="IsMouseOver" Value="True">
+									<Setter Property="Background" TargetName="border">
+										<Setter.Value>
+											<LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
+												<GradientStop Color="#FFCEFFCF" Offset="0"/>
+												<GradientStop Color="#FFE1FFE3" Offset="0.43888888888888888"/>
+												<GradientStop Color="#FFC4FFC8" Offset="1"/>
+											</LinearGradientBrush>
+										</Setter.Value>
+									</Setter>
+								</Trigger>
+							</ControlTemplate.Triggers>
+						</ControlTemplate>
+					</Setter.Value>
+				</Setter>
+			</Style>
+
+			<my:ObjectToStringConverter x:Key='NiceNamer'/>
+			
+		</ResourceDictionary>
+	</Window.Resources>
+	<Grid>
+
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width='1*'/>
+			<ColumnDefinition Width='2*'/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height='24'/>
+			<RowDefinition Height='5*'/>
+			<RowDefinition Height='1*'/>
+			<RowDefinition Height='16'/>
+		</Grid.RowDefinitions>
+
+		<ComboBox Name='TreeFilter' IsEditable='True' Text='{Binding Path=Filter, UpdateSourceTrigger=PropertyChanged}' ToolTip='Filter tree view by name or type' Margin='2,2,20,2'>
+			<ComboBoxItem>Clear Filter</ComboBoxItem>
+			<ComboBoxItem>Visuals with binding Errors</ComboBoxItem>
+			<ComboBoxItem></ComboBoxItem>
+		</ComboBox>
+
+		<Button Command='{x:Static my:SnoopUI.RefreshCommand}' Style='{StaticResource RefreshButton}' Width='16' HorizontalAlignment='Right' Margin='0,4,2,4'>
+			<Image Source='{StaticResource Reload}'/>
+		</Button>
+		
+		<my:ProperTreeView x:Name='Tree' Grid.Row='1' Grid.RowSpan='2' Margin='2,0,2,0' ItemsSource='{Binding Filtered}' HorizontalAlignment='Stretch' MinHeight="0" MinWidth="0">
+			<TreeView.Resources>
+				<HierarchicalDataTemplate DataType='{x:Type my:VisualTreeItem}' ItemsSource='{Binding Children}'>
+					<TextBlock Text='{Binding}' HorizontalAlignment='Stretch' Background='Transparent'/>
+				</HierarchicalDataTemplate>
+			</TreeView.Resources>
+
+			<TreeView.ItemContainerStyle>
+				<Style BasedOn='{StaticResource ProperTreeViewItemStyle}' TargetType='{x:Type my:ProperTreeViewItem}'>
+					<Setter Property='IsSelected' Value='{Binding IsSelected, Mode=TwoWay}'/>
+					<Setter Property='IsExpanded' Value='{Binding IsExpanded, Mode=TwoWay}'/>
+				</Style>
+			</TreeView.ItemContainerStyle>
+		</my:ProperTreeView>
+		
+		<GridSplitter HorizontalAlignment="Left" Margin="-2,0,0,0" MinHeight="0" x:Name="GridSplitter" VerticalAlignment="Stretch" Width="4" Height="Auto" Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="0" Grid.RowSpan="3"/>
+
+		<TabControl Grid.Column='1' Grid.RowSpan='2' Margin='2,2,2,0'>
+			<TabItem Header='Properties'>
+				<my:PropertyGrid2 x:Name='PropertyGrid' Target='{Binding Path=CurrentSelection.Target}'/>
+			</TabItem>
+			<TabItem Header='Events'>
+				<my:EventsView Scope='{Binding Root.Target}'/>
+			</TabItem>
+		</TabControl>
+
+		<StatusBar Grid.Row='3' Grid.ColumnSpan='4'>
+			<TextBlock HorizontalAlignment='Right' Margin='0,-3,0,0' Text='Tip: Hold down Ctrl-Shift and mouse over elements in the target app to select them.'/>
+			<TextBlock HorizontalAlignment='Right' Margin='3,-3,0,0'>
+				<my:NoFocusHyperlink Command='{x:Static my:SnoopUI.SelectFocusCommand}' CommandParameter='{Binding CurrentFocus}' Focusable='False'>
+					<TextBlock Text='{Binding CurrentFocus, Converter={StaticResource NiceNamer}}'/>
+				</my:NoFocusHyperlink>
+			</TextBlock>
+		</StatusBar>
+		<GridSplitter HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="2,0,0,0" Height="4" Grid.Column="1" Grid.Row="2"/>
+		<my:Previewer Grid.Column="1" Grid.Row="2" Margin='2,4,0,0' Target='{Binding CurrentSelection.Target}' x:Name='PreviewArea'/>
+		
+	</Grid>
+</Window>
