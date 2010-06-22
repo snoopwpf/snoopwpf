@@ -1,0 +1,18 @@
+﻿<Window
+	x:Class="DepthReducer.Window1"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	Title="Depth Reducer Test Harness"
+	Width="600"
+	Height="300"
+>
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"/>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+
+		<Border Name="_left"/>
+		<Border Name="_right" Grid.Column="1"/>
+	</Grid>
+</Window>
