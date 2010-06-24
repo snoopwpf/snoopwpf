@@ -16,14 +16,14 @@ static HHOOK _messageHookHandle;
 //-----------------------------------------------------------------------------
 //Spying Process functions follow
 //-----------------------------------------------------------------------------
-void Injector::Launch(System::IntPtr windowHandle, System::Reflection::Assembly^ assembly, System::String^ className, System::String^ methodName) {
+void Injector::Launch(System::IntPtr windowHandle, System::String^ assembly, System::String^ className, System::String^ methodName) {
 
-	System::String^ assemblyClassAndMethod = assembly->Location + "$" + className + "$" + methodName;
+	System::String^ assemblyClassAndMethod = assembly + "$" + className + "$" + methodName;
 	pin_ptr<const wchar_t> acmLocal = PtrToStringChars(assemblyClassAndMethod);
 
-	HINSTANCE hinstDLL = ::LoadLibrary((LPCTSTR) _T("ManagedInjector.dll")); 
+	HINSTANCE hinstDLL;	
 
-	if (hinstDLL)
+	if (::GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, (LPCTSTR)&MessageHookProc, &hinstDLL))
 	{
 		DWORD processID = 0;
 		DWORD threadID = ::GetWindowThreadProcessId((HWND)windowHandle.ToPointer(), &processID);
@@ -40,8 +40,7 @@ void Injector::Launch(System::IntPtr windowHandle, System::Reflection::Assembly^
 				{
 					::WriteProcessMemory(hProcess, acmRemote, acmLocal, buffLen, NULL);
 				
-					HOOKPROC procAddress = (HOOKPROC)GetProcAddress(hinstDLL, "MessageHookProc");
-					_messageHookHandle = ::SetWindowsHookEx(WH_CALLWNDPROC, procAddress, hinstDLL, threadID);
+					_messageHookHandle = ::SetWindowsHookEx(WH_CALLWNDPROC, &MessageHookProc, hinstDLL, threadID);
 
 					if (_messageHookHandle)
 					{
