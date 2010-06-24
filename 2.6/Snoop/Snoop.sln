@@ -2,6 +2,12 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snoop", "Snoop\Snoop.csproj", "{6ADE40E1-7624-475C-80C5-9883AA4712EF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{26815909-08A8-499B-96F2-0910830CFA6D} = {26815909-08A8-499B-96F2-0910830CFA6D}
+		{63738B28-A45F-4BE4-A769-656443F698CD} = {63738B28-A45F-4BE4-A769-656443F698CD}
+		{837EED94-D254-4F58-8949-635015DE371D} = {837EED94-D254-4F58-8949-635015DE371D}
+		{21E131D3-760F-4E93-8BDD-502591BD1F97} = {21E131D3-760F-4E93-8BDD-502591BD1F97}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestHarnesses", "TestHarnesses", "{4EAA2216-FEF3-4AD8-800E-751117636D6F}"
 EndProject
@@ -43,6 +49,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ManagedInjector64-4.0", "ManagedInjector\ManagedInjector64-4.0.vcxproj", "{A27C8B34-2527-4258-8C07-D2720C576B90}"
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "SnoopInstaller", "SnoopInstaller\SnoopInstaller.wixproj", "{4D12FCE5-FF2D-4224-804D-4654485A22D7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6ADE40E1-7624-475C-80C5-9883AA4712EF} = {6ADE40E1-7624-475C-80C5-9883AA4712EF}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
@@ -233,7 +242,6 @@ Global
 		{A27C8B34-2527-4258-8C07-D2720C576B90}.Release|Mixed Platforms.Build.0 = Release|x64
 		{A27C8B34-2527-4258-8C07-D2720C576B90}.Release|x86.ActiveCfg = Release|x64
 		{4D12FCE5-FF2D-4224-804D-4654485A22D7}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{4D12FCE5-FF2D-4224-804D-4654485A22D7}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{4D12FCE5-FF2D-4224-804D-4654485A22D7}.Debug|x86.ActiveCfg = Debug|x86
 		{4D12FCE5-FF2D-4224-804D-4654485A22D7}.Debug|x86.Build.0 = Debug|x86
 		{4D12FCE5-FF2D-4224-804D-4654485A22D7}.Release|Mixed Platforms.ActiveCfg = Release|x86
