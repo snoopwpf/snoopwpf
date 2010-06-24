@@ -1,4 +1,4 @@
-// (c) Copyright Microsoft Corporation.
+﻿// (c) Copyright Microsoft Corporation.
 // This source is subject to the Microsoft Public License (Ms-PL).
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
@@ -35,13 +35,6 @@ namespace Snoop
 			this.CommandBindings.Add(new CommandBinding(AppChooser.RefreshCommand, this.HandleRefreshCommand));
 			this.CommandBindings.Add(new CommandBinding(AppChooser.InspectCommand, this.HandleInspectCommand, this.HandleCanInspectOrMagnifyCommand));
 			this.CommandBindings.Add(new CommandBinding(AppChooser.MagnifyCommand, this.HandleMagnifyCommand, this.HandleCanInspectOrMagnifyCommand));
-
-#if X86
-			this.snoopTextBlock.Text = "(32-bit)";
-#endif
-#if X64
-			this.snoopTextBlock.Text = "(64-bit)";
-#endif
 
 			AutoRefresh = false;
 			DispatcherTimer timer =

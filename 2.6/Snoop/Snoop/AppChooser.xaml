@@ -219,7 +219,7 @@ All other rights reserved.
 										<Rectangle
 											x:Name="fillHighlight"
 											Fill="#39FFFFFF"
-											Width="147"
+											Width="67"
 											HorizontalAlignment="Left"
 											Margin="1,1,0,2"
 											RadiusX="1.5"
@@ -275,7 +275,7 @@ All other rights reserved.
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="150"/>
+			<ColumnDefinition Width="73"/>
 			<ColumnDefinition Width="*"/>
 			<ColumnDefinition Width="Auto"/>
 			<ColumnDefinition Width="Auto"/>
@@ -318,33 +318,6 @@ All other rights reserved.
 				IsEnabled="True"
 				Opacity="0.745"
 			/>
-			<TextBlock
-				x:Name="snoopTextBlock"
-				Margin="4,0,0,0"
-				VerticalAlignment="Center"
-				Width="Auto"
-				Height="Auto"
-				FontSize="10"
-				FontWeight="Normal"
-				Foreground="#B2FFFFFF"
-				TextAlignment="Center"
-				IsEnabled="True"
-				Opacity="0.745"
-				Text="(32-bit)"
-			/>
-			<TextBlock
-				Margin="4,0,0,0"
-				VerticalAlignment="Center"
-				Width="Auto"
-				Height="Auto"
-				FontSize="10"
-				FontWeight="Normal"
-				Foreground="#B2FFFFFF"
-				TextAlignment="Center"
-				IsEnabled="True"
-				Opacity="0.745"
-				Text="(WPF 4.0)"
-			/>
 		</StackPanel>
 
 		<!-- windows combo box -->
@@ -373,7 +346,6 @@ All other rights reserved.
 			VerticalAlignment="Center"
 			Margin="8,0,0,0"
 			Style="{StaticResource appChooserButtonStyle}"
-			Command="{x:Static my:AppChooser.RefreshCommand}"
 			ToolTip="Refresh (F5)"
 		>
 			<Grid>
@@ -414,7 +386,6 @@ All other rights reserved.
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
 				Style="{DynamicResource appChooserButtonStyle}"
-				Command="{x:Static my:AppChooser.MagnifyCommand}"
 				ToolTip="Magnify"
 			>
 				<Viewbox Height="16">
@@ -488,7 +459,6 @@ All other rights reserved.
 				Margin="4,0,0,0"
 				Style="{DynamicResource appChooserButtonStyle}"
 				IsDefault="True"
-				Command="{x:Static my:AppChooser.InspectCommand}"
 				ToolTip="Snoop this application"
 			>
 				<Viewbox Height="13">
