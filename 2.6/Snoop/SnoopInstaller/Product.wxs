@@ -14,32 +14,110 @@
 
 		<Directory Id="TARGETDIR" Name="SourceDir">
 			<Directory Id="ProgramFilesFolder">
-				<Directory Id="INSTALLLOCATION" Name="Snoop">
+				<Directory Id="INSTALLDIR" Name="Snoop">
 					<Component Id="Snoop" Guid="5624FD27-2409-4E5A-86E1-7C1A9C52A2F4">
-						<File Id="SnoopEXE" Name="Snoop.exe" Source="..\Build\Release\Snoop.exe" KeyPath="yes"/>
-						<File Id="SnoopCFG" Name="Snoop.exe.config" Source="..\Build\Release\Snoop.exe.config"/>
+						<File
+							Id="SnoopEXE"
+							Name="Snoop.exe"
+							Source="..\Build\Release\Snoop.exe"
+							KeyPath="yes"
+						>
+							<Shortcut
+								Id="desktopSnoopShortcut"
+								Directory="DesktopFolder"
+								Name="Snoop 2.6.0"
+								WorkingDirectory="INSTALLDIR"
+								Icon="Snoop.exe"
+								IconIndex="0"
+								Advertise="yes"
+							/>
+							<Shortcut
+								Id="startMenuSnoopShortcut"
+								Directory="ProgramMenuDir"
+								Name="Snoop 2.6.0"
+								WorkingDirectory="INSTALLDIR"
+								Icon="Snoop.exe"
+								IconIndex="0"
+								Advertise="yes"
+							/>
+						</File>
 
-						<File Id="ManagedInjectorLauncher3235" Name="ManagedInjectorLauncher32-3.5.exe" Source="..\ManagedInjectorLauncher\bin\Release\ManagedInjectorLauncher32-3.5.exe"/>
-						<File Id="ManagedInjector3235" Name="ManagedInjector32-3.5.dll" Source="..\ManagedInjectorLauncher\bin\Release\ManagedInjector32-3.5.dll"/>
+						<File
+							Id="SnoopCFG"
+							Name="Snoop.exe.config"
+							Source="..\Build\Release\Snoop.exe.config"
+						/>
 
-						<File Id="ManagedInjectorLauncher3240" Name="ManagedInjectorLauncher32-4.0.exe" Source="..\ManagedInjectorLauncher\bin\Release\ManagedInjectorLauncher32-4.0.exe"/>
-						<File Id="ManagedInjector3240" Name="ManagedInjector32-4.0.dll" Source="..\ManagedInjectorLauncher\bin\Release\ManagedInjector32-4.0.dll"/>
+						<File
+							Id="ManagedInjectorLauncher3235"
+							Name="ManagedInjectorLauncher32-3.5.exe"
+							Source="..\ManagedInjectorLauncher\bin\Release\ManagedInjectorLauncher32-3.5.exe"
+						/>
+						<File
+							Id="ManagedInjector3235"
+							Name="ManagedInjector32-3.5.dll"
+							Source="..\ManagedInjectorLauncher\bin\Release\ManagedInjector32-3.5.dll"
+						/>
 
-						<File Id="ManagedInjectorLauncher6435" Name="ManagedInjectorLauncher64-3.5.exe" Source="..\ManagedInjectorLauncher\bin\x64\Release\ManagedInjectorLauncher64-3.5.exe"/>
-						<File Id="ManagedInjector6435" Name="ManagedInjector64-3.5.dll" Source="..\ManagedInjectorLauncher\bin\x64\Release\ManagedInjector64-3.5.dll"/>
+						<File
+							Id="ManagedInjectorLauncher3240"
+							Name="ManagedInjectorLauncher32-4.0.exe"
+							Source="..\ManagedInjectorLauncher\bin\Release\ManagedInjectorLauncher32-4.0.exe"
+						/>
+						<File
+							Id="ManagedInjector3240"
+							Name="ManagedInjector32-4.0.dll"
+							Source="..\ManagedInjectorLauncher\bin\Release\ManagedInjector32-4.0.dll"
+						/>
 
-						<File Id="ManagedInjectorLauncher6440" Name="ManagedInjectorLauncher64-4.0.exe" Source="..\ManagedInjectorLauncher\bin\x64\Release\ManagedInjectorLauncher64-4.0.exe"/>
-						<File Id="ManagedInjector6440" Name="ManagedInjector64-4.0.dll" Source="..\ManagedInjectorLauncher\bin\x64\Release\ManagedInjector64-4.0.dll"/>
+						<File
+							Id="ManagedInjectorLauncher6435"
+							Name="ManagedInjectorLauncher64-3.5.exe"
+							Source="..\ManagedInjectorLauncher\bin\x64\Release\ManagedInjectorLauncher64-3.5.exe"
+						/>
+						<File
+							Id="ManagedInjector6435"
+							Name="ManagedInjector64-3.5.dll"
+							Source="..\ManagedInjectorLauncher\bin\x64\Release\ManagedInjector64-3.5.dll"
+						/>
+
+						<File
+							Id="ManagedInjectorLauncher6440"
+							Name="ManagedInjectorLauncher64-4.0.exe"
+							Source="..\ManagedInjectorLauncher\bin\x64\Release\ManagedInjectorLauncher64-4.0.exe"
+						/>
+						<File
+							Id="ManagedInjector6440"
+							Name="ManagedInjector64-4.0.dll"
+							Source="..\ManagedInjectorLauncher\bin\x64\Release\ManagedInjector64-4.0.dll"
+						/>
 					</Component>
 				</Directory>
 			</Directory>
+
+			<Directory Id="ProgramMenuFolder" Name="Programs">
+				<Directory Id="ProgramMenuDir" Name="Snoop">
+					<Component Id="ProgramMenuDir" Guid="F04C55F5-09D6-40CD-90E3-FA46E5E4A93D">
+						<RemoveFolder Id='ProgramMenuDir' On='uninstall'/>
+						<RegistryValue Root='HKCU' Key='Software\[ProductName]' Type='string' Value='' KeyPath='yes' />
+					</Component>
+				</Directory>
+			</Directory>
+
+			<Directory Id="DesktopFolder" Name="Desktop"/>
 		</Directory>
 
-		<Feature Id="ProductFeature" Title="Snoop" Level="1">
+		<Feature Id="ProductFeature" Title="Snoop" Description="Snoop, the WPF Spying Utility" Level="1" ConfigurableDirectory="INSTALLDIR">
 			<ComponentRef Id="Snoop"/>
+			<ComponentRef Id="ProgramMenuDir"/>
 
 			<!-- Note: The following ComponentGroupRef is required to pull in generated authoring from project references. -->
 			<ComponentGroupRef Id="Product.Generated"/>
 		</Feature>
+
+		<UIRef Id="WixUI_Minimal"/>
+		<WixVariable Id="WixUILicenseRtf" Value="License.rtf"/>
+
+		<Icon Id="Snoop.exe" SourceFile="..\Build\Release\Snoop.exe"/>
 	</Product>
 </Wix>
