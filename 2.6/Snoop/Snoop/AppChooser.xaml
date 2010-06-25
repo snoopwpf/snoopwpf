@@ -346,6 +346,7 @@ All other rights reserved.
 			VerticalAlignment="Center"
 			Margin="8,0,0,0"
 			Style="{StaticResource appChooserButtonStyle}"
+			Command="{x:Static my:AppChooser.RefreshCommand}"
 			ToolTip="Refresh (F5)"
 		>
 			<Grid>
@@ -386,6 +387,7 @@ All other rights reserved.
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
 				Style="{DynamicResource appChooserButtonStyle}"
+				Command="{x:Static my:AppChooser.MagnifyCommand}"
 				ToolTip="Magnify"
 			>
 				<Viewbox Height="16">
@@ -459,6 +461,7 @@ All other rights reserved.
 				Margin="4,0,0,0"
 				Style="{DynamicResource appChooserButtonStyle}"
 				IsDefault="True"
+				Command="{x:Static my:AppChooser.InspectCommand}"
 				ToolTip="Snoop this application"
 			>
 				<Viewbox Height="13">
