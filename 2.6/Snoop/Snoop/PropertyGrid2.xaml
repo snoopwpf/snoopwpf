@@ -13,7 +13,6 @@ All other rights reserved.
 	MinHeight="0"
 	MinWidth="0"
 >
-
 	<Grid.Resources>
 		<ResourceDictionary>
 			<ContextMenu x:Key="PropertyMenu">

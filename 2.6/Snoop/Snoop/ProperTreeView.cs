@@ -165,10 +165,10 @@ namespace Snoop
 			base.OnSelected(e);
 		}
 
-		protected override DependencyObject GetContainerForItemOverride() {
+		protected override DependencyObject GetContainerForItemOverride()
+		{
 			ProperTreeViewItem treeViewItem = new ProperTreeViewItem(_treeView);
 			treeViewItem.Indent = this.Indent + 12;
-
 			return treeViewItem;
 		}
 

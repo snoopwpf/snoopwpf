@@ -95,6 +95,17 @@ namespace Snoop
 		#endregion
 
 		#region Public Properties
+		#region VisualTreeItems
+		/// <summary>
+		/// This is the collection of VisualTreeItem(s) that the visual tree TreeView binds to.
+		/// </summary>
+		public ObservableCollection<VisualTreeItem> VisualTreeItems
+		{
+			get { return this.visualTreeItems; }
+		}
+		#endregion
+
+		#region Root
 		/// <summary>
 		/// Root element of the visual tree
 		/// </summary>
@@ -110,8 +121,9 @@ namespace Snoop
 		/// root is the object you are inspecting.
 		/// </summary>
 		private object root;
+		#endregion
 
-
+		#region CurrentSelection
 		/// <summary>
 		/// Currently selected item in the tree view.
 		/// </summary>
@@ -133,12 +145,12 @@ namespace Snoop
 					this.OnPropertyChanged("CurrentSelection");
 					this.OnPropertyChanged("CurrentFocusScope");
 
-					if (this.filtered.Count > 1 || this.filtered.Count == 1 && this.filtered[0] != this.rootVisualTreeItem)
+					if (this.visualTreeItems.Count > 1 || this.visualTreeItems.Count == 1 && this.visualTreeItems[0] != this.rootVisualTreeItem)
 					{
 						// Check whether the selected item is filtered out by the filter,
 						// in which case reset the filter.
 						VisualTreeItem tmp = this.currentSelection;
-						while (tmp != null && !this.filtered.Contains(tmp))
+						while (tmp != null && !this.visualTreeItems.Contains(tmp))
 						{
 							tmp = tmp.Parent;
 						}
@@ -152,24 +164,13 @@ namespace Snoop
 			}
 		}
 		private VisualTreeItem currentSelection = null;
+		#endregion
 
-
+		#region Filter
 		/// <summary>
-		/// Pluggable interface for additional VisualTree filters.
-		/// Used to enable searching for Sparkle automation IDs.
+		/// This Filter property is bound to the editable combo box that the user can type in to filter the visual tree TreeView.
+		/// Every time the user types a key, the setter gets called, enqueueing a delayed call to the ProcessFilter method.
 		/// </summary>
-		public Predicate<VisualTreeItem> AdditionalFilter
-		{
-			get { return this.externalFilter; }
-			set { this.externalFilter = value; }
-		}
-		private Predicate<VisualTreeItem> externalFilter;
-
-		public ObservableCollection<VisualTreeItem> Filtered
-		{
-			get { return this.filtered; }
-		}
-
 		public string Filter
 		{
 			get { return this.filter; }
@@ -182,7 +183,10 @@ namespace Snoop
 				this.OnPropertyChanged("Filter");
 			}
 		}
+		private string filter = string.Empty;
+		#endregion
 
+		#region EventFilter
 		public string EventFilter
 		{
 			get { return this.eventFilter; }
@@ -192,7 +196,9 @@ namespace Snoop
 				EventsListener.Filter = value;
 			}
 		}
+		#endregion
 
+		#region CurrentFocus
 		public IInputElement CurrentFocus
 		{
 			get
@@ -208,7 +214,9 @@ namespace Snoop
 				return this.returnPreviousFocus ? this.previousFocus : this.currentFocus;
 			}
 		}
+		#endregion
 
+		#region CurrentFocusScope
 		public object CurrentFocusScope
 		{
 			get
@@ -224,6 +232,7 @@ namespace Snoop
 				return null;
 			}
 		}
+		#endregion
 		#endregion
 
 		#region Public Methods
@@ -263,8 +272,8 @@ namespace Snoop
 						(function)
 						delegate
 						{
-							this.filtered.Clear();
-							this.filtered.Add(m_reducedDepthRoot);
+							this.visualTreeItems.Clear();
+							this.visualTreeItems.Add(m_reducedDepthRoot);
 							m_reducedDepthRoot = null;
 						}
 					);
@@ -331,7 +340,7 @@ namespace Snoop
 			{
 				object currentTarget = this.CurrentSelection != null ? this.CurrentSelection.Target : null;
 
-				this.filtered.Clear();
+				this.visualTreeItems.Clear();
 
 				this.rootVisualTreeItem = VisualTreeItem.Construct(this.root, null);
 
@@ -417,52 +426,6 @@ namespace Snoop
 		#endregion
 
 		#region Private Methods
-		private void ProcessFilter()
-		{
-			this.filtered.Clear();
-
-			// Blech.
-			if (this.filter == "Clear Filter")
-			{
-				Dispatcher dispatcher = null;
-				if (Application.Current == null)
-				{
-					dispatcher = Dispatcher.CurrentDispatcher;
-				}
-				else
-				{
-					dispatcher = Application.Current.Dispatcher;
-				}
-
-				dispatcher.BeginInvoke
-				(
-					DispatcherPriority.Loaded,
-					new DispatcherOperationCallback
-					(
-						delegate(object arg)
-						{
-							this.Filter = string.Empty;
-							return null;
-						}
-					),
-					null
-				);
-				return;
-			}
-			else if (this.filter == "Show only visuals with binding errors")
-			{
-				this.FilterBindings(this.rootVisualTreeItem);
-			}
-			else if (this.filter.Length == 0)
-			{
-				this.filtered.Add(this.rootVisualTreeItem);
-			}
-			else
-			{
-				this.FilterTree(this.rootVisualTreeItem, this.filter.ToLower());
-			}
-		}
-
 		/// <summary>
 		/// Find the VisualTreeItem for the specified visual.
 		/// If the item is not found and is not part of the Snoop UI,
@@ -512,23 +475,45 @@ namespace Snoop
 				this.CurrentSelection = item;
 		}
 
+		private void ProcessFilter()
+		{
+			this.visualTreeItems.Clear();
+
+			// cplotts todo: we've got to come up with a better way to do this.
+			if (this.filter == "Clear any filter applied to the tree view")
+			{
+				this.Filter = string.Empty;
+			}
+			else if (this.filter == "Show only visuals with binding errors")
+			{
+				this.FilterBindings(this.rootVisualTreeItem);
+			}
+			else if (this.filter.Length == 0)
+			{
+				this.visualTreeItems.Add(this.rootVisualTreeItem);
+			}
+			else
+			{
+				this.FilterTree(this.rootVisualTreeItem, this.filter.ToLower());
+			}
+		}
+
 		private void FilterTree(VisualTreeItem node, string filter)
 		{
 			foreach (VisualTreeItem child in node.Children)
 			{
-				if (child.Filter(filter) || (this.externalFilter != null && this.externalFilter(child)))
-					this.filtered.Add(child);
+				if (child.Filter(filter))
+					this.visualTreeItems.Add(child);
 				else
 					FilterTree(child, filter);
 			}
 		}
-
 		private void FilterBindings(VisualTreeItem node)
 		{
 			foreach (VisualTreeItem child in node.Children)
 			{
 				if (child.HasBindingError)
-					this.filtered.Add(child);
+					this.visualTreeItems.Add(child);
 				else
 					FilterBindings(child);
 			}
@@ -582,7 +567,7 @@ namespace Snoop
 		{
 			this.root = root;
 
-			this.filtered.Clear();
+			this.visualTreeItems.Clear();
 
 			this.rootVisualTreeItem = VisualTreeItem.Construct(root, null);
 			this.CurrentSelection = this.rootVisualTreeItem;
@@ -594,9 +579,8 @@ namespace Snoop
 		#endregion
 
 		#region Private Fields
-		private ObservableCollection<VisualTreeItem> filtered = new ObservableCollection<VisualTreeItem>();
+		private ObservableCollection<VisualTreeItem> visualTreeItems = new ObservableCollection<VisualTreeItem>();
 
-		private string filter = string.Empty;
 		private string propertyFilter = string.Empty;
 		private string eventFilter = string.Empty;
 
