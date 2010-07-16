@@ -228,6 +228,8 @@ namespace Snoop
 					newTarget = property.Value;
 
 				if (newTarget != null) {
+					PropertyInspector.DelveCommand.Execute(property, this);
+
 					//this.PushTarget(newTarget);
 					//PropertyWindow window = new PropertyWindow(newTarget);
 					//window.Show();

@@ -9,6 +9,7 @@ All other rights reserved.
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	x:Class="Snoop.PropertyGrid2"
 	xmlns:my="clr-namespace:Snoop"
+	xmlns:editors="clr-namespace:Snoop.ValueEditors"
 	x:Name="PropertyGrid"
 	MinHeight="0"
 	MinWidth="0"
@@ -46,6 +47,21 @@ All other rights reserved.
 			<Style TargetType="{x:Type GridViewColumnHeader}">
 				<Setter Property="Command" Value="{x:Static my:PropertyGrid2.SortCommand}"/>
 			</Style>
+			
+			<Style TargetType="{x:Type editors:MouseWheelValueEditor}">
+				<Setter Property="DockPanel.Dock" Value="Right"/>
+				<Setter Property="Margin" Value="5,0,0,0"/>
+				<Setter Property="Visibility" Value="Collapsed"/>
+				<Style.Triggers>
+					<MultiDataTrigger>
+						<MultiDataTrigger.Conditions>
+							<Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}" Value="True"/>
+							<Condition Binding="{Binding CanEdit}" Value="True"/>
+						</MultiDataTrigger.Conditions>
+						<Setter Property="Visibility" Value="Visible"/>
+					</MultiDataTrigger>
+				</Style.Triggers>
+			</Style>
 
 			<ControlTemplate x:Key="BreakpointTemplate" TargetType="{x:Type CheckBox}">
 				<Grid>
@@ -61,25 +77,77 @@ All other rights reserved.
 			<my:ValueEditorTemplateSelector x:Key="EditorSelector">
 				<my:ValueEditorTemplateSelector.StandardTemplate>
 					<DataTemplate>
-						<my:StandardValueEditor PropertyType="{Binding PropertyType}" Value="{Binding Value, Mode=TwoWay}" IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}" IsEditable="{Binding CanEdit}"/>
+						<DockPanel>
+							<!-- add mouse wheel editor to right of value (only visible when IsSelected and CanEdit) -->
+							<editors:MouseWheelValueEditor/>
+
+							<my:StandardValueEditor
+								PropertyType="{Binding PropertyType}"
+								Value="{Binding Value, Mode=TwoWay}"
+								IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
+								IsEditable="{Binding CanEdit}"
+							/>
+
+							<!-- to allow ValueEditor to live on the left and not stretch -->
+							<Border/>
+						</DockPanel>
 					</DataTemplate>
 				</my:ValueEditorTemplateSelector.StandardTemplate>
 
 				<my:ValueEditorTemplateSelector.EnumTemplate>
 					<DataTemplate>
-						<my:EnumValueEditor PropertyType="{Binding PropertyType}" Value="{Binding Value, Mode=TwoWay}" IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}" IsEditable="{Binding CanEdit}"/>
+						<DockPanel>
+							<!-- add mouse wheel editor to right of value (only visible when IsSelected and CanEdit) -->
+							<editors:MouseWheelValueEditor/>
+
+							<my:EnumValueEditor
+								PropertyType="{Binding PropertyType}"
+								Value="{Binding Value, Mode=TwoWay}"
+								IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
+								IsEditable="{Binding CanEdit}"
+							/>
+
+							<!-- to allow ValueEditor to live on the left and not stretch -->
+							<Border/>
+						</DockPanel>
 					</DataTemplate>
 				</my:ValueEditorTemplateSelector.EnumTemplate>
 
 				<my:ValueEditorTemplateSelector.BoolTemplate>
 					<DataTemplate>
-						<my:BoolValueEditor PropertyType="{Binding PropertyType}" Value="{Binding Value, Mode=TwoWay}" IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}" IsEditable="{Binding CanEdit}"/>
+						<DockPanel>
+							<!-- add mouse wheel editor to right of value (only visible when IsSelected and CanEdit) -->
+							<editors:MouseWheelValueEditor/>
+
+							<my:BoolValueEditor
+								PropertyType="{Binding PropertyType}"
+								Value="{Binding Value, Mode=TwoWay}"
+								IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
+								IsEditable="{Binding CanEdit}"
+							/>
+
+							<!-- to allow ValueEditor to live on the left and not stretch -->
+							<Border/>
+						</DockPanel>
 					</DataTemplate>
 				</my:ValueEditorTemplateSelector.BoolTemplate>
 
 				<my:ValueEditorTemplateSelector.BrushTemplate>
 					<DataTemplate>
-						<my:BrushValueEditor PropertyType="{Binding PropertyType}" Value="{Binding Value, Mode=TwoWay}" IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}" IsEditable="{Binding CanEdit}"/>
+						<DockPanel>
+							<!-- add mouse wheel editor to right of value (only visible when IsSelected and CanEdit) -->
+							<editors:MouseWheelValueEditor/>
+
+							<my:BrushValueEditor
+								PropertyType="{Binding PropertyType}"
+								Value="{Binding Value, Mode=TwoWay}"
+								IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
+								IsEditable="{Binding CanEdit}"
+							/>
+
+							<!-- to allow ValueEditor to live on the left and not stretch -->
+							<Border/>
+						</DockPanel>
 					</DataTemplate>
 				</my:ValueEditorTemplateSelector.BrushTemplate>
 			</my:ValueEditorTemplateSelector>
@@ -111,6 +179,7 @@ All other rights reserved.
 		<ListView.ItemContainerStyle>
 			<Style TargetType="{x:Type ListViewItem}">
 				<Setter Property="ContextMenu" Value="{StaticResource PropertyMenu}"/>
+				<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
 				<Style.Triggers>
 					<DataTrigger Binding="{Binding IsLocallySet}" Value="False">
 						<Setter Property="Foreground" Value="Gray"/>
@@ -173,7 +242,7 @@ All other rights reserved.
 					</GridViewColumn.CellTemplate>
 				</GridViewColumn>
 
-				<GridViewColumn Width="143" CellTemplateSelector="{StaticResource EditorSelector}">
+				<GridViewColumn Width="175" CellTemplateSelector="{StaticResource EditorSelector}">
 					<GridViewColumn.Header>
 						<TextBlock Style="{x:Null}" Text="Value">
 							<TextBlock.ToolTip>

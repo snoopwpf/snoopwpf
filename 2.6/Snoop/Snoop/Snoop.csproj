@@ -76,6 +76,7 @@
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -119,6 +120,8 @@
     <Compile Include="AdornerContainer.cs" />
     <Compile Include="ApplicationTreeItem.cs" />
     <Compile Include="BringIntoViewBehavior.cs" />
+    <Compile Include="Converters\ArgbToPartsConverter.cs" />
+    <Compile Include="Converters\IsSupportedRuntimeTypeConverter.cs" />
     <Compile Include="DelayedCall.cs" />
     <Compile Include="EditTextBox.cs" />
     <Compile Include="EventsListener.cs" />
@@ -173,6 +176,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Page Include="ValueEditors\MouseWheelValueEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Zoomer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -198,6 +205,9 @@
     <Compile Include="ValueEditors\BoolValueEditor.cs" />
     <Compile Include="ValueEditors\BrushValueEditor.cs" />
     <Compile Include="ValueEditors\EnumValueEditor.cs" />
+    <Compile Include="ValueEditors\MouseWheelValueEditor.xaml.cs">
+      <DependentUpon>MouseWheelValueEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ValueEditors\StandardValueEditor.cs" />
     <Compile Include="ValueEditors\ValueEditor.cs" />
     <Compile Include="ValueEditors\ValueEditorTemplateSelector.cs" />
