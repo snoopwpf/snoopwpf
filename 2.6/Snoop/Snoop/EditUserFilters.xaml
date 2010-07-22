@@ -1,0 +1,71 @@
+﻿<Window x:Class="Snoop.EditUserFilters"
+				xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+				xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+				xmlns:converters="clr-namespace:Snoop.Converters"
+				Title="Edit Filter Sets"
+				Height="300"
+				Width="500">
+	<Window.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="Icons.xaml"/>
+				</ResourceDictionary.MergedDictionaries>
+			</ResourceDictionary>
+	</Window.Resources>
+	
+	<Grid Margin="4">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+		
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="75" />
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="Auto" />
+		</Grid.ColumnDefinitions>
+		
+		<TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Text="Name:" />
+		<TextBox Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Text="{Binding Path=SelectedItem.DisplayName, ElementName=TheList}" />
+		<TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,4,0,0" Text="Properties:" />
+		<TextBox Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Margin="0,4,0,0" Text="{Binding Path=SelectedItem.Properties, ElementName=TheList, Converter={x:Static converters:CsvStringToArrayConverter.Default}}" />
+			
+		<ListBox x:Name="TheList" 
+						 Grid.Row="0" Grid.ColumnSpan="2"
+						 ItemsSource="{Binding ItemsSource}"
+						 SelectionChanged="SelectionChangedHandler"
+						 DisplayMemberPath="DisplayName"
+						 Margin="0,0,0,10"
+						 
+						 />
+		
+		<StackPanel Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
+								HorizontalAlignment="Right"
+								Margin="0,10,5,5" Orientation="Horizontal" >
+			<Button Width="75" Content="OK" Click="OkHandler" IsDefault="True" />
+			<Button Width="75" Margin="5,0,0,0" Content="Cancel" Click="CancelHandler" IsCancel="true" />
+		</StackPanel>
+		
+		<StackPanel Grid.Row="0" Grid.Column="2"
+								Margin="5,0,5,0"
+								VerticalAlignment="Center"
+								>
+			<Button x:Name="MoveUp" Click="UpHandler" Width="20" Height="20" >
+				<Image Source="{StaticResource scopeUpDrawingImage}" Margin="3"/>
+			</Button>
+			<Button x:Name="MoveDown" Margin="0,5,0,0" Click="DownHandler" Width="20" Height="20">
+				<Image Source="{StaticResource scopeUpDrawingImage}" Margin="3" RenderTransformOrigin="0.5,0.5">
+					<Image.RenderTransform>
+						<RotateTransform Angle="180" />
+					</Image.RenderTransform>
+				</Image>
+			</Button>
+			<Button Width="50" Margin="0,10,0,0" Content="Add" Click="AddHandler" />
+			<Button x:Name="DeleteItem" Width="50" Margin="0,5,0,0" Content="Delete" Click="DeleteHandler" />
+		</StackPanel>
+			
+	</Grid>
+	
+</Window>

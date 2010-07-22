@@ -93,6 +93,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="EditUserFilters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Simple Styles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -121,9 +125,13 @@
     <Compile Include="ApplicationTreeItem.cs" />
     <Compile Include="BringIntoViewBehavior.cs" />
     <Compile Include="Converters\ArgbToPartsConverter.cs" />
+    <Compile Include="Converters\CsvStringToArrayConverter.cs" />
     <Compile Include="Converters\IsSupportedRuntimeTypeConverter.cs" />
     <Compile Include="DelayedCall.cs" />
     <Compile Include="EditTextBox.cs" />
+    <Compile Include="EditUserFilters.xaml.cs">
+      <DependentUpon>EditUserFilters.xaml</DependentUpon>
+    </Compile>
     <Compile Include="EventsListener.cs" />
     <Compile Include="EventTracker.cs" />
     <Compile Include="Expression.cs" />

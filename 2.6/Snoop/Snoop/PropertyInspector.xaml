@@ -95,12 +95,13 @@ All other rights reserved.
 			</Button.ToolTip>
 		</Button>
 		<ComboBox
+			x:Name="FilterSetCombo"
 			Width="100"
 			HorizontalAlignment="Right"
 			Margin="0,0,40,2"
 			FontSize="10.667"
-			ItemsSource="{Binding Path=FilterSets, ElementName=propertyInspector}"  
-			SelectedItem="{Binding Path=SelectedFilterSet, ElementName=propertyInspector}"
+			ItemsSource="{Binding Path=AllFilterSets, ElementName=propertyInspector}"  
+			SelectedItem="{Binding Path=SelectedFilterSet, ElementName=propertyInspector, Mode=TwoWay}"
 			ItemTemplate="{StaticResource stylelessTextBlockDataTemplate}"
 		>
 			<ComboBox.ToolTip>

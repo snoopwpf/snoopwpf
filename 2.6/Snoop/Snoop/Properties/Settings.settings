@@ -70,5 +70,58 @@
 &lt;/WINDOWPLACEMENT&gt;
 </Value>
     </Setting>
+    <Setting Name="PropertyFilterSets" Type="System.String" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfPropertyFilterSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+      &lt;PropertyFilterSet&gt;
+        &lt;DisplayName&gt;Layout&lt;/DisplayName&gt;
+        &lt;IsDefault&gt;false&lt;/IsDefault&gt;
+        &lt;IsEditCommand&gt;false&lt;/IsEditCommand&gt;
+        &lt;Properties&gt;
+          &lt;string&gt;width&lt;/string&gt;
+          &lt;string&gt;height&lt;/string&gt;
+          &lt;string&gt;actualwidth&lt;/string&gt;
+          &lt;string&gt;actualheight&lt;/string&gt;
+          &lt;string&gt;margin&lt;/string&gt;
+          &lt;string&gt;padding&lt;/string&gt;
+          &lt;string&gt;left&lt;/string&gt;
+          &lt;string&gt;top&lt;/string&gt;
+        &lt;/Properties&gt;
+      &lt;/PropertyFilterSet&gt;
+      &lt;PropertyFilterSet&gt;
+        &lt;DisplayName&gt;Grid/Dock&lt;/DisplayName&gt;
+        &lt;IsDefault&gt;false&lt;/IsDefault&gt;
+        &lt;IsEditCommand&gt;false&lt;/IsEditCommand&gt;
+        &lt;Properties&gt;
+          &lt;string&gt;grid&lt;/string&gt;
+          &lt;string&gt;dock&lt;/string&gt;
+        &lt;/Properties&gt;
+      &lt;/PropertyFilterSet&gt;
+      &lt;PropertyFilterSet&gt;
+        &lt;DisplayName&gt;Color&lt;/DisplayName&gt;
+        &lt;IsDefault&gt;false&lt;/IsDefault&gt;
+        &lt;IsEditCommand&gt;false&lt;/IsEditCommand&gt;
+        &lt;Properties&gt;
+          &lt;string&gt;color&lt;/string&gt;
+          &lt;string&gt;background&lt;/string&gt;
+          &lt;string&gt;foreground&lt;/string&gt;
+          &lt;string&gt;borderbrush&lt;/string&gt;
+          &lt;string&gt;fill&lt;/string&gt;
+          &lt;string&gt;stroke&lt;/string&gt;
+        &lt;/Properties&gt;
+      &lt;/PropertyFilterSet&gt;
+      &lt;PropertyFilterSet&gt;
+        &lt;DisplayName&gt;ItemsControl&lt;/DisplayName&gt;
+        &lt;IsDefault&gt;false&lt;/IsDefault&gt;
+        &lt;IsEditCommand&gt;false&lt;/IsEditCommand&gt;
+        &lt;Properties&gt;
+          &lt;string&gt;items&lt;/string&gt;
+          &lt;string&gt;selected&lt;/string&gt;
+        &lt;/Properties&gt;
+      &lt;/PropertyFilterSet&gt;
+    &lt;/ArrayOfPropertyFilterSet&gt;
+</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

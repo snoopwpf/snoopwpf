@@ -3,6 +3,8 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
+using System;
+
 namespace Snoop
 {
 	using System.Text.RegularExpressions;
@@ -88,6 +90,7 @@ namespace Snoop
 		}
 	}
 
+	[Serializable]
 	public class PropertyFilterSet
 	{
 		public string DisplayName
@@ -97,6 +100,12 @@ namespace Snoop
 		}
 
 		public bool IsDefault
+		{
+			get;
+			set;
+		}
+
+		public bool IsEditCommand
 		{
 			get;
 			set;
