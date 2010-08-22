@@ -9,29 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snoop", "Snoop\Snoop.csproj
 		{21E131D3-760F-4E93-8BDD-502591BD1F97} = {21E131D3-760F-4E93-8BDD-502591BD1F97}
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestHarnesses", "TestHarnesses", "{4EAA2216-FEF3-4AD8-800E-751117636D6F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhiteForegroundIssue", "TestHarnesses\WhiteForegroundIssue\WhiteForegroundIssue.csproj", "{65E7541A-B1A7-4C90-8EDF-022CB9B800DE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InvisibleOwnerWindowIssue", "TestHarnesses\InvisibleOwnerWindowIssue\InvisibleOwnerWindowIssue.csproj", "{4B964EFB-099E-4C53-99CA-A779AA57477E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsToWPFInterop", "TestHarnesses\WindowsFormsToWPFInterop\WindowsFormsToWPFInterop.csproj", "{5B73FBB9-BA20-4ED7-BA54-52C49EE37C00}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Win32ToWPFInterop", "Win32ToWPFInterop", "{BD5BAB06-EF80-4A66-953E-826FD369044A}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "win32clock", "TestHarnesses\Win32ToWPFInterop\Win32Clock\win32clock.vcxproj", "{8625A303-646D-4D87-BC14-29CD4D079CD9}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A447BFAE-E087-463A-ABAF-2C6F01CB775E} = {A447BFAE-E087-463A-ABAF-2C6F01CB775E}
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfClock", "TestHarnesses\Win32ToWPFInterop\WPFClock\WpfClock.csproj", "{A447BFAE-E087-463A-ABAF-2C6F01CB775E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DepthReducer", "TestHarnesses\DepthReducer\DepthReducer.csproj", "{AB81D171-A776-42F4-83C5-20ADB4927FA2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicTestHarness", "TestHarnesses\BasicTestHarness\BasicTestHarness.csproj", "{64812FFE-93C4-4E74-8EAF-ECE82C7331FA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoMainWindowForApp", "TestHarnesses\NoMainWindowForApp\NoMainWindowForApp.csproj", "{3B32E230-F7D5-4D71-AE9C-680800359EC0}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagedInjectorLauncher32-4.0", "ManagedInjectorLauncher\ManagedInjectorLauncher32-4.0.csproj", "{837EED94-D254-4F58-8949-635015DE371D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagedInjectorLauncher32-3.5", "ManagedInjectorLauncher\ManagedInjectorLauncher32-3.5.csproj", "{63738B28-A45F-4BE4-A769-656443F698CD}"
@@ -55,72 +32,40 @@ Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "SnoopInstaller", "SnoopInst
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 19
+		SccNumberOfProjects = 11
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs09
 		SccLocalPath0 = .
 		SccProjectUniqueName1 = Snoop\\Snoop.csproj
 		SccProjectName1 = Snoop
 		SccLocalPath1 = Snoop
-		SccProjectUniqueName2 = TestHarnesses\\WhiteForegroundIssue\\WhiteForegroundIssue.csproj
-		SccProjectTopLevelParentUniqueName2 = Snoop.sln
-		SccProjectName2 = TestHarnesses/WhiteForegroundIssue
-		SccLocalPath2 = TestHarnesses\\WhiteForegroundIssue
-		SccProjectUniqueName3 = TestHarnesses\\InvisibleOwnerWindowIssue\\InvisibleOwnerWindowIssue.csproj
-		SccProjectTopLevelParentUniqueName3 = Snoop.sln
-		SccProjectName3 = TestHarnesses/InvisibleOwnerWindowIssue
-		SccLocalPath3 = TestHarnesses\\InvisibleOwnerWindowIssue
-		SccProjectUniqueName4 = TestHarnesses\\WindowsFormsToWPFInterop\\WindowsFormsToWPFInterop.csproj
-		SccProjectTopLevelParentUniqueName4 = Snoop.sln
-		SccProjectName4 = TestHarnesses/WindowsFormsToWPFInterop
-		SccLocalPath4 = TestHarnesses\\WindowsFormsToWPFInterop
-		SccProjectUniqueName5 = TestHarnesses\\Win32ToWPFInterop\\Win32Clock\\win32clock.vcxproj
-		SccProjectTopLevelParentUniqueName5 = Snoop.sln
-		SccProjectName5 = TestHarnesses/Win32ToWPFInterop/Win32Clock
-		SccLocalPath5 = TestHarnesses\\Win32ToWPFInterop\\Win32Clock
-		SccProjectUniqueName6 = TestHarnesses\\Win32ToWPFInterop\\WPFClock\\WpfClock.csproj
-		SccProjectTopLevelParentUniqueName6 = Snoop.sln
-		SccProjectName6 = TestHarnesses/Win32ToWPFInterop/WPFClock
-		SccLocalPath6 = TestHarnesses\\Win32ToWPFInterop\\WPFClock
-		SccProjectUniqueName7 = TestHarnesses\\DepthReducer\\DepthReducer.csproj
-		SccProjectTopLevelParentUniqueName7 = Snoop.sln
-		SccProjectName7 = TestHarnesses/DepthReducer
-		SccLocalPath7 = TestHarnesses\\DepthReducer
-		SccProjectUniqueName8 = TestHarnesses\\BasicTestHarness\\BasicTestHarness.csproj
-		SccProjectTopLevelParentUniqueName8 = Snoop.sln
-		SccProjectName8 = TestHarnesses/BasicTestHarness
-		SccLocalPath8 = TestHarnesses\\BasicTestHarness
-		SccProjectUniqueName9 = TestHarnesses\\NoMainWindowForApp\\NoMainWindowForApp.csproj
-		SccProjectTopLevelParentUniqueName9 = Snoop.sln
-		SccProjectName9 = TestHarnesses/NoMainWindowForApp
-		SccLocalPath9 = TestHarnesses\\NoMainWindowForApp
-		SccProjectUniqueName10 = ManagedInjector\\ManagedInjector32-3.5.vcxproj
-		SccProjectName10 = ManagedInjector
-		SccLocalPath10 = ManagedInjector
-		SccProjectUniqueName11 = ManagedInjector\\ManagedInjector32-4.0.vcxproj
-		SccProjectName11 = ManagedInjector
-		SccLocalPath11 = ManagedInjector
-		SccProjectUniqueName12 = ManagedInjector\\ManagedInjector64-3.5.vcxproj
-		SccProjectName12 = ManagedInjector
-		SccLocalPath12 = ManagedInjector
-		SccProjectUniqueName13 = ManagedInjector\\ManagedInjector64-4.0.vcxproj
-		SccProjectName13 = ManagedInjector
-		SccLocalPath13 = ManagedInjector
-		SccProjectUniqueName14 = ManagedInjectorLauncher\\ManagedInjectorLauncher32-4.0.csproj
-		SccProjectName14 = ManagedInjectorLauncher
-		SccLocalPath14 = ManagedInjectorLauncher
-		SccProjectUniqueName15 = ManagedInjectorLauncher\\ManagedInjectorLauncher32-3.5.csproj
-		SccProjectName15 = ManagedInjectorLauncher
-		SccLocalPath15 = ManagedInjectorLauncher
-		SccProjectUniqueName16 = ManagedInjectorLauncher\\ManagedInjectorLauncher64-4.0.csproj
-		SccProjectName16 = ManagedInjectorLauncher
-		SccLocalPath16 = ManagedInjectorLauncher
-		SccProjectUniqueName17 = ManagedInjectorLauncher\\ManagedInjectorLauncher64-3.5.csproj
-		SccProjectName17 = ManagedInjectorLauncher
-		SccLocalPath17 = ManagedInjectorLauncher
-		SccProjectUniqueName18 = SnoopInstaller\\SnoopInstaller.wixproj
-		SccProjectName18 = SnoopInstaller
-		SccLocalPath18 = SnoopInstaller
+		SccProjectUniqueName2 = ManagedInjector\\ManagedInjector32-3.5.vcxproj
+		SccProjectName2 = ManagedInjector
+		SccLocalPath2 = ManagedInjector
+		SccProjectUniqueName3 = ManagedInjector\\ManagedInjector32-4.0.vcxproj
+		SccProjectName3 = ManagedInjector
+		SccLocalPath3 = ManagedInjector
+		SccProjectUniqueName4 = ManagedInjector\\ManagedInjector64-3.5.vcxproj
+		SccProjectName4 = ManagedInjector
+		SccLocalPath4 = ManagedInjector
+		SccProjectUniqueName5 = ManagedInjector\\ManagedInjector64-4.0.vcxproj
+		SccProjectName5 = ManagedInjector
+		SccLocalPath5 = ManagedInjector
+		SccProjectUniqueName6 = ManagedInjectorLauncher\\ManagedInjectorLauncher32-4.0.csproj
+		SccProjectName6 = ManagedInjectorLauncher
+		SccLocalPath6 = ManagedInjectorLauncher
+		SccProjectUniqueName7 = ManagedInjectorLauncher\\ManagedInjectorLauncher32-3.5.csproj
+		SccProjectName7 = ManagedInjectorLauncher
+		SccLocalPath7 = ManagedInjectorLauncher
+		SccProjectUniqueName8 = ManagedInjectorLauncher\\ManagedInjectorLauncher64-4.0.csproj
+		SccProjectName8 = ManagedInjectorLauncher
+		SccLocalPath8 = ManagedInjectorLauncher
+		SccProjectUniqueName9 = ManagedInjectorLauncher\\ManagedInjectorLauncher64-3.5.csproj
+		SccProjectName9 = ManagedInjectorLauncher
+		SccLocalPath9 = ManagedInjectorLauncher
+		SccProjectUniqueName10 = SnoopInstaller\\SnoopInstaller.wixproj
+		SccProjectName10 = SnoopInstaller
+		SccLocalPath10 = SnoopInstaller
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -135,60 +80,6 @@ Global
 		{6ADE40E1-7624-475C-80C5-9883AA4712EF}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{6ADE40E1-7624-475C-80C5-9883AA4712EF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{6ADE40E1-7624-475C-80C5-9883AA4712EF}.Release|x86.ActiveCfg = Release|Any CPU
-		{65E7541A-B1A7-4C90-8EDF-022CB9B800DE}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{65E7541A-B1A7-4C90-8EDF-022CB9B800DE}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{65E7541A-B1A7-4C90-8EDF-022CB9B800DE}.Debug|x86.ActiveCfg = Debug|x86
-		{65E7541A-B1A7-4C90-8EDF-022CB9B800DE}.Debug|x86.Build.0 = Debug|x86
-		{65E7541A-B1A7-4C90-8EDF-022CB9B800DE}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{65E7541A-B1A7-4C90-8EDF-022CB9B800DE}.Release|x86.ActiveCfg = Release|x86
-		{65E7541A-B1A7-4C90-8EDF-022CB9B800DE}.Release|x86.Build.0 = Release|x86
-		{4B964EFB-099E-4C53-99CA-A779AA57477E}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{4B964EFB-099E-4C53-99CA-A779AA57477E}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{4B964EFB-099E-4C53-99CA-A779AA57477E}.Debug|x86.ActiveCfg = Debug|x86
-		{4B964EFB-099E-4C53-99CA-A779AA57477E}.Debug|x86.Build.0 = Debug|x86
-		{4B964EFB-099E-4C53-99CA-A779AA57477E}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{4B964EFB-099E-4C53-99CA-A779AA57477E}.Release|x86.ActiveCfg = Release|x86
-		{4B964EFB-099E-4C53-99CA-A779AA57477E}.Release|x86.Build.0 = Release|x86
-		{5B73FBB9-BA20-4ED7-BA54-52C49EE37C00}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{5B73FBB9-BA20-4ED7-BA54-52C49EE37C00}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{5B73FBB9-BA20-4ED7-BA54-52C49EE37C00}.Debug|x86.ActiveCfg = Debug|x86
-		{5B73FBB9-BA20-4ED7-BA54-52C49EE37C00}.Debug|x86.Build.0 = Debug|x86
-		{5B73FBB9-BA20-4ED7-BA54-52C49EE37C00}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{5B73FBB9-BA20-4ED7-BA54-52C49EE37C00}.Release|x86.ActiveCfg = Release|x86
-		{5B73FBB9-BA20-4ED7-BA54-52C49EE37C00}.Release|x86.Build.0 = Release|x86
-		{8625A303-646D-4D87-BC14-29CD4D079CD9}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{8625A303-646D-4D87-BC14-29CD4D079CD9}.Debug|Mixed Platforms.Build.0 = Debug|Win32
-		{8625A303-646D-4D87-BC14-29CD4D079CD9}.Debug|x86.ActiveCfg = Debug|x64
-		{8625A303-646D-4D87-BC14-29CD4D079CD9}.Release|Mixed Platforms.ActiveCfg = Release|Win32
-		{8625A303-646D-4D87-BC14-29CD4D079CD9}.Release|x86.ActiveCfg = Release|x64
-		{A447BFAE-E087-463A-ABAF-2C6F01CB775E}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{A447BFAE-E087-463A-ABAF-2C6F01CB775E}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{A447BFAE-E087-463A-ABAF-2C6F01CB775E}.Debug|x86.ActiveCfg = Debug|x86
-		{A447BFAE-E087-463A-ABAF-2C6F01CB775E}.Debug|x86.Build.0 = Debug|x86
-		{A447BFAE-E087-463A-ABAF-2C6F01CB775E}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{A447BFAE-E087-463A-ABAF-2C6F01CB775E}.Release|x86.ActiveCfg = Release|x86
-		{A447BFAE-E087-463A-ABAF-2C6F01CB775E}.Release|x86.Build.0 = Release|x86
-		{AB81D171-A776-42F4-83C5-20ADB4927FA2}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{AB81D171-A776-42F4-83C5-20ADB4927FA2}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{AB81D171-A776-42F4-83C5-20ADB4927FA2}.Debug|x86.ActiveCfg = Debug|x86
-		{AB81D171-A776-42F4-83C5-20ADB4927FA2}.Debug|x86.Build.0 = Debug|x86
-		{AB81D171-A776-42F4-83C5-20ADB4927FA2}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{AB81D171-A776-42F4-83C5-20ADB4927FA2}.Release|x86.ActiveCfg = Release|x86
-		{AB81D171-A776-42F4-83C5-20ADB4927FA2}.Release|x86.Build.0 = Release|x86
-		{64812FFE-93C4-4E74-8EAF-ECE82C7331FA}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{64812FFE-93C4-4E74-8EAF-ECE82C7331FA}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{64812FFE-93C4-4E74-8EAF-ECE82C7331FA}.Debug|x86.ActiveCfg = Debug|x86
-		{64812FFE-93C4-4E74-8EAF-ECE82C7331FA}.Debug|x86.Build.0 = Debug|x86
-		{64812FFE-93C4-4E74-8EAF-ECE82C7331FA}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{64812FFE-93C4-4E74-8EAF-ECE82C7331FA}.Release|x86.ActiveCfg = Release|x86
-		{64812FFE-93C4-4E74-8EAF-ECE82C7331FA}.Release|x86.Build.0 = Release|x86
-		{3B32E230-F7D5-4D71-AE9C-680800359EC0}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{3B32E230-F7D5-4D71-AE9C-680800359EC0}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{3B32E230-F7D5-4D71-AE9C-680800359EC0}.Debug|x86.ActiveCfg = Debug|x86
-		{3B32E230-F7D5-4D71-AE9C-680800359EC0}.Debug|x86.Build.0 = Debug|x86
-		{3B32E230-F7D5-4D71-AE9C-680800359EC0}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{3B32E230-F7D5-4D71-AE9C-680800359EC0}.Release|x86.ActiveCfg = Release|x86
-		{3B32E230-F7D5-4D71-AE9C-680800359EC0}.Release|x86.Build.0 = Release|x86
 		{837EED94-D254-4F58-8949-635015DE371D}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{837EED94-D254-4F58-8949-635015DE371D}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{837EED94-D254-4F58-8949-635015DE371D}.Debug|x86.ActiveCfg = Debug|x86
@@ -251,16 +142,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{65E7541A-B1A7-4C90-8EDF-022CB9B800DE} = {4EAA2216-FEF3-4AD8-800E-751117636D6F}
-		{4B964EFB-099E-4C53-99CA-A779AA57477E} = {4EAA2216-FEF3-4AD8-800E-751117636D6F}
-		{5B73FBB9-BA20-4ED7-BA54-52C49EE37C00} = {4EAA2216-FEF3-4AD8-800E-751117636D6F}
-		{BD5BAB06-EF80-4A66-953E-826FD369044A} = {4EAA2216-FEF3-4AD8-800E-751117636D6F}
-		{AB81D171-A776-42F4-83C5-20ADB4927FA2} = {4EAA2216-FEF3-4AD8-800E-751117636D6F}
-		{64812FFE-93C4-4E74-8EAF-ECE82C7331FA} = {4EAA2216-FEF3-4AD8-800E-751117636D6F}
-		{3B32E230-F7D5-4D71-AE9C-680800359EC0} = {4EAA2216-FEF3-4AD8-800E-751117636D6F}
-		{8625A303-646D-4D87-BC14-29CD4D079CD9} = {BD5BAB06-EF80-4A66-953E-826FD369044A}
-		{A447BFAE-E087-463A-ABAF-2C6F01CB775E} = {BD5BAB06-EF80-4A66-953E-826FD369044A}
 	EndGlobalSection
 EndGlobal
