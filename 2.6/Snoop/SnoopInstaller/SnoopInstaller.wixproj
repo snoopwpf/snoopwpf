@@ -27,10 +27,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Product.wxs" />
-    <Compile Include="Product.Generated.wxs">
-      <DependentUpon>Product.wxs</DependentUpon>
-      <GenerateComponentGroups>True</GenerateComponentGroups>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="License.rtf" />
