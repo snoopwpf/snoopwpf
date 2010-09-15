@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C29817A9-3696-421D-89BD-F66681657C37}</ProjectGuid>
     <RootNamespace>ManagedInjector</RootNamespace>
-    <SccProjectName>$/snoopwpf/WPF4/Snoop 2.5/ManagedInjector</SccProjectName>
-    <SccAuxPath>https://tfs09.codeplex.com</SccAuxPath>
+    <SccProjectName>$/snoopwpf/2.5/WPF4/Snoop/ManagedInjector</SccProjectName>
+    <SccAuxPath>https://tfs.codeplex.com/tfs/tfs09</SccAuxPath>
     <SccLocalPath>.</SccLocalPath>
     <SccProvider>{4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}</SccProvider>
     <Keyword>ManagedCProj</Keyword>
