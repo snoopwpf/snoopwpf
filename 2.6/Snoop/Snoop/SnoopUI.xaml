@@ -15,7 +15,7 @@ All other rights reserved.
 	Icon="Snoop.ico"
 	Title="Snoop"
 	Background="#FFE0DFE3"
-	ShowInTaskbar="False"
+	ShowInTaskbar="True"
 	SnapsToDevicePixels="True"
 	Focusable="False"
 	DataContext="{Binding RelativeSource={RelativeSource Self}}"
