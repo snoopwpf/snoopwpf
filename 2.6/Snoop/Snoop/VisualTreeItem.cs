@@ -181,7 +181,7 @@ namespace Snoop
 			this.name = (this.target is FrameworkElement) ? ((FrameworkElement)this.target).Name : string.Empty;
 
 			this.nameLower = this.name.ToLower();
-			this.typeNameLower = this.Target.GetType().Name.ToLower();
+			this.typeNameLower = this.Target != null ? this.Target.GetType().Name.ToLower() : string.Empty;
 
 			List<VisualTreeItem> toBeRemoved = new List<VisualTreeItem>(this.Children);
 			this.Reload(toBeRemoved);
