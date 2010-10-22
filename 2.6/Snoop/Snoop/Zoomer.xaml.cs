@@ -71,8 +71,21 @@ namespace Snoop
 
 		public static void GoBabyGo()
 		{
-			Zoomer zoomer = new Zoomer();
-			zoomer.Magnify();
+			Dispatcher dispatcher;
+			if (Application.Current == null)
+				dispatcher = Dispatcher.CurrentDispatcher;
+			else
+				dispatcher = Application.Current.Dispatcher;
+
+			if (dispatcher.CheckAccess())
+			{
+				Zoomer zoomer = new Zoomer();
+				zoomer.Magnify();
+			}
+			else
+			{
+				dispatcher.Invoke((Action)GoBabyGo);
+			}
 		}
 
 		public void Magnify()

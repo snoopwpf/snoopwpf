@@ -76,8 +76,21 @@ namespace Snoop
 
 		public static void GoBabyGo()
 		{
-			SnoopUI snoop = new SnoopUI();
-			snoop.Inspect();
+			Dispatcher dispatcher;
+			if (Application.Current == null)
+				dispatcher = Dispatcher.CurrentDispatcher;
+			else
+				dispatcher = Application.Current.Dispatcher;
+
+			if (dispatcher.CheckAccess())
+			{
+				SnoopUI snoop = new SnoopUI();
+				snoop.Inspect();
+			}
+			else
+			{
+				dispatcher.Invoke((Action)GoBabyGo);
+			}
 		}
 		#endregion
 
