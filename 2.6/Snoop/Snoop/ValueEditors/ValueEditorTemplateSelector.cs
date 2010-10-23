@@ -3,39 +3,45 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+
 namespace Snoop
 {
-	using System.Windows;
-	using System.Windows.Controls;
-	using System.Windows.Media;
-
-	public class ValueEditorTemplateSelector: DataTemplateSelector {
-		private DataTemplate standardTemplate;
-		private DataTemplate enumTemplate;
-		private DataTemplate boolTemplate;
-		private DataTemplate brushTemplate;
-
-		public DataTemplate StandardTemplate {
+	public class ValueEditorTemplateSelector : DataTemplateSelector
+	{
+		public DataTemplate StandardTemplate
+		{
 			get { return this.standardTemplate; }
 			set { this.standardTemplate = value; }
 		}
+		private DataTemplate standardTemplate;
 
-		public DataTemplate EnumTemplate {
+		public DataTemplate EnumTemplate
+		{
 			get { return this.enumTemplate; }
 			set { this.enumTemplate = value; }
 		}
+		private DataTemplate enumTemplate;
 
-		public DataTemplate BoolTemplate {
+		public DataTemplate BoolTemplate
+		{
 			get { return this.boolTemplate; }
 			set { this.boolTemplate = value; }
 		}
+		private DataTemplate boolTemplate;
 
-		public DataTemplate BrushTemplate {
+		public DataTemplate BrushTemplate
+		{
 			get { return this.brushTemplate; }
 			set { this.brushTemplate = value; }
 		}
+		private DataTemplate brushTemplate;
 
-		public override DataTemplate SelectTemplate(object item, DependencyObject container) {
+
+		public override DataTemplate SelectTemplate(object item, DependencyObject container)
+		{
 			PropertyInformation property = (PropertyInformation)item;
 
 			if (property.PropertyType.IsEnum)
