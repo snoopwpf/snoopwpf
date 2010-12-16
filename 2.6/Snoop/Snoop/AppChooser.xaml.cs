@@ -261,13 +261,24 @@ namespace Snoop
 					}
 					else
 					{
-						// a process is valid to snoop if it contains a dependency on PresentationFramework.dll
-                        foreach (var module in Modules)
+						// a process is valid to snoop if it contains a dependency on PresentationFramework, PresentationCore, or milcore (wpfgfx).
+						// this includes the files:
+						// PresentationFramework.dll, PresentationFramework.ni.dll
+						// PresentationCore.dll, PresentationCore.ni.dll
+						// wpfgfx_v0300.dll (WPF 3.0/3.5)
+						// wpfgrx_v0400.dll (WPF 4.0)
+
+						// note: sometimes PresentationFramework.dll doesn't show up in the list of modules.
+						// so, it makes sense to also check for the unmanaged milcore component (wpfgfx_vxxxx.dll).
+						// see for more info: http://snoopwpf.codeplex.com/Thread/View.aspx?ThreadId=236335
+
+						foreach (var module in Modules)
 						{
 							if
 							(
-								module.szModule.Contains("PresentationFramework.dll") ||
-                                module.szModule.Contains("PresentationFramework.ni.dll")
+								module.szModule.Contains("PresentationFramework") ||
+								module.szModule.Contains("PresentationCore") ||
+								module.szModule.Contains("wpfgfx")
 							)
 							{
 								isValid = true;

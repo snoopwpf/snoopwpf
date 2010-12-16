@@ -13,44 +13,56 @@ using System.IO;
 
 namespace Snoop
 {
-    class Injector
-    {
-        static string Suffix(IntPtr windowHandle)
-        {
-            var window = new WindowInfo(windowHandle, null);
-            string bitness = IntPtr.Size == 8 ? "64" : "32";
-            string clr = "3.5";
+	class Injector
+	{
+		static string Suffix(IntPtr windowHandle)
+		{
+			var window = new WindowInfo(windowHandle, null);
+			string bitness = IntPtr.Size == 8 ? "64" : "32";
+			string clr = "3.5";
 
-            foreach (var module in window.Modules)
-            {
-                if
-                (
-                    module.szModule.Contains("PresentationFramework.dll") ||
-                    module.szModule.Contains("PresentationFramework.ni.dll")
-                )
-                {
-                    if (FileVersionInfo.GetVersionInfo(module.szExePath).FileMajorPart > 3)
-                    {
-                        clr = "4.0";
-                    }
-                }
-                if (module.szModule.Contains("wow64.dll"))
-                {
-                    if (FileVersionInfo.GetVersionInfo(module.szExePath).FileMajorPart > 3)
-                    {
-                        bitness = "32";
-                    }
-                }
-            }
-            return bitness + "-" + clr;
-        }
-        internal static void Launch(IntPtr windowHandle, Assembly assembly, string className, string methodName)
-        {
-            var location = Assembly.GetEntryAssembly().Location;
-            var directory = Path.GetDirectoryName(location);
-            var file = Path.Combine(directory, "ManagedInjectorLauncher" + Suffix(windowHandle) + ".exe");
 
-            Process.Start(file, windowHandle + " \"" + assembly.Location + "\" \"" + className + "\" \"" + methodName + "\"");
-        }
-    }
+			foreach (var module in window.Modules)
+			{
+				// a process is valid to snoop if it contains a dependency on PresentationFramework, PresentationCore, or milcore (wpfgfx).
+				// this includes the files:
+				// PresentationFramework.dll, PresentationFramework.ni.dll
+				// PresentationCore.dll, PresentationCore.ni.dll
+				// wpfgfx_v0300.dll (WPF 3.0/3.5)
+				// wpfgrx_v0400.dll (WPF 4.0)
+
+				// note: sometimes PresentationFramework.dll doesn't show up in the list of modules.
+				// so, it makes sense to also check for the unmanaged milcore component (wpfgfx_vxxxx.dll).
+				// see for more info: http://snoopwpf.codeplex.com/Thread/View.aspx?ThreadId=236335
+				if
+				(
+					module.szModule.Contains("PresentationFramework") ||
+					module.szModule.Contains("PresentationCore") ||
+					module.szModule.Contains("wpfgfx")
+				)
+				{
+					if (FileVersionInfo.GetVersionInfo(module.szExePath).FileMajorPart > 3)
+					{
+						clr = "4.0";
+					}
+				}
+				if (module.szModule.Contains("wow64.dll"))
+				{
+					if (FileVersionInfo.GetVersionInfo(module.szExePath).FileMajorPart > 3)
+					{
+						bitness = "32";
+					}
+				}
+			}
+			return bitness + "-" + clr;
+		}
+		internal static void Launch(IntPtr windowHandle, Assembly assembly, string className, string methodName)
+		{
+			var location = Assembly.GetEntryAssembly().Location;
+			var directory = Path.GetDirectoryName(location);
+			var file = Path.Combine(directory, "ManagedInjectorLauncher" + Suffix(windowHandle) + ".exe");
+
+			Process.Start(file, windowHandle + " \"" + assembly.Location + "\" \"" + className + "\" \"" + methodName + "\"");
+		}
+	}
 }
