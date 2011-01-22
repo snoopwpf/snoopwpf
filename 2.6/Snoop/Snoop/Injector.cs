@@ -34,11 +34,15 @@ namespace Snoop
 				// note: sometimes PresentationFramework.dll doesn't show up in the list of modules.
 				// so, it makes sense to also check for the unmanaged milcore component (wpfgfx_vxxxx.dll).
 				// see for more info: http://snoopwpf.codeplex.com/Thread/View.aspx?ThreadId=236335
+
+				// sometimes the module names aren't always the same case. compare case insensitive.
+				// see for more info: http://snoopwpf.codeplex.com/workitem/6090
+
 				if
 				(
-					module.szModule.Contains("PresentationFramework") ||
-					module.szModule.Contains("PresentationCore") ||
-					module.szModule.Contains("wpfgfx")
+					module.szModule.StartsWith("PresentationFramework", StringComparison.OrdinalIgnoreCase) ||
+					module.szModule.StartsWith("PresentationCore", StringComparison.OrdinalIgnoreCase) ||
+					module.szModule.StartsWith("wpfgfx", StringComparison.OrdinalIgnoreCase)
 				)
 				{
 					if (FileVersionInfo.GetVersionInfo(module.szExePath).FileMajorPart > 3)

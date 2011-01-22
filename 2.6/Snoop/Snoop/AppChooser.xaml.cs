@@ -272,13 +272,16 @@ namespace Snoop
 						// so, it makes sense to also check for the unmanaged milcore component (wpfgfx_vxxxx.dll).
 						// see for more info: http://snoopwpf.codeplex.com/Thread/View.aspx?ThreadId=236335
 
+						// sometimes the module names aren't always the same case. compare case insensitive.
+						// see for more info: http://snoopwpf.codeplex.com/workitem/6090
+
 						foreach (var module in Modules)
 						{
 							if
 							(
-								module.szModule.Contains("PresentationFramework") ||
-								module.szModule.Contains("PresentationCore") ||
-								module.szModule.Contains("wpfgfx")
+								module.szModule.StartsWith("PresentationFramework", StringComparison.OrdinalIgnoreCase) ||
+								module.szModule.StartsWith("PresentationCore", StringComparison.OrdinalIgnoreCase) ||
+								module.szModule.StartsWith("wpfgfx", StringComparison.OrdinalIgnoreCase)
 							)
 							{
 								isValid = true;
