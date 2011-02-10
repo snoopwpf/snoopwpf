@@ -1,16 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<!-- ID="*" will generate a new GUID for product code at time of build. -->
+	<!-- Product code changes AND version number changes (first 3 digits), then a major upgrade will be triggered. -->
 	<Product
-		Id="10AC5FAF-630D-48CF-9B46-029B1A0EB251"
+		Id="*"
 		Name="Snoop"
 		Manufacturer="Cory Plotts"
 		Language="1033"
-		Version="2.6.0"
+		Version="2.6.1"
 		UpgradeCode="FBEC01D7-CE1B-46F4-9498-71A96FEA8A15"
 	>
-		<Package InstallerVersion="200" Compressed="yes"/>
+		<Package InstallerVersion="301" Compressed="yes"/>
 
-		<Media Id="1" Cabinet="media1.cab" EmbedCab="yes" />
+		<!-- Rules for upgrading. ID must be the same as the packages to be checked/uninstalled. -->
+		<Upgrade Id="FBEC01D7-CE1B-46F4-9498-71A96FEA8A15">
+			<!-- If the installed version is 2.6.1 or higher, then set the property "NEWPRODUCTFOUND". This will trigger a "PreventDowngrading" Custom action. -->
+			<UpgradeVersion Minimum="2.6.1" IncludeMinimum="no" OnlyDetect="yes" Language="1033" Property="NEWPRODUCTFOUND"/>
+
+			<!-- If the installed version is between 1.0.0 and 2.6.1, then set "PREVIOUSVERSIONINSTALLED" properity. This will trigger RemoveExistingProducts. -->
+			<UpgradeVersion Minimum="1.0.0" IncludeMinimum="yes" Maximum="2.6.1" IncludeMaximum="no" Language="1033" Property="PREVIOUSVERSIONSINSTALLED"/>
+		</Upgrade>
+
+		<InstallExecuteSequence>
+			<!-- After we locate related products (listed by UpgradeCode in Upgrade table), launch custom action if NEWPRODUCTFOUND is set. -->
+			<Custom Action="PreventDowngrading" After="FindRelatedProducts">NEWPRODUCTFOUND</Custom>
+			<!-- Move RemoveExistingProducts to after InstallInitalize. This allows an upgrade to rollback to the previous version if there is an error. -->
+			<RemoveExistingProducts After="InstallInitialize">PREVIOUSVERSIONSINSTALLED</RemoveExistingProducts>
+		</InstallExecuteSequence>
+		
+		<!-- Will prompt user that a Newer version is already installed.-->
+		<CustomAction Id="PreventDowngrading" Error="Newer version already installed."/>
+
+		<Media Id="1" Cabinet="media1.cab" EmbedCab="yes"/>
 
 		<Directory Id="TARGETDIR" Name="SourceDir">
 			<Directory Id="ProgramFilesFolder">
@@ -25,7 +46,7 @@
 							<Shortcut
 								Id="desktopSnoopShortcut"
 								Directory="DesktopFolder"
-								Name="Snoop 2.6.0"
+								Name="Snoop 2.6.1"
 								WorkingDirectory="INSTALLDIR"
 								Icon="Snoop.exe"
 								IconIndex="0"
@@ -34,7 +55,7 @@
 							<Shortcut
 								Id="startMenuSnoopShortcut"
 								Directory="ProgramMenuDir"
-								Name="Snoop 2.6.0"
+								Name="Snoop 2.6.1"
 								WorkingDirectory="INSTALLDIR"
 								Icon="Snoop.exe"
 								IconIndex="0"
@@ -99,7 +120,7 @@
 				<Directory Id="ProgramMenuDir" Name="Snoop">
 					<Component Id="ProgramMenuDir" Guid="F04C55F5-09D6-40CD-90E3-FA46E5E4A93D">
 						<RemoveFolder Id='ProgramMenuDir' On='uninstall'/>
-						<RegistryValue Root='HKCU' Key='Software\[ProductName]' Type='string' Value='' KeyPath='yes' />
+						<RegistryValue Root='HKCU' Key='Software\[ProductName]' Type='string' Value='' KeyPath='yes'/>
 					</Component>
 				</Directory>
 			</Directory>
