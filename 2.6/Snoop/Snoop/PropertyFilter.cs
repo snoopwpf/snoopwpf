@@ -4,25 +4,28 @@
 // All other rights reserved.
 
 using System;
+using System.Windows;
+using System.Text.RegularExpressions;
 
 namespace Snoop
 {
-	using System.Text.RegularExpressions;
-	using System.Windows;
-
-	public class PropertyFilter {
+	public class PropertyFilter
+	{
 		private string filterString;
 		private Regex filterRegex;
 		private bool showDefaults;
 
-		public PropertyFilter(string filterString, bool showDefaults) {
+		public PropertyFilter(string filterString, bool showDefaults)
+		{
 			this.filterString = filterString.ToLower();
 			this.showDefaults = showDefaults;
 		}
 
-		public string FilterString {
+		public string FilterString
+		{
 			get { return this.filterString; }
-			set {
+			set
+			{
 				this.filterString = value.ToLower();
 				try
 				{
@@ -35,7 +38,8 @@ namespace Snoop
 			}
 		}
 
-		public bool ShowDefaults {
+		public bool ShowDefaults
+		{
 			get { return this.showDefaults; }
 			set { this.showDefaults = value; }
 		}
@@ -50,43 +54,47 @@ namespace Snoop
 			}
 		}
 
-		public bool Show(PropertyInformation property) {
-			if (this.filterRegex == null && string.IsNullOrEmpty(this.filterString) && !IsPropertyFilterSet)
+		public bool Show(PropertyInformation property)
+		{
+			// use a regular expression if we have one and we also have a filter string.
+			if (this.filterRegex != null && !string.IsNullOrEmpty(this.FilterString))
+			{
+				return
+				(
+					this.filterRegex.IsMatch(property.DisplayName) ||
+					this.filterRegex.IsMatch(property.Property.PropertyType.Name) ||
+					this.filterRegex.IsMatch(property.Property.ComponentType.Name)
+				);
+			}
+			// else just check for containment if we don't have a regular expression but we do have a filter string.
+			else if (!string.IsNullOrEmpty(this.FilterString))
+			{
+				if (property.DisplayName.ToLower().Contains(this.FilterString))
+					return true;
+				if (property.Property.PropertyType.Name.ToLower().Contains(this.FilterString))
+					return true;
+				if (property.Property.ComponentType.Name.ToLower().Contains(this.FilterString))
+					return true;
+				return false;
+			}
+			// else use the filter set if we have one of those.
+			else if (IsPropertyFilterSet)
+			{
+				if (SelectedFilterSet.IsPropertyInFilter(property.DisplayName))
+					return true;
+				else
+					return false;
+			}
+			// finally, if none of the above applies
+			// just check to see if we're not showing properties at their default values
+			// and this property is actually set to its default value
+			else
 			{
 				if (!this.ShowDefaults && property.ValueSource.BaseValueSource == BaseValueSource.Default)
 					return false;
-				return true;
-			}
-
-			// Use a regular expression if we have one.
-			if (this.filterRegex != null)
-			{
-				return (this.filterRegex.IsMatch(property.DisplayName) ||
-					this.filterRegex.IsMatch(property.Property.PropertyType.Name) ||
-					this.filterRegex.IsMatch(property.Property.ComponentType.Name));
-			}
-
-			// check if filter set is applied
-			if (IsPropertyFilterSet)
-			{
-				if (SelectedFilterSet.IsPropertyInFilter(property.DisplayName))
-				{
-					return true;
-				}
 				else
-				{
-					return false;
-				}
+					return true;
 			}
-
-			// Otherwise, just check for string containment.
-			if (property.DisplayName.ToLower().Contains(this.FilterString))
-				return true;
-			if (property.Property.PropertyType.Name.ToLower().Contains(this.FilterString))
-				return true;
-			if (property.Property.ComponentType.Name.ToLower().Contains(this.FilterString))
-				return true;
-			return false;
 		}
 	}
 
