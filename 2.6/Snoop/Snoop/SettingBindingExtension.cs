@@ -15,12 +15,10 @@ namespace Snoop
 	{
 		public SettingBindingExtension()
 		{
-
 		}
 
 		public SettingBindingExtension(string path) : base(path)
 		{
-
 		}
 
 		private void Initialize()

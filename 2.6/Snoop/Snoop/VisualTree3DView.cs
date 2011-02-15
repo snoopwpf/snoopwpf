@@ -3,25 +3,18 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
+using System;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Media3D;
+using System.Windows.Media.Imaging;
+
 namespace Snoop
 {
-	using System;
-	using System.Windows;
-	using System.Windows.Controls;
-	using System.Windows.Input;
-	using System.Windows.Media;
-	using System.Windows.Media.Media3D;
-	using System.Windows.Media.Imaging;
-
-	class VisualTree3DView : Viewport3D
+	public class VisualTree3DView : Viewport3D
 	{
-		private static Pen OutlinePen = new Pen(new SolidColorBrush(Color.FromArgb(128, 255, 0, 0)), 2);
-
-		private bool drawOutlines = false;
-		private bool includeEmptyVisuals = false;
-		private TrackballBehavior trackballBehavior;
-		private ScaleTransform3D zScaleTransform;
-
 		public VisualTree3DView(Visual visual)
 		{
 			DirectionalLight directionalLight1 = new DirectionalLight(Colors.White, new Vector3D(0, 0, 1));
@@ -152,7 +145,6 @@ namespace Snoop
 
 			return model;
 		}
-
 		private Brush MakeBrushFromVisual(Visual visual, Rect bounds)
 		{
 			Viewport3D viewport = visual as Viewport3D;
@@ -198,5 +190,12 @@ namespace Snoop
 
 			return imageBrush;
 		}
+
+		private bool drawOutlines = false;
+		private bool includeEmptyVisuals = false;
+		private TrackballBehavior trackballBehavior;
+		private ScaleTransform3D zScaleTransform;
+
+		private static Pen OutlinePen = new Pen(new SolidColorBrush(Color.FromArgb(128, 255, 0, 0)), 2);
 	}
 }

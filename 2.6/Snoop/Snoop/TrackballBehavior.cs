@@ -3,26 +3,16 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
+using System;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media.Media3D;
+
 namespace Snoop
 {
-	using System;
-	using System.Windows;
-	using System.Windows.Controls;
-	using System.Windows.Input;
-	using System.Windows.Media.Media3D;
-
 	public class TrackballBehavior
 	{
-		private const double ZoomFactor = 1.1;
-
-		private Viewport3D viewport;
-		private Point3D lookAtPoint;
-		private double distance = 1;
-		private double zoom = 1;
-		private bool isRotating;
-		private Vector3D mouseDirection;
-		private Quaternion orientation = Quaternion.Identity;
-
 		public TrackballBehavior(Viewport3D viewport, Point3D lookAtPoint)
 		{
 			if (viewport == null)
@@ -61,7 +51,6 @@ namespace Snoop
 			this.isRotating = true;
 			e.Handled = true;
 		}
-
 		private void Viewport_MouseMove(object sender, MouseEventArgs e)
 		{
 			if (this.isRotating)
@@ -76,14 +65,12 @@ namespace Snoop
 				e.Handled = true;
 			}
 		}
-
 		private void Viewport_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 		{
 			this.isRotating = false;
 			e.MouseDevice.Capture(null);
 			e.Handled = true;
 		}
-
 		private void Viewport_MouseWheel(object sender, MouseWheelEventArgs e)
 		{
 			// Zoom in or out exponentially.
@@ -165,5 +152,15 @@ namespace Snoop
 				return new Quaternion(axis, angleMultiplier * angle * 180 / Math.PI);
 			}
 		}
+
+		private Viewport3D viewport;
+		private Point3D lookAtPoint;
+		private double distance = 1;
+		private double zoom = 1;
+		private bool isRotating;
+		private Vector3D mouseDirection;
+		private Quaternion orientation = Quaternion.Identity;
+
+		private const double ZoomFactor = 1.1;
 	}
 }
