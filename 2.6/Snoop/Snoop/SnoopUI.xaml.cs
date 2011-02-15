@@ -257,9 +257,10 @@ namespace Snoop
 			if (ownerWindow != null)
 				this.Owner = ownerWindow;
 
+			SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
+
 			Show();
 			Activate();
-			SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
 		}
 
 		public void ApplyReduceDepthFilter(VisualTreeItem newRoot)
@@ -315,7 +316,6 @@ namespace Snoop
 
 			InputManager.Current.PreProcessInput -= this.HandlePreProcessInput;
 			EventsListener.Stop();
-
 
 			// persist the window placement details to the user settings.
 			WINDOWPLACEMENT wp = new WINDOWPLACEMENT();

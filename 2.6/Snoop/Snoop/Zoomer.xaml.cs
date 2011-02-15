@@ -115,6 +115,7 @@ namespace Snoop
 				this.Owner = ownerWindow;
 
 			SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
+
 			this.Show();
 			this.Activate();
 		}
@@ -165,7 +166,6 @@ namespace Snoop
 		protected override void OnClosing(CancelEventArgs e)
 		{
 			base.OnClosing(e);
-			SnoopPartsRegistry.RemoveSnoopVisualTreeRoot(this);
 
 			this.Viewbox.Child = null;
 
@@ -175,6 +175,8 @@ namespace Snoop
 			Win32.GetWindowPlacement(hwnd, out wp);
 			Properties.Settings.Default.ZoomerWindowPlacement = wp;
 			Properties.Settings.Default.Save();
+
+			SnoopPartsRegistry.RemoveSnoopVisualTreeRoot(this);
 		}
 
 		private void HandleReset(object target, ExecutedRoutedEventArgs args)
