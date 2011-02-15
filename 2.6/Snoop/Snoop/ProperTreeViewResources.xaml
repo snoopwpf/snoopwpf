@@ -60,7 +60,7 @@ All other rights reserved.
 		</Setter>
 	</Style>
 
-	<Style x:Key="ProperTreeViewItemStyle" TargetType="{x:Type my:ProperTreeViewItem}">
+	<Style x:Key="ProperTreeViewItemStyle" TargetType="{x:Type TreeViewItem}">
 		<Setter Property="Background" Value="#00FFFFFF"/>
 		<Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}, AncestorLevel=1}}"/>
 		<Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}, AncestorLevel=1}}"/>
@@ -96,7 +96,7 @@ All other rights reserved.
 		</Setter>
 		<Setter Property="Template">
 			<Setter.Value>
-				<ControlTemplate TargetType="{x:Type my:ProperTreeViewItem}">
+				<ControlTemplate TargetType="{x:Type TreeViewItem}">
 					<Grid x:Name="Grid">
 						<Grid.RowDefinitions>
 							<RowDefinition Height="Auto"/>

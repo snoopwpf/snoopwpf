@@ -135,6 +135,9 @@
     <Compile Include="EventsListener.cs" />
     <Compile Include="EventTracker.cs" />
     <Compile Include="Expression.cs" />
+    <Compile Include="Infrastructure\ComboBoxSettings.cs" />
+    <Compile Include="Infrastructure\SnoopPartsRegistry.cs" />
+    <Compile Include="Infrastructure\WhenLoaded.cs" />
     <Compile Include="Injector.cs" />
     <Compile Include="Inspector.cs" />
     <Compile Include="NativeMethods.cs" />

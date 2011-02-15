@@ -17,6 +17,7 @@ using System.Windows.Threading;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using System.Windows.Forms.Integration;
+using Snoop.Infrastructure;
 
 namespace Snoop
 {
@@ -104,6 +105,7 @@ namespace Snoop
 
 			Magnify(root);
 		}
+
 		public void Magnify(object root)
 		{
 			this.Target = root;
@@ -112,6 +114,7 @@ namespace Snoop
 			if (ownerWindow != null)
 				this.Owner = ownerWindow;
 
+			SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
 			this.Show();
 			this.Activate();
 		}
@@ -156,9 +159,14 @@ namespace Snoop
 			{
 			}
 		}
+
+		
+
 		protected override void OnClosing(CancelEventArgs e)
 		{
 			base.OnClosing(e);
+			SnoopPartsRegistry.RemoveSnoopVisualTreeRoot(this);
+
 			this.Viewbox.Child = null;
 
 			// persist the window placement details to the user settings.

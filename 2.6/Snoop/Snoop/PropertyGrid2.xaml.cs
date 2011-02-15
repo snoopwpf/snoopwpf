@@ -15,6 +15,7 @@ namespace Snoop
 	using System.Windows.Data;
 	using System.Windows.Input;
 	using System.Windows.Threading;
+using Snoop.Infrastructure;
 
 	public partial class PropertyGrid2: INotifyPropertyChanged
 	{
@@ -119,8 +120,8 @@ namespace Snoop
 				this.propertiesToAdd = null;
 		}
 
-		private void HandleShowBindingErrors(object sender, ExecutedRoutedEventArgs e) {
-			PropertyInformation propertyInformation = (PropertyInformation)e.Parameter;
+		private void HandleShowBindingErrors(object sender, ExecutedRoutedEventArgs eventArgs) {
+			PropertyInformation propertyInformation = (PropertyInformation)eventArgs.Parameter;
 			Window window = new Window();
 			TextBox textbox = new TextBox();
 			textbox.IsReadOnly = true;
@@ -130,9 +131,26 @@ namespace Snoop
 			window.Width = 400;
 			window.Height = 300;
 			window.Title = "Binding Errors for " + propertyInformation.DisplayName;
-			window.Show();			
+			SnoopPartsRegistry.AddSnoopVisualTreeRoot(window);
+			window.Closing +=
+				(s, e) =>
+				{
+					Window w = (Window)s;
+					SnoopPartsRegistry.RemoveSnoopVisualTreeRoot(w);
+				};
+			window.Show();
 		}
-		
+
+
+		//delegate(object sender, RoutedEventArgs e)
+		//{
+		//	throw new NotImplementedException();
+		//};		
+		//this.Loaded += (sender, e) =>
+		//{
+		//	throw new NotImplementedException();
+		//};
+
 		private void CanShowBindingErrors(object sender, CanExecuteRoutedEventArgs e) {
 			if (e.Parameter != null && !string.IsNullOrEmpty(((PropertyInformation)e.Parameter).BindingError))
 				e.CanExecute = true;

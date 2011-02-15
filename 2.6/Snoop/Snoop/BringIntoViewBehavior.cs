@@ -5,6 +5,7 @@
 
 using System;
 using System.Windows;
+using Snoop.Infrastructure;
 
 namespace Snoop
 {
@@ -41,9 +42,8 @@ namespace Snoop
 			if ((bool)e.NewValue)
 			{
 				// Can Bring into view only when element is loaded.
-				new WhenLoaded
+				fe.WhenLoaded
 				(
-					fe,
 					element =>
 					{
 						if (GetIsActive(element))
@@ -54,40 +54,5 @@ namespace Snoop
 				);
 			}
 		}
-	}
-
-	/// <summary>
-	/// Executes action on framework element when it's loaded.
-	/// </summary>
-	public class WhenLoaded
-	{
-		public WhenLoaded(FrameworkElement target, Action<FrameworkElement> loadedAction)
-		{
-			this.target = target;
-			this.loadedAction = loadedAction;
-
-			DoAction();
-		}
-
-		private void DoAction()
-		{
-			if (this.target.IsLoaded)
-			{
-				this.loadedAction(this.target);
-			}
-			else
-			{
-				this.target.Loaded += TargetLoaded;
-			}
-		}
-
-		private void TargetLoaded(object sender, RoutedEventArgs e)
-		{
-			this.target.Loaded -= TargetLoaded;
-			this.loadedAction(this.target);
-		}
-
-		private readonly FrameworkElement target;
-		private readonly Action<FrameworkElement> loadedAction;
 	}
 }

@@ -10,6 +10,7 @@ All other rights reserved.
 	xmlns:my="clr-namespace:Snoop"
 	xmlns:d="http://schemas.microsoft.com/expression/interactivedesigner/2006"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:i="clr-namespace:Snoop.Infrastructure"
 	mc:Ignorable="d"
 	x:Class="Snoop.EventsView"
 	x:Name="Events"
@@ -45,10 +46,11 @@ All other rights reserved.
 			</DataTemplate>
 
 			<HierarchicalDataTemplate ItemsSource="{Binding Stack}" DataType="{x:Type my:TrackedEvent}">
-				<Grid Name="Grid" Background="Transparent" MouseLeftButtonDown="InspectHandler">
-					<Grid.ToolTip>
+				<Grid Name="Grid" Background="Transparent">
+					<!--AK: I commented this out, should be removed, since it gives false information:-->
+					<!--<Grid.ToolTip>
 						<TextBlock Style="{x:Null}" Text="Double-click to select the element that handled this"/>
-					</Grid.ToolTip>
+					</Grid.ToolTip>-->
 					<!--<Grid.InputBindings>
 					<MouseBinding MouseAction="LeftDoubleClick" Command="{x:Static my:SnoopUI.InspectCommand}" CommandParameter="{Binding EventArgs}"/>
 				</Grid.InputBindings>-->
@@ -61,12 +63,12 @@ All other rights reserved.
 						<RowDefinition Height="*"/>
 					</Grid.RowDefinitions>
 					<StackPanel Orientation="Horizontal">
-						<ContentControl Content="{Binding EventArgs}"/>
-						<!--<TextBlock Style="{x:Null}" Text="{Binding EventArgs.RoutedEvent.Name}"/>-->
+						<ContentControl Content="{Binding EventArgs}" Focusable="False"/>						
 						<TextBlock Style="{x:Null}" Text=" on "/>
 						<TextBlock Style="{x:Null}" Text="{Binding Originator.Handler, Converter={StaticResource NiceNamer}}" Grid.Column="1"/>
 					</StackPanel>
-					<ContentControl Name="Handler" Visibility="Collapsed" Grid.Row="1" Grid.ColumnSpan="2">
+					<ContentControl Name="Handler" Visibility="Collapsed" Grid.Row="1" Grid.ColumnSpan="2"
+													Focusable="False">
 						<StackPanel Orientation="Horizontal">
 							<TextBlock Style="{x:Null}" Text="Handled by: "/>
 							<TextBlock Style="{x:Null}" Text="{Binding HandledBy, Converter={StaticResource NiceNamer}}"/>
@@ -81,9 +83,9 @@ All other rights reserved.
 			</HierarchicalDataTemplate>
 
 			<HierarchicalDataTemplate DataType="{x:Type my:EventEntry}">
-				<Grid Name="Grid" Background="Transparent" MouseLeftButtonDown="InspectHandler">
+				<Grid Name="Grid" Background="Transparent">
 					<Grid.ToolTip>
-						<TextBlock Style="{x:Null}" Text="Double-click to select the element that handled this"/>
+						<TextBlock Style="{x:Null}" Text="Click to select the element that handled this"/>
 					</Grid.ToolTip>
 					<StackPanel Orientation="Horizontal">
 						<TextBlock Style="{x:Null}" Text="{Binding Handler, Converter={StaticResource NiceNamer}}"/>
@@ -102,7 +104,12 @@ All other rights reserved.
 								<ColumnDefinition Width="*"/>
 								<ColumnDefinition Width="Auto" SharedSizeGroup="ComboBoxButton"/>
 							</Grid.ColumnDefinitions>
-							<TextBlock Style="{x:Null}" Margin="3,4.36166666666667,3.41060513164848E-13,2.36166666666664" Height="13.2766666666667" Grid.Column="1" Grid.ColumnSpan="2" x:Name="TextBlock" Text="Common events"/>
+							<TextBlock Style="{x:Null}" Margin="3,4.36166666666667,3.41060513164848E-13,2.36166666666664" Height="13.2766666666667"
+												 Grid.Column="1" Grid.ColumnSpan="2" 
+												 Foreground="Black"
+												 x:Name="TextBlock" 
+												 Text="Common events"
+												 />
 							<ToggleButton Grid.ColumnSpan="3" x:Name="ToggleButton" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource Mode=TemplatedParent, AncestorType={x:Null}}}">
 								<ToggleButton.Style>
 									<Style TargetType="{x:Type ToggleButton}">
@@ -160,53 +167,8 @@ All other rights reserved.
 															<MultiTrigger.Conditions>
 																<Condition Property="IsMouseOver" Value="True"/>
 																<Condition Property="IsChecked" Value="False"/>
-															</MultiTrigger.Conditions>
-															<!--<Setter Property="Shape.Fill" TargetName="Chrome">
-															<Setter.Value>
-																<LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-																	<GradientStop Offset="0" Color="#FFFFFFFF"/>
-																	<GradientStop Offset="0.7" Color="#FFE3E5F0"/>
-																	<GradientStop Offset="1" Color="#FFC6C5D7"/>
-																</LinearGradientBrush>
-															</Setter.Value>
-														</Setter>-->
-															<!--<Setter Property="Microsoft_Windows_Themes:ScrollChrome.OuterBorder" TargetName="Chrome">
-															<Setter.Value>
-																<Pen Brush="#FF5B6665" Thickness="1"/>
-															</Setter.Value>
-														</Setter>-->
-															<!--<Setter Property="Microsoft_Windows_Themes:ScrollChrome.Glyph" Value="#FF202020" TargetName="Chrome"/>-->
-														</MultiTrigger>
-														<Trigger Property="IsPressed" Value="True">
-															<!--<Setter Property="Shape.Fill" TargetName="Chrome">
-															<Setter.Value>
-																<LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-																	<GradientStop Offset="0" Color="#FFADAABD"/>
-																	<GradientStop Offset="0.5" Color="#FFDEDBE7"/>
-																	<GradientStop Offset="1" Color="#FFFFFFFF"/>
-																</LinearGradientBrush>
-															</Setter.Value>
-														</Setter>-->
-															<!--<Setter Property="Microsoft_Windows_Themes:ScrollChrome.OuterBorder" TargetName="Chrome">
-															<Setter.Value>
-																<Pen Brush="#FF5B6665" Thickness="1"/>
-															</Setter.Value>
-														</Setter>
-														<Setter Property="Microsoft_Windows_Themes:ScrollChrome.Glyph" Value="#FF202020" TargetName="Chrome"/>-->
-														</Trigger>
-														<Trigger Property="IsEnabled" Value="False">
-															<!--<Setter Property="Shape.Fill" TargetName="Chrome">
-															<Setter.Value>
-																<LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-																	<GradientStop Offset="0" Color="#FFF7F7F7"/>
-																	<GradientStop Offset="0.3" Color="#FFF0F0F0"/>
-																	<GradientStop Offset="0.6" Color="#FFECECEC"/>
-																	<GradientStop Offset="1" Color="#FFE3E3E3"/>
-																</LinearGradientBrush>
-															</Setter.Value>
-														</Setter>-->
-															<!--<Setter Property="Microsoft_Windows_Themes:ScrollChrome.Glyph" Value="#FFC9C9C2" TargetName="Chrome"/>-->
-														</Trigger>
+															</MultiTrigger.Conditions>															
+														</MultiTrigger>														
 													</ControlTemplate.Triggers>
 												</ControlTemplate>
 											</Setter.Value>
@@ -216,7 +178,9 @@ All other rights reserved.
 							</ToggleButton>
 						</Grid>
 					</Border>
-					<Popup IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource Mode=TemplatedParent, AncestorType={x:Null}}}" Focusable="False" Placement="Bottom" x:Name="PART_Popup" PopupAnimation="Slide" AllowsTransparency="True">
+					<Popup IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource Mode=TemplatedParent, AncestorType={x:Null}}}" 
+								 Focusable="False" Placement="Bottom" 
+								 x:Name="PART_Popup" PopupAnimation="Slide" AllowsTransparency="True">
 						<Grid MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}" x:Name="DropDown">
 							<Border Background="{TemplateBinding Background}" x:Name="DropDownBorder" BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" BorderThickness="1,1,1,1"/>
 							<ScrollViewer Margin="1,1,1,1" x:Name="ScrollViewer">
@@ -274,6 +238,7 @@ All other rights reserved.
 
 	<ComboBox
 		x:Name="EventChooser"
+		i:ComboBoxSettings.IsSnoopPart="True"
 		HorizontalAlignment="Stretch"
 		VerticalAlignment="Stretch"
 		Margin="0,0,20,0"
@@ -311,14 +276,19 @@ All other rights reserved.
 		</Button.ToolTip>
 	</Button>
 
-	<my:ProperTreeView
+	<!--Anvaka: Changed from ProperTreeView to TreeView.
+	No need for depth reduce filter here, since EventView
+	clears elements itself. Also fixes http://snoopwpf.codeplex.com/workitem/5409
+	issue.
+	-->
+	<TreeView
 		x:Name="EventTree"
+		SelectedItemChanged="EventTree_SelectedItemChanged"
 		Grid.Row="1"
 		ItemsSource="{Binding ElementName=Events, Path=InterestingEvents}"
-		HorizontalContentAlignment="Stretch"
-	>
-		<my:ProperTreeView.ItemContainerStyle>
-			<Style BasedOn="{StaticResource ProperTreeViewItemStyle}" TargetType="{x:Type my:ProperTreeViewItem}">
+		HorizontalContentAlignment="Stretch">
+		<TreeView.ItemContainerStyle>
+			<Style BasedOn="{StaticResource ProperTreeViewItemStyle}" TargetType="{x:Type TreeViewItem}">
 				<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
 				<Setter Property="HorizontalAlignment" Value="Stretch"/>
 				<Style.Triggers>
@@ -330,6 +300,6 @@ All other rights reserved.
 					</Trigger>
 				</Style.Triggers>
 			</Style>
-		</my:ProperTreeView.ItemContainerStyle>
-	</my:ProperTreeView>
+		</TreeView.ItemContainerStyle>
+	</TreeView>
 </Grid>

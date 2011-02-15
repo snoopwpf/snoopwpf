@@ -2,25 +2,25 @@
 // This source is subject to the Microsoft Public License (Ms-PL).
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Globalization;
+using System.Windows;
+using System.Windows.Data;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Controls;
+using Snoop.Infrastructure;
+
 
 namespace Snoop {
-	using System;
-	using System.Collections;
-	using System.Collections.Generic;
-	using System.Collections.ObjectModel;
-	using System.ComponentModel;
-	using System.Diagnostics;
-	using System.Globalization;
-	using System.Windows;
-	using System.Windows.Data;
-	using System.Windows.Input;
-	using System.Windows.Media;
-	using System.Windows.Controls;
 
 	public partial class EventsView: INotifyPropertyChanged
 	{
-		public static readonly DependencyProperty ScopeProperty = DependencyProperty.Register("Scope", typeof(Visual), typeof(EventsView));
-
 		public static readonly RoutedCommand ClearCommand = new RoutedCommand();
 
 		private ObservableCollection<TrackedEvent> interestingEvents = new ObservableCollection<TrackedEvent>();
@@ -56,17 +56,13 @@ namespace Snoop {
 
 			this.CommandBindings.Add(new CommandBinding(EventsView.ClearCommand, this.HandleClear));
 		}
-
-		public Visual Scope {
-			get { return (Visual)this.GetValue(EventsView.ScopeProperty); }
-			set { this.SetValue(EventsView.ScopeProperty, value); }
-		}
-
+		
 		public IEnumerable InterestingEvents {
 			get { return this.interestingEvents; }
 		}
 
-		public object AvailableEvents {
+		public object AvailableEvents 
+		{
 			get {
 				PropertyGroupDescription pgd = new PropertyGroupDescription();
 				pgd.PropertyName = "Category";
@@ -87,9 +83,8 @@ namespace Snoop {
 		private void HandleEventHandled(TrackedEvent trackedEvent)
 		{
 			Visual visual = trackedEvent.Originator.Handler as Visual;
-			Visual scope = this.Scope;
-			if (visual != null && scope != null) {
-				if (visual.IsDescendantOf(scope)) {
+			if (visual != null && !visual.IsPartOfSnoopVisualTree())
+			{				
 					this.interestingEvents.Add(trackedEvent);
 
 					while (this.interestingEvents.Count > 100)
@@ -97,8 +92,7 @@ namespace Snoop {
 
 					TreeViewItem tvi = (TreeViewItem)this.EventTree.ItemContainerGenerator.ContainerFromItem(trackedEvent);
 					if (tvi != null)
-						tvi.BringIntoView();
-				}
+						tvi.BringIntoView();				
 			}
 		}
 
@@ -113,12 +107,15 @@ namespace Snoop {
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 		}
 
-		private void InspectHandler(object sender, EventArgs e) {
-			object obj = ((FrameworkElement)sender).DataContext;
-			if (obj is TrackedEvent)
-				SnoopUI.InspectCommand.Execute(((TrackedEvent)obj).EventArgs, this);
-			else if (obj is EventEntry)
-				SnoopUI.InspectCommand.Execute(((EventEntry)obj).Handler, this);
+		private void EventTree_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+		{
+			if (e.NewValue != null)
+			{
+				if (e.NewValue is EventEntry)
+					SnoopUI.InspectCommand.Execute(((EventEntry)e.NewValue).Handler, this);
+				else if (e.NewValue is TrackedEvent)
+					SnoopUI.InspectCommand.Execute(((TrackedEvent)e.NewValue).EventArgs, this);
+			}
 		}
 	}
 

@@ -50,18 +50,23 @@ namespace Snoop
 			}
 		}
 
-		public RoutedEvent RoutedEvent {
+		public RoutedEvent RoutedEvent 
+		{
 			get { return this.routedEvent; }
 		}
 
-		private void HandleEvent(object sender, RoutedEventArgs e) {
+		private void HandleEvent(object sender, RoutedEventArgs e) 
+		{
 			// Try to figure out what element handled the event. Not precise.
-			if (this.isEnabled) {
+			if (this.isEnabled) 
+			{
 				EventEntry entry = new EventEntry(sender, e.Handled);
-				if (this.currentEvent != null && this.currentEvent.EventArgs == e) {
+				if (this.currentEvent != null && this.currentEvent.EventArgs == e) 
+				{
 					this.currentEvent.AddEventEntry(entry);
 				}
-				else {
+				else 
+				{
 					this.currentEvent = new TrackedEvent(e, entry);
 					this.EventHandled(this.currentEvent);
 				}
@@ -94,7 +99,9 @@ namespace Snoop
 		}
 	}
 
-	public class TrackedEvent: INotifyPropertyChanged {
+	[DebuggerDisplay("TrackedEvent: {EventArgs}")]
+	public class TrackedEvent: INotifyPropertyChanged 
+	{
 		private ObservableCollection<EventEntry> stack = new ObservableCollection<EventEntry>();
 
 		private RoutedEventArgs routedEventArgs;
@@ -126,7 +133,8 @@ namespace Snoop
 			get { return this.stack[0]; }
 		}
 
-		public RoutedEventArgs EventArgs {
+		public RoutedEventArgs EventArgs 
+		{
 			get { return this.routedEventArgs; }
 		}
 		

@@ -81,22 +81,11 @@ namespace Snoop
 			this.Target = target;
 		}
 
-		
-
-		/*
-		public void SetTarget(object target) {
+		public void SetTarget(object target)
+		{
 			this.inspectStack.Clear();
 			this.Target = target;
-		}*/
-		/*
-		private void ChangeTarget(object newTarget) {
-
-			if (this.target != newTarget) {
-				this.target = newTarget;
-
-				this.OnPropertyChanged("Type");
-			}
-		}*/
+		}
 
 		private void HandlePopTarget(object sender, ExecutedRoutedEventArgs e)
 		{

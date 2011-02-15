@@ -21,6 +21,7 @@ using System.Windows.Forms.Integration;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using System.Threading;
+using Snoop.Infrastructure;
 
 namespace Snoop
 {
@@ -258,6 +259,7 @@ namespace Snoop
 
 			Show();
 			Activate();
+			SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
 		}
 
 		public void ApplyReduceDepthFilter(VisualTreeItem newRoot)
@@ -321,6 +323,8 @@ namespace Snoop
 			Win32.GetWindowPlacement(hwnd, out wp);
 			Properties.Settings.Default.SnoopUIWindowPlacement = wp;
 			Properties.Settings.Default.Save();
+
+			SnoopPartsRegistry.RemoveSnoopVisualTreeRoot(this);
 		}
 		#endregion
 
@@ -374,11 +378,7 @@ namespace Snoop
 			}
 			else if (e.Parameter != null)
 			{
-				// cplotts todo:
-				// if i click on the event, versus the visual it is routing through (in the events view),
-				// then i get here, and the property grid seems stuck forever on it.
-				// hmmm. does it make sense to delete this else statment?
-				this.PropertyGrid.RootTarget = e.Parameter;
+				this.PropertyGrid.SetTarget(e.Parameter);
 			}
 		}
 		private void HandleSelectFocus(object sender, ExecutedRoutedEventArgs e)
