@@ -14,8 +14,6 @@ namespace Snoop.Infrastructure
 	/// </summary>
 	internal sealed class ComboBoxSettings
 	{
-		private const string PopupTemplateName = "PART_Popup";
-
 		/// <summary>
 		/// Indicates whether given ComboBox is a part of the Snoop UI.
 		/// If ComboBox is a part of Snoop UI it doesn't take part in
@@ -27,7 +25,6 @@ namespace Snoop.Infrastructure
 		{
 			return (bool)obj.GetValue(IsSnoopPartProperty);
 		}
-
 		/// <summary>
 		/// Allows a ComboBox opt in/opt out from being a part of Snoop UI.
 		/// If ComboBox is a part of Snoop UI it doesn't take part in 
@@ -42,16 +39,22 @@ namespace Snoop.Infrastructure
 		/// Identifies the <see cref="IsSnoopPart"/> attached property.
 		/// </summary>
 		public static readonly DependencyProperty IsSnoopPartProperty =
-				DependencyProperty.RegisterAttached("IsSnoopPart", typeof(bool), typeof(ComboBox), new PropertyMetadata(false, OnIsSnoopPartChanged));
-
+			DependencyProperty.RegisterAttached
+			(
+				"IsSnoopPart",
+				typeof(bool),
+				typeof(ComboBox),
+				new PropertyMetadata(false, OnIsSnoopPartChanged)
+			);
 		private static void OnIsSnoopPartChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
 		{			
 			var cb = o as ComboBox;
 			if (cb != null)
 			{
-				cb.WhenLoaded(fe => UpdateSnoopPartSettings(cb, (bool)e.NewValue));				
+				cb.WhenLoaded(fe => UpdateSnoopPartSettings(cb, (bool)e.NewValue));
 			}
 		}
+
 
 		private static void UpdateSnoopPartSettings(ComboBox comboBox, bool isSnoopPart)
 		{
@@ -86,14 +89,13 @@ namespace Snoop.Infrastructure
 			popup.Opened += SnoopChildPopupOpened;
 			popup.Closed += SnoopChildPopupClosed;
 		}
-
 		private static void UnregisterAsSnoopPopup(Popup popup)
 		{
 			popup.Opened -= SnoopChildPopupOpened;
 			popup.Closed -= SnoopChildPopupClosed;
 		}
 
-		static void SnoopChildPopupOpened(object sender, EventArgs e)
+		private static void SnoopChildPopupOpened(object sender, EventArgs e)
 		{
 			var popup = (Popup)sender;
 			if (popup.Child != null)
@@ -104,8 +106,7 @@ namespace Snoop.Infrastructure
 				SnoopPartsRegistry.AddSnoopVisualTreeRoot(popup.Child);
 			}
 		}
-
-		static void SnoopChildPopupClosed(object sender, EventArgs e)
+		private static void SnoopChildPopupClosed(object sender, EventArgs e)
 		{
 			var popup = (Popup)sender;
 			if (popup.Child != null)
@@ -113,8 +114,10 @@ namespace Snoop.Infrastructure
 				// Cannot use 'popup' as a snoop part, since it's not
 				// going to be in the PopupRoot's visual tree. The closest
 				// object in the PopupRoot's tree is popup.Child:
-				SnoopPartsRegistry.RemoveSnoopVisualTreeRoot(popup.Child);				
+				SnoopPartsRegistry.RemoveSnoopVisualTreeRoot(popup.Child);
 			}
 		}
+
+		private const string PopupTemplateName = "PART_Popup";
 	}
 }

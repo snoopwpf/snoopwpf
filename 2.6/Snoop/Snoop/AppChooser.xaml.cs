@@ -190,44 +190,43 @@ namespace Snoop
 			this.appChooser = appChooser;
 		}
 
-        /// <summary>
-        /// Similar to System.Diagnostics.WinProcessManager.GetModuleInfos,
-        /// except that we include 32 bit modules when Snoop runs in 64 bit mode.
-        /// See http://blogs.msdn.com/b/jasonz/archive/2007/05/11/code-sample-is-your-process-using-the-silverlight-clr.aspx
-        /// </summary>
-        IEnumerable<NativeMethods.MODULEENTRY32> GetModules()
-        {
-            int processId;
-            NativeMethods.GetWindowThreadProcessId(hwnd, out processId);
+		public IEnumerable<NativeMethods.MODULEENTRY32> Modules
+		{
+			get
+			{
+				if (_modules == null)
+					_modules = GetModules().ToArray();
+				return _modules;
+			}
+		}
+		/// <summary>
+		/// Similar to System.Diagnostics.WinProcessManager.GetModuleInfos,
+		/// except that we include 32 bit modules when Snoop runs in 64 bit mode.
+		/// See http://blogs.msdn.com/b/jasonz/archive/2007/05/11/code-sample-is-your-process-using-the-silverlight-clr.aspx
+		/// </summary>
+		private IEnumerable<NativeMethods.MODULEENTRY32> GetModules()
+		{
+			int processId;
+			NativeMethods.GetWindowThreadProcessId(hwnd, out processId);
 
-            var me32 = new NativeMethods.MODULEENTRY32();
-            var hModuleSnap = NativeMethods.CreateToolhelp32Snapshot(NativeMethods.SnapshotFlags.Module | NativeMethods.SnapshotFlags.Module32, processId);
-            if (!hModuleSnap.IsInvalid)
-            {
-                using (hModuleSnap)
-                {
-                    me32.dwSize = (uint)System.Runtime.InteropServices.Marshal.SizeOf(me32);
-                    if (NativeMethods.Module32First(hModuleSnap, ref me32))
-                    {
-                        do
-                        {
-                            yield return me32;
-                        } while (NativeMethods.Module32Next(hModuleSnap, ref me32));
-                    }
-                }
-            } 
-        }
-
-        IEnumerable<NativeMethods.MODULEENTRY32> _modules;
-        public IEnumerable<NativeMethods.MODULEENTRY32> Modules
-        {
-            get
-            {
-                if (_modules == null)
-                    _modules = GetModules().ToArray();
-                return _modules;
-            }
-        }
+			var me32 = new NativeMethods.MODULEENTRY32();
+			var hModuleSnap = NativeMethods.CreateToolhelp32Snapshot(NativeMethods.SnapshotFlags.Module | NativeMethods.SnapshotFlags.Module32, processId);
+			if (!hModuleSnap.IsInvalid)
+			{
+				using (hModuleSnap)
+				{
+					me32.dwSize = (uint)System.Runtime.InteropServices.Marshal.SizeOf(me32);
+					if (NativeMethods.Module32First(hModuleSnap, ref me32))
+					{
+						do
+						{
+							yield return me32;
+						} while (NativeMethods.Module32Next(hModuleSnap, ref me32));
+					}
+				}
+			}
+		}
+		private IEnumerable<NativeMethods.MODULEENTRY32> _modules;
 
 		public bool IsValidProcess
 		{

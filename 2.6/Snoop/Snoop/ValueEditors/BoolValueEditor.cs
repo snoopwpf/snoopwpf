@@ -5,9 +5,10 @@
 
 namespace Snoop
 {
-	public partial class BoolValueEditor: ValueEditor
+	public partial class BoolValueEditor : ValueEditor
 	{
-		public BoolValueEditor() {
+		public BoolValueEditor()
+		{
 		}
 	}
 }

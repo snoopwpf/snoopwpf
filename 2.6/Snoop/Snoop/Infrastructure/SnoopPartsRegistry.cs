@@ -11,8 +11,6 @@ namespace Snoop.Infrastructure
 	/// </summary>
 	public static class SnoopPartsRegistry
 	{
-		private static List<Visual> _registeredSnoopVisualTreeRoots = new List<Visual>();
-
 		/// <summary>
 		/// Checks whether given visual is a part of Snoop's visual tree.
 		/// </summary>
@@ -43,7 +41,6 @@ namespace Snoop.Infrastructure
 				_registeredSnoopVisualTreeRoots.Add(root);
 			}
 		}
-
 		/// <summary>
 		/// Opts out given visual from being considered as a Snoop's visual tree root.
 		/// </summary>
@@ -51,5 +48,7 @@ namespace Snoop.Infrastructure
 		{
 			_registeredSnoopVisualTreeRoots.Remove(root);
 		}
+
+		private static List<Visual> _registeredSnoopVisualTreeRoots = new List<Visual>();
 	}
 }

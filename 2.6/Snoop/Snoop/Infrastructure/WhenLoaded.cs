@@ -65,5 +65,4 @@ namespace Snoop.Infrastructure
 			new WhenLoaded(frameworkElement, loadedAction);
 		}
 	}
-
 }

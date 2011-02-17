@@ -29,26 +29,19 @@ namespace Snoop.ValueEditors
 		{
 			InitializeComponent();
 
-			MouseWheel += new MouseWheelEventHandler( MouseWheelHandler );
+			MouseWheel += new MouseWheelEventHandler(MouseWheelHandler);
 		}
 
-		private PropertyInformation PropertyInfo
-		{
-			get
-			{
-				return DataContext as PropertyInformation;
-			}
-		}
 
-		void MouseWheelHandler( object sender, MouseWheelEventArgs e )
+		private void MouseWheelHandler(object sender, MouseWheelEventArgs e)
 		{
 			FrameworkElement fe = e.OriginalSource as FrameworkElement;
-			if ( fe == null )
+			if (fe == null)
 			{
 				return;
 			}
 
-			//if ( !PropertyEditor.GetSupportMouseWheel( fe ) )
+			//if (!PropertyEditor.GetSupportMouseWheel(fe))
 			//{
 			//    return;
 			//}
@@ -57,138 +50,133 @@ namespace Snoop.ValueEditors
 			bool largeIncrement = false;
 			bool tinyIncrement = false;
 
-			if ( e.Delta > 0 )
+			if (e.Delta > 0)
 			{
 				increment = false;
 			}
 
-			if ( ((Keyboard.GetKeyStates( Key.LeftShift ) & KeyStates.Down) > 0)
-					|| (Keyboard.GetKeyStates( Key.RightShift ) & KeyStates.Down) > 0 )
+			if (((Keyboard.GetKeyStates(Key.LeftShift) & KeyStates.Down) > 0)
+					|| (Keyboard.GetKeyStates(Key.RightShift) & KeyStates.Down) > 0)
 			{
 				largeIncrement = true;
 			}
 
-			if ( ((Keyboard.GetKeyStates( Key.LeftCtrl ) & KeyStates.Down) > 0)
-					|| (Keyboard.GetKeyStates( Key.RightCtrl ) & KeyStates.Down) > 0 )
+			if (((Keyboard.GetKeyStates(Key.LeftCtrl) & KeyStates.Down) > 0)
+					|| (Keyboard.GetKeyStates(Key.RightCtrl) & KeyStates.Down) > 0)
 			{
 				tinyIncrement = true;
 			}
 
 			var tb = fe as TextBlock;
-			if ( tb != null )
+			if (tb != null)
 			{
-				//var expRaw = tb.GetBindingExpression( TextBlock.TextProperty );
-				//var binding = BindingOperations.GetBinding( tb, TextBlock.TextProperty );
-				//var bindingBase = BindingOperations.GetBindingBase( tb, TextBlock.TextProperty );
-				//var exp = BindingOperations.GetBindingExpression( tb, TextBlock.TextProperty );
-				//var expBase = BindingOperations.GetBindingExpressionBase( tb, TextBlock.TextProperty );
+				//var expRaw = tb.GetBindingExpression(TextBlock.TextProperty);
+				//var binding = BindingOperations.GetBinding(tb, TextBlock.TextProperty);
+				//var bindingBase = BindingOperations.GetBindingBase(tb, TextBlock.TextProperty);
+				//var exp = BindingOperations.GetBindingExpression(tb, TextBlock.TextProperty);
+				//var expBase = BindingOperations.GetBindingExpressionBase(tb, TextBlock.TextProperty);
 
-				int fieldNum = Int32.Parse( tb.Tag.ToString() );
+				int fieldNum = Int32.Parse(tb.Tag.ToString());
 
-				switch ( PropertyInfo.Property.PropertyType.Name )
+				switch (PropertyInfo.Property.PropertyType.Name)
 				{
 					case "Double":
-						PropertyInfo.StringValue = ChangeDoubleValue( tb.Text, increment, largeIncrement, tinyIncrement );
+						PropertyInfo.StringValue = ChangeDoubleValue(tb.Text, increment, largeIncrement, tinyIncrement);
 						break;
 
 					case "Int32":
 					case "Int16":
-						PropertyInfo.StringValue = ChangeIntValue( tb.Text, increment, largeIncrement );
+						PropertyInfo.StringValue = ChangeIntValue(tb.Text, increment, largeIncrement);
 						break;
 
 					case "Boolean":
-						PropertyInfo.StringValue = ChangeBooleanValue( tb.Text );
+						PropertyInfo.StringValue = ChangeBooleanValue(tb.Text);
 						break;
 
 					case "Visibility":
-						PropertyInfo.StringValue = ChangeEnumValue<Visibility>( tb.Text, increment );
+						PropertyInfo.StringValue = ChangeEnumValue<Visibility>(tb.Text, increment);
 						break;
 
 					case "HorizontalAlignment":
-						PropertyInfo.StringValue = ChangeEnumValue<HorizontalAlignment>( tb.Text, increment );
+						PropertyInfo.StringValue = ChangeEnumValue<HorizontalAlignment>(tb.Text, increment);
 						break;
 					case "VerticalAlignment":
-						PropertyInfo.StringValue = ChangeEnumValue<VerticalAlignment>( tb.Text, increment );
+						PropertyInfo.StringValue = ChangeEnumValue<VerticalAlignment>(tb.Text, increment);
 						break;
 
 					case "Thickness":
-						ChangeThicknessValuePart( fieldNum, tb.Text, increment, largeIncrement );
+						ChangeThicknessValuePart(fieldNum, tb.Text, increment, largeIncrement);
 						break;
 
 					case "Brush":
-						ChangeBrushValuePart( fieldNum, tb.Text, increment, largeIncrement );
+						ChangeBrushValuePart(fieldNum, tb.Text, increment, largeIncrement);
 						break;
 
 					case "Color":
-						ChangeBrushValuePart( fieldNum, tb.Text, increment, largeIncrement );
+						ChangeBrushValuePart(fieldNum, tb.Text, increment, largeIncrement);
 						break;
-
 				}
-
 			}
 
 			e.Handled = true;
-
 		}
 
 
-		#region Private
-
-		private string ChangeIntValue( string current, bool increase, bool largeIncrement )
+		private string ChangeIntValue(string current, bool increase, bool largeIncrement)
 		{
 			int change = 1;
-			if ( !increase )
+			if (!increase)
 			{
 				change *= -1;
 			}
-			if ( largeIncrement )
+			if (largeIncrement)
 			{
 				change *= 10;
 			}
 
-			int ret = Int32.Parse( current );
+			int ret = Int32.Parse(current);
 			ret = ret + change;
 
 			return ret.ToString();
 		}
 
-		private string ChangeDoubleValue( string current, bool increase, bool largeIncrement, bool tinyIncrement )
+		private string ChangeDoubleValue(string current, bool increase, bool largeIncrement, bool tinyIncrement)
 		{
 			double change = 1;
-			if ( !increase )
+			if (!increase)
 			{
 				change *= -1;
 			}
-			if ( largeIncrement )
+			if (largeIncrement)
 			{
 				change *= 10;
 			}
-			if ( tinyIncrement )
+			if (tinyIncrement)
 			{
 				change /= 10;
 			}
 
-			double ret = Double.Parse( current );
+			double ret = Double.Parse(current);
 			ret = ret + change;
 
 			return ret.ToString();
 		}
 
-		private string ChangeBooleanValue( string current )
+		private string ChangeBooleanValue(string current)
 		{
-			bool ret = Boolean.Parse( current );
+			bool ret = Boolean.Parse(current);
 			ret = !ret;
 
 			return ret.ToString();
 		}
 
-		private string ChangeEnumValue<T>( string current, bool increase )
+		private string ChangeEnumValue<T>(string current, bool increase)
 		{
-			T ret = (T)Enum.Parse( typeof( T ), current );
+			T ret = (T)Enum.Parse(typeof(T), current);
 
 			// make numeric, so we can add or subtract one
-			int value = Convert.ToInt32( ret );
-			if ( increase )
+			int value = Convert.ToInt32(ret);
+			if (increase)
 			{
 				value += 1;
 			}
@@ -197,46 +185,43 @@ namespace Snoop.ValueEditors
 				value -= 1;
 			}
 
-			value = Math.Min( Enum.GetValues( typeof( T ) ).Length - 1, Math.Max( 0, value ) );
+			value = Math.Min(Enum.GetValues(typeof(T)).Length - 1, Math.Max(0, value));
 			// long way around to get the enum typed value from the integer
-			ret = (T)(Enum.GetValues( typeof( T ) ).GetValue( value ));
+			ret = (T)(Enum.GetValues(typeof(T)).GetValue(value));
 
 			return ret.ToString();
 		}
-
-
-
 
 		/// <summary>
 		/// Increments or decrements the field part in the Thickness value.
 		/// Replaces that field in the underlying VALUE 
 		/// </summary>
-		private void ChangeThicknessValuePart( int fieldNum, string current, bool increase, bool largeIncrement )
+		private void ChangeThicknessValuePart(int fieldNum, string current, bool increase, bool largeIncrement)
 		{
 			int change = 1;
-			if ( !increase )
+			if (!increase)
 			{
 				change *= -1;
 			}
-			if ( largeIncrement )
+			if (largeIncrement)
 			{
 				change *= 20;
 			}
 
-			int newVal = Int32.Parse( current );
+			int newVal = Int32.Parse(current);
 			newVal = newVal + change;
 
 			string partValue = newVal.ToString();
 			string currentValue = PropertyInfo.StringValue;
 
 			// chop the current value up into its parts
-			string[] fields = currentValue.Split( ',' );
+			string[] fields = currentValue.Split(',');
 
 			// replace the appropriate field
 			fields[fieldNum - 1] = partValue;
 
 			// re-assemble back to Brush value
-			string newValue = String.Format( @"{0},{1},{2},{3}", fields[0], fields[1], fields[2], fields[3] );
+			string newValue = String.Format(@"{0},{1},{2},{3}", fields[0], fields[1], fields[2], fields[3]);
 
 			PropertyInfo.StringValue = newValue;
 		}
@@ -245,42 +230,47 @@ namespace Snoop.ValueEditors
 		/// Increments or decrements the field part in the Brush value.
 		/// Replaces that field in the underlying VALUE 
 		/// </summary>
-		private void ChangeBrushValuePart( int fieldNum, string current, bool increase, bool largeIncrement )
+		private void ChangeBrushValuePart(int fieldNum, string current, bool increase, bool largeIncrement)
 		{
 			int change = 1;
-			if ( !increase )
+			if (!increase)
 			{
 				change *= -1;
 			}
-			if ( largeIncrement )
+			if (largeIncrement)
 			{
 				change *= 16;
 			}
 
-			int ret = Int32.Parse( current, NumberStyles.HexNumber );
-			ret = Math.Min( 255, Math.Max( 0, ret + change ) );
+			int ret = Int32.Parse(current, NumberStyles.HexNumber);
+			ret = Math.Min(255, Math.Max(0, ret + change));
 
-			string partValue = ret.ToString( "X2" );
+			string partValue = ret.ToString("X2");
 			string currentValue = PropertyInfo.StringValue;
 
 			// chop the current value up into its parts
 			string[] fields = new string[4];
-			fields[0] = currentValue.Substring( 1, 2 );	// start at 1 to skip the leading # sign
-			fields[1] = currentValue.Substring( 3, 2 );
-			fields[2] = currentValue.Substring( 5, 2 );
-			fields[3] = currentValue.Substring( 7, 2 );
+			fields[0] = currentValue.Substring(1, 2);	// start at 1 to skip the leading # sign
+			fields[1] = currentValue.Substring(3, 2);
+			fields[2] = currentValue.Substring(5, 2);
+			fields[3] = currentValue.Substring(7, 2);
 
 			// replace the appropriate field
 			fields[fieldNum - 1] = partValue;
 
 			// re-assemble back to Brush value
-			string newValue = String.Format( @"#{0}{1}{2}{3}", fields[0], fields[1], fields[2], fields[3] );
+			string newValue = String.Format(@"#{0}{1}{2}{3}", fields[0], fields[1], fields[2], fields[3]);
 
 			PropertyInfo.StringValue = newValue;
 		}
 
-		#endregion
 
-
+		private PropertyInformation PropertyInfo
+		{
+			get
+			{
+				return DataContext as PropertyInformation;
+			}
+		}
 	}
 }

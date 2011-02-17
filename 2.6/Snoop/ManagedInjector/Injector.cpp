@@ -16,8 +16,8 @@ static HHOOK _messageHookHandle;
 //-----------------------------------------------------------------------------
 //Spying Process functions follow
 //-----------------------------------------------------------------------------
-void Injector::Launch(System::IntPtr windowHandle, System::String^ assembly, System::String^ className, System::String^ methodName) {
-
+void Injector::Launch(System::IntPtr windowHandle, System::String^ assembly, System::String^ className, System::String^ methodName)
+{
 	System::String^ assemblyClassAndMethod = assembly + "$" + className + "$" + methodName;
 	pin_ptr<const wchar_t> acmLocal = PtrToStringChars(assemblyClassAndMethod);
 
@@ -58,10 +58,10 @@ void Injector::Launch(System::IntPtr windowHandle, System::String^ assembly, Sys
 	}
 }
 
-__declspec( dllexport ) 
-LRESULT __stdcall MessageHookProc(int nCode, WPARAM wparam, LPARAM lparam) {
-
-	if (nCode == HC_ACTION) 
+__declspec(dllexport) 
+LRESULT __stdcall MessageHookProc(int nCode, WPARAM wparam, LPARAM lparam)
+{
+	if (nCode == HC_ACTION)
 	{
 		CWPSTRUCT* msg = (CWPSTRUCT*)lparam;
 		if (msg != NULL && msg->message == WM_GOBABYGO)

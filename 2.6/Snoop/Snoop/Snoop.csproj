@@ -134,7 +134,6 @@
     </Compile>
     <Compile Include="EventsListener.cs" />
     <Compile Include="EventTracker.cs" />
-    <Compile Include="Expression.cs" />
     <Compile Include="Infrastructure\ComboBoxSettings.cs" />
     <Compile Include="Infrastructure\SnoopPartsRegistry.cs" />
     <Compile Include="Infrastructure\WhenLoaded.cs" />
@@ -195,10 +194,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Expressions.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -246,9 +241,6 @@
     </Compile>
     <Compile Include="Previewer.xaml.cs">
       <DependentUpon>Previewer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Expressions.xaml.cs">
-      <DependentUpon>Expressions.xaml</DependentUpon>
     </Compile>
     <Compile Include="VisualTree3DView.cs" />
   </ItemGroup>

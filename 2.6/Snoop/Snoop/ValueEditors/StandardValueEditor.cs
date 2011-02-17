@@ -3,31 +3,39 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
+using System.Windows;
+using System;
+using System.ComponentModel;
+using System.Windows.Data;
+
 namespace Snoop
 {
-	using System.Windows;
-	using System;
-	using System.ComponentModel;
-	using System.Windows.Data;
-
 	public partial class StandardValueEditor: ValueEditor
 	{
-		public static readonly DependencyProperty StringValueProperty = DependencyProperty.Register("StringValue", typeof(string), typeof(StandardValueEditor), new PropertyMetadata(StandardValueEditor.HandleStringPropertyChanged));
-		private bool isUpdatingValue = false;
-
-		public StandardValueEditor() {
+		public StandardValueEditor()
+		{
 		}
 
-		public string StringValue {
+
+		public string StringValue
+		{
 			get { return (string)this.GetValue(StandardValueEditor.StringValueProperty); }
 			set { this.SetValue(StandardValueEditor.StringValueProperty, value); }
 		}
-
-		private static void HandleStringPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
+		public static readonly DependencyProperty StringValueProperty =
+			DependencyProperty.Register
+			(
+				"StringValue",
+				typeof(string),
+				typeof(StandardValueEditor),
+				new PropertyMetadata(StandardValueEditor.HandleStringPropertyChanged)
+			);
+		private static void HandleStringPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+		{
 			((StandardValueEditor)sender).OnStringPropertyChanged((string)e.NewValue);
 		}
-
-		protected virtual void OnStringPropertyChanged(string newValue) {
+		protected virtual void OnStringPropertyChanged(string newValue)
+		{
 			if (this.isUpdatingValue)
 				return;
 
@@ -35,19 +43,25 @@ namespace Snoop
 
 			if (targetType.IsAssignableFrom(typeof(string)))
 				this.Value = newValue;
-			else {
+			else
+			{
 				TypeConverter converter = TypeDescriptor.GetConverter(targetType);
-				if (converter != null) {
-					try {
+				if (converter != null)
+				{
+					try
+					{
 						this.Value = converter.ConvertFrom(newValue);
 					}
-					catch (Exception) { }
+					catch (Exception)
+					{
+					}
 				}
 			}
 		}
 
-		protected override void OnValueChanged(object newValue) {
 
+		protected override void OnValueChanged(object newValue)
+		{
 			this.isUpdatingValue = true;
 
 			object value = this.Value;
@@ -62,5 +76,8 @@ namespace Snoop
 			if (binding != null)
 				binding.UpdateSource();
 		}
+
+
+		private bool isUpdatingValue = false;
 	}
 }

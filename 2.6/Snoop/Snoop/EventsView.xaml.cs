@@ -2,6 +2,7 @@
 // This source is subject to the Microsoft Public License (Ms-PL).
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,32 +17,21 @@ using System.Windows.Media;
 using System.Windows.Controls;
 using Snoop.Infrastructure;
 
-
-namespace Snoop {
-
-	public partial class EventsView: INotifyPropertyChanged
+namespace Snoop
+{
+	public partial class EventsView : INotifyPropertyChanged
 	{
 		public static readonly RoutedCommand ClearCommand = new RoutedCommand();
 
-		private ObservableCollection<TrackedEvent> interestingEvents = new ObservableCollection<TrackedEvent>();
-		private ObservableCollection<EventTracker> trackers = new ObservableCollection<EventTracker>();
 
-		private static List<RoutedEvent> defaultEvents = new List<RoutedEvent>(new RoutedEvent[] {
-			Keyboard.KeyDownEvent,
-			Keyboard.KeyUpEvent,
-			TextCompositionManager.TextInputEvent,
-			Mouse.MouseDownEvent,
-			Mouse.PreviewMouseDownEvent,
-			Mouse.MouseUpEvent,
-			CommandManager.ExecutedEvent,
-			});
-
-		public EventsView() {
+		public EventsView()
+		{
 			this.InitializeComponent();
 
 			List<EventTracker> sorter = new List<EventTracker>();
 
-			foreach (RoutedEvent routedEvent in EventManager.GetRoutedEvents()) {
+			foreach (RoutedEvent routedEvent in EventManager.GetRoutedEvents())
+			{
 				EventTracker tracker = new EventTracker(typeof(UIElement), routedEvent);
 				tracker.EventHandled += this.HandleEventHandled;
 				sorter.Add(tracker);
@@ -56,14 +46,18 @@ namespace Snoop {
 
 			this.CommandBindings.Add(new CommandBinding(EventsView.ClearCommand, this.HandleClear));
 		}
-		
-		public IEnumerable InterestingEvents {
+
+
+		public IEnumerable InterestingEvents
+		{
 			get { return this.interestingEvents; }
 		}
+		private ObservableCollection<TrackedEvent> interestingEvents = new ObservableCollection<TrackedEvent>();
 
-		public object AvailableEvents 
+		public object AvailableEvents
 		{
-			get {
+			get
+			{
 				PropertyGroupDescription pgd = new PropertyGroupDescription();
 				pgd.PropertyName = "Category";
 				pgd.StringComparison = StringComparison.OrdinalIgnoreCase;
@@ -80,31 +74,25 @@ namespace Snoop {
 			}
 		}
 
+
 		private void HandleEventHandled(TrackedEvent trackedEvent)
 		{
 			Visual visual = trackedEvent.Originator.Handler as Visual;
 			if (visual != null && !visual.IsPartOfSnoopVisualTree())
-			{				
-					this.interestingEvents.Add(trackedEvent);
+			{
+				this.interestingEvents.Add(trackedEvent);
 
-					while (this.interestingEvents.Count > 100)
-						this.interestingEvents.RemoveAt(0);
+				while (this.interestingEvents.Count > 100)
+					this.interestingEvents.RemoveAt(0);
 
-					TreeViewItem tvi = (TreeViewItem)this.EventTree.ItemContainerGenerator.ContainerFromItem(trackedEvent);
-					if (tvi != null)
-						tvi.BringIntoView();				
+				TreeViewItem tvi = (TreeViewItem)this.EventTree.ItemContainerGenerator.ContainerFromItem(trackedEvent);
+				if (tvi != null)
+					tvi.BringIntoView();
 			}
 		}
-
-		private void HandleClear(object sender, ExecutedRoutedEventArgs e) {
+		private void HandleClear(object sender, ExecutedRoutedEventArgs e)
+		{
 			this.interestingEvents.Clear();
-		}
-
-		public event PropertyChangedEventHandler PropertyChanged;
-		protected void OnPropertyChanged(string propertyName) {
-			Debug.Assert(this.GetType().GetProperty(propertyName) != null);
-			if (this.PropertyChanged != null)
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 		}
 
 		private void EventTree_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
@@ -117,33 +105,71 @@ namespace Snoop {
 					SnoopUI.InspectCommand.Execute(((TrackedEvent)e.NewValue).EventArgs, this);
 			}
 		}
+
+
+		private ObservableCollection<EventTracker> trackers = new ObservableCollection<EventTracker>();
+
+
+		private static List<RoutedEvent> defaultEvents =
+			new List<RoutedEvent>
+			(
+				new RoutedEvent[]
+				{
+					Keyboard.KeyDownEvent,
+					Keyboard.KeyUpEvent,
+					TextCompositionManager.TextInputEvent,
+					Mouse.MouseDownEvent,
+					Mouse.PreviewMouseDownEvent,
+					Mouse.MouseUpEvent,
+					CommandManager.ExecutedEvent,
+				}
+			);
+
+
+		#region INotifyPropertyChanged Members
+		public event PropertyChangedEventHandler PropertyChanged;
+		protected void OnPropertyChanged(string propertyName)
+		{
+			Debug.Assert(this.GetType().GetProperty(propertyName) != null);
+			if (this.PropertyChanged != null)
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+		#endregion
 	}
 
 	public class InterestingEvent
 	{
-		private object triggeredOn;
-		private object handledBy;
-		private RoutedEventArgs eventArgs;
-
-		public InterestingEvent(object handledBy, RoutedEventArgs eventArgs) {
+		public InterestingEvent(object handledBy, RoutedEventArgs eventArgs)
+		{
 			this.handledBy = handledBy;
 			this.triggeredOn = null;
 			this.eventArgs = eventArgs;
 		}
 
-		public RoutedEventArgs EventArgs {
+
+		public RoutedEventArgs EventArgs
+		{
 			get { return this.eventArgs; }
 		}
+		private RoutedEventArgs eventArgs;
 
-		public object HandledBy {
+
+		public object HandledBy
+		{
 			get { return this.handledBy; }
 		}
+		private object handledBy;
 
-		public object TriggeredOn {
+
+		public object TriggeredOn
+		{
 			get { return this.triggeredOn; }
 		}
+		private object triggeredOn;
 
-		public bool Handled {
+
+		public bool Handled
+		{
 			get { return this.handledBy != null; }
 		}
 	}
