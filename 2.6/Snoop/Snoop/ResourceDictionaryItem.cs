@@ -18,7 +18,7 @@ namespace Snoop
 
 		public override string ToString()
 		{
-			return this.dictionary.Count + " Resources";
+			return this.Children.Count + " Resources";
 		}
 
 		protected override void Reload(List<VisualTreeItem> toBeRemoved)
@@ -27,7 +27,25 @@ namespace Snoop
 
 			foreach (object key in this.dictionary.Keys)
 			{
-				object target = this.dictionary[key];
+				object target;
+				try
+				{
+					target = this.dictionary[key];
+				}
+				catch (System.Windows.Markup.XamlParseException e)
+				{
+					// sometimes you can get a XamlParseException ... because the xaml you are Snoop(ing) is bad.
+					// e.g. I got this once when I was Snoop(ing) some xaml that was refering to an image resource that was no longer there.
+					// in this case, just continue to the next resource in the dictionary.
+					continue;
+				}
+
+				if (target == null)
+				{
+					// you only get a XamlParseException once. the next time through target just comes back null.
+					// in this case, just continue to the next resource in the dictionary (as before).
+					continue;
+				}
 
 				bool foundItem = false;
 				foreach (VisualTreeItem item in toBeRemoved)
