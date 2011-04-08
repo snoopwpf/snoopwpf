@@ -1,0 +1,17 @@
+﻿<Window
+	x:Class="AmbiguousMatchExceptionCrash.MainWindow"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:local="clr-namespace:AmbiguousMatchExceptionCrash"
+	Title="MainWindow"
+	Height="350"
+	Width="525"
+>
+	<Grid>
+		<local:MyButton
+			Content="Snoop me and I'll crash!"
+			Width="200"
+			Height="85"
+		/>
+	</Grid>
+</Window>

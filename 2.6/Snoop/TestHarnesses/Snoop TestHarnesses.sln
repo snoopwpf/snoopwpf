@@ -25,9 +25,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld35", "HelloWorld3
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld40", "HelloWorld40\HelloWorld40.csproj", "{688C7775-C219-4D81-A404-F520BE4BF458}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmbiguousMatchExceptionCrash", "AmbiguousMatchExceptionCrash\AmbiguousMatchExceptionCrash.csproj", "{C280DB67-E25F-478E-A6E9-9A107284E0E5}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 12
+		SccNumberOfProjects = 13
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs09
 		SccLocalPath0 = .
@@ -66,6 +68,9 @@ Global
 		SccProjectUniqueName11 = HelloWorld40\\HelloWorld40.csproj
 		SccProjectName11 = HelloWorld40
 		SccLocalPath11 = HelloWorld40
+		SccProjectUniqueName12 = AmbiguousMatchExceptionCrash\\AmbiguousMatchExceptionCrash.csproj
+		SccProjectName12 = AmbiguousMatchExceptionCrash
+		SccLocalPath12 = AmbiguousMatchExceptionCrash
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -162,6 +167,14 @@ Global
 		{688C7775-C219-4D81-A404-F520BE4BF458}.Release|x64.Build.0 = Release|x64
 		{688C7775-C219-4D81-A404-F520BE4BF458}.Release|x86.ActiveCfg = Release|x86
 		{688C7775-C219-4D81-A404-F520BE4BF458}.Release|x86.Build.0 = Release|x86
+		{C280DB67-E25F-478E-A6E9-9A107284E0E5}.Debug|x64.ActiveCfg = Debug|x64
+		{C280DB67-E25F-478E-A6E9-9A107284E0E5}.Debug|x64.Build.0 = Debug|x64
+		{C280DB67-E25F-478E-A6E9-9A107284E0E5}.Debug|x86.ActiveCfg = Debug|x86
+		{C280DB67-E25F-478E-A6E9-9A107284E0E5}.Debug|x86.Build.0 = Debug|x86
+		{C280DB67-E25F-478E-A6E9-9A107284E0E5}.Release|x64.ActiveCfg = Release|x64
+		{C280DB67-E25F-478E-A6E9-9A107284E0E5}.Release|x64.Build.0 = Release|x64
+		{C280DB67-E25F-478E-A6E9-9A107284E0E5}.Release|x86.ActiveCfg = Release|x86
+		{C280DB67-E25F-478E-A6E9-9A107284E0E5}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
