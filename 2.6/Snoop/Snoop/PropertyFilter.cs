@@ -130,7 +130,7 @@ namespace Snoop
 			string lowerProperty = property.ToLower();
 			foreach (var filterProp in Properties)
 			{
-				if (lowerProperty.Contains(filterProp))
+				if (lowerProperty.StartsWith(filterProp))
 				{
 					return true;
 				}

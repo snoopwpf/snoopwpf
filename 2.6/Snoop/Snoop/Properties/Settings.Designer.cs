@@ -127,22 +127,22 @@ namespace Snoop.Properties {
             "mmand>\r\n        <Properties>\r\n          <string>width</string>\r\n          <strin" +
             "g>height</string>\r\n          <string>actualwidth</string>\r\n          <string>act" +
             "ualheight</string>\r\n          <string>margin</string>\r\n          <string>padding" +
-            "</string>\r\n          <string>left</string>\r\n          <string>top</string>\r\n    " +
-            "    </Properties>\r\n      </PropertyFilterSet>\r\n      <PropertyFilterSet>\r\n      " +
-            "  <DisplayName>Grid/Dock</DisplayName>\r\n        <IsDefault>false</IsDefault>\r\n  " +
-            "      <IsEditCommand>false</IsEditCommand>\r\n        <Properties>\r\n          <str" +
-            "ing>grid</string>\r\n          <string>dock</string>\r\n        </Properties>\r\n     " +
-            " </PropertyFilterSet>\r\n      <PropertyFilterSet>\r\n        <DisplayName>Color</Di" +
-            "splayName>\r\n        <IsDefault>false</IsDefault>\r\n        <IsEditCommand>false</" +
-            "IsEditCommand>\r\n        <Properties>\r\n          <string>color</string>\r\n        " +
-            "  <string>background</string>\r\n          <string>foreground</string>\r\n          " +
-            "<string>borderbrush</string>\r\n          <string>fill</string>\r\n          <string" +
-            ">stroke</string>\r\n        </Properties>\r\n      </PropertyFilterSet>\r\n      <Prop" +
-            "ertyFilterSet>\r\n        <DisplayName>ItemsControl</DisplayName>\r\n        <IsDefa" +
-            "ult>false</IsDefault>\r\n        <IsEditCommand>false</IsEditCommand>\r\n        <Pr" +
-            "operties>\r\n          <string>items</string>\r\n          <string>selected</string>" +
-            "\r\n        </Properties>\r\n      </PropertyFilterSet>\r\n    </ArrayOfPropertyFilter" +
-            "Set>\r\n")]
+            "</string>\r\n          <string>canvas.left</string>\r\n          <string>canvas.top<" +
+            "/string>\r\n        </Properties>\r\n      </PropertyFilterSet>\r\n      <PropertyFilt" +
+            "erSet>\r\n        <DisplayName>Grid/Dock</DisplayName>\r\n        <IsDefault>false</" +
+            "IsDefault>\r\n        <IsEditCommand>false</IsEditCommand>\r\n        <Properties>\r\n" +
+            "          <string>grid.</string>\r\n          <string>dockpanel.dock</string>\r\n   " +
+            "     </Properties>\r\n      </PropertyFilterSet>\r\n      <PropertyFilterSet>\r\n     " +
+            "   <DisplayName>Color</DisplayName>\r\n        <IsDefault>false</IsDefault>\r\n     " +
+            "   <IsEditCommand>false</IsEditCommand>\r\n        <Properties>\r\n          <string" +
+            ">color</string>\r\n          <string>background</string>\r\n          <string>foregr" +
+            "ound</string>\r\n          <string>borderbrush</string>\r\n          <string>fill</s" +
+            "tring>\r\n          <string>stroke</string>\r\n        </Properties>\r\n      </Proper" +
+            "tyFilterSet>\r\n      <PropertyFilterSet>\r\n        <DisplayName>ItemsControl</Disp" +
+            "layName>\r\n        <IsDefault>false</IsDefault>\r\n        <IsEditCommand>false</Is" +
+            "EditCommand>\r\n        <Properties>\r\n          <string>items</string>\r\n          " +
+            "<string>selected</string>\r\n        </Properties>\r\n      </PropertyFilterSet>\r\n  " +
+            "  </ArrayOfPropertyFilterSet>")]
         public PropertyFilterSet[] PropertyFilterSets {
             get {
                 return ((PropertyFilterSet[])(this["PropertyFilterSets"]));
