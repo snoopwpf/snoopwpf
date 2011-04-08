@@ -5,9 +5,19 @@
 	Title="Hello World WPF 3.5"
 	Height="300"
 	Width="300"
-	TextElement.FontSize="48"
 >
+	<Window.Resources>
+		<Style TargetType="TextBlock">
+			<Setter Property="Foreground" Value="DarkBlue"/>
+			<Setter Property="FontSize" Value="48"/>
+		</Style>
+	</Window.Resources>
 	<Grid>
-		<TextBlock Text="Hello World" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding DNE}"/>
+		<TextBlock
+			x:Name="theTextBlock"
+			Text="Hello World"
+			HorizontalAlignment="Center"
+			VerticalAlignment="Center"
+		/>
 	</Grid>
 </Window>
