@@ -387,8 +387,12 @@ namespace Snoop
 		{
 			List<PropertyInformation> props = new List<PropertyInformation>();
 
-			PropertyDescriptorCollection propertyDescriptors = TypeDescriptor.GetProperties(obj, new Attribute[] { new PropertyFilterAttribute(PropertyFilterOptions.All) });
 
+			// get the properties
+			List<PropertyDescriptor> propertyDescriptors = GetAllProperties(obj, new Attribute[] { new PropertyFilterAttribute(PropertyFilterOptions.All) });
+
+
+			// filter the properties
 			foreach (PropertyDescriptor property in propertyDescriptors)
 			{
 				if (filter(property))
@@ -398,6 +402,8 @@ namespace Snoop
 				}
 			}
 
+
+			// if the object is a collection, add the items in the collection as properties
 			ICollection collection = obj as ICollection;
 			int index = 0;
 			if (collection != null)
@@ -411,9 +417,67 @@ namespace Snoop
 				}
 			}
 
+
+			// sort the properties
 			props.Sort();
 
+
 			return props;
+		}
+
+		private static List<PropertyDescriptor> GetAllProperties(object obj, Attribute[] attributes)
+		{
+			List<PropertyDescriptor> propertiesToReturn = new List<PropertyDescriptor>();
+
+			// keep looping until you don't have an AmbiguousMatchException exception
+			// and you normally won't have an exception, so the loop will typically execute only once.
+			bool noException = false;
+			while (!noException && obj != null)
+			{
+				try
+				{
+					// try to get the properties using the GetProperties method that takes an instance
+					var properties = TypeDescriptor.GetProperties(obj, attributes);
+					noException = true;
+
+					MergeProperties(properties, propertiesToReturn);
+				}
+				catch (System.Reflection.AmbiguousMatchException)
+				{
+					// if we get an AmbiguousMatchException, the user has probably declared a property that hides a property in an ancestor
+					// see issue 6258 (http://snoopwpf.codeplex.com/workitem/6258)
+					//
+					// public class MyButton : Button
+					// {
+					//     public new double? Width
+					//     {
+					//         get { return base.Width; }
+					//         set { base.Width = value.Value; }
+					//     }
+					// }
+
+					Type t = obj.GetType();
+					var properties = TypeDescriptor.GetProperties(t, attributes);
+
+					MergeProperties(properties, propertiesToReturn);
+
+					obj = Activator.CreateInstance(t.BaseType);
+				}
+			}
+
+			return propertiesToReturn;
+		}
+		private static void MergeProperties(System.Collections.IEnumerable newProperties, ICollection<PropertyDescriptor> allProperties)
+		{
+			foreach (var newProperty in newProperties)
+			{
+				PropertyDescriptor newPropertyDescriptor = newProperty as PropertyDescriptor;
+				if (newPropertyDescriptor == null)
+					continue;
+
+				if (!allProperties.Contains(newPropertyDescriptor))
+					allProperties.Add(newPropertyDescriptor);
+			}
 		}
 
 		private bool isRunning = false;
