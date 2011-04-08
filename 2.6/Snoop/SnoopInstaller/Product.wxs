@@ -30,6 +30,8 @@
 		
 		<!-- Will prompt user that a Newer version is already installed.-->
 		<CustomAction Id="PreventDowngrading" Error="Newer version already installed."/>
+		
+		<Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR"/>
 
 		<Media Id="1" Cabinet="media1.cab" EmbedCab="yes"/>
 
@@ -133,8 +135,14 @@
 			<ComponentRef Id="ProgramMenuDir"/>
 		</Feature>
 
-		<UIRef Id="WixUI_Minimal"/>
+		<UIRef Id="WixUI_InstallDir"/>
 		<WixVariable Id="WixUILicenseRtf" Value="License.rtf"/>
+		<WixVariable Id="WixUIBannerBmp" Value="Bitmaps\Banner.bmp"/>
+		<WixVariable Id="WixUIDialogBmp" Value="Bitmaps\Dialog.bmp"/>
+		<WixVariable Id="WixUIExclamationIco" Value="Bitmaps\Exclamation.ico"/>
+		<WixVariable Id="WixUIInfoIco" Value="Bitmaps\Information.ico"/>
+		<WixVariable Id="WixUINewIco" Value="Bitmaps\New.ico"/>
+		<WixVariable Id="WixUIUpIco" Value="Bitmaps\Up.ico"/>
 
 		<Icon Id="Snoop.exe" SourceFile="..\Build\Release\Snoop.exe"/>
 	</Product>
