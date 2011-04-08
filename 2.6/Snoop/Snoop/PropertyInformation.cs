@@ -24,6 +24,8 @@ namespace Snoop
 			this.property = property;
 			this.displayName = displayName;
 
+			// create a data binding between the actual property value on the target object
+			// and the Value dependency property on this PropertyInformation object
 			Binding binding;
 			DependencyProperty dp = this.DependencyProperty;
 			if (dp != null)
@@ -150,9 +152,32 @@ namespace Snoop
 			}
 		}
 
+		public Type ComponentType
+		{
+			get
+			{
+				return this.property.ComponentType;
+			}
+		}
+
 		public Type PropertyType
 		{
 			get { return this.property.PropertyType; }
+		}
+
+		public Type ValueType
+		{
+			get
+			{
+				if (this.Value != null)
+				{
+					return this.Value.GetType();
+				}
+				else
+				{
+					return typeof(object);
+				}
+			}
 		}
 
 		public string BindingError
@@ -302,6 +327,10 @@ namespace Snoop
 				((DependencyObject)this.target).ClearValue(dp);
 		}
 
+		/// <summary>
+		/// Returns the DependencyProperty identifier for the property that this PropertyInformation wraps.
+		/// If the wrapped property is not a DependencyProperty, null is returned.
+		/// </summary>
 		private DependencyProperty DependencyProperty
 		{
 			get

@@ -130,12 +130,25 @@ namespace Snoop
 			int i = 0;
 			for (; i < numberToAdd && this.propertiesToAdd.MoveNext(); ++i)
 			{
+				// iterate over the PropertyInfo objects,
+				// setting the property grid's filter on each object,
+				// and adding those properties to the observable collection of properties (this.properties)
 				PropertyInformation property = this.propertiesToAdd.Current;
 				property.Filter = this.Filter;
 				this.properties.Add(property);
 
+				// checking whether a property is visible ... actually runs the property filtering code
 				if (property.IsVisible)
 					property.Index = this.visiblePropertyCount++;
+
+				// cplotts todo:
+				// i wonder if i add just the properties that are visible
+				// if that will get rid of the weird scrolling problem when properties have been filtered out.
+				//
+				// nope.
+				// i quickly tried moving the this.properties.Add(property) method into the if (property.IsVisible) statement,
+				// but that didn't work when filtering and unfiltering
+				// (e.g. showing properties at their default value ... and NOT showing properties at their default value).
 			}
 
 			if (i == numberToAdd)

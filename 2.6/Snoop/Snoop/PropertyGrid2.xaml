@@ -292,6 +292,17 @@ All other rights reserved.
 						</DataTemplate>
 					</GridViewColumn.CellTemplate>
 				</GridViewColumn>
+
+				<GridViewColumn Width="150">
+					<GridViewColumn.Header>
+						<TextBlock Style="{x:Null}" Text="Component Type"/>
+					</GridViewColumn.Header>
+					<GridViewColumn.CellTemplate>
+						<DataTemplate>
+							<TextBlock Style="{x:Null}" Text="{Binding ComponentType}" Height="15"/>
+						</DataTemplate>
+					</GridViewColumn.CellTemplate>
+				</GridViewColumn>
 			</GridView>
 		</ListView.View>
 	</ListView>
