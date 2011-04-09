@@ -293,9 +293,18 @@ All other rights reserved.
 					</GridViewColumn.CellTemplate>
 				</GridViewColumn>
 
-				<GridViewColumn Width="150">
+				<GridViewColumn Width="200">
 					<GridViewColumn.Header>
-						<TextBlock Style="{x:Null}" Text="Component Type"/>
+						<TextBlock Style="{x:Null}" Text="Component Type">
+							<TextBlock.ToolTip>
+								<StackPanel>
+									<TextBlock Style="{x:Null}" Text="This is the type that the property is defined on."/>
+									<TextBlock Style="{x:Null}" Text="It is actually used in the filtering mechanism."/>
+									<TextBlock Style="{x:Null}" Text="Filter on FrameworkElement, for example, to see"/>
+									<TextBlock Style="{x:Null}" Text="all the properties defined on FrameworkElement."/>
+								</StackPanel>
+							</TextBlock.ToolTip>
+						</TextBlock>
 					</GridViewColumn.Header>
 					<GridViewColumn.CellTemplate>
 						<DataTemplate>
