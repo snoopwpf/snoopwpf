@@ -35,6 +35,8 @@ namespace Snoop
 			this.CommandBindings.Add(new CommandBinding(AppChooser.RefreshCommand, this.HandleRefreshCommand));
 			this.CommandBindings.Add(new CommandBinding(AppChooser.InspectCommand, this.HandleInspectCommand, this.HandleCanInspectOrMagnifyCommand));
 			this.CommandBindings.Add(new CommandBinding(AppChooser.MagnifyCommand, this.HandleMagnifyCommand, this.HandleCanInspectOrMagnifyCommand));
+			this.CommandBindings.Add(new CommandBinding(AppChooser.MinimizeCommand, this.HandleMinimizeCommand));
+			this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, this.HandleCloseCommand));
 
 			AutoRefresh = false;
 			DispatcherTimer timer =
@@ -52,6 +54,7 @@ namespace Snoop
 		public static readonly RoutedCommand InspectCommand = new RoutedCommand();
 		public static readonly RoutedCommand RefreshCommand = new RoutedCommand();
 		public static readonly RoutedCommand MagnifyCommand = new RoutedCommand();
+		public static readonly RoutedCommand MinimizeCommand = new RoutedCommand();
 
 
 		public ICollectionView Windows
@@ -160,6 +163,14 @@ namespace Snoop
 			WindowInfo.ClearCachedProcessInfo();
 			this.Refresh();
 		}
+		private void HandleMinimizeCommand(object sender, ExecutedRoutedEventArgs e)
+		{
+			this.WindowState = System.Windows.WindowState.Minimized;
+		}
+		private void HandleCloseCommand(object sender, ExecutedRoutedEventArgs e)
+		{
+			this.Close();
+		}
 
 		private void HandleRefreshTimer(object sender, EventArgs e)
 		{
@@ -171,14 +182,6 @@ namespace Snoop
 		private void HandleMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			this.DragMove();
-		}
-		private void HandleMinimize(object sender, MouseButtonEventArgs e)
-		{
-			this.WindowState = System.Windows.WindowState.Minimized;
-		}
-		private void HandleClose(object sender, MouseButtonEventArgs e)
-		{
-			this.Close();
 		}
 	}
 
