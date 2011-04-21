@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 (c) Copyright Cory Plotts.
 This source is subject to the Microsoft Public License (Ms-PL).
 Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
@@ -107,7 +107,98 @@ All other rights reserved.
 								</LinearGradientBrush>
 							</Setter.Value>
 						</Setter>
-						<Setter Property="Opacity" Value="1" TargetName="ContentPresenter"/>
+						<Setter Property="Opacity" Value="0.5" TargetName="ContentPresenter"/>
+					</Trigger>
+				</ControlTemplate.Triggers>
+			</ControlTemplate>
+			<ControlTemplate x:Key="ButtonMiddle" TargetType="{x:Type ButtonBase}">
+				<Border x:Name="Border" BorderThickness="0,1">
+					<Border.BorderBrush>
+						<LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+							<GradientStop Offset="0" Color="#FFFFFFFF"/>
+							<GradientStop Offset="0.5" Color="#FFE3E5F0"/>
+							<GradientStop Offset="1" Color="#FFC6C5D7"/>
+						</LinearGradientBrush>
+					</Border.BorderBrush>
+					<Border.Background>
+						<LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+							<GradientStop Offset="0" Color="#FFFFFFFF"/>
+							<GradientStop Offset="0.5" Color="#FFE3E5F0"/>
+							<GradientStop Offset="1" Color="#FFC6C5D7"/>
+						</LinearGradientBrush>
+					</Border.Background>
+					<Border x:Name="Border1" BorderThickness="1,1,1,1">
+						<Border.BorderBrush>
+							<LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+								<GradientStop Offset="0" Color="sc#1, 0.366845042, 0.318384647, 0.9851835"/>
+								<GradientStop Offset="0.51923076923076927" Color="sc#1, 0.280645251, 0.3073139, 0.4595425"/>
+								<GradientStop Offset="1" Color="#FFC6C5D7"/>
+							</LinearGradientBrush>
+						</Border.BorderBrush>
+						<ContentPresenter
+							x:Name="ContentPresenter"
+							Margin="1,1,1,1"
+							Content="{TemplateBinding Content}"
+							ContentTemplate="{TemplateBinding ContentTemplate}"
+							ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
+						/>
+					</Border>
+				</Border>
+				<ControlTemplate.Triggers>
+					<Trigger Property="IsMouseOver" Value="True">
+						<Setter Property="BorderBrush" TargetName="Border1">
+							<Setter.Value>
+								<LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+									<GradientStop Offset="0" Color="sc#1, 0.856244, 0.283094436, 0.221971929"/>
+									<GradientStop Offset="1" Color="sc#1, 0.664019346, 0.3326727, 0"/>
+								</LinearGradientBrush>
+							</Setter.Value>
+						</Setter>
+					</Trigger>
+					<Trigger Property="IsPressed" Value="True">
+						<Setter Property="Background">
+							<Setter.Value>
+								<LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+									<GradientStop Offset="0" Color="#FFADAABD"/>
+									<GradientStop Offset="0.5" Color="#FFDEDBE7"/>
+									<GradientStop Offset="1" Color="#FFFFFFFF"/>
+								</LinearGradientBrush>
+							</Setter.Value>
+						</Setter>
+						<Setter Property="Background" TargetName="Border">
+							<Setter.Value>
+								<LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+									<GradientStop Offset="0" Color="#FFFFFFFF"/>
+									<GradientStop Offset="0.84615384615384615" Color="sc#1, 0.299671352, 0.299671352, 0.299671352"/>
+									<GradientStop Offset="0" Color="#FFC6C5D7"/>
+								</LinearGradientBrush>
+							</Setter.Value>
+						</Setter>
+					</Trigger>
+					<Trigger Property="ToggleButton.IsChecked" Value="True">
+						<Setter Property="Background" TargetName="Border">
+							<Setter.Value>
+								<LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+									<GradientStop Offset="0" Color="#FFFFFFFF"/>
+									<GradientStop Offset="0.84615384615384615" Color="sc#1, 0.299671352, 0.299671352, 0.299671352"/>
+									<GradientStop Offset="0" Color="#FFC6C5D7"/>
+								</LinearGradientBrush>
+							</Setter.Value>
+						</Setter>
+					</Trigger>
+					<Trigger Property="IsEnabled" Value="False">
+						<Setter Property="Background" Value="#77FFFFFF"/>
+						<Setter Property="BorderBrush" Value="#44000000"/>
+						<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+						<Setter Property="BorderBrush" TargetName="Border1">
+							<Setter.Value>
+								<LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+									<GradientStop Offset="0" Color="sc#1, 0.8917268, 0.8832413, 1"/>
+									<GradientStop Offset="1" Color="sc#1, 0.817024231, 0.768234, 0.768234"/>
+								</LinearGradientBrush>
+							</Setter.Value>
+						</Setter>
+						<Setter Property="Opacity" Value="0.5" TargetName="ContentPresenter"/>
 					</Trigger>
 				</ControlTemplate.Triggers>
 			</ControlTemplate>
@@ -188,7 +279,7 @@ All other rights reserved.
 								</LinearGradientBrush>
 							</Setter.Value>
 						</Setter>
-						<Setter Property="Opacity" Value="1" TargetName="ContentPresenter"/>
+						<Setter Property="Opacity" Value="0.5" TargetName="ContentPresenter"/>
 					</Trigger>
 				</ControlTemplate.Triggers>
 			</ControlTemplate>
@@ -199,14 +290,13 @@ All other rights reserved.
 		<Rectangle x:Name="PreviewArea" Fill="{Binding Brush}"/>
 
 		<Button
-			x:Name="MagnifyButton"
 			Width="22"
 			Height="20"
 			HorizontalAlignment="Right"
 			VerticalAlignment="Bottom"
-			Margin="0,0,22,0"
-			Command="{x:Static my:Previewer.MagnifyCommand}"
+			Margin="0,0,44,0"
 			Template="{DynamicResource ButtonLeft}"
+			Command="{x:Static my:Previewer.MagnifyCommand}"
 		>
 			<Image x:Name="Image" Source="{DynamicResource magnifyingGlassDrawingImage}"/>
 			<Button.ToolTip>
@@ -218,12 +308,12 @@ All other rights reserved.
 		</Button>
 
 		<ToggleButton
-			x:Name="MiniViewButton"
 			Width="22"
 			Height="20"
 			HorizontalAlignment="Right"
 			VerticalAlignment="Bottom"
-			Template="{DynamicResource ButtonRight}"
+			Margin="0,0,22,0"
+			Template="{DynamicResource ButtonMiddle}"
 			IsChecked="{Binding IsActive}"
 		>
 			<Image Source="{DynamicResource powerDrawingImage}"/>
@@ -234,5 +324,19 @@ All other rights reserved.
 				</StackPanel>
 			</ToggleButton.ToolTip>
 		</ToggleButton>
+
+		<Button
+			Width="22"
+			Height="20"
+			HorizontalAlignment="Right"
+			VerticalAlignment="Bottom"
+			Template="{DynamicResource ButtonRight}"
+			Command="{x:Static my:Previewer.ScreenshotCommand}"
+		>
+			<Image Margin="1" Source="{DynamicResource cameraDrawingImage}"/>
+			<Button.ToolTip>
+				<TextBlock Style="{x:Null}" Text="Save the current preview as bitmap."/>
+			</Button.ToolTip>
+		</Button>
 	</Grid>
 </UserControl>

@@ -12,6 +12,7 @@ namespace Snoop
 	public partial class Previewer
 	{
 		public static readonly RoutedCommand MagnifyCommand = new RoutedCommand("Magnify", typeof(SnoopUI));
+		public static readonly RoutedCommand ScreenshotCommand = new RoutedCommand("Screenshot", typeof(SnoopUI));
 
 
 		static Previewer()
@@ -24,49 +25,118 @@ namespace Snoop
 			this.InitializeComponent();
 
 			this.CommandBindings.Add(new CommandBinding(Previewer.MagnifyCommand, this.HandleMagnify, this.HandleCanMagnify));
+			this.CommandBindings.Add(new CommandBinding(Previewer.ScreenshotCommand, this.HandleScreenshot, this.HandleCanScreenshot));
 		}
 
 
+		#region Target
+		/// <summary>
+		/// Gets or sets the Target property.
+		/// </summary>
 		public object Target
 		{
-			get { return this.GetValue(Previewer.TargetProperty); }
-			set { this.SetValue(Previewer.TargetProperty, value); }
+			get { return (object)GetValue(TargetProperty); }
+			set { SetValue(TargetProperty, value); }
 		}
+		/// <summary>
+		/// Target Dependency Property
+		/// </summary>
 		public static readonly DependencyProperty TargetProperty =
 			DependencyProperty.Register
 			(
 				"Target",
 				typeof(object),
-				typeof(Previewer)
-			);
-
-		public Brush Brush
-		{
-			get { return (Brush)this.GetValue(Previewer.BrushProperty); }
-		}
-		public static readonly DependencyProperty BrushProperty;
-		private static readonly DependencyPropertyKey BrushPropertyKey =
-			DependencyProperty.RegisterReadOnly
-			(
-				"Brush",
-				typeof(Brush),
 				typeof(Previewer),
-				new PropertyMetadata(null)
+				new FrameworkPropertyMetadata
+				(
+					(object)null,
+					new PropertyChangedCallback(OnTargetChanged)
+				)
 			);
+		/// <summary>
+		/// Handles changes to the Target property.
+		/// </summary>
+		private static void OnTargetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			((Previewer)d).OnTargetChanged(e);
+		}
+		/// <summary>
+		/// Provides derived classes an opportunity to handle changes to the Target property.
+		/// </summary>
+		protected virtual void OnTargetChanged(DependencyPropertyChangedEventArgs e)
+		{
+			HandleTargetOrIsActiveChanged();
+		}
+		#endregion
 
+		#region IsActive
+		/// <summary>
+		/// Gets or sets the IsActive property.
+		/// </summary>
 		public bool IsActive
 		{
-			get { return (bool)this.GetValue(Previewer.IsActiveProperty); }
-			set { this.SetValue(Previewer.IsActiveProperty, value); }
+			get { return (bool)GetValue(IsActiveProperty); }
+			set { SetValue(IsActiveProperty, value); }
 		}
+		/// <summary>
+		/// IsActive Dependency Property
+		/// </summary>
 		public static readonly DependencyProperty IsActiveProperty =
 			DependencyProperty.Register
 			(
 				"IsActive",
 				typeof(bool),
 				typeof(Previewer),
-				new PropertyMetadata(false)
+				new FrameworkPropertyMetadata
+				(
+					(bool)false,
+					new PropertyChangedCallback(OnIsActiveChanged)
+				)
 			);
+		/// <summary>
+		/// Handles changes to the IsActive property.
+		/// </summary>
+		private static void OnIsActiveChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			((Previewer)d).OnIsActiveChanged(e);
+		}
+		/// <summary>
+		/// Provides derived classes an opportunity to handle changes to the IsActive property.
+		/// </summary>
+		protected virtual void OnIsActiveChanged(DependencyPropertyChangedEventArgs e)
+		{
+			HandleTargetOrIsActiveChanged();
+		}
+		#endregion
+
+		#region Brush
+		/// <summary>
+		/// Gets the Brush property.
+		/// </summary>
+		public Brush Brush
+		{
+			get { return (Brush)GetValue(BrushProperty); }
+		}
+		/// <summary>
+		/// Brush Read-Only Dependency Property
+		/// </summary>
+		private static readonly DependencyPropertyKey BrushPropertyKey =
+			DependencyProperty.RegisterReadOnly
+			(
+				"Brush",
+				typeof(Brush),
+				typeof(Previewer),
+				new FrameworkPropertyMetadata((Brush)null)
+			);
+		public static readonly DependencyProperty BrushProperty = BrushPropertyKey.DependencyProperty;
+		/// <summary>
+		/// Provides a secure method for setting the Brush property.
+		/// </summary>
+		protected void SetBrush(Brush value)
+		{
+			SetValue(BrushPropertyKey, value);
+		}
+		#endregion
 
 
 		protected override void OnInitialized(System.EventArgs e)
@@ -77,52 +147,48 @@ namespace Snoop
 			this.SetValue(Previewer.BrushPropertyKey, pooSniffer);
 		}
 
-		protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+
+		private void HandleTargetOrIsActiveChanged()
 		{
-			base.OnPropertyChanged(e);
-
-			if (e.Property == Previewer.TargetProperty && this.IsActive)
+			if (this.IsActive && this.Target is Visual)
 			{
-				Visual visual = this.Target as Visual;
-
-				if (visual != null && !(visual is Window))
-				{
-					VisualBrush brush = new VisualBrush(visual);
-					brush.Stretch = Stretch.Uniform;
-					this.SetValue(Previewer.BrushPropertyKey, brush);
-				}
+				Visual visual = (Visual)this.Target;
+				VisualBrush brush = new VisualBrush(visual);
+				brush.Stretch = Stretch.Uniform;
+				SetBrush(brush);
 			}
-			else if (e.Property == Previewer.IsActiveProperty)
+			else
 			{
-				if (this.IsActive)
-				{
-					Visual visual = this.Target as Visual;
-
-					if (visual != null)
-					{
-						VisualBrush brush = new VisualBrush(visual);
-						brush.Stretch = Stretch.Uniform;
-						this.SetValue(Previewer.BrushPropertyKey, brush);
-					}
-				}
-				else
-				{
-					Brush pooSniffer = (Brush)this.FindResource("poo_sniffer_xpr");
-					this.SetValue(Previewer.BrushPropertyKey, pooSniffer);
-				}
+				Brush pooSniffer = (Brush)this.FindResource("poo_sniffer_xpr");
+				SetBrush(pooSniffer);
 			}
 		}
 
 
 		private void HandleCanMagnify(object sender, CanExecuteRoutedEventArgs e)
 		{
-			e.CanExecute = this.Target != null;
+			e.CanExecute = (this.Target as Visual) != null;
 			e.Handled = true;
 		}
 		private void HandleMagnify(object sender, ExecutedRoutedEventArgs e)
 		{
 			Zoomer zoomer = new Zoomer();
 			zoomer.Magnify(this.Target);
+			e.Handled = true;
+		}
+
+		private void HandleCanScreenshot(object sender, CanExecuteRoutedEventArgs e)
+		{
+			e.CanExecute = (this.Target as Visual) != null;
+			e.Handled = true;
+		}
+		private void HandleScreenshot(object sender, ExecutedRoutedEventArgs e)
+		{
+			Visual visual = this.Target as Visual;
+
+			ScreenshotDialog dialog = new ScreenshotDialog();
+			dialog.DataContext = visual;
+			dialog.ShowDialog();
 			e.Handled = true;
 		}
 	}

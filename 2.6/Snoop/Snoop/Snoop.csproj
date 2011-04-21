@@ -97,6 +97,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="SampleData\ScreenshotVisualSample.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ScreenshotDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Simple Styles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -204,6 +212,9 @@
     <Compile Include="PropertyInformation.cs" />
     <Compile Include="ResourceContainerItem.cs" />
     <Compile Include="ResourceDictionaryItem.cs" />
+    <Compile Include="ScreenshotDialog.xaml.cs">
+      <DependentUpon>ScreenshotDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SettingBindingExtension.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SnoopWindowUtils.cs" />
@@ -217,6 +228,7 @@
     <Compile Include="ValueEditors\StandardValueEditor.cs" />
     <Compile Include="ValueEditors\ValueEditor.cs" />
     <Compile Include="ValueEditors\ValueEditorTemplateSelector.cs" />
+    <Compile Include="VisualCaptureUtil.cs" />
     <Compile Include="VisualItem.cs" />
     <Compile Include="EventsView.xaml.cs">
       <DependentUpon>EventsView.xaml</DependentUpon>
