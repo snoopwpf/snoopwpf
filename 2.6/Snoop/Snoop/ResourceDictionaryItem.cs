@@ -32,7 +32,7 @@ namespace Snoop
 				{
 					target = this.dictionary[key];
 				}
-				catch (System.Windows.Markup.XamlParseException e)
+				catch (System.Windows.Markup.XamlParseException)
 				{
 					// sometimes you can get a XamlParseException ... because the xaml you are Snoop(ing) is bad.
 					// e.g. I got this once when I was Snoop(ing) some xaml that was refering to an image resource that was no longer there.
