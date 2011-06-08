@@ -54,8 +54,21 @@ namespace Snoop
 			this.InheritanceBehavior = InheritanceBehavior.SkipToThemeNext;
 			this.InitializeComponent();
 
-			PresentationTraceSources.Refresh();
-			PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.Error;
+			// wrap the following PresentationTraceSources.Refresh() call in a try/catch
+			// sometimes a NullReferenceException occurs
+			// due to empty <filter> elements in the app.config file of the app you are snooping
+			// see the following for more info:
+			// http://snoopwpf.codeplex.com/discussions/236503
+			// http://snoopwpf.codeplex.com/workitem/6647
+			try
+			{
+				PresentationTraceSources.Refresh();
+				PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.Error;
+			}
+			catch (NullReferenceException)
+			{
+				// swallow this exception since you can Snoop just fine anyways.
+			}
 
 			this.CommandBindings.Add(new CommandBinding(SnoopUI.IntrospectCommand, this.HandleIntrospection));
 			this.CommandBindings.Add(new CommandBinding(SnoopUI.RefreshCommand, this.HandleRefresh));
