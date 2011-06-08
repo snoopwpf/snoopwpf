@@ -86,6 +86,12 @@ namespace Snoop
 			if (dispatcher.CheckAccess())
 			{
 				SnoopUI snoop = new SnoopUI();
+				var title = TryGetMainWindowTitle();
+				if (!string.IsNullOrEmpty(title))
+				{
+					snoop.Title = string.Format("{0} - Snoop", title);
+				}
+
 				snoop.Inspect();
 			}
 			else
@@ -466,6 +472,15 @@ namespace Snoop
 				this.Filter = this.filter;
 			}
 			return node;
+		}
+
+		private static string TryGetMainWindowTitle()
+		{
+			if (Application.Current != null && Application.Current.MainWindow != null)
+			{
+				return Application.Current.MainWindow.Title;
+			}
+			return string.Empty;
 		}
 
 		private void HandleTreeSelectedItemChanged(object sender, EventArgs e)
