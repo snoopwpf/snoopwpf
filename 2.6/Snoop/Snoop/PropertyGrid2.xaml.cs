@@ -31,6 +31,7 @@ namespace Snoop
 
 			this.InitializeComponent();
 
+			this.Loaded += this.HandleLoaded;
 			this.Unloaded += this.HandleUnloaded;
 
 			this.CommandBindings.Add(new CommandBinding(PropertyGrid2.ShowBindingErrorsCommand, this.HandleShowBindingErrors, this.CanShowBindingErrors));
@@ -71,11 +72,8 @@ namespace Snoop
 
 				foreach (PropertyInformation property in this.properties)
 					property.Teardown();
-				this.properties.Clear();
-				this.visiblePropertyCount = 0;
 
-				this.propertiesToAdd = null;
-				this.processIncrementalCall.Enqueue();
+				this.RefreshPropertyGrid();
 
 				this.OnPropertyChanged("Type");
 			}
@@ -236,10 +234,20 @@ namespace Snoop
 			}
 		}
 
+		private void HandleLoaded(object sender, EventArgs e)
+		{
+			if (this.unloaded)
+			{
+				this.RefreshPropertyGrid();
+				this.unloaded = false;
+			}
+		}
 		private void HandleUnloaded(object sender, EventArgs e)
 		{
 			foreach (PropertyInformation property in this.properties)
 				property.Teardown();
+
+			unloaded = true;
 		}
 
 		private void HandleNameClick(object sender, MouseButtonEventArgs e)
@@ -277,6 +285,15 @@ namespace Snoop
 				this.properties.Add(property);
 		}
 
+		private void RefreshPropertyGrid()
+		{
+			this.properties.Clear();
+			this.visiblePropertyCount = 0;
+
+			this.propertiesToAdd = null;
+			this.processIncrementalCall.Enqueue();
+		}
+
 
 		private object target;
 
@@ -287,6 +304,7 @@ namespace Snoop
 		private DelayedCall processIncrementalCall;
 		private DelayedCall filterCall;
 		private int visiblePropertyCount = 0;
+		private bool unloaded = false;
 
 
 		private static int CompareNames(PropertyInformation one, PropertyInformation two)
