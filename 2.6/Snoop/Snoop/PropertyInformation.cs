@@ -12,6 +12,7 @@ using System.Windows.Data;
 using System.Windows.Threading;
 using System.Collections;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.IO;
 
 namespace Snoop
@@ -514,6 +515,14 @@ namespace Snoop
 		#region IComparable Members
 		public int CompareTo(object obj)
 		{
+			string pattern = "^this\\[\\d+\\]$";
+			if (Regex.IsMatch(this.DisplayName, pattern) && Regex.IsMatch(((PropertyInformation)obj).DisplayName, pattern))
+			{
+				int thisIndex = int.Parse(this.DisplayName.Substring(5, this.DisplayName.Length - 6));
+				int objIndex = int.Parse(((PropertyInformation)obj).DisplayName.Substring(5, ((PropertyInformation)obj).DisplayName.Length - 6));
+				return thisIndex.CompareTo(objIndex);
+			}
+
 			return this.DisplayName.CompareTo(((PropertyInformation)obj).DisplayName);
 		}
 		#endregion

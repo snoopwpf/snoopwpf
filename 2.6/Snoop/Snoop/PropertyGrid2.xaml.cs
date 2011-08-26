@@ -311,10 +311,12 @@ namespace Snoop
 		{
 			return string.Compare(one.DisplayName, two.DisplayName);
 		}
-		private static int CompareValues(PropertyInformation one, PropertyInformation two) {
+		private static int CompareValues(PropertyInformation one, PropertyInformation two)
+		{
 			return string.Compare(one.StringValue, two.StringValue);
 		}
-		private static int CompareValueSources(PropertyInformation one, PropertyInformation two) {
+		private static int CompareValueSources(PropertyInformation one, PropertyInformation two)
+		{
 			return string.Compare(one.ValueSource.BaseValueSource.ToString(), two.ValueSource.BaseValueSource.ToString());
 		}
 
