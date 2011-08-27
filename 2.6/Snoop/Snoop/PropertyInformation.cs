@@ -345,6 +345,9 @@ namespace Snoop
 
 		private void Update()
 		{
+			if (ignoreUpdate)
+				return;
+
 			this.isLocallySet = false;
 			this.isInvalidBinding = false;
 			this.isDatabound = false;
@@ -370,10 +373,14 @@ namespace Snoop
 						StringWriter writer = new StringWriter(builder);
 						TextWriterTraceListener tracer = new TextWriterTraceListener(writer);
 						PresentationTraceSources.DataBindingSource.Listeners.Add(tracer);
+
+						// reset binding to get the error message.
+						ignoreUpdate = true;
 						d.ClearValue(dp);
 						BindingOperations.SetBinding(d, dp, expression.ParentBindingBase);
+						ignoreUpdate = false;
 
-						// This needs to happen on idle so that we can actually run the binding, which may occur asynchronously.
+						// this needs to happen on idle so that we can actually run the binding, which may occur asynchronously.
 						Dispatcher.BeginInvoke
 						(
 							DispatcherPriority.ApplicationIdle,
@@ -511,6 +518,8 @@ namespace Snoop
 		}
 
 		private bool isRunning = false;
+		private bool ignoreUpdate = false;
+
 
 		#region IComparable Members
 		public int CompareTo(object obj)
