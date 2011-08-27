@@ -143,7 +143,7 @@ namespace Snoop
 		{
 			base.OnInitialized(e);
 
-			Brush pooSniffer = (Brush)this.FindResource("poo_sniffer_xpr");
+			Brush pooSniffer = (Brush)this.FindResource("previewerSnoopDogDrawingBrush");
 			this.SetValue(Previewer.BrushPropertyKey, pooSniffer);
 		}
 
@@ -159,7 +159,7 @@ namespace Snoop
 			}
 			else
 			{
-				Brush pooSniffer = (Brush)this.FindResource("poo_sniffer_xpr");
+				Brush pooSniffer = (Brush)this.FindResource("previewerSnoopDogDrawingBrush");
 				SetBrush(pooSniffer);
 			}
 		}

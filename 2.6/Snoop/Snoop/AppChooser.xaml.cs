@@ -47,7 +47,11 @@ namespace Snoop
 					this.HandleRefreshTimer,
 					Dispatcher.CurrentDispatcher
 				);
-			this.Refresh();
+
+			// cplotts todo:
+			// i have commented out this refresh call due to inclusion of the crosshairs functionality.
+			// we should create an options dialog and add this as an option for the people who still want to use the combo box.
+//			this.Refresh();
 		}
 
 
@@ -81,9 +85,12 @@ namespace Snoop
 
 						foreach (IntPtr windowHandle in NativeMethods.ToplevelWindows)
 						{
-							WindowInfo window = new WindowInfo(windowHandle, this);
+							WindowInfo window = new WindowInfo(windowHandle);
 							if (window.IsValidProcess && !this.HasProcess(window.OwningProcess))
+							{
+								new AttachFailedHandler(window, this);
 								this.windows.Add(window);
+							}
 						}
 
 						if (this.windows.Count > 0)
@@ -98,7 +105,6 @@ namespace Snoop
 				null
 			);
 		}
-
 
 		protected override void OnSourceInitialized(EventArgs e)
 		{
@@ -187,11 +193,17 @@ namespace Snoop
 
 	public class WindowInfo
 	{
-		public WindowInfo(IntPtr hwnd, AppChooser appChooser)
+		public WindowInfo(IntPtr hwnd)
 		{
-			this.hwnd = hwnd;
-			this.appChooser = appChooser;
+			this.hwnd = hwnd;			
 		}
+
+		public static void ClearCachedProcessInfo()
+		{
+			WindowInfo.processIDToValidityMap.Clear();
+		}
+
+		public event EventHandler<AttachFailedEventArgs> AttachFailed;
 
 		public IEnumerable<NativeMethods.MODULEENTRY32> Modules
 		{
@@ -320,11 +332,6 @@ namespace Snoop
 			return this.Description;
 		}
 
-
-		public static void ClearCachedProcessInfo()
-		{
-			WindowInfo.processIDToValidityMap.Clear();
-		}
 		public void Snoop()
 		{
 			Mouse.OverrideCursor = Cursors.Wait;
@@ -332,10 +339,9 @@ namespace Snoop
 			{
 				Injector.Launch(this.HWnd, typeof(SnoopUI).Assembly, typeof(SnoopUI).FullName, "GoBabyGo");
 			}
-			catch (Exception)
+			catch (Exception e)
 			{
-				if (this.appChooser != null)
-					this.appChooser.Refresh();
+				OnFailedToAttach(e);
 			}
 			Mouse.OverrideCursor = null;
 		}
@@ -346,16 +352,65 @@ namespace Snoop
 			{
 				Injector.Launch(this.HWnd, typeof(Zoomer).Assembly, typeof(Zoomer).FullName, "GoBabyGo");
 			}
-			catch (Exception)
+			catch (Exception e)
 			{
-				if (this.appChooser != null)
-					this.appChooser.Refresh();
+				OnFailedToAttach(e);
 			}
 			Mouse.OverrideCursor = null;
 		}
 
-
-		private AppChooser appChooser;
+		private void OnFailedToAttach(Exception e)
+		{
+			var handler = AttachFailed;
+			if (handler != null)
+			{
+				handler(this, new AttachFailedEventArgs(e, this.Description));
+			}
+		}
+		
 		private static Dictionary<int, bool> processIDToValidityMap = new Dictionary<int, bool>();
+	}
+
+	public class AttachFailedEventArgs : EventArgs
+	{
+		public Exception AttachException { get; private set; }
+		public string WindowName { get; private set; }
+
+		public AttachFailedEventArgs(Exception attachException, string windowName)
+		{
+			AttachException = attachException;
+			WindowName = windowName;
+		}		
+	}
+
+	public class AttachFailedHandler
+	{
+		public AttachFailedHandler(WindowInfo window, AppChooser appChooser = null)
+		{
+			window.AttachFailed += OnSnoopAttachFailed;
+			_appChooser = appChooser;
+		}
+
+		private void OnSnoopAttachFailed(object sender, AttachFailedEventArgs e)
+		{
+			System.Windows.MessageBox.Show
+			(
+				string.Format
+				(
+					"Failed to attach to {0}. Exception occured:{1}{2}",
+					e.WindowName,
+					Environment.NewLine,
+					e.AttachException.ToString()
+				),
+				"Can't Snoop the process!"
+			);
+			if (_appChooser != null)
+			{
+				// TODO This should be implmemented through the event broker, not like this.
+				_appChooser.Refresh();
+			}
+		}
+
+		private AppChooser _appChooser;
 	}
 }

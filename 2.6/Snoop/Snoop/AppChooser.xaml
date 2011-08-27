@@ -29,231 +29,155 @@ All other rights reserved.
 	DataContext="{Binding RelativeSource={RelativeSource Self}}"
 >
 	<Window.Resources>
-		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="Icons.xaml"/>
-				<ResourceDictionary Source="Simple Styles.xaml"/>
-			</ResourceDictionary.MergedDictionaries>
+		<!-- mouseOverBackgroundBrush -->
+		<RadialGradientBrush x:Key="mouseOverBackgroundBrush">
+			<GradientStop Color="#FFE3E5F0" Offset="0.439"/>
+			<GradientStop Color="#FFB2E3FF" Offset="1"/>
+		</RadialGradientBrush>
+
+		<!-- glassyGradientBrush -->
+		<LinearGradientBrush x:Key="glassyGradientBrush" EndPoint="0.25,0.067" StartPoint="0.75,0.933">
+			<GradientStop Color="#FF329CA5" Offset="0"/>
+			<GradientStop Color="#FFAEF2FA" Offset="1"/>
+		</LinearGradientBrush>
+
+		<!-- blueSteelGradientBrush -->
+		<LinearGradientBrush x:Key="blueSteelGradientBrush" EndPoint="0.501,-0.007" StartPoint="0.501,1.007">
+			<GradientStop Color="#FF0B9FF2" Offset="0.787"/>
+			<GradientStop Color="#FF007674" Offset="0"/>
+			<GradientStop Color="#FF004468" Offset="0.257"/>
+			<GradientStop Color="#FF004970" Offset="0.251"/>
+			<GradientStop Color="#FF014F79" Offset="0.421"/>
+			<GradientStop Color="#FF036194" Offset="1"/>
+		</LinearGradientBrush>
 
 
-			<!-- mouseOverBackgroundBrush -->
-			<RadialGradientBrush x:Key="mouseOverBackgroundBrush">
-				<GradientStop Color="#FFE3E5F0" Offset="0.439"/>
-				<GradientStop Color="#FFB2E3FF" Offset="1"/>
-			</RadialGradientBrush>
-
-			<!-- glassyGradientBrush -->
-			<LinearGradientBrush x:Key="glassyGradientBrush" EndPoint="0.25,0.067" StartPoint="0.75,0.933">
-				<GradientStop Color="#FF329CA5" Offset="0"/>
-				<GradientStop Color="#FFAEF2FA" Offset="1"/>
-			</LinearGradientBrush>
-
-			<!-- blueSteelGradientBrush -->
-			<LinearGradientBrush x:Key="blueSteelGradientBrush" EndPoint="0.501,-0.007" StartPoint="0.501,1.007">
-				<GradientStop Color="#FF0B9FF2" Offset="0.787"/>
-				<GradientStop Color="#FF007674" Offset="0"/>
-				<GradientStop Color="#FF004468" Offset="0.257"/>
-				<GradientStop Color="#FF004970" Offset="0.251"/>
-				<GradientStop Color="#FF014F79" Offset="0.421"/>
-				<GradientStop Color="#FF036194" Offset="1"/>
-			</LinearGradientBrush>
-
-
-			<!-- appChooserButtonStyle -->
-			<Style x:Key="appChooserButtonStyle" TargetType="{x:Type Button}">
-				<Setter Property="FocusVisualStyle">
-					<Setter.Value>
-						<Style>
-							<Setter Property="Control.Template">
-								<Setter.Value>
-									<ControlTemplate>
-										<Rectangle
-											Margin="3"
-											Stroke="Black"
-											StrokeThickness="1"
-											StrokeDashArray="1 2"
-											SnapsToDevicePixels="True"
-										/>
-									</ControlTemplate>
-								</Setter.Value>
-							</Setter>
-						</Style>
-					</Setter.Value>
-				</Setter>
-				<Setter Property="Background" Value="{DynamicResource MetalGrad}"/>
-				<Setter Property="BorderBrush" Value="{DynamicResource DarkBlue}"/>
-				<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
-				<Setter Property="HorizontalContentAlignment" Value="Center"/>
-				<Setter Property="VerticalContentAlignment" Value="Center"/>
-				<Setter Property="Template">
-					<Setter.Value>
-						<ControlTemplate TargetType="{x:Type ButtonBase}">
-							<Grid>
-								<Border
-									x:Name="border"
-									Background="{TemplateBinding Background}"
-									BorderBrush="{TemplateBinding BorderBrush}"
-									BorderThickness="1,1,1,1"
-									CornerRadius="4,4,4,4"
-								/>
-								<ContentPresenter
-									x:Name="contentPresenter"
-									Margin="2,2,2,2"
-								/>
-							</Grid>
-							<ControlTemplate.Triggers>
-								<Trigger Property="IsEnabled" Value="False">
-									<Setter Property="Opacity" TargetName="contentPresenter" Value="0.5"/>
-									<Setter Property="Opacity" TargetName="border" Value="0.6"/>
-								</Trigger>
-								<Trigger Property="IsMouseOver" Value="True">
-									<Setter Property="Opacity" TargetName="border" Value="1"/>
-									<Setter Property="Background" TargetName="border" Value="{DynamicResource mouseOverBackgroundBrush}"/>
-								</Trigger>
-							</ControlTemplate.Triggers>
-						</ControlTemplate>
-					</Setter.Value>
-				</Setter>
-			</Style>
-
-			<!-- appChooserMinimizeCloseButtonStyle -->
-			<Style x:Key="appChooserMinimizeCloseButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource appChooserButtonStyle}">
-				<Setter Property="Background" Value="#FF5B0000"/>
-				<Setter Property="Foreground" Value="White"/>
-				<Style.Triggers>
-					<Trigger Property="IsMouseOver" Value="True">
-						<Setter Property="Foreground" Value="{DynamicResource DeepBlueColorBrush}"/>
-					</Trigger>
-				</Style.Triggers>
-			</Style>
-
-			<!-- checkBoxStyle -->
-			<Style x:Key="checkBoxStyle" TargetType="{x:Type CheckBox}">
-				<Setter Property="SnapsToDevicePixels" Value="true"/>
-				<Setter Property="FocusVisualStyle" Value="{DynamicResource CheckBoxFocusVisual}"/>
-				<Setter Property="Background" Value="{DynamicResource NormalBrush}"/>
-				<Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}"/>
-				<Setter Property="Template">
-					<Setter.Value>
-						<ControlTemplate TargetType="{x:Type CheckBox}">
-							<!-- BulletDecorator is used to provide baseline alignment between the checkmark and the Content -->
-							<BulletDecorator Background="Transparent">
-								<BulletDecorator.Bullet>
-									<Grid Width="13" Height="13">
-										<Border x:Name="Border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"/>
-										<Path x:Name="CheckMark" Stroke="{DynamicResource GlyphBrush}" StrokeThickness="2" SnapsToDevicePixels="False" Data="M 3 3 L 10 10 M 3 10 L 10 3"/>
-									</Grid>
-								</BulletDecorator.Bullet>
-								<ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True"/>
-							</BulletDecorator>
-							<!-- This uses Visibility to hide and show the CheckMark on IsChecked -->
-							<ControlTemplate.Triggers>
-								<Trigger Property="IsChecked" Value="false">
-									<Setter Property="Visibility" Value="Collapsed" TargetName="CheckMark"/>
-								</Trigger>
-								<Trigger Property="IsMouseOver" Value="true">
-									<Setter Property="Background" Value="{DynamicResource MouseOverBrush}" TargetName="Border"/>
-								</Trigger>
-								<Trigger Property="IsPressed" Value="true">
-									<Setter Property="Background" Value="{DynamicResource PressedBrush}" TargetName="Border"/>
-									<Setter Property="BorderBrush" Value="{DynamicResource PressedBorderBrush}" TargetName="Border"/>
-								</Trigger>
-								<Trigger Property="IsEnabled" Value="false">
-									<Setter Property="Background" Value="{DynamicResource DisabledBackgroundBrush}" TargetName="Border"/>
-									<Setter Property="BorderBrush" Value="{DynamicResource DisabledBorderBrush}" TargetName="Border"/>
-								</Trigger>
-							</ControlTemplate.Triggers>
-						</ControlTemplate>
-					</Setter.Value>
-				</Setter>
-			</Style>
+		<!-- checkBoxStyle -->
+		<Style x:Key="checkBoxStyle" TargetType="{x:Type CheckBox}">
+			<Setter Property="SnapsToDevicePixels" Value="true"/>
+			<Setter Property="FocusVisualStyle" Value="{DynamicResource CheckBoxFocusVisual}"/>
+			<Setter Property="Background" Value="{DynamicResource NormalBrush}"/>
+			<Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type CheckBox}">
+						<!-- BulletDecorator is used to provide baseline alignment between the checkmark and the Content -->
+						<BulletDecorator Background="Transparent">
+							<BulletDecorator.Bullet>
+								<Grid Width="13" Height="13">
+									<Border x:Name="Border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"/>
+									<Path x:Name="CheckMark" Stroke="{DynamicResource GlyphBrush}" StrokeThickness="2" SnapsToDevicePixels="False" Data="M 3 3 L 10 10 M 3 10 L 10 3"/>
+								</Grid>
+							</BulletDecorator.Bullet>
+							<ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True"/>
+						</BulletDecorator>
+						<!-- This uses Visibility to hide and show the CheckMark on IsChecked -->
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsChecked" Value="false">
+								<Setter Property="Visibility" Value="Collapsed" TargetName="CheckMark"/>
+							</Trigger>
+							<Trigger Property="IsMouseOver" Value="true">
+								<Setter Property="Background" Value="{DynamicResource MouseOverBrush}" TargetName="Border"/>
+							</Trigger>
+							<Trigger Property="IsPressed" Value="true">
+								<Setter Property="Background" Value="{DynamicResource PressedBrush}" TargetName="Border"/>
+								<Setter Property="BorderBrush" Value="{DynamicResource PressedBorderBrush}" TargetName="Border"/>
+							</Trigger>
+							<Trigger Property="IsEnabled" Value="false">
+								<Setter Property="Background" Value="{DynamicResource DisabledBackgroundBrush}" TargetName="Border"/>
+								<Setter Property="BorderBrush" Value="{DynamicResource DisabledBorderBrush}" TargetName="Border"/>
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
 
 
-			<!-- windowStyle (that makes the app chooser look selected/activated) -->
-			<ControlTemplate x:Key="WindowTemplateKey" TargetType="{x:Type Window}">
-				<Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
-					<Grid>
-						<AdornerDecorator>
-							<ContentPresenter/>
-						</AdornerDecorator>
-						<ResizeGrip x:Name="WindowResizeGrip" HorizontalAlignment="Right" VerticalAlignment="Bottom" IsTabStop="false" Visibility="Collapsed"/>
-					</Grid>
-				</Border>
-				<ControlTemplate.Triggers>
-					<MultiTrigger>
-						<MultiTrigger.Conditions>
-							<Condition Property="ResizeMode" Value="CanResizeWithGrip"/>
-							<Condition Property="WindowState" Value="Normal"/>
-						</MultiTrigger.Conditions>
-						<Setter Property="Visibility" TargetName="WindowResizeGrip" Value="Visible"/>
-					</MultiTrigger>
-				</ControlTemplate.Triggers>
-			</ControlTemplate>
-			<Style x:Key="windowStyle" TargetType="{x:Type Window}">
-				<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>
-				<Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
-				<Setter Property="Template">
-					<Setter.Value>
-						<ControlTemplate TargetType="{x:Type Window}">
-							<Border
-								Background="{TemplateBinding Background}"
-								BorderBrush="{TemplateBinding BorderBrush}"
-								BorderThickness="{TemplateBinding BorderThickness}"
-							>
-								<AdornerDecorator>
-									<Grid>
-										<ContentPresenter/>
-										<Rectangle
-											x:Name="borderHighlight"
-											Stroke="#FFB2B2B2"
-											Margin="0,0,1,1"
-											RadiusX="2"
-											RadiusY="2"
-											Visibility="Collapsed"
-										/>
-										<Rectangle
-											x:Name="fillHighlight"
-											Fill="#39FFFFFF"
-											Width="67"
-											HorizontalAlignment="Left"
-											Margin="1,1,0,2"
-											RadiusX="1.5"
-											RadiusY="1.5"
-											Visibility="Collapsed"
-										/>
-									</Grid>
-								</AdornerDecorator>
-							</Border>
-							<ControlTemplate.Triggers>
-								<Trigger Property="IsKeyboardFocusWithin" Value="True">
-									<Setter Property="Visibility" TargetName="borderHighlight" Value="Visible"/>
-									<Setter Property="Visibility" TargetName="fillHighlight" Value="Visible"/>
-								</Trigger>
-								<Trigger Property="AllowsTransparency" Value="False"/>
-							</ControlTemplate.Triggers>
-						</ControlTemplate>
-					</Setter.Value>
-				</Setter>
-				<Style.Triggers>
-					<Trigger Property="ResizeMode" Value="CanResizeWithGrip">
-						<Setter Property="Template" Value="{StaticResource WindowTemplateKey}"/>
-					</Trigger>
-				</Style.Triggers>
-			</Style>
+		<!-- windowStyle (that makes the app chooser look selected/activated) -->
+		<ControlTemplate x:Key="WindowTemplateKey" TargetType="{x:Type Window}">
+			<Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+				<Grid>
+					<AdornerDecorator>
+						<ContentPresenter/>
+					</AdornerDecorator>
+					<ResizeGrip x:Name="WindowResizeGrip" HorizontalAlignment="Right" VerticalAlignment="Bottom" IsTabStop="false" Visibility="Collapsed"/>
+				</Grid>
+			</Border>
+			<ControlTemplate.Triggers>
+				<MultiTrigger>
+					<MultiTrigger.Conditions>
+						<Condition Property="ResizeMode" Value="CanResizeWithGrip"/>
+						<Condition Property="WindowState" Value="Normal"/>
+					</MultiTrigger.Conditions>
+					<Setter Property="Visibility" TargetName="WindowResizeGrip" Value="Visible"/>
+				</MultiTrigger>
+			</ControlTemplate.Triggers>
+		</ControlTemplate>
+		<Style x:Key="windowStyle" TargetType="{x:Type Window}">
+			<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>
+			<Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type Window}">
+						<Border
+							Background="{TemplateBinding Background}"
+							BorderBrush="{TemplateBinding BorderBrush}"
+							BorderThickness="{TemplateBinding BorderThickness}"
+						>
+							<AdornerDecorator>
+								<Grid>
+									<ContentPresenter/>
+									<Rectangle
+										x:Name="borderHighlight"
+										Stroke="#FFB2B2B2"
+										Margin="0,0,1,1"
+										RadiusX="2"
+										RadiusY="2"
+										Visibility="Collapsed"
+									/>
+									<Rectangle
+										x:Name="fillHighlight"
+										Fill="#39FFFFFF"
+										Width="67"
+										HorizontalAlignment="Left"
+										Margin="1,1,0,2"
+										RadiusX="1.5"
+										RadiusY="1.5"
+										Visibility="Collapsed"
+									/>
+								</Grid>
+							</AdornerDecorator>
+						</Border>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsKeyboardFocusWithin" Value="True">
+								<Setter Property="Visibility" TargetName="borderHighlight" Value="Visible"/>
+								<Setter Property="Visibility" TargetName="fillHighlight" Value="Visible"/>
+							</Trigger>
+							<Trigger Property="AllowsTransparency" Value="False"/>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+			<Style.Triggers>
+				<Trigger Property="ResizeMode" Value="CanResizeWithGrip">
+					<Setter Property="Template" Value="{StaticResource WindowTemplateKey}"/>
+				</Trigger>
+			</Style.Triggers>
+		</Style>
 
-			<!-- simpleComboBoxFocusStyle -->
-			<Style x:Key="simpleComboBoxFocusStyle" TargetType="{x:Type Control}">
-				<Setter Property="Template">
-					<Setter.Value>
-						<ControlTemplate TargetType="{x:Type Control}">
-							<Border>
-								<Rectangle Margin="2" Stroke="#AFFFFFFF" StrokeThickness="1" StrokeDashArray="1 2"/>
-							</Border>
-						</ControlTemplate>
-					</Setter.Value>
-				</Setter>
-			</Style>
-		</ResourceDictionary>
+		<!-- simpleComboBoxFocusStyle -->
+		<Style x:Key="simpleComboBoxFocusStyle" TargetType="{x:Type Control}">
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type Control}">
+						<Border>
+							<Rectangle Margin="2" Stroke="#AFFFFFFF" StrokeThickness="1" StrokeDashArray="1 2"/>
+						</Border>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
 	</Window.Resources>
 
 	<Grid x:Name="grid">
@@ -356,7 +280,7 @@ All other rights reserved.
 			ToolTip="Auto Refresh - check this box to automatically (in the background) refresh the list of applications that can be Snoop(ed)."
 		/>
 
-		<!-- magnify and snoop buttons -->
+		<!-- magnify button, snoop button, and the crosshairs window finder -->
 		<StackPanel
 			Grid.Column="4"
 			Height="20"
@@ -636,6 +560,9 @@ All other rights reserved.
 					</Canvas>
 				</Viewbox>
 			</Button>
+			
+			<!-- crosshairs window finder -->
+			<my:WindowFinder ToolTip="Drag and drop this crosshairs over a WPF window in order to Snoop it."/>
 		</StackPanel>
 
 		<!-- minimizeButton -->

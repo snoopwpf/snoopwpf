@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
 using System.Runtime.ConstrainedExecution;
+using System.Windows;
 
 namespace Snoop
 {
@@ -120,5 +121,49 @@ namespace Snoop
 
 		[DllImport("kernel32.dll", SetLastError = true)]
 		static public extern bool CloseHandle(IntPtr hHandle);
+
+
+		// anvaka's changes below
+
+
+		public static Point GetCursorPosition()
+		{
+			var pos = new Point();
+			var win32Point = new POINT();
+			if (GetCursorPos(ref win32Point))
+			{
+				pos.X = win32Point.X;
+				pos.Y = win32Point.Y;
+			}
+			return pos;
+		}
+
+		public static IntPtr GetWindowUnderMouse()
+		{
+			POINT pt = new POINT();
+			if (GetCursorPos(ref pt))
+			{
+				return WindowFromPoint(pt);
+			}
+			return IntPtr.Zero;
+		}
+
+		public static Rect GetWindowRect(IntPtr hwnd)
+		{
+			RECT rect = new RECT();
+			GetWindowRect(hwnd, out rect);
+			return new Rect(rect.Left, rect.Top, rect.Right - rect.Left, rect.Bottom - rect.Top);
+		}
+
+		[DllImport("user32.dll")]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static extern bool GetCursorPos(ref POINT pt);
+		
+		[DllImport("user32.dll")]
+		private static extern IntPtr WindowFromPoint(POINT Point);
+
+		[DllImport("user32.dll")]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
 	}
 }

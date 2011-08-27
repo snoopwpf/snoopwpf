@@ -114,6 +114,10 @@
     <Resource Include="Snoop.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="SnoopabilityFeedbackWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ValueEditors\EditorTemplates.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -174,10 +178,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="PooSniffer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="PropertyGrid2.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -195,6 +195,10 @@
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
     <Page Include="ValueEditors\MouseWheelValueEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WindowFinder.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -217,6 +221,9 @@
     </Compile>
     <Compile Include="SettingBindingExtension.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="SnoopabilityFeedbackWindow.xaml.cs">
+      <DependentUpon>SnoopabilityFeedbackWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SnoopWindowUtils.cs" />
     <Compile Include="TrackballBehavior.cs" />
     <Compile Include="ValueEditors\BoolValueEditor.cs" />
@@ -246,6 +253,9 @@
     <Compile Include="VisualTreeItem.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WindowFinder.xaml.cs">
+      <DependentUpon>WindowFinder.xaml</DependentUpon>
     </Compile>
     <Compile Include="WindowPlacement.cs" />
     <Compile Include="Zoomer.xaml.cs">
@@ -277,6 +287,12 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SnoopCrosshairsCursor.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\SnoopCrosshairsCursor.png" />
   </ItemGroup>
   <ProjectExtensions>
     <InteractiveDesigner>

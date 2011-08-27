@@ -17,8 +17,17 @@ All other rights reserved.
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
 				<ResourceDictionary Source="Icons.xaml"/>
-				<ResourceDictionary Source="PooSniffer.xaml"/>
 			</ResourceDictionary.MergedDictionaries>
+
+			<DrawingBrush x:Key="previewerSnoopDogDrawingBrush" Stretch="Uniform">
+				<DrawingBrush.Drawing>
+					<DrawingGroup>
+						<DrawingGroup.Children>
+							<GeometryDrawing Brush="#FFE8E8E8" Geometry="{DynamicResource snoopDogStreamGeometry}"/>
+						</DrawingGroup.Children>
+					</DrawingGroup>
+				</DrawingBrush.Drawing>
+			</DrawingBrush>
 
 			<ControlTemplate x:Key="ButtonRight" TargetType="{x:Type ButtonBase}">
 				<Border x:Name="Border" BorderThickness="0,1,1,1" CornerRadius="0,7,7,0">

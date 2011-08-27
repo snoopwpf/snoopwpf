@@ -8,6 +8,8 @@ using System.Runtime.InteropServices;
 
 namespace Snoop
 {
+	// AK: TODO: Move this to NativeMethods.cs
+
 	// RECT structure required by WINDOWPLACEMENT structure
 	[Serializable]
 	[StructLayout(LayoutKind.Sequential)]

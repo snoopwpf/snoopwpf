@@ -17,7 +17,7 @@ namespace Snoop
 	{
 		static string Suffix(IntPtr windowHandle)
 		{
-			var window = new WindowInfo(windowHandle, null);
+			var window = new WindowInfo(windowHandle);
 			string bitness = IntPtr.Size == 8 ? "64" : "32";
 			string clr = "3.5";
 

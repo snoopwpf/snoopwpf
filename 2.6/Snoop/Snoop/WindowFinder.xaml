@@ -1,0 +1,19 @@
+﻿<UserControl
+	x:Class="Snoop.WindowFinder"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+>
+	<Button
+		x:Name="btnStartWindowsSearch"
+		Width="20"
+		Height="20"
+		Style="{DynamicResource appChooserButtonStyle}"
+	>
+		<Image
+			x:Name="snoopCrosshairsImage"
+			Width="16"
+			Height="16"
+			Source="Resources/SnoopCrosshairsCursor.png"
+		/>
+	</Button>
+</UserControl>
