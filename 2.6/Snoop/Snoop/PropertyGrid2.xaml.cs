@@ -309,7 +309,9 @@ namespace Snoop
 
 		private static int CompareNames(PropertyInformation one, PropertyInformation two)
 		{
-			return string.Compare(one.DisplayName, two.DisplayName);
+			// use the PropertyInformation CompareTo method, instead of the string.Compare method
+			// so that collections get sorted correctly.
+			return one.CompareTo(two);
 		}
 		private static int CompareValues(PropertyInformation one, PropertyInformation two)
 		{
