@@ -220,7 +220,7 @@ All other rights reserved.
 			Margin="-2,0,0,0"
 		/>
 
-		<!-- Tab Control (for the property grid and the events view) -->
+		<!-- Tab Control (for the property grid, the data context property grid, and the events view) -->
 		<TabControl
 			Grid.Column="1"
 			Grid.RowSpan="2"
@@ -240,6 +240,21 @@ All other rights reserved.
 					</TextBlock>
 				</TabItem.Header>
 				<local:PropertyInspector x:Name="PropertyGrid" RootTarget="{Binding Path=CurrentSelection.Target}"/>
+			</TabItem>
+			<TabItem>
+				<TabItem.Header>
+					<TextBlock Style="{x:Null}" Text="Data Context">
+						<TextBlock.ToolTip>
+							<StackPanel>
+								<TextBlock Style="{x:Null}" Text="Data Context View"/>
+								<TextBlock Style="{x:Null}" Text="Lists all the properties for the Data Context of the"/>
+								<TextBlock Style="{x:Null}" Text="currently selected object. You can even edit these"/>
+								<TextBlock Style="{x:Null}" Text="properties or right-click and then delve into them."/>
+							</StackPanel>
+						</TextBlock.ToolTip>
+					</TextBlock>
+				</TabItem.Header>
+				<local:PropertyInspector x:Name="DataContextPropertyGrid" RootTarget="{Binding Path=CurrentSelection.Target.DataContext}"/>
 			</TabItem>
 			<TabItem>
 				<TabItem.Header>
