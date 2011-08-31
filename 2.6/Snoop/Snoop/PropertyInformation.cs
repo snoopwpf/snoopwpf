@@ -19,39 +19,64 @@ namespace Snoop
 {
 	public class PropertyInformation : DependencyObject, IComparable, INotifyPropertyChanged
 	{
+		/// <summary>
+		/// Normal constructor used when constructing PropertyInformation objects for properties.
+		/// </summary>
+		/// <param name="target">target object being shown in the property grid</param>
+		/// <param name="property">the property around which we are contructing this PropertyInformation object</param>
+		/// <param name="displayName">the display name for the property that goes in the name column</param>
 		public PropertyInformation(object target, PropertyDescriptor property, string displayName)
 		{
 			this.target = target;
 			this.property = property;
 			this.displayName = displayName;
 
-			// create a data binding between the actual property value on the target object
-			// and the Value dependency property on this PropertyInformation object
-			Binding binding;
-			DependencyProperty dp = this.DependencyProperty;
-			if (dp != null)
+			if (property != null)
 			{
-				binding = new Binding();
-				binding.Path = new PropertyPath("(0)", new object[] { dp });
-			}
-			else
-			{
-				binding = new Binding(property.DisplayName);
-			}
-			binding.Source = target;
-			binding.Mode = property.IsReadOnly ? BindingMode.OneWay : BindingMode.TwoWay;
+				// create a data binding between the actual property value on the target object
+				// and the Value dependency property on this PropertyInformation object
+				Binding binding;
+				DependencyProperty dp = this.DependencyProperty;
+				if (dp != null)
+				{
+					binding = new Binding();
+					binding.Path = new PropertyPath("(0)", new object[] { dp });
+				}
+				else
+				{
+					binding = new Binding(property.DisplayName);
+				}
+				binding.Source = target;
+				binding.Mode = property.IsReadOnly ? BindingMode.OneWay : BindingMode.TwoWay;
 
-			try
-			{
-				BindingOperations.SetBinding(this, PropertyInformation.ValueProperty, binding);
-			}
-			catch (Exception)
-			{
+				try
+				{
+					BindingOperations.SetBinding(this, PropertyInformation.ValueProperty, binding);
+				}
+				catch (Exception)
+				{
+				}
 			}
 
 			this.Update();
 
 			this.isRunning = true;
+		}
+
+		/// <summary>
+		/// Constructor used when constructing PropertyInformation objects for an item in a collection.
+		/// In this case, we set the PropertyDescriptor for this object (in the property Property) to be null.
+		/// This kind of makes since because an item in a collection really isn't a property on a class.
+		/// That is, in this case, we're really hijacking the PropertyInformation class
+		/// in order to expose the items in the Snoop property grid.
+		/// </summary>
+		/// <param name="target">the item in the collection</param>
+		/// <param name="component">the collection</param>
+		/// <param name="displayName">the display name that goes in the name column, i.e. this[x]</param>
+		public PropertyInformation(object target, object component, string displayName)
+			: this(target, null, displayName)
+		{
+			this.component = component;
 		}
 
 		public void Teardown()
@@ -131,7 +156,14 @@ namespace Snoop
 			}
 			set
 			{
-				Type targetType = property.PropertyType;
+				if (this.property == null)
+				{
+					// if this is a PropertyInformation object constructed for an item in a collection
+					// then just return, since setting the value via a string doesn't make sense.
+					return;
+				}
+
+				Type targetType = this.property.PropertyType;
 				if (targetType.IsAssignableFrom(typeof(string)))
 				{
 					this.property.SetValue(this.target, value);
@@ -157,13 +189,36 @@ namespace Snoop
 		{
 			get
 			{
-				return this.property.ComponentType;
+				if (this.property == null)
+				{
+					// if this is a PropertyInformation object constructed for an item in a collection
+					// then this.property will be null, but this.component will contain the collection.
+					// use this object to return the type of the collection for the ComponentType.
+					return this.component.GetType();
+				}
+				else
+				{
+					return this.property.ComponentType;
+				}
 			}
 		}
+		private object component;
 
 		public Type PropertyType
 		{
-			get { return this.property.PropertyType; }
+			get
+			{
+				if (this.property == null)
+				{
+					// if this is a PropertyInformation object constructed for an item in a collection
+					// just return typeof(object) here, since an item in a collection ... really isn't a property.
+					return typeof(object);
+				}
+				else
+				{
+					return this.property.PropertyType;
+				}
+			}
 		}
 
 		public Type ValueType
@@ -213,7 +268,18 @@ namespace Snoop
 
 		public bool CanEdit
 		{
-			get { return !this.property.IsReadOnly; }
+			get
+			{
+				if (this.property == null)
+				{
+					// if this is a PropertyInformation object constructed for an item in a collection
+					return false;
+				}
+				else
+				{
+					return !this.property.IsReadOnly;
+				}
+			}
 		}
 
 		public bool IsDatabound
@@ -336,9 +402,16 @@ namespace Snoop
 		{
 			get
 			{
-				DependencyPropertyDescriptor dpd = DependencyPropertyDescriptor.FromProperty(this.property);
-				if (dpd != null)
-					return dpd.DependencyProperty;
+				if (this.property != null)
+				{
+					// in order to be a DependencyProperty, the object must first be a regular property,
+					// and not an item in a collection.
+
+					DependencyPropertyDescriptor dpd = DependencyPropertyDescriptor.FromProperty(this.property);
+					if (dpd != null)
+						return dpd.DependencyProperty;
+				}
+
 				return null;
 			}
 		}
@@ -356,7 +429,6 @@ namespace Snoop
 			DependencyObject d = target as DependencyObject;
 			if (dp != null && d != null)
 			{
-
 				if (d.ReadLocalValue(dp) != DependencyProperty.UnsetValue)
 					this.isLocallySet = true;
 
@@ -445,11 +517,11 @@ namespace Snoop
 			int index = 0;
 			if (collection != null)
 			{
-				foreach (object entry in collection)
+				foreach (object item in collection)
 				{
-					PropertyInformation info = new PropertyInformation(entry, propertyDescriptors[0], "this[" + index + "]");
+					PropertyInformation info = new PropertyInformation(item, collection, "this[" + index + "]");
 					index++;
-					info.Value = entry;
+					info.Value = item;
 					props.Add(info);
 				}
 			}
