@@ -241,6 +241,7 @@ All other rights reserved.
 			IsSynchronizedWithCurrentItem="True"
 			FontSize="10.667"
 			FocusVisualStyle="{DynamicResource simpleComboBoxFocusStyle}"
+			ToolTip="This combo box shows the list of applications that can be Snoop(ed)."
 		/>
 
 		<!-- refresh button -->
@@ -253,7 +254,7 @@ All other rights reserved.
 			Margin="8,0,0,0"
 			Style="{StaticResource appChooserButtonStyle}"
 			Command="{x:Static my:AppChooser.RefreshCommand}"
-			ToolTip="Refresh (F5)"
+			ToolTip="Refresh (F5) the combo box list of applications that can be Snoop(ed)."
 		>
 			<Grid>
 				<Path Fill="{DynamicResource DeepBlueColorBrush}" Stretch="Fill" Stroke="{x:Null}" Margin="-0.104,3.939,9.354,1.686" Data="M4.333,4 L0.37273436,10.3125 3.0196258,10.3125 C3.0377636,15.483316 5.2010074,17.342296 10.143806,17.401491 L10.143806,14.916038 C6.453455,14.89251 5.5418587,13.089075 5.7292816,10.250495 L8.353837,10.250495 z"/>
@@ -277,7 +278,7 @@ All other rights reserved.
 			Margin="4,0,0,0"
 			Style="{DynamicResource checkBoxStyle}"
 			IsChecked="{Binding AutoRefresh}"
-			ToolTip="Auto Refresh - check this box to automatically (in the background) refresh the list of applications that can be Snoop(ed)."
+			ToolTip="Check this box to automatically (in the background) refresh the combo box list of applications that can be Snoop(ed)."
 		/>
 
 		<!-- magnify button, snoop button, and the crosshairs window finder -->
@@ -294,7 +295,8 @@ All other rights reserved.
 				VerticalAlignment="Stretch"
 				Style="{DynamicResource appChooserButtonStyle}"
 				Command="{x:Static my:AppChooser.MagnifyCommand}"
-				ToolTip="Magnify"
+				ToolTip="Magnify the application selected in the combo box."
+				ToolTipService.ShowOnDisabled="True"
 			>
 				<Viewbox Height="16">
 					<Canvas Width="53.613" Height="26.017" Margin="0,3,0,0">
@@ -368,7 +370,8 @@ All other rights reserved.
 				Style="{DynamicResource appChooserButtonStyle}"
 				IsDefault="True"
 				Command="{x:Static my:AppChooser.InspectCommand}"
-				ToolTip="Snoop this application"
+				ToolTip="Snoop the application selected in the combo box."
+				ToolTipService.ShowOnDisabled="True"
 			>
 				<Viewbox Height="13">
 					<Canvas Width="52" Height="20">
@@ -572,7 +575,7 @@ All other rights reserved.
 			Width="20"
 			Height="20"
 			Style="{DynamicResource appChooserMinimizeCloseButtonStyle}"
-			ToolTip="Minimize"
+			ToolTip="Minimize the Snoop Application Chooser."
 			Command="{x:Static my:AppChooser.MinimizeCommand}"
 		>
 			<Path
@@ -595,7 +598,7 @@ All other rights reserved.
 			Height="20"
 			Margin="2,0,4,0"
 			Style="{DynamicResource appChooserMinimizeCloseButtonStyle}"
-			ToolTip="Close"
+			ToolTip="Close the Snoop Application Chooser."
 			Command="{x:Static input:ApplicationCommands.Close}"
 		>
 			<Grid>
