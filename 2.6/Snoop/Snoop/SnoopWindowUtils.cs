@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
+using Snoop.Infrastructure;
 
 namespace Snoop
 {
@@ -16,7 +17,23 @@ namespace Snoop
 		{
 			Window ownerWindow = null;
 
-			if (Application.Current != null)
+			if (SnoopModes.MultipleDispatcherMode)
+			{
+				foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
+				{
+					if
+					(
+						presentationSource.RootVisual is Window &&
+						((Window)presentationSource.RootVisual).Dispatcher.CheckAccess() &&
+						((Window)presentationSource.RootVisual).Visibility == Visibility.Visible
+					)
+					{
+						ownerWindow = (Window)presentationSource.RootVisual;
+						break;
+					}
+				}
+			}
+			else if (Application.Current != null)
 			{
 				if (Application.Current.MainWindow != null && Application.Current.MainWindow.Visibility == Visibility.Visible)
 				{

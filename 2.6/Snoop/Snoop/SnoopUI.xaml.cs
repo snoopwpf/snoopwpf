@@ -86,8 +86,6 @@ namespace Snoop
 		#endregion
 
 		#region Public Static Methods
-		private delegate void Action();
-
 		public static void GoBabyGo()
 		{
 			Dispatcher dispatcher;
@@ -110,8 +108,74 @@ namespace Snoop
 			else
 			{
 				dispatcher.Invoke((Action)GoBabyGo);
+				return;
+			}
+
+
+			// check and see if any of the root visuals have a different dispatcher
+			// if so, ask the user if they wish to enter multiple dispatcher mode.
+			// if they do, launch a snoop ui for every additional dispatcher.
+			// see http://snoopwpf.codeplex.com/workitem/6334 for more info.
+
+			List<Visual> rootVisuals = new List<Visual>();
+			List<Dispatcher> dispatchers = new List<Dispatcher>();
+			dispatchers.Add(dispatcher);
+			foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
+			{
+				Visual presentationSourceRootVisual = presentationSource.RootVisual;
+				Dispatcher presentationSourceRootVisualDispatcher = presentationSourceRootVisual.Dispatcher;
+
+				if (dispatchers.IndexOf(presentationSourceRootVisualDispatcher) == -1)
+				{
+					rootVisuals.Add(presentationSourceRootVisual);
+					dispatchers.Add(presentationSourceRootVisualDispatcher);
+				}
+			}
+
+			if (rootVisuals.Count > 0)
+			{
+				var result =
+					MessageBox.Show
+					(
+						"Snoop has noticed windows running in multiple dispatchers!\n\n" +
+						"Would you like to enter multiple dispatcher mode, and have a separate Snoop window for each dispatcher?\n\n" +
+						"Without having a separate Snoop window for each dispatcher, you will not be able to Snoop the windows in the dispatcher threads outside of the main dispatcher. " +
+						"Also, note, that if you bring up additional windows in additional dispatchers (after Snooping), you will need to Snoop again in order to launch Snoop windows for those additional dispatchers.",
+						"Enter Multiple Dispatcher Mode",
+						MessageBoxButton.YesNo,
+						MessageBoxImage.Question
+					);
+
+
+				if (result == MessageBoxResult.Yes)
+				{
+					SnoopModes.MultipleDispatcherMode = true;
+					Thread thread = new Thread(new ParameterizedThreadStart(DispatchOut));
+					thread.Start(rootVisuals);
+				}
 			}
 		}
+
+		private static void DispatchOut(object o)
+		{
+			List<Visual> visuals = (List<Visual>)o;
+			foreach (var v in visuals)
+			{
+				// launch a snoop ui on each dispatcher
+				v.Dispatcher.Invoke
+				(
+					(Action)
+					(
+						() =>
+						{
+							SnoopUI snoopOtherDispatcher = new SnoopUI();
+							snoopOtherDispatcher.Inspect(v, v as Window);
+						}
+					)
+				);
+			}
+		}
+		private delegate void Action();
 		#endregion
 
 		#region Public Properties
@@ -273,6 +337,18 @@ namespace Snoop
 			Load(root);
 
 			Window ownerWindow = SnoopWindowUtils.FindOwnerWindow();
+			if (ownerWindow != null)
+				this.Owner = ownerWindow;
+
+			SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
+
+			Show();
+			Activate();
+		}
+		public void Inspect(object root, Window ownerWindow)
+		{
+			Load(root);
+
 			if (ownerWindow != null)
 				this.Owner = ownerWindow;
 
@@ -505,6 +581,13 @@ namespace Snoop
 
 		private void ProcessFilter()
 		{
+			if (SnoopModes.MultipleDispatcherMode && !this.Dispatcher.CheckAccess())
+			{
+				Action action = () => ProcessFilter();
+				this.Dispatcher.BeginInvoke(action);
+				return;
+			}
+
 			this.visualTreeItems.Clear();
 
 			// cplotts todo: we've got to come up with a better way to do this.
@@ -551,7 +634,23 @@ namespace Snoop
 		{
 			object root = null;
 
-			if (Application.Current != null)
+			if (SnoopModes.MultipleDispatcherMode)
+			{
+				foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
+				{
+					if
+					(
+						presentationSource.RootVisual != null &&
+						presentationSource.RootVisual is UIElement &&
+						((UIElement)presentationSource.RootVisual).Dispatcher.CheckAccess()
+					)
+					{
+						root = presentationSource.RootVisual;
+						break;
+					}
+				}
+			}
+			else if (Application.Current != null)
 			{
 				root = Application.Current;
 			}

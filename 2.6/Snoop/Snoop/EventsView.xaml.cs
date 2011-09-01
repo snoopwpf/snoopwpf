@@ -80,14 +80,27 @@ namespace Snoop
 			Visual visual = trackedEvent.Originator.Handler as Visual;
 			if (visual != null && !visual.IsPartOfSnoopVisualTree())
 			{
-				this.interestingEvents.Add(trackedEvent);
+				Action action =
+					() =>
+					{
+						this.interestingEvents.Add(trackedEvent);
 
-				while (this.interestingEvents.Count > 100)
-					this.interestingEvents.RemoveAt(0);
+						while (this.interestingEvents.Count > 100)
+							this.interestingEvents.RemoveAt(0);
 
-				TreeViewItem tvi = (TreeViewItem)this.EventTree.ItemContainerGenerator.ContainerFromItem(trackedEvent);
-				if (tvi != null)
-					tvi.BringIntoView();
+						TreeViewItem tvi = (TreeViewItem)this.EventTree.ItemContainerGenerator.ContainerFromItem(trackedEvent);
+						if (tvi != null)
+							tvi.BringIntoView();
+					};
+
+				if (!this.Dispatcher.CheckAccess())
+				{
+					this.Dispatcher.BeginInvoke(action);
+				}
+				else
+				{
+					action.Invoke();
+				}
 			}
 		}
 		private void HandleClear(object sender, ExecutedRoutedEventArgs e)

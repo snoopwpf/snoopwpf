@@ -5,6 +5,7 @@
 
 using System.Windows;
 using System.Windows.Threading;
+using Snoop.Infrastructure;
 
 namespace Snoop
 {
@@ -25,7 +26,7 @@ namespace Snoop
 				this.queued = true;
 
 				Dispatcher dispatcher = null;
-				if (Application.Current == null)
+				if (Application.Current == null || SnoopModes.MultipleDispatcherMode)
 					dispatcher = Dispatcher.CurrentDispatcher;
 				else
 					dispatcher = Application.Current.Dispatcher;

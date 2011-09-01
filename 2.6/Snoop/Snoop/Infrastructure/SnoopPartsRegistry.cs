@@ -22,7 +22,14 @@ namespace Snoop.Infrastructure
 
 			foreach (var snoopVisual in _registeredSnoopVisualTreeRoots)
 			{
-				if (visual == snoopVisual || visual.IsDescendantOf(snoopVisual))
+				if
+				(
+					visual == snoopVisual ||
+					(
+						visual.Dispatcher == snoopVisual.Dispatcher &&
+						visual.IsDescendantOf(snoopVisual)
+					)
+				)
 				{
 					return true;
 				}

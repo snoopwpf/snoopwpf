@@ -73,7 +73,7 @@ namespace Snoop
 		public static void GoBabyGo()
 		{
 			Dispatcher dispatcher;
-			if (Application.Current == null)
+			if (Application.Current == null && !SnoopModes.MultipleDispatcherMode)
 				dispatcher = Dispatcher.CurrentDispatcher;
 			else
 				dispatcher = Application.Current.Dispatcher;
@@ -356,7 +356,23 @@ namespace Snoop
 		{
 			object root = null;
 
-			if (Application.Current != null)
+			if (SnoopModes.MultipleDispatcherMode)
+			{
+				foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
+				{
+					if
+					(
+						presentationSource.RootVisual != null &&
+						presentationSource.RootVisual is UIElement &&
+						((UIElement)presentationSource.RootVisual).Dispatcher.CheckAccess()
+					)
+					{
+						root = presentationSource.RootVisual;
+						break;
+					}
+				}
+			}
+			else if (Application.Current != null)
 			{
 				// try to use the application's main window (if visible) as the root
 				if (Application.Current.MainWindow != null && Application.Current.MainWindow.Visibility == Visibility.Visible)
@@ -422,7 +438,23 @@ namespace Snoop
 		private void SetOwnerWindow()
 		{
 			Window ownerWindow = null;
-			if (Application.Current != null)
+
+			if (SnoopModes.MultipleDispatcherMode)
+			{
+				foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
+				{
+					if
+					(
+						presentationSource.RootVisual is Window &&
+						((Window)presentationSource.RootVisual).Dispatcher.CheckAccess()
+					)
+					{
+						ownerWindow = (Window)presentationSource.RootVisual;
+						break;
+					}
+				}
+			}
+			else if (Application.Current != null)
 			{
 				if (Application.Current.MainWindow != null && Application.Current.MainWindow.Visibility == Visibility.Visible)
 				{

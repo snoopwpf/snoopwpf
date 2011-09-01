@@ -147,6 +147,7 @@
     <Compile Include="EventsListener.cs" />
     <Compile Include="EventTracker.cs" />
     <Compile Include="Infrastructure\ComboBoxSettings.cs" />
+    <Compile Include="Infrastructure\SnoopModes.cs" />
     <Compile Include="Infrastructure\SnoopPartsRegistry.cs" />
     <Compile Include="Infrastructure\WhenLoaded.cs" />
     <Compile Include="Injector.cs" />

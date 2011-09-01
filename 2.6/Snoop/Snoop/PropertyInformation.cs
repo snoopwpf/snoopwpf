@@ -14,6 +14,7 @@ using System.Collections;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.IO;
+using Snoop.Infrastructure;
 
 namespace Snoop
 {
@@ -427,6 +428,10 @@ namespace Snoop
 
 			DependencyProperty dp = this.DependencyProperty;
 			DependencyObject d = target as DependencyObject;
+
+			if (SnoopModes.MultipleDispatcherMode && d != null && d.Dispatcher != this.Dispatcher)
+				return;
+
 			if (dp != null && d != null)
 			{
 				if (d.ReadLocalValue(dp) != DependencyProperty.UnsetValue)
