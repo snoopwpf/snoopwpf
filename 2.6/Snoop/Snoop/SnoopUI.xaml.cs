@@ -82,6 +82,10 @@ namespace Snoop
 
 			InputManager.Current.PreProcessInput += this.HandlePreProcessInput;
 			this.Tree.SelectedItemChanged += this.HandleTreeSelectedItemChanged;
+
+			// we can't catch the mouse wheel at the ZoomerControl level,
+			// so we catch it here, and relay it to the ZoomerControl.
+			this.MouseWheel += this.SnoopUI_MouseWheel;
 		}
 		#endregion
 
@@ -517,6 +521,10 @@ namespace Snoop
 			VisualTreeItem node = this.FindItem(directlyOver);
 			if (node != null)
 				this.CurrentSelection = node;
+		}
+		private void SnoopUI_MouseWheel(object sender, MouseWheelEventArgs e)
+		{
+			this.PreviewArea.Zoomer.DoMouseWheel(sender, e);        
 		}
 		#endregion
 

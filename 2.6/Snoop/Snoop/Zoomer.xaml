@@ -106,7 +106,7 @@ All other rights reserved.
 			Focusable="False"
 		>
 			<Slider.ToolTip>
-				<TextBlock Style="{x:Null}" Text="Background brightness"/>
+				<TextBlock Style="{x:Null}" Text="Use this slider to adjust the Background from white to black."/>
 			</Slider.ToolTip>
 		</Slider>
 

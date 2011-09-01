@@ -296,7 +296,7 @@ All other rights reserved.
 	</UserControl.Resources>
 
 	<Grid DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
-		<Rectangle x:Name="PreviewArea" Fill="{Binding Brush}"/>
+		<my:ZoomerControl x:Name="Zoomer"/>
 
 		<Button
 			Width="22"

@@ -15,11 +15,6 @@ namespace Snoop
 		public static readonly RoutedCommand ScreenshotCommand = new RoutedCommand("Screenshot", typeof(SnoopUI));
 
 
-		static Previewer()
-		{
-			Previewer.BrushProperty = Previewer.BrushPropertyKey.DependencyProperty;
-		}
-
 		public Previewer()
 		{
 			this.InitializeComponent();
@@ -109,58 +104,18 @@ namespace Snoop
 		}
 		#endregion
 
-		#region Brush
-		/// <summary>
-		/// Gets the Brush property.
-		/// </summary>
-		public Brush Brush
-		{
-			get { return (Brush)GetValue(BrushProperty); }
-		}
-		/// <summary>
-		/// Brush Read-Only Dependency Property
-		/// </summary>
-		private static readonly DependencyPropertyKey BrushPropertyKey =
-			DependencyProperty.RegisterReadOnly
-			(
-				"Brush",
-				typeof(Brush),
-				typeof(Previewer),
-				new FrameworkPropertyMetadata((Brush)null)
-			);
-		public static readonly DependencyProperty BrushProperty = BrushPropertyKey.DependencyProperty;
-		/// <summary>
-		/// Provides a secure method for setting the Brush property.
-		/// </summary>
-		protected void SetBrush(Brush value)
-		{
-			SetValue(BrushPropertyKey, value);
-		}
-		#endregion
-
-
-		protected override void OnInitialized(System.EventArgs e)
-		{
-			base.OnInitialized(e);
-
-			Brush pooSniffer = (Brush)this.FindResource("previewerSnoopDogDrawingBrush");
-			this.SetValue(Previewer.BrushPropertyKey, pooSniffer);
-		}
-
 
 		private void HandleTargetOrIsActiveChanged()
 		{
 			if (this.IsActive && this.Target is Visual)
 			{
 				Visual visual = (Visual)this.Target;
-				VisualBrush brush = new VisualBrush(visual);
-				brush.Stretch = Stretch.Uniform;
-				SetBrush(brush);
+				this.Zoomer.Target = visual;
 			}
 			else
 			{
 				Brush pooSniffer = (Brush)this.FindResource("previewerSnoopDogDrawingBrush");
-				SetBrush(pooSniffer);
+				this.Zoomer.Target = pooSniffer;
 			}
 		}
 
