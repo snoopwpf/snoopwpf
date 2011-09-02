@@ -15,6 +15,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.IO;
 using Snoop.Infrastructure;
+using Snoop.Converters;
 
 namespace Snoop
 {
@@ -25,12 +26,13 @@ namespace Snoop
 		/// </summary>
 		/// <param name="target">target object being shown in the property grid</param>
 		/// <param name="property">the property around which we are contructing this PropertyInformation object</param>
-		/// <param name="displayName">the display name for the property that goes in the name column</param>
-		public PropertyInformation(object target, PropertyDescriptor property, string displayName)
+		/// <param name="propertyName">the property name for the property that we use in the binding in the case of a non-dependency property</param>
+		/// <param name="propertyDisplayName">the display name for the property that goes in the name column</param>
+		public PropertyInformation(object target, PropertyDescriptor property, string propertyName, string propertyDisplayName)
 		{
 			this.target = target;
 			this.property = property;
-			this.displayName = displayName;
+			this.displayName = propertyDisplayName;
 
 			if (property != null)
 			{
@@ -45,10 +47,21 @@ namespace Snoop
 				}
 				else
 				{
-					binding = new Binding(property.DisplayName);
+					binding = new Binding(propertyName);
 				}
+
 				binding.Source = target;
-				binding.Mode = property.IsReadOnly ? BindingMode.OneWay : BindingMode.TwoWay;
+
+				if (property.Name == "Style")
+				{
+					binding.Converter = new StyleKeyConverter();
+					binding.ConverterParameter = target;
+					binding.Mode = BindingMode.OneWay;
+				}
+				else
+				{
+					binding.Mode = property.IsReadOnly ? BindingMode.OneWay : BindingMode.TwoWay;
+				}
 
 				try
 				{
@@ -56,6 +69,9 @@ namespace Snoop
 				}
 				catch (Exception)
 				{
+					// cplotts note:
+					// warning: i saw a problem with the StyleKeyConverter get swallowed by this empty catch (Exception) block.
+					// in other words, this empty catch block could be hiding some potential future errors.
 				}
 			}
 
@@ -75,7 +91,7 @@ namespace Snoop
 		/// <param name="component">the collection</param>
 		/// <param name="displayName">the display name that goes in the name column, i.e. this[x]</param>
 		public PropertyInformation(object target, object component, string displayName)
-			: this(target, null, displayName)
+			: this(target, null, displayName, displayName)
 		{
 			this.component = component;
 		}
@@ -511,7 +527,7 @@ namespace Snoop
 			{
 				if (filter(property))
 				{
-					PropertyInformation prop = new PropertyInformation(obj, property, property.DisplayName);
+					PropertyInformation prop = new PropertyInformation(obj, property, property.Name, property.DisplayName);
 					props.Add(prop);
 				}
 			}

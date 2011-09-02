@@ -143,6 +143,7 @@
     <Compile Include="Converters\ArgbToPartsConverter.cs" />
     <Compile Include="Converters\CsvStringToArrayConverter.cs" />
     <Compile Include="Converters\IsSupportedRuntimeTypeConverter.cs" />
+    <Compile Include="Converters\StyleKeyConverter.cs" />
     <Compile Include="DelayedCall.cs" />
     <Compile Include="EditTextBox.cs" />
     <Compile Include="EditUserFilters.xaml.cs">
