@@ -2,23 +2,26 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 	<!-- ID="*" will generate a new GUID for product code at time of build. -->
 	<!-- Product code changes AND version number changes (first 3 digits), then a major upgrade will be triggered. -->
+	
+	<!-- One spot to update version :) -->
+	<?define ProductVersion="2.7.0" ?>
 	<Product
 		Id="*"
 		Name="Snoop"
 		Manufacturer="Cory Plotts"
 		Language="1033"
-		Version="2.6.1"
+		Version="$(var.ProductVersion)"
 		UpgradeCode="FBEC01D7-CE1B-46F4-9498-71A96FEA8A15"
 	>
 		<Package InstallerVersion="301" Compressed="yes"/>
 
 		<!-- Rules for upgrading. ID must be the same as the packages to be checked/uninstalled. -->
 		<Upgrade Id="FBEC01D7-CE1B-46F4-9498-71A96FEA8A15">
-			<!-- If the installed version is 2.6.1 or higher, then set the property "NEWPRODUCTFOUND". This will trigger a "PreventDowngrading" Custom action. -->
-			<UpgradeVersion Minimum="2.6.1" IncludeMinimum="no" OnlyDetect="yes" Language="1033" Property="NEWPRODUCTFOUND"/>
+			<!-- If the installed version is $(var.ProductVersion) or higher, then set the property "NEWPRODUCTFOUND". This will trigger a "PreventDowngrading" Custom action. -->
+			<UpgradeVersion Minimum="$(var.ProductVersion)" IncludeMinimum="no" OnlyDetect="yes" Language="1033" Property="NEWPRODUCTFOUND"/>
 
-			<!-- If the installed version is between 1.0.0 and 2.6.1, then set "PREVIOUSVERSIONINSTALLED" properity. This will trigger RemoveExistingProducts. -->
-			<UpgradeVersion Minimum="1.0.0" IncludeMinimum="yes" Maximum="2.6.1" IncludeMaximum="no" Language="1033" Property="PREVIOUSVERSIONSINSTALLED"/>
+			<!-- If the installed version is between 1.0.0 and $(var.ProductVersion), then set "PREVIOUSVERSIONINSTALLED" properity. This will trigger RemoveExistingProducts. -->
+			<UpgradeVersion Minimum="1.0.0" IncludeMinimum="yes" Maximum="$(var.ProductVersion)" IncludeMaximum="no" Language="1033" Property="PREVIOUSVERSIONSINSTALLED"/>
 		</Upgrade>
 
 		<InstallExecuteSequence>
@@ -48,7 +51,7 @@
 							<Shortcut
 								Id="desktopSnoopShortcut"
 								Directory="DesktopFolder"
-								Name="Snoop 2.6.1"
+								Name="Snoop $(var.ProductVersion)"
 								WorkingDirectory="INSTALLDIR"
 								Icon="Snoop.exe"
 								IconIndex="0"
@@ -57,7 +60,7 @@
 							<Shortcut
 								Id="startMenuSnoopShortcut"
 								Directory="ProgramMenuDir"
-								Name="Snoop 2.6.1"
+								Name="Snoop $(var.ProductVersion)"
 								WorkingDirectory="INSTALLDIR"
 								Icon="Snoop.exe"
 								IconIndex="0"
