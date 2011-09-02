@@ -37,21 +37,6 @@ namespace Snoop
 			this.CommandBindings.Add(new CommandBinding(AppChooser.MagnifyCommand, this.HandleMagnifyCommand, this.HandleCanInspectOrMagnifyCommand));
 			this.CommandBindings.Add(new CommandBinding(AppChooser.MinimizeCommand, this.HandleMinimizeCommand));
 			this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, this.HandleCloseCommand));
-
-			AutoRefresh = false;
-			DispatcherTimer timer =
-				new DispatcherTimer
-				(
-					TimeSpan.FromSeconds(20),
-					DispatcherPriority.Background,
-					this.HandleRefreshTimer,
-					Dispatcher.CurrentDispatcher
-				);
-
-			// cplotts todo:
-			// i have commented out this refresh call due to inclusion of the crosshairs functionality.
-			// we should create an options dialog and add this as an option for the people who still want to use the combo box.
-//			this.Refresh();
 		}
 
 
@@ -67,8 +52,6 @@ namespace Snoop
 		}
 		private ICollectionView windowsView;
 		private ObservableCollection<WindowInfo> windows = new ObservableCollection<WindowInfo>();
-
-		public bool AutoRefresh { get; set; }
 
 		public void Refresh()
 		{
@@ -178,13 +161,6 @@ namespace Snoop
 			this.Close();
 		}
 
-		private void HandleRefreshTimer(object sender, EventArgs e)
-		{
-			if (AutoRefresh)
-			{
-				this.Refresh();
-			}
-		}
 		private void HandleMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			this.DragMove();
