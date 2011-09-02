@@ -1,0 +1,345 @@
+<!--
+(c) Copyright Cory Plotts.
+This source is subject to the Microsoft Public License (Ms-PL).
+Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
+All other rights reserved.
+-->
+<Grid
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:my="clr-namespace:Snoop"
+	xmlns:d="http://schemas.microsoft.com/expression/interactivedesigner/2006"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:i="clr-namespace:Snoop.Infrastructure"
+	mc:Ignorable="d"
+	x:Class="Snoop.EventsView"
+	x:Name="Events"
+	MinHeight="0"
+	MinWidth="0"
+>
+	<Grid.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="ProperTreeViewResources.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+
+			<my:ObjectToStringConverter x:Key="NiceNamer"/>
+
+			<DataTemplate x:Key="CategoryTemplate">
+				<TextBlock Style="{x:Null}" Text="{Binding Path=Name}" FontWeight="Bold" Margin="2,5,0,0"/>
+			</DataTemplate>
+
+			<DataTemplate DataType="{x:Type RoutedEventArgs}">
+				<TextBlock Style="{x:Null}" Text="{Binding RoutedEvent.Name}"/>
+			</DataTemplate>
+
+			<DataTemplate DataType="{x:Type ExecutedRoutedEventArgs}">
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Style="{x:Null}" Text="{Binding Command, Converter={StaticResource NiceNamer}}"/>
+				</StackPanel>
+			</DataTemplate>
+
+			<DataTemplate DataType="{x:Type my:EventTracker}">
+				<CheckBox IsChecked="{Binding IsEnabled}">
+					<TextBlock Style="{x:Null}" Text="{Binding RoutedEvent.Name}"/>
+				</CheckBox>
+			</DataTemplate>
+
+			<HierarchicalDataTemplate ItemsSource="{Binding Stack}" DataType="{x:Type my:TrackedEvent}">
+				<Grid x:Name="Grid" Background="Transparent">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*"/>
+						<ColumnDefinition Width="*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="*"/>
+						<RowDefinition Height="*"/>
+					</Grid.RowDefinitions>
+					<StackPanel Orientation="Horizontal">
+						<ContentControl Content="{Binding EventArgs}" Focusable="False"/>
+						<TextBlock Style="{x:Null}" Text=" on "/>
+						<TextBlock Style="{x:Null}" Text="{Binding Originator.Handler, Converter={StaticResource NiceNamer}}" Grid.Column="1"/>
+					</StackPanel>
+					<ContentControl
+						x:Name="Handler"
+						Grid.Row="1"
+						Grid.ColumnSpan="2"
+						Visibility="Collapsed"
+						Focusable="False"
+					>
+						<StackPanel Orientation="Horizontal">
+							<TextBlock Style="{x:Null}" Text="Handled by: "/>
+							<TextBlock Style="{x:Null}" Text="{Binding HandledBy, Converter={StaticResource NiceNamer}}"/>
+						</StackPanel>
+					</ContentControl>
+				</Grid>
+				<HierarchicalDataTemplate.Triggers>
+					<DataTrigger Binding="{Binding Handled}" Value="True">
+						<Setter TargetName="Handler" Property="Visibility" Value="Visible"/>
+					</DataTrigger>
+				</HierarchicalDataTemplate.Triggers>
+			</HierarchicalDataTemplate>
+
+			<HierarchicalDataTemplate DataType="{x:Type my:EventEntry}">
+				<Grid Name="Grid" Background="Transparent">
+					<Grid.ToolTip>
+						<TextBlock Style="{x:Null}" Text="Click to select the element that handled this"/>
+					</Grid.ToolTip>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Style="{x:Null}" Text="{Binding Handler, Converter={StaticResource NiceNamer}}"/>
+						<TextBlock Style="{x:Null}" Text=" handled: "/>
+						<TextBlock Style="{x:Null}" Text="{Binding Handled}" Grid.Column="1"/>
+					</StackPanel>
+				</Grid>
+			</HierarchicalDataTemplate>
+
+			<ControlTemplate x:Key="NoSelectionComboBox" TargetType="{x:Type ComboBox}">
+				<Grid x:Name="Grid">
+					<Border
+						x:Name="Border"
+						Background="{x:Null}"
+						BorderBrush="{TemplateBinding BorderBrush}"
+						BorderThickness="{TemplateBinding BorderThickness}"
+					>
+						<Grid Grid.IsSharedSizeScope="True" x:Name="Grid1">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="1"/>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="Auto" SharedSizeGroup="ComboBoxButton"/>
+							</Grid.ColumnDefinitions>
+							<TextBlock
+								x:Name="TextBlock"
+								Style="{x:Null}"
+								Grid.Column="1"
+								Grid.ColumnSpan="2"
+								Margin="3,4.36166666666667,3.41060513164848E-13,2.36166666666664"
+								Height="13.2766666666667"
+								Foreground="Black"
+								Text="Common events"
+							/>
+							<ToggleButton
+								x:Name="ToggleButton"
+								Grid.ColumnSpan="3"
+								IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource Mode=TemplatedParent, AncestorType={x:Null}}}"
+							>
+								<ToggleButton.Style>
+									<Style TargetType="{x:Type ToggleButton}">
+										<Setter Property="MinWidth" Value="0"/>
+										<Setter Property="MinHeight" Value="0"/>
+										<Setter Property="Width" Value="Auto"/>
+										<Setter Property="Height" Value="Auto"/>
+										<Setter Property="Background" Value="#00FFFFFF"/>
+										<Setter Property="Focusable" Value="False"/>
+										<Setter Property="ClickMode" Value="Press"/>
+										<Setter Property="Template">
+											<Setter.Value>
+												<ControlTemplate TargetType="{x:Type ToggleButton}">
+													<Grid Background="{TemplateBinding Background}" x:Name="Grid">
+														<Grid.ColumnDefinitions>
+															<ColumnDefinition Width="*"/>
+															<ColumnDefinition Width="Auto" SharedSizeGroup="ComboBoxButton"/>
+														</Grid.ColumnDefinitions>
+														<Border
+															x:Name="Border"
+															Grid.Column="1"
+															Width="14.6791723969389"
+															HorizontalAlignment="Left"
+															Margin="2,2,2,2"
+															BorderThickness="1,1,1,1"
+															CornerRadius="3,3,3,3"
+														>
+															<Border.BorderBrush>
+																<LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+																	<LinearGradientBrush.RelativeTransform>
+																		<TransformGroup>
+																			<TranslateTransform X="-0.5" Y="-0.5"/>
+																			<ScaleTransform ScaleX="1.2938731180987744" ScaleY="1.2938731180987744"/>
+																			<SkewTransform AngleX="0" AngleY="0"/>
+																			<RotateTransform Angle="137.35598639732007"/>
+																			<TranslateTransform X="0.5" Y="0.5"/>
+																			<TranslateTransform X="-0.052250302263790425" Y="0.061724038623558443"/>
+																		</TransformGroup>
+																	</LinearGradientBrush.RelativeTransform>
+																	<GradientStop Offset="0.41025641025641024" Color="sc#1, 0.0884037539, 0.0884037539, 0.0884037539"/>
+																	<GradientStop Offset="1" Color="sc#1, 0.3278404, 0.3278404, 0.3278404"/>
+																	<GradientStop Offset="0" Color="sc#1, 0.398262918, 0.398262918, 0.398262918"/>
+																</LinearGradientBrush>
+															</Border.BorderBrush>
+															<Canvas x:Name="Canvas" Width="16" Height="16">
+																<Path
+																	x:Name="Path"
+																	Width="10.0079642791082"
+																	Height="7.69193004565297"
+																	Canvas.Left="1.41917012579142"
+																	Canvas.Top="3.53853164614431"
+																	Fill="{x:Null}"
+																	Stroke="sc#1, 0.102488264, 0.102488264, 0.102488264"
+																	StrokeThickness="2"
+																	StrokeEndLineCap="Round"
+																	StrokeStartLineCap="Round"
+																	StrokeLineJoin="Round"
+																	RenderTransformOrigin="0.5,0.5"
+																	Stretch="Fill"
+																	Data="M1.6594606,3.3776513 L7.9633767,11.712949 14.601148,3.4108349"
+																	d:LastTangent="0,0"
+																>
+																	<Path.RenderTransform>
+																		<TransformGroup>
+																			<TranslateTransform X="0" Y="0"/>
+																			<ScaleTransform ScaleX="1" ScaleY="1"/>
+																			<SkewTransform AngleX="0" AngleY="0"/>
+																			<RotateTransform Angle="0"/>
+																			<TranslateTransform X="0" Y="0"/>
+																			<TranslateTransform X="0" Y="0"/>
+																		</TransformGroup>
+																	</Path.RenderTransform>
+																</Path>
+															</Canvas>
+														</Border>
+													</Grid>
+												</ControlTemplate>
+											</Setter.Value>
+										</Setter>
+									</Style>
+								</ToggleButton.Style>
+							</ToggleButton>
+						</Grid>
+					</Border>
+					<Popup
+						x:Name="PART_Popup"
+						IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource Mode=TemplatedParent, AncestorType={x:Null}}}"
+						Focusable="False"
+						Placement="Bottom"
+						PopupAnimation="Slide"
+						AllowsTransparency="True"
+					>
+						<Grid
+							x:Name="DropDown"
+							MinWidth="{TemplateBinding ActualWidth}"
+							MaxHeight="{TemplateBinding MaxDropDownHeight}"
+						>
+							<Border
+								x:Name="DropDownBorder"
+								Background="{TemplateBinding Background}"
+								BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}"
+								BorderThickness="1,1,1,1"
+							/>
+							<ScrollViewer x:Name="ScrollViewer" Margin="1,1,1,1">
+								<ItemsControl
+									ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource TemplatedParent}}"
+									KeyboardNavigation.DirectionalNavigation="Contained"
+								>
+									<ItemsControl.GroupStyle>
+										<GroupStyle HeaderTemplate="{StaticResource CategoryTemplate}"/>
+									</ItemsControl.GroupStyle>
+								</ItemsControl>
+							</ScrollViewer>
+						</Grid>
+					</Popup>
+				</Grid>
+				<ControlTemplate.Triggers>
+					<MultiTrigger>
+						<MultiTrigger.Conditions>
+							<Condition Property="IsKeyboardFocusWithin" Value="True"/>
+							<Condition Property="IsDropDownOpen" Value="False"/>
+						</MultiTrigger.Conditions>
+						<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}"/>
+					</MultiTrigger>
+					<Trigger Property="Popup.HasDropShadow" SourceName="PART_Popup" Value="True">
+						<Setter Property="Margin" Value="0,0,3,3" TargetName="DropDown"/>
+						<Setter Property="SnapsToDevicePixels" Value="True" TargetName="DropDown"/>
+						<Setter Property="BitmapEffect" TargetName="DropDownBorder">
+							<Setter.Value>
+								<DropShadowBitmapEffect ShadowDepth="1.5" Softness="0.15"/>
+							</Setter.Value>
+						</Setter>
+					</Trigger>
+					<Trigger Property="HasItems" Value="False">
+						<Setter Property="MinHeight" Value="95" TargetName="DropDownBorder"/>
+					</Trigger>
+					<Trigger Property="IsEnabled" Value="False">
+						<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+						<Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+					</Trigger>
+					<Trigger Property="IsGrouping" Value="True">
+						<Setter Property="ScrollViewer.CanContentScroll" Value="False"/>
+					</Trigger>
+					<Trigger Property="Width" Value="Auto">
+						<Setter Property="MinWidth" Value="150"/>
+					</Trigger>
+					<Trigger Property="Height" Value="Auto">
+						<Setter Property="MinHeight" Value="20"/>
+					</Trigger>
+				</ControlTemplate.Triggers>
+			</ControlTemplate>
+		</ResourceDictionary>
+	</Grid.Resources>
+	
+	<Grid.RowDefinitions>
+		<RowDefinition Height="Auto"/>
+		<RowDefinition Height="*"/>
+	</Grid.RowDefinitions>
+
+	<ComboBox
+		x:Name="EventChooser"
+		i:ComboBoxSettings.IsSnoopPart="True"
+		HorizontalAlignment="Stretch"
+		VerticalAlignment="Stretch"
+		Margin="0,0,20,0"
+		Template="{StaticResource NoSelectionComboBox}"
+		ItemsSource="{Binding ElementName=Events, Path=AvailableEvents}"
+		IsSynchronizedWithCurrentItem="True"
+	>
+		<ComboBox.ToolTip>
+			<TextBlock Style="{x:Null}" Text="Select which events you want to track."/>
+		</ComboBox.ToolTip>
+	</ComboBox>
+
+	<Button
+		Width="18"
+		Height="18"
+		HorizontalAlignment="Right"
+		Padding="3"
+		Command="{x:Static my:EventsView.ClearCommand}"
+	>
+		<Grid>
+			<Path
+				Stretch="Fill"
+				Stroke="Black"
+				StrokeThickness="2"
+				Data="M18.33996,8.7972167 L1.8622991,25.274878"
+			/>
+			<Path
+				Stretch="Fill"
+				Stroke="Black"
+				StrokeThickness="2"
+				Data="M19.831014,18.751491 L4.5959764,3.5164535"
+			/>
+		</Grid>
+		<Button.ToolTip>
+			<TextBlock Style="{x:Null}" Text="Clear the current list of events."/>
+		</Button.ToolTip>
+	</Button>
+
+	<TreeView
+		x:Name="EventTree"
+		SelectedItemChanged="EventTree_SelectedItemChanged"
+		Grid.Row="1"
+		ItemsSource="{Binding ElementName=Events, Path=InterestingEvents}"
+		HorizontalContentAlignment="Stretch">
+		<TreeView.ItemContainerStyle>
+			<Style BasedOn="{StaticResource ProperTreeViewItemStyle}" TargetType="{x:Type TreeViewItem}">
+				<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+				<Setter Property="HorizontalAlignment" Value="Stretch"/>
+				<Style.Triggers>
+					<DataTrigger Binding="{Binding Handled}" Value="True">
+						<Setter Property="Background" Value="LightGreen"/>
+					</DataTrigger>
+					<Trigger Property="IsSelected" Value="True">
+						<Setter Property="Background" Value="LightGray"/>
+					</Trigger>
+				</Style.Triggers>
+			</Style>
+		</TreeView.ItemContainerStyle>
+	</TreeView>
+</Grid>

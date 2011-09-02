@@ -1,0 +1,182 @@
+<!--
+(c) Copyright Cory Plotts.
+This source is subject to the Microsoft Public License (Ms-PL).
+Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
+All other rights reserved.
+-->
+<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:System="clr-namespace:System;assembly=mscorlib"
+	xmlns:my='clr-namespace:Snoop'
+>
+	<!-- styles & templates to make treeview select the whole width wide and not scroll horizontally-->
+
+	<my:IndentToMarginConverter x:Key='IndentToMarginConverter'/>
+
+	<Style x:Key='TreeViewToggleStyle' TargetType="{x:Type ToggleButton}">
+		<Setter Property="Focusable" Value="False"/>
+		<Setter Property="Width" Value="19"/>
+		<Setter Property="Height" Value="13"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ToggleButton}">
+					<Border
+						x:Name="Border"
+						Width="19"
+						Height="13"
+						Background="#00FFFFFF"
+					>
+						<Border
+							x:Name="Border1"
+							Width="9"
+							Height="9"
+							SnapsToDevicePixels="True"
+							BorderBrush="#FF9495A2"
+							BorderThickness="1,1,1,1"
+							CornerRadius="1,1,1,1"
+						>
+							<Border.Background>
+								<LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+									<GradientStop Color="#FFFFFFFF" Offset="0.4"/>
+									<GradientStop Color="#FFC6CEDA" Offset="1"/>
+								</LinearGradientBrush>
+							</Border.Background>
+							<Path
+								x:Name="ExpandPath"
+								Fill="#FF000000"
+								Margin="1,1,1,1"
+								Data="M0,2L0,3 2,3 2,5 3,5 3,3 5,3 5,2 3,2 3,0 2,0 2,2z"
+							/>
+						</Border>
+					</Border>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsChecked" Value="True">
+							<Setter Property="Data" Value="M0,2L0,3 5,3 5,2z" TargetName="ExpandPath"/>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style x:Key="ProperTreeViewItemStyle" TargetType="{x:Type TreeViewItem}">
+		<Setter Property="Background" Value="#00FFFFFF"/>
+		<Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}, AncestorLevel=1}}"/>
+		<Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}, AncestorLevel=1}}"/>
+		<Setter Property="Padding" Value="1,0,0,0"/>
+		<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+		<Setter Property="FocusVisualStyle">
+			<Setter.Value>
+				<Style>
+					<Setter Property="Control.Template">
+						<Setter.Value>
+							<ControlTemplate>
+								<Border x:Name="Border">
+									<Rectangle
+										x:Name="Rectangle"
+										Margin="0,0,0,0"
+										Stroke="#FF000000"
+										StrokeThickness="5"
+										Opacity="0"
+									>
+										<Rectangle.StrokeDashArray>
+											<DoubleCollection>
+												<System:Double>1</System:Double>
+												<System:Double>2</System:Double>
+											</DoubleCollection>
+										</Rectangle.StrokeDashArray>
+									</Rectangle>
+								</Border>
+							</ControlTemplate>
+						</Setter.Value>
+					</Setter>
+				</Style>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type TreeViewItem}">
+					<Grid x:Name="Grid">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition/>
+						</Grid.RowDefinitions>
+						<Border
+							x:Name="PART_Header"
+							Grid.Column="1"
+							Background="{TemplateBinding Background}"
+							BorderBrush="{TemplateBinding BorderBrush}"
+							BorderThickness="{TemplateBinding BorderThickness}"
+							Padding="{TemplateBinding Padding}"
+						>
+							<StackPanel
+								Orientation='Horizontal'
+								Margin='{Binding Indent, Converter={StaticResource IndentToMarginConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type my:ProperTreeViewItem}}}'
+							>
+								<ToggleButton
+									x:Name="Expander"
+									Style='{StaticResource TreeViewToggleStyle}'
+									IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
+									ClickMode="Press"
+								/>
+								<ContentPresenter
+									DataContext="{x:Null}"
+									HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+									Content="{TemplateBinding Header}"
+									ContentTemplate="{TemplateBinding HeaderTemplate}"
+									ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}"
+									ContentSource="Header"
+								/>
+							</StackPanel>
+						</Border>
+						<ItemsPresenter
+							x:Name="ItemsHost"
+							Grid.Row="1"
+							Grid.Column="1"
+							Grid.ColumnSpan="2"
+						/>
+					</Grid>
+
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsExpanded" Value="False">
+							<Setter Property="Visibility" Value="Collapsed" TargetName="ItemsHost"/>
+						</Trigger>
+						<Trigger Property="HasItems" Value="False">
+							<Setter Property="Visibility" Value="Hidden" TargetName="Expander"/>
+						</Trigger>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="HasHeader" Value="False"/>
+								<Condition Property="Width" Value="Auto"/>
+							</MultiTrigger.Conditions>
+							<Setter Property="MinWidth" Value="75" TargetName="PART_Header"/>
+						</MultiTrigger>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="HasHeader" Value="False"/>
+								<Condition Property="Height" Value="Auto"/>
+							</MultiTrigger.Conditions>
+							<Setter Property="MinHeight" Value="19" TargetName="PART_Header"/>
+						</MultiTrigger>
+						<Trigger Property="IsSelected" Value="True">
+							<Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" TargetName="PART_Header"/>
+							<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}"/>
+						</Trigger>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="IsSelected" Value="True"/>
+								<Condition Property="IsSelectionActive" Value="False"/>
+							</MultiTrigger.Conditions>
+							<Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" TargetName="PART_Header"/>
+							<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+						</MultiTrigger>
+						<Trigger Property="IsEnabled" Value="False">
+							<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+</ResourceDictionary>

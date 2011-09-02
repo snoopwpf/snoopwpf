@@ -1,0 +1,111 @@
+﻿<!--
+(c) Copyright Cory Plotts.
+This source is subject to the Microsoft Public License (Ms-PL).
+Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
+All other rights reserved.
+-->
+<UserControl
+	x:Class="Snoop.ValueEditors.MouseWheelValueEditor"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+	xmlns:converters="clr-namespace:Snoop.Converters" 
+	mc:Ignorable="d" 
+	d:DesignHeight="300"
+	d:DesignWidth="300"
+>
+	<UserControl.Resources>
+		<Style x:Key="MouseWheelText" TargetType="{x:Type TextBlock}">
+			<!--<Setter Property="local:PropertyEditor.SupportMouseWheel" Value="True"/>-->
+			<Setter Property="FontSize" Value="12"/>
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="Margin" Value="0,0,5,0"/>
+		</Style>
+
+		<DataTemplate x:Key="DefaultEmptyTemplate">
+			<Border/>
+		</DataTemplate>
+
+		<DataTemplate x:Key="CustomEditSingleField">
+			<TextBlock x:Name="Field1" Tag="1" Style="{StaticResource MouseWheelText}" Text="{Binding Value}"/>
+		</DataTemplate>
+
+		<DataTemplate x:Key="CustomEditThickness" DataType="{x:Type Thickness}">
+			<StackPanel Orientation="Horizontal">
+				<TextBlock x:Name="Field1" Tag="1" Style="{StaticResource MouseWheelText}" Text="{Binding Value.Left}"/>
+				<TextBlock x:Name="Field2" Tag="2" Style="{StaticResource MouseWheelText}" Text="{Binding Value.Top}"/>
+				<TextBlock x:Name="Field3" Tag="3" Style="{StaticResource MouseWheelText}" Text="{Binding Value.Right}"/>
+				<TextBlock x:Name="Field4" Tag="4" Style="{StaticResource MouseWheelText}" Text="{Binding Value.Bottom}"/>
+			</StackPanel>
+		</DataTemplate>
+
+		<DataTemplate x:Key="CustomEditBrush" DataType="{x:Type Brush}">
+			<StackPanel Orientation="Horizontal">
+				<TextBlock x:Name="Field1" Tag="1" Style="{StaticResource MouseWheelText}" Text="{Binding Path=Value, Converter={x:Static converters:ArgbToPartsConverter.Default}, ConverterParameter=0}"/>
+				<TextBlock x:Name="Field2" Tag="2" Style="{StaticResource MouseWheelText}" Text="{Binding Path=Value, Converter={x:Static converters:ArgbToPartsConverter.Default}, ConverterParameter=1}"/>
+				<TextBlock x:Name="Field3" Tag="3" Style="{StaticResource MouseWheelText}" Text="{Binding Path=Value, Converter={x:Static converters:ArgbToPartsConverter.Default}, ConverterParameter=2}"/>
+				<TextBlock x:Name="Field4" Tag="4" Style="{StaticResource MouseWheelText}" Text="{Binding Path=Value, Converter={x:Static converters:ArgbToPartsConverter.Default}, ConverterParameter=3}"/>
+			</StackPanel>
+		</DataTemplate>
+	</UserControl.Resources>
+
+	<!-- DataContext: PropertyInformation -->
+
+	<ContentControl Content="{Binding}" VerticalAlignment="Center">
+		<ContentControl.Style>
+				<Style TargetType="{x:Type ContentControl}">
+					<!--
+					ugh!  couldnt get a ContentControl binding to Value and using implicit DataTemplates. Keep ketting error
+					about element is already in the visual tree.
+					So instead, we manually describe which template to use based on Type.Name 
+					Add more templates here for other data types.
+					-->
+					<Setter Property="ContentTemplate" Value="{StaticResource DefaultEmptyTemplate}"/>
+					<Style.Triggers>
+						<DataTrigger Binding="{Binding Path=Property.PropertyType.Name}" Value="Int32">
+							<Setter Property="ContentTemplate" Value="{StaticResource CustomEditSingleField}"/>
+						</DataTrigger>
+						<DataTrigger Binding="{Binding Path=Property.PropertyType.Name}" Value="Int16">
+							<Setter Property="ContentTemplate" Value="{StaticResource CustomEditSingleField}"/>
+						</DataTrigger>
+						<DataTrigger Binding="{Binding Path=Property.PropertyType.Name}" Value="Double">
+							<Setter Property="ContentTemplate" Value="{StaticResource CustomEditSingleField}"/>
+						</DataTrigger>
+						<DataTrigger Binding="{Binding Path=Property.PropertyType.Name}" Value="Boolean">
+							<Setter Property="ContentTemplate" Value="{StaticResource CustomEditSingleField}"/>
+						</DataTrigger>
+						<DataTrigger Binding="{Binding Path=Property.PropertyType.Name}" Value="Visibility">
+							<Setter Property="ContentTemplate" Value="{StaticResource CustomEditSingleField}"/>
+						</DataTrigger>
+						<DataTrigger Binding="{Binding Path=Property.PropertyType.Name}" Value="HorizontalAlignment">
+							<Setter Property="ContentTemplate" Value="{StaticResource CustomEditSingleField}"/>
+						</DataTrigger>
+						<DataTrigger Binding="{Binding Path=Property.PropertyType.Name}" Value="VerticalAlignment">
+							<Setter Property="ContentTemplate" Value="{StaticResource CustomEditSingleField}"/>
+						</DataTrigger>
+						<DataTrigger Binding="{Binding Path=Property.PropertyType.Name}" Value="Thickness">
+							<Setter Property="ContentTemplate" Value="{StaticResource CustomEditThickness}"/>
+						</DataTrigger>
+						<DataTrigger Binding="{Binding Path=Property.PropertyType.Name}" Value="Brush">
+							<Setter Property="ContentTemplate" Value="{StaticResource CustomEditBrush}"/>
+						</DataTrigger>
+						<DataTrigger Binding="{Binding Path=Property.PropertyType.Name}" Value="Color">
+							<Setter Property="ContentTemplate" Value="{StaticResource CustomEditBrush}"/>
+						</DataTrigger>
+
+						<!--
+						Catch all to prevent editing data types (based on runtime type) that we cant support (i.e. GradientBrush)
+						and use the empty template.  The binding here is to the runtime Value of the property, not the PropertyInfo.
+						The PropertyInfo (on Border.Background for example) might say a property is of type Brush, but at runtime
+						a LinearGradientBrush is provided, so we use the converter to detect that and return false, not suppored.
+						Since this is last in the list, this will override any satisfying trigger above here
+						-->
+						<DataTrigger Binding="{Binding Path=Value, Converter={x:Static converters:IsSupportedRuntimeTypeConverter.Default}}" Value="False">
+							<Setter Property="ContentTemplate" Value="{StaticResource DefaultEmptyTemplate}"/>
+						</DataTrigger>
+					</Style.Triggers>
+				</Style>
+			</ContentControl.Style>
+		</ContentControl>
+</UserControl>

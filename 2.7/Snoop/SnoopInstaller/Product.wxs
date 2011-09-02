@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<!-- ID="*" will generate a new GUID for product code at time of build. -->
+	<!-- Product code changes AND version number changes (first 3 digits), then a major upgrade will be triggered. -->
+	
+	<!-- One spot to update version :) -->
+	<?define ProductVersion="2.7.0" ?>
+	<Product
+		Id="*"
+		Name="Snoop"
+		Manufacturer="Cory Plotts"
+		Language="1033"
+		Version="$(var.ProductVersion)"
+		UpgradeCode="FBEC01D7-CE1B-46F4-9498-71A96FEA8A15"
+	>
+		<Package InstallerVersion="301" Compressed="yes"/>
+
+		<!-- Rules for upgrading. ID must be the same as the packages to be checked/uninstalled. -->
+		<Upgrade Id="FBEC01D7-CE1B-46F4-9498-71A96FEA8A15">
+			<!-- If the installed version is $(var.ProductVersion) or higher, then set the property "NEWPRODUCTFOUND". This will trigger a "PreventDowngrading" Custom action. -->
+			<UpgradeVersion Minimum="$(var.ProductVersion)" IncludeMinimum="no" OnlyDetect="yes" Language="1033" Property="NEWPRODUCTFOUND"/>
+
+			<!-- If the installed version is between 1.0.0 and $(var.ProductVersion), then set "PREVIOUSVERSIONINSTALLED" properity. This will trigger RemoveExistingProducts. -->
+			<UpgradeVersion Minimum="1.0.0" IncludeMinimum="yes" Maximum="$(var.ProductVersion)" IncludeMaximum="no" Language="1033" Property="PREVIOUSVERSIONSINSTALLED"/>
+		</Upgrade>
+
+		<InstallExecuteSequence>
+			<!-- After we locate related products (listed by UpgradeCode in Upgrade table), launch custom action if NEWPRODUCTFOUND is set. -->
+			<Custom Action="PreventDowngrading" After="FindRelatedProducts">NEWPRODUCTFOUND</Custom>
+			<!-- Move RemoveExistingProducts to after InstallInitalize. This allows an upgrade to rollback to the previous version if there is an error. -->
+			<RemoveExistingProducts After="InstallInitialize">PREVIOUSVERSIONSINSTALLED</RemoveExistingProducts>
+		</InstallExecuteSequence>
+		
+		<!-- Will prompt user that a Newer version is already installed.-->
+		<CustomAction Id="PreventDowngrading" Error="Newer version already installed."/>
+		
+		<Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR"/>
+
+		<Media Id="1" Cabinet="media1.cab" EmbedCab="yes"/>
+
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLDIR" Name="Snoop">
+					<Component Id="Snoop" Guid="5624FD27-2409-4E5A-86E1-7C1A9C52A2F4">
+						<File
+							Id="SnoopEXE"
+							Name="Snoop.exe"
+							Source="..\Build\Release\Snoop.exe"
+							KeyPath="yes"
+						>
+							<Shortcut
+								Id="desktopSnoopShortcut"
+								Directory="DesktopFolder"
+								Name="Snoop $(var.ProductVersion)"
+								WorkingDirectory="INSTALLDIR"
+								Icon="Snoop.exe"
+								IconIndex="0"
+								Advertise="yes"
+							/>
+							<Shortcut
+								Id="startMenuSnoopShortcut"
+								Directory="ProgramMenuDir"
+								Name="Snoop $(var.ProductVersion)"
+								WorkingDirectory="INSTALLDIR"
+								Icon="Snoop.exe"
+								IconIndex="0"
+								Advertise="yes"
+							/>
+						</File>
+
+						<File
+							Id="SnoopCFG"
+							Name="Snoop.exe.config"
+							Source="..\Build\Release\Snoop.exe.config"
+						/>
+
+						<File
+							Id="ManagedInjectorLauncher3235"
+							Name="ManagedInjectorLauncher32-3.5.exe"
+							Source="..\ManagedInjectorLauncher\bin\Release\ManagedInjectorLauncher32-3.5.exe"
+						/>
+						<File
+							Id="ManagedInjector3235"
+							Name="ManagedInjector32-3.5.dll"
+							Source="..\ManagedInjectorLauncher\bin\Release\ManagedInjector32-3.5.dll"
+						/>
+
+						<File
+							Id="ManagedInjectorLauncher3240"
+							Name="ManagedInjectorLauncher32-4.0.exe"
+							Source="..\ManagedInjectorLauncher\bin\Release\ManagedInjectorLauncher32-4.0.exe"
+						/>
+						<File
+							Id="ManagedInjector3240"
+							Name="ManagedInjector32-4.0.dll"
+							Source="..\ManagedInjectorLauncher\bin\Release\ManagedInjector32-4.0.dll"
+						/>
+
+						<File
+							Id="ManagedInjectorLauncher6435"
+							Name="ManagedInjectorLauncher64-3.5.exe"
+							Source="..\ManagedInjectorLauncher\bin\x64\Release\ManagedInjectorLauncher64-3.5.exe"
+						/>
+						<File
+							Id="ManagedInjector6435"
+							Name="ManagedInjector64-3.5.dll"
+							Source="..\ManagedInjectorLauncher\bin\x64\Release\ManagedInjector64-3.5.dll"
+						/>
+
+						<File
+							Id="ManagedInjectorLauncher6440"
+							Name="ManagedInjectorLauncher64-4.0.exe"
+							Source="..\ManagedInjectorLauncher\bin\x64\Release\ManagedInjectorLauncher64-4.0.exe"
+						/>
+						<File
+							Id="ManagedInjector6440"
+							Name="ManagedInjector64-4.0.dll"
+							Source="..\ManagedInjectorLauncher\bin\x64\Release\ManagedInjector64-4.0.dll"
+						/>
+					</Component>
+				</Directory>
+			</Directory>
+
+			<Directory Id="ProgramMenuFolder" Name="Programs">
+				<Directory Id="ProgramMenuDir" Name="Snoop">
+					<Component Id="ProgramMenuDir" Guid="F04C55F5-09D6-40CD-90E3-FA46E5E4A93D">
+						<RemoveFolder Id='ProgramMenuDir' On='uninstall'/>
+						<RegistryValue Root='HKCU' Key='Software\[ProductName]' Type='string' Value='' KeyPath='yes'/>
+					</Component>
+				</Directory>
+			</Directory>
+
+			<Directory Id="DesktopFolder" Name="Desktop"/>
+		</Directory>
+
+		<Feature Id="ProductFeature" Title="Snoop" Description="Snoop, the WPF Spying Utility" Level="1" ConfigurableDirectory="INSTALLDIR">
+			<ComponentRef Id="Snoop"/>
+			<ComponentRef Id="ProgramMenuDir"/>
+		</Feature>
+
+		<UIRef Id="WixUI_InstallDir"/>
+		<WixVariable Id="WixUILicenseRtf" Value="License.rtf"/>
+		<WixVariable Id="WixUIBannerBmp" Value="Bitmaps\Banner.bmp"/>
+		<WixVariable Id="WixUIDialogBmp" Value="Bitmaps\Dialog.bmp"/>
+		<WixVariable Id="WixUIExclamationIco" Value="Bitmaps\Exclamation.ico"/>
+		<WixVariable Id="WixUIInfoIco" Value="Bitmaps\Information.ico"/>
+		<WixVariable Id="WixUINewIco" Value="Bitmaps\New.ico"/>
+		<WixVariable Id="WixUIUpIco" Value="Bitmaps\Up.ico"/>
+
+		<Icon Id="Snoop.exe" SourceFile="..\Build\Release\Snoop.exe"/>
+	</Product>
+</Wix>

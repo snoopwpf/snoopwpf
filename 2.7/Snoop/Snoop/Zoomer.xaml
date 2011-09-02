@@ -1,0 +1,133 @@
+﻿<!--
+(c) Copyright Cory Plotts.
+This source is subject to the Microsoft Public License (Ms-PL).
+Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
+All other rights reserved.
+-->
+<Window
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:xv="clr-namespace:Snoop"
+	x:Class="Snoop.Zoomer"
+	Icon="Snoop.ico"
+	Title="Zoomer"
+	Width="400"
+	Height="400"
+	FocusManager.FocusedElement="{Binding ElementName=DocumentRoot}"
+>
+	<Grid
+		x:Name="DocumentRoot"
+		Cursor="SizeAll"
+		Focusable="True"
+		Mouse.MouseMove="Content_MouseMove"
+		Mouse.MouseDown="Content_MouseDown"
+		Mouse.MouseUp="Content_MouseUp"
+		Mouse.MouseWheel="Content_MouseWheel"
+	>
+		<Grid.Background>
+			<Binding ElementName="ColorSlider" Path="Value">
+				<Binding.Converter>
+					<xv:DoubleToWhitenessConverter/>
+				</Binding.Converter>
+			</Binding>
+		</Grid.Background>
+
+		<Grid.ContextMenu>
+			<ContextMenu>
+				<MenuItem Command="{x:Static xv:Zoomer.SwitchTo2DCommand}">
+					<MenuItem.Header>
+						<TextBlock Style="{x:Null}" Text="2D view"/>
+					</MenuItem.Header>
+				</MenuItem>
+				<MenuItem Command="{x:Static xv:Zoomer.SwitchTo3DCommand}">
+					<MenuItem.Header>
+						<TextBlock Style="{x:Null}" Text="3D view"/>
+					</MenuItem.Header>
+				</MenuItem>
+				<Separator/>
+				<MenuItem Command="{x:Static xv:Zoomer.ResetCommand}">
+					<MenuItem.Header>
+						<TextBlock Style="{x:Null}" Text="Reset"/>
+					</MenuItem.Header>
+				</MenuItem>
+			</ContextMenu>
+		</Grid.ContextMenu>
+
+		<Viewbox x:Name="Viewbox"/>
+
+		<StackPanel
+			Orientation="Horizontal"
+			HorizontalAlignment="Left"
+			VerticalAlignment="Top"
+			Margin="2,2,0,0"
+			Opacity="0.5"
+		>
+			<RadioButton
+				Style="{DynamicResource {x:Type ToggleButton}}"
+				MinWidth="0"
+				MinHeight="0"
+				Cursor="Arrow"
+				Focusable="False"
+				IsChecked="True"
+				Command="{x:Static xv:Zoomer.SwitchTo2DCommand}"
+			>
+				<TextBlock Style="{x:Null}" Text="2D"/>
+				<RadioButton.ToolTip>
+					<TextBlock Style="{x:Null}" Text="2D view (F2)"/>
+				</RadioButton.ToolTip>
+			</RadioButton>
+			<RadioButton
+				Style="{DynamicResource {x:Type ToggleButton}}"
+				MinWidth="0"
+				MinHeight="0"
+				Margin="2,0,0,0"
+				Cursor="Arrow"
+				Focusable="False"
+				Command="{x:Static xv:Zoomer.SwitchTo3DCommand}"
+			>
+				<TextBlock Style="{x:Null}" Text="3D"/>
+				<RadioButton.ToolTip>
+					<TextBlock Style="{x:Null}" Text="3D view (F3)"/>
+				</RadioButton.ToolTip>
+			</RadioButton>
+		</StackPanel>
+
+		<Slider
+			x:Name="ColorSlider"
+			Width="100"
+			HorizontalAlignment="Right"
+			VerticalAlignment="Top"
+			Margin="0,2,2,0"
+			Minimum="0"
+			Maximum="1"
+			Value="1"
+			Opacity=".5"
+			Cursor="Arrow"
+			Focusable="False"
+		>
+			<Slider.ToolTip>
+				<TextBlock Style="{x:Null}" Text="Use this slider to adjust the Background from white to black."/>
+			</Slider.ToolTip>
+		</Slider>
+
+		<Slider
+			x:Name="ZScaleSlider"
+			Width="100"
+			HorizontalAlignment="Right"
+			VerticalAlignment="Bottom"
+			Margin="0,0,2,2"
+			Minimum="-1.2"
+			Maximum="1.2"
+			Value="0"
+			Opacity=".5"
+			Cursor="Arrow"
+			Focusable="False"
+			ValueChanged="ZScaleSlider_ValueChanged"
+			Visibility="Collapsed"
+		>
+			<Slider.ToolTip>
+				<TextBlock Style="{x:Null}" Text="3D separation"/>
+			</Slider.ToolTip>
+		</Slider>
+	</Grid>
+</Window>
