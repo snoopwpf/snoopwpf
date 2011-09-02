@@ -14,7 +14,7 @@
     <ProjectGuid>{C29817A9-3696-421D-89BD-F66681657C37}</ProjectGuid>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <RootNamespace>ManagedInjector</RootNamespace>
-    <SccProjectName>$/snoopwpf/2.6/Snoop/ManagedInjector</SccProjectName>
+    <SccProjectName>$/snoopwpf/2.7/Snoop/ManagedInjector</SccProjectName>
     <SccAuxPath>https://tfs.codeplex.com/tfs/tfs09</SccAuxPath>
     <SccLocalPath>.</SccLocalPath>
     <SccProvider>{4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}</SccProvider>
