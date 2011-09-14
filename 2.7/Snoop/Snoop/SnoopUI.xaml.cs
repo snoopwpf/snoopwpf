@@ -127,6 +127,9 @@ namespace Snoop
 			foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
 			{
 				Visual presentationSourceRootVisual = presentationSource.RootVisual;
+                if (presentationSourceRootVisual == null)
+                    continue;
+
 				Dispatcher presentationSourceRootVisualDispatcher = presentationSourceRootVisual.Dispatcher;
 
 				if (dispatchers.IndexOf(presentationSourceRootVisualDispatcher) == -1)
