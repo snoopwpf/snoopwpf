@@ -35,7 +35,7 @@ All other rights reserved.
 		<RowDefinition Height="*"/>
 	</Grid.RowDefinitions>
 
-	<TextBlock Margin="2" Text="{Binding ElementName=propertyInspector, Path=Type}">
+	<TextBlock Margin="2" Text="{Binding ElementName=propertyInspector, Path=DelvePath}">
 		<TextBlock.ToolTip>
 			<TextBlock Style="{x:Null}" Text="This is the type of currently selected object"/>
 		</TextBlock.ToolTip>

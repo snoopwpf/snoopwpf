@@ -152,8 +152,12 @@
     <Compile Include="EventsListener.cs" />
     <Compile Include="EventTracker.cs" />
     <Compile Include="Infrastructure\ComboBoxSettings.cs" />
+    <Compile Include="Infrastructure\ISkipDelve.cs" />
+    <Compile Include="Infrastructure\ResourceDictionaryKeyHelpers.cs" />
     <Compile Include="Infrastructure\SnoopModes.cs" />
     <Compile Include="Infrastructure\SnoopPartsRegistry.cs" />
+    <Compile Include="Infrastructure\StyleKeyCache.cs" />
+    <Compile Include="Infrastructure\StyleKeyPair.cs" />
     <Compile Include="Infrastructure\WhenLoaded.cs" />
     <Compile Include="Injector.cs" />
     <Compile Include="Inspector.cs" />

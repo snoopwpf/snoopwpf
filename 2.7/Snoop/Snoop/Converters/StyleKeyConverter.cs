@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Data;
 using System.ComponentModel;
+using Snoop.Infrastructure;
 
 namespace Snoop.Converters
 {
@@ -28,7 +29,7 @@ namespace Snoop.Converters
 			if (frameworkElement == null || !(value is Style))
 				return value;
 
-			string styleKey = StyleKeyHelpers.GetKeyOfStyle(frameworkElement);
+			string styleKey = ResourceDictionaryKeyHelpers.GetKeyOfStyle(frameworkElement);
 			if (string.IsNullOrEmpty(styleKey))
 			{
 				// if we can't find the key, just return the Style object
@@ -37,6 +38,7 @@ namespace Snoop.Converters
 			else
 			{
 				// else create a StyleKeyPair and return that
+                StyleKeyCache.CacheStyle((Style)value, styleKey);
 				return new StyleKeyPair { Style = (Style)value, Key = styleKey };
 			}
 		}
@@ -47,20 +49,9 @@ namespace Snoop.Converters
 		#endregion
 	}
 
-	public class StyleKeyPair
-	{
-		public Style Style { get; set; }
+    
 
-		[DisplayName("x:Key")]
-		public string Key { get; set; }
-
-		public override string ToString()
-		{
-			return string.IsNullOrEmpty(Key) ? Style.ToString() : Key + " (Style)";
-		}
-	}
-
-	public static class StyleKeyHelpers
+	public static class ResourceDictionaryKeyHelpers
 	{
 		public static string GetKeyOfStyle(FrameworkElement frameworkElement)
 		{

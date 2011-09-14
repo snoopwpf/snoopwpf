@@ -90,10 +90,11 @@ namespace Snoop
 		/// <param name="target">the item in the collection</param>
 		/// <param name="component">the collection</param>
 		/// <param name="displayName">the display name that goes in the name column, i.e. this[x]</param>
-		public PropertyInformation(object target, object component, string displayName)
+		public PropertyInformation(object target, object component, string displayName, bool isCopyable = false)
 			: this(target, null, displayName, displayName)
 		{
 			this.component = component;
+            this.isCopyable = isCopyable;
 		}
 
 		public void Teardown()
@@ -220,6 +221,7 @@ namespace Snoop
 			}
 		}
 		private object component;
+        private bool isCopyable;
 
 		public Type PropertyType
 		{
@@ -290,7 +292,8 @@ namespace Snoop
 				if (this.property == null)
 				{
 					// if this is a PropertyInformation object constructed for an item in a collection
-					return false;
+					//return false;
+                    return this.isCopyable;
 				}
 				else
 				{
@@ -513,6 +516,7 @@ namespace Snoop
 		{
 			return PropertyInformation.GetProperties(obj, new PertinentPropertyFilter(obj).Filter);
 		}
+
 		public static List<PropertyInformation> GetProperties(object obj, Predicate<PropertyDescriptor> filter)
 		{
 			List<PropertyInformation> props = new List<PropertyInformation>();
@@ -531,6 +535,10 @@ namespace Snoop
 					props.Add(prop);
 				}
 			}
+
+            //delve path. also, issue 4919
+            var extendedProps = GetExtendedProperties(obj);
+            props.AddRange(extendedProps);
 
 
 			// if the object is a collection, add the items in the collection as properties
@@ -554,6 +562,31 @@ namespace Snoop
 
 			return props;
 		}
+
+        /// <summary>
+        /// 4919 + Delve
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        private static IList<PropertyInformation> GetExtendedProperties(object obj)
+        {
+            List<PropertyInformation> props = new List<PropertyInformation>();
+           
+            if (obj is Style)
+            {
+                //string key;
+                //if (StyleKeyCache.Keys.TryGetValue((Style)obj, out key))
+                if (StyleKeyCache.ContainsStyle((Style)obj))
+                {
+                    string key = StyleKeyCache.GetKey((Style)obj);
+                    PropertyInformation prop = new PropertyInformation(key, new object(), "x:key", true);
+                    prop.Value = key;
+                    props.Add(prop);
+                }
+            }
+
+            return props;
+        }
 
 		private static List<PropertyDescriptor> GetAllProperties(object obj, Attribute[] attributes)
 		{
@@ -613,19 +646,31 @@ namespace Snoop
 		private bool isRunning = false;
 		private bool ignoreUpdate = false;
 
+        public bool IsCollection()
+        {
+            string pattern = "^this\\[\\d+\\]$";
+            return Regex.IsMatch(this.DisplayName, pattern);
+        }
+
+        public int CollectionIndex()
+        {
+            if (this.IsCollection())
+            {
+                return int.Parse(this.DisplayName.Substring(5, this.DisplayName.Length - 6));
+            }
+            return -1;
+        }
 
 		#region IComparable Members
 		public int CompareTo(object obj)
 		{
-			string pattern = "^this\\[\\d+\\]$";
-			if (Regex.IsMatch(this.DisplayName, pattern) && Regex.IsMatch(((PropertyInformation)obj).DisplayName, pattern))
-			{
-				int thisIndex = int.Parse(this.DisplayName.Substring(5, this.DisplayName.Length - 6));
-				int objIndex = int.Parse(((PropertyInformation)obj).DisplayName.Substring(5, ((PropertyInformation)obj).DisplayName.Length - 6));
-				return thisIndex.CompareTo(objIndex);
-			}
-
-			return this.DisplayName.CompareTo(((PropertyInformation)obj).DisplayName);
+            int thisIndex = this.CollectionIndex();
+            int objIndex = ((PropertyInformation)obj).CollectionIndex();
+            if (thisIndex >= 0 && objIndex >= 0)
+            {
+                return thisIndex.CompareTo(objIndex);
+            }
+            return this.DisplayName.CompareTo(((PropertyInformation)obj).DisplayName);
 		}
 		#endregion
 

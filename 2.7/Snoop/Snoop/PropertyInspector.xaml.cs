@@ -16,6 +16,8 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using System.Collections;
 using System.Reflection;
+using Snoop.Infrastructure;
+using System.Text;
 
 namespace Snoop
 {
@@ -67,6 +69,9 @@ namespace Snoop
 
 			inspector.inspectStack.Clear();
 			inspector.Target = e.NewValue;
+
+            inspector._delvePathList.Clear();//delve path
+            inspector.OnPropertyChanged("DelvePath");//delve path
 		}
 
 		public object Target
@@ -90,6 +95,73 @@ namespace Snoop
 			if (e.NewValue != null)
 				inspector.inspectStack.Add(e.NewValue);
 		}
+
+
+        private string GetDelvePath(Type rootTargetType)
+        {
+            StringBuilder delvePath = new StringBuilder(rootTargetType.Name);
+
+            foreach (var propInfo in _delvePathList)
+            {
+                int collectionIndex;
+                if ((collectionIndex = propInfo.CollectionIndex()) >= 0)
+                {
+                    delvePath.Append(string.Format("[{0}]", collectionIndex));
+                }
+                else
+                {
+                    delvePath.Append(string.Format(".{0}", propInfo.DisplayName));
+                }
+            }
+
+            return delvePath.ToString();
+        }
+
+        private string GetCurrentTypeName(Type rootTargetType)
+        {
+            string type = string.Empty;
+            if (_delvePathList.Count > 0)
+            {
+                ISkipDelve skipDelve = _delvePathList[_delvePathList.Count - 1].Value as ISkipDelve;
+                if (skipDelve != null && skipDelve.NextValue != null && skipDelve.NextValueType != null)
+                {
+                    return skipDelve.NextValueType.ToString();//we want to make this "future friendly", so we take into account that the string value of the property type may change.
+                }
+                else if (_delvePathList[_delvePathList.Count - 1].Value != null)
+                {
+                    type = _delvePathList[_delvePathList.Count - 1].Value.GetType().ToString();
+                }
+                else
+                {
+                    type = _delvePathList[_delvePathList.Count - 1].PropertyType.ToString();
+                }
+            }
+            else if (_delvePathList.Count == 0)
+            {
+                type = rootTargetType.FullName;
+            }
+
+            return type;
+        }
+
+        /// <summary>
+        /// Delve Path
+        /// </summary>
+        public string DelvePath
+        {
+            get
+            {
+                if (this.RootTarget == null)
+                    return "object is NULL";
+
+
+                Type rootTargetType = this.RootTarget.GetType();
+                string delvePath = GetDelvePath(rootTargetType);
+                string type = GetCurrentTypeName(rootTargetType);
+
+                return string.Format("{0}\n({1})", delvePath, type);//delvePath.ToString();
+            }
+        }
 
 		public Type Type
 		{
@@ -123,6 +195,9 @@ namespace Snoop
 				this.Target = this.inspectStack[this.inspectStack.Count - 2];
 				this.inspectStack.RemoveAt(this.inspectStack.Count - 2);
 				this.inspectStack.RemoveAt(this.inspectStack.Count - 2);
+
+                this._delvePathList.RemoveAt(_delvePathList.Count - 1);//delve path
+                this.OnPropertyChanged("DelvePath");//delve path
 			}
 		}
 		private void CanPopTarget(object sender, CanExecuteRoutedEventArgs e)
@@ -134,9 +209,30 @@ namespace Snoop
 			}
 		}
 
+        private object GetRealTarget(object target)
+        {
+            ISkipDelve skipDelve = target as ISkipDelve;
+            if (skipDelve != null)
+            {
+                return skipDelve.NextValue;
+            }
+            return target;
+        }
+
 		private void HandleDelve(object sender, ExecutedRoutedEventArgs e)
 		{
-			this.PushTarget(((PropertyInformation)e.Parameter).Value);
+            var realTarget = GetRealTarget(((PropertyInformation)e.Parameter).Value);
+
+            //top 'if' statement is the delve path.
+            if (realTarget != this.Target)//we do this because without doing this, the delve path gets out of sync with the actual delves.
+            //the reason for this is because PushTarget sets the new target, and if it's equal to the current (original) target, we won't raise the property-changed
+            //event, and therefore, we don't add to our delveStack (the real one).
+            {
+                this._delvePathList.Add(((PropertyInformation)e.Parameter));
+                this.OnPropertyChanged("DelvePath");
+            }
+
+            this.PushTarget(realTarget);
 		}
 		private void HandleDelveBinding(object sender, ExecutedRoutedEventArgs e)
 		{
@@ -383,6 +479,7 @@ namespace Snoop
 
 		private List<object> inspectStack = new List<object>();
 		private PropertyFilterSet[] _filterSets;
+        private List<PropertyInformation> _delvePathList = new List<PropertyInformation>();//delve path
 
 		private Inspector inspector;
 
