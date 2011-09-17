@@ -25,25 +25,30 @@ void Injector::Launch(System::IntPtr windowHandle, System::String^ assembly, Sys
 
 	if (::GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, (LPCTSTR)&MessageHookProc, &hinstDLL))
 	{
+		LogMessage("GetModuleHandleEx successful", true);
 		DWORD processID = 0;
 		DWORD threadID = ::GetWindowThreadProcessId((HWND)windowHandle.ToPointer(), &processID);
 
 		if (processID)
 		{
+			LogMessage("Got process id", true);
 			HANDLE hProcess = ::OpenProcess(PROCESS_ALL_ACCESS, FALSE, processID);
 			if (hProcess)
 			{
+				LogMessage("Got process handle", true);
 				int buffLen = (assemblyClassAndMethod->Length + 1) * sizeof(wchar_t);
 				void* acmRemote = ::VirtualAllocEx(hProcess, NULL, buffLen, MEM_COMMIT, PAGE_READWRITE);
 
 				if (acmRemote)
 				{
+					LogMessage("VirtualAllocEx successful", true);
 					::WriteProcessMemory(hProcess, acmRemote, acmLocal, buffLen, NULL);
 				
 					_messageHookHandle = ::SetWindowsHookEx(WH_CALLWNDPROC, &MessageHookProc, hinstDLL, threadID);
 
 					if (_messageHookHandle)
 					{
+						LogMessage("SetWindowsHookEx successful", true);
 						::SendMessage((HWND)windowHandle.ToPointer(), WM_GOBABYGO, (WPARAM)acmRemote, 0);
 						::UnhookWindowsHookEx(_messageHookHandle);
 					}
@@ -56,6 +61,22 @@ void Injector::Launch(System::IntPtr windowHandle, System::String^ assembly, Sys
 		}
 		::FreeLibrary(hinstDLL);
 	}
+}
+
+void Injector::LogMessage(System::String^ message, bool append)
+{	            
+	System::String ^ filename = "SnoopLog.txt";
+
+	if (!append)    
+	{    
+		System::IO::File::Delete(filename);        
+	}
+
+	System::IO::FileInfo ^ fi = gcnew System::IO::FileInfo(filename);
+	            
+	System::IO::StreamWriter ^ sw = fi->AppendText();   
+	sw->WriteLine(System::DateTime::Now.ToString("MM/dd/yyyy HH:mm:ss") + " : " + message);
+	sw->Close();
 }
 
 __declspec(dllexport) 

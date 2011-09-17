@@ -13,6 +13,9 @@ namespace ManagedInjector
 	public ref class Injector : System::Object
 	{
 		public:
+
 		static void Launch(System::IntPtr windowHandle, System::String^ assemblyName, System::String^ className, System::String^ methodName);
+
+		static void LogMessage(System::String^ message, bool append);
 	};
 }
