@@ -42,7 +42,13 @@ All other rights reserved.
 						<TextBlock Style="{x:Null}" Text="Clear/Reset"/>
 					</MenuItem.Header>
 				</MenuItem>
-			</ContextMenu>
+
+                <MenuItem Command="{x:Static my:PropertyInspector.SnipXamlCommand}" CommandParameter="{Binding}">
+                    <MenuItem.Header>
+                        <TextBlock Style="{x:Null}" Text="Copy this brush"/>
+                    </MenuItem.Header>
+                </MenuItem>
+            </ContextMenu>
 
 			<Style TargetType="{x:Type GridViewColumnHeader}">
 				<Setter Property="Command" Value="{x:Static my:PropertyGrid2.SortCommand}"/>

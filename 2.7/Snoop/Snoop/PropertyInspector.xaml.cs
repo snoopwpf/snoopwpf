@@ -18,11 +18,14 @@ using System.Collections;
 using System.Reflection;
 using Snoop.Infrastructure;
 using System.Text;
+using System.Windows.Markup;
+using System.Windows.Media;
 
 namespace Snoop
 {
 	public partial class PropertyInspector : INotifyPropertyChanged
 	{
+        public static readonly RoutedCommand SnipXamlCommand = new RoutedCommand("SnipXaml", typeof(PropertyInspector));
 		public static readonly RoutedCommand PopTargetCommand = new RoutedCommand("PopTarget", typeof(PropertyInspector));
 		public static readonly RoutedCommand DelveCommand = new RoutedCommand();
 		public static readonly RoutedCommand DelveBindingCommand = new RoutedCommand();
@@ -37,6 +40,7 @@ namespace Snoop
 			this.inspector = this.PropertyGrid;
 			this.inspector.Filter = this.propertyFilter;
 
+            this.CommandBindings.Add(new CommandBinding(PropertyInspector.SnipXamlCommand, this.HandleSnipXaml, this.CanSnipXaml));
 			this.CommandBindings.Add(new CommandBinding(PropertyInspector.PopTargetCommand, this.HandlePopTarget, this.CanPopTarget));
 			this.CommandBindings.Add(new CommandBinding(PropertyInspector.DelveCommand, this.HandleDelve, this.CanDelve));
 			this.CommandBindings.Add(new CommandBinding(PropertyInspector.DelveBindingCommand, this.HandleDelveBinding, this.CanDelveBinding));
@@ -48,7 +52,29 @@ namespace Snoop
 			// watch for mouse "back" button
 			this.MouseDown += new MouseButtonEventHandler(MouseDownHandler);
 			this.KeyDown += new KeyEventHandler(PropertyInspector_KeyDown);
+            
 		}
+
+        private void HandleSnipXaml(object sender, ExecutedRoutedEventArgs e)
+        {
+            try
+            {
+                string xaml = XamlWriter.Save(((PropertyInformation)e.Parameter).Value);
+                Clipboard.SetData(DataFormats.Text, xaml);
+                MessageBox.Show("This brush has been copied to the clipboard. You can paste it into your project.", "Brush copied", MessageBoxButton.OK);                
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void CanSnipXaml(object sender, CanExecuteRoutedEventArgs e)
+        {
+            if (e.Parameter != null && ((PropertyInformation)e.Parameter).Value is Brush)
+                e.CanExecute = true;
+            e.Handled = true;
+        }
 
 		public object RootTarget
 		{
@@ -79,6 +105,7 @@ namespace Snoop
 			get { return this.GetValue(PropertyInspector.TargetProperty); }
 			set { this.SetValue(PropertyInspector.TargetProperty, value); }
 		}
+
 		public static readonly DependencyProperty TargetProperty =
 			DependencyProperty.Register
 			(
@@ -87,6 +114,7 @@ namespace Snoop
 				typeof(PropertyInspector),
 				new PropertyMetadata(PropertyInspector.HandleTargetChanged)
 			);
+
 		private static void HandleTargetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
 			PropertyInspector inspector = (PropertyInspector)d;
