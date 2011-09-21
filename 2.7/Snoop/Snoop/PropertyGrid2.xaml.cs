@@ -194,32 +194,33 @@ namespace Snoop
 			((PropertyInformation)e.Parameter).Clear();
 		}
 
+        private ListSortDirection GetNewSortDirection(GridViewColumnHeader columnHeader)
+        {
+            if (!(columnHeader.Tag is ListSortDirection))
+                return (ListSortDirection)(columnHeader.Tag = ListSortDirection.Descending);
+            
+            ListSortDirection direction = (ListSortDirection)columnHeader.Tag;
+            return (ListSortDirection)(columnHeader.Tag = (ListSortDirection)(((int)direction + 1) % 2));
+        }
+
 		private void HandleSort(object sender, ExecutedRoutedEventArgs args)
 		{
 			GridViewColumnHeader headerClicked = (GridViewColumnHeader)args.OriginalSource;
 
-			if (headerClicked != null)
+            var direction = GetNewSortDirection(headerClicked);
+
+			switch (((TextBlock)headerClicked.Column.Header).Text)
 			{
-				ListSortDirection direction = ListSortDirection.Ascending;
-
-				if (headerClicked == this.lastHeaderClicked && this.lastDirection == ListSortDirection.Ascending)
-					direction = ListSortDirection.Descending;
-
-				switch (((TextBlock)headerClicked.Column.Header).Text)
-				{
-					case "Name":
-						this.Sort(PropertyGrid2.CompareNames, direction);
-						break;
-					case "Value":
-						this.Sort(PropertyGrid2.CompareValues, direction);
-						break;
-					case "ValueSource":
-						this.Sort(PropertyGrid2.CompareValueSources, direction);
-						break;
-				}
-				this.lastHeaderClicked = headerClicked;
-				this.lastDirection = direction;
-			}
+				case "Name":
+					this.Sort(PropertyGrid2.CompareNames, direction);
+					break;
+				case "Value":
+					this.Sort(PropertyGrid2.CompareValues, direction);
+					break;
+				case "ValueSource":
+					this.Sort(PropertyGrid2.CompareValueSources, direction);
+					break;
+			}       
 		}
 
 		private void ProcessFilter()
@@ -298,9 +299,6 @@ namespace Snoop
 		private object target;
 
 		private IEnumerator<PropertyInformation> propertiesToAdd;
-
-		private GridViewColumnHeader lastHeaderClicked = null;
-		private ListSortDirection lastDirection = ListSortDirection.Ascending;
 		private DelayedCall processIncrementalCall;
 		private DelayedCall filterCall;
 		private int visiblePropertyCount = 0;
