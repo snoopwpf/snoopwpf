@@ -30,18 +30,23 @@ All other rights reserved.
 	</Grid.Resources>
 
 	<Grid.RowDefinitions>
-		<RowDefinition Height="22"/>
+		<RowDefinition Height="Auto"/>
 		<RowDefinition Height="22"/>
 		<RowDefinition Height="*"/>
 	</Grid.RowDefinitions>
 
-	<TextBlock Margin="2" Text="{Binding ElementName=propertyInspector, Path=DelvePath}">
+	<!--<TextBlock Margin="2" Text="{Binding ElementName=propertyInspector, Path=DelvePath}">
 		<TextBlock.ToolTip>
 			<TextBlock Style="{x:Null}" Text="This is the type of currently selected object"/>
 		</TextBlock.ToolTip>
-	</TextBlock>
+	</TextBlock>-->
+    <TextBox Margin="2" Style="{x:Null}" BorderThickness="0" Text="{Binding ElementName=propertyInspector, Path=DelvePath, Mode=OneWay}" Background="Transparent"  TextWrapping="Wrap" AcceptsReturn="True" IsReadOnly="True">
+        <TextBox.ToolTip>
+            <TextBlock Style="{x:Null}" Text="This is the type of currently selected object"/>
+        </TextBox.ToolTip>
+    </TextBox>
 
-	<Grid Grid.Row="1">
+    <Grid Grid.Row="1">
 		<TextBox
 			x:Name="PropertiesFilter"
 			Text="{Binding ElementName=propertyInspector, Path=StringFilter, UpdateSourceTrigger=PropertyChanged}"
