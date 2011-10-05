@@ -147,8 +147,16 @@ namespace Snoop
 				brush.Stretch = Stretch.Uniform;
 				Rectangle rect = new Rectangle();
 				rect.Fill = brush;
-				rect.Width = uiElement.ActualWidth;
-				rect.Height = uiElement.ActualHeight;
+                if (uiElement.ActualHeight == 0 && uiElement.ActualWidth == 0)//sometimes the actual size might be 0 despite there being a rendered visual with a size greater than 0. This happens often on a custom panel (http://snoopwpf.codeplex.com/workitem/7217). Having a fixed size visual brush remedies the problem.
+                {
+                    rect.Width = 50;
+                    rect.Height = 50;
+                }
+                else
+                {
+                    rect.Width = uiElement.ActualWidth;
+                    rect.Height = uiElement.ActualHeight;
+                }
 				return rect;
 			}
 
