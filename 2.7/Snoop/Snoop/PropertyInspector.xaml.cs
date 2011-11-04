@@ -224,8 +224,11 @@ namespace Snoop
 				this.inspectStack.RemoveAt(this.inspectStack.Count - 2);
 				this.inspectStack.RemoveAt(this.inspectStack.Count - 2);
 
-                this._delvePathList.RemoveAt(_delvePathList.Count - 1);//delve path
-                this.OnPropertyChanged("DelvePath");//delve path
+                if (this._delvePathList.Count > 0)
+                {
+                    this._delvePathList.RemoveAt(this._delvePathList.Count - 1);//delve path
+                    this.OnPropertyChanged("DelvePath");//delve path
+                }
 			}
 		}
 		private void CanPopTarget(object sender, CanExecuteRoutedEventArgs e)
