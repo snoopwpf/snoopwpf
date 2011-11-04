@@ -46,9 +46,6 @@ namespace Snoop
 			this.CommandBindings.Add(new CommandBinding(PropertyInspector.DelveBindingCommand, this.HandleDelveBinding, this.CanDelveBinding));
 			this.CommandBindings.Add(new CommandBinding(PropertyInspector.DelveBindingExpressionCommand, this.HandleDelveBindingExpression, this.CanDelveBindingExpression));
 
-			// don't show properties at their default values ... by default
-			this.ShowDefaults = false;
-
 			// watch for mouse "back" button
 			this.MouseDown += new MouseButtonEventHandler(MouseDownHandler);
 			this.KeyDown += new KeyEventHandler(PropertyInspector_KeyDown);

@@ -423,6 +423,12 @@ namespace Snoop
 				wp.showCmd = (wp.showCmd == Win32.SW_SHOWMINIMIZED ? Win32.SW_SHOWNORMAL : wp.showCmd);
 				IntPtr hwnd = new WindowInteropHelper(this).Handle;
 				Win32.SetWindowPlacement(hwnd, ref wp);
+
+				// load whether all properties are shown by default
+				this.PropertyGrid.ShowDefaults = Properties.Settings.Default.ShowDefaults;
+
+				// load whether the previewer is shown by default
+				this.PreviewArea.IsActive = Properties.Settings.Default.ShowPreviewer;
 			}
 			catch
 			{
@@ -445,6 +451,14 @@ namespace Snoop
 			IntPtr hwnd = new WindowInteropHelper(this).Handle;
 			Win32.GetWindowPlacement(hwnd, out wp);
 			Properties.Settings.Default.SnoopUIWindowPlacement = wp;
+
+			// persist whether all properties are shown by default
+			Properties.Settings.Default.ShowDefaults = this.PropertyGrid.ShowDefaults;
+
+			// persist whether the previewer is shown by default
+			Properties.Settings.Default.ShowPreviewer = this.PreviewArea.IsActive;
+
+			// actually do the persisting
 			Properties.Settings.Default.Save();
 
 			SnoopPartsRegistry.RemoveSnoopVisualTreeRoot(this);

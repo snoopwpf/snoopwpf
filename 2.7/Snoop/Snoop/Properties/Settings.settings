@@ -122,5 +122,11 @@
       &lt;/PropertyFilterSet&gt;
     &lt;/ArrayOfPropertyFilterSet&gt;</Value>
     </Setting>
+    <Setting Name="ShowDefaults" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ShowPreviewer" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -45,6 +45,7 @@ namespace Snoop
 			get { return this.properties; }
 		}
 		private ObservableCollection<PropertyInformation> properties = new ObservableCollection<PropertyInformation>();
+		private ObservableCollection<PropertyInformation> allProperties = new ObservableCollection<PropertyInformation>();
 
 		public object Target
 		{
@@ -130,23 +131,19 @@ namespace Snoop
 			{
 				// iterate over the PropertyInfo objects,
 				// setting the property grid's filter on each object,
-				// and adding those properties to the observable collection of properties (this.properties)
+				// and adding those properties to the observable collection of propertiesToSort (this.properties)
 				PropertyInformation property = this.propertiesToAdd.Current;
 				property.Filter = this.Filter;
-				this.properties.Add(property);
+
+				if (property.IsVisible)
+				{
+					this.properties.Add(property);
+				}
+				allProperties.Add(property);
 
 				// checking whether a property is visible ... actually runs the property filtering code
 				if (property.IsVisible)
 					property.Index = this.visiblePropertyCount++;
-
-				// cplotts todo:
-				// i wonder if i add just the properties that are visible
-				// if that will get rid of the weird scrolling problem when properties have been filtered out.
-				//
-				// nope.
-				// i quickly tried moving the this.properties.Add(property) method into the if (property.IsVisible) statement,
-				// but that didn't work when filtering and unfiltering
-				// (e.g. showing properties at their default value ... and NOT showing properties at their default value).
 			}
 
 			if (i == numberToAdd)
@@ -194,20 +191,21 @@ namespace Snoop
 			((PropertyInformation)e.Parameter).Clear();
 		}
 
-        private ListSortDirection GetNewSortDirection(GridViewColumnHeader columnHeader)
-        {
-            if (!(columnHeader.Tag is ListSortDirection))
-                return (ListSortDirection)(columnHeader.Tag = ListSortDirection.Descending);
-            
-            ListSortDirection direction = (ListSortDirection)columnHeader.Tag;
-            return (ListSortDirection)(columnHeader.Tag = (ListSortDirection)(((int)direction + 1) % 2));
-        }
+		private ListSortDirection GetNewSortDirection(GridViewColumnHeader columnHeader)
+		{
+			if (!(columnHeader.Tag is ListSortDirection))
+				return (ListSortDirection)(columnHeader.Tag = ListSortDirection.Descending);
+
+			ListSortDirection direction = (ListSortDirection)columnHeader.Tag;
+			return (ListSortDirection)(columnHeader.Tag = (ListSortDirection)(((int)direction + 1) % 2));
+		}
+
 
 		private void HandleSort(object sender, ExecutedRoutedEventArgs args)
 		{
 			GridViewColumnHeader headerClicked = (GridViewColumnHeader)args.OriginalSource;
 
-            var direction = GetNewSortDirection(headerClicked);
+			direction = GetNewSortDirection(headerClicked);
 
 			switch (((TextBlock)headerClicked.Column.Header).Text)
 			{
@@ -220,18 +218,75 @@ namespace Snoop
 				case "ValueSource":
 					this.Sort(PropertyGrid2.CompareValueSources, direction);
 					break;
-			}       
+			}
 		}
 
 		private void ProcessFilter()
 		{
-			int index = 0;
-			foreach (PropertyInformation property in this.properties)
+			foreach (var property in this.allProperties)
 			{
-				property.Filter = this.Filter;
-				property.Index = index;
 				if (property.IsVisible)
-					++index;
+				{
+					if (!this.properties.Contains(property))
+					{
+						InsertInPropertOrder(property);
+					}
+				}
+				else
+				{
+					if (properties.Contains(property))
+					{
+						this.properties.Remove(property);
+					}
+				}
+			}
+
+			SetIndexesOfProperties();
+		}
+
+		private void InsertInPropertOrder(PropertyInformation property)
+		{
+			if (this.properties.Count == 0)
+			{
+				this.properties.Add(property);
+				return;
+			}
+
+			if (PropertiesAreInOrder(property, this.properties[0]))
+			{
+				this.properties.Insert(0, property);
+				return;
+			}
+
+			for (int i = 0; i < this.properties.Count - 1; i++)
+			{
+				if (PropertiesAreInOrder(this.properties[i], property) && PropertiesAreInOrder(property, this.properties[i + 1]))
+				{
+					this.properties.Insert(i + 1, property);
+					return;
+				}
+			}
+
+			this.properties.Add(property);
+		}
+
+		private bool PropertiesAreInOrder(PropertyInformation first, PropertyInformation last)
+		{
+			if (direction == ListSortDirection.Ascending)
+			{
+				return first.CompareTo(last) <= 0;
+			}
+			else
+			{
+				return last.CompareTo(first) <= 0;
+			}
+		}
+
+		private void SetIndexesOfProperties()
+		{
+			for (int i = 0; i < this.properties.Count; i++)
+			{
+				this.properties[i].Index = i;
 			}
 		}
 
@@ -275,19 +330,26 @@ namespace Snoop
 
 		private void Sort(Comparison<PropertyInformation> comparator, ListSortDirection direction)
 		{
-			List<PropertyInformation> sorter = new List<PropertyInformation>(this.properties);
+			Sort(comparator, direction, this.properties);
+			Sort(comparator, direction, this.allProperties);
+		}
+
+		private void Sort(Comparison<PropertyInformation> comparator, ListSortDirection direction, ObservableCollection<PropertyInformation> propertiesToSort)
+		{
+			List<PropertyInformation> sorter = new List<PropertyInformation>(propertiesToSort);
 			sorter.Sort(comparator);
 
 			if (direction == ListSortDirection.Descending)
 				sorter.Reverse();
 
-			this.properties.Clear();
+			propertiesToSort.Clear();
 			foreach (PropertyInformation property in sorter)
-				this.properties.Add(property);
+				propertiesToSort.Add(property);
 		}
 
 		private void RefreshPropertyGrid()
 		{
+			this.allProperties.Clear();
 			this.properties.Clear();
 			this.visiblePropertyCount = 0;
 
@@ -303,6 +365,7 @@ namespace Snoop
 		private DelayedCall filterCall;
 		private int visiblePropertyCount = 0;
 		private bool unloaded = false;
+		private ListSortDirection direction = ListSortDirection.Ascending;
 
 
 		private static int CompareNames(PropertyInformation one, PropertyInformation two)

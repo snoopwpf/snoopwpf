@@ -42,13 +42,12 @@ All other rights reserved.
 						<TextBlock Style="{x:Null}" Text="Clear/Reset"/>
 					</MenuItem.Header>
 				</MenuItem>
-
-                <MenuItem Command="{x:Static my:PropertyInspector.SnipXamlCommand}" CommandParameter="{Binding}">
-                    <MenuItem.Header>
-                        <TextBlock Style="{x:Null}" Text="Copy this brush"/>
-                    </MenuItem.Header>
-                </MenuItem>
-            </ContextMenu>
+				<MenuItem Command="{x:Static my:PropertyInspector.SnipXamlCommand}" CommandParameter="{Binding}">
+					<MenuItem.Header>
+						<TextBlock Style="{x:Null}" Text="Copy this brush"/>
+					</MenuItem.Header>
+				</MenuItem>
+			</ContextMenu>
 
 			<Style TargetType="{x:Type GridViewColumnHeader}">
 				<Setter Property="Command" Value="{x:Static my:PropertyGrid2.SortCommand}"/>
@@ -182,6 +181,16 @@ All other rights reserved.
 		SelectedItem="{Binding ElementName=PropertyGrid, Path=Selection, Mode=TwoWay}"
 		IsSynchronizedWithCurrentItem="True"
 	>
+		<!-- cplotts note: -->
+		<!-- does turning virtualization off actually improve performance? let's play with this later. -->
+		<!--
+		<ListView.ItemsPanel>
+			<ItemsPanelTemplate>
+				<StackPanel/>
+			</ItemsPanelTemplate>
+		</ListView.ItemsPanel>
+		-->
+
 		<ListView.ItemContainerStyle>
 			<Style TargetType="{x:Type ListViewItem}">
 				<Setter Property="ContextMenu" Value="{StaticResource PropertyMenu}"/>
@@ -202,9 +211,6 @@ All other rights reserved.
 					<DataTrigger Binding="{Binding IsInvalidBinding}" Value="True">
 						<Setter Property="Background" Value="Red"/>
 						<Setter Property="Foreground" Value="White"/>
-					</DataTrigger>
-					<DataTrigger Binding="{Binding IsVisible}" Value="False">
-						<Setter Property="Visibility" Value="Collapsed"/>
 					</DataTrigger>
 					<Trigger Property="IsSelected" Value="True">
 						<Setter Property="Background" Value="LightGray"/>
