@@ -180,6 +180,7 @@ All other rights reserved.
 		ItemsSource="{Binding ElementName=PropertyGrid, Path=Properties}"
 		SelectedItem="{Binding ElementName=PropertyGrid, Path=Selection, Mode=TwoWay}"
 		IsSynchronizedWithCurrentItem="True"
+        AlternationCount="2"
 	>
 		<!-- cplotts note: -->
 		<!-- does turning virtualization off actually improve performance? let's play with this later. -->
@@ -196,12 +197,20 @@ All other rights reserved.
 				<Setter Property="ContextMenu" Value="{StaticResource PropertyMenu}"/>
 				<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
 				<Style.Triggers>
-					<DataTrigger Binding="{Binding IsLocallySet}" Value="False">
+
+                    <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                        <Setter Property="Background" Value="Transparent"></Setter>
+                    </Trigger>
+                    <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                        <Setter Property="Background" Value="#FFEAEAEA"></Setter>
+                    </Trigger>
+                    
+                    <DataTrigger Binding="{Binding IsLocallySet}" Value="False">
 						<Setter Property="Foreground" Value="Gray"/>
 					</DataTrigger>
-					<DataTrigger Binding="{Binding IsOdd}" Value="False">
+					<!--<DataTrigger Binding="{Binding IsOdd}" Value="False">
 						<Setter Property="Background" Value="#FFEAEAEA"/>
-					</DataTrigger>
+					</DataTrigger>-->
 					<DataTrigger Binding="{Binding IsExpression}" Value="True">
 						<Setter Property="Background" Value="LightGreen"/>
 					</DataTrigger>
