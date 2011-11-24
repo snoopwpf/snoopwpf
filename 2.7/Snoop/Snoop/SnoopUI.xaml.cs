@@ -365,8 +365,14 @@ namespace Snoop
 			Load(root);
 
 			Window ownerWindow = SnoopWindowUtils.FindOwnerWindow();
-			if (ownerWindow != null)
-				this.Owner = ownerWindow;
+            if (ownerWindow != null)
+            {
+                if (ownerWindow.Dispatcher != this.Dispatcher)
+                {
+                    return;
+                }
+                this.Owner = ownerWindow;
+            }
 
 			SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
 
