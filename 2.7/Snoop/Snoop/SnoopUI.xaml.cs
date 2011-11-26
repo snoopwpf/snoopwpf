@@ -353,13 +353,17 @@ namespace Snoop
 			object root = FindRoot();
 			if (root == null)
 			{
-				MessageBox.Show
-				(
-					"Can't find a current application or a PresentationSource root visual!",
-					"Can't Snoop",
-					MessageBoxButton.OK,
-					MessageBoxImage.Exclamation
-				);
+                if (!SnoopModes.MultipleDispatcherMode)//as is in the case of all scenarios except for cases where we are running multiple dispatchers.
+                {
+                    MessageBox.Show
+                    (
+                        "Can't find a current application or a PresentationSource root visual!",
+                        "Can't Snoop",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Exclamation
+                    );
+                }
+
 				return;
 			}
 			Load(root);
