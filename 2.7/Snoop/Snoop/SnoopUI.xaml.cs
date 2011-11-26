@@ -353,8 +353,11 @@ namespace Snoop
 			object root = FindRoot();
 			if (root == null)
 			{
-                if (!SnoopModes.MultipleDispatcherMode)//as is in the case of all scenarios except for cases where we are running multiple dispatchers.
+                if (!SnoopModes.MultipleDispatcherMode)
                 {
+                    //SnoopModes.MultipleDispatcherMode is always false for all scenarios except for cases where we are running multiple dispatchers.
+                    //If SnoopModes.MultipleDispatcherMode was set to true, then there definitely was a root visual found in another dispatcher, so
+                    //the message below would be wrong.
                     MessageBox.Show
                     (
                         "Can't find a current application or a PresentationSource root visual!",
