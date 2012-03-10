@@ -50,7 +50,8 @@ namespace Snoop
 				{
 					try
 					{
-						this.Value = converter.ConvertFrom(newValue);
+						//this.Value = converter.ConvertFrom(newValue);
+                        SetValueFromConverter(newValue, targetType, converter);
 					}
 					catch (Exception)
 					{
@@ -58,6 +59,18 @@ namespace Snoop
 				}
 			}
 		}
+
+        private void SetValueFromConverter(string newValue, Type targetType, TypeConverter converter)
+        {
+            if (!converter.CanConvertFrom(targetType) && string.IsNullOrEmpty(newValue))
+            {
+                this.Value = null;
+            }
+            else
+            {
+                this.Value = converter.ConvertFrom(newValue);
+            }
+        }
 
 
 		protected override void OnValueChanged(object newValue)
