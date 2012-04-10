@@ -293,52 +293,56 @@ namespace Snoop
 			}
 		}
 
+        private UIElement CreateIfPossible(object item)
+        {
+            return ZoomerUtilities.CreateIfPossible(item);
+        }
 
-		private UIElement CreateIfPossible(object item)
-		{
-			if (item is Window && VisualTreeHelper.GetChildrenCount((Visual)item) == 1)
-				item = VisualTreeHelper.GetChild((Visual)item, 0);
+        //private UIElement CreateIfPossible(object item)
+        //{
+        //    if (item is Window && VisualTreeHelper.GetChildrenCount((Visual)item) == 1)
+        //        item = VisualTreeHelper.GetChild((Visual)item, 0);
 
-			if (item is FrameworkElement)
-			{
-				FrameworkElement uiElement = (FrameworkElement)item;
-				VisualBrush brush = new VisualBrush(uiElement);
-				brush.Stretch = Stretch.Uniform;
-				Rectangle rect = new Rectangle();
-				rect.Fill = brush;
-				rect.Width = uiElement.ActualWidth;
-				rect.Height = uiElement.ActualHeight;
-				return rect;
-			}
+        //    if (item is FrameworkElement)
+        //    {
+        //        FrameworkElement uiElement = (FrameworkElement)item;
+        //        VisualBrush brush = new VisualBrush(uiElement);
+        //        brush.Stretch = Stretch.Uniform;
+        //        Rectangle rect = new Rectangle();
+        //        rect.Fill = brush;
+        //        rect.Width = uiElement.ActualWidth;
+        //        rect.Height = uiElement.ActualHeight;
+        //        return rect;
+        //    }
 
-			else if (item is ResourceDictionary)
-			{
-				StackPanel stackPanel = new StackPanel();
+        //    else if (item is ResourceDictionary)
+        //    {
+        //        StackPanel stackPanel = new StackPanel();
 
-				foreach (object value in ((ResourceDictionary)item).Values)
-				{
-					UIElement element = CreateIfPossible(value);
-					if (element != null)
-						stackPanel.Children.Add(element);
-				}
-				return stackPanel;
-			}
-			else if (item is Brush)
-			{
-				Rectangle rect = new Rectangle();
-				rect.Width = 10;
-				rect.Height = 10;
-				rect.Fill = (Brush)item;
-				return rect;
-			}
-			else if (item is ImageSource)
-			{
-				Image image = new Image();
-				image.Source = (ImageSource)item;
-				return image;
-			}
-			return null;
-		}
+        //        foreach (object value in ((ResourceDictionary)item).Values)
+        //        {
+        //            UIElement element = CreateIfPossible(value);
+        //            if (element != null)
+        //                stackPanel.Children.Add(element);
+        //        }
+        //        return stackPanel;
+        //    }
+        //    else if (item is Brush)
+        //    {
+        //        Rectangle rect = new Rectangle();
+        //        rect.Width = 10;
+        //        rect.Height = 10;
+        //        rect.Fill = (Brush)item;
+        //        return rect;
+        //    }
+        //    else if (item is ImageSource)
+        //    {
+        //        Image image = new Image();
+        //        image.Source = (ImageSource)item;
+        //        return image;
+        //    }
+        //    return null;
+        //}
 
 		private void Zoom(double zoom, Point offset)
 		{

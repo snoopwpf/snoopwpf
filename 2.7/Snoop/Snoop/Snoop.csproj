@@ -159,6 +159,7 @@
     <Compile Include="Infrastructure\StyleKeyCache.cs" />
     <Compile Include="Infrastructure\StyleKeyPair.cs" />
     <Compile Include="Infrastructure\WhenLoaded.cs" />
+    <Compile Include="Infrastructure\ZoomerUtilities.cs" />
     <Compile Include="Injector.cs" />
     <Compile Include="Inspector.cs" />
     <Compile Include="NativeMethods.cs" />

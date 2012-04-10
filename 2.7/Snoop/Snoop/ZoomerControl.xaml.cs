@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.ComponentModel;
+using Snoop.Infrastructure;
 
 namespace Snoop
 {
@@ -135,59 +136,65 @@ namespace Snoop
 			this.translation.X = 0.0;
 			this.translation.Y = 0.0;
 		}
-		private UIElement CreateIfPossible(object item)
-		{
-			if (item is Window && VisualTreeHelper.GetChildrenCount((Visual)item) == 1)
-				item = VisualTreeHelper.GetChild((Visual)item, 0);
 
-			if (item is FrameworkElement)
-			{
-				FrameworkElement uiElement = (FrameworkElement)item;
-				VisualBrush brush = new VisualBrush(uiElement);
-				brush.Stretch = Stretch.Uniform;
-				Rectangle rect = new Rectangle();
-				rect.Fill = brush;
-                if (uiElement.ActualHeight == 0 && uiElement.ActualWidth == 0)//sometimes the actual size might be 0 despite there being a rendered visual with a size greater than 0. This happens often on a custom panel (http://snoopwpf.codeplex.com/workitem/7217). Having a fixed size visual brush remedies the problem.
-                {
-                    rect.Width = 50;
-                    rect.Height = 50;
-                }
-                else
-                {
-                    rect.Width = uiElement.ActualWidth;
-                    rect.Height = uiElement.ActualHeight;
-                }
-				return rect;
-			}
+        private UIElement CreateIfPossible(object item)
+        {
+            return ZoomerUtilities.CreateIfPossible(item);
+        }
+        //private UIElement CreateIfPossible(object item)
+        //{
+        //    if (item is Window && VisualTreeHelper.GetChildrenCount((Visual)item) == 1)
+        //        item = VisualTreeHelper.GetChild((Visual)item, 0);
 
-			else if (item is ResourceDictionary)
-			{
-				StackPanel stackPanel = new StackPanel();
+        //    if (item is FrameworkElement)
+        //    {
+        //        FrameworkElement uiElement = (FrameworkElement)item;
+        //        VisualBrush brush = new VisualBrush(uiElement);
+        //        brush.Stretch = Stretch.Uniform;
+        //        Rectangle rect = new Rectangle();
+        //        rect.Fill = brush;
+        //        if (uiElement.ActualHeight == 0 && uiElement.ActualWidth == 0)//sometimes the actual size might be 0 despite there being a rendered visual with a size greater than 0. This happens often on a custom panel (http://snoopwpf.codeplex.com/workitem/7217). Having a fixed size visual brush remedies the problem.
+        //        {
+        //            rect.Width = 50;
+        //            rect.Height = 50;
+        //        }
+        //        else
+        //        {
+        //            rect.Width = uiElement.ActualWidth;
+        //            rect.Height = uiElement.ActualHeight;
+        //        }
+        //        return rect;
+        //    }
 
-				foreach (object value in ((ResourceDictionary)item).Values)
-				{
-					UIElement element = CreateIfPossible(value);
-					if (element != null)
-						stackPanel.Children.Add(element);
-				}
-				return stackPanel;
-			}
-			else if (item is Brush)
-			{
-				Rectangle rect = new Rectangle();
-				rect.Width = 10;
-				rect.Height = 10;
-				rect.Fill = (Brush)item;
-				return rect;
-			}
-			else if (item is ImageSource)
-			{
-				Image image = new Image();
-				image.Source = (ImageSource)item;
-				return image;
-			}
-			return null;
-		}
+        //    else if (item is ResourceDictionary)
+        //    {
+        //        StackPanel stackPanel = new StackPanel();
+
+        //        foreach (object value in ((ResourceDictionary)item).Values)
+        //        {
+        //            UIElement element = CreateIfPossible(value);
+        //            if (element != null)
+        //                stackPanel.Children.Add(element);
+        //        }
+        //        return stackPanel;
+        //    }
+        //    else if (item is Brush)
+        //    {
+        //        Rectangle rect = new Rectangle();
+        //        rect.Width = 10;
+        //        rect.Height = 10;
+        //        rect.Fill = (Brush)item;
+        //        return rect;
+        //    }
+        //    else if (item is ImageSource)
+        //    {
+        //        Image image = new Image();
+        //        image.Source = (ImageSource)item;
+        //        return image;
+        //    }
+        //    return null;
+        //}
+
 		private void Zoom(double zoom, Point offset)
 		{
 			Vector v = new Vector((1 - zoom) * offset.X, (1 - zoom) * offset.Y);
