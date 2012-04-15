@@ -624,12 +624,37 @@ namespace Snoop
 
 					MergeProperties(properties, propertiesToReturn);
 
-					obj = Activator.CreateInstance(t.BaseType);
+                    var nextBaseTypeWithDefaultConstructor = GetNextTypeWithDefaultConstructor(t);
+                    obj = Activator.CreateInstance(nextBaseTypeWithDefaultConstructor);
 				}
 			}
 
 			return propertiesToReturn;
 		}
+
+        public static bool HasDefaultConstructor(Type type)
+        {
+            var constructors = type.GetConstructors();
+
+            foreach (var constructor in constructors)
+            {
+                if (constructor.GetParameters().Length == 0)
+                    return true;
+            }
+            return false;
+
+        }
+
+        public static Type GetNextTypeWithDefaultConstructor(Type type)
+        {
+            var t = type.BaseType;
+
+            while (!HasDefaultConstructor(t))
+                t = t.BaseType;
+
+            return t;
+        }
+
 		private static void MergeProperties(System.Collections.IEnumerable newProperties, ICollection<PropertyDescriptor> allProperties)
 		{
 			foreach (var newProperty in newProperties)
