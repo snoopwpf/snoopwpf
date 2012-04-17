@@ -86,6 +86,14 @@ namespace Snoop
 			// we can't catch the mouse wheel at the ZoomerControl level,
 			// so we catch it here, and relay it to the ZoomerControl.
 			this.MouseWheel += this.SnoopUI_MouseWheel;
+
+            filterTimer = new DispatcherTimer();
+            filterTimer.Interval = TimeSpan.FromSeconds(0.5);
+            filterTimer.Tick += (s, e) =>
+            {
+                EnqueueAfterSettingFilter();
+                filterTimer.Stop();
+            };
 		}
 		#endregion
 
@@ -290,11 +298,32 @@ namespace Snoop
 			{
 				this.filter = value;
 
-				this.filterCall.Enqueue();
-
-				this.OnPropertyChanged("Filter");
+                if (!fromTextBox)
+                {
+                    EnqueueAfterSettingFilter();
+                }
+                else
+                {
+                    filterTimer.Stop();
+                    filterTimer.Start();
+                }
 			}
 		}
+
+        private void SetFilter(string value)
+        {
+            fromTextBox = false;
+            this.Filter = value;
+            fromTextBox = true;
+        }
+
+        private void EnqueueAfterSettingFilter()
+        {
+            this.filterCall.Enqueue();
+
+            this.OnPropertyChanged("Filter");
+        }
+
 		private string filter = string.Empty;
 		#endregion
 
@@ -505,7 +534,7 @@ namespace Snoop
 						this.CurrentSelection = visualItem;
 				}
 
-				this.Filter = this.filter;
+                this.SetFilter(this.filter);
 			}
 			finally
 			{
@@ -617,7 +646,7 @@ namespace Snoop
 
 				node = this.rootVisualTreeItem.FindNode(target);
 
-				this.Filter = this.filter;
+                this.SetFilter(this.filter);
 			}
 			return node;
 		}
@@ -652,7 +681,7 @@ namespace Snoop
 			// cplotts todo: we've got to come up with a better way to do this.
 			if (this.filter == "Clear any filter applied to the tree view")
 			{
-				this.Filter = string.Empty;
+                this.SetFilter(string.Empty);
 			}
 			else if (this.filter == "Show only visuals with binding errors")
 			{
@@ -758,13 +787,16 @@ namespace Snoop
 			this.rootVisualTreeItem = VisualTreeItem.Construct(root, null);
 			this.CurrentSelection = this.rootVisualTreeItem;
 
-			this.Filter = this.filter;
+            this.SetFilter(this.filter);
 
 			this.OnPropertyChanged("Root");
 		}
 		#endregion
 
 		#region Private Fields
+        private bool fromTextBox = true;
+        private DispatcherTimer filterTimer;
+
 		private ObservableCollection<VisualTreeItem> visualTreeItems = new ObservableCollection<VisualTreeItem>();
 
 		private string propertyFilter = string.Empty;

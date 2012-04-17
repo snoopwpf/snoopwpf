@@ -37,6 +37,15 @@ namespace Snoop
 			this.CommandBindings.Add(new CommandBinding(PropertyGrid2.ShowBindingErrorsCommand, this.HandleShowBindingErrors, this.CanShowBindingErrors));
 			this.CommandBindings.Add(new CommandBinding(PropertyGrid2.ClearCommand, this.HandleClear, this.CanClear));
 			this.CommandBindings.Add(new CommandBinding(PropertyGrid2.SortCommand, this.HandleSort));
+
+
+			filterTimer = new DispatcherTimer();
+			filterTimer.Interval = TimeSpan.FromSeconds(0.5);
+			filterTimer.Tick += (s, e) =>
+			{
+				this.filterCall.Enqueue();
+				filterTimer.Stop();
+			};
 		}
 
 
@@ -106,7 +115,8 @@ namespace Snoop
 		{
 			base.OnFilterChanged();
 
-			this.filterCall.Enqueue();
+			filterTimer.Stop();
+			filterTimer.Start();
 		}
 
 
@@ -366,6 +376,8 @@ namespace Snoop
 		private int visiblePropertyCount = 0;
 		private bool unloaded = false;
 		private ListSortDirection direction = ListSortDirection.Ascending;
+
+		private DispatcherTimer filterTimer;
 
 
 		private static int CompareNames(PropertyInformation one, PropertyInformation two)
