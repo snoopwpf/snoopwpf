@@ -1,0 +1,6 @@
+2.7/Snoop/Build/
+2.7/Snoop/Intermediate/
+*.vcxproj.user
+*.opensdf
+*.sdf
+*.suo
