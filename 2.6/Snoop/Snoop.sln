@@ -31,42 +31,6 @@ Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "SnoopInstaller", "SnoopInst
 	EndProjectSection
 EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 11
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs09
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = Snoop\\Snoop.csproj
-		SccProjectName1 = Snoop
-		SccLocalPath1 = Snoop
-		SccProjectUniqueName2 = ManagedInjector\\ManagedInjector32-3.5.vcxproj
-		SccProjectName2 = ManagedInjector
-		SccLocalPath2 = ManagedInjector
-		SccProjectUniqueName3 = ManagedInjector\\ManagedInjector32-4.0.vcxproj
-		SccProjectName3 = ManagedInjector
-		SccLocalPath3 = ManagedInjector
-		SccProjectUniqueName4 = ManagedInjector\\ManagedInjector64-3.5.vcxproj
-		SccProjectName4 = ManagedInjector
-		SccLocalPath4 = ManagedInjector
-		SccProjectUniqueName5 = ManagedInjector\\ManagedInjector64-4.0.vcxproj
-		SccProjectName5 = ManagedInjector
-		SccLocalPath5 = ManagedInjector
-		SccProjectUniqueName6 = ManagedInjectorLauncher\\ManagedInjectorLauncher32-4.0.csproj
-		SccProjectName6 = ManagedInjectorLauncher
-		SccLocalPath6 = ManagedInjectorLauncher
-		SccProjectUniqueName7 = ManagedInjectorLauncher\\ManagedInjectorLauncher32-3.5.csproj
-		SccProjectName7 = ManagedInjectorLauncher
-		SccLocalPath7 = ManagedInjectorLauncher
-		SccProjectUniqueName8 = ManagedInjectorLauncher\\ManagedInjectorLauncher64-4.0.csproj
-		SccProjectName8 = ManagedInjectorLauncher
-		SccLocalPath8 = ManagedInjectorLauncher
-		SccProjectUniqueName9 = ManagedInjectorLauncher\\ManagedInjectorLauncher64-3.5.csproj
-		SccProjectName9 = ManagedInjectorLauncher
-		SccLocalPath9 = ManagedInjectorLauncher
-		SccProjectUniqueName10 = SnoopInstaller\\SnoopInstaller.wixproj
-		SccProjectName10 = SnoopInstaller
-		SccLocalPath10 = SnoopInstaller
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Mixed Platforms = Debug|Mixed Platforms
 		Debug|x86 = Debug|x86
