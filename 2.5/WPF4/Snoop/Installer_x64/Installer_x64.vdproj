@@ -7,12 +7,18 @@
 "LanguageId" = "3:1033"
 "CodePage" = "3:1252"
 "UILanguageId" = "3:1033"
-"SccProjectName" = "8:SAK"
-"SccLocalPath" = "8:SAK"
-"SccAuxPath" = "8:SAK"
-"SccProvider" = "8:SAK"
+"SccProjectName" = "8:"
+"SccLocalPath" = "8:"
+"SccAuxPath" = "8:"
+"SccProvider" = "8:"
     "Hierarchy"
     {
+        "Entry"
+        {
+        "MsmKey" = "8:_0E5405EFE69675917F20C65039D3138D"
+        "OwnerKey" = "8:_741A81C0F7A446C8AD860A42AA26CC43"
+        "MsmSig" = "8:_UNDEFINED"
+        }
         "Entry"
         {
         "MsmKey" = "8:_741A81C0F7A446C8AD860A42AA26CC43"
@@ -21,12 +27,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_7F5F23A84B640307FD335C82D6C2BB0F"
-        "OwnerKey" = "8:_741A81C0F7A446C8AD860A42AA26CC43"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_741A81C0F7A446C8AD860A42AA26CC43"
         "MsmSig" = "8:_UNDEFINED"
@@ -34,7 +34,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_7F5F23A84B640307FD335C82D6C2BB0F"
+        "OwnerKey" = "8:_0E5405EFE69675917F20C65039D3138D"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -134,7 +134,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "FrameworkVersion" = "8:3.5.30729  "
+                "FrameworkVersion" = "8:3.5.30729   "
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=76617"
                 }
@@ -142,14 +142,14 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_7F5F23A84B640307FD335C82D6C2BB0F"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_0E5405EFE69675917F20C65039D3138D"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ManagedInjector, Version=1.0.3793.29566, Culture=neutral, processorArchitecture=AMD64"
+            "AssemblyAsmDisplayName" = "8:ManagedInjector, Version=1.0.4497.27910, Culture=neutral, processorArchitecture=AMD64"
                 "ScatterAssemblies"
                 {
-                    "_7F5F23A84B640307FD335C82D6C2BB0F"
+                    "_0E5405EFE69675917F20C65039D3138D"
                     {
                     "Name" = "8:ManagedInjector.dll"
                     "Attributes" = "3:512"
@@ -241,7 +241,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Snoop x64 for WPF4"
         "ProductCode" = "8:{86790788-E6E2-400D-8C78-15D312766608}"
-        "PackageCode" = "8:{87D19280-5149-4EB5-8932-641139296CD2}"
+        "PackageCode" = "8:{934A57A2-2728-426E-812B-D1C4188C5659}"
         "UpgradeCode" = "8:{0A1BCE6F-691E-493C-997A-5CF2D27F0BBF}"
         "AspNetVersion" = "8:4.0.21006.0"
         "RestartWWWService" = "11:FALSE"
@@ -818,7 +818,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_741A81C0F7A446C8AD860A42AA26CC43"
             {
-            "SourcePath" = "8:..\\Intermediate\\Snoop\\x64\\Release\\Snoop.exe"
+            "SourcePath" = "8:..\\Intermediate\\Snoop\\x86\\Release\\Snoop.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_D6A93129C8A84BB5AD51FC4C8D61081A"
