@@ -1,6 +1,8 @@
-2.7/Snoop/Build/
-2.7/Snoop/Intermediate/
-*.vcxproj.user
+Build/
+Intermediate/
+bin/
+obj/
+*.user
 *.opensdf
 *.sdf
 *.suo
