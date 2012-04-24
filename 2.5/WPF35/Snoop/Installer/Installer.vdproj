@@ -7,18 +7,12 @@
 "LanguageId" = "3:1033"
 "CodePage" = "3:1252"
 "UILanguageId" = "3:1033"
-"SccProjectName" = "8:SAK"
-"SccLocalPath" = "8:SAK"
-"SccAuxPath" = "8:SAK"
-"SccProvider" = "8:SAK"
+"SccProjectName" = "8:"
+"SccLocalPath" = "8:"
+"SccAuxPath" = "8:"
+"SccProvider" = "8:"
     "Hierarchy"
     {
-        "Entry"
-        {
-        "MsmKey" = "8:_130744972C92F6C927FF0095135E06E7"
-        "OwnerKey" = "8:_225B35581A664F3D8F11F91AE78F34D0"
-        "MsmSig" = "8:_UNDEFINED"
-        }
         "Entry"
         {
         "MsmKey" = "8:_225B35581A664F3D8F11F91AE78F34D0"
@@ -29,12 +23,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_225B35581A664F3D8F11F91AE78F34D0"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_130744972C92F6C927FF0095135E06E7"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -127,37 +115,6 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_130744972C92F6C927FF0095135E06E7"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ManagedInjector, Version=1.0.3793.29494, Culture=neutral, processorArchitecture=x86"
-                "ScatterAssemblies"
-                {
-                    "_130744972C92F6C927FF0095135E06E7"
-                    {
-                    "Name" = "8:ManagedInjector.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:ManagedInjector.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_C46CF69C04BA4077995A1F01F2C0C8A8"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
         }
         "FileType"
         {
@@ -785,7 +742,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_225B35581A664F3D8F11F91AE78F34D0"
             {
-            "SourcePath" = "8:..\\Intermediate\\Snoop\\x86\\Release\\Snoop.exe"
+            "SourcePath" = "8:..\\Intermediate\\Snoop\\Debug\\Snoop.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C46CF69C04BA4077995A1F01F2C0C8A8"
