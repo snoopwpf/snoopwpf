@@ -40,7 +40,7 @@ namespace Snoop
 
 
 			filterTimer = new DispatcherTimer();
-			filterTimer.Interval = TimeSpan.FromSeconds(0.5);
+			filterTimer.Interval = TimeSpan.FromSeconds(0.3);
 			filterTimer.Tick += (s, e) =>
 			{
 				this.filterCall.Enqueue();
