@@ -2,7 +2,11 @@ Build/
 Intermediate/
 bin/
 obj/
+Debug/
+Release/
 *.user
 *.opensdf
 *.sdf
 *.suo
+*.pdb
+*.dll
