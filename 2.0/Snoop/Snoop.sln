@@ -8,21 +8,6 @@ EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Installer", "Installer\Installer.vdproj", "{A2B1B889-F28D-4BC3-B1B3-3EF3A325E05B}"
 EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 4
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs09.codeplex.com/
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = Installer\\Installer.vdproj
-		SccProjectName1 = Installer
-		SccLocalPath1 = Installer
-		SccProjectUniqueName2 = ManagedInjector\\ManagedInjector.vcproj
-		SccProjectName2 = ManagedInjector
-		SccLocalPath2 = ManagedInjector
-		SccProjectUniqueName3 = Snoop\\Snoop.csproj
-		SccProjectName3 = Snoop
-		SccLocalPath3 = Snoop
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms

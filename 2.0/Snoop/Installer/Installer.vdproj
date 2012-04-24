@@ -7,10 +7,10 @@
 "LanguageId" = "3:1033"
 "CodePage" = "3:1252"
 "UILanguageId" = "3:1033"
-"SccProjectName" = "8:SAK"
-"SccLocalPath" = "8:SAK"
-"SccAuxPath" = "8:SAK"
-"SccProvider" = "8:SAK"
+"SccProjectName" = "8:"
+"SccLocalPath" = "8:"
+"SccAuxPath" = "8:"
+"SccProvider" = "8:"
     "Hierarchy"
     {
         "Entry"
@@ -735,7 +735,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_086C434E511B4182AEB5F176FCE0504B"
             {
-            "SourcePath" = "8:..\\Build\\Release\\ManagedInjector.dll"
+            "SourcePath" = "8:..\\Build\\Debug\\ManagedInjector.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_5B00CF9482884014B19A2D34C97D4EF6"
@@ -763,7 +763,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_225B35581A664F3D8F11F91AE78F34D0"
             {
-            "SourcePath" = "8:..\\Intermediate\\Snoop\\Release\\Snoop.exe"
+            "SourcePath" = "8:..\\Intermediate\\Snoop\\Debug\\Snoop.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C46CF69C04BA4077995A1F01F2C0C8A8"
@@ -791,7 +791,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_3554CE06EC33400E914AEA2B0801FBCF"
             {
-            "SourcePath" = "8:..\\Intermediate\\Snoop\\Release\\Snoop.exe"
+            "SourcePath" = "8:..\\Intermediate\\Snoop\\Debug\\Snoop.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_5B00CF9482884014B19A2D34C97D4EF6"
