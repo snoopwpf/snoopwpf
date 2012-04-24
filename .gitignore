@@ -10,3 +10,4 @@ Release/
 *.suo
 *.pdb
 *.dll
+*.ncb
