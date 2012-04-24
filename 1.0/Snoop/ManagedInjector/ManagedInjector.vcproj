@@ -5,10 +5,6 @@
 	Name="ManagedInjector"
 	ProjectGUID="{C29817A9-3696-421D-89BD-F66681657C37}"
 	RootNamespace="ManagedInjector"
-	SccProjectName="SAK"
-	SccAuxPath="SAK"
-	SccLocalPath="SAK"
-	SccProvider="SAK"
 	Keyword="ManagedCProj"
 	TargetFrameworkVersion="131072"
 	>
