@@ -14,10 +14,14 @@
     <ProjectGuid>{A27C8B34-2527-4258-8C07-D2720C576B90}</ProjectGuid>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <RootNamespace>ManagedInjector</RootNamespace>
-    <SccProjectName>$/snoopwpf/2.7/Snoop/ManagedInjector</SccProjectName>
-    <SccAuxPath>https://tfs.codeplex.com/tfs/tfs09</SccAuxPath>
-    <SccLocalPath>.</SccLocalPath>
-    <SccProvider>{4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccProvider>
+    </SccProvider>
     <Keyword>ManagedCProj</Keyword>
     <ProjectName>ManagedInjector64-4.0</ProjectName>
   </PropertyGroup>
