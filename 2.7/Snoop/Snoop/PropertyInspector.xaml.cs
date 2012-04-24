@@ -52,6 +52,20 @@ namespace Snoop
             
 		}
 
+        private bool _nameValueOnly = false;
+        public bool NameValueOnly
+        {
+            get
+            {
+                return _nameValueOnly;
+            }
+            set
+            {
+                this.PropertyGrid.NameValueOnly = value;
+
+            }
+        }       
+
         private void HandleSnipXaml(object sender, ExecutedRoutedEventArgs e)
         {
             try

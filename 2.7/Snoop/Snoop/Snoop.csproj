@@ -97,6 +97,22 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="MethodsTab\FullTypeSelector.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MethodsTab\MethodsControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MethodsTab\ParameterCreator.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MethodsTab\TypeSelector.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="SampleData\ScreenshotVisualSample.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -143,6 +159,7 @@
     <Compile Include="Converters\ArgbToPartsConverter.cs" />
     <Compile Include="Converters\CsvStringToArrayConverter.cs" />
     <Compile Include="Converters\IsSupportedRuntimeTypeConverter.cs" />
+    <Compile Include="Converters\SnoopParameterInfoConverter.cs" />
     <Compile Include="Converters\StyleKeyConverter.cs" />
     <Compile Include="DelayedCall.cs" />
     <Compile Include="EditTextBox.cs" />
@@ -153,6 +170,8 @@
     <Compile Include="EventTracker.cs" />
     <Compile Include="Infrastructure\ComboBoxSettings.cs" />
     <Compile Include="Infrastructure\ISkipDelve.cs" />
+    <Compile Include="Infrastructure\ObservableCollectionExtensions.cs" />
+    <Compile Include="Infrastructure\RelayCommand.cs" />
     <Compile Include="Infrastructure\ResourceDictionaryKeyHelpers.cs" />
     <Compile Include="Infrastructure\SnoopModes.cs" />
     <Compile Include="Infrastructure\SnoopPartsRegistry.cs" />
@@ -162,6 +181,25 @@
     <Compile Include="Infrastructure\ZoomerUtilities.cs" />
     <Compile Include="Injector.cs" />
     <Compile Include="Inspector.cs" />
+    <Compile Include="MethodsTab\AssemblyNamePair.cs" />
+    <Compile Include="MethodsTab\FullTypeSelector.xaml.cs">
+      <DependentUpon>FullTypeSelector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MethodsTab\ITypeSelector.cs" />
+    <Compile Include="MethodsTab\MethodsControl.xaml.cs">
+      <DependentUpon>MethodsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MethodsTab\ParameterCreator.xaml.cs">
+      <DependentUpon>ParameterCreator.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MethodsTab\SnoopMethodInformation.cs" />
+    <Compile Include="MethodsTab\SnoopParameterInformation.cs" />
+    <Compile Include="MethodsTab\SnoopParameterInformationTemplateSelector.cs" />
+    <Compile Include="MethodsTab\TypeComparerByName.cs" />
+    <Compile Include="MethodsTab\TypeNamePair.cs" />
+    <Compile Include="MethodsTab\TypeSelector.xaml.cs">
+      <DependentUpon>TypeSelector.xaml</DependentUpon>
+    </Compile>
     <Compile Include="NativeMethods.cs" />
     <Compile Include="ObjectToStringConverter.cs" />
     <Compile Include="PertinentPropertyFilter.cs" />

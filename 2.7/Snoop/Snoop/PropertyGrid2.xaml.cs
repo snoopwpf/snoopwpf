@@ -48,6 +48,29 @@ namespace Snoop
 			};
 		}
 
+        private bool _nameValueOnly = false;
+
+        public bool NameValueOnly
+        {
+            get
+            {
+                return _nameValueOnly;
+            }
+            set
+            {
+                _nameValueOnly = value;
+                GridView gridView = this.ListView != null && this.ListView.View != null ? this.ListView.View as GridView : null;
+                if (_nameValueOnly && gridView != null && gridView.Columns.Count != 2)
+                {
+                    gridView.Columns.RemoveAt(0);
+                    while (gridView.Columns.Count > 2)
+                    {
+                        gridView.Columns.RemoveAt(2);
+                    }
+                }
+            }
+
+        }
 
 		public ObservableCollection<PropertyInformation> Properties
 		{
