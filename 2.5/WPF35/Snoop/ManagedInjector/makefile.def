@@ -1,3 +1,0 @@
-LIBRARY	"ManagedInjector"
-EXPORTS
-   MessageHookProc   @1
