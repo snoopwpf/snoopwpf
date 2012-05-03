@@ -1,4 +1,9 @@
-﻿using System.Reflection;
+﻿// (c) Copyright Cory Plotts.
+// This source is subject to the Microsoft Public License (Ms-PL).
+// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
+// All other rights reserved.
+
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -10,7 +15,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Cory Plotts")]
 [assembly: AssemblyProduct("Snoop")]
-[assembly: AssemblyCopyright("Copyright © Cory Plotts 2010-2011")]
+[assembly: AssemblyCopyright("Copyright © Cory Plotts 2010-2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -29,5 +34,5 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("2.7.0.0")]
-[assembly: AssemblyFileVersion("2.7.0.0")]
+[assembly: AssemblyVersion("2.7.1.0")]
+[assembly: AssemblyFileVersion("2.7.1.0")]

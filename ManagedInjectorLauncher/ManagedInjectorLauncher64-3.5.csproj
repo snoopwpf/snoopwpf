@@ -84,10 +84,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
+  <ItemGroup/>
   <ItemGroup>
     <ProjectReference Include="..\ManagedInjector\ManagedInjector64-3.5.vcxproj">
       <Project>{C29817A9-3696-421D-89BD-F66681657C37}</Project>
