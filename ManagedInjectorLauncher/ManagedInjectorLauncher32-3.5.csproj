@@ -53,7 +53,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\Build\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -74,7 +74,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup/>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\ManagedInjector\ManagedInjector32-3.5.vcxproj">
       <Project>{5403CEA2-F8E6-4B2D-B25C-4DAC65A6216C}</Project>
