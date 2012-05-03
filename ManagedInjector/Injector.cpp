@@ -65,14 +65,22 @@ void Injector::Launch(System::IntPtr windowHandle, System::String^ assembly, Sys
 
 void Injector::LogMessage(System::String^ message, bool append)
 {	            
-	System::String ^ filename = "SnoopLog.txt";
+	System::String ^ applicationDataPath = Environment::GetFolderPath(Environment::SpecialFolder::ApplicationData);
+	applicationDataPath += "\\Snoop";
+
+	if (!System::IO::Directory::Exists(applicationDataPath))
+	{
+		System::IO::Directory::CreateDirectory(applicationDataPath);
+	}
+
+	System::String ^ pathname = applicationDataPath + "\\SnoopLog.txt";
 
 	if (!append)    
 	{    
-		System::IO::File::Delete(filename);        
+		System::IO::File::Delete(pathname);        
 	}
 
-	System::IO::FileInfo ^ fi = gcnew System::IO::FileInfo(filename);
+	System::IO::FileInfo ^ fi = gcnew System::IO::FileInfo(pathname);
 	            
 	System::IO::StreamWriter ^ sw = fi->AppendText();   
 	sw->WriteLine(System::DateTime::Now.ToString("MM/dd/yyyy HH:mm:ss") + " : " + message);
