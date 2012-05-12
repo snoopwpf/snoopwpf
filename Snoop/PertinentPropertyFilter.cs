@@ -49,9 +49,15 @@ namespace Snoop
 			}
 			else if (attachedPropertyForType != null)
 			{
-				DependencyObjectType doType = DependencyObjectType.FromSystemType(attachedPropertyForType.TargetType);
-				if (doType != null && doType.IsInstanceOfType(this.element))
-					return true;
+				// when using [AttachedPropertyBrowsableForType(typeof(IMyInterface))] and IMyInterface is not a DependencyObject, Snoop crashes.
+				// see http://snoopwpf.codeplex.com/workitem/6712
+
+				if (attachedPropertyForType.TargetType.IsSubclassOf(typeof(DependencyObject)))
+				{
+					DependencyObjectType doType = DependencyObjectType.FromSystemType(attachedPropertyForType.TargetType);
+					if (doType != null && doType.IsInstanceOfType(this.element))
+						return true;
+				}
 
 				return false;
 			}
