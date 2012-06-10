@@ -14,9 +14,11 @@
 
 <h2>Documentation on How to Use Snoop</h2>
 
-<p>I have copied the documentation from Pete Blois’ Snoop <a href="http://blois.us/Snoop">page</a> to the <a href="http://snoopwpf.codeplex.com/documentation">Documentation</a> area on CodePlex. It is quite out of date (obviously). Some day, I hope to update it with current screen shots and information.</p>
+<p>I am finally getting to business on the <a href="http://snoopwpf.codeplex.com/documentation">Documentation</a> area on CodePlex. It will be a work in progress for a bit. Please forgive the mess.</p>
 
-<p>I also have a blog series on Snoop Tips &amp; Tricks. Here is a <a href="http://www.cplotts.com/2011/02/10/snoop-tips-tricks-1-ctrl-shift-mouse-over/">link</a> to the first one (from where you can get to the others as they appear).</p>
+<p>Here are the links to the current Snoop Tips &amp; Tricks: <a href="http://www.cplotts.com/2011/02/10/snoop-tips-tricks-1-ctrl-shift-mouse-over/">#1</a>, <a href="http://www.cplotts.com/2011/02/14/snoop-tips-tricks-2-snooping-transient-visuals/">#2</a>, <a href="http://www.cplotts.com/2012/05/31/snoop-tips-tricks-3-the-crosshairs/">#3</a>.</p>
+
+<p>Also, don’t forget about the documentation on Pete Blois’ Snoop <a href="http://blois.us/Snoop">page</a>. It is still useful … but hopefully will be less so once I finish my efforts.</p>
 
 <h2>Why Aren’t My Apps Showing Up in the App Chooser?</h2>
 
