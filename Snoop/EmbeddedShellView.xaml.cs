@@ -40,7 +40,7 @@ namespace Snoop
             this.runspace.Open();
 
             this.SetVariable("scriptDir", Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Scripts"));
-            this.runspace.CreatePipeline("function Reload-Scripts { dir -recurse -filter *.ps1 $scriptDir | % { . $_ } }").Invoke();
+            this.runspace.CreatePipeline("function Reload-Scripts { dir -recurse -filter *.ps1 $scriptDir | % { . $_.FullName } }; Reload-Scripts;").Invoke();
         }
 
         private void OnCommandTextBoxPreviewKeyDown(object sender, KeyEventArgs e)
