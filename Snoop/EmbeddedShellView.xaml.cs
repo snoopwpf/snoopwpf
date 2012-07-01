@@ -1,4 +1,9 @@
-﻿using System;
+﻿// (c) Copyright Bailey Ling.
+// This source is subject to the Microsoft Public License (Ms-PL).
+// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
+// All other rights reserved.
+
+using System;
 using System.IO;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
@@ -34,28 +39,8 @@ namespace Snoop
             this.runspace.ApartmentState = ApartmentState.STA;
             this.runspace.Open();
 
-            this.LoadEmbeddedScripts();
-        }
-
-        private void LoadEmbeddedScripts()
-        {
-            var scripts = new[]
-            {
-                "Snoop.Scripts.FindView.ps1",
-                "Snoop.Scripts.FindViewModel.ps1"
-            };
-
-            foreach (var script in scripts)
-            {
-                using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(script))
-                using (var reader = new StreamReader(stream))
-                {
-                    using (var pipe = this.runspace.CreatePipeline(reader.ReadToEnd()))
-                    {
-                        pipe.Invoke();
-                    }
-                }
-            }
+            this.SetVariable("scriptDir", Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Scripts"));
+            this.runspace.CreatePipeline("function Reload-Scripts { dir -recurse -filter *.ps1 | % { . $_ } }").Invoke();
         }
 
         private void OnCommandTextBoxPreviewKeyDown(object sender, KeyEventArgs e)
@@ -137,7 +122,7 @@ namespace Snoop
 
         private string GetHistoryCommand(int history)
         {
-            using (var pipe = this.runspace.CreatePipeline("get-history -count " + history, false))
+            using (var pipe = this.runspace.CreatePipeline("get-history -count " + history))
             {
                 var results = pipe.Invoke();
                 if (results.Count > 0)
