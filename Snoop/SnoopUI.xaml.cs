@@ -265,7 +265,7 @@ namespace Snoop
 						this.currentSelection.IsSelected = false;
 
 					this.currentSelection = value;
-                    this.EmbeddedShell.SetVariable("current", value);
+                    this.EmbeddedShell.SetVariable("selected", value);
 
 					if (this.currentSelection != null)
 						this.currentSelection.IsSelected = true;

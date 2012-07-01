@@ -11,15 +11,15 @@ Unlike the original version, this one is targeted against .NET 4 Client Profile.
 By default, the PowerShell runspace will expose 2 variables:
  * $root
    * The root node of the TreeView.  This will typically be _App_ or _Popup_.
- * $current
+ * $selected
    * This is the current selected item in the TreeView.  It is automatically updated when selection changes.
 
 Next, a series of functions are provided out the box:
  * Reload-Scripts
    * This function will dot source reload all the scripts found in the *Scripts* folder that is found beside the Snoop.exe executable.  Some other functions like _Find-View_ and _Find-ViewModel_ will be found here, but if you want to write your own scripts, this is an easy way to reload all scripts (including yours) at runtime for testing.
- * Find-View -Name -Type
+ * Find-Item -Name -Type
    * This function recursively finds every WPF control whose name matches the _name_ parameter, and optionally must also match the same _type_.
-   * For example, "Find-View -Type ([System.Windows.Controls.Border])" will find every _Border_ in the current window.
+   * For example, "Find-Item -Type ([System.Windows.Controls.Border])" will find every _Border_ in the current window.
 
 ## Notes
 
