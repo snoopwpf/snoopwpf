@@ -13,18 +13,13 @@ namespace Snoop
     public partial class EmbeddedShellView : UserControl
     {
         private readonly Runspace runspace;
-        private readonly PowerShell shell;
         private readonly PSInvocationSettings invocationSettings;
 
         public EmbeddedShellView()
         {
             InitializeComponent();
 
-            this.Unloaded += delegate
-            {
-                runspace.Dispose();
-                shell.Dispose();
-            };
+            this.Unloaded += delegate { runspace.Dispose(); };
 
             commandTextBox.PreviewKeyDown += OnCommandTextBoxPreviewKeyDown;
 
@@ -40,9 +35,6 @@ namespace Snoop
             this.runspace.ThreadOptions = PSThreadOptions.UseCurrentThread;
             this.runspace.ApartmentState = ApartmentState.STA;
             this.runspace.Open();
-
-            this.shell = PowerShell.Create(iis);
-            this.shell.Runspace = runspace;
         }
 
         private void OnCommandTextBoxPreviewKeyDown(object sender, KeyEventArgs e)
@@ -67,30 +59,35 @@ namespace Snoop
 
         private void Invoke(string script)
         {
+            outputTextBox.AppendText(Environment.NewLine);
+            outputTextBox.AppendText(script);
+            outputTextBox.AppendText(Environment.NewLine);
+
             try
             {
-                shell.Commands.AddScript(script);
-                shell.Commands.AddCommand("Out-String");
-                shell.Commands.AddParameter("Width", 500);
-
-                foreach (var item in shell.Invoke(null, this.invocationSettings))
+                using (var pipe = this.runspace.CreatePipeline(script, true))
                 {
-                    outputTextBox.AppendText(item.ToString());
-                }
+                    var cmd = new Command("Out-String");
+                    cmd.Parameters.Add("Width", 500);
+                    pipe.Commands.Add(cmd);
 
-                foreach (var item in shell.Streams.Error)
-                {
-                    outputTextBox.AppendText(item.ToString());
+                    foreach (var item in pipe.Invoke())
+                    {
+                        outputTextBox.AppendText(item.ToString());
+                    }
+
+                    if (pipe.HadErrors)
+                    {
+                        foreach (var item in pipe.Error.ReadToEnd())
+                        {
+                            outputTextBox.AppendText(item.ToString());
+                        }
+                    }
                 }
             }
             catch (Exception ex)
             {
-                outputTextBox.AppendText(ex.ToString());
-            }
-            finally
-            {
-                shell.Commands.Clear();
-                shell.Streams.ClearStreams();
+                outputTextBox.AppendText(ex.Message);
             }
 
             outputTextBox.ScrollToEnd();

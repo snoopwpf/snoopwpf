@@ -16,6 +16,6 @@
               <RowDefinition Height="Auto"/>
           </Grid.RowDefinitions>  
         <TextBox x:Name="commandTextBox" Grid.Row="1" />
-        <TextBox x:Name="outputTextBox" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+        <TextBox x:Name="outputTextBox" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" />
     </Grid>
 </UserControl>
