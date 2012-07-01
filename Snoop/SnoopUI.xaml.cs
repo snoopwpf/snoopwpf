@@ -226,14 +226,21 @@ namespace Snoop
 		#endregion
 
 		#region Root
-		/// <summary>
-		/// Root element of the visual tree
-		/// </summary>
-		public VisualTreeItem Root
-		{
-			get { return this.rootVisualTreeItem; }
-		}
-		/// <summary>
+
+	    /// <summary>
+	    /// Root element of the visual tree
+	    /// </summary>
+	    public VisualTreeItem Root
+	    {
+	        get { return this.rootVisualTreeItem; }
+	        private set
+	        {
+	            this.rootVisualTreeItem = value;
+	            this.EmbeddedShell.SetVariable("root", value);
+	        }
+	    }
+
+	    /// <summary>
 		/// rootVisualTreeItem is the VisualTreeItem for the root you are inspecting.
 		/// </summary>
 		private VisualTreeItem rootVisualTreeItem;
@@ -258,6 +265,7 @@ namespace Snoop
 						this.currentSelection.IsSelected = false;
 
 					this.currentSelection = value;
+                    this.EmbeddedShell.SetVariable("current", value);
 
 					if (this.currentSelection != null)
 						this.currentSelection.IsSelected = true;
@@ -525,7 +533,7 @@ namespace Snoop
 
 				this.visualTreeItems.Clear();
 
-				this.rootVisualTreeItem = VisualTreeItem.Construct(this.root, null);
+				this.Root = VisualTreeItem.Construct(this.root, null);
 
 				if (currentTarget != null)
 				{
@@ -638,7 +646,7 @@ namespace Snoop
 							return null; // Something went wrong. At least we will not crash with null ref here.
 						}
 
-						this.rootVisualTreeItem = new VisualItem(presentationSource.RootVisual, null);
+						this.Root = new VisualItem(presentationSource.RootVisual, null);
 					}
 				}
 
@@ -784,7 +792,7 @@ namespace Snoop
 
 			this.visualTreeItems.Clear();
 
-			this.rootVisualTreeItem = VisualTreeItem.Construct(root, null);
+			this.Root = VisualTreeItem.Construct(root, null);
 			this.CurrentSelection = this.rootVisualTreeItem;
 
             this.SetFilter(this.filter);

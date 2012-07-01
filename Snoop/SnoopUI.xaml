@@ -279,7 +279,9 @@ All other rights reserved.
 
                 <MethodsTabNS:MethodsControl RootTarget="{Binding Path=CurrentSelection.Target}" IsSelected="{Binding Path=IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}" />
             </TabItem>
-            
+            <TabItem Header="PowerShell">
+                <local:EmbeddedShellView x:Name="EmbeddedShell" />
+            </TabItem>
 		</TabControl>
 
 		<!-- Horizontal GridSplitter (between the tab control (with the property grid/events view) and the previewer) -->

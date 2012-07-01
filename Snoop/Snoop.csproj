@@ -130,6 +130,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="EmbeddedShellView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Simple Styles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -213,6 +217,9 @@
     <Compile Include="ObjectToStringConverter.cs" />
     <Compile Include="PertinentPropertyFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="EmbeddedShellView.xaml.cs">
+      <DependentUpon>EmbeddedShellView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ZoomerControl.xaml.cs">
       <DependentUpon>ZoomerControl.xaml</DependentUpon>
     </Compile>
