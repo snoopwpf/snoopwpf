@@ -2,9 +2,9 @@
 
 This is an enhanced version of the original Snoop which adds the scripting capabilities of PowerShell into the application.
 
-## Notes
+## Requirements
 
-When cloning this repository, please ensure your core.autocrlf is set to true.
+Unlike the original version, this one is targeted against .NET 4 Client Profile.  It also depends on [PowerShell V3 RC](http://www.microsoft.com/en-us/download/details.aspx?id=29939) being installed.
 
 ## Usage
 
@@ -20,6 +20,10 @@ Next, a series of functions are provided out the box:
  * Find-View -Name -Type
    * This function recursively finds every WPF control whose name matches the _name_ parameter, and optionally must also match the same _type_.
    * For example, "Find-View -Type ([System.Windows.Controls.Border])" will find every _Border_ in the current window.
+
+## Notes
+
+When cloning this repository, please ensure your core.autocrlf is set to true.
 
 ## License
 
