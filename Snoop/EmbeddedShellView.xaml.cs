@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
+using System.Reflection;
 using System.Threading;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -13,7 +15,6 @@ namespace Snoop
     public partial class EmbeddedShellView : UserControl
     {
         private readonly Runspace runspace;
-        private readonly PSInvocationSettings invocationSettings;
         private int historyIndex;
 
         public EmbeddedShellView()
@@ -28,14 +29,32 @@ namespace Snoop
             var iis = InitialSessionState.CreateDefault();
             iis.AuthorizationManager = new AuthorizationManager(Guid.NewGuid().ToString());
 
-            this.invocationSettings = new PSInvocationSettings();
-            this.invocationSettings.AddToHistory = true;
-            this.invocationSettings.ErrorActionPreference = ActionPreference.Stop;
-
             this.runspace = RunspaceFactory.CreateRunspace(iis);
             this.runspace.ThreadOptions = PSThreadOptions.UseCurrentThread;
             this.runspace.ApartmentState = ApartmentState.STA;
             this.runspace.Open();
+
+            this.LoadEmbeddedScripts();
+        }
+
+        private void LoadEmbeddedScripts()
+        {
+            var scripts = new[]
+            {
+                "Snoop.Scripts.FindItem.ps1"
+            };
+
+            foreach (var script in scripts)
+            {
+                using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(script))
+                using (var reader = new StreamReader(stream))
+                {
+                    using (var pipe = this.runspace.CreatePipeline(reader.ReadToEnd()))
+                    {
+                        pipe.Invoke();
+                    }
+                }
+            }
         }
 
         private void OnCommandTextBoxPreviewKeyDown(object sender, KeyEventArgs e)
@@ -43,12 +62,17 @@ namespace Snoop
             switch (e.Key)
             {
                 case Key.Up:
-                    ++this.historyIndex;
-                    SetCommandTextToHistory(this.historyIndex);
+                    SetCommandTextToHistory(++this.historyIndex);
                     break;
                 case Key.Down:
-                    --this.historyIndex;
-                    SetCommandTextToHistory(this.historyIndex);
+                    if (this.historyIndex - 1 <= 0)
+                    {
+                        this.commandTextBox.Clear();
+                    }
+                    else
+                    {
+                        SetCommandTextToHistory(--this.historyIndex);
+                    }
                     break;
                 case Key.Return:
                     Invoke(commandTextBox.Text);
@@ -112,11 +136,6 @@ namespace Snoop
 
         private string GetHistoryCommand(int history)
         {
-            if (history <= 0)
-            {
-                return null;
-            }
-
             using (var pipe = this.runspace.CreatePipeline("get-history -count " + history, false))
             {
                 var results = pipe.Invoke();
