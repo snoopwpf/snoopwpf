@@ -163,7 +163,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <Content Include="Scripts\FindControl.ps1">
+    <Content Include="Scripts\FindItem.ps1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="VisualTreeItem.cd" />
