@@ -39,8 +39,16 @@ namespace Snoop
             this.runspace.ApartmentState = ApartmentState.STA;
             this.runspace.Open();
 
-            this.SetVariable("scriptDir", Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Scripts"));
-            this.runspace.CreatePipeline("function Reload-Scripts { dir -recurse -filter *.ps1 $scriptDir | % { . $_.FullName } }; Reload-Scripts;").Invoke();
+            LoadModule();
+        }
+
+        private void LoadModule()
+        {
+            string scriptDir = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Scripts");
+            string modulePath = Path.Combine(scriptDir, "Snoop.psm1");
+            SetVariable("modulePath", modulePath);
+            using (var pipe = this.runspace.CreatePipeline(string.Format("import-module \"{0}\"", modulePath), false))
+                pipe.Invoke();
         }
 
         private void OnCommandTextBoxPreviewKeyDown(object sender, KeyEventArgs e)
