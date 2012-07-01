@@ -34,7 +34,7 @@ namespace Snoop.Shell
             var iis = InitialSessionState.CreateDefault();
             iis.AuthorizationManager = new AuthorizationManager(Guid.NewGuid().ToString());
 
-            this.runspace = RunspaceFactory.CreateRunspace(new Host(x => this.outputTextBox.AppendText(x)), iis);
+            this.runspace = RunspaceFactory.CreateRunspace(new SnoopPSHost(x => this.outputTextBox.AppendText(x)), iis);
             this.runspace.ThreadOptions = PSThreadOptions.UseCurrentThread;
             this.runspace.ApartmentState = ApartmentState.STA;
             this.runspace.Open();

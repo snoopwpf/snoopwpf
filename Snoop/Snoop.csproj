@@ -227,6 +227,8 @@
     <Compile Include="Shell\EmbeddedShellView.xaml.cs">
       <DependentUpon>EmbeddedShellView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Shell\SnoopPSHost.cs" />
+    <Compile Include="Shell\SnoopPSHostUserInterface.cs" />
     <Compile Include="ZoomerControl.xaml.cs">
       <DependentUpon>ZoomerControl.xaml</DependentUpon>
     </Compile>
