@@ -1,4 +1,4 @@
-﻿function Find-Item {
+﻿function Find-View {
     param(
         [string] $name = '',
         [System.Type] $type = $null)

@@ -41,7 +41,8 @@ namespace Snoop
         {
             var scripts = new[]
             {
-                "Snoop.Scripts.FindItem.ps1"
+                "Snoop.Scripts.FindView.ps1",
+                "Snoop.Scripts.FindViewModel.ps1"
             };
 
             foreach (var script in scripts)

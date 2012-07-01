@@ -163,7 +163,8 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <EmbeddedResource Include="Scripts\FindItem.ps1" />
+    <EmbeddedResource Include="Scripts\FindView.ps1" />
+    <EmbeddedResource Include="Scripts\FindViewModel.ps1" />
     <None Include="VisualTreeItem.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
