@@ -12,7 +12,7 @@ using System.Threading;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace Snoop
+namespace Snoop.Shell
 {
     /// <summary>
     /// Interaction logic for EmbeddedShellView.xaml
@@ -34,7 +34,7 @@ namespace Snoop
             var iis = InitialSessionState.CreateDefault();
             iis.AuthorizationManager = new AuthorizationManager(Guid.NewGuid().ToString());
 
-            this.runspace = RunspaceFactory.CreateRunspace(iis);
+            this.runspace = RunspaceFactory.CreateRunspace(new Host(x => this.outputTextBox.AppendText(x)), iis);
             this.runspace.ThreadOptions = PSThreadOptions.UseCurrentThread;
             this.runspace.ApartmentState = ApartmentState.STA;
             this.runspace.Open();

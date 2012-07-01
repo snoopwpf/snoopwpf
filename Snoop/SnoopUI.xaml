@@ -12,7 +12,8 @@ All other rights reserved.
     xmlns:MethodsTabNS="clr-namespace:Snoop.MethodsTab"
 	xmlns:i="clr-namespace:Snoop.Infrastructure"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:d="http://schemas.microsoft.com/expression/interactivedesigner/2006"
+	xmlns:d="http://schemas.microsoft.com/expression/interactivedesigner/2006" 
+	xmlns:shell="clr-namespace:Snoop.Shell"
 	mc:Ignorable="d"
 	Icon="Snoop.ico"
 	Title="Snoop"
@@ -280,7 +281,7 @@ All other rights reserved.
                 <MethodsTabNS:MethodsControl RootTarget="{Binding Path=CurrentSelection.Target}" IsSelected="{Binding Path=IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}" />
             </TabItem>
             <TabItem Header="PowerShell">
-                <local:EmbeddedShellView x:Name="EmbeddedShell" />
+                <shell:EmbeddedShellView x:Name="EmbeddedShell" />
             </TabItem>
 		</TabControl>
 

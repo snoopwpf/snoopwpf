@@ -131,7 +131,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="EmbeddedShellView.xaml">
+    <Page Include="Shell\EmbeddedShellView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -224,7 +224,7 @@
     <Compile Include="ObjectToStringConverter.cs" />
     <Compile Include="PertinentPropertyFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="EmbeddedShellView.xaml.cs">
+    <Compile Include="Shell\EmbeddedShellView.xaml.cs">
       <DependentUpon>EmbeddedShellView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ZoomerControl.xaml.cs">
