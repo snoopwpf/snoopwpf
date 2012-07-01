@@ -14,6 +14,7 @@ namespace Snoop
     {
         private readonly Runspace runspace;
         private readonly PSInvocationSettings invocationSettings;
+        private int historyIndex;
 
         public EmbeddedShellView()
         {
@@ -42,8 +43,12 @@ namespace Snoop
             switch (e.Key)
             {
                 case Key.Up:
+                    ++this.historyIndex;
+                    SetCommandTextToHistory(this.historyIndex);
                     break;
                 case Key.Down:
+                    --this.historyIndex;
+                    SetCommandTextToHistory(this.historyIndex);
                     break;
                 case Key.Return:
                     Invoke(commandTextBox.Text);
@@ -59,6 +64,8 @@ namespace Snoop
 
         private void Invoke(string script)
         {
+            this.historyIndex = 0;
+
             outputTextBox.AppendText(Environment.NewLine);
             outputTextBox.AppendText(script);
             outputTextBox.AppendText(Environment.NewLine);
@@ -91,6 +98,36 @@ namespace Snoop
             }
 
             outputTextBox.ScrollToEnd();
+        }
+
+        private void SetCommandTextToHistory(int history)
+        {
+            var cmd = GetHistoryCommand(history);
+            if (cmd != null)
+            {
+                commandTextBox.Text = cmd;
+                commandTextBox.SelectionStart = cmd.Length;
+            }
+        }
+
+        private string GetHistoryCommand(int history)
+        {
+            if (history <= 0)
+            {
+                return null;
+            }
+
+            using (var pipe = this.runspace.CreatePipeline("get-history -count " + history, false))
+            {
+                var results = pipe.Invoke();
+                if (results.Count > 0)
+                {
+                    dynamic item = results[0];
+                    return (string)item.CommandLine;
+                }
+
+                return null;
+            }
         }
     }
 }
