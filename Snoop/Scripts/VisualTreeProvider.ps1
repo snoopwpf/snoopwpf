@@ -1,6 +1,7 @@
 ﻿new-psdrive tree treescriptprovider -root / -moduleinfo $(new-module -name tree {
 
 $items = @{}
+$reverse = @{}
 
 function Get-TreeItem([string]$path) {
     if ($items.Count -eq 0) {
@@ -48,7 +49,7 @@ function CopyItem {
 		[bool]$recurse
     )
 
-    $psprovider.WriteWarning("Clear-Item is not supported.")
+    $psprovider.WriteWarning("Copy-Item is not supported.")
 }
 function GetChildItems {
     [cmdletbinding()]
@@ -57,8 +58,16 @@ function GetChildItems {
 		[bool]$recurse
     )
 
-    $psprovider.writewarning("GetChildItems:$path")
-    # ...
+    $path = Get-ValidPath $path
+    $item = Get-TreeItem $path
+    if ($item) {
+        foreach ($c in $item.Children) {
+            $p = $reverse[$c]
+            $psprovider.WriteItemObject((Split-Path -Leaf $p), $p, $true)
+        }
+    } else {
+        $psprovider.WriteWarning("$path was not found.")
+    }
 }
 function GetChildNames {
     [cmdletbinding()]
@@ -68,7 +77,6 @@ function GetChildNames {
     )
 
     $psprovider.writewarning("GetChildNames:$path")
-    # ...
 }
 function GetItem {
     [cmdletbinding()]
@@ -77,7 +85,8 @@ function GetItem {
     )
 
     $psprovider.writewarning("GetItem:$path")
-    # ...
+    $path = Get-ValidPath $path
+    return (Get-TreeItem $path)
 }
 function HasChildItems {
     [cmdletbinding()]
@@ -87,7 +96,9 @@ function HasChildItems {
     )
 
     $psprovider.writewarning("HasChildItems:$path")
-    # ...
+    $path = Get-ValidPath $path
+    $item = Get-TreeItem $path
+    return $item.Children.Count -gt 0
 }
 function InvokeDefaultAction {
     [cmdletbinding()]
@@ -96,7 +107,6 @@ function InvokeDefaultAction {
     )
 
     $psprovider.writewarning("InvokeDefaultAction:$path")
-    # ...
 }
 function IsItemContainer {
     [cmdletbinding()]
@@ -116,7 +126,15 @@ function IsValidPath {
     )
 
     $psprovider.writewarning("IsValidPath:$path")
-    # ...
+    foreach ($c in $path) {
+        if ($c -eq '/' -or $c -eq '\') {
+            continue
+        }
+        if (-not [char]::IsLetter($c)) {
+            return $false
+        }
+    }
+    return $true
 }
 function ItemExists {
     [cmdletbinding()]
@@ -126,7 +144,8 @@ function ItemExists {
     )
 
     $psprovider.writewarning("ItemExists:$path")
-    return $true
+    $path = Get-ValidPath $path
+    return (Get-TreeItem $path)
 }
 function MoveItem {
     [cmdletbinding()]
@@ -135,8 +154,7 @@ function MoveItem {
 		[string]$destination
     )
 
-    $psprovider.writewarning("MoveItem:$path -> $destination")
-    # ...
+    $psprovider.WriteWarning("Move-Item is not supported.")
 }
 function NewDrive {
     [cmdletbinding()]
@@ -145,8 +163,7 @@ function NewDrive {
 		[Management.Automation.PSDriveInfo]$drive
     )
 
-    $psprovider.writewarning("NewDrive")
-    # ...
+    $psprovider.WriteWarning("New-Drive is not supported.")
 }
 function NewItem {
     [cmdletbinding()]
@@ -156,8 +173,7 @@ function NewItem {
 		[Object]$newItemValue
     )
 
-    $psprovider.writewarning("NewItem:$path")
-    # ...
+    $psprovider.WriteWarning("New-Item is not supported.")
 }
 function RemoveItem {
     [cmdletbinding()]
@@ -166,8 +182,7 @@ function RemoveItem {
 		[bool]$recurse
     )
 
-    $psprovider.writewarning("RemoveItem:$path")
-    # ...
+    $psprovider.WriteWarning("Remove-Item is not supported.")
 }
 function RenameItem {
     [cmdletbinding()]
@@ -186,7 +201,6 @@ function SetItem {
 		[Object]$value
     )
 
-    $psprovider.writewarning("SetItem:$path")
-    # ...
+    $psprovider.WriteWarning("Set-Item is not supported.")
 }
 })
