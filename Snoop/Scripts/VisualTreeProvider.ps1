@@ -1,6 +1,10 @@
 ﻿$path = Split-Path $MyInvocation.MyCommand.Path
 ipmo -force (Join-Path $path "PSProvider\PSProvider.psd1")
 
+if (Get-PSDrive tree) {
+    Remove-PSDrive tree
+}
+
 New-PSDrive tree TreeScriptProvider -root / -moduleinfo $(new-module -name tree {
 
 $items = @{}
@@ -17,7 +21,7 @@ function Get-TreeItem([string]$path) {
             foreach ($c in $element.Children) {
                 $n = $c.Target.GetType().Name
                 if ($names[$n] -gt 1) {
-                    recurse $c ($p + $n + $names[$n] + '\')
+                    recurse $c ($p + $n + $names[$n]-- + '\')
                 } else {
                     recurse $c ($p + $n + '\')
                 }
@@ -69,7 +73,8 @@ function GetChildItems {
     if ($item) {
         foreach ($c in $item.Children) {
             $p = $reverse[$c]
-            $psprovider.WriteItemObject((Split-Path -Leaf $p), $p, $true)
+            #$psprovider.WriteItemObject((Split-Path -Leaf $p), $p, $true)
+            $psprovider.WriteItemObject($c, $p, $true)
         }
     } else {
         $psprovider.WriteWarning("$path was not found.")
@@ -121,7 +126,6 @@ function IsItemContainer {
 		[string]$path
     )
 
-    $psprovider.writewarning("IsItemContainer:$path")
     return $true
 }
 function IsValidPath {
@@ -149,7 +153,6 @@ function ItemExists {
 		[string]$path
     )
 
-    $psprovider.writewarning("ItemExists:$path")
     $path = Get-ValidPath $path
     return (Get-TreeItem $path)
 }
