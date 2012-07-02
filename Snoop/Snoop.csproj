@@ -166,10 +166,16 @@
     <Content Include="Scripts\FindItem.ps1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\PSProvider\PSProviderFramework.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\Snoop.psm1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\VisualTreeProvider.ps1">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\PSProvider\PSProvider.psd1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="VisualTreeItem.cd" />
@@ -374,6 +380,7 @@
   <ItemGroup>
     <Resource Include="Resources\SnoopCrosshairsCursor.png" />
   </ItemGroup>
+  <ItemGroup />
   <ProjectExtensions>
     <InteractiveDesigner>
       <ProjectExtensions>

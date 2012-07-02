@@ -1,4 +1,7 @@
-﻿new-psdrive tree treescriptprovider -root / -moduleinfo $(new-module -name tree {
+﻿$path = Split-Path $MyInvocation.MyCommand.Path
+ipmo -force (Join-Path $path "PSProvider\PSProvider.psd1")
+
+New-PSDrive tree TreeScriptProvider -root / -moduleinfo $(new-module -name tree {
 
 $items = @{}
 $reverse = @{}
@@ -19,8 +22,11 @@ function Get-TreeItem([string]$path) {
                     recurse $c ($p + $n + '\')
                 }
             }
+            
+            $items[$p] = $element
+            $reverse[$element] = $p
         }
-        recurse $root $path
+        recurse $root '\'
     }
     return $items[$path]
 }
