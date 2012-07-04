@@ -4,6 +4,7 @@
 // All other rights reserved.
 
 using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
@@ -45,7 +46,10 @@ namespace Snoop.Shell
         private void LoadModule()
         {
             string folder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Scripts");
-            Invoke(string.Format("import-module \"{0}\"", Path.Combine(folder, "Snoop.psm1")));
+            InvokeDirect(string.Format("import-module \"{0}\"", Path.Combine(folder, "Snoop.psm1")));
+
+            string profile = Path.Combine(folder, "SnoopProfile.ps1");
+            InvokeDirect(string.Format("if (test-path \"{0}\") {{ . \"{0}\" }}", profile));
         }
 
         private void OnCommandTextBoxPreviewKeyDown(object sender, KeyEventArgs e)
@@ -110,6 +114,14 @@ namespace Snoop.Shell
             }
 
             outputTextBox.ScrollToEnd();
+        }
+
+        private Collection<PSObject> InvokeDirect(string script, bool addToHistory = false)
+        {
+            using (var pipe = this.runspace.CreatePipeline(script, addToHistory))
+            {
+                return pipe.Invoke();
+            }
         }
 
         private void SetCommandTextToHistory(int history)
