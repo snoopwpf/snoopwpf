@@ -47,7 +47,7 @@ namespace Snoop.Shell
             string scriptDir = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Scripts");
             string modulePath = Path.Combine(scriptDir, "Snoop.psm1");
             SetVariable("modulePath", modulePath);
-            using (var pipe = this.runspace.CreatePipeline(string.Format("import-module \"{0}\"", modulePath), false))
+            using (var pipe = this.runspace.CreatePipeline(string.Format("import-module \"{0}\"", modulePath), true))
                 pipe.Invoke();
         }
 
@@ -101,12 +101,9 @@ namespace Snoop.Shell
                         outputTextBox.AppendText(item.ToString());
                     }
 
-                    if (pipe.HadErrors)
+                    foreach (var item in pipe.Error.ReadToEnd())
                     {
-                        foreach (var item in pipe.Error.ReadToEnd())
-                        {
-                            outputTextBox.AppendText(item.ToString());
-                        }
+                        outputTextBox.AppendText(item.ToString());
                     }
                 }
             }
@@ -135,8 +132,8 @@ namespace Snoop.Shell
                 var results = pipe.Invoke();
                 if (results.Count > 0)
                 {
-                    dynamic item = results[0];
-                    return (string)item.CommandLine;
+                    var item = results[0];
+                    return (string)item.Properties["CommandLine"].Value;
                 }
 
                 return null;

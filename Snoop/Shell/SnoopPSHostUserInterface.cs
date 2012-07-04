@@ -14,6 +14,8 @@ namespace Snoop.Shell
 {
     internal class SnoopPSHostUserInterface : PSHostUserInterface
     {
+        private readonly PSHostRawUserInterface rawUI = new SnoopPSHostRawUserInterface();
+        
         public event Action<string> OnVerbose = delegate { };
         public event Action<string> OnDebug = delegate { };
         public event Action<string> OnWarning = delegate { };
@@ -92,7 +94,7 @@ namespace Snoop.Shell
 
         public override PSHostRawUserInterface RawUI
         {
-            get { return null; }
+            get { return this.rawUI; }
         }
     }
 }
