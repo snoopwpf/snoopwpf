@@ -44,11 +44,8 @@ namespace Snoop.Shell
 
         private void LoadModule()
         {
-            string scriptDir = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Scripts");
-            string modulePath = Path.Combine(scriptDir, "Snoop.psm1");
-            SetVariable("modulePath", modulePath);
-            using (var pipe = this.runspace.CreatePipeline(string.Format("import-module \"{0}\"", modulePath), true))
-                pipe.Invoke();
+            string folder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Scripts");
+            Invoke(string.Format("import-module \"{0}\"", Path.Combine(folder, "Snoop.psm1")));
         }
 
         private void OnCommandTextBoxPreviewKeyDown(object sender, KeyEventArgs e)
