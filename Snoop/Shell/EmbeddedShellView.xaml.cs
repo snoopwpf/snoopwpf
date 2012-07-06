@@ -30,6 +30,9 @@ namespace Snoop.Shell
             this.Unloaded += delegate { runspace.Dispose(); };
 
             commandTextBox.PreviewKeyDown += OnCommandTextBoxPreviewKeyDown;
+            ToolTipService.SetToolTip(commandTextBox, @"
+F12 - Reload profile
+");
 
             // ignore execution-policy
             var iis = InitialSessionState.CreateDefault();
@@ -49,7 +52,7 @@ namespace Snoop.Shell
             InvokeDirect(string.Format("import-module \"{0}\"", Path.Combine(folder, "Snoop.psm1")));
 
             string profile = Path.Combine(folder, "SnoopProfile.ps1");
-            InvokeDirect(string.Format("if (test-path \"{0}\") {{ . \"{0}\" }}", profile));
+            InvokeDirect(string.Format("if (test-path \"{0}\") {{ $profile = \"{0}\"; . $profile }}", profile));
         }
 
         private void OnCommandTextBoxPreviewKeyDown(object sender, KeyEventArgs e)
@@ -146,6 +149,15 @@ namespace Snoop.Shell
                 }
 
                 return null;
+            }
+        }
+
+        protected override void OnPreviewKeyDown(KeyEventArgs e)
+        {
+            base.OnPreviewKeyDown(e);
+            if (e.Key == Key.F12)
+            {
+                Invoke(". $profile");
             }
         }
     }
