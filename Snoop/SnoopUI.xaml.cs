@@ -94,6 +94,8 @@ namespace Snoop
                 EnqueueAfterSettingFilter();
                 filterTimer.Stop();
             };
+
+		    this.EmbeddedShell.SetVariable("UI", this);
 		}
 		#endregion
 
@@ -233,11 +235,12 @@ namespace Snoop
 	    public VisualTreeItem Root
 	    {
 	        get { return this.rootVisualTreeItem; }
-	        private set
-	        {
-	            this.rootVisualTreeItem = value;
-	            this.EmbeddedShell.SetVariable("root", value);
-	        }
+            private set
+            {
+                this.rootVisualTreeItem = value;
+                this.EmbeddedShell.SetVariable("root", value);
+                this.OnPropertyChanged("Root");
+            }
 	    }
 
 	    /// <summary>
