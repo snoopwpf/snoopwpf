@@ -47,45 +47,45 @@ namespace Snoop
 		#endregion
 
 		#region Public Constructor
-		public SnoopUI()
-		{
-			this.filterCall = new DelayedCall(this.ProcessFilter, DispatcherPriority.Background);
+        public SnoopUI()
+        {
+            this.filterCall = new DelayedCall(this.ProcessFilter, DispatcherPriority.Background);
 
-			this.InheritanceBehavior = InheritanceBehavior.SkipToThemeNext;
-			this.InitializeComponent();
+            this.InheritanceBehavior = InheritanceBehavior.SkipToThemeNext;
+            this.InitializeComponent();
 
-			// wrap the following PresentationTraceSources.Refresh() call in a try/catch
-			// sometimes a NullReferenceException occurs
-			// due to empty <filter> elements in the app.config file of the app you are snooping
-			// see the following for more info:
-			// http://snoopwpf.codeplex.com/discussions/236503
-			// http://snoopwpf.codeplex.com/workitem/6647
-			try
-			{
-				PresentationTraceSources.Refresh();
-				PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.Error;
-			}
-			catch (NullReferenceException)
-			{
-				// swallow this exception since you can Snoop just fine anyways.
-			}
+            // wrap the following PresentationTraceSources.Refresh() call in a try/catch
+            // sometimes a NullReferenceException occurs
+            // due to empty <filter> elements in the app.config file of the app you are snooping
+            // see the following for more info:
+            // http://snoopwpf.codeplex.com/discussions/236503
+            // http://snoopwpf.codeplex.com/workitem/6647
+            try
+            {
+                PresentationTraceSources.Refresh();
+                PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.Error;
+            }
+            catch (NullReferenceException)
+            {
+                // swallow this exception since you can Snoop just fine anyways.
+            }
 
-			this.CommandBindings.Add(new CommandBinding(SnoopUI.IntrospectCommand, this.HandleIntrospection));
-			this.CommandBindings.Add(new CommandBinding(SnoopUI.RefreshCommand, this.HandleRefresh));
-			this.CommandBindings.Add(new CommandBinding(SnoopUI.HelpCommand, this.HandleHelp));
+            this.CommandBindings.Add(new CommandBinding(SnoopUI.IntrospectCommand, this.HandleIntrospection));
+            this.CommandBindings.Add(new CommandBinding(SnoopUI.RefreshCommand, this.HandleRefresh));
+            this.CommandBindings.Add(new CommandBinding(SnoopUI.HelpCommand, this.HandleHelp));
 
-			// cplotts todo: how does this inspect command work? seems tied into the events view.
-			this.CommandBindings.Add(new CommandBinding(SnoopUI.InspectCommand, this.HandleInspect));
+            // cplotts todo: how does this inspect command work? seems tied into the events view.
+            this.CommandBindings.Add(new CommandBinding(SnoopUI.InspectCommand, this.HandleInspect));
 
-			this.CommandBindings.Add(new CommandBinding(SnoopUI.SelectFocusCommand, this.HandleSelectFocus));
-			this.CommandBindings.Add(new CommandBinding(SnoopUI.SelectFocusScopeCommand, this.HandleSelectFocusScope));
+            this.CommandBindings.Add(new CommandBinding(SnoopUI.SelectFocusCommand, this.HandleSelectFocus));
+            this.CommandBindings.Add(new CommandBinding(SnoopUI.SelectFocusScopeCommand, this.HandleSelectFocusScope));
 
-			InputManager.Current.PreProcessInput += this.HandlePreProcessInput;
-			this.Tree.SelectedItemChanged += this.HandleTreeSelectedItemChanged;
+            InputManager.Current.PreProcessInput += this.HandlePreProcessInput;
+            this.Tree.SelectedItemChanged += this.HandleTreeSelectedItemChanged;
 
-			// we can't catch the mouse wheel at the ZoomerControl level,
-			// so we catch it here, and relay it to the ZoomerControl.
-			this.MouseWheel += this.SnoopUI_MouseWheel;
+            // we can't catch the mouse wheel at the ZoomerControl level,
+            // so we catch it here, and relay it to the ZoomerControl.
+            this.MouseWheel += this.SnoopUI_MouseWheel;
 
             filterTimer = new DispatcherTimer();
             filterTimer.Interval = TimeSpan.FromSeconds(0.3);
@@ -95,9 +95,10 @@ namespace Snoop
                 filterTimer.Stop();
             };
 
-		    this.EmbeddedShell.SetVariable("UI", this);
-		}
-		#endregion
+            this.EmbeddedShell.SetVariable("ui", this);
+        }
+
+	    #endregion
 
 		#region Public Static Methods
 		public static bool GoBabyGo()
