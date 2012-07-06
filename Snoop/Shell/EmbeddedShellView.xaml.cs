@@ -43,16 +43,19 @@ F12 - Reload profile
             this.runspace.ApartmentState = ApartmentState.STA;
             this.runspace.Open();
 
-            LoadModule();
-        }
-
-        private void LoadModule()
-        {
             string folder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Scripts");
             InvokeDirect(string.Format("import-module \"{0}\"", Path.Combine(folder, "Snoop.psm1")));
 
-            string profile = Path.Combine(folder, "SnoopProfile.ps1");
-            InvokeDirect(string.Format("if (test-path \"{0}\") {{ $profile = \"{0}\"; . $profile }}", profile));
+            try
+            {
+                string profile = Path.Combine(folder, "SnoopProfile.ps1");
+                InvokeDirect(string.Format("if (test-path \"{0}\") {{ $profile = \"{0}\"; . $profile }}", profile));
+            }
+            catch (Exception e)
+            {
+                outputTextBox.AppendText("Error loading SnoopProfiler.ps1:" + Environment.NewLine);
+                outputTextBox.AppendText(e.Message);
+            }
         }
 
         private void OnCommandTextBoxPreviewKeyDown(object sender, KeyEventArgs e)
