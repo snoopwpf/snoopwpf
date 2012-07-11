@@ -42,24 +42,29 @@ F12 - Reload profile
             this.runspace.ThreadOptions = PSThreadOptions.UseCurrentThread;
             this.runspace.ApartmentState = ApartmentState.STA;
             this.runspace.Open();
+        }
 
+        public void Start()
+        {
             string folder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Scripts");
             InvokeDirect(string.Format("import-module \"{0}\"", Path.Combine(folder, "Snoop.psm1")));
 
-            // load the profile in the event to give a change for certain variables to be initialized
-            this.Loaded += delegate
+            string name = "SnoopProfile.ps1";
+            if (!LoadProfile(Path.Combine(Environment.GetEnvironmentVariable("USERPROFILE"), name)))
             {
-                try
-                {
-                    string profile = Path.Combine(folder, "SnoopProfile.ps1");
-                    InvokeDirect(string.Format("if (test-path \"{0}\") {{ $profile = \"{0}\"; . $profile }}", profile));
-                }
-                catch (Exception e)
-                {
-                    outputTextBox.AppendText("Error loading SnoopProfiler.ps1:" + Environment.NewLine);
-                    outputTextBox.AppendText(e.Message);
-                }
-            };
+                LoadProfile(Path.Combine(folder, name));
+            }
+        }
+
+        private bool LoadProfile(string path)
+        {
+            if (File.Exists(path))
+            {
+                InvokeDirect(string.Format("$profile = '{0}'; . $profile", path));
+                return true;
+            }
+
+            return false;
         }
 
         private void OnCommandTextBoxPreviewKeyDown(object sender, KeyEventArgs e)

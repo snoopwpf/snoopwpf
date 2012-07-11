@@ -96,6 +96,7 @@ namespace Snoop
             };
 
             this.EmbeddedShell.SetVariable("ui", this);
+            this.EmbeddedShell.Start();
         }
 
 	    #endregion
