@@ -2,7 +2,7 @@
 
 This is an enhanced version of the original Snoop which adds the scripting capabilities of PowerShell into the application.
 
-## Usage
+## The Basics
 
 By default, the PowerShell runspace will expose 4 variables:
  * $profile
@@ -15,10 +15,14 @@ By default, the PowerShell runspace will expose 4 variables:
  * $ui
    * This is the instance of the WPF control.  This allows you to dynamically modify the UI such as adding menu items.
 
-Next, a series of functions are provided out the box:
- * Find-Item -Name -Type
-   * This function recursively finds every WPF control whose name matches the _name_ parameter, and optionally must also match the same _type_.
-   * For example, "Find-Item -Type ([System.Windows.Controls.Border])" will find every _Border_ in the current window.
+## Functions
+
+ * Find-ByName($name,[switch]$select)
+   * Performs a regex match on value of x:Name.
+ * Find-ByType($type,[switch]$select)
+   * Performs a regex match on the type name of the element.
+
+Note that in both cases, -Select will automatically select the first match in the tree view.
 
 ## Notes
 

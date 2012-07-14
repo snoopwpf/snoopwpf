@@ -27,10 +27,10 @@ namespace Snoop.Shell
         {
             InitializeComponent();
 
-            this.Unloaded += delegate { runspace.Dispose(); };
+            Unloaded += delegate { this.runspace.Dispose(); };
 
-            commandTextBox.PreviewKeyDown += OnCommandTextBoxPreviewKeyDown;
-            ToolTipService.SetToolTip(commandTextBox, @"
+            this.commandTextBox.PreviewKeyDown += OnCommandTextBoxPreviewKeyDown;
+            ToolTipService.SetToolTip(this.commandTextBox, @"
 F12 - Reload profile
 ");
 
@@ -39,7 +39,7 @@ F12 - Reload profile
             iis.AuthorizationManager = new AuthorizationManager(Guid.NewGuid().ToString());
 
             this.host = new SnoopPSHost(x => this.outputTextBox.AppendText(x));
-            this.runspace = RunspaceFactory.CreateRunspace(host, iis);
+            this.runspace = RunspaceFactory.CreateRunspace(this.host, iis);
             this.runspace.ThreadOptions = PSThreadOptions.UseCurrentThread;
             this.runspace.ApartmentState = ApartmentState.STA;
             this.runspace.Open();
@@ -91,12 +91,12 @@ F12 - Reload profile
                     }
                     break;
                 case Key.Return:
-                    outputTextBox.AppendText(Environment.NewLine);
-                    outputTextBox.AppendText(commandTextBox.Text);
-                    outputTextBox.AppendText(Environment.NewLine);
+                    this.outputTextBox.AppendText(Environment.NewLine);
+                    this.outputTextBox.AppendText(this.commandTextBox.Text);
+                    this.outputTextBox.AppendText(Environment.NewLine);
 
-                    Invoke(commandTextBox.Text);
-                    commandTextBox.Clear();
+                    Invoke(this.commandTextBox.Text);
+                    this.commandTextBox.Clear();
                     break;
             }
         }
@@ -104,7 +104,7 @@ F12 - Reload profile
         public void SetVariable(string name, object instance)
         {
             this.host.SetVariable(name, instance);
-            this.Invoke(string.Format("${0} = $host.PrivateData['{0}']", name));
+            Invoke(string.Format("${0} = $host.PrivateData['{0}']", name));
         }
 
         private void Invoke(string script)
@@ -121,21 +121,21 @@ F12 - Reload profile
 
                     foreach (var item in pipe.Invoke())
                     {
-                        outputTextBox.AppendText(item.ToString());
+                        this.outputTextBox.AppendText(item.ToString());
                     }
 
                     foreach (var item in pipe.Error.ReadToEnd())
                     {
-                        outputTextBox.AppendText(item.ToString());
+                        this.outputTextBox.AppendText(item.ToString());
                     }
                 }
             }
             catch (Exception ex)
             {
-                outputTextBox.AppendText(ex.Message);
+                this.outputTextBox.AppendText(ex.Message);
             }
 
-            outputTextBox.ScrollToEnd();
+            this.outputTextBox.ScrollToEnd();
         }
 
         private void SetCommandTextToHistory(int history)
@@ -143,8 +143,8 @@ F12 - Reload profile
             var cmd = GetHistoryCommand(history);
             if (cmd != null)
             {
-                commandTextBox.Text = cmd;
-                commandTextBox.SelectionStart = cmd.Length;
+                this.commandTextBox.Text = cmd;
+                this.commandTextBox.SelectionStart = cmd.Length;
             }
         }
 
@@ -168,7 +168,7 @@ F12 - Reload profile
             base.OnPreviewKeyDown(e);
             if (e.Key == Key.F12)
             {
-                Invoke(". $profile");
+                Invoke("if ($profile) { . $profile }");
             }
         }
     }
