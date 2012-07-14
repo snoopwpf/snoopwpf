@@ -11,11 +11,10 @@
 function Find-ByCondition {
 	param([parameter(mandatory=$true)] [scriptblock] $condition)
 	foreach ($i in (Get-AllItems | ? $condition)) {
+		$i
 		if ($select) {
 			$i.IsSelected = $true
 			break
-		} else {
-			$i
 		}
 	}
 }

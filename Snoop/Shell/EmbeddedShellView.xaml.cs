@@ -27,8 +27,6 @@ namespace Snoop.Shell
         {
             InitializeComponent();
 
-            Unloaded += delegate { this.runspace.Dispose(); };
-
             this.commandTextBox.PreviewKeyDown += OnCommandTextBoxPreviewKeyDown;
             ToolTipService.SetToolTip(this.commandTextBox, @"
 F5 - Reload profile
@@ -96,7 +94,7 @@ F12 - Clear output
                     this.outputTextBox.AppendText(this.commandTextBox.Text);
                     this.outputTextBox.AppendText(Environment.NewLine);
 
-                    Invoke(this.commandTextBox.Text);
+                    Invoke(this.commandTextBox.Text, true);
                     this.commandTextBox.Clear();
                     break;
             }
@@ -108,13 +106,13 @@ F12 - Clear output
             Invoke(string.Format("${0} = $host.PrivateData['{0}']", name));
         }
 
-        private void Invoke(string script)
+        private void Invoke(string script, bool addToHistory = false)
         {
             this.historyIndex = 0;
 
             try
             {
-                using (var pipe = this.runspace.CreatePipeline(script, true))
+                using (var pipe = this.runspace.CreatePipeline(script, addToHistory))
                 {
                     var cmd = new Command("Out-String");
                     cmd.Parameters.Add("Width", 500);
