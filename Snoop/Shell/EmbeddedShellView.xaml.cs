@@ -31,7 +31,8 @@ namespace Snoop.Shell
 
             this.commandTextBox.PreviewKeyDown += OnCommandTextBoxPreviewKeyDown;
             ToolTipService.SetToolTip(this.commandTextBox, @"
-F12 - Reload profile
+F5 - Reload profile
+F12 - Clear output
 ");
 
             // ignore execution-policy
@@ -165,9 +166,15 @@ F12 - Reload profile
         protected override void OnPreviewKeyDown(KeyEventArgs e)
         {
             base.OnPreviewKeyDown(e);
-            if (e.Key == Key.F12)
+
+            switch (e.Key)
             {
-                Invoke("if ($profile) { . $profile }");
+                case Key.F5:
+                    Invoke("if ($profile) { . $profile }");
+                    break;
+                case Key.F12:
+                    this.outputTextBox.Clear();
+                    break;
             }
         }
     }

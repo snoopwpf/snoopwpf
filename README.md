@@ -24,6 +24,11 @@ By default, the PowerShell runspace will expose 4 variables:
 
 Note that in both cases, -Select will automatically select the first match in the tree view.
 
+## Hotkeys
+
+ * F5: Invokes dot-sourcing the $profile variable, if it exists.
+ * F12: Clears the output buffer.
+
 ## Notes
 
 When cloning this repository, please ensure your core.autocrlf is set to true.
