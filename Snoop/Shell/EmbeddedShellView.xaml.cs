@@ -115,7 +115,7 @@ F12 - Clear output
                 using (var pipe = this.runspace.CreatePipeline(script, addToHistory))
                 {
                     var cmd = new Command("Out-String");
-                    cmd.Parameters.Add("Width", 500);
+                    cmd.Parameters.Add("Width", (int)(this.ActualWidth * 0.7));
                     pipe.Commands.Add(cmd);
 
                     foreach (var item in pipe.Invoke())
@@ -123,18 +123,30 @@ F12 - Clear output
                         this.outputTextBox.AppendText(item.ToString());
                     }
 
-                    foreach (var item in pipe.Error.ReadToEnd())
+                    foreach (PSObject item in pipe.Error.ReadToEnd())
                     {
-                        this.outputTextBox.AppendText(item.ToString());
+                        var error = (ErrorRecord)item.BaseObject;
+                        this.OutputErrorRecord(error);
                     }
                 }
             }
+            catch (RuntimeException ex)
+            {
+                this.OutputErrorRecord(ex.ErrorRecord);
+            }
             catch (Exception ex)
             {
-                this.outputTextBox.AppendText(ex.Message);
+                this.outputTextBox.AppendText(string.Format("Oops!  Uncaught exception invoking on the PowerShell runspace: {0}", ex.Message));
             }
 
             this.outputTextBox.ScrollToEnd();
+        }
+
+        private void OutputErrorRecord(ErrorRecord error)
+        {
+            this.outputTextBox.AppendText(string.Format("{0}{1}", error, error.InvocationInfo != null ? error.InvocationInfo.PositionMessage : string.Empty));
+            this.outputTextBox.AppendText(string.Format("{1}  + CategoryInfo          : {0}", error.CategoryInfo, Environment.NewLine));
+            this.outputTextBox.AppendText(string.Format("{1}  + FullyQualifiedErrorId : {0}", error.FullyQualifiedErrorId, Environment.NewLine));
         }
 
         private void SetCommandTextToHistory(int history)
