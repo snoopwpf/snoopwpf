@@ -226,6 +226,7 @@
     <Compile Include="Shell\SnoopPSHost.cs" />
     <Compile Include="Shell\SnoopPSHostRawUserInterface.cs" />
     <Compile Include="Shell\SnoopPSHostUserInterface.cs" />
+    <Compile Include="Shell\VisualTreeProvider.cs" />
     <Compile Include="ZoomerControl.xaml.cs">
       <DependentUpon>ZoomerControl.xaml</DependentUpon>
     </Compile>

@@ -22,15 +22,15 @@ namespace Snoop.Shell
 
         public SnoopPSHost(Action<string> onOutput)
         {
-            ui = new SnoopPSHostUserInterface();
-            ui.OnDebug += onOutput;
-            ui.OnError += onOutput;
-            ui.OnVerbose += onOutput;
-            ui.OnWarning += onOutput;
-            ui.OnWrite += onOutput;
+            this.ui = new SnoopPSHostUserInterface();
+            this.ui.OnDebug += onOutput;
+            this.ui.OnError += onOutput;
+            this.ui.OnVerbose += onOutput;
+            this.ui.OnWarning += onOutput;
+            this.ui.OnWrite += onOutput;
 
-            privateHashtable = new Hashtable();
-            privateData = new PSObject(privateHashtable);
+            this.privateHashtable = new Hashtable();
+            this.privateData = new PSObject(this.privateHashtable);
         }
 
         public override void SetShouldExit(int exitCode)
@@ -65,17 +65,17 @@ namespace Snoop.Shell
 
         public override Guid InstanceId
         {
-            get { return id; }
+            get { return this.id; }
         }
 
         public override string Name
         {
-            get { return id.ToString(); }
+            get { return this.id.ToString(); }
         }
 
         public override PSHostUserInterface UI
         {
-            get { return ui; }
+            get { return this.ui; }
         }
 
         public override Version Version
@@ -85,12 +85,13 @@ namespace Snoop.Shell
 
         public override PSObject PrivateData
         {
-            get { return privateData; }
+            get { return this.privateData; }
         }
 
-        public void SetVariable(string name, object value)
+        public object this[string name]
         {
-            privateHashtable[name] = value;
+            get { return this.privateHashtable[name]; }
+            set { this.privateHashtable[name] = value; }
         }
     }
 }
