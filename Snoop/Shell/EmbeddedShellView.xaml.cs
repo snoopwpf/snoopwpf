@@ -47,7 +47,11 @@ F12 - Reload profile
         public void Start()
         {
             string folder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Scripts");
-            InvokeDirect(string.Format("import-module \"{0}\"", Path.Combine(folder, "Snoop.psm1")));
+            Invoke(string.Format("import-module \"{0}\"", Path.Combine(folder, "Snoop.psm1")));
+
+            Invoke("write-host 'Welcome to the Snoop PowerShell console!'");
+            Invoke("write-host '----------------------------------------'");
+            Invoke("write-host 'To get started, try the $root and $selected variables.'");
 
             string name = "SnoopProfile.ps1";
             if (!LoadProfile(Path.Combine(Environment.GetEnvironmentVariable("USERPROFILE"), name)))
@@ -60,7 +64,7 @@ F12 - Reload profile
         {
             if (File.Exists(path))
             {
-                InvokeDirect(string.Format("$profile = '{0}'; . $profile", path));
+                Invoke(string.Format("$profile = '{0}'; . $profile", path));
                 return true;
             }
 
@@ -85,6 +89,10 @@ F12 - Reload profile
                     }
                     break;
                 case Key.Return:
+                    outputTextBox.AppendText(Environment.NewLine);
+                    outputTextBox.AppendText(commandTextBox.Text);
+                    outputTextBox.AppendText(Environment.NewLine);
+
                     Invoke(commandTextBox.Text);
                     commandTextBox.Clear();
                     break;
@@ -99,10 +107,6 @@ F12 - Reload profile
         private void Invoke(string script)
         {
             this.historyIndex = 0;
-
-            outputTextBox.AppendText(Environment.NewLine);
-            outputTextBox.AppendText(script);
-            outputTextBox.AppendText(Environment.NewLine);
 
             try
             {
@@ -129,14 +133,6 @@ F12 - Reload profile
             }
 
             outputTextBox.ScrollToEnd();
-        }
-
-        private Collection<PSObject> InvokeDirect(string script, bool addToHistory = false)
-        {
-            using (var pipe = this.runspace.CreatePipeline(script, addToHistory))
-            {
-                return pipe.Invoke();
-            }
         }
 
         private void SetCommandTextToHistory(int history)
