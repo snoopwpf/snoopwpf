@@ -8,29 +8,36 @@ using System.Collections;
 using System.Globalization;
 using System.Management.Automation;
 using System.Management.Automation.Host;
+using System.Management.Automation.Runspaces;
 using System.Reflection;
 using System.Threading;
 
 namespace Snoop.Shell
 {
-    internal class SnoopPSHost : PSHost
+    internal class SnoopPSHost : PSHost, IHostSupportsInteractiveSession
     {
         private readonly Guid id = Guid.NewGuid();
         private readonly SnoopPSHostUserInterface ui;
         private readonly PSObject privateData;
         private readonly Hashtable privateHashtable;
+        private Runspace runspace;
 
         public SnoopPSHost(Action<string> onOutput)
         {
-            ui = new SnoopPSHostUserInterface();
-            ui.OnDebug += onOutput;
-            ui.OnError += onOutput;
-            ui.OnVerbose += onOutput;
-            ui.OnWarning += onOutput;
-            ui.OnWrite += onOutput;
+            this.ui = new SnoopPSHostUserInterface();
+            this.ui.OnDebug += onOutput;
+            this.ui.OnError += onOutput;
+            this.ui.OnVerbose += onOutput;
+            this.ui.OnWarning += onOutput;
+            this.ui.OnWrite += onOutput;
 
-            privateHashtable = new Hashtable();
-            privateData = new PSObject(privateHashtable);
+            this.privateHashtable = new Hashtable();
+            this.privateData = new PSObject(this.privateHashtable);
+
+            var iis = InitialSessionState.Create();
+            iis.AuthorizationManager = new AuthorizationManager(Guid.NewGuid().ToString());
+            this.runspace = RunspaceFactory.CreateRunspace(iis);
+            this.runspace.Open();
         }
 
         public override void SetShouldExit(int exitCode)
@@ -65,17 +72,17 @@ namespace Snoop.Shell
 
         public override Guid InstanceId
         {
-            get { return id; }
+            get { return this.id; }
         }
 
         public override string Name
         {
-            get { return id.ToString(); }
+            get { return this.id.ToString(); }
         }
 
         public override PSHostUserInterface UI
         {
-            get { return ui; }
+            get { return this.ui; }
         }
 
         public override Version Version
@@ -85,12 +92,33 @@ namespace Snoop.Shell
 
         public override PSObject PrivateData
         {
-            get { return privateData; }
+            get { return this.privateData; }
         }
 
-        public void SetVariable(string name, object value)
+        public object this[string name]
         {
-            privateHashtable[name] = value;
+            get { return this.privateHashtable[name]; }
+            set { this.privateHashtable[name] = value; }
+        }
+
+        void IHostSupportsInteractiveSession.PushRunspace(Runspace runspace)
+        {
+            throw new InvalidOperationException();
+        }
+
+        void IHostSupportsInteractiveSession.PopRunspace()
+        {
+            throw new InvalidOperationException();
+        }
+
+        bool IHostSupportsInteractiveSession.IsRunspacePushed
+        {
+            get { return true; }
+        }
+
+        Runspace IHostSupportsInteractiveSession.Runspace
+        {
+            get { return this.runspace; }
         }
     }
 }
