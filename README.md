@@ -13,7 +13,7 @@ By default, the PowerShell runspace will expose 4 variables:
  * $selected
    * This is the current selected item in the TreeView.  It is automatically updated when selection changes.
  * $ui
-   * This is the instance of the WPF control.  This allows you to dynamically modify the UI such as adding menu items.
+   * This is the instance of the Snoop WPF control.  This allows you to dynamically modify the UI such as adding menu items.
 
 ## Functions
 
@@ -26,6 +26,10 @@ By default, the PowerShell runspace will expose 4 variables:
    * The script block takes a single item, the VisualTreeItem, which can be filtered.
 
 Note that in both cases, -Select will automatically select the first match in the tree view.
+
+## Provider
+
+There is preliminary support for a provider to navigate the tree (i.e., using cd, dir, etc.).  To enable this, enter the drive by issuing the command:  'cd tree:'
 
 ## Hotkeys
 
