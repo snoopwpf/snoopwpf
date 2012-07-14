@@ -21,6 +21,9 @@ By default, the PowerShell runspace will expose 4 variables:
    * Performs a regex match on value of x:Name.
  * Find-ByType($type,[switch]$select)
    * Performs a regex match on the type name of the element.
+ * Find-By([scriptblock]$predicate,[switch]$select)
+   * Both the ByName and ByType variants are convenience functions which invokes this one.
+   * The script block takes a single item, the VisualTreeItem, which can be filtered.
 
 Note that in both cases, -Select will automatically select the first match in the tree view.
 

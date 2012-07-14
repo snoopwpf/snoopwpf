@@ -8,9 +8,17 @@
 	Drill $root
 }
 
-function Find-ByCondition {
-	param([parameter(mandatory=$true)] [scriptblock] $condition)
-	foreach ($i in (Get-AllItems | ? $condition)) {
+function Find-By {
+<#
+.SYNOPSIS
+	Recursively finds an element contained in the visual tree matched using a predicate.
+.PARAMETER predicate
+	The script block which filters on items.
+.PARAMETER select
+	If enabled, selects the first match.
+#>
+	param([parameter(mandatory=$true)] [scriptblock] $predicate, [switch] $select)
+	foreach ($i in (Get-AllItems | ? $predicate)) {
 		$i
 		if ($select) {
 			$i.IsSelected = $true
@@ -26,23 +34,23 @@ function Find-ByName {
 .PARAMETER name
 	The regular expression to match on the element's x:Name.
 .PARAMETER select
-	If provided, selects the first match.
+	If enabled, selects the first match.
 #>
 	param([parameter(mandatory=$true)] [string] $name, [switch] $select)
-	Find-ByCondition { $_.Target.Name -match $name }
+	Find-By { $_.Target.Name -match $name } -select:$select
 }
 
-function Find-ByType {
 <#
 .SYNOPSIS
 	Recursively finds an element contained in the visual tree matched by name.
 .PARAMETER type
 	The regular expression to match on the element's type.
 .PARAMETER select
-	If provided, selects the first match.
+	If enabled, selects the first match.
 #>
+function Find-ByType {
 	param([parameter(mandatory=$true)] [string] $type, [switch]$select)
-	Find-ByCondition { $_.Target.GetType().Name -match $type }
+	Find-By { $_.Target.GetType().Name -match $type } -select:$select
 }
 
-Export-ModuleMember Find-ByType,Find-ByName
+Export-ModuleMember Find-By,Find-ByType,Find-ByName
