@@ -1,5 +1,6 @@
 using System;
-using System.Management.Automation.Host;
+using System.Collections;
+using System.Management.Automation;
 using System.Management.Automation.Provider;
 
 namespace Snoop.Shell
@@ -11,15 +12,10 @@ namespace Snoop.Shell
         {
             get
             {
-                var session = (IHostSupportsInteractiveSession)this.Host;
-                if (session.IsRunspacePushed)
+                var data = Host.PrivateData.BaseObject as Hashtable;
+                if (data != null)
                 {
-                    var rs = session.Runspace;
-                    using (var pipe = rs.CreatePipeline("$root", false))
-                    {
-                        var root = pipe.Invoke()[0];
-                        return root.BaseObject as VisualTreeItem;
-                    }
+                    return data["root"] as VisualTreeItem;
                 }
 
                 return null;
@@ -67,7 +63,7 @@ namespace Snoop.Shell
                 foreach (var c in current.Children)
                 {
                     var name = c.Target.GetType().Name;
-                    if (name.Equals(part))
+                    if (name.Equals(part, StringComparison.OrdinalIgnoreCase))
                     {
                         current = c;
                         count++;
@@ -111,6 +107,11 @@ namespace Snoop.Shell
         {
             var item = GetTreeItem(path);
             return item.Children.Count > 0;
+        }
+
+        protected override bool IsItemContainer(string path)
+        {
+            return true;
         }
 
         protected override bool IsValidPath(string path)

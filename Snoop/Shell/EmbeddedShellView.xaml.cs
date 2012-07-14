@@ -43,6 +43,8 @@ F12 - Clear output
             this.runspace.ThreadOptions = PSThreadOptions.UseCurrentThread;
             this.runspace.ApartmentState = ApartmentState.STA;
             this.runspace.Open();
+
+            Invoke("new-psdrive tree tree -root /");
         }
 
         public void Start()

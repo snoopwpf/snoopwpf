@@ -8,19 +8,17 @@ using System.Collections;
 using System.Globalization;
 using System.Management.Automation;
 using System.Management.Automation.Host;
-using System.Management.Automation.Runspaces;
 using System.Reflection;
 using System.Threading;
 
 namespace Snoop.Shell
 {
-    internal class SnoopPSHost : PSHost, IHostSupportsInteractiveSession
+    internal class SnoopPSHost : PSHost
     {
         private readonly Guid id = Guid.NewGuid();
         private readonly SnoopPSHostUserInterface ui;
         private readonly PSObject privateData;
         private readonly Hashtable privateHashtable;
-        private Runspace runspace;
 
         public SnoopPSHost(Action<string> onOutput)
         {
@@ -33,11 +31,6 @@ namespace Snoop.Shell
 
             this.privateHashtable = new Hashtable();
             this.privateData = new PSObject(this.privateHashtable);
-
-            var iis = InitialSessionState.Create();
-            iis.AuthorizationManager = new AuthorizationManager(Guid.NewGuid().ToString());
-            this.runspace = RunspaceFactory.CreateRunspace(iis);
-            this.runspace.Open();
         }
 
         public override void SetShouldExit(int exitCode)
@@ -99,26 +92,6 @@ namespace Snoop.Shell
         {
             get { return this.privateHashtable[name]; }
             set { this.privateHashtable[name] = value; }
-        }
-
-        void IHostSupportsInteractiveSession.PushRunspace(Runspace runspace)
-        {
-            throw new InvalidOperationException();
-        }
-
-        void IHostSupportsInteractiveSession.PopRunspace()
-        {
-            throw new InvalidOperationException();
-        }
-
-        bool IHostSupportsInteractiveSession.IsRunspacePushed
-        {
-            get { return true; }
-        }
-
-        Runspace IHostSupportsInteractiveSession.Runspace
-        {
-            get { return this.runspace; }
         }
     }
 }
