@@ -115,7 +115,7 @@ F12 - Clear output
                 using (var pipe = this.runspace.CreatePipeline(script, addToHistory))
                 {
                     var cmd = new Command("Out-String");
-                    cmd.Parameters.Add("Width", (int)(this.ActualWidth * 0.7));
+                    cmd.Parameters.Add("Width", Math.Max(2, (int)(this.ActualWidth * 0.7)));
                     pipe.Commands.Add(cmd);
 
                     foreach (var item in pipe.Invoke())
