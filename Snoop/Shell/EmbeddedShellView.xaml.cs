@@ -52,7 +52,7 @@ F12 - Reload profile
 
             Invoke("write-host 'Welcome to the Snoop PowerShell console!'");
             Invoke("write-host '----------------------------------------'");
-            Invoke("write-host 'To get started, try the $root and $selected variables.'");
+            Invoke("write-host 'To get started, try using the $root and $selected variables.'");
 
             string name = "SnoopProfile.ps1";
             if (!LoadProfile(Path.Combine(Environment.GetEnvironmentVariable("USERPROFILE"), name)))
@@ -150,7 +150,7 @@ F12 - Reload profile
 
         private string GetHistoryCommand(int history)
         {
-            using (var pipe = this.runspace.CreatePipeline("get-history -count " + history))
+            using (var pipe = this.runspace.CreatePipeline("get-history -count " + history, false))
             {
                 var results = pipe.Invoke();
                 if (results.Count > 0)
@@ -158,7 +158,6 @@ F12 - Reload profile
                     var item = results[0];
                     return (string)item.Properties["CommandLine"].Value;
                 }
-
                 return null;
             }
         }

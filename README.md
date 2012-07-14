@@ -7,7 +7,7 @@ This is an enhanced version of the original Snoop which adds the scripting capab
 By default, the PowerShell runspace will expose 4 variables:
  * $profile
    * This is the path to your SnoopProfile.ps1 profile which is automatically loaded on startup.
-   * Search paths are %USERPROFILE%, followed by the_ Scripts_ folder found alongside the binaries.
+   * Search paths are %USERPROFILE%, followed by the _Scripts_ folder found alongside the binaries.
  * $root
    * The root node of the TreeView.  This will typically be _App_ or _Popup_.
  * $selected
