@@ -4,7 +4,9 @@
 // All other rights reserved.
 
 using System;
+using System.Collections;
 using System.Globalization;
+using System.Management.Automation;
 using System.Management.Automation.Host;
 using System.Reflection;
 using System.Threading;
@@ -15,15 +17,20 @@ namespace Snoop.Shell
     {
         private readonly Guid id = Guid.NewGuid();
         private readonly SnoopPSHostUserInterface ui;
+        private readonly PSObject privateData;
+        private readonly Hashtable privateHashtable;
 
         public SnoopPSHost(Action<string> onOutput)
         {
-            this.ui = new SnoopPSHostUserInterface();
-            this.ui.OnDebug += onOutput;
-            this.ui.OnError += onOutput;
-            this.ui.OnVerbose += onOutput;
-            this.ui.OnWarning += onOutput;
-            this.ui.OnWrite += onOutput;
+            ui = new SnoopPSHostUserInterface();
+            ui.OnDebug += onOutput;
+            ui.OnError += onOutput;
+            ui.OnVerbose += onOutput;
+            ui.OnWarning += onOutput;
+            ui.OnWrite += onOutput;
+
+            privateHashtable = new Hashtable();
+            privateData = new PSObject(privateHashtable);
         }
 
         public override void SetShouldExit(int exitCode)
@@ -58,22 +65,32 @@ namespace Snoop.Shell
 
         public override Guid InstanceId
         {
-            get { return this.id; }
+            get { return id; }
         }
 
         public override string Name
         {
-            get { return this.id.ToString(); }
+            get { return id.ToString(); }
         }
 
         public override PSHostUserInterface UI
         {
-            get { return this.ui; }
+            get { return ui; }
         }
 
         public override Version Version
         {
             get { return Assembly.GetExecutingAssembly().GetName().Version; }
+        }
+
+        public override PSObject PrivateData
+        {
+            get { return privateData; }
+        }
+
+        public void SetVariable(string name, object value)
+        {
+            privateHashtable[name] = value;
         }
     }
 }

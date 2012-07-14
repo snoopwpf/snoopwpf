@@ -4,7 +4,6 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
@@ -21,6 +20,7 @@ namespace Snoop.Shell
     public partial class EmbeddedShellView : UserControl
     {
         private readonly Runspace runspace;
+        private readonly SnoopPSHost host;
         private int historyIndex;
 
         public EmbeddedShellView()
@@ -38,7 +38,8 @@ F12 - Reload profile
             var iis = InitialSessionState.CreateDefault();
             iis.AuthorizationManager = new AuthorizationManager(Guid.NewGuid().ToString());
 
-            this.runspace = RunspaceFactory.CreateRunspace(new SnoopPSHost(x => this.outputTextBox.AppendText(x)), iis);
+            this.host = new SnoopPSHost(x => this.outputTextBox.AppendText(x));
+            this.runspace = RunspaceFactory.CreateRunspace(host, iis);
             this.runspace.ThreadOptions = PSThreadOptions.UseCurrentThread;
             this.runspace.ApartmentState = ApartmentState.STA;
             this.runspace.Open();
@@ -65,6 +66,7 @@ F12 - Reload profile
             if (File.Exists(path))
             {
                 Invoke(string.Format("$profile = '{0}'; . $profile", path));
+                Invoke("write-host 'Profile loaded: $profile'");
                 return true;
             }
 
@@ -101,7 +103,8 @@ F12 - Reload profile
 
         public void SetVariable(string name, object instance)
         {
-            this.runspace.SessionStateProxy.SetVariable(name, instance);
+            this.host.SetVariable(name, instance);
+            this.Invoke(string.Format("${0} = $host.PrivateData['{0}']", name));
         }
 
         private void Invoke(string script)
