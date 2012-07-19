@@ -1,11 +1,11 @@
 using System;
 using System.Collections;
-using System.Management.Automation;
+using System.Linq;
 using System.Management.Automation.Provider;
 
 namespace Snoop.Shell
 {
-    [CmdletProvider("VisualTreeProvider", ProviderCapabilities.None)]
+    [CmdletProvider("VisualTreeProvider", ProviderCapabilities.Filter)]
     public class VisualTreeProvider : NavigationCmdletProvider
     {
         private VisualTreeItem Root
@@ -88,7 +88,20 @@ namespace Snoop.Shell
                 foreach (var c in item.Children)
                 {
                     var p = GetPath(c);
-                    GetItem(p);
+
+                    if (this.Filter != null)
+                    {
+                        var parts = p.Split(new[] { '\\' }, StringSplitOptions.RemoveEmptyEntries);
+                        var last = parts.Last();
+                        if (last.ToLowerInvariant().Contains(this.Filter.ToLowerInvariant()))
+                        {
+                            GetItem(p);
+                        }
+                    }
+                    else
+                    {
+                        GetItem(p);
+                    }
                 }
             }
             else
