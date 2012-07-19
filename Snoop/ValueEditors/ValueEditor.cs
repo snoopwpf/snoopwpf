@@ -45,6 +45,19 @@ namespace Snoop
 		{
 		}
 
+		public object DescriptiveValue
+		{
+			get { return (bool)this.GetValue(ValueEditor.DescriptiveValueProperty); }
+			set { this.SetValue(ValueEditor.DescriptiveValueProperty, value); }
+		}
+		public static DependencyProperty DescriptiveValueProperty =
+			DependencyProperty.Register
+			(
+				"DescriptiveValue",
+				typeof(object),
+				typeof(ValueEditor)
+			);
+
 		public Type PropertyType
 		{
 			get { return (Type)this.GetValue(ValueEditor.PropertyTypeProperty); }

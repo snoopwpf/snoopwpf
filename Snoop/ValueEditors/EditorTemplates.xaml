@@ -12,7 +12,7 @@ All other rights reserved.
 	<Style TargetType="{x:Type my:StandardValueEditor}">
 		<Style.Resources>
 			<DataTemplate x:Key="UnselectedValueTemplate">
-				<TextBlock Style="{x:Null}" Text="{Binding StringValue}"/>
+				<TextBlock Style="{x:Null}" Text="{Binding DescriptiveValue}"/>
 			</DataTemplate>
 
 			<DataTemplate x:Key="SelectedValueTemplate">
@@ -25,7 +25,7 @@ All other rights reserved.
 				<ControlTemplate TargetType="{x:Type my:StandardValueEditor}">
 					<ContentPresenter Name="ValueHolder" ContentTemplate="{StaticResource UnselectedValueTemplate}" Content="{Binding RelativeSource={RelativeSource TemplatedParent}}">
 						<ContentPresenter.ToolTip>
-							<TextBlock Style="{x:Null}" Text="{TemplateBinding StringValue}"/>
+							<TextBlock Style="{x:Null}" Text="{TemplateBinding DescriptiveValue}"/>
 						</ContentPresenter.ToolTip>
 					</ContentPresenter>
 
@@ -56,14 +56,32 @@ All other rights reserved.
 	
 	<Style TargetType="{x:Type my:BrushValueEditor}">
 		<Style.Resources>
+			<DrawingBrush Stretch="Fill" TileMode="Tile" x:Key="CheckerboardBrush" Viewport="0,0,16,16" ViewportUnits="Absolute">
+				<DrawingBrush.Drawing>
+					<DrawingGroup>
+						<GeometryDrawing Brush="White" Geometry="M 0,0 L 2,0 2,2 0,2 Z"/>
+						<GeometryDrawing Brush="LightGray" Geometry="M 0,0 L 1,0 1,2 2,2 2,1 0,1 Z"/>
+					</DrawingGroup>
+				</DrawingBrush.Drawing>
+			</DrawingBrush>
+
 			<DataTemplate x:Key="UnselectedValueTemplate">
-				<Rectangle Width="50" Height="16" Fill="{Binding Value}" HorizontalAlignment="Left"/>
+				<Grid Height="16" HorizontalAlignment="Left" ToolTip="{Binding DescriptiveValue}">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="48"/>
+						<ColumnDefinition/>
+					</Grid.ColumnDefinitions>
+					<Rectangle Fill="{StaticResource CheckerboardBrush}"/>
+					<Rectangle Fill="{Binding Value}" Stroke="{TemplateBinding TextElement.Foreground}" StrokeThickness="1"/>
+					<TextBlock Grid.Column="1" Style="{x:Null}" Margin="5,0,0,0" Text="{Binding DescriptiveValue}"/>
+				</Grid>
 			</DataTemplate>
 
 			<DataTemplate x:Key="SelectedValueTemplate">
 				<my:EditTextBox Height="16" Text="{Binding StringValue}" HorizontalAlignment="Stretch" Padding="1" BorderThickness="0" Background="White" VerticalContentAlignment="Center"/>
 			</DataTemplate>
-		
+
+			<DataTemplate x:Key="EmptyValueTemplate"/>
 		</Style.Resources>
 		
 		<Setter Property="Template">
@@ -72,6 +90,9 @@ All other rights reserved.
 					<ContentPresenter Name="ValueHolder" ContentTemplate="{StaticResource UnselectedValueTemplate}" Content="{Binding RelativeSource={RelativeSource TemplatedParent}}"/>
 
 					<ControlTemplate.Triggers>
+						<DataTrigger Binding="{Binding Value}" Value="{x:Null}">
+							<Setter TargetName="ValueHolder" Property="ContentTemplate" Value="{StaticResource EmptyValueTemplate}"/>
+						</DataTrigger>
 						<MultiTrigger>
 							<MultiTrigger.Conditions>
 								<Condition Property="IsSelected" Value="True"/>

@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Media;
 using System.Windows.Threading;
 using System.Collections;
 using System.Text;
@@ -51,17 +52,7 @@ namespace Snoop
 				}
 
 				binding.Source = target;
-
-				if (property.Name == "Style")
-				{
-					binding.Converter = new StyleKeyConverter();
-					binding.ConverterParameter = target;
-					binding.Mode = BindingMode.OneWay;
-				}
-				else
-				{
-					binding.Mode = property.IsReadOnly ? BindingMode.OneWay : BindingMode.TwoWay;
-				}
+				binding.Mode = property.IsReadOnly ? BindingMode.OneWay : BindingMode.TwoWay;
 
 				try
 				{
@@ -70,7 +61,7 @@ namespace Snoop
 				catch (Exception)
 				{
 					// cplotts note:
-					// warning: i saw a problem with the StyleKeyConverter get swallowed by this empty catch (Exception) block.
+					// warning: i saw a problem get swallowed by this empty catch (Exception) block.
 					// in other words, this empty catch block could be hiding some potential future errors.
 				}
 			}
@@ -200,6 +191,71 @@ namespace Snoop
 						}
 					}
 				}
+			}
+		}
+
+		public string DescriptiveValue
+		{
+			get
+			{
+				object value = this.Value;
+				if (value == null)
+				{
+					return string.Empty;
+				}
+
+				string stringValue = value.ToString();
+
+				if (stringValue.Equals(value.GetType().ToString()))
+				{
+					// Add brackets around types to distinguish them from values.
+					// Replace long type names with short type names for some specific types, for easier readability.
+					// FUTURE: This could be extended to other types.
+					if (this.property != null &&
+						(this.property.PropertyType == typeof(Brush) || this.property.PropertyType == typeof(Style)))
+					{
+						stringValue = string.Format("[{0}]", value.GetType().Name);
+					}
+					else
+					{
+						stringValue = string.Format("[{0}]", stringValue);
+					}
+				}
+
+				// Display #00FFFFFF as Transparent for easier readability
+				if (this.property != null &&
+					this.property.PropertyType == typeof(Brush) &&
+					stringValue.Equals("#00FFFFFF"))
+				{
+					stringValue = "Transparent";
+				}
+
+				DependencyObject dependencyObject = this.Target as DependencyObject;
+				if (dependencyObject != null && this.DependencyProperty != null)
+				{
+					// Cache the resource key for this item if not cached already. This could be done for more types, but would need to optimize perf.
+					string resourceKey = null;
+					if (this.property != null &&
+						(this.property.PropertyType == typeof(Style) || this.property.PropertyType == typeof(Brush)))
+					{
+						object resourceItem = dependencyObject.GetValue(this.DependencyProperty);
+						resourceKey = ResourceKeyCache.GetKey(resourceItem);
+						if (string.IsNullOrEmpty(resourceKey))
+						{
+							resourceKey = ResourceDictionaryKeyHelpers.GetKeyOfResourceItem(dependencyObject, this.DependencyProperty);
+							ResourceKeyCache.Cache(resourceItem, resourceKey);
+						}
+						Debug.Assert(resourceKey != null);
+					}
+
+					// Display both the value and the resource key, if there's a key for this property.
+					if (!string.IsNullOrEmpty(resourceKey))
+					{
+						return string.Format("{0} {1}", resourceKey, stringValue);
+					}
+				}
+
+				return stringValue;
 			}
 		}
 
@@ -506,6 +562,7 @@ namespace Snoop
 			this.OnPropertyChanged("IsLocallySet");
 			this.OnPropertyChanged("IsInvalidBinding");
 			this.OnPropertyChanged("StringValue");
+			this.OnPropertyChanged("DescriptiveValue"); 
 			this.OnPropertyChanged("IsDatabound");
 			this.OnPropertyChanged("IsExpression");
 			this.OnPropertyChanged("IsAnimated");
@@ -568,25 +625,20 @@ namespace Snoop
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        private static IList<PropertyInformation> GetExtendedProperties(object obj)
-        {
-            List<PropertyInformation> props = new List<PropertyInformation>();
-           
-            if (obj is Style)
-            {
-                //string key;
-                //if (StyleKeyCache.Keys.TryGetValue((Style)obj, out key))
-                if (StyleKeyCache.ContainsStyle((Style)obj))
-                {
-                    string key = StyleKeyCache.GetKey((Style)obj);
-                    PropertyInformation prop = new PropertyInformation(key, new object(), "x:key", true);
-                    prop.Value = key;
-                    props.Add(prop);
-                }
-            }
+		private static IList<PropertyInformation> GetExtendedProperties(object obj)
+		{
+			List<PropertyInformation> props = new List<PropertyInformation>();
 
-            return props;
-        }
+			if (obj != null && ResourceKeyCache.Contains(obj))
+			{
+				string key = ResourceKeyCache.GetKey(obj);
+				PropertyInformation prop = new PropertyInformation(key, new object(), "x:key", true);
+				prop.Value = key;
+				props.Add(prop);
+			}
+
+			return props;
+		}
 
 		private static List<PropertyDescriptor> GetAllProperties(object obj, Attribute[] attributes)
 		{

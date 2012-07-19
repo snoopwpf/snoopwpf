@@ -164,7 +164,6 @@
     <Compile Include="Converters\CsvStringToArrayConverter.cs" />
     <Compile Include="Converters\IsSupportedRuntimeTypeConverter.cs" />
     <Compile Include="Converters\SnoopParameterInfoConverter.cs" />
-    <Compile Include="Converters\StyleKeyConverter.cs" />
     <Compile Include="DelayedCall.cs" />
     <Compile Include="EditTextBox.cs" />
     <Compile Include="EditUserFilters.xaml.cs">
@@ -179,8 +178,7 @@
     <Compile Include="Infrastructure\ResourceDictionaryKeyHelpers.cs" />
     <Compile Include="Infrastructure\SnoopModes.cs" />
     <Compile Include="Infrastructure\SnoopPartsRegistry.cs" />
-    <Compile Include="Infrastructure\StyleKeyCache.cs" />
-    <Compile Include="Infrastructure\StyleKeyPair.cs" />
+    <Compile Include="Infrastructure\ResourceKeyCache.cs" />
     <Compile Include="Infrastructure\WhenLoaded.cs" />
     <Compile Include="Infrastructure\ZoomerUtilities.cs" />
     <Compile Include="Injector.cs" />

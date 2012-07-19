@@ -12,77 +12,68 @@ using System.Windows.Media;
 
 namespace Snoop.Infrastructure
 {
-    public static class ResourceDictionaryKeyHelpers
-    {
-        public static string GetKeyOfStyle(FrameworkElement frameworkElement)
-        {
-            Style style = frameworkElement.Style;
-            if (style != null)
-            {
-                // check the resource dictionary on the target FrameworkElement first.
-                string name = FindNameFromResource(frameworkElement.Resources, style);
-                if (name != null)
-                    return name;
+	public static class ResourceDictionaryKeyHelpers
+	{
+		public static string GetKeyOfResourceItem(DependencyObject dependencyObject, DependencyProperty dp)
+		{
+			if (dependencyObject == null || dp == null)
+			{
+				return string.Empty;
+			}
 
-                // get the parent of the target and check its resource dictionary
-                // if not found, continue traveling up the hierarchy and checking
-                DependencyObject d = VisualTreeHelper.GetParent(frameworkElement);
-                while (d != null)
-                {
-                    FrameworkElement fe = d as FrameworkElement;
-                    if (fe != null)
-                    {
-                        name = FindNameFromResource(fe.Resources, style);
-                    }
-                    if (name != null)
-                    {
-                        return name;
-                    }
+			object resourceItem = dependencyObject.GetValue(dp);
+			if (resourceItem != null)
+			{
+				// Walk up the visual tree, looking for the resourceItem in each frameworkElement's resource dictionary.
+				while (dependencyObject != null)
+				{
+					FrameworkElement frameworkElement = dependencyObject as FrameworkElement;
+					if (frameworkElement != null)
+					{
+						string resourceKey = GetKeyInResourceDictionary(frameworkElement.Resources, resourceItem);
+						if (resourceKey != null)
+						{
+							return resourceKey;
+						}
+					}
 
-                    if (fe != null && fe.Parent != null)
-                    {
-                        d = fe.Parent;
-                    }
-                    else
-                    {
-                        d = VisualTreeHelper.GetParent(d);
-                    }
-                }
+					dependencyObject = VisualTreeHelper.GetParent(dependencyObject);
+				}
 
-                // check the application resources
-                if (Application.Current != null)
-                {
-                    name = FindNameFromResource(Application.Current.Resources, style);
-                    if (name != null)
-                        return name;
-                }
-            }
-            return string.Empty;
-        }
+				// check the application resources
+				if (Application.Current != null)
+				{
+					string resourceKey = GetKeyInResourceDictionary(Application.Current.Resources, resourceItem);
+					if (resourceKey != null)
+						return resourceKey;
+				}
+			}
+			return string.Empty;
+		}
 
-        public static string FindNameFromResource(ResourceDictionary dictionary, object resourceItem)
-        {
-            foreach (object key in dictionary.Keys)
-            {
-                if (dictionary[key] == resourceItem)
-                {
-                    return key.ToString();
-                }
-            }
+		public static string GetKeyInResourceDictionary(ResourceDictionary dictionary, object resourceItem)
+		{
+			foreach (object key in dictionary.Keys)
+			{
+				if (dictionary[key] == resourceItem)
+				{
+					return key.ToString();
+				}
+			}
 
-            if (dictionary.MergedDictionaries != null)
-            {
-                foreach (var dic in dictionary.MergedDictionaries)
-                {
-                    string name = FindNameFromResource(dic, resourceItem);
-                    if (!string.IsNullOrEmpty(name))
-                    {
-                        return name;
-                    }
-                }
-            }
+			if (dictionary.MergedDictionaries != null)
+			{
+				foreach (var dic in dictionary.MergedDictionaries)
+				{
+					string name = GetKeyInResourceDictionary(dic, resourceItem);
+					if (!string.IsNullOrEmpty(name))
+					{
+						return name;
+					}
+				}
+			}
 
-            return null;
-        }
-    }
+			return null;
+		}
+	}
 }
