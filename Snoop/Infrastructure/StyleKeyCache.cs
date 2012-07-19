@@ -11,30 +11,30 @@ using System.Windows;
 
 namespace Snoop.Infrastructure
 {
-    public static class StyleKeyCache
-    {
-        private static Dictionary<Style, string> Keys = new Dictionary<Style, string>();
+	public static class ResourceKeyCache
+	{
+		private static Dictionary<object, string> Keys = new Dictionary<object, string>();
 
-        public static string GetKey(Style style)
-        {
-            string key;
-            if (Keys.TryGetValue(style, out key))
-                return key;
+		public static string GetKey(object element)
+		{
+			string key;
+			if (Keys.TryGetValue(element, out key))
+				return key;
 
-            return null;
-        }
+			return null;
+		}
 
-        public static void CacheStyle(Style style, string key)
-        {
-            if (!Keys.ContainsKey(style))
-            {
-                Keys.Add(style, key);
-            }
-        }
+		public static void Cache(object element, string key)
+		{
+			if (!Keys.ContainsKey(element))
+			{
+				Keys.Add(element, key);
+			}
+		}
 
-        public static bool ContainsStyle(Style style)
-        {
-            return Keys.ContainsKey(style);
-        }
-    }
+		public static bool Contains(object element)
+		{
+			return Keys.ContainsKey(element);
+		}
+	}
 }
