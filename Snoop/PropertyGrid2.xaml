@@ -57,7 +57,11 @@ All other rights reserved.
 				<Setter Property="DockPanel.Dock" Value="Right"/>
 				<Setter Property="Margin" Value="5,0,0,0"/>
 				<Setter Property="Visibility" Value="Collapsed"/>
-				<Setter Property="ToolTip" Value="Scroll mouse wheel here to edit value"/>
+				<Setter Property="ToolTip">
+					<Setter.Value>
+						<TextBlock Style="{x:Null}" Text="Scroll mouse wheel here to edit value"/>
+					</Setter.Value>
+				</Setter>
 				<Style.Triggers>
 					<MultiDataTrigger>
 						<MultiDataTrigger.Conditions>

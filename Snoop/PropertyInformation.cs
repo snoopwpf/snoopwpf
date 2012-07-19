@@ -632,7 +632,7 @@ namespace Snoop
 			if (obj != null && ResourceKeyCache.Contains(obj))
 			{
 				string key = ResourceKeyCache.GetKey(obj);
-				PropertyInformation prop = new PropertyInformation(key, new object(), "x:key", true);
+				PropertyInformation prop = new PropertyInformation(key, new object(), "x:Key", true);
 				prop.Value = key;
 				props.Add(prop);
 			}
