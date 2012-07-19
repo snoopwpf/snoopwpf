@@ -57,6 +57,7 @@ All other rights reserved.
 				<Setter Property="DockPanel.Dock" Value="Right"/>
 				<Setter Property="Margin" Value="5,0,0,0"/>
 				<Setter Property="Visibility" Value="Collapsed"/>
+				<Setter Property="ToolTip" Value="Scroll mouse wheel here to edit value"/>
 				<Style.Triggers>
 					<MultiDataTrigger>
 						<MultiDataTrigger.Conditions>
@@ -89,6 +90,7 @@ All other rights reserved.
 							<my:StandardValueEditor
 								PropertyType="{Binding PropertyType}"
 								Value="{Binding Value, Mode=TwoWay}"
+								DescriptiveValue="{Binding DescriptiveValue, Mode=OneWay}"
 								IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
 								IsEditable="{Binding CanEdit}"
 							/>
@@ -108,6 +110,7 @@ All other rights reserved.
 							<my:EnumValueEditor
 								PropertyType="{Binding PropertyType}"
 								Value="{Binding Value, Mode=TwoWay}"
+								DescriptiveValue="{Binding DescriptiveValue, Mode=OneWay}"
 								IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
 								IsEditable="{Binding CanEdit}"
 							/>
@@ -127,6 +130,7 @@ All other rights reserved.
 							<my:BoolValueEditor
 								PropertyType="{Binding PropertyType}"
 								Value="{Binding Value, Mode=TwoWay}"
+								DescriptiveValue="{Binding DescriptiveValue, Mode=OneWay}"
 								IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
 								IsEditable="{Binding CanEdit}"
 							/>
@@ -146,6 +150,7 @@ All other rights reserved.
 							<my:BrushValueEditor
 								PropertyType="{Binding PropertyType}"
 								Value="{Binding Value, Mode=TwoWay}"
+								DescriptiveValue="{Binding DescriptiveValue, Mode=OneWay}"
 								IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
 								IsEditable="{Binding CanEdit}"
 							/>
