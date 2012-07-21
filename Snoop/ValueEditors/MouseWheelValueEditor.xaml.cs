@@ -116,6 +116,8 @@ namespace Snoop.ValueEditors
 						ChangeBrushValuePart(fieldNum, tb.Text, increment, largeIncrement);
 						break;
 				}
+
+				PropertyInfo.IsValueChangedByUser = true;
 			}
 
 			e.Handled = true;

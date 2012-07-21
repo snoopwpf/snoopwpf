@@ -4,6 +4,7 @@
 // All other rights reserved.
 
 using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -91,5 +92,30 @@ namespace Snoop
 				typeof(bool),
 				typeof(ValueEditor)
 			);
+
+
+		#region PropertyInfo (Dependency Property)
+
+		public static readonly DependencyProperty PropertyInfoProperty =
+			DependencyProperty.Register( "PropertyInfo", typeof( PropertyInformation ), typeof( ValueEditor ),
+					new UIPropertyMetadata( null, new PropertyChangedCallback( OnPropertyInfoChanged ) ) );
+
+		public PropertyInformation PropertyInfo
+		{
+			[DebuggerStepThrough]
+			get { return (PropertyInformation)GetValue( PropertyInfoProperty ); }
+			set { SetValue( PropertyInfoProperty, value ); }
+		}
+
+		private static void OnPropertyInfoChanged( DependencyObject d, DependencyPropertyChangedEventArgs e )
+		{
+			((ValueEditor)d).OnPropertyInfoChanged( e );
+		}
+
+		private void OnPropertyInfoChanged( DependencyPropertyChangedEventArgs e )
+		{
+		}
+
+		#endregion
 	}
 }

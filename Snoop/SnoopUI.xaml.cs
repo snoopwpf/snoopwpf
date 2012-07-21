@@ -8,11 +8,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Globalization;
-using System.Reflection;
+using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -262,6 +259,12 @@ namespace Snoop
 					if (this.currentSelection != null)
 						this.currentSelection.IsSelected = true;
 
+					if ( this.currentSelection != null )
+					{
+						this.currentSelection.IsSelected = true;
+						_lastNonNullSelection = currentSelection;
+					}
+
 					this.OnPropertyChanged("CurrentSelection");
 					this.OnPropertyChanged("CurrentFocusScope");
 
@@ -284,6 +287,8 @@ namespace Snoop
 			}
 		}
 		private VisualTreeItem currentSelection = null;
+		private VisualTreeItem _lastNonNullSelection = null;
+
 		#endregion
 
 		#region Filter
@@ -449,6 +454,35 @@ namespace Snoop
 				m_reducedDepthRoot = newRoot;
 			}
 		}
+
+		public void AddPropertyEdited( PropertyInformation propInfo )
+		{
+			var propertyOwner = CurrentSelection ?? _lastNonNullSelection;
+			List<PropertyValueInfo> propInfoList = null;
+			if ( !_itemsWithEditedProperties.TryGetValue( propertyOwner, out propInfoList ) )
+			{
+				propInfoList = new List<PropertyValueInfo>();
+				_itemsWithEditedProperties.Add( propertyOwner, propInfoList );
+			}
+			propInfoList.Add( new PropertyValueInfo
+			{
+				PropertyName = propInfo.DisplayName,
+				PropertyValue = propInfo.Value,
+			} );
+		}
+
+		//HACK ALERT: give the PropertyGrid2 that's buried way down the tree a chance
+		// to tell us where it is.  We can call back to it when the main window is closing
+		// for one last chance to capture a changed property on the currently selected item
+		private PropertyGrid2 _propertyGrid2;
+		public PropertyGrid2 PropertyGrid2
+		{
+			set
+			{
+				_propertyGrid2 = value;
+			}
+		}
+
 		#endregion
 
 		#region Protected Event Overrides
@@ -488,6 +522,8 @@ namespace Snoop
 			InputManager.Current.PreProcessInput -= this.HandlePreProcessInput;
 			EventsListener.Stop();
 
+			DumpObjectsWithEditedProperties();
+
 			// persist the window placement details to the user settings.
 			WINDOWPLACEMENT wp = new WINDOWPLACEMENT();
 			IntPtr hwnd = new WindowInteropHelper(this).Handle;
@@ -505,6 +541,50 @@ namespace Snoop
 
 			SnoopPartsRegistry.RemoveSnoopVisualTreeRoot(this);
 		}
+
+		/// <summary>
+		/// Hooked into the hosting application main window closing event.  This is our chance to spit out 
+		/// all the properties that changed during the snoop session.
+		/// </summary>
+		private void HostApplicationMainWindowClosingHandler( object sender, CancelEventArgs e )
+		{
+			if ( _propertyGrid2 != null )
+			{
+				_propertyGrid2.Target = null;
+			}
+			DumpObjectsWithEditedProperties();
+		}
+
+
+		private void DumpObjectsWithEditedProperties()
+		{
+			if ( _itemsWithEditedProperties.Count == 0 )
+			{
+				return;
+			}
+
+			var sb = new StringBuilder();
+
+			sb.AppendFormat( "Snoop dump as of {0}{1}--- OBJECTS WITH EDITED PROPERTIES ---{1}", DateTime.Now.ToString( "yyyy-MM-dd HH:mm:ss"), Environment.NewLine ); 
+			foreach ( KeyValuePair<VisualTreeItem, List<PropertyValueInfo>> kvp in _itemsWithEditedProperties )
+			{
+				sb.AppendFormat( "Object: {0}{1}", kvp.Key, Environment.NewLine ); 
+				foreach ( PropertyValueInfo propInfo in kvp.Value )
+				{
+					sb.AppendFormat( "\tProperty: {0}, New Value: {1}{2}", 
+						propInfo.PropertyName, 
+						propInfo.PropertyValue,
+						Environment.NewLine
+						); 
+				}
+			}
+
+			Debug.WriteLine( sb.ToString() );
+			Clipboard.SetText( sb.ToString() );
+
+		}
+
+
 		#endregion
 
 		#region Private Routed Event Handlers
@@ -741,6 +821,7 @@ namespace Snoop
 			else if (Application.Current != null)
 			{
 				root = Application.Current;
+				Application.Current.MainWindow.Closing += HostApplicationMainWindowClosingHandler;
 			}
 			else
 			{
@@ -814,6 +895,10 @@ namespace Snoop
 		/// This fixes problem where Snoop steals the focus from snooped app.
 		/// </summary>
 		private bool returnPreviousFocus;
+
+		private Dictionary<VisualTreeItem, List<PropertyValueInfo>> _itemsWithEditedProperties =
+			new Dictionary<VisualTreeItem, List<PropertyValueInfo>>();
+
 		#endregion
 
 		#region Private Delegates
@@ -845,4 +930,10 @@ namespace Snoop
 		}
 	}
 	#endregion
+
+	public class PropertyValueInfo
+	{
+		public string PropertyName { get; set; }
+		public object PropertyValue { get; set; }
+	}
 }

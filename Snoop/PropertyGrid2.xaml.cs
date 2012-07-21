@@ -10,7 +10,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
 using Snoop.Infrastructure;
@@ -72,6 +71,20 @@ namespace Snoop
 
         }
 
+		private SnoopUI _snoopUI;
+		public SnoopUI SnoopUI
+		{
+			[DebuggerStepThrough]
+			get
+			{
+				if ( _snoopUI == null )
+				{
+					_snoopUI = VisualTreeHelper2.GetAncestor<SnoopUI>( this );
+				}
+				return _snoopUI;
+			}
+		}
+
 		public ObservableCollection<PropertyInformation> Properties
 		{
 			get { return this.properties; }
@@ -99,13 +112,23 @@ namespace Snoop
 		}
 		private void ChangeTarget(object newTarget)
 		{
+			if ( newTarget != null && SnoopUI != null )
+			{
+				SnoopUI.PropertyGrid2 = this;
+			}
+
 			if (this.target != newTarget)
 			{
 				this.target = newTarget;
 
-				foreach (PropertyInformation property in this.properties)
+				foreach ( PropertyInformation property in this.properties )
+				{
+					if ( property.IsValueChangedByUser )
+					{
+						SnoopUI.AddPropertyEdited( property );
+					}
 					property.Teardown();
-
+				}
 				this.RefreshPropertyGrid();
 
 				this.OnPropertyChanged("Type");

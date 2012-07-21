@@ -39,6 +39,11 @@ namespace Snoop
 			if (this.isUpdatingValue)
 				return;
 
+			if ( PropertyInfo != null )
+			{
+				PropertyInfo.IsValueChangedByUser = true;
+			}
+
 			Type targetType = this.PropertyType;
 
 			if (targetType.IsAssignableFrom(typeof(string)))

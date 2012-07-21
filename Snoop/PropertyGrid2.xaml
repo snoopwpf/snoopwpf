@@ -97,6 +97,7 @@ All other rights reserved.
 								DescriptiveValue="{Binding DescriptiveValue, Mode=OneWay}"
 								IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
 								IsEditable="{Binding CanEdit}"
+								PropertyInfo="{Binding}"
 							/>
 
 							<!-- to allow ValueEditor to live on the left and not stretch -->
@@ -117,6 +118,7 @@ All other rights reserved.
 								DescriptiveValue="{Binding DescriptiveValue, Mode=OneWay}"
 								IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
 								IsEditable="{Binding CanEdit}"
+								PropertyInfo="{Binding}"
 							/>
 
 							<!-- to allow ValueEditor to live on the left and not stretch -->
@@ -137,6 +139,7 @@ All other rights reserved.
 								DescriptiveValue="{Binding DescriptiveValue, Mode=OneWay}"
 								IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
 								IsEditable="{Binding CanEdit}"
+								PropertyInfo="{Binding}"
 							/>
 
 							<!-- to allow ValueEditor to live on the left and not stretch -->
@@ -157,6 +160,7 @@ All other rights reserved.
 								DescriptiveValue="{Binding DescriptiveValue, Mode=OneWay}"
 								IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
 								IsEditable="{Binding CanEdit}"
+								PropertyInfo="{Binding}"
 							/>
 
 							<!-- to allow ValueEditor to live on the left and not stretch -->

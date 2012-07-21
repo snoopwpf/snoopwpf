@@ -4,10 +4,7 @@
 // All other rights reserved.
 
 using System;
-using System.Windows;
-using System.ComponentModel;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Windows.Data;
 
 namespace Snoop
@@ -57,6 +54,13 @@ namespace Snoop
 			base.OnValueChanged(newValue);
 
 			this.valuesView.MoveCurrentTo(newValue);
+
+			// sneaky trick here.  only if both are non-null is this a change
+			// caused by the user.  If so, set the bool to track it.
+			if ( PropertyInfo != null && newValue != null )
+			{
+				PropertyInfo.IsValueChangedByUser = true;
+			}
 		}
 
 
