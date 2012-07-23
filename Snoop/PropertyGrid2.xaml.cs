@@ -47,43 +47,42 @@ namespace Snoop
 			};
 		}
 
-        private bool _nameValueOnly = false;
 
-        public bool NameValueOnly
-        {
-            get
-            {
-                return _nameValueOnly;
-            }
-            set
-            {
-                _nameValueOnly = value;
-                GridView gridView = this.ListView != null && this.ListView.View != null ? this.ListView.View as GridView : null;
-                if (_nameValueOnly && gridView != null && gridView.Columns.Count != 2)
-                {
-                    gridView.Columns.RemoveAt(0);
-                    while (gridView.Columns.Count > 2)
-                    {
-                        gridView.Columns.RemoveAt(2);
-                    }
-                }
-            }
+		public bool NameValueOnly
+		{
+			get
+			{
+				return _nameValueOnly;
+			}
+			set
+			{
+				_nameValueOnly = value;
+				GridView gridView = this.ListView != null && this.ListView.View != null ? this.ListView.View as GridView : null;
+				if (_nameValueOnly && gridView != null && gridView.Columns.Count != 2)
+				{
+					gridView.Columns.RemoveAt(0);
+					while (gridView.Columns.Count > 2)
+					{
+						gridView.Columns.RemoveAt(2);
+					}
+				}
+			}
+		}
+		private bool _nameValueOnly = false;
 
-        }
-
-		private SnoopUI _snoopUI;
 		public SnoopUI SnoopUI
 		{
 			[DebuggerStepThrough]
 			get
 			{
-				if ( _snoopUI == null )
+				if (_snoopUI == null)
 				{
-					_snoopUI = VisualTreeHelper2.GetAncestor<SnoopUI>( this );
+					_snoopUI = VisualTreeHelper2.GetAncestor<SnoopUI>(this);
 				}
 				return _snoopUI;
 			}
 		}
+		private SnoopUI _snoopUI;
 
 		public ObservableCollection<PropertyInformation> Properties
 		{
@@ -112,7 +111,7 @@ namespace Snoop
 		}
 		private void ChangeTarget(object newTarget)
 		{
-			if ( newTarget != null && SnoopUI != null )
+			if (newTarget != null && SnoopUI != null)
 			{
 				SnoopUI.PropertyGrid2 = this;
 			}
@@ -121,11 +120,11 @@ namespace Snoop
 			{
 				this.target = newTarget;
 
-				foreach ( PropertyInformation property in this.properties )
+				foreach (PropertyInformation property in this.properties)
 				{
-					if ( property.IsValueChangedByUser )
+					if (property.IsValueChangedByUser)
 					{
-						SnoopUI.AddPropertyEdited( property );
+						SnoopUI.AddPropertyEdited(property);
 					}
 					property.Teardown();
 				}

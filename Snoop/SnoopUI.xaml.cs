@@ -84,110 +84,106 @@ namespace Snoop
 			// so we catch it here, and relay it to the ZoomerControl.
 			this.MouseWheel += this.SnoopUI_MouseWheel;
 
-            filterTimer = new DispatcherTimer();
-            filterTimer.Interval = TimeSpan.FromSeconds(0.3);
-            filterTimer.Tick += (s, e) =>
-            {
-                EnqueueAfterSettingFilter();
-                filterTimer.Stop();
-            };
+			filterTimer = new DispatcherTimer();
+			filterTimer.Interval = TimeSpan.FromSeconds(0.3);
+			filterTimer.Tick += (s, e) =>
+			{
+				EnqueueAfterSettingFilter();
+				filterTimer.Stop();
+			};
 		}
 		#endregion
 
 		#region Public Static Methods
 		public static bool GoBabyGo()
 		{
-            try
-            {
-                SnoopApplication();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(string.Format("There was an error snooping! Message = {0}\n\nStack Trace:\n", ex.Message, ex.StackTrace), "Error Snooping", MessageBoxButton.OK);
-                return false;
-            }
+			try
+			{
+				SnoopApplication();
+				return true;
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(string.Format("There was an error snooping! Message = {0}\n\nStack Trace:\n", ex.Message, ex.StackTrace), "Error Snooping", MessageBoxButton.OK);
+				return false;
+			}
 		}
 
-        public static void SnoopApplication()
-        {
-            Dispatcher dispatcher;
-            if (Application.Current == null)
-                dispatcher = Dispatcher.CurrentDispatcher;
-            else
-                dispatcher = Application.Current.Dispatcher;
+		public static void SnoopApplication()
+		{
+			Dispatcher dispatcher;
+			if (Application.Current == null)
+				dispatcher = Dispatcher.CurrentDispatcher;
+			else
+				dispatcher = Application.Current.Dispatcher;
 
-            if (dispatcher.CheckAccess())
-            {
-                SnoopUI snoop = new SnoopUI();
-                var title = TryGetMainWindowTitle();
-                if (!string.IsNullOrEmpty(title))
-                {
-                    snoop.Title = string.Format("{0} - Snoop", title);
-                }
+			if (dispatcher.CheckAccess())
+			{
+				SnoopUI snoop = new SnoopUI();
+				var title = TryGetMainWindowTitle();
+				if (!string.IsNullOrEmpty(title))
+				{
+					snoop.Title = string.Format("{0} - Snoop", title);
+				}
 
-                snoop.Inspect();
+				snoop.Inspect();
 
-                CheckForOtherDispatchers(dispatcher);
-            }
-            else
-            {
-                dispatcher.Invoke((Action)SnoopApplication);
-                return;
-            }
+				CheckForOtherDispatchers(dispatcher);
+			}
+			else
+			{
+				dispatcher.Invoke((Action)SnoopApplication);
+				return;
+			}
+		}
 
+		private static void CheckForOtherDispatchers(Dispatcher mainDispatcher)
+		{
+			// check and see if any of the root visuals have a different mainDispatcher
+			// if so, ask the user if they wish to enter multiple mainDispatcher mode.
+			// if they do, launch a snoop ui for every additional mainDispatcher.
+			// see http://snoopwpf.codeplex.com/workitem/6334 for more info.
 
-            
-        }
+			List<Visual> rootVisuals = new List<Visual>();
+			List<Dispatcher> dispatchers = new List<Dispatcher>();
+			dispatchers.Add(mainDispatcher);
+			foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
+			{
+				Visual presentationSourceRootVisual = presentationSource.RootVisual;
+				if (presentationSourceRootVisual == null)
+					continue;
 
-        private static void CheckForOtherDispatchers(Dispatcher mainDispatcher)
-        {
-            // check and see if any of the root visuals have a different mainDispatcher
-            // if so, ask the user if they wish to enter multiple mainDispatcher mode.
-            // if they do, launch a snoop ui for every additional mainDispatcher.
-            // see http://snoopwpf.codeplex.com/workitem/6334 for more info.
+				Dispatcher presentationSourceRootVisualDispatcher = presentationSourceRootVisual.Dispatcher;
 
-            List<Visual> rootVisuals = new List<Visual>();
-            List<Dispatcher> dispatchers = new List<Dispatcher>();
-            dispatchers.Add(mainDispatcher);
-            foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
-            {
-                Visual presentationSourceRootVisual = presentationSource.RootVisual;
-                if (presentationSourceRootVisual == null)
-                    continue;
+				if (dispatchers.IndexOf(presentationSourceRootVisualDispatcher) == -1)
+				{
+					rootVisuals.Add(presentationSourceRootVisual);
+					dispatchers.Add(presentationSourceRootVisualDispatcher);
+				}
+			}
 
-                Dispatcher presentationSourceRootVisualDispatcher = presentationSourceRootVisual.Dispatcher;
+			if (rootVisuals.Count > 0)
+			{
+				var result =
+					MessageBox.Show
+					(
+						"Snoop has noticed windows running in multiple dispatchers!\n\n" +
+						"Would you like to enter multiple dispatcher mode, and have a separate Snoop window for each dispatcher?\n\n" +
+						"Without having a separate Snoop window for each dispatcher, you will not be able to Snoop the windows in the dispatcher threads outside of the main dispatcher. " +
+						"Also, note, that if you bring up additional windows in additional dispatchers (after Snooping), you will need to Snoop again in order to launch Snoop windows for those additional dispatchers.",
+						"Enter Multiple Dispatcher Mode",
+						MessageBoxButton.YesNo,
+						MessageBoxImage.Question
+					);
 
-                if (dispatchers.IndexOf(presentationSourceRootVisualDispatcher) == -1)
-                {
-                    rootVisuals.Add(presentationSourceRootVisual);
-                    dispatchers.Add(presentationSourceRootVisualDispatcher);
-                }
-            }
-
-            if (rootVisuals.Count > 0)
-            {
-                var result =
-                    MessageBox.Show
-                    (
-                        "Snoop has noticed windows running in multiple dispatchers!\n\n" +
-                        "Would you like to enter multiple dispatcher mode, and have a separate Snoop window for each dispatcher?\n\n" +
-                        "Without having a separate Snoop window for each dispatcher, you will not be able to Snoop the windows in the dispatcher threads outside of the main dispatcher. " +
-                        "Also, note, that if you bring up additional windows in additional dispatchers (after Snooping), you will need to Snoop again in order to launch Snoop windows for those additional dispatchers.",
-                        "Enter Multiple Dispatcher Mode",
-                        MessageBoxButton.YesNo,
-                        MessageBoxImage.Question
-                    );
-
-
-                if (result == MessageBoxResult.Yes)
-                {
-                    SnoopModes.MultipleDispatcherMode = true;
-                    Thread thread = new Thread(new ParameterizedThreadStart(DispatchOut));
-                    thread.Start(rootVisuals);
-                }
-            }
-        }
+				if (result == MessageBoxResult.Yes)
+				{
+					SnoopModes.MultipleDispatcherMode = true;
+					Thread thread = new Thread(new ParameterizedThreadStart(DispatchOut));
+					thread.Start(rootVisuals);
+				}
+			}
+		}
 
 		private static void DispatchOut(object o)
 		{
@@ -259,7 +255,7 @@ namespace Snoop
 					if (this.currentSelection != null)
 						this.currentSelection.IsSelected = true;
 
-					if ( this.currentSelection != null )
+					if (this.currentSelection != null)
 					{
 						this.currentSelection.IsSelected = true;
 						_lastNonNullSelection = currentSelection;
@@ -303,31 +299,31 @@ namespace Snoop
 			{
 				this.filter = value;
 
-                if (!fromTextBox)
-                {
-                    EnqueueAfterSettingFilter();
-                }
-                else
-                {
-                    filterTimer.Stop();
-                    filterTimer.Start();
-                }
+				if (!fromTextBox)
+				{
+					EnqueueAfterSettingFilter();
+				}
+				else
+				{
+					filterTimer.Stop();
+					filterTimer.Start();
+				}
 			}
 		}
 
-        private void SetFilter(string value)
-        {
-            fromTextBox = false;
-            this.Filter = value;
-            fromTextBox = true;
-        }
+		private void SetFilter(string value)
+		{
+			fromTextBox = false;
+			this.Filter = value;
+			fromTextBox = true;
+		}
 
-        private void EnqueueAfterSettingFilter()
-        {
-            this.filterCall.Enqueue();
+		private void EnqueueAfterSettingFilter()
+		{
+			this.filterCall.Enqueue();
 
-            this.OnPropertyChanged("Filter");
-        }
+			this.OnPropertyChanged("Filter");
+		}
 
 		private string filter = string.Empty;
 		#endregion
@@ -387,33 +383,33 @@ namespace Snoop
 			object root = FindRoot();
 			if (root == null)
 			{
-                if (!SnoopModes.MultipleDispatcherMode)
-                {
-                    //SnoopModes.MultipleDispatcherMode is always false for all scenarios except for cases where we are running multiple dispatchers.
-                    //If SnoopModes.MultipleDispatcherMode was set to true, then there definitely was a root visual found in another dispatcher, so
-                    //the message below would be wrong.
-                    MessageBox.Show
-                    (
-                        "Can't find a current application or a PresentationSource root visual!",
-                        "Can't Snoop",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Exclamation
-                    );
-                }
+				if (!SnoopModes.MultipleDispatcherMode)
+				{
+					//SnoopModes.MultipleDispatcherMode is always false for all scenarios except for cases where we are running multiple dispatchers.
+					//If SnoopModes.MultipleDispatcherMode was set to true, then there definitely was a root visual found in another dispatcher, so
+					//the message below would be wrong.
+					MessageBox.Show
+					(
+						"Can't find a current application or a PresentationSource root visual!",
+						"Can't Snoop",
+						MessageBoxButton.OK,
+						MessageBoxImage.Exclamation
+					);
+				}
 
 				return;
 			}
 			Load(root);
 
 			Window ownerWindow = SnoopWindowUtils.FindOwnerWindow();
-            if (ownerWindow != null)
-            {
-                if (ownerWindow.Dispatcher != this.Dispatcher)
-                {
-                    return;
-                }
-                this.Owner = ownerWindow;
-            }
+			if (ownerWindow != null)
+			{
+				if (ownerWindow.Dispatcher != this.Dispatcher)
+				{
+					return;
+				}
+				this.Owner = ownerWindow;
+			}
 
 			SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
 
@@ -455,23 +451,23 @@ namespace Snoop
 			}
 		}
 
-		public void AddPropertyEdited( PropertyInformation propInfo )
+		public void AddPropertyEdited(PropertyInformation propInfo)
 		{
 			var propertyOwner = CurrentSelection ?? _lastNonNullSelection;
 			List<PropertyValueInfo> propInfoList = null;
-			if ( !_itemsWithEditedProperties.TryGetValue( propertyOwner, out propInfoList ) )
+			if (!_itemsWithEditedProperties.TryGetValue(propertyOwner, out propInfoList))
 			{
 				propInfoList = new List<PropertyValueInfo>();
-				_itemsWithEditedProperties.Add( propertyOwner, propInfoList );
+				_itemsWithEditedProperties.Add(propertyOwner, propInfoList);
 			}
-			propInfoList.Add( new PropertyValueInfo
+			propInfoList.Add(new PropertyValueInfo
 			{
 				PropertyName = propInfo.DisplayName,
 				PropertyValue = propInfo.Value,
-			} );
+			});
 		}
 
-		//HACK ALERT: give the PropertyGrid2 that's buried way down the tree a chance
+		// HACK ALERT: give the PropertyGrid2 that's buried way down the tree a chance
 		// to tell us where it is.  We can call back to it when the main window is closing
 		// for one last chance to capture a changed property on the currently selected item
 		private PropertyGrid2 _propertyGrid2;
@@ -517,6 +513,9 @@ namespace Snoop
 		{
 			base.OnClosing(e);
 
+			if (Application.Current != null && Application.Current.MainWindow != null)
+				Application.Current.MainWindow.Closing -= HostApplicationMainWindowClosingHandler;
+
 			this.CurrentSelection = null;
 
 			InputManager.Current.PreProcessInput -= this.HandlePreProcessInput;
@@ -546,45 +545,48 @@ namespace Snoop
 		/// Hooked into the hosting application main window closing event.  This is our chance to spit out 
 		/// all the properties that changed during the snoop session.
 		/// </summary>
-		private void HostApplicationMainWindowClosingHandler( object sender, CancelEventArgs e )
+		private void HostApplicationMainWindowClosingHandler(object sender, CancelEventArgs e)
 		{
-			if ( _propertyGrid2 != null )
+			if (_propertyGrid2 != null)
 			{
 				_propertyGrid2.Target = null;
 			}
 			DumpObjectsWithEditedProperties();
 		}
 
-
 		private void DumpObjectsWithEditedProperties()
 		{
-			if ( _itemsWithEditedProperties.Count == 0 )
+			if (_itemsWithEditedProperties.Count == 0)
 			{
 				return;
 			}
 
 			var sb = new StringBuilder();
+			sb.AppendFormat
+			(
+				"Snoop dump as of {0}{1}--- OBJECTS WITH EDITED PROPERTIES ---{1}",
+				DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+				Environment.NewLine
+			);
 
-			sb.AppendFormat( "Snoop dump as of {0}{1}--- OBJECTS WITH EDITED PROPERTIES ---{1}", DateTime.Now.ToString( "yyyy-MM-dd HH:mm:ss"), Environment.NewLine ); 
-			foreach ( KeyValuePair<VisualTreeItem, List<PropertyValueInfo>> kvp in _itemsWithEditedProperties )
+			foreach (KeyValuePair<VisualTreeItem, List<PropertyValueInfo>> kvp in _itemsWithEditedProperties)
 			{
-				sb.AppendFormat( "Object: {0}{1}", kvp.Key, Environment.NewLine ); 
-				foreach ( PropertyValueInfo propInfo in kvp.Value )
+				sb.AppendFormat("Object: {0}{1}", kvp.Key, Environment.NewLine); 
+				foreach (PropertyValueInfo propInfo in kvp.Value)
 				{
-					sb.AppendFormat( "\tProperty: {0}, New Value: {1}{2}", 
-						propInfo.PropertyName, 
+					sb.AppendFormat
+					(
+						"\tProperty: {0}, New Value: {1}{2}",
+						propInfo.PropertyName,
 						propInfo.PropertyValue,
 						Environment.NewLine
-						); 
+					);
 				}
 			}
 
-			Debug.WriteLine( sb.ToString() );
-			Clipboard.SetText( sb.ToString() );
-
+			Debug.WriteLine(sb.ToString());
+			Clipboard.SetText(sb.ToString());
 		}
-
-
 		#endregion
 
 		#region Private Routed Event Handlers
@@ -614,7 +616,7 @@ namespace Snoop
 						this.CurrentSelection = visualItem;
 				}
 
-                this.SetFilter(this.filter);
+				this.SetFilter(this.filter);
 			}
 			finally
 			{
@@ -684,7 +686,7 @@ namespace Snoop
 		}
 		private void SnoopUI_MouseWheel(object sender, MouseWheelEventArgs e)
 		{
-			this.PreviewArea.Zoomer.DoMouseWheel(sender, e);        
+			this.PreviewArea.Zoomer.DoMouseWheel(sender, e);
 		}
 		#endregion
 
@@ -726,7 +728,7 @@ namespace Snoop
 
 				node = this.rootVisualTreeItem.FindNode(target);
 
-                this.SetFilter(this.filter);
+				this.SetFilter(this.filter);
 			}
 			return node;
 		}
@@ -761,7 +763,7 @@ namespace Snoop
 			// cplotts todo: we've got to come up with a better way to do this.
 			if (this.filter == "Clear any filter applied to the tree view")
 			{
-                this.SetFilter(string.Empty);
+				this.SetFilter(string.Empty);
 			}
 			else if (this.filter == "Show only visuals with binding errors")
 			{
@@ -821,7 +823,9 @@ namespace Snoop
 			else if (Application.Current != null)
 			{
 				root = Application.Current;
-				Application.Current.MainWindow.Closing += HostApplicationMainWindowClosingHandler;
+
+				if (Application.Current.MainWindow != null)
+					Application.Current.MainWindow.Closing += HostApplicationMainWindowClosingHandler;
 			}
 			else
 			{
@@ -868,15 +872,15 @@ namespace Snoop
 			this.rootVisualTreeItem = VisualTreeItem.Construct(root, null);
 			this.CurrentSelection = this.rootVisualTreeItem;
 
-            this.SetFilter(this.filter);
+			this.SetFilter(this.filter);
 
 			this.OnPropertyChanged("Root");
 		}
 		#endregion
 
 		#region Private Fields
-        private bool fromTextBox = true;
-        private DispatcherTimer filterTimer;
+		private bool fromTextBox = true;
+		private DispatcherTimer filterTimer;
 
 		private ObservableCollection<VisualTreeItem> visualTreeItems = new ObservableCollection<VisualTreeItem>();
 

@@ -41,11 +41,6 @@ namespace Snoop.ValueEditors
 				return;
 			}
 
-			//if (!PropertyEditor.GetSupportMouseWheel(fe))
-			//{
-			//    return;
-			//}
-
 			bool increment = true;
 			bool largeIncrement = false;
 			bool tinyIncrement = false;
@@ -70,12 +65,6 @@ namespace Snoop.ValueEditors
 			var tb = fe as TextBlock;
 			if (tb != null)
 			{
-				//var expRaw = tb.GetBindingExpression(TextBlock.TextProperty);
-				//var binding = BindingOperations.GetBinding(tb, TextBlock.TextProperty);
-				//var bindingBase = BindingOperations.GetBindingBase(tb, TextBlock.TextProperty);
-				//var exp = BindingOperations.GetBindingExpression(tb, TextBlock.TextProperty);
-				//var expBase = BindingOperations.GetBindingExpressionBase(tb, TextBlock.TextProperty);
-
 				int fieldNum = Int32.Parse(tb.Tag.ToString());
 
 				switch (PropertyInfo.Property.PropertyType.Name)

@@ -93,29 +93,26 @@ namespace Snoop
 				typeof(ValueEditor)
 			);
 
-
-		#region PropertyInfo (Dependency Property)
-
-		public static readonly DependencyProperty PropertyInfoProperty =
-			DependencyProperty.Register( "PropertyInfo", typeof( PropertyInformation ), typeof( ValueEditor ),
-					new UIPropertyMetadata( null, new PropertyChangedCallback( OnPropertyInfoChanged ) ) );
-
 		public PropertyInformation PropertyInfo
 		{
 			[DebuggerStepThrough]
-			get { return (PropertyInformation)GetValue( PropertyInfoProperty ); }
-			set { SetValue( PropertyInfoProperty, value ); }
+			get { return (PropertyInformation)GetValue(PropertyInfoProperty); }
+			set { SetValue(PropertyInfoProperty, value); }
 		}
-
-		private static void OnPropertyInfoChanged( DependencyObject d, DependencyPropertyChangedEventArgs e )
+		public static readonly DependencyProperty PropertyInfoProperty =
+			DependencyProperty.Register
+			(
+				"PropertyInfo",
+				typeof(PropertyInformation),
+				typeof(ValueEditor),
+				new UIPropertyMetadata(null, new PropertyChangedCallback(OnPropertyInfoChanged))
+			);
+		private static void OnPropertyInfoChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
-			((ValueEditor)d).OnPropertyInfoChanged( e );
+			((ValueEditor)d).OnPropertyInfoChanged(e);
 		}
-
-		private void OnPropertyInfoChanged( DependencyPropertyChangedEventArgs e )
+		private void OnPropertyInfoChanged(DependencyPropertyChangedEventArgs e)
 		{
 		}
-
-		#endregion
 	}
 }
