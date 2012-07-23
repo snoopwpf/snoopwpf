@@ -59,7 +59,9 @@ All other rights reserved.
 				<Setter Property="Visibility" Value="Collapsed"/>
 				<Setter Property="ToolTip">
 					<Setter.Value>
-						<TextBlock Style="{x:Null}" Text="Scroll mouse wheel here to edit value"/>
+                        <DataTemplate>
+                            <TextBlock Style="{x:Null}" Text="Scroll mouse wheel here to edit value"/>
+                        </DataTemplate>
 					</Setter.Value>
 				</Setter>
 				<Style.Triggers>
