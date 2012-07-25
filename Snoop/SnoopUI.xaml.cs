@@ -153,7 +153,8 @@ namespace Snoop
 			foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
 			{
 				Visual presentationSourceRootVisual = presentationSource.RootVisual;
-				if (presentationSourceRootVisual == null)
+				//if (presentationSourceRootVisual == null)
+                if (!(presentationSourceRootVisual is Window))
 					continue;
 
 				Dispatcher presentationSourceRootVisualDispatcher = presentationSourceRootVisual.Dispatcher;
