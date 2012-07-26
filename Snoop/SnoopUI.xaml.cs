@@ -94,7 +94,15 @@ namespace Snoop
 				EnqueueAfterSettingFilter();
 				filterTimer.Stop();
 			};
-            
+
+		    this.EmbeddedShell.ProviderLocationChanged
+		        += item =>
+		           this.Dispatcher.BeginInvoke(new Action(() =>
+		           {
+		               item.IsSelected = true;
+		               item.IsExpanded = true;
+		               this.CurrentSelection = item;
+		           }));
 			this.EmbeddedShell.SetVariable("ui", this);
             this.EmbeddedShell.Start();
 		}

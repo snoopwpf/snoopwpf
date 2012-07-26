@@ -6,23 +6,44 @@ using System.IO;
 using System.Linq;
 using System.Management.Automation;
 using System.Management.Automation.Provider;
+using System.Threading;
 
 namespace Snoop.Shell
 {
     [CmdletProvider("VisualTreeProvider", ProviderCapabilities.Filter)]
-    public class VisualTreeProvider : NavigationCmdletProvider
+    public class VisualTreeProvider : NavigationCmdletProvider, IDisposable
     {
+        internal const int LocationChangeNotifyDelay = 250;
+        internal const string LocationChangedKeyAction = "locationchanged";
+
         private VisualTreeItem Root
         {
             get
             {
-                var data = Host.PrivateData.BaseObject as Hashtable;
-                if (data != null)
-                {
-                    return data["root"] as VisualTreeItem;
-                }
+                var data = (Hashtable)Host.PrivateData.BaseObject;
+                return (VisualTreeItem)data["root"];
+            }
+        }
 
-                return null;
+        private readonly Timer selectedTimer;
+        private string lastLocation;
+
+        public VisualTreeProvider()
+        {
+            selectedTimer = new Timer(OnSyncSelectedItem, null, Timeout.Infinite, Timeout.Infinite);
+        }
+
+        private void OnSyncSelectedItem(object _)
+        {
+            // the PSDrive.CurrentLocation gets set, but i couldn't find a way to have it notify
+            // so unfortunately we have to poll :(
+            if (this.PSDriveInfo.CurrentLocation != this.lastLocation)
+            {
+                var data = (Hashtable)Host.PrivateData.BaseObject;
+                var action = (Action<VisualTreeItem>)data[LocationChangedKeyAction];
+                action(GetTreeItem(this.PSDriveInfo.CurrentLocation));
+
+                this.lastLocation = this.PSDriveInfo.CurrentLocation;
             }
         }
 
@@ -43,6 +64,7 @@ namespace Snoop.Shell
 
             if (path.Equals("\\"))
             {
+                this.selectedTimer.Change(LocationChangeNotifyDelay, Timeout.Infinite);
                 return Root;
             }
 
@@ -65,6 +87,7 @@ namespace Snoop.Shell
 
             if (count == parts.Length)
             {
+                this.selectedTimer.Change(LocationChangeNotifyDelay, Timeout.Infinite);
                 return current;
             }
 
@@ -148,6 +171,12 @@ namespace Snoop.Shell
                     WriteItemObject(name, nodePath, true);
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            this.selectedTimer.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 

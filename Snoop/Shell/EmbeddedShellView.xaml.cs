@@ -19,6 +19,8 @@ namespace Snoop.Shell
     /// </summary>
     public partial class EmbeddedShellView : UserControl
     {
+        public event Action<VisualTreeItem> ProviderLocationChanged;
+
         private readonly Runspace runspace;
         private readonly SnoopPSHost host;
         private int historyIndex;
@@ -48,6 +50,8 @@ F12 - Clear output
         public void Start()
         {
             Invoke("new-psdrive snoop snoop -root /");
+
+            this.SetVariable(VisualTreeProvider.LocationChangedKeyAction, this.ProviderLocationChanged);
             
             string folder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Scripts");
             Invoke(string.Format("import-module \"{0}\"", Path.Combine(folder, "Snoop.psm1")));
