@@ -29,7 +29,7 @@ Note that in both cases, -Select will automatically select the first match in th
 
 ## Provider
 
-There is preliminary support for a provider to navigate the tree (i.e., using cd, dir, etc.).  To enable this, enter the drive by issuing the command:  'cd tree:'
+There is preliminary support for a provider to navigate the tree (i.e., using cd, dir, etc.).  To enable this, enter the drive by issuing the command:  'cd snoop:'
 
 ## Hotkeys
 

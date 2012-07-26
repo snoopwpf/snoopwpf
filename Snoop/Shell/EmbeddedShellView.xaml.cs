@@ -36,19 +36,19 @@ F12 - Clear output
             // ignore execution-policy
             var iis = InitialSessionState.CreateDefault();
             iis.AuthorizationManager = new AuthorizationManager(Guid.NewGuid().ToString());
-            iis.Providers.Add(new SessionStateProviderEntry("tree", typeof(VisualTreeProvider), string.Empty));
+            iis.Providers.Add(new SessionStateProviderEntry("snoop", typeof(VisualTreeProvider), string.Empty));
 
             this.host = new SnoopPSHost(x => this.outputTextBox.AppendText(x));
             this.runspace = RunspaceFactory.CreateRunspace(this.host, iis);
             this.runspace.ThreadOptions = PSThreadOptions.UseCurrentThread;
             this.runspace.ApartmentState = ApartmentState.STA;
             this.runspace.Open();
-
-            Invoke("new-psdrive tree tree -root /");
         }
 
         public void Start()
         {
+            Invoke("new-psdrive snoop snoop -root /");
+            
             string folder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Scripts");
             Invoke(string.Format("import-module \"{0}\"", Path.Combine(folder, "Snoop.psm1")));
 
