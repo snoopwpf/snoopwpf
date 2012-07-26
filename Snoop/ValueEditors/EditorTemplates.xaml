@@ -48,7 +48,11 @@ All other rights reserved.
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type my:BoolValueEditor}">
-					<CheckBox IsChecked="{Binding Value, Mode=TwoWay}" IsEnabled="{TemplateBinding IsEditable}"/>
+					<CheckBox
+						x:Name="PART_CheckBox"
+						IsChecked="{Binding Value, Mode=TwoWay}"
+						IsEnabled="{TemplateBinding IsEditable}"
+					/>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>

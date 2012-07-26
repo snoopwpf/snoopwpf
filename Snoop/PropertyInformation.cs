@@ -16,7 +16,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.IO;
 using Snoop.Infrastructure;
-using Snoop.Converters;
 
 namespace Snoop
 {
@@ -340,6 +339,9 @@ namespace Snoop
 			get { return this.isLocallySet; }
 		}
 		private bool isLocallySet = false;
+
+		public bool IsValueChangedByUser { get; set; }
+
 
 		public bool CanEdit
 		{
@@ -760,5 +762,6 @@ namespace Snoop
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 		}
 		#endregion
+
 	}
 }

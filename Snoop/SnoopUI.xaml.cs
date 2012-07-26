@@ -8,11 +8,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Globalization;
-using System.Reflection;
+using System.Linq;
+using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -35,6 +33,7 @@ namespace Snoop
 		public static readonly RoutedCommand InspectCommand = new RoutedCommand("Inspect", typeof(SnoopUI));
 		public static readonly RoutedCommand SelectFocusCommand = new RoutedCommand("SelectFocus", typeof(SnoopUI));
 		public static readonly RoutedCommand SelectFocusScopeCommand = new RoutedCommand("SelectFocusScope", typeof(SnoopUI));
+        public static readonly RoutedCommand CopyMarkupCommand = new RoutedCommand("CopyMarkup", typeof(SnoopUI));
 		#endregion
 
 		#region Static Constructor
@@ -47,154 +46,151 @@ namespace Snoop
 		#endregion
 
 		#region Public Constructor
-        public SnoopUI()
-        {
-            this.filterCall = new DelayedCall(this.ProcessFilter, DispatcherPriority.Background);
+		public SnoopUI()
+		{
+			this.filterCall = new DelayedCall(this.ProcessFilter, DispatcherPriority.Background);
 
-            this.InheritanceBehavior = InheritanceBehavior.SkipToThemeNext;
-            this.InitializeComponent();
+			this.InheritanceBehavior = InheritanceBehavior.SkipToThemeNext;
+			this.InitializeComponent();
 
-            // wrap the following PresentationTraceSources.Refresh() call in a try/catch
-            // sometimes a NullReferenceException occurs
-            // due to empty <filter> elements in the app.config file of the app you are snooping
-            // see the following for more info:
-            // http://snoopwpf.codeplex.com/discussions/236503
-            // http://snoopwpf.codeplex.com/workitem/6647
-            try
-            {
-                PresentationTraceSources.Refresh();
-                PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.Error;
-            }
-            catch (NullReferenceException)
-            {
-                // swallow this exception since you can Snoop just fine anyways.
-            }
+			// wrap the following PresentationTraceSources.Refresh() call in a try/catch
+			// sometimes a NullReferenceException occurs
+			// due to empty <filter> elements in the app.config file of the app you are snooping
+			// see the following for more info:
+			// http://snoopwpf.codeplex.com/discussions/236503
+			// http://snoopwpf.codeplex.com/workitem/6647
+			try
+			{
+				PresentationTraceSources.Refresh();
+				PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.Error;
+			}
+			catch (NullReferenceException)
+			{
+				// swallow this exception since you can Snoop just fine anyways.
+			}
 
-            this.CommandBindings.Add(new CommandBinding(SnoopUI.IntrospectCommand, this.HandleIntrospection));
-            this.CommandBindings.Add(new CommandBinding(SnoopUI.RefreshCommand, this.HandleRefresh));
-            this.CommandBindings.Add(new CommandBinding(SnoopUI.HelpCommand, this.HandleHelp));
+			this.CommandBindings.Add(new CommandBinding(SnoopUI.IntrospectCommand, this.HandleIntrospection));
+			this.CommandBindings.Add(new CommandBinding(SnoopUI.RefreshCommand, this.HandleRefresh));
+			this.CommandBindings.Add(new CommandBinding(SnoopUI.HelpCommand, this.HandleHelp));
 
-            // cplotts todo: how does this inspect command work? seems tied into the events view.
-            this.CommandBindings.Add(new CommandBinding(SnoopUI.InspectCommand, this.HandleInspect));
+			// cplotts todo: how does this inspect command work? seems tied into the events view.
+			this.CommandBindings.Add(new CommandBinding(SnoopUI.InspectCommand, this.HandleInspect));
 
-            this.CommandBindings.Add(new CommandBinding(SnoopUI.SelectFocusCommand, this.HandleSelectFocus));
-            this.CommandBindings.Add(new CommandBinding(SnoopUI.SelectFocusScopeCommand, this.HandleSelectFocusScope));
+			this.CommandBindings.Add(new CommandBinding(SnoopUI.SelectFocusCommand, this.HandleSelectFocus));
+			this.CommandBindings.Add(new CommandBinding(SnoopUI.SelectFocusScopeCommand, this.HandleSelectFocusScope));
+            this.CommandBindings.Add(new CommandBinding(SnoopUI.CopyMarkupCommand, this.HandleCopyMarkup));
 
-            InputManager.Current.PreProcessInput += this.HandlePreProcessInput;
-            this.Tree.SelectedItemChanged += this.HandleTreeSelectedItemChanged;
+			InputManager.Current.PreProcessInput += this.HandlePreProcessInput;
+			this.Tree.SelectedItemChanged += this.HandleTreeSelectedItemChanged;
 
-            // we can't catch the mouse wheel at the ZoomerControl level,
-            // so we catch it here, and relay it to the ZoomerControl.
-            this.MouseWheel += this.SnoopUI_MouseWheel;
+			// we can't catch the mouse wheel at the ZoomerControl level,
+			// so we catch it here, and relay it to the ZoomerControl.
+			this.MouseWheel += this.SnoopUI_MouseWheel;
 
-            filterTimer = new DispatcherTimer();
-            filterTimer.Interval = TimeSpan.FromSeconds(0.3);
-            filterTimer.Tick += (s, e) =>
-            {
-                EnqueueAfterSettingFilter();
-                filterTimer.Stop();
-            };
-
-            this.EmbeddedShell.SetVariable("ui", this);
+			filterTimer = new DispatcherTimer();
+			filterTimer.Interval = TimeSpan.FromSeconds(0.3);
+			filterTimer.Tick += (s, e) =>
+			{
+				EnqueueAfterSettingFilter();
+				filterTimer.Stop();
+			};
+            
+			this.EmbeddedShell.SetVariable("ui", this);
             this.EmbeddedShell.Start();
-        }
-
-	    #endregion
+		}
+		#endregion
 
 		#region Public Static Methods
 		public static bool GoBabyGo()
 		{
-            try
-            {
-                SnoopApplication();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(string.Format("There was an error snooping! Message = {0}\n\nStack Trace:\n", ex.Message, ex.StackTrace), "Error Snooping", MessageBoxButton.OK);
-                return false;
-            }
+			try
+			{
+				SnoopApplication();
+				return true;
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(string.Format("There was an error snooping! Message = {0}\n\nStack Trace:\n", ex.Message, ex.StackTrace), "Error Snooping", MessageBoxButton.OK);
+				return false;
+			}
 		}
 
-        public static void SnoopApplication()
-        {
-            Dispatcher dispatcher;
-            if (Application.Current == null)
-                dispatcher = Dispatcher.CurrentDispatcher;
-            else
-                dispatcher = Application.Current.Dispatcher;
+		public static void SnoopApplication()
+		{
+			Dispatcher dispatcher;
+			if (Application.Current == null)
+				dispatcher = Dispatcher.CurrentDispatcher;
+			else
+				dispatcher = Application.Current.Dispatcher;
 
-            if (dispatcher.CheckAccess())
-            {
-                SnoopUI snoop = new SnoopUI();
-                var title = TryGetMainWindowTitle();
-                if (!string.IsNullOrEmpty(title))
-                {
-                    snoop.Title = string.Format("{0} - Snoop", title);
-                }
+			if (dispatcher.CheckAccess())
+			{
+				SnoopUI snoop = new SnoopUI();
+				var title = TryGetMainWindowTitle();
+				if (!string.IsNullOrEmpty(title))
+				{
+					snoop.Title = string.Format("{0} - Snoop", title);
+				}
 
-                snoop.Inspect();
+				snoop.Inspect();
 
-                CheckForOtherDispatchers(dispatcher);
-            }
-            else
-            {
-                dispatcher.Invoke((Action)SnoopApplication);
-                return;
-            }
+				CheckForOtherDispatchers(dispatcher);
+			}
+			else
+			{
+				dispatcher.Invoke((Action)SnoopApplication);
+				return;
+			}
+		}
 
+		private static void CheckForOtherDispatchers(Dispatcher mainDispatcher)
+		{
+			// check and see if any of the root visuals have a different mainDispatcher
+			// if so, ask the user if they wish to enter multiple mainDispatcher mode.
+			// if they do, launch a snoop ui for every additional mainDispatcher.
+			// see http://snoopwpf.codeplex.com/workitem/6334 for more info.
 
-            
-        }
+			List<Visual> rootVisuals = new List<Visual>();
+			List<Dispatcher> dispatchers = new List<Dispatcher>();
+			dispatchers.Add(mainDispatcher);
+			foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
+			{
+				Visual presentationSourceRootVisual = presentationSource.RootVisual;
 
-        private static void CheckForOtherDispatchers(Dispatcher mainDispatcher)
-        {
-            // check and see if any of the root visuals have a different mainDispatcher
-            // if so, ask the user if they wish to enter multiple mainDispatcher mode.
-            // if they do, launch a snoop ui for every additional mainDispatcher.
-            // see http://snoopwpf.codeplex.com/workitem/6334 for more info.
+                if (!(presentationSourceRootVisual is Window))
+					continue;
 
-            List<Visual> rootVisuals = new List<Visual>();
-            List<Dispatcher> dispatchers = new List<Dispatcher>();
-            dispatchers.Add(mainDispatcher);
-            foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
-            {
-                Visual presentationSourceRootVisual = presentationSource.RootVisual;
-                if (presentationSourceRootVisual == null)
-                    continue;
+				Dispatcher presentationSourceRootVisualDispatcher = presentationSourceRootVisual.Dispatcher;
 
-                Dispatcher presentationSourceRootVisualDispatcher = presentationSourceRootVisual.Dispatcher;
+				if (dispatchers.IndexOf(presentationSourceRootVisualDispatcher) == -1)
+				{
+					rootVisuals.Add(presentationSourceRootVisual);
+					dispatchers.Add(presentationSourceRootVisualDispatcher);
+				}
+			}
 
-                if (dispatchers.IndexOf(presentationSourceRootVisualDispatcher) == -1)
-                {
-                    rootVisuals.Add(presentationSourceRootVisual);
-                    dispatchers.Add(presentationSourceRootVisualDispatcher);
-                }
-            }
+			if (rootVisuals.Count > 0)
+			{
+				var result =
+					MessageBox.Show
+					(
+						"Snoop has noticed windows running in multiple dispatchers!\n\n" +
+						"Would you like to enter multiple dispatcher mode, and have a separate Snoop window for each dispatcher?\n\n" +
+						"Without having a separate Snoop window for each dispatcher, you will not be able to Snoop the windows in the dispatcher threads outside of the main dispatcher. " +
+						"Also, note, that if you bring up additional windows in additional dispatchers (after Snooping), you will need to Snoop again in order to launch Snoop windows for those additional dispatchers.",
+						"Enter Multiple Dispatcher Mode",
+						MessageBoxButton.YesNo,
+						MessageBoxImage.Question
+					);
 
-            if (rootVisuals.Count > 0)
-            {
-                var result =
-                    MessageBox.Show
-                    (
-                        "Snoop has noticed windows running in multiple dispatchers!\n\n" +
-                        "Would you like to enter multiple dispatcher mode, and have a separate Snoop window for each dispatcher?\n\n" +
-                        "Without having a separate Snoop window for each dispatcher, you will not be able to Snoop the windows in the dispatcher threads outside of the main dispatcher. " +
-                        "Also, note, that if you bring up additional windows in additional dispatchers (after Snooping), you will need to Snoop again in order to launch Snoop windows for those additional dispatchers.",
-                        "Enter Multiple Dispatcher Mode",
-                        MessageBoxButton.YesNo,
-                        MessageBoxImage.Question
-                    );
-
-
-                if (result == MessageBoxResult.Yes)
-                {
-                    SnoopModes.MultipleDispatcherMode = true;
-                    Thread thread = new Thread(new ParameterizedThreadStart(DispatchOut));
-                    thread.Start(rootVisuals);
-                }
-            }
-        }
+				if (result == MessageBoxResult.Yes)
+				{
+					SnoopModes.MultipleDispatcherMode = true;
+					Thread thread = new Thread(new ParameterizedThreadStart(DispatchOut));
+					thread.Start(rootVisuals);
+				}
+			}
+		}
 
 		private static void DispatchOut(object o)
 		{
@@ -275,6 +271,12 @@ namespace Snoop
 					if (this.currentSelection != null)
 						this.currentSelection.IsSelected = true;
 
+					if (this.currentSelection != null)
+					{
+						this.currentSelection.IsSelected = true;
+						_lastNonNullSelection = currentSelection;
+					}
+
 					this.OnPropertyChanged("CurrentSelection");
 					this.OnPropertyChanged("CurrentFocusScope");
 
@@ -297,6 +299,8 @@ namespace Snoop
 			}
 		}
 		private VisualTreeItem currentSelection = null;
+		private VisualTreeItem _lastNonNullSelection = null;
+
 		#endregion
 
 		#region Filter
@@ -311,31 +315,31 @@ namespace Snoop
 			{
 				this.filter = value;
 
-                if (!fromTextBox)
-                {
-                    EnqueueAfterSettingFilter();
-                }
-                else
-                {
-                    filterTimer.Stop();
-                    filterTimer.Start();
-                }
+				if (!fromTextBox)
+				{
+					EnqueueAfterSettingFilter();
+				}
+				else
+				{
+					filterTimer.Stop();
+					filterTimer.Start();
+				}
 			}
 		}
 
-        private void SetFilter(string value)
-        {
-            fromTextBox = false;
-            this.Filter = value;
-            fromTextBox = true;
-        }
+		private void SetFilter(string value)
+		{
+			fromTextBox = false;
+			this.Filter = value;
+			fromTextBox = true;
+		}
 
-        private void EnqueueAfterSettingFilter()
-        {
-            this.filterCall.Enqueue();
+		private void EnqueueAfterSettingFilter()
+		{
+			this.filterCall.Enqueue();
 
-            this.OnPropertyChanged("Filter");
-        }
+			this.OnPropertyChanged("Filter");
+		}
 
 		private string filter = string.Empty;
 		#endregion
@@ -395,33 +399,33 @@ namespace Snoop
 			object root = FindRoot();
 			if (root == null)
 			{
-                if (!SnoopModes.MultipleDispatcherMode)
-                {
-                    //SnoopModes.MultipleDispatcherMode is always false for all scenarios except for cases where we are running multiple dispatchers.
-                    //If SnoopModes.MultipleDispatcherMode was set to true, then there definitely was a root visual found in another dispatcher, so
-                    //the message below would be wrong.
-                    MessageBox.Show
-                    (
-                        "Can't find a current application or a PresentationSource root visual!",
-                        "Can't Snoop",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Exclamation
-                    );
-                }
+				if (!SnoopModes.MultipleDispatcherMode)
+				{
+					//SnoopModes.MultipleDispatcherMode is always false for all scenarios except for cases where we are running multiple dispatchers.
+					//If SnoopModes.MultipleDispatcherMode was set to true, then there definitely was a root visual found in another dispatcher, so
+					//the message below would be wrong.
+					MessageBox.Show
+					(
+						"Can't find a current application or a PresentationSource root visual!",
+						"Can't Snoop",
+						MessageBoxButton.OK,
+						MessageBoxImage.Exclamation
+					);
+				}
 
 				return;
 			}
 			Load(root);
 
 			Window ownerWindow = SnoopWindowUtils.FindOwnerWindow();
-            if (ownerWindow != null)
-            {
-                if (ownerWindow.Dispatcher != this.Dispatcher)
-                {
-                    return;
-                }
-                this.Owner = ownerWindow;
-            }
+			if (ownerWindow != null)
+			{
+				if (ownerWindow.Dispatcher != this.Dispatcher)
+				{
+					return;
+				}
+				this.Owner = ownerWindow;
+			}
 
 			SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
 
@@ -462,6 +466,35 @@ namespace Snoop
 				m_reducedDepthRoot = newRoot;
 			}
 		}
+
+		public void AddPropertyEdited(PropertyInformation propInfo)
+		{
+			var propertyOwner = CurrentSelection ?? _lastNonNullSelection;
+			List<PropertyValueInfo> propInfoList = null;
+			if (!_itemsWithEditedProperties.TryGetValue(propertyOwner, out propInfoList))
+			{
+				propInfoList = new List<PropertyValueInfo>();
+				_itemsWithEditedProperties.Add(propertyOwner, propInfoList);
+			}
+			propInfoList.Add(new PropertyValueInfo
+			{
+				PropertyName = propInfo.DisplayName,
+				PropertyValue = propInfo.Value,
+			});
+		}
+
+		// HACK ALERT: give the PropertyGrid2 that's buried way down the tree a chance
+		// to tell us where it is.  We can call back to it when the main window is closing
+		// for one last chance to capture a changed property on the currently selected item
+		private PropertyGrid2 _propertyGrid2;
+		public PropertyGrid2 PropertyGrid2
+		{
+			set
+			{
+				_propertyGrid2 = value;
+			}
+		}
+
 		#endregion
 
 		#region Protected Event Overrides
@@ -496,10 +529,15 @@ namespace Snoop
 		{
 			base.OnClosing(e);
 
+			if (Application.Current != null && Application.Current.MainWindow != null)
+				Application.Current.MainWindow.Closing -= HostApplicationMainWindowClosingHandler;
+
 			this.CurrentSelection = null;
 
 			InputManager.Current.PreProcessInput -= this.HandlePreProcessInput;
 			EventsListener.Stop();
+
+			DumpObjectsWithEditedProperties();
 
 			// persist the window placement details to the user settings.
 			WINDOWPLACEMENT wp = new WINDOWPLACEMENT();
@@ -517,6 +555,53 @@ namespace Snoop
 			Properties.Settings.Default.Save();
 
 			SnoopPartsRegistry.RemoveSnoopVisualTreeRoot(this);
+		}
+
+		/// <summary>
+		/// Hooked into the hosting application main window closing event.  This is our chance to spit out 
+		/// all the properties that changed during the snoop session.
+		/// </summary>
+		private void HostApplicationMainWindowClosingHandler(object sender, CancelEventArgs e)
+		{
+			if (_propertyGrid2 != null)
+			{
+				_propertyGrid2.Target = null;
+			}
+			DumpObjectsWithEditedProperties();
+		}
+
+		private void DumpObjectsWithEditedProperties()
+		{
+			if (_itemsWithEditedProperties.Count == 0)
+			{
+				return;
+			}
+
+			var sb = new StringBuilder();
+			sb.AppendFormat
+			(
+				"Snoop dump as of {0}{1}--- OBJECTS WITH EDITED PROPERTIES ---{1}",
+				DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+				Environment.NewLine
+			);
+
+			foreach (KeyValuePair<VisualTreeItem, List<PropertyValueInfo>> kvp in _itemsWithEditedProperties)
+			{
+				sb.AppendFormat("Object: {0}{1}", kvp.Key, Environment.NewLine); 
+				foreach (PropertyValueInfo propInfo in kvp.Value)
+				{
+					sb.AppendFormat
+					(
+						"\tProperty: {0}, New Value: {1}{2}",
+						propInfo.PropertyName,
+						propInfo.PropertyValue,
+						Environment.NewLine
+					);
+				}
+			}
+
+			Debug.WriteLine(sb.ToString());
+			Clipboard.SetText(sb.ToString());
 		}
 		#endregion
 
@@ -547,7 +632,7 @@ namespace Snoop
 						this.CurrentSelection = visualItem;
 				}
 
-                this.SetFilter(this.filter);
+				this.SetFilter(this.filter);
 			}
 			finally
 			{
@@ -587,6 +672,57 @@ namespace Snoop
 			SelectItem(e.Parameter as DependencyObject);
 		}
 
+        private void HandleCopyMarkup(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (this.CurrentSelection == null)
+            {
+                return;
+            }
+
+            // construct the markup for the element and copy it to the clipboard (local properties only)
+            List<PropertyInformation> Properties = PropertyInformation.GetProperties(this.CurrentSelection.Target);
+            string Tag = "";
+            string[] fqn = this.CurrentSelection.Target.ToString().Split('.');
+            string Namespace = fqn[0];
+            string[] typeArray;
+            string Type = "";
+
+            if (fqn.Length > 0)
+            {
+                typeArray = fqn[fqn.Length - 1].Split(':');
+                if (typeArray.Length > 0)
+                {
+                    Type= typeArray[0];
+                }
+            }
+
+            switch (Namespace)
+            {
+                case "System":
+                    Namespace = "";
+                    break;
+                case "xceed":
+                    Namespace = "xcdg:";
+                    break;
+                default:
+                    Namespace += ":";
+                    break;
+            }
+
+            Tag = "<" + Namespace + Type;
+
+            // add the properties, ignore bindings and styles for now since theres no code here to handle it yet, only add editable properties.
+            foreach (PropertyInformation property in Properties.Where(x => x.ValueSource.BaseValueSource == BaseValueSource.Local && x.CanEdit && x.DisplayName != "Style"))
+            {
+                // add properties to tag, in my experience using "Name" can be flakey, should use x:Name instead
+                Tag += " " + (property.DisplayName == "Name" ? "x:Name" : property.DisplayName) + "=" + '"' + property.Value + '"';
+            }
+
+            Tag += "/>";
+
+            Clipboard.SetText(Tag);
+        }
+
 		private void SelectItem(DependencyObject item)
 		{
 			if (item != null)
@@ -617,7 +753,7 @@ namespace Snoop
 		}
 		private void SnoopUI_MouseWheel(object sender, MouseWheelEventArgs e)
 		{
-			this.PreviewArea.Zoomer.DoMouseWheel(sender, e);        
+			this.PreviewArea.Zoomer.DoMouseWheel(sender, e);
 		}
 		#endregion
 
@@ -659,7 +795,7 @@ namespace Snoop
 
 				node = this.rootVisualTreeItem.FindNode(target);
 
-                this.SetFilter(this.filter);
+				this.SetFilter(this.filter);
 			}
 			return node;
 		}
@@ -694,7 +830,7 @@ namespace Snoop
 			// cplotts todo: we've got to come up with a better way to do this.
 			if (this.filter == "Clear any filter applied to the tree view")
 			{
-                this.SetFilter(string.Empty);
+				this.SetFilter(string.Empty);
 			}
 			else if (this.filter == "Show only visuals with binding errors")
 			{
@@ -754,6 +890,9 @@ namespace Snoop
 			else if (Application.Current != null)
 			{
 				root = Application.Current;
+
+				if (Application.Current.MainWindow != null)
+					Application.Current.MainWindow.Closing += HostApplicationMainWindowClosingHandler;
 			}
 			else
 			{
@@ -800,15 +939,15 @@ namespace Snoop
 			this.Root = VisualTreeItem.Construct(root, null);
 			this.CurrentSelection = this.rootVisualTreeItem;
 
-            this.SetFilter(this.filter);
+			this.SetFilter(this.filter);
 
 			this.OnPropertyChanged("Root");
 		}
 		#endregion
 
 		#region Private Fields
-        private bool fromTextBox = true;
-        private DispatcherTimer filterTimer;
+		private bool fromTextBox = true;
+		private DispatcherTimer filterTimer;
 
 		private ObservableCollection<VisualTreeItem> visualTreeItems = new ObservableCollection<VisualTreeItem>();
 
@@ -827,6 +966,10 @@ namespace Snoop
 		/// This fixes problem where Snoop steals the focus from snooped app.
 		/// </summary>
 		private bool returnPreviousFocus;
+
+		private Dictionary<VisualTreeItem, List<PropertyValueInfo>> _itemsWithEditedProperties =
+			new Dictionary<VisualTreeItem, List<PropertyValueInfo>>();
+
 		#endregion
 
 		#region Private Delegates
@@ -858,4 +1001,10 @@ namespace Snoop
 		}
 	}
 	#endregion
+
+	public class PropertyValueInfo
+	{
+		public string PropertyName { get; set; }
+		public object PropertyValue { get; set; }
+	}
 }

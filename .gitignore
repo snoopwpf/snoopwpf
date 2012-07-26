@@ -11,3 +11,4 @@ Release/
 *.pdb
 *.dll
 *.ncb
+_Resharper.*

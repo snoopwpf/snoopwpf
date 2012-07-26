@@ -39,10 +39,17 @@ namespace Snoop
 			if (this.isUpdatingValue)
 				return;
 
+			if (PropertyInfo != null)
+			{
+				PropertyInfo.IsValueChangedByUser = true;
+			}
+
 			Type targetType = this.PropertyType;
 
 			if (targetType.IsAssignableFrom(typeof(string)))
+			{
 				this.Value = newValue;
+			}
 			else
 			{
 				TypeConverter converter = TypeDescriptor.GetConverter(targetType);
@@ -50,8 +57,7 @@ namespace Snoop
 				{
 					try
 					{
-						//this.Value = converter.ConvertFrom(newValue);
-                        SetValueFromConverter(newValue, targetType, converter);
+						SetValueFromConverter(newValue, targetType, converter);
 					}
 					catch (Exception)
 					{
@@ -60,17 +66,17 @@ namespace Snoop
 			}
 		}
 
-        private void SetValueFromConverter(string newValue, Type targetType, TypeConverter converter)
-        {
-            if (!converter.CanConvertFrom(targetType) && string.IsNullOrEmpty(newValue))
-            {
-                this.Value = null;
-            }
-            else
-            {
-                this.Value = converter.ConvertFrom(newValue);
-            }
-        }
+		private void SetValueFromConverter(string newValue, Type targetType, TypeConverter converter)
+		{
+			if (!converter.CanConvertFrom(targetType) && string.IsNullOrEmpty(newValue))
+			{
+				this.Value = null;
+			}
+			else
+			{
+				this.Value = converter.ConvertFrom(newValue);
+			}
+		}
 
 
 		protected override void OnValueChanged(object newValue)
