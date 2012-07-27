@@ -111,7 +111,6 @@ namespace Snoop
 	               this.Dispatcher.BeginInvoke(new Action(() =>
 	               {
 	                   item.IsSelected = true;
-	                   item.IsExpanded = true;
 	                   this.CurrentSelection = item;
 	               }));
 	        this.EmbeddedShell.SetVariable("ui", this);

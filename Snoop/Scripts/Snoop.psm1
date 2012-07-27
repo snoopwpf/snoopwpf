@@ -53,4 +53,12 @@ function Find-ByType {
 	Find-By { $_.Target.GetType().Name -match $type } -select:$select
 }
 
-Export-ModuleMember Find-By,Find-ByType,Find-ByName
+<#
+.SYNOPSIS
+	Gets the currently selected tree item's data context.
+#>
+function Get-SelectedDataContext {
+	$selected.Target.DataContext
+}
+
+Export-ModuleMember Find-By,Find-ByType,Find-ByName,Get-SelectedDataContext

@@ -45,6 +45,9 @@ F12 - Clear output
             this.runspace.ThreadOptions = PSThreadOptions.UseCurrentThread;
             this.runspace.ApartmentState = ApartmentState.STA;
             this.runspace.Open();
+
+            // default required if you intend to inject scriptblocks into the host application
+            Runspace.DefaultRunspace = this.runspace;
         }
 
         public void Start()
@@ -56,6 +59,7 @@ F12 - Clear output
             string folder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Scripts");
             Invoke(string.Format("import-module \"{0}\"", Path.Combine(folder, "Snoop.psm1")));
 
+            this.outputTextBox.Clear();
             Invoke("write-host 'Welcome to the Snoop PowerShell console!'");
             Invoke("write-host '----------------------------------------'");
             Invoke("write-host 'To get started, try using the $root and $selected variables.'");
