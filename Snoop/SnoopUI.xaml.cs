@@ -20,6 +20,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using System.Threading;
 using Snoop.Infrastructure;
+using Snoop.Shell;
 
 namespace Snoop
 {
@@ -95,18 +96,29 @@ namespace Snoop
 				filterTimer.Stop();
 			};
 
-		    this.EmbeddedShell.ProviderLocationChanged
-		        += item =>
-		           this.Dispatcher.BeginInvoke(new Action(() =>
-		           {
-		               item.IsSelected = true;
-		               item.IsExpanded = true;
-		               this.CurrentSelection = item;
-		           }));
-			this.EmbeddedShell.SetVariable("ui", this);
-            this.EmbeddedShell.Start();
+		    InitShell();
 		}
-		#endregion
+
+	    private void InitShell()
+	    {
+	        this.Tree.SelectedItemChanged += delegate
+	        {
+	            this.EmbeddedShell.Invoke("cd \\" + this.CurrentSelection.NodePath());
+	        };
+
+	        this.EmbeddedShell.ProviderLocationChanged
+	            += item =>
+	               this.Dispatcher.BeginInvoke(new Action(() =>
+	               {
+	                   item.IsSelected = true;
+	                   item.IsExpanded = true;
+	                   this.CurrentSelection = item;
+	               }));
+	        this.EmbeddedShell.SetVariable("ui", this);
+	        this.EmbeddedShell.Start();
+	    }
+
+	    #endregion
 
 		#region Public Static Methods
 		public static bool GoBabyGo()

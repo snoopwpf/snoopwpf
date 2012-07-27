@@ -113,7 +113,7 @@ F12 - Clear output
             Invoke(string.Format("${0} = $host.PrivateData['{0}']", name));
         }
 
-        private void Invoke(string script, bool addToHistory = false)
+        public void Invoke(string script, bool addToHistory = false)
         {
             this.historyIndex = 0;
 
