@@ -24,12 +24,14 @@ By default, the PowerShell runspace will expose 4 variables:
  * Find-By([scriptblock]$predicate,[switch]$select)
    * Both the ByName and ByType variants are convenience functions which invokes this one.
    * The script block takes a single item, the VisualTreeItem, which can be filtered.
+ * Get-SelectedDataContext
+   * Helper function which gets the _DataContext_ of the currently selected tree item.
 
 Note that in both cases, -Select will automatically select the first match in the tree view.
 
 ## Provider
 
-There is preliminary support for a provider to navigate the tree (i.e., using cd, dir, etc.).  To enable this, enter the drive by issuing the command:  'cd snoop:'
+The shell is automatically exposes a PowerShell provider which lets you navigate the visual tree as if you were in a file system (cd, dir, etc.).  The $selected variable will automatically synchronize with the current location, and vice-versa.
 
 ## Hotkeys
 

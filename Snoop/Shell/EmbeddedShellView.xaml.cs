@@ -19,6 +19,8 @@ namespace Snoop.Shell
     /// </summary>
     public partial class EmbeddedShellView : UserControl
     {
+        public const string DriveName = "snoop";
+
         public event Action<VisualTreeItem> ProviderLocationChanged;
 
         private readonly Runspace runspace;
@@ -38,7 +40,7 @@ F12 - Clear output
             // ignore execution-policy
             var iis = InitialSessionState.CreateDefault();
             iis.AuthorizationManager = new AuthorizationManager(Guid.NewGuid().ToString());
-            iis.Providers.Add(new SessionStateProviderEntry("snoop", typeof(VisualTreeProvider), string.Empty));
+            iis.Providers.Add(new SessionStateProviderEntry(DriveName, typeof(VisualTreeProvider), string.Empty));
 
             this.host = new SnoopPSHost(x => this.outputTextBox.AppendText(x));
             this.runspace = RunspaceFactory.CreateRunspace(this.host, iis);
@@ -52,7 +54,7 @@ F12 - Clear output
 
         public void Start()
         {
-            Invoke("new-psdrive snoop snoop -root /");
+            Invoke(string.Format("new-psdrive {0} {0} -root /", DriveName));
 
             this.SetVariable(VisualTreeProvider.LocationChangedKeyAction, this.ProviderLocationChanged);
             
