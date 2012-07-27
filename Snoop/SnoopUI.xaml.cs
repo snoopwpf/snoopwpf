@@ -103,7 +103,7 @@ namespace Snoop
 	    {
 	        this.Tree.SelectedItemChanged += delegate
 	        {
-	            this.EmbeddedShell.Invoke("cd \\" + this.CurrentSelection.NodePath());
+	            this.EmbeddedShell.Invoke("cd snoop:\\" + this.CurrentSelection.NodePath());
 	        };
 
 	        this.EmbeddedShell.ProviderLocationChanged
