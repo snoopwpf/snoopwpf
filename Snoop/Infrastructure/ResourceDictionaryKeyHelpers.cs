@@ -40,6 +40,7 @@ namespace Snoop.Infrastructure
                     {
                         break;
                     }
+
 					dependencyObject = VisualTreeHelper.GetParent(dependencyObject);
 				}
 
