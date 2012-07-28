@@ -19,8 +19,6 @@ namespace Snoop.Shell
     /// </summary>
     public partial class EmbeddedShellView : UserControl
     {
-        public const string DriveName = "snoop";
-
         public event Action<VisualTreeItem> ProviderLocationChanged;
 
         private readonly Runspace runspace;
@@ -40,7 +38,7 @@ F12 - Clear output
             // ignore execution-policy
             var iis = InitialSessionState.CreateDefault();
             iis.AuthorizationManager = new AuthorizationManager(Guid.NewGuid().ToString());
-            iis.Providers.Add(new SessionStateProviderEntry(DriveName, typeof(VisualTreeProvider), string.Empty));
+            iis.Providers.Add(new SessionStateProviderEntry(ShellConstants.DriveName, typeof(VisualTreeProvider), string.Empty));
 
             this.host = new SnoopPSHost(x => this.outputTextBox.AppendText(x));
             this.runspace = RunspaceFactory.CreateRunspace(this.host, iis);
@@ -57,44 +55,46 @@ F12 - Clear output
         /// </summary>
         public void Start()
         {
-            Invoke(string.Format("new-psdrive {0} {0} -root /", DriveName));
+            Invoke(string.Format("new-psdrive {0} {0} -root /", ShellConstants.DriveName));
 
             // marshall back to the UI thread when the provider notifiers of a location change
             var action = new Action<VisualTreeItem>(item => this.Dispatcher.BeginInvoke(new Action(() => this.ProviderLocationChanged(item))));
-            this.SetVariable(VisualTreeProvider.LocationChangedKeyAction, action);
+            this.SetVariable(ShellConstants.LocationChangedActionKey, action);
 
             string folder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Scripts");
-            Invoke(string.Format("import-module \"{0}\"", Path.Combine(folder, "Snoop.psm1")));
+            Invoke(string.Format("import-module \"{0}\"", Path.Combine(folder, ShellConstants.SnoopModule)));
 
             this.outputTextBox.Clear();
             Invoke("write-host 'Welcome to the Snoop PowerShell console!'");
             Invoke("write-host '----------------------------------------'");
-            Invoke("write-host 'To get started, try using the $root and $selected variables.'");
+            Invoke(string.Format("write-host 'To get started, try using the ${0} and ${1} variables.'", ShellConstants.Root, ShellConstants.Selected));
 
-            string name = "SnoopProfile.ps1";
-            if (!LoadProfile(Path.Combine(Environment.GetEnvironmentVariable("USERPROFILE"), name)))
+            if (!LoadProfile(Path.Combine(Environment.GetEnvironmentVariable("USERPROFILE"), ShellConstants.SnoopProfile)))
             {
-                LoadProfile(Path.Combine(folder, name));
+                LoadProfile(Path.Combine(folder, ShellConstants.SnoopProfile));
             }
         }
 
         public void SetVariable(string name, object instance)
         {
+            // add to the host so the provider has access to exposed variables
             this.host[name] = instance;
+
+            // expose to the current runspace
             Invoke(string.Format("${0} = $host.PrivateData['{0}']", name));
         }
 
         public void NotifySelected(VisualTreeItem item)
         {
-            this.Invoke(string.Format("cd {0}:\\{1}", DriveName, item.NodePath()));
+            this.Invoke(string.Format("cd {0}:\\{1}", ShellConstants.DriveName, item.NodePath()));
         }
 
         private bool LoadProfile(string path)
         {
             if (File.Exists(path))
             {
-                Invoke(string.Format("$profile = '{0}'; . $profile", path));
-                Invoke("write-host 'Profile loaded: $profile'");
+                Invoke(string.Format("${0} = '{1}'; . ${0}", ShellConstants.Profile, path));
+                Invoke(string.Format("write-host \"Profile loaded: ${0}\"", ShellConstants.Profile));
                 return true;
             }
 
@@ -203,7 +203,7 @@ F12 - Clear output
             switch (e.Key)
             {
                 case Key.F5:
-                    Invoke("if ($profile) { . $profile }");
+                    Invoke(string.Format("if (${0}) {{ . ${0} }}", ShellConstants.Profile));
                     break;
                 case Key.F12:
                     this.outputTextBox.Clear();

@@ -6,7 +6,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Management.Automation;
@@ -19,14 +18,13 @@ namespace Snoop.Shell
     public class VisualTreeProvider : NavigationCmdletProvider, IDisposable
     {
         internal const int LocationChangeNotifyDelay = 250;
-        internal const string LocationChangedKeyAction = "locationchanged";
 
         private VisualTreeItem Root
         {
             get
             {
                 var data = (Hashtable)Host.PrivateData.BaseObject;
-                return (VisualTreeItem)data["root"];
+                return (VisualTreeItem)data[ShellConstants.Root];
             }
         }
 
@@ -45,7 +43,7 @@ namespace Snoop.Shell
             if (this.PSDriveInfo.CurrentLocation != this.lastLocation)
             {
                 var data = (Hashtable)Host.PrivateData.BaseObject;
-                var action = (Action<VisualTreeItem>)data[LocationChangedKeyAction];
+                var action = (Action<VisualTreeItem>)data[ShellConstants.LocationChangedActionKey];
                 action(GetTreeItem(this.PSDriveInfo.CurrentLocation));
 
                 this.lastLocation = this.PSDriveInfo.CurrentLocation;
@@ -172,7 +170,6 @@ namespace Snoop.Shell
                 {
                     var name = child.NodeName();
                     var nodePath = child.NodePath();
-                    Debug.WriteLine(string.Format("{0}:: {1}", name, nodePath));
                     WriteItemObject(name, nodePath, true);
                 }
             }

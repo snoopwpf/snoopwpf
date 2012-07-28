@@ -20,6 +20,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using System.Threading;
 using Snoop.Infrastructure;
+using Snoop.Shell;
 
 namespace Snoop
 {
@@ -251,7 +252,7 @@ namespace Snoop
             private set
             {
                 this.rootVisualTreeItem = value;
-                this.EmbeddedShell.SetVariable("root", value);
+                this.EmbeddedShell.SetVariable(ShellConstants.Root, value);
                 this.OnPropertyChanged("Root");
             }
 	    }
@@ -281,7 +282,6 @@ namespace Snoop
 						this.currentSelection.IsSelected = false;
 
 					this.currentSelection = value;
-                    this.EmbeddedShell.SetVariable("selected", value);
 
 					if (this.currentSelection != null)
 						this.currentSelection.IsSelected = true;
@@ -292,6 +292,7 @@ namespace Snoop
 						_lastNonNullSelection = currentSelection;
 					}
 
+                    this.EmbeddedShell.SetVariable(ShellConstants.Selected, value);
 					this.OnPropertyChanged("CurrentSelection");
 					this.OnPropertyChanged("CurrentFocusScope");
 

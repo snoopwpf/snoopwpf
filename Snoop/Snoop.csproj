@@ -218,6 +218,7 @@
     <Compile Include="ObjectToStringConverter.cs" />
     <Compile Include="PertinentPropertyFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shell\ShellConstants.cs" />
     <Compile Include="Shell\EmbeddedShellView.xaml.cs">
       <DependentUpon>EmbeddedShellView.xaml</DependentUpon>
     </Compile>
