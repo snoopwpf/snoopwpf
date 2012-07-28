@@ -84,10 +84,7 @@ F12 - Clear output
             Invoke("write-host '----------------------------------------'");
             Invoke(string.Format("write-host 'To get started, try using the ${0} and ${1} variables.'", ShellConstants.Root, ShellConstants.Selected));
 
-            if (!LoadProfile(Path.Combine(Environment.GetEnvironmentVariable("USERPROFILE"), ShellConstants.SnoopProfile)))
-            {
-                LoadProfile(Path.Combine(folder, ShellConstants.SnoopProfile));
-            }
+            FindAndLoadProfile(folder);
         }
 
         public void SetVariable(string name, object instance)
@@ -109,12 +106,29 @@ F12 - Clear output
             this.Invoke(string.Format("cd {0}:\\{1}", ShellConstants.DriveName, item.NodePath()));
         }
 
-        private bool LoadProfile(string path)
+        private void FindAndLoadProfile(string scriptFolder)
         {
-            if (File.Exists(path))
+            if (LoadProfile(Path.Combine(Environment.GetEnvironmentVariable("USERPROFILE"), ShellConstants.SnoopProfile)))
             {
-                Invoke(string.Format("${0} = '{1}'; . ${0}", ShellConstants.Profile, path));
-                Invoke(string.Format("write-host \"Profile loaded: ${0}\"", ShellConstants.Profile));
+                return;
+            }
+
+            if (LoadProfile(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\WindowsPowerShell", ShellConstants.SnoopProfile)))
+            {
+                return;
+            }
+
+            LoadProfile(Path.Combine(scriptFolder, ShellConstants.SnoopProfile));
+        }
+
+        private bool LoadProfile(string scriptPath)
+        {
+            if (File.Exists(scriptPath))
+            {
+                Invoke(string.Format("write-host \"Found profile located at: ${0}\"", ShellConstants.Profile));
+                Invoke("write-host 'Loading profile...'");
+                Invoke(string.Format("${0} = '{1}'; . ${0}", ShellConstants.Profile, scriptPath));
+
                 return true;
             }
 
