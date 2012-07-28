@@ -125,9 +125,9 @@ F12 - Clear output
         {
             if (File.Exists(scriptPath))
             {
-                Invoke(string.Format("write-host \"Found profile located at: ${0}\"", ShellConstants.Profile));
-                Invoke("write-host 'Loading profile...'");
+                Invoke("write-host ''");
                 Invoke(string.Format("${0} = '{1}'; . ${0}", ShellConstants.Profile, scriptPath));
+                Invoke(string.Format("write-host \"Loaded `$profile: ${0}\"", ShellConstants.Profile));
 
                 return true;
             }
