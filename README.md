@@ -7,13 +7,15 @@ This is an enhanced version of the original Snoop which adds the scripting capab
 By default, the PowerShell runspace will expose 4 variables:
  * $profile
    * This is the path to your SnoopProfile.ps1 profile which is automatically loaded on startup.
-   * Search paths are %USERPROFILE%, followed by the _Scripts_ folder found alongside the binaries.
+   * Search paths are %USERPROFILE%, Documents\WindowsPowerShell, followed by the _Scripts_ folder found alongside the binaries.
  * $root
    * The root node of the TreeView.  This will typically be _App_ or _Popup_.
  * $selected
    * This is the current selected item in the TreeView.  It is automatically updated when selection changes.
- * $ui
+ * $snoopui
    * This is the instance of the Snoop WPF control.  This allows you to dynamically modify the UI such as adding menu items.
+ * $ui
+   * This is the instance of the PowerShell control.  This allows you to dynamically modify the UI as required.
 
 ## Functions
 

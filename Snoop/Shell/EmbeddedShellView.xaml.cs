@@ -58,7 +58,6 @@ F12 - Clear output
             Invoke(string.Format("new-psdrive {0} {0} -root /", ShellConstants.DriveName));
 
             // synchronize selected and root tree elements
-            SetVariable("ui", ui);
             ui.PropertyChanged += (sender, e) =>
             {
                 switch (e.PropertyName)
@@ -71,6 +70,10 @@ F12 - Clear output
                         break;
                 }
             };
+
+            // allow scripting of the host controls
+            SetVariable("snoopui", ui);
+            SetVariable("ui", this);
 
             // marshall back to the UI thread when the provider notifiers of a location change
             var action = new Action<VisualTreeItem>(item => this.Dispatcher.BeginInvoke(new Action(() => this.ProviderLocationChanged(item))));
