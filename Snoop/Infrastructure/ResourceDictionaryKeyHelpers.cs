@@ -28,14 +28,18 @@ namespace Snoop.Infrastructure
 				while (dependencyObject != null)
 				{
 					FrameworkElement frameworkElement = dependencyObject as FrameworkElement;
-					if (frameworkElement != null)
-					{
-						string resourceKey = GetKeyInResourceDictionary(frameworkElement.Resources, resourceItem);
-						if (resourceKey != null)
-						{
-							return resourceKey;
-						}
-					}
+                    if (frameworkElement != null)
+                    {
+                        string resourceKey = GetKeyInResourceDictionary(frameworkElement.Resources, resourceItem);
+                        if (resourceKey != null)
+                        {
+                            return resourceKey;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
 
 					dependencyObject = VisualTreeHelper.GetParent(dependencyObject);
 				}
