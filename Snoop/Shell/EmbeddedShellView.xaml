@@ -11,11 +11,16 @@
         </Style>
     </UserControl.Resources>
     <Grid>
-          <Grid.RowDefinitions>
-              <RowDefinition/>
-              <RowDefinition Height="Auto"/>
-          </Grid.RowDefinitions>  
-        <TextBox x:Name="commandTextBox" Grid.Row="1" />
-        <TextBox x:Name="outputTextBox" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel HorizontalAlignment="Right">
+            <CheckBox x:Name="autoExpandCheckBox" Content="Auto-expand" 
+                      ToolTip="Automatically expands the selected tree item when changed from the PowerShell provider." />
+        </StackPanel>
+        <TextBox x:Name="commandTextBox" Grid.Row="2" />
+        <TextBox x:Name="outputTextBox" Grid.Row="1" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" />
     </Grid>
 </UserControl>

@@ -86,6 +86,11 @@ F12 - Clear output
 
         public void NotifySelected(VisualTreeItem item)
         {
+            if (this.autoExpandCheckBox.IsChecked == true)
+            {
+                item.IsExpanded = true;
+            }
+
             this.Invoke(string.Format("cd {0}:\\{1}", ShellConstants.DriveName, item.NodePath()));
         }
 
