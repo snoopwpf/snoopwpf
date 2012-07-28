@@ -52,12 +52,17 @@ F12 - Clear output
             Runspace.DefaultRunspace = this.runspace;
         }
 
+        /// <summary>
+        /// Initiates the startup routine and configures the runspace for use.
+        /// </summary>
         public void Start()
         {
             Invoke(string.Format("new-psdrive {0} {0} -root /", DriveName));
 
-            this.SetVariable(VisualTreeProvider.LocationChangedKeyAction, this.ProviderLocationChanged);
-            
+            // marshall back to the UI thread when the provider notifiers of a location change
+            var action = new Action<VisualTreeItem>(item => this.Dispatcher.BeginInvoke(new Action(() => this.ProviderLocationChanged(item))));
+            this.SetVariable(VisualTreeProvider.LocationChangedKeyAction, action);
+
             string folder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Scripts");
             Invoke(string.Format("import-module \"{0}\"", Path.Combine(folder, "Snoop.psm1")));
 
@@ -71,6 +76,17 @@ F12 - Clear output
             {
                 LoadProfile(Path.Combine(folder, name));
             }
+        }
+
+        public void SetVariable(string name, object instance)
+        {
+            this.host[name] = instance;
+            Invoke(string.Format("${0} = $host.PrivateData['{0}']", name));
+        }
+
+        public void NotifySelected(VisualTreeItem item)
+        {
+            this.Invoke(string.Format("cd {0}:\\{1}", DriveName, item.NodePath()));
         }
 
         private bool LoadProfile(string path)
@@ -113,13 +129,7 @@ F12 - Clear output
             }
         }
 
-        public void SetVariable(string name, object instance)
-        {
-            this.host[name] = instance;
-            Invoke(string.Format("${0} = $host.PrivateData['{0}']", name));
-        }
-
-        public void Invoke(string script, bool addToHistory = false)
+        private void Invoke(string script, bool addToHistory = false)
         {
             this.historyIndex = 0;
 

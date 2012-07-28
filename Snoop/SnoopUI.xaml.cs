@@ -20,7 +20,6 @@ using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using System.Threading;
 using Snoop.Infrastructure;
-using Snoop.Shell;
 
 namespace Snoop
 {
@@ -99,23 +98,20 @@ namespace Snoop
 		    InitShell();
 		}
 
-	    private void InitShell()
-	    {
-	        this.Tree.SelectedItemChanged += delegate
-	        {
-	            this.EmbeddedShell.Invoke(string.Format("cd {0}:\\{1}", EmbeddedShellView.DriveName, this.CurrentSelection.NodePath()));
-	        };
+        private void InitShell()
+        {
+            this.Tree.SelectedItemChanged += delegate { this.EmbeddedShell.NotifySelected(this.CurrentSelection); };
 
-	        this.EmbeddedShell.ProviderLocationChanged
-	            += item =>
-	               this.Dispatcher.BeginInvoke(new Action(() =>
-	               {
-	                   item.IsSelected = true;
-	                   this.CurrentSelection = item;
-	               }));
-	        this.EmbeddedShell.SetVariable("ui", this);
-	        this.EmbeddedShell.Start();
-	    }
+            this.EmbeddedShell.ProviderLocationChanged
+                += item =>
+                   this.Dispatcher.BeginInvoke(new Action(() =>
+                   {
+                       item.IsSelected = true;
+                       this.CurrentSelection = item;
+                   }));
+            this.EmbeddedShell.SetVariable("ui", this);
+            this.EmbeddedShell.Start();
+        }
 
 	    #endregion
 
