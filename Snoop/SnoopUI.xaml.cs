@@ -126,7 +126,7 @@ namespace Snoop
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(string.Format("There was an error snooping! Message = {0}\n\nStack Trace:\n", ex.Message, ex.StackTrace), "Error Snooping", MessageBoxButton.OK);
+				MessageBox.Show(string.Format("There was an error snooping! Message = {0}\n\nStack Trace:\n{1}", ex.Message, ex.StackTrace), "Error Snooping", MessageBoxButton.OK);
 				return false;
 			}
 		}
