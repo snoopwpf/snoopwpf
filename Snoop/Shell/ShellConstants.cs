@@ -4,6 +4,7 @@
 // All other rights reserved.
 
 using System;
+using Microsoft.Win32;
 
 namespace Snoop.Shell
 {
@@ -43,5 +44,26 @@ namespace Snoop.Shell
         /// Gets the key for storing an <see cref="Action{T}"/> of type <see cref="VisualTreeItem"/>.
         /// </summary>
         public const string LocationChangedActionKey = "lca_key";
+
+        /// <summary>
+        /// Checks to see if PowerShell is installed.
+        /// </summary>
+        public static bool IsPowerShellInstalled
+        {
+            get
+            {
+                var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\PowerShell\1\PowerShellEngine");
+                if (key != null)
+                {
+                    object keyValue = key.GetValue("PowerShellVersion");
+                    if ("2.0".Equals(keyValue))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        }
     }
 }

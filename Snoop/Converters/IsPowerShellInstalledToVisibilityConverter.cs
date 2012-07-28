@@ -7,7 +7,7 @@ using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using Microsoft.Win32;
+using Snoop.Shell;
 
 namespace Snoop.Converters
 {
@@ -15,17 +15,7 @@ namespace Snoop.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\PowerShell\1\PowerShellEngine");
-            if (key != null)
-            {
-                object keyValue = key.GetValue("PowerShellVersion");
-                if ("2.0".Equals(keyValue))
-                {
-                    return Visibility.Visible;
-                }
-            }
-
-            return Visibility.Collapsed;
+            return ShellConstants.IsPowerShellInstalled ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

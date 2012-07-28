@@ -101,17 +101,23 @@ namespace Snoop
 
         private void InitShell()
         {
-            this.Tree.SelectedItemChanged += delegate { this.EmbeddedShell.NotifySelected(this.CurrentSelection); };
+            if (ShellConstants.IsPowerShellInstalled)
+            {
+                var shell = new EmbeddedShellView();
+                shell.Start(this);
 
-            this.EmbeddedShell.ProviderLocationChanged
-                += item =>
-                   this.Dispatcher.BeginInvoke(new Action(() =>
-                   {
-                       item.IsSelected = true;
-                       this.CurrentSelection = item;
-                   }));
-            this.EmbeddedShell.SetVariable("ui", this);
-            this.EmbeddedShell.Start();
+                this.Tree.SelectedItemChanged += delegate { shell.NotifySelected(this.CurrentSelection); };
+
+                shell.ProviderLocationChanged
+                    += item =>
+                       this.Dispatcher.BeginInvoke(new Action(() =>
+                       {
+                           item.IsSelected = true;
+                           this.CurrentSelection = item;
+                       }));
+
+                this.PowerShellTab.Content = shell;
+            }
         }
 
 	    #endregion
@@ -252,7 +258,6 @@ namespace Snoop
             private set
             {
                 this.rootVisualTreeItem = value;
-                this.EmbeddedShell.SetVariable(ShellConstants.Root, value);
                 this.OnPropertyChanged("Root");
             }
 	    }
@@ -292,7 +297,6 @@ namespace Snoop
 						_lastNonNullSelection = currentSelection;
 					}
 
-                    this.EmbeddedShell.SetVariable(ShellConstants.Selected, value);
 					this.OnPropertyChanged("CurrentSelection");
 					this.OnPropertyChanged("CurrentFocusScope");
 

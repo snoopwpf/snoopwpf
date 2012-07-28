@@ -53,9 +53,24 @@ F12 - Clear output
         /// <summary>
         /// Initiates the startup routine and configures the runspace for use.
         /// </summary>
-        public void Start()
+        public void Start(SnoopUI ui)
         {
             Invoke(string.Format("new-psdrive {0} {0} -root /", ShellConstants.DriveName));
+
+            // synchronize selected and root tree elements
+            SetVariable("ui", ui);
+            ui.PropertyChanged += (sender, e) =>
+            {
+                switch (e.PropertyName)
+                {
+                    case "CurrentSelection":
+                        SetVariable(ShellConstants.Selected, ui.CurrentSelection);
+                        break;
+                    case "Root":
+                        SetVariable(ShellConstants.Root, ui.Root);
+                        break;
+                }
+            };
 
             // marshall back to the UI thread when the provider notifiers of a location change
             var action = new Action<VisualTreeItem>(item => this.Dispatcher.BeginInvoke(new Action(() => this.ProviderLocationChanged(item))));
