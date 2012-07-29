@@ -549,8 +549,10 @@ namespace Snoop
 		{
 			base.OnClosing(e);
 
-			if (Application.Current != null && Application.Current.MainWindow != null)
-				Application.Current.MainWindow.Closing -= HostApplicationMainWindowClosingHandler;
+			// cplotts note:
+			// this is causing a crash for the multiple dispatcher scenario. fix this.
+//			if (Application.Current != null && Application.Current.MainWindow != null)
+//				Application.Current.MainWindow.Closing -= HostApplicationMainWindowClosingHandler;
 
 			this.CurrentSelection = null;
 
