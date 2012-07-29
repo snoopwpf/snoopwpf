@@ -1,49 +1,29 @@
-## Introduction
+<h1>Snoop</h1>
 
-This is an enhanced version of the original Snoop which adds the scripting capabilities of PowerShell into the application.
+<p>Snoop is the open source WPF spying utility created by Pete Blois and now maintained by Team Snoop (<a href="http://www.cplotts.com">Cory Plotts</a>, <a href="http://blogs.interknowlogy.com/author/danhanan/">Dan Hanan</a>, <a href="http://blog.yasiv.com/">Andrei Kashcha</a>, and Maciek Rakowski).</p>
 
-## The Basics
+<p>It allows you to spy/browse the visual tree of a running application (without the need for a debugger) � and change properties ... amongst other things.</p>
 
-By default, the PowerShell runspace will expose 4 variables:
- * $profile
-   * This is the path to your SnoopProfile.ps1 profile which is automatically loaded on startup.
-   * Search paths are %USERPROFILE%, Documents\WindowsPowerShell, followed by the _Scripts_ folder found alongside the binaries.
- * $root
-   * The root node of the TreeView.  This will typically be _App_ or _Popup_.
- * $selected
-   * This is the current selected item in the TreeView.  It is automatically updated when selection changes.
- * $snoopui
-   * This is the instance of the Snoop WPF control.  This allows you to dynamically modify the UI such as adding menu items.
- * $ui
-   * This is the instance of the PowerShell control.  This allows you to dynamically modify the UI as required.
+<h2>Snoop 2.7.1</h2>
 
-## Functions
+<p>The most recent version of Snoop, <a href="http://snoopwpf.codeplex.com/releases/view/73187">Snoop 2.7.1</a>, was released on May 4th, 2012. Go to one of download pages (<a href="http://snoopwpf.codeplex.com/releases/view/73187">CodePlex</a> or <a href="https://github.com/cplotts/snoopwpf/downloads">GitHub</a>) to download it.</p>
 
- * Find-ByName($name,[switch]$select)
-   * Performs a regex match on value of x:Name.
- * Find-ByType($type,[switch]$select)
-   * Performs a regex match on the type name of the element.
- * Find-By([scriptblock]$predicate,[switch]$select)
-   * Both the ByName and ByType variants are convenience functions which invokes this one.
-   * The script block takes a single item, the VisualTreeItem, which can be filtered.
- * Get-SelectedDataContext
-   * Helper function which gets the _DataContext_ of the currently selected tree item.
+<h2>Git</h2>
 
-Note that in both cases, -Select will automatically select the first match in the tree view.
+<p>The Snoop repository has been converted to Git and is now being hosted in two public repositories (which will be kept in sync), the one at CodePlex (<a href="http://snoopwpf.codeplex.com/">http://snoopwpf.codeplex.com/</a>) and the one at GitHub (<a href="https://github.com/cplotts/snoopwpf">https://github.com/cplotts/snoopwpf</a>). See the 2.7.1 <a href="http://snoopwpf.codeplex.com/releases/view/73187">release notes</a> for more info.</p>
 
-## Provider
+<h2>Documentation on How to Use Snoop</h2>
 
-The shell is automatically exposes a PowerShell provider which lets you navigate the visual tree as if you were in a file system (cd, dir, etc.).  The $selected variable will automatically synchronize with the current location, and vice-versa.
+<p>I am finally getting to business on the <a href="http://snoopwpf.codeplex.com/documentation">Documentation</a> area on CodePlex. It will be a work in progress for a bit. Please forgive the mess.</p>
 
-## Hotkeys
+<p>Here are the links to the current Snoop Tips &amp; Tricks: <a href="http://www.cplotts.com/2011/02/10/snoop-tips-tricks-1-ctrl-shift-mouse-over/">#1</a>, <a href="http://www.cplotts.com/2011/02/14/snoop-tips-tricks-2-snooping-transient-visuals/">#2</a>, <a href="http://www.cplotts.com/2012/05/31/snoop-tips-tricks-3-the-crosshairs/">#3</a>.</p>
 
- * F5: Invokes dot-sourcing the $profile variable, if it exists.
- * F12: Clears the output buffer.
+<p>Also, don�t forget about the documentation on Pete Blois� Snoop <a href="http://blois.us/Snoop">page</a>. It is still useful � but hopefully will be less so once I finish my efforts.</p>
 
-## Notes
+<h2>Why Aren�t My Apps Showing Up in the App Chooser?</h2>
 
-When cloning this repository, please ensure your core.autocrlf is set to true.
+<p>One question that comes up all the time is the situation where the application you are trying to Snoop, isn't appearing in the application chooser (i.e. the&#160; combo box that lists the processes you can Snoop). This is more than likely a situation where the application you are trying to Snoop is running elevated (as Administrator). In order to Snoop these applications, you will also need to run Snoop elevated (as Administrator).</p>
 
-## License
+<h2>Silverlight Support</h2>
 
-All original code and new code is released under the [Ms-PL](http://go.microsoft.com/fwlink/?LinkID=131993) license.
+<p>Snoop is not currently able to spy Silverlight applications (maybe some day). In the meantime, if you want to do that, I would point you to Koen Zwikstra's awesome utility, <a href="http://firstfloorsoftware.com/silverlightspy/">Silverlight Spy</a>.</p>
