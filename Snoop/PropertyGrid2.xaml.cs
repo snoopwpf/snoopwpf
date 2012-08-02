@@ -120,14 +120,17 @@ namespace Snoop
 			{
 				this.target = newTarget;
 
-				foreach (PropertyInformation property in this.properties)
-				{
-					if (property.IsValueChangedByUser)
-					{
-						SnoopUI.AddPropertyEdited(property);
-					}
-					property.Teardown();
-				}
+                if (SnoopUI != null)
+                {
+                    foreach (PropertyInformation property in this.properties)
+                    {
+                        if (property.IsValueChangedByUser)
+                        {
+                            SnoopUI.AddPropertyEdited(property);
+                        }
+                        property.Teardown();
+                    }
+                }
 				this.RefreshPropertyGrid();
 
 				this.OnPropertyChanged("Type");
