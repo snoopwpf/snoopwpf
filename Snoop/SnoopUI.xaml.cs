@@ -284,12 +284,12 @@ namespace Snoop
 				if (this.currentSelection != value)
 				{
 					if (this.currentSelection != null)
+					{
+						SaveEditedProperties(currentSelection);
 						this.currentSelection.IsSelected = false;
+					}
 
 					this.currentSelection = value;
-
-					if (this.currentSelection != null)
-						this.currentSelection.IsSelected = true;
 
 					if (this.currentSelection != null)
 					{
@@ -318,6 +318,7 @@ namespace Snoop
 				}
 			}
 		}
+
 		private VisualTreeItem currentSelection = null;
 		private VisualTreeItem _lastNonNullSelection = null;
 
@@ -487,9 +488,8 @@ namespace Snoop
 			}
 		}
 
-		public void AddPropertyEdited(PropertyInformation propInfo)
+		public void AddEditedProperty(VisualTreeItem propertyOwner, PropertyInformation propInfo)
 		{
-			var propertyOwner = CurrentSelection ?? _lastNonNullSelection;
 			List<PropertyValueInfo> propInfoList = null;
 			if (!_itemsWithEditedProperties.TryGetValue(propertyOwner, out propInfoList))
 			{
@@ -503,16 +503,21 @@ namespace Snoop
 			});
 		}
 
-		// HACK ALERT: give the PropertyGrid2 that's buried way down the tree a chance
-		// to tell us where it is.  We can call back to it when the main window is closing
-		// for one last chance to capture a changed property on the currently selected item
-		private PropertyGrid2 _propertyGrid2;
-		public PropertyGrid2 PropertyGrid2
+		/// <summary>
+		/// Loop through the properties in the current PropertyGrid and save away any properties
+		/// that have been changed by the user.  
+		/// </summary>
+		/// <param name="owningObject">currently selected object that owns the properties in the grid (before changing selection to the new object)</param>
+		private void SaveEditedProperties( VisualTreeItem owningObject )
 		{
-			set
-			{
-				_propertyGrid2 = value;
-			}
+            foreach (PropertyInformation property in PropertyGrid.PropertyGrid.Properties)
+            {
+                if (property.IsValueChangedByUser)
+                {
+                    AddEditedProperty( owningObject, property );
+                }
+                property.Teardown();
+            }
 		}
 
 		#endregion
@@ -586,10 +591,6 @@ namespace Snoop
 		/// </summary>
 		private void HostApplicationMainWindowClosingHandler(object sender, CancelEventArgs e)
 		{
-			if (_propertyGrid2 != null)
-			{
-				_propertyGrid2.Target = null;
-			}
 			DumpObjectsWithEditedProperties();
 		}
 

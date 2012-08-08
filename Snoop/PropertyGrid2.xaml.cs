@@ -70,20 +70,6 @@ namespace Snoop
 		}
 		private bool _nameValueOnly = false;
 
-		public SnoopUI SnoopUI
-		{
-			[DebuggerStepThrough]
-			get
-			{
-				if (_snoopUI == null)
-				{
-					_snoopUI = VisualTreeHelper2.GetAncestor<SnoopUI>(this);
-				}
-				return _snoopUI;
-			}
-		}
-		private SnoopUI _snoopUI;
-
 		public ObservableCollection<PropertyInformation> Properties
 		{
 			get { return this.properties; }
@@ -111,26 +97,14 @@ namespace Snoop
 		}
 		private void ChangeTarget(object newTarget)
 		{
-			if (newTarget != null && SnoopUI != null)
-			{
-				SnoopUI.PropertyGrid2 = this;
-			}
-
 			if (this.target != newTarget)
 			{
 				this.target = newTarget;
 
-                if (SnoopUI != null)
-                {
-                    foreach (PropertyInformation property in this.properties)
-                    {
-                        if (property.IsValueChangedByUser)
-                        {
-                            SnoopUI.AddPropertyEdited(property);
-                        }
-                        property.Teardown();
-                    }
-                }
+				foreach (PropertyInformation property in this.properties)
+				{
+				    property.Teardown();
+				}
 				this.RefreshPropertyGrid();
 
 				this.OnPropertyChanged("Type");
