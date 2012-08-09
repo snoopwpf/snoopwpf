@@ -488,20 +488,6 @@ namespace Snoop
 			}
 		}
 
-		public void AddEditedProperty(VisualTreeItem propertyOwner, PropertyInformation propInfo)
-		{
-			List<PropertyValueInfo> propInfoList = null;
-			if (!_itemsWithEditedProperties.TryGetValue(propertyOwner, out propInfoList))
-			{
-				propInfoList = new List<PropertyValueInfo>();
-				_itemsWithEditedProperties.Add(propertyOwner, propInfoList);
-			}
-			propInfoList.Add(new PropertyValueInfo
-			{
-				PropertyName = propInfo.DisplayName,
-				PropertyValue = propInfo.Value,
-			});
-		}
 
 		/// <summary>
 		/// Loop through the properties in the current PropertyGrid and save away any properties
@@ -514,7 +500,7 @@ namespace Snoop
             {
                 if (property.IsValueChangedByUser)
                 {
-                    AddEditedProperty( owningObject, property );
+                    EditedPropertiesHelper.AddEditedProperty( Dispatcher, owningObject, property );
                 }
                 property.Teardown();
             }
@@ -556,16 +542,15 @@ namespace Snoop
 
             // cplotts note:
             // this is causing a crash for the multiple dispatcher scenario. fix this.
-            if (Application.Current != null && Application.Current.CheckAccess() &&  Application.Current.MainWindow != null)
-                Application.Current.MainWindow.Closing -= HostApplicationMainWindowClosingHandler;
-     
+			if (Application.Current != null && Application.Current.CheckAccess() &&  Application.Current.MainWindow != null)
+			    Application.Current.MainWindow.Closing -= HostApplicationMainWindowClosingHandler;
 
 			this.CurrentSelection = null;
 
 			InputManager.Current.PreProcessInput -= this.HandlePreProcessInput;
 			EventsListener.Stop();
 
-			DumpObjectsWithEditedProperties();
+			EditedPropertiesHelper.DumpObjectsWithEditedProperties();
 
 			// persist the window placement details to the user settings.
 			WINDOWPLACEMENT wp = new WINDOWPLACEMENT();
@@ -591,42 +576,23 @@ namespace Snoop
 		/// </summary>
 		private void HostApplicationMainWindowClosingHandler(object sender, CancelEventArgs e)
 		{
-			DumpObjectsWithEditedProperties();
+			// changing the selection captures any changes in the selected item at the time of window closing 
+			this.CurrentSelection = null;
+		    EditedPropertiesHelper.DumpObjectsWithEditedProperties();
 		}
 
-		private void DumpObjectsWithEditedProperties()
+		/// <summary>
+		/// Each SnoopUI window (multiple when there are multiple dispatchers) needs to find out about 
+		/// application exiting.  Set current selection to null, thereby 
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void HostApplicationExitHandler( object sender, ExitEventArgs e )
 		{
-			if (_itemsWithEditedProperties.Count == 0)
-			{
-				return;
-			}
-
-			var sb = new StringBuilder();
-			sb.AppendFormat
-			(
-				"Snoop dump as of {0}{1}--- OBJECTS WITH EDITED PROPERTIES ---{1}",
-				DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-				Environment.NewLine
-			);
-
-			foreach (KeyValuePair<VisualTreeItem, List<PropertyValueInfo>> kvp in _itemsWithEditedProperties)
-			{
-				sb.AppendFormat("Object: {0}{1}", kvp.Key, Environment.NewLine); 
-				foreach (PropertyValueInfo propInfo in kvp.Value)
-				{
-					sb.AppendFormat
-					(
-						"\tProperty: {0}, New Value: {1}{2}",
-						propInfo.PropertyName,
-						propInfo.PropertyValue,
-						Environment.NewLine
-					);
-				}
-			}
-
-			Debug.WriteLine(sb.ToString());
-			Clipboard.SetText(sb.ToString());
+			this.CurrentSelection = null;
+			EditedPropertiesHelper.DumpObjectsWithEditedProperties();
 		}
+		
 		#endregion
 
 		#region Private Routed Event Handlers
@@ -916,7 +882,16 @@ namespace Snoop
 				root = Application.Current;
 
 				if (Application.Current.MainWindow != null)
-					Application.Current.MainWindow.Closing += HostApplicationMainWindowClosingHandler;
+				    Application.Current.MainWindow.Closing += HostApplicationMainWindowClosingHandler;
+
+				//DH: this Exit event is not reliably called in the multi dispatcher test app, so 
+				// we need to find a better way to know when the host EXE is closing.
+				// Until then, we are dumping properties (for all dispatchers) when the main window closes.
+				// Also need to find the right place to wire up to this event to possibly loop through
+				// all SnoopUI windows and give them a last chance to capture properties changed on 
+				// their last selected item.
+				//Application.Current.Exit += HostApplicationExitHandler;
+
 			}
 			else
 			{
@@ -954,6 +929,7 @@ namespace Snoop
 
 			return root;
 		}
+
 		private void Load(object root)
 		{
 			this.root = root;
@@ -990,9 +966,6 @@ namespace Snoop
 		/// This fixes problem where Snoop steals the focus from snooped app.
 		/// </summary>
 		private bool returnPreviousFocus;
-
-		private Dictionary<VisualTreeItem, List<PropertyValueInfo>> _itemsWithEditedProperties =
-			new Dictionary<VisualTreeItem, List<PropertyValueInfo>>();
 
 		#endregion
 
@@ -1031,4 +1004,94 @@ namespace Snoop
 		public string PropertyName { get; set; }
 		public object PropertyValue { get; set; }
 	}
+
+	public class EditedPropertiesHelper
+	{
+		private static object _lock = new object();
+
+		private static readonly Dictionary<Dispatcher,Dictionary<VisualTreeItem, List<PropertyValueInfo>>> _itemsWithEditedProperties =
+			new Dictionary<Dispatcher,Dictionary<VisualTreeItem, List<PropertyValueInfo>>>();
+
+		public static void AddEditedProperty( Dispatcher dispatcher, VisualTreeItem propertyOwner, PropertyInformation propInfo)
+		{
+			lock ( _lock )
+			{
+				List<PropertyValueInfo> propInfoList = null;
+				Dictionary<VisualTreeItem, List<PropertyValueInfo>> dispatcherList = null;
+
+				// first get the dictionary we're using for the given dispatcher
+				if ( !_itemsWithEditedProperties.TryGetValue( dispatcher, out dispatcherList ) )
+				{
+					dispatcherList = new Dictionary<VisualTreeItem, List<PropertyValueInfo>>();
+					_itemsWithEditedProperties.Add( dispatcher, dispatcherList );
+				}
+
+				// now get the property info list for the owning object 
+				if ( !dispatcherList.TryGetValue( propertyOwner, out propInfoList ) )
+				{
+					propInfoList = new List<PropertyValueInfo>();
+					dispatcherList.Add( propertyOwner, propInfoList );
+				}
+
+				// finally add the edited property info
+				propInfoList.Add( new PropertyValueInfo
+				                  {
+				                  	PropertyName = propInfo.DisplayName,
+				                  	PropertyValue = propInfo.Value,
+				                  } );
+			}
+		}
+
+		public static void DumpObjectsWithEditedProperties()
+		{
+			if (_itemsWithEditedProperties.Count == 0)
+			{
+				return;
+			}
+
+			var sb = new StringBuilder();
+			sb.AppendFormat
+			(
+				"Snoop dump as of {0}{1}--- OBJECTS WITH EDITED PROPERTIES ---{1}",
+				DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+				Environment.NewLine
+			);
+
+			int dispatcherCount = 1;
+
+			foreach (KeyValuePair<Dispatcher, Dictionary<VisualTreeItem, List<PropertyValueInfo>>> dispatcherKVP in _itemsWithEditedProperties)
+			{
+				if ( _itemsWithEditedProperties.Count > 1 )
+				{
+					sb.AppendFormat( "-- Dispatcher #{0} -- {1}", dispatcherCount++, Environment.NewLine );
+				}
+
+				foreach (KeyValuePair<VisualTreeItem, List<PropertyValueInfo>> objectPropertiesKVP in dispatcherKVP.Value )
+				{
+					sb.AppendFormat("Object: {0}{1}", objectPropertiesKVP.Key, Environment.NewLine); 
+					foreach (PropertyValueInfo propInfo in objectPropertiesKVP.Value)
+					{
+						sb.AppendFormat
+						(
+							"\tProperty: {0}, New Value: {1}{2}",
+							propInfo.PropertyName,
+							propInfo.PropertyValue,
+							Environment.NewLine
+						);
+					}
+				}
+
+				if ( _itemsWithEditedProperties.Count > 1 )
+				{
+					sb.AppendLine();
+				}
+			}
+
+			Debug.WriteLine(sb.ToString());
+			Clipboard.SetText(sb.ToString());
+		}
+
+		
+	}
+
 }
