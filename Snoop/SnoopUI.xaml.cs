@@ -449,12 +449,15 @@ namespace Snoop
 			}
 
 			SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
-
+            this.Dispatcher.UnhandledException += new DispatcherUnhandledExceptionEventHandler(d_UnhandledException);
 			Show();
 			Activate();
 		}
 		public void Inspect(object root, Window ownerWindow)
 		{
+            this.Dispatcher.UnhandledException += new DispatcherUnhandledExceptionEventHandler(d_UnhandledException);
+            ownerWindow.Closing += new CancelEventHandler(ownerWindow_Closing);
+
 			Load(root);
 
 			if (ownerWindow != null)
@@ -465,6 +468,18 @@ namespace Snoop
 			Show();
 			Activate();
 		}
+
+        void ownerWindow_Closing(object sender, CancelEventArgs e)
+        {
+            InputManager.Current.PreProcessInput -= this.HandlePreProcessInput;
+            //throw new NotImplementedException();
+        }
+
+        void d_UnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            //Should we check if the exception came from Snoop? Perhaps seeing if any Snoop call is in the stack trace?
+            e.Handled = true;
+        }
 
 		public void ApplyReduceDepthFilter(VisualTreeItem newRoot)
 		{
@@ -544,7 +559,7 @@ namespace Snoop
             // this is causing a crash for the multiple dispatcher scenario. fix this.
 			if (Application.Current != null && Application.Current.CheckAccess() &&  Application.Current.MainWindow != null)
 			    Application.Current.MainWindow.Closing -= HostApplicationMainWindowClosingHandler;
-
+            
 			this.CurrentSelection = null;
 
 			InputManager.Current.PreProcessInput -= this.HandlePreProcessInput;
