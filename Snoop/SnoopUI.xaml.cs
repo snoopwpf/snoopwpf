@@ -446,6 +446,9 @@ namespace Snoop
 					return;
 				}
 				this.Owner = ownerWindow;
+
+				// watch for window closing so we can spit out the changed properties
+				ownerWindow.Closing += SnoopedWindowClosingHandler;
 			}
 
 			SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
@@ -461,7 +464,12 @@ namespace Snoop
 			Load(root);
 
 			if (ownerWindow != null)
+			{
 				this.Owner = ownerWindow;
+
+				// watch for window closing so we can spit out the changed properties
+				ownerWindow.Closing += SnoopedWindowClosingHandler;
+			}
 
 			SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
 
@@ -557,8 +565,18 @@ namespace Snoop
 
             // cplotts note:
             // this is causing a crash for the multiple dispatcher scenario. fix this.
-			if (Application.Current != null && Application.Current.CheckAccess() &&  Application.Current.MainWindow != null)
-			    Application.Current.MainWindow.Closing -= HostApplicationMainWindowClosingHandler;
+			//if (Application.Current != null && Application.Current.CheckAccess() &&  Application.Current.MainWindow != null)
+			//    Application.Current.MainWindow.Closing -= HostApplicationMainWindowClosingHandler;
+
+			// unsubscribe to owner window closing event
+			// replaces previous attempts to hookup to MainWindow.Closing on the wrong dispatcher thread
+			// This one should be running on the right dispatcher thread since this SnoopUI instance
+			// is wired up to the dispatcher thread/window that it owns
+			if ( Owner != null )
+			{
+				Owner.Closing -= SnoopedWindowClosingHandler;
+			}
+
             
 			this.CurrentSelection = null;
 
@@ -586,28 +604,18 @@ namespace Snoop
 		}
 
 		/// <summary>
-		/// Hooked into the hosting application main window closing event.  This is our chance to spit out 
-		/// all the properties that changed during the snoop session.
+		/// Event handler for a snooped window closing. This is our chance to spit out 
+		/// all the properties that changed during the snoop session for that window.
+		/// Note: there may be multiple snooped windows (when in multiple dispatcher mode)
+		/// and each window is hooked up to it's own instance of SnoopUI and this event.
 		/// </summary>
-		private void HostApplicationMainWindowClosingHandler(object sender, CancelEventArgs e)
+		private void SnoopedWindowClosingHandler(object sender, CancelEventArgs e)
 		{
 			// changing the selection captures any changes in the selected item at the time of window closing 
 			this.CurrentSelection = null;
 		    EditedPropertiesHelper.DumpObjectsWithEditedProperties();
 		}
 
-		/// <summary>
-		/// Each SnoopUI window (multiple when there are multiple dispatchers) needs to find out about 
-		/// application exiting.  Set current selection to null, thereby 
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void HostApplicationExitHandler( object sender, ExitEventArgs e )
-		{
-			this.CurrentSelection = null;
-			EditedPropertiesHelper.DumpObjectsWithEditedProperties();
-		}
-		
 		#endregion
 
 		#region Private Routed Event Handlers
@@ -895,18 +903,6 @@ namespace Snoop
 			else if (Application.Current != null)
 			{
 				root = Application.Current;
-
-				if (Application.Current.MainWindow != null)
-				    Application.Current.MainWindow.Closing += HostApplicationMainWindowClosingHandler;
-
-				//DH: this Exit event is not reliably called in the multi dispatcher test app, so 
-				// we need to find a better way to know when the host EXE is closing.
-				// Until then, we are dumping properties (for all dispatchers) when the main window closes.
-				// Also need to find the right place to wire up to this event to possibly loop through
-				// all SnoopUI windows and give them a last chance to capture properties changed on 
-				// their last selected item.
-				//Application.Current.Exit += HostApplicationExitHandler;
-
 			}
 			else
 			{
