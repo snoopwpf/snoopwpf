@@ -1044,6 +1044,13 @@ namespace Snoop
 					dispatcherList.Add( propertyOwner, propInfoList );
 				}
 
+				// if we already have a property of that name on this object, remove it
+				var existingPropInfo = propInfoList.FirstOrDefault( l => l.PropertyName == propInfo.DisplayName );
+				if ( existingPropInfo != null )
+				{
+					propInfoList.Remove( existingPropInfo );
+				}
+
 				// finally add the edited property info
 				propInfoList.Add( new PropertyValueInfo
 				                  {
