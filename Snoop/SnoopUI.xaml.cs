@@ -452,12 +452,15 @@ namespace Snoop
 			}
 
 			SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
+			this.Dispatcher.UnhandledException += new DispatcherUnhandledExceptionEventHandler(d_UnhandledException);
 
 			Show();
 			Activate();
 		}
 		public void Inspect(object root, Window ownerWindow)
 		{
+			this.Dispatcher.UnhandledException += new DispatcherUnhandledExceptionEventHandler(d_UnhandledException);
+
 			Load(root);
 
 			if (ownerWindow != null)
@@ -472,6 +475,12 @@ namespace Snoop
 
 			Show();
 			Activate();
+		}
+
+		private void d_UnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+		{
+			//Should we check if the exception came from Snoop? Perhaps seeing if any Snoop call is in the stack trace?
+			e.Handled = true;
 		}
 
 		public void ApplyReduceDepthFilter(VisualTreeItem newRoot)
