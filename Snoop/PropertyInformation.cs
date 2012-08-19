@@ -16,6 +16,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.IO;
 using Snoop.Infrastructure;
+using System.Linq;
 
 namespace Snoop
 {
@@ -251,6 +252,29 @@ namespace Snoop
 					if (!string.IsNullOrEmpty(resourceKey))
 					{
 						return string.Format("{0} {1}", resourceKey, stringValue);
+					}
+
+					// if the value comes from a Binding, show the path in [] brackets
+					if ( IsExpression && Binding is Binding )
+					{
+						var bindingPath = ((Binding)this.Binding).Path.Path;
+						return string.Format( "{0} [{1}]", stringValue, bindingPath );
+					}
+
+					// if the value comes from a MultiBinding, show the binding paths separated by , in [] brackets
+					if ( IsExpression && Binding is MultiBinding )
+					{
+						string[] pathStrings =
+							((MultiBinding)this.Binding).Bindings.OfType<Binding>().Select( b => b.Path.Path ).ToArray();
+						return string.Format( "{0} [{1}]", stringValue, string.Join( ",", pathStrings ) );
+					}
+
+					// if the value comes from a PriorityBinding, show the binding paths separated by , in [] brackets
+					if ( IsExpression && Binding is PriorityBinding )
+					{
+						string[] pathStrings =
+							((PriorityBinding)this.Binding).Bindings.OfType<Binding>().Select( b => b.Path.Path ).ToArray();
+						return string.Format( "{0} [{1}]", stringValue, string.Join( ",", pathStrings ) );
 					}
 				}
 
