@@ -257,29 +257,69 @@ namespace Snoop
 					// if the value comes from a Binding, show the path in [] brackets
 					if ( IsExpression && Binding is Binding )
 					{
-						var bindingPath = ((Binding)this.Binding).Path.Path;
-						return string.Format( "{0} [{1}]", stringValue, bindingPath );
+						stringValue = string.Format( "{0} {1}", stringValue, BuildBindingDescriptiveString( (Binding)Binding, true ) );
 					}
 
 					// if the value comes from a MultiBinding, show the binding paths separated by , in [] brackets
-					if ( IsExpression && Binding is MultiBinding )
+					else if ( IsExpression && Binding is MultiBinding )
 					{
-						string[] pathStrings =
-							((MultiBinding)this.Binding).Bindings.OfType<Binding>().Select( b => b.Path.Path ).ToArray();
-						return string.Format( "{0} [{1}]", stringValue, string.Join( ",", pathStrings ) );
+						stringValue = stringValue + BuildMultiBindingDescriptiveString( ((MultiBinding)this.Binding).Bindings.OfType<Binding>().ToArray() );
 					}
 
 					// if the value comes from a PriorityBinding, show the binding paths separated by , in [] brackets
-					if ( IsExpression && Binding is PriorityBinding )
+					else if ( IsExpression && Binding is PriorityBinding )
 					{
-						string[] pathStrings =
-							((PriorityBinding)this.Binding).Bindings.OfType<Binding>().Select( b => b.Path.Path ).ToArray();
-						return string.Format( "{0} [{1}]", stringValue, string.Join( ",", pathStrings ) );
+						stringValue = stringValue + BuildMultiBindingDescriptiveString( ((PriorityBinding)this.Binding).Bindings.OfType<Binding>().ToArray() );
 					}
 				}
 
 				return stringValue;
 			}
+		}
+
+		/// <summary>
+		/// Build up a string of Paths for a MultiBinding separated by ;
+		/// </summary>
+		private string BuildMultiBindingDescriptiveString( IEnumerable<Binding> bindings )
+		{
+			string ret = " {Paths=";
+			foreach ( Binding binding in bindings )
+			{
+				ret += BuildBindingDescriptiveString( binding, false );
+				ret += ";";
+			}
+			ret = ret.Substring( 0, ret.Length - 1 );	// remove trailing ,
+			ret += "}";
+			
+			return ret;
+		}
+
+		/// <summary>
+		/// Build up a string describing the Binding.  Path and ElementName (if present)
+		/// </summary>
+		private string BuildBindingDescriptiveString( Binding binding, bool isSinglePath )
+		{
+			var sb = new StringBuilder();
+			var bindingPath = binding.Path.Path;
+			var elementName = binding.ElementName;
+
+			if ( isSinglePath )
+			{
+				sb.Append( "{Path=" );
+			}
+
+			sb.Append( bindingPath );
+			if ( !String.IsNullOrEmpty( elementName )  )
+			{
+				sb.AppendFormat( ", ElementName={0}", elementName );
+			}
+
+			if ( isSinglePath )
+			{
+				sb.Append( "}" );
+			}
+
+			return sb.ToString();
 		}
 
 		public Type ComponentType

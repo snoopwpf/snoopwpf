@@ -114,7 +114,7 @@ All other rights reserved.
 	<Style TargetType="{x:Type my:EnumValueEditor}">
 		<Style.Resources>
 			<DataTemplate x:Key="UnselectedValueTemplate">
-				<TextBlock Style="{x:Null}" Text="{Binding Value}"/>
+				<TextBlock Style="{x:Null}" Text="{Binding DescriptiveValue}"/>
 			</DataTemplate>
 
 			<DataTemplate x:Key="SelectedValueTemplate">
