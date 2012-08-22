@@ -35,6 +35,7 @@ namespace Snoop
 		public static readonly RoutedCommand SelectFocusCommand = new RoutedCommand("SelectFocus", typeof(SnoopUI));
 		public static readonly RoutedCommand SelectFocusScopeCommand = new RoutedCommand("SelectFocusScope", typeof(SnoopUI));
         public static readonly RoutedCommand CopyMarkupCommand = new RoutedCommand("CopyMarkup", typeof(SnoopUI));
+		public static readonly RoutedCommand ClearSearchFilterCommand = new RoutedCommand();
 		#endregion
 
 		#region Static Constructor
@@ -43,6 +44,7 @@ namespace Snoop
 			SnoopUI.IntrospectCommand.InputGestures.Add(new KeyGesture(Key.I, ModifierKeys.Control));
 			SnoopUI.RefreshCommand.InputGestures.Add(new KeyGesture(Key.F5));
 			SnoopUI.HelpCommand.InputGestures.Add(new KeyGesture(Key.F1));
+			ClearSearchFilterCommand.InputGestures.Add(new KeyGesture(Key.Escape));
 		}
 		#endregion
 
@@ -80,6 +82,10 @@ namespace Snoop
 			this.CommandBindings.Add(new CommandBinding(SnoopUI.SelectFocusCommand, this.HandleSelectFocus));
 			this.CommandBindings.Add(new CommandBinding(SnoopUI.SelectFocusScopeCommand, this.HandleSelectFocusScope));
             this.CommandBindings.Add(new CommandBinding(SnoopUI.CopyMarkupCommand, this.HandleCopyMarkup));
+
+			//NOTE: this is up here in the outer UI layer so ESC will clear any typed filter regardless of where the focus is
+			// (i.e. focus on a selected item in the tree, not in the property list where the search box is hosted)
+			this.CommandBindings.Add(new CommandBinding(SnoopUI.ClearSearchFilterCommand, this.ClearSearchFilterHandler ));
 
 			InputManager.Current.PreProcessInput += this.HandlePreProcessInput;
 			this.Tree.SelectedItemChanged += this.HandleTreeSelectedItemChanged;
@@ -720,6 +726,13 @@ namespace Snoop
 
             Clipboard.SetText(Tag);
         }
+
+		private void ClearSearchFilterHandler( object sender, ExecutedRoutedEventArgs e )
+		{
+			PropertyGrid.StringFilter = string.Empty;
+		}
+
+
 
 		private void SelectItem(DependencyObject item)
 		{
