@@ -45,14 +45,26 @@ All other rights reserved.
 	</Style>
 	
 	<Style TargetType="{x:Type my:BoolValueEditor}">
+		<Style.Resources>
+			<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+		</Style.Resources>
+		
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type my:BoolValueEditor}">
-					<CheckBox
-						x:Name="PART_CheckBox"
-						IsChecked="{Binding Value, Mode=TwoWay}"
-						IsEnabled="{TemplateBinding IsEditable}"
-					/>
+					<StackPanel Orientation="Horizontal">
+						<CheckBox
+							x:Name="PART_CheckBox"
+							IsChecked="{Binding Value, Mode=TwoWay}"
+							IsEnabled="{TemplateBinding IsEditable}"
+							VerticalAlignment="Center"
+						/>
+						<TextBlock Margin="3,0" 
+											 Text="{Binding Path=DescriptiveValue}"
+											 Visibility="{Binding Path=IsExpression, Converter={StaticResource BooleanToVisibilityConverter}}"
+											 VerticalAlignment="Center"
+											 />
+					</StackPanel>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>

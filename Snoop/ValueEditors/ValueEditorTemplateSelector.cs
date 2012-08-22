@@ -3,6 +3,7 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -47,6 +48,9 @@ namespace Snoop
 			if (property.PropertyType.IsEnum)
 				return this.EnumTemplate;
 			else if (property.PropertyType.Equals(typeof(bool)))
+				return this.BoolTemplate;
+			else if ( property.PropertyType.IsGenericType 
+				&& Nullable.GetUnderlyingType( property.PropertyType ) == typeof(bool) )
 				return this.BoolTemplate;
 			else if (typeof(Brush).IsAssignableFrom(property.PropertyType))
 				return this.brushTemplate;
