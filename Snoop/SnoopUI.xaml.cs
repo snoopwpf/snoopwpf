@@ -479,8 +479,25 @@ namespace Snoop
 
 		private void d_UnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
 		{
-			//Should we check if the exception came from Snoop? Perhaps seeing if any Snoop call is in the stack trace?
-			e.Handled = true;
+            if (SnoopModes.IgnoreExceptions)
+            {
+                return;
+            }
+
+            if (SnoopModes.SwallowExceptions)
+            {
+                e.Handled = true;
+                return;
+            }
+
+            //Should we check if the exception came from Snoop? Perhaps seeing if any Snoop call is in the stack trace?
+            ErrorDialog dialog = new ErrorDialog();
+            dialog.Exception = e.Exception;
+            var result = dialog.ShowDialog();
+            if (dialog.SwallowExceptions)
+                SnoopModes.SwallowExceptions = true;
+            if (result.HasValue && !result.Value)
+                e.Handled = true;
 		}
 
 		public void ApplyReduceDepthFilter(VisualTreeItem newRoot)

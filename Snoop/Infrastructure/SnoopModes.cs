@@ -17,5 +17,9 @@ namespace Snoop.Infrastructure
 		/// The main Snoop UI is needed for each dispatcher.
 		/// </summary>
 		public static bool MultipleDispatcherMode { get; set; }
+
+        public static bool SwallowExceptions { get; set; }
+
+        public static bool IgnoreExceptions { get; set; }
 	}
 }

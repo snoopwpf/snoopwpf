@@ -1,0 +1,28 @@
+﻿<Window x:Class="Snoop.ErrorDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="An unhandled exception occured on the UI thread." Height="418" Width="464">
+    <Grid Margin="10,0,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <!--<RowDefinition Height="Auto" MaxHeight="200" />-->
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Text="An unhandled exception occured on the UI thread:" Grid.Row="0" />
+        <TextBox Name="_textBlockException"  AcceptsReturn="True" TextWrapping="NoWrap" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  Grid.Row="1" />
+
+        <TextBlock Margin="0,10,0,0" Grid.Row="2" TextWrapping="Wrap" Text="Click OK to pass the exception on, or cancel to swallow the exception and keep running. If this is an exception from Snoop, it would be nice of you to click 'Copy exception to clipboard' and submit this on our codeplex or github page." />
+
+
+        <StackPanel Orientation="Horizontal" Grid.Row="3" Margin="0,35,0,0">
+            <Button Name="_buttonOK" Content="OK" Click="_buttonOK_Click" Width="81" Height="32" Margin="0,0,15,0" />
+            <Button Name="_buttonCancel" Content="Cancel" Click="_buttonCancel_Click" Width="83" Margin="0,0,15,0" Height="32" />
+            <Button Name="_buttonCopyToClipboard"  Content="Copy exception to clipboard" Click="_buttonCopyToClipboard_Click" Margin="0,0,15,0" Width="166" Height="36" />
+        </StackPanel>
+
+        <CheckBox Margin="0,12,0,8" Name="_checkBoxRemember" Content="Remember this option" Grid.Row="4" />
+    </Grid>
+</Window>
