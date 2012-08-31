@@ -93,5 +93,18 @@ namespace Snoop
             }
         }
 
+        private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start(e.Uri.AbsoluteUri);
+            }
+            catch (Exception)
+            {
+                string message = string.Format("There was an error starting the browser. Please visit \"{0}\" to create the issue.", e.Uri.AbsoluteUri);
+                MessageBox.Show(message, "Error starting browser");
+            }
+        }
+
     }
 }
