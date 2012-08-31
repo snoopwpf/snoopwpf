@@ -91,7 +91,7 @@ namespace Snoop
                 string message = string.Format("There was an error copying to the clipboard:\nMessage = {0}\n\nPlease copy the exception from the above textbox manually!", ex.Message);
                 MessageBox.Show(message, "Error copying to clipboard");
             }
-        }
+        } 
 
         private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
