@@ -19,7 +19,7 @@ namespace Snoop.Shell
     /// </summary>
     public partial class EmbeddedShellView : UserControl
     {
-        public event Action<VisualTreeItem> ProviderLocationChanged;
+        public event Action<VisualTreeItem> ProviderLocationChanged = delegate { }; 
 
         private readonly Runspace runspace;
         private readonly SnoopPSHost host;
