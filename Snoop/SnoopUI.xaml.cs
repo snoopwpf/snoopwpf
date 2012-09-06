@@ -112,17 +112,25 @@ namespace Snoop
                 var shell = new EmbeddedShellView();
                 shell.Start(this);
 
-                this.Tree.SelectedItemChanged += delegate { shell.NotifySelected(this.CurrentSelection); };
-
-                shell.ProviderLocationChanged
-                    += item =>
-                       this.Dispatcher.BeginInvoke(new Action(() =>
-                       {
-                           item.IsSelected = true;
-                           this.CurrentSelection = item;
-                       }));
-
                 this.PowerShellTab.Content = shell;
+
+                RoutedPropertyChangedEventHandler<object> onSelectedItemChanged = (sender, e) => shell.NotifySelected(this.CurrentSelection);
+                Action<VisualTreeItem> onProviderLocationChanged = item => this.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    item.IsSelected = true;
+                    this.CurrentSelection = item;
+                }));
+
+                // sync the current location
+                this.Tree.SelectedItemChanged += onSelectedItemChanged;
+                shell.ProviderLocationChanged += onProviderLocationChanged;
+
+                // clean up garbage!
+                this.Closed += delegate
+                {
+                    this.Tree.SelectedItemChanged -= onSelectedItemChanged;
+                    shell.ProviderLocationChanged -= onProviderLocationChanged;
+                };
             }
         }
 
