@@ -6,10 +6,13 @@
 	Height="300"
 	Width="300"
 >
-	<TextBlock
-		Text="Hello World"
-		FontSize="48"
-		HorizontalAlignment="Center"
-		VerticalAlignment="Center"
-	/>
+	<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+		<TextBlock
+			Text="Hello World"
+			FontSize="48"
+			HorizontalAlignment="Center"
+			VerticalAlignment="Center"
+		/>
+		<Button Width="200" Height="50" Margin="10" Content="Click to Throw Exception" Click="Button_Click"/>
+	</StackPanel>
 </Window>
