@@ -19,24 +19,44 @@ namespace Snoop
 	/// </summary>
 	public partial class ErrorDialog : Window
 	{
-		public Exception Exception { get; set; }
-
-		public bool SwallowExceptions { get; set; }
-
 		public ErrorDialog()
 		{
 			InitializeComponent();
+
 			this.Loaded += ErrorDialog_Loaded;
 		}
 
-		void ErrorDialog_Loaded(object sender, RoutedEventArgs e)
+		public Exception Exception { get; set; }
+		public bool SwallowExceptions { get; set; }
+
+		private void ErrorDialog_Loaded(object sender, RoutedEventArgs e)
 		{
 			this._textBlockException.Text = this.GetExceptionMessage();
 		}
 
-		private bool CheckBoxRememberIsChecked()
+		private void _buttonCopyToClipboard_Click(object sender, RoutedEventArgs e)
 		{
-			return this._checkBoxRemember.IsChecked.HasValue && this._checkBoxRemember.IsChecked.Value;
+			try
+			{
+				Clipboard.SetText(this.GetExceptionMessage());
+			}
+			catch (Exception ex)
+			{
+				string message = string.Format("There was an error copying to the clipboard:\nMessage = {0}\n\nPlease copy the exception from the above textbox manually!", ex.Message);
+				MessageBox.Show(message, "Error copying to clipboard");
+			}
+		}
+		private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+		{
+			try
+			{
+				System.Diagnostics.Process.Start(e.Uri.AbsoluteUri);
+			}
+			catch (Exception)
+			{
+				string message = string.Format("There was an error starting the browser. Please visit \"{0}\" to create the issue.", e.Uri.AbsoluteUri);
+				MessageBox.Show(message, "Error starting browser");
+			}
 		}
 
 		private void _buttonOK_Click(object sender, RoutedEventArgs e)
@@ -48,7 +68,6 @@ namespace Snoop
 			}
 			this.Close();
 		}
-
 		private void _buttonCancel_Click(object sender, RoutedEventArgs e)
 		{
 			this.DialogResult = false;
@@ -59,6 +78,12 @@ namespace Snoop
 			this.Close();
 		}
 
+		private string GetExceptionMessage()
+		{
+			StringBuilder builder = new StringBuilder();
+			GetExceptionString(this.Exception, builder);
+			return builder.ToString();
+		}
 		private static void GetExceptionString(Exception exception, StringBuilder builder, bool isInner = false)
 		{
 			if (exception == null)
@@ -73,38 +98,9 @@ namespace Snoop
 			GetExceptionString(exception.InnerException, builder, true);
 		}
 
-		private string GetExceptionMessage()
+		private bool CheckBoxRememberIsChecked()
 		{
-			StringBuilder builder = new StringBuilder();
-			GetExceptionString(this.Exception, builder);
-			return builder.ToString();
+			return this._checkBoxRemember.IsChecked.HasValue && this._checkBoxRemember.IsChecked.Value;
 		}
-
-		private void _buttonCopyToClipboard_Click(object sender, RoutedEventArgs e)
-		{
-			try
-			{
-				Clipboard.SetText(this.GetExceptionMessage());
-			}
-			catch (Exception ex)
-			{
-				string message = string.Format("There was an error copying to the clipboard:\nMessage = {0}\n\nPlease copy the exception from the above textbox manually!", ex.Message);
-				MessageBox.Show(message, "Error copying to clipboard");
-			}
-		} 
-
-		private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
-		{
-			try
-			{
-				System.Diagnostics.Process.Start(e.Uri.AbsoluteUri);
-			}
-			catch (Exception)
-			{
-				string message = string.Format("There was an error starting the browser. Please visit \"{0}\" to create the issue.", e.Uri.AbsoluteUri);
-				MessageBox.Show(message, "Error starting browser");
-			}
-		}
-
 	}
 }

@@ -9,6 +9,14 @@
 	TextElement.FontSize="48"
 >
 	<Grid>
-		<TextBlock Text="Hello World" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding DNE}"/>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+
+		<TextBlock Grid.Row="0" Text="Hello World" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding DNE}"/>
+		<Button Grid.Row="1" Width="200" Height="50" Margin="10" Click="Button_Click">
+			<TextBlock FontSize="12" Foreground="Black" Text="Click To Throw Exception"/>
+		</Button>
 	</Grid>
 </Window>

@@ -23,5 +23,10 @@ namespace WhiteForegroundIssue
 		{
 			InitializeComponent();
 		}
+
+		private void Button_Click(object sender, RoutedEventArgs e)
+		{
+			throw new Exception("This is a test exception.");
+		}
 	}
 }
