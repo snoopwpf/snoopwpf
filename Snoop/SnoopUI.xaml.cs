@@ -452,14 +452,14 @@ namespace Snoop
 			}
 
 			SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
-			this.Dispatcher.UnhandledException += new DispatcherUnhandledExceptionEventHandler(d_UnhandledException);
+			this.Dispatcher.UnhandledException += new DispatcherUnhandledExceptionEventHandler(UnhandledExceptionHandler);
 
 			Show();
 			Activate();
 		}
 		public void Inspect(object root, Window ownerWindow)
 		{
-			this.Dispatcher.UnhandledException += new DispatcherUnhandledExceptionEventHandler(d_UnhandledException);
+			this.Dispatcher.UnhandledException += new DispatcherUnhandledExceptionEventHandler(UnhandledExceptionHandler);
 
 			Load(root);
 
@@ -477,27 +477,25 @@ namespace Snoop
 			Activate();
 		}
 
-		private void d_UnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+		private void UnhandledExceptionHandler(object sender, DispatcherUnhandledExceptionEventArgs e)
 		{
-            if (SnoopModes.IgnoreExceptions)
-            {
-                return;
-            }
+			if (SnoopModes.IgnoreExceptions)
+			{
+				return;
+			}
 
-            if (SnoopModes.SwallowExceptions)
-            {
-                e.Handled = true;
-                return;
-            }
+			if (SnoopModes.SwallowExceptions)
+			{
+				e.Handled = true;
+				return;
+			}
 
-            //Should we check if the exception came from Snoop? Perhaps seeing if any Snoop call is in the stack trace?
-            ErrorDialog dialog = new ErrorDialog();
-            dialog.Exception = e.Exception;
-            var result = dialog.ShowDialog();
-            if (dialog.SwallowExceptions)
-                SnoopModes.SwallowExceptions = true;
-            if (result.HasValue && !result.Value)
-                e.Handled = true;
+			// should we check if the exception came from Snoop? perhaps seeing if any Snoop call is in the stack trace?
+			ErrorDialog dialog = new ErrorDialog();
+			dialog.Exception = e.Exception;
+			var result = dialog.ShowDialog();
+			if (result.HasValue && result.Value)
+				e.Handled = true;
 		}
 
 		public void ApplyReduceDepthFilter(VisualTreeItem newRoot)
@@ -574,11 +572,6 @@ namespace Snoop
 		{
 			base.OnClosing(e);
 
-            // cplotts note:
-            // this is causing a crash for the multiple dispatcher scenario. fix this.
-			//if (Application.Current != null && Application.Current.CheckAccess() &&  Application.Current.MainWindow != null)
-			//    Application.Current.MainWindow.Closing -= HostApplicationMainWindowClosingHandler;
-
 			// unsubscribe to owner window closing event
 			// replaces previous attempts to hookup to MainWindow.Closing on the wrong dispatcher thread
 			// This one should be running on the right dispatcher thread since this SnoopUI instance
@@ -588,7 +581,6 @@ namespace Snoop
 				Owner.Closing -= SnoopedWindowClosingHandler;
 			}
 
-            
 			this.CurrentSelection = null;
 
 			InputManager.Current.PreProcessInput -= this.HandlePreProcessInput;

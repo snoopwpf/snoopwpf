@@ -24,14 +24,20 @@ namespace Snoop
 			InitializeComponent();
 
 			this.Loaded += ErrorDialog_Loaded;
+			this.Closed += ErrorDialog_Closed;
 		}
 
 		public Exception Exception { get; set; }
-		public bool SwallowExceptions { get; set; }
 
 		private void ErrorDialog_Loaded(object sender, RoutedEventArgs e)
 		{
 			this._textBlockException.Text = this.GetExceptionMessage();
+
+			SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
+		}
+		private void ErrorDialog_Closed(object sender, EventArgs e)
+		{
+			SnoopPartsRegistry.RemoveSnoopVisualTreeRoot(this);
 		}
 
 		private void _buttonCopyToClipboard_Click(object sender, RoutedEventArgs e)
@@ -59,18 +65,18 @@ namespace Snoop
 			}
 		}
 
-		private void _buttonOK_Click(object sender, RoutedEventArgs e)
+		private void CloseDoNotMarkHandled_Click(object sender, RoutedEventArgs e)
 		{
-			this.DialogResult = true;
+			this.DialogResult = false;
 			if (CheckBoxRememberIsChecked())
 			{
 				SnoopModes.IgnoreExceptions = true;
 			}
 			this.Close();
 		}
-		private void _buttonCancel_Click(object sender, RoutedEventArgs e)
+		private void CloseAndMarkHandled_Click(object sender, RoutedEventArgs e)
 		{
-			this.DialogResult = false;
+			this.DialogResult = true;
 			if (CheckBoxRememberIsChecked())
 			{
 				SnoopModes.SwallowExceptions = true;

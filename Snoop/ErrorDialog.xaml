@@ -43,7 +43,7 @@
 		<StackPanel Grid.Row="3" Margin="0,20,0,0">
 			<TextBlock
 				Style="{x:Null}"
-				Text="Take a look at the above stack (you can resize this dialog). If you think the exception is related to an issue in Snoop (versus the application you are Snooping), we would be very grateful if you could copy the stack trace to the clipboard and paste it into an issue at either CodePlex or github."
+				Text="Take a look at the above stack (you can resize this dialog). If you think the exception is related to an issue in Snoop (versus the application you are Snooping), we would be very grateful if you could copy the stack trace to the clipboard and paste it into an issue at either CodePlex or GitHub."
 				TextWrapping="Wrap"
 			/>
 			<TextBlock
@@ -85,23 +85,29 @@
 				Grid.Row="5"
 				VerticalAlignment="Center"
 				Margin="0,0,10,0"
+				ToolTipService.ShowDuration="30000"
 			>
 				<TextBlock Style="{x:Null}" Text="Remember This Option"/>
 				<CheckBox.ToolTip>
 					<TextBlock
 						Style="{x:Null}"
 						MaxWidth="300"
-						Text="This checkbox will remember whether you want to mark the exception handled or not, in the case that there are many unhandled exceptions, so that the dialog does not keep coming up."
 						TextWrapping="Wrap"
-					/>
+					>
+						<TextBlock.Inlines>
+							<Run Text="This checkbox will remember whether you want to mark the exception handled or not, in the case that there are many unhandled exceptions, so that the dialog does not keep coming up."/>
+							<LineBreak/>
+							<LineBreak/>
+							<Run Text="Note that clicking this checkbox and choosing one of the close buttons, also, in essence, stops this dialog from ever coming up again ... even in the case of a different unhandled exception ... until you Snoop the application all over again."/>
+						</TextBlock.Inlines>
+					</TextBlock>
 				</CheckBox.ToolTip>
 			</CheckBox>
 			<Button
-				x:Name="_buttonOK"
 				Width="200"
 				Height="32"
 				Margin="0,0,10,0"
-				Click="_buttonOK_Click"
+				Click="CloseDoNotMarkHandled_Click"
 			>
 				<TextBlock Style="{x:Null}" Text="Close And Do Not Handle Exception"/>
 				<Button.ToolTip>
@@ -114,10 +120,9 @@
 				</Button.ToolTip>
 			</Button>
 			<Button
-				x:Name="_buttonCancel"
 				Width="200"
 				Height="32"
-				Click="_buttonCancel_Click"
+				Click="CloseAndMarkHandled_Click"
 			>
 				<TextBlock Style="{x:Null}" Text="Close And Mark Exception Handled"/>
 				<Button.ToolTip>
