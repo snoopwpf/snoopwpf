@@ -42,9 +42,19 @@ namespace Snoop.Shell
             // so unfortunately we have to poll :(
             if (this.PSDriveInfo.CurrentLocation != this.lastLocation)
             {
-                var data = (Hashtable)Host.PrivateData.BaseObject;
-                var action = (Action<VisualTreeItem>)data[ShellConstants.LocationChangedActionKey];
-                action(GetTreeItem(this.PSDriveInfo.CurrentLocation));
+                var item = GetTreeItem(this.PSDriveInfo.CurrentLocation);
+
+                if (item != null)
+                {
+                    var data = (Hashtable)Host.PrivateData.BaseObject;
+                    var action = (Action<VisualTreeItem>)data[ShellConstants.LocationChangedActionKey];
+                    action(item);
+                }
+                else
+                {
+                    // the visual tree changed drastically, we must reset the current location
+                    this.PSDriveInfo.CurrentLocation = string.Empty;
+                }
 
                 this.lastLocation = this.PSDriveInfo.CurrentLocation;
             }
@@ -123,7 +133,7 @@ namespace Snoop.Shell
         protected override bool HasChildItems(string path)
         {
             var item = GetTreeItem(path);
-            return item.Children.Count > 0;
+            return item != null && item.Children.Count > 0;
         }
 
         protected override bool IsItemContainer(string path)
