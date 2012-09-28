@@ -53,7 +53,7 @@ void Injector::Launch(System::IntPtr windowHandle, System::String^ assembly, Sys
 						::UnhookWindowsHookEx(_messageHookHandle);
 					}
 
-					::VirtualFreeEx(hProcess, acmRemote, buffLen, MEM_RELEASE);
+					::VirtualFreeEx(hProcess, acmRemote, 0, MEM_RELEASE);
 				}
 
 				::CloseHandle(hProcess);
