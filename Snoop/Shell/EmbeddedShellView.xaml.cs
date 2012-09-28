@@ -30,10 +30,6 @@ namespace Snoop.Shell
             InitializeComponent();
 
             this.commandTextBox.PreviewKeyDown += OnCommandTextBoxPreviewKeyDown;
-            ToolTipService.SetToolTip(this.commandTextBox, @"
-F5 - Reload profile
-F12 - Clear output
-");
 
             // ignore execution-policy
             var iis = InitialSessionState.CreateDefault();

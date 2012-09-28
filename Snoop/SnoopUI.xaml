@@ -123,7 +123,7 @@ All other rights reserved.
 			x:Name="filterComboBox"
 			i:ComboBoxSettings.IsSnoopPart="True"
 			IsEditable="True"
-			Text="{Binding Path=Filter, UpdateSourceTrigger=PropertyChanged}"
+			Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}"
 			Margin="2,2,22,2"
 		>
 			<ComboBoxItem>
@@ -244,55 +244,95 @@ All other rights reserved.
 				<TabItem.Header>
 					<TextBlock Style="{x:Null}" Text="Properties">
 						<TextBlock.ToolTip>
-							<StackPanel>
+							<StackPanel MaxWidth="300">
 								<TextBlock Style="{x:Null}" Text="Properties View"/>
-								<TextBlock Style="{x:Null}" Text="Lists all the properties on currently selected object."/>
-								<TextBlock Style="{x:Null}" Text="You can even edit these properties or right-click and"/>
-								<TextBlock Style="{x:Null}" Text="then delve into them."/>
+								<TextBlock
+									Style="{x:Null}"
+									Text="Lists all the properties on currently selected object. You can even edit these properties or right-click and then delve into them."
+									TextWrapping="Wrap"
+								/>
 							</StackPanel>
 						</TextBlock.ToolTip>
 					</TextBlock>
 				</TabItem.Header>
-				<local:PropertyInspector x:Name="PropertyGrid" RootTarget="{Binding Path=CurrentSelection.Target}"/>
+				<local:PropertyInspector x:Name="PropertyGrid" RootTarget="{Binding CurrentSelection.Target}"/>
 			</TabItem>
 			<TabItem>
 				<TabItem.Header>
 					<TextBlock Style="{x:Null}" Text="Data Context">
 						<TextBlock.ToolTip>
-							<StackPanel>
+							<StackPanel MaxWidth="300">
 								<TextBlock Style="{x:Null}" Text="Data Context View"/>
-								<TextBlock Style="{x:Null}" Text="Lists all the properties for the Data Context of the"/>
-								<TextBlock Style="{x:Null}" Text="currently selected object. You can even edit these"/>
-								<TextBlock Style="{x:Null}" Text="properties or right-click and then delve into them."/>
+								<TextBlock
+									Style="{x:Null}"
+									Text="Lists all the properties for the Data Context of the currently selected object. You can even edit these properties or right-click and then delve into them."
+									TextWrapping="Wrap"
+								/>
 							</StackPanel>
 						</TextBlock.ToolTip>
 					</TextBlock>
 				</TabItem.Header>
-				<local:PropertyInspector x:Name="DataContextPropertyGrid" RootTarget="{Binding Path=CurrentSelection.Target.DataContext}"/>
+				<local:PropertyInspector x:Name="DataContextPropertyGrid" RootTarget="{Binding CurrentSelection.Target.DataContext}"/>
 			</TabItem>
 			<TabItem>
 				<TabItem.Header>
 					<TextBlock Style="{x:Null}" Text="Events">
 						<TextBlock.ToolTip>
-							<StackPanel>
+							<StackPanel MaxWidth="300">
 								<TextBlock Style="{x:Null}" Text="Events View"/>
-								<TextBlock Style="{x:Null}" Text="Lists all the all routed events in the application, so you"/>
-								<TextBlock Style="{x:Null}" Text="can see how they route, and where and/or whether they are handled."/>
+								<TextBlock
+									Style="{x:Null}"
+									Text="Lists all the all routed events in the application, so you can see how they route, and where and/or whether they are handled."
+									TextWrapping="Wrap"
+								/>
 							</StackPanel>
 						</TextBlock.ToolTip>
 					</TextBlock>
 				</TabItem.Header>
 				<local:EventsView />
 			</TabItem>
-            
-            <TabItem>
-                <TabItem.Header>
-                    <TextBlock Text="Methods" />
-                </TabItem.Header>
 
-                <MethodsTabNS:MethodsControl RootTarget="{Binding Path=CurrentSelection.Target}" IsSelected="{Binding Path=IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}" />
-            </TabItem>
-            <TabItem x:Name="PowerShellTab" Header="PowerShell" Visibility="{Binding Converter={StaticResource isPowerShellInstalled}}" />
+			<TabItem>
+				<TabItem.Header>
+					<TextBlock Style="{x:Null}" Text="Methods">
+						<TextBlock.ToolTip>
+							<StackPanel MaxWidth="300">
+								<TextBlock Style="{x:Null}" Text="Methods View"/>
+								<TextBlock
+									Style="{x:Null}"
+									Text="A rudimentary view that lets you call methods on the selected visual or the data context of the selected visual."
+									TextWrapping="Wrap"
+								/>
+							</StackPanel>
+						</TextBlock.ToolTip>
+					</TextBlock>
+				</TabItem.Header>
+
+				<MethodsTabNS:MethodsControl
+					RootTarget="{Binding CurrentSelection.Target}"
+					IsSelected="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}"
+				/>
+			</TabItem>
+
+			<TabItem
+				x:Name="PowerShellTab"
+				Visibility="{Binding Converter={StaticResource isPowerShellInstalled}}"
+			>
+				<TabItem.Header>
+					<TextBlock Style="{x:Null}" Text="PowerShell">
+						<TextBlock.ToolTip>
+							<StackPanel MaxWidth="300">
+								<TextBlock Style="{x:Null}" Text="PowerShell View"/>
+								<TextBlock
+									Style="{x:Null}"
+									Text="A view which lets you script the Snooped app using PowerShell."
+									TextWrapping="Wrap"
+								/>
+							</StackPanel>
+						</TextBlock.ToolTip>
+					</TextBlock>
+				</TabItem.Header>
+			</TabItem>
 		</TabControl>
 
 		<!-- Horizontal GridSplitter (between the tab control (with the property grid/events view) and the previewer) -->

@@ -4,133 +4,268 @@ This source is subject to the Microsoft Public License (Ms-PL).
 Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 All other rights reserved.
 -->
-<UserControl x:Class="Snoop.MethodsTab.MethodsControl"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:Snoop.MethodsTab"
-             xmlns:snoopNS="clr-namespace:Snoop"
-             xmlns:converters="clr-namespace:Snoop.Converters" 
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="420">
-    <UserControl.Resources>
+<UserControl
+	x:Class="Snoop.MethodsTab.MethodsControl"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:local="clr-namespace:Snoop.MethodsTab"
+	xmlns:snoopNS="clr-namespace:Snoop"
+	xmlns:converters="clr-namespace:Snoop.Converters"
+	mc:Ignorable="d"
+	d:DesignWidth="420"
+	d:DesignHeight="300"
+>
+	<UserControl.Resources>
+		<local:SnoopParameterInformationTemplateSelector x:Key="SnoopParameterInformationTemplateSelector"/>
 
-        <local:SnoopParameterInformationTemplateSelector x:Key="SnoopParameterInformationTemplateSelector" />
+		<DataTemplate x:Key="EnumParameterTemplate">
+			<Grid Margin="0,0,0,10">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition/>
+				</Grid.ColumnDefinitions>
 
-        <DataTemplate x:Key="EnumParameterTemplate">
-            <Grid  Margin="0,0,0,10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <TextBlock Text="{Binding Path=ParameterName}" Margin="0,0,25,0" HorizontalAlignment="Left" />
-                <ComboBox ItemsSource="{Binding Path=ParameterValue, Converter={x:Static converters:SnoopEnumValuesConverter.Default}}"
-                          SelectedValue="{Binding Path=ParameterValue}" Grid.Column="1" Width="129" HorizontalAlignment="Left" />
-                <!--<TextBox Name="ParameterValue" Width="100" Text="{Binding Path=ParameterValue, Mode=OneWayToSource}" Grid.Column="1" HorizontalAlignment="Left" />-->
-            </Grid>
-        </DataTemplate>
+				<TextBlock
+					Style="{x:Null}"
+					HorizontalAlignment="Left"
+					Margin="0,0,25,0"
+					Text="{Binding ParameterName}"
+				/>
+				<ComboBox
+					Grid.Column="1"
+					Width="129"
+					HorizontalAlignment="Left"
+					ItemsSource="{Binding ParameterValue, Converter={x:Static converters:SnoopEnumValuesConverter.Default}}"
+					SelectedValue="{Binding ParameterValue}"
+				/>
+			</Grid>
+		</DataTemplate>
 
-        <DataTemplate x:Key="DependencyPropertyTemplate">
-            <Grid  Margin="0,0,0,10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <TextBlock Text="{Binding Path=ParameterName}" Margin="0,0,25,0" HorizontalAlignment="Left" />
-                <ComboBox ItemsSource="{Binding Converter={x:Static converters:SnoopDependencyPropertiesConverter.Default}}" 
-                          Grid.Column="1" Width="129" HorizontalAlignment="Left" SelectedValue="{Binding Path=ParameterValue, Mode=TwoWay}" />
-                <!--<TextBox Name="ParameterValue" Width="100" Text="{Binding Path=ParameterValue, Mode=OneWayToSource}" Grid.Column="1" HorizontalAlignment="Left" />-->
-            </Grid>
-        </DataTemplate>
+		<DataTemplate x:Key="DependencyPropertyTemplate">
+			<Grid Margin="0,0,0,10">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition/>
+				</Grid.ColumnDefinitions>
 
-        <DataTemplate x:Key="DefaultParameterTemplate">
-            <Grid  Margin="0,0,0,10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <TextBlock Text="{Binding Path=ParameterName}" Margin="0,0,25,0" HorizontalAlignment="Left" />
-                <TextBox Name="ParameterValue" Width="100" Text="{Binding Path=ParameterValue, Mode=OneWayToSource}" Grid.Column="1" HorizontalAlignment="Left" />
-            </Grid>
-        </DataTemplate>
+				<TextBlock
+					Style="{x:Null}"
+					HorizontalAlignment="Left"
+					Margin="0,0,25,0"
+					Text="{Binding ParameterName}"
+				/>
+				<ComboBox
+					Grid.Column="1"
+					Width="129"
+					HorizontalAlignment="Left"
+					ItemsSource="{Binding Converter={x:Static converters:SnoopDependencyPropertiesConverter.Default}}"
+					SelectedValue="{Binding ParameterValue, Mode=TwoWay}"
+				/>
+			</Grid>
+		</DataTemplate>
 
-        <DataTemplate x:Key="UnknownParameterTemplate">
-            <Grid Margin="0,0,0,10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="160" />
-                    <ColumnDefinition Width="160" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <TextBlock Text="{Binding Path=ParameterName}" Margin="0,0,25,0" HorizontalAlignment="Left" />
-                <!--<Rectangle Width="1" Fill="Black" HorizontalAlignment="Right" />-->
-                <Button HorizontalAlignment="Left" Width="150" Height="25" Content="Create/Modify Parameter"  Command="{Binding Path=CreateCustomParameterCommand}" Grid.Column="1" />
-                <Button HorizontalAlignment="Left" Width="150" Height="25" Content="Clear Parameter"  Command="{Binding Path=NullOutParameterCommand}" Grid.Column="2" />
-                <TextBlock Text="{Binding Path=ParameterValue}" Grid.Column="3" VerticalAlignment="Center" />
-            </Grid>
-        </DataTemplate>
-    </UserControl.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="45" />
-            <RowDefinition Height="25" />
-            <RowDefinition Height="50" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        
-        <StackPanel Orientation="Horizontal" Grid.Row="0">
-            <Button Height="30" Width="100" Content="Change Target" Click="ChangeTarget_Click" Margin="0,0,15,0" />
-            
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+		<DataTemplate x:Key="DefaultParameterTemplate">
+			<Grid Margin="0,0,0,10">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition/>
+				</Grid.ColumnDefinitions>
 
-                <TextBlock Text="Current Target: " VerticalAlignment="Center" FontWeight="Bold" />
-                <TextBlock Grid.Row="1" Text="{Binding Path=Target, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MethodsControl}}}" VerticalAlignment="Center" />                
-            </Grid>
-        </StackPanel>
+				<TextBlock
+					Style="{x:Null}"
+					HorizontalAlignment="Left"
+					Margin="0,0,25,0"
+					Text="{Binding ParameterName}"
+				/>
+				<TextBox
+					x:Name="ParameterValue"
+					Style="{x:Null}"
+					Grid.Column="1"
+					Width="100"
+					HorizontalAlignment="Left"
+					Text="{Binding ParameterValue, Mode=OneWayToSource}"
+				/>
+			</Grid>
+		</DataTemplate>
 
-        <CheckBox Name="_checkBoxUseDataContext" Content="Use DataContext property" Grid.Row="1" />
+		<DataTemplate x:Key="UnknownParameterTemplate">
+			<Grid Margin="0,0,0,10">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="160"/>
+					<ColumnDefinition Width="160"/>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="2">
-            <TextBlock Text="Method: "  VerticalAlignment="Center" FontWeight="Bold"/>
-            <ComboBox Name="comboBoxMethods" Height="25" Width="350" />
-        </StackPanel>
+				<TextBlock
+					Style="{x:Null}"
+					HorizontalAlignment="Left"
+					Margin="0,0,25,0"
+					Text="{Binding ParameterName}"
+				/>
+				<Button
+					Grid.Column="1"
+					Width="150"
+					Height="25"
+					HorizontalAlignment="Left"
+					Command="{Binding CreateCustomParameterCommand}"
+				>
+					<TextBlock Style="{x:Null}" Text="Create/Modify Parameter"/>
+				</Button>
+				<Button
+					Grid.Column="2"
+					Width="150"
+					Height="25"
+					HorizontalAlignment="Left"
+					Command="{Binding NullOutParameterCommand}"
+				>
+					<TextBlock Style="{x:Null}" Text="Clear Parameter"/>
+				</Button>
+				<TextBlock
+					Style="{x:Null}"
+					Grid.Column="3"
+					VerticalAlignment="Center"
+					Text="{Binding ParameterValue}"
+				/>
+			</Grid>
+		</DataTemplate>
+	</UserControl.Resources>
 
-        <StackPanel Grid.Row="3" Margin="0,10,0,10" Name="parametersContainer" Visibility="Collapsed">
-            <TextBlock Text="Parameters:" Foreground="Black" Margin="0,0,0,10" FontWeight="Bold" />
-            <ItemsControl Name="itemsControlParameters" Grid.Row="1" Margin="0,10,0,0" ItemTemplateSelector="{StaticResource SnoopParameterInformationTemplateSelector}" />
-        </StackPanel>        
-        
-        <Button Grid.Row="4"
-                Height="25"
-                Width="200"
-                Content="Invoke"
-                HorizontalAlignment="Left"
-                Click="InvokeMethodClick" />
-        
-        <StackPanel Name="resultStringContainer" Grid.Row="5" Margin="0,20,0,0" Orientation="Horizontal" Visibility="Collapsed">
-            <TextBlock Name="textBlockResultLabel" Text="Result as string: " Foreground="Black" FontWeight="Bold" />
-            <TextBox IsReadOnly="True" Name="textBlockResult" Grid.Row="3" />
-        </StackPanel>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="45"/>
+			<RowDefinition Height="25"/>
+			<RowDefinition Height="50"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
 
-        <Grid Grid.Row="6" Margin="0,25,0,0" Name="resultProperties" Visibility="Collapsed">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <TextBlock Text="Result Properties:" Foreground="Black" FontWeight="Bold" />
-            <snoopNS:PropertyInspector x:Name="propertyInspector" Grid.Row="1"  />
-        </Grid>
+		<StackPanel Orientation="Horizontal" Grid.Row="0">
+			<Button
+				Height="30"
+				Width="100"
+				VerticalAlignment="Center"
+				Margin="0,0,15,0"
+				Click="ChangeTarget_Click"
+			>
+				<TextBlock Style="{x:Null}" Text="Change Target"/>
+			</Button>
 
-        
-        
-    </Grid>
+			<Grid VerticalAlignment="Center">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+				</Grid.RowDefinitions>
+
+				<TextBlock
+					Style="{x:Null}"
+					Grid.Row="0"
+					VerticalAlignment="Center"
+					FontWeight="Bold"
+					Text="Current Target:"
+				/>
+				<TextBlock
+					Style="{x:Null}"
+					Grid.Row="1"
+					VerticalAlignment="Center"
+					Text="{Binding Path=Target, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MethodsControl}}}"
+				/>
+			</Grid>
+		</StackPanel>
+
+		<CheckBox
+			x:Name="_checkBoxUseDataContext"
+			Grid.Row="1"
+		>
+			<TextBlock Style="{x:Null}" Text="Use DataContext Property"/>
+		</CheckBox>
+
+		<StackPanel Grid.Row="2" Orientation="Horizontal">
+			<TextBlock
+				Style="{x:Null}"
+				VerticalAlignment="Center"
+				Margin="0,0,5,0"
+				FontWeight="Bold"
+				Text="Method:"
+			/>
+			<ComboBox x:Name="comboBoxMethods" Width="350" Height="25"/>
+		</StackPanel>
+
+		<StackPanel
+			x:Name="parametersContainer"
+			Grid.Row="3"
+			Margin="0,10,0,10"
+			Visibility="Collapsed"
+		>
+			<TextBlock
+				Style="{x:Null}"
+				Margin="0,0,0,10"
+				FontWeight="Bold"
+				Text="Parameters:"
+			/>
+			<ItemsControl
+				x:Name="itemsControlParameters"
+				Grid.Row="1"
+				Margin="0,10,0,0"
+				ItemTemplateSelector="{StaticResource SnoopParameterInformationTemplateSelector}"
+			/>
+		</StackPanel>
+
+		<Button
+			Grid.Row="4"
+			Width="200"
+			Height="25"
+			HorizontalAlignment="Left"
+			Click="InvokeMethodClick"
+		>
+			<TextBlock Style="{x:Null}" Text="Invoke"/>
+		</Button>
+
+		<StackPanel
+			x:Name="resultStringContainer"
+			Grid.Row="5"
+			Margin="0,20,0,0"
+			Orientation="Horizontal"
+			Visibility="Collapsed"
+		>
+			<TextBlock
+				x:Name="textBlockResultLabel"
+				Style="{x:Null}"
+				VerticalAlignment="Center"
+				Margin="0,0,5,0"
+				FontWeight="Bold"
+				Text="Result as string:"
+			/>
+			<TextBox
+				x:Name="textBlockResult"
+				Style="{x:Null}"
+				Grid.Row="3"
+				VerticalAlignment="Center"
+				IsReadOnly="True"
+			/>
+		</StackPanel>
+
+		<Grid
+			x:Name="resultProperties"
+			Grid.Row="6"
+			Margin="0,25,0,0"
+			Visibility="Collapsed"
+		>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+
+			<TextBlock
+				Style="{x:Null}"
+				FontWeight="Bold"
+				Text="Result Properties:"
+			/>
+			<snoopNS:PropertyInspector x:Name="propertyInspector" Grid.Row="1"/>
+		</Grid>
+	</Grid>
 </UserControl>
