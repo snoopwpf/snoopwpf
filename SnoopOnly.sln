@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snoop", "Snoop\Snoop.csproj", "{6ADE40E1-7624-475C-80C5-9883AA4712EF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Release|Mixed Platforms = Release|Mixed Platforms
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6ADE40E1-7624-475C-80C5-9883AA4712EF}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6ADE40E1-7624-475C-80C5-9883AA4712EF}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6ADE40E1-7624-475C-80C5-9883AA4712EF}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{6ADE40E1-7624-475C-80C5-9883AA4712EF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
