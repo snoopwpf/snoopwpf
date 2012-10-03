@@ -179,16 +179,6 @@ All other rights reserved.
 				<SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="LightBlue"/>
 			</TreeView.Resources>
 
-            <TreeView.ContextMenu>
-                <ContextMenu>
-                    <MenuItem x:Name="mnuCopyMarkup" Command="{x:Static local:SnoopUI.CopyMarkupCommand}">
-                        <MenuItem.Header>
-                            <TextBlock Text="Copy markup to clipboard"/>
-                        </MenuItem.Header>
-                    </MenuItem>
-                </ContextMenu>
-            </TreeView.ContextMenu>
-
             <TreeView.ItemContainerStyle>
 				<Style BasedOn="{StaticResource ProperTreeViewItemStyle}" TargetType="{x:Type local:ProperTreeViewItem}">
 					<Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>

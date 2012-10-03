@@ -34,8 +34,8 @@ namespace Snoop
 		public static readonly RoutedCommand InspectCommand = new RoutedCommand("Inspect", typeof(SnoopUI));
 		public static readonly RoutedCommand SelectFocusCommand = new RoutedCommand("SelectFocus", typeof(SnoopUI));
 		public static readonly RoutedCommand SelectFocusScopeCommand = new RoutedCommand("SelectFocusScope", typeof(SnoopUI));
-        public static readonly RoutedCommand CopyMarkupCommand = new RoutedCommand("CopyMarkup", typeof(SnoopUI));
-		public static readonly RoutedCommand ClearSearchFilterCommand = new RoutedCommand();
+		public static readonly RoutedCommand ClearSearchFilterCommand = new RoutedCommand("ClearSearchFilter", typeof(SnoopUI));
+		public static readonly RoutedCommand CopyPropertyChangesCommand = new RoutedCommand("CopyPropertyChanges", typeof(SnoopUI));
 		#endregion
 
 		#region Static Constructor
@@ -44,7 +44,8 @@ namespace Snoop
 			SnoopUI.IntrospectCommand.InputGestures.Add(new KeyGesture(Key.I, ModifierKeys.Control));
 			SnoopUI.RefreshCommand.InputGestures.Add(new KeyGesture(Key.F5));
 			SnoopUI.HelpCommand.InputGestures.Add(new KeyGesture(Key.F1));
-			ClearSearchFilterCommand.InputGestures.Add(new KeyGesture(Key.Escape));
+			SnoopUI.ClearSearchFilterCommand.InputGestures.Add(new KeyGesture(Key.Escape));
+			SnoopUI.CopyPropertyChangesCommand.InputGestures.Add(new KeyGesture(Key.C, ModifierKeys.Control | ModifierKeys.Shift));
 		}
 		#endregion
 
@@ -76,16 +77,16 @@ namespace Snoop
 			this.CommandBindings.Add(new CommandBinding(SnoopUI.RefreshCommand, this.HandleRefresh));
 			this.CommandBindings.Add(new CommandBinding(SnoopUI.HelpCommand, this.HandleHelp));
 
-			// cplotts todo: how does this inspect command work? seems tied into the events view.
 			this.CommandBindings.Add(new CommandBinding(SnoopUI.InspectCommand, this.HandleInspect));
 
 			this.CommandBindings.Add(new CommandBinding(SnoopUI.SelectFocusCommand, this.HandleSelectFocus));
 			this.CommandBindings.Add(new CommandBinding(SnoopUI.SelectFocusScopeCommand, this.HandleSelectFocusScope));
-            this.CommandBindings.Add(new CommandBinding(SnoopUI.CopyMarkupCommand, this.HandleCopyMarkup));
 
 			//NOTE: this is up here in the outer UI layer so ESC will clear any typed filter regardless of where the focus is
 			// (i.e. focus on a selected item in the tree, not in the property list where the search box is hosted)
-			this.CommandBindings.Add(new CommandBinding(SnoopUI.ClearSearchFilterCommand, this.ClearSearchFilterHandler ));
+			this.CommandBindings.Add(new CommandBinding(SnoopUI.ClearSearchFilterCommand, this.ClearSearchFilterHandler));
+
+			this.CommandBindings.Add(new CommandBinding(SnoopUI.CopyPropertyChangesCommand, this.CopyPropertyChangesHandler));
 
 			InputManager.Current.PreProcessInput += this.HandlePreProcessInput;
 			this.Tree.SelectedItemChanged += this.HandleTreeSelectedItemChanged;
@@ -702,63 +703,18 @@ namespace Snoop
 			SelectItem(e.Parameter as DependencyObject);
 		}
 
-        private void HandleCopyMarkup(object sender, ExecutedRoutedEventArgs e)
-        {
-            if (this.CurrentSelection == null)
-            {
-                return;
-            }
-
-            // construct the markup for the element and copy it to the clipboard (local properties only)
-            List<PropertyInformation> Properties = PropertyInformation.GetProperties(this.CurrentSelection.Target);
-            string Tag = "";
-            string[] fqn = this.CurrentSelection.Target.ToString().Split('.');
-            string Namespace = fqn[0];
-            string[] typeArray;
-            string Type = "";
-
-            if (fqn.Length > 0)
-            {
-                typeArray = fqn[fqn.Length - 1].Split(':');
-                if (typeArray.Length > 0)
-                {
-                    Type= typeArray[0];
-                }
-            }
-
-            switch (Namespace)
-            {
-                case "System":
-                    Namespace = "";
-                    break;
-                case "xceed":
-                    Namespace = "xcdg:";
-                    break;
-                default:
-                    Namespace += ":";
-                    break;
-            }
-
-            Tag = "<" + Namespace + Type;
-
-            // add the properties, ignore bindings and styles for now since theres no code here to handle it yet, only add editable properties.
-            foreach (PropertyInformation property in Properties.Where(x => x.ValueSource.BaseValueSource == BaseValueSource.Local && x.CanEdit && x.DisplayName != "Style"))
-            {
-                // add properties to tag, in my experience using "Name" can be flakey, should use x:Name instead
-                Tag += " " + (property.DisplayName == "Name" ? "x:Name" : property.DisplayName) + "=" + '"' + property.Value + '"';
-            }
-
-            Tag += "/>";
-
-            Clipboard.SetText(Tag);
-        }
-
-		private void ClearSearchFilterHandler( object sender, ExecutedRoutedEventArgs e )
+		private void ClearSearchFilterHandler(object sender, ExecutedRoutedEventArgs e)
 		{
 			PropertyGrid.StringFilter = string.Empty;
 		}
 
+		private void CopyPropertyChangesHandler(object sender, ExecutedRoutedEventArgs e)
+		{
+			if (this.currentSelection != null)
+				SaveEditedProperties(this.currentSelection);
 
+			EditedPropertiesHelper.DumpObjectsWithEditedProperties();
+		}
 
 		private void SelectItem(DependencyObject item)
 		{
