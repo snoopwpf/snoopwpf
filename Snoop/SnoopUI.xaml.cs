@@ -549,7 +549,6 @@ namespace Snoop
                 {
                     EditedPropertiesHelper.AddEditedProperty( Dispatcher, owningObject, property );
                 }
-                property.Teardown();
             }
 		}
 
