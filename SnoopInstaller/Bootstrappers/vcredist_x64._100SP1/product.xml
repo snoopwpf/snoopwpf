@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+
+<Product
+  xmlns="http://schemas.microsoft.com/developer/2004/01/bootstrapper"
+  ProductCode="Microsoft.Visual.C++.10.0.SP1.x64"
+>
+
+  <!-- Defines list of files to be copied on build -->
+  <PackageFiles>
+    <PackageFile Name="vcredist_x64.exe" HomeSite="VCRedistExe"/>
+  </PackageFiles>
+
+  <InstallChecks>
+    <MsiProductCheck Property="VCRedistInstalled" Product="{1D8E6291-B0D5-35EC-8441-6616F567A0F7}"/>
+  </InstallChecks>
+
+  <!-- Defines how to invoke the setup for the Visual C++ 10.0 redist -->
+  <!-- TODO: Needs EstrimatedTempSpace, LogFile, and an update of EstimatedDiskSpace -->
+  <Commands Reboot="Defer">
+    <Command PackageFile="vcredist_x64.exe" 
+	     Arguments=' /q:a ' 
+	     >
+
+      <!-- These checks determine whether the package is to be installed -->
+      <InstallConditions>
+        <BypassIf Property="VCRedistInstalled" Compare="ValueGreaterThanOrEqualTo" Value="3"/>
+		
+		
+        <!-- Bypass install on any platform other than x64 -->
+        <BypassIf Property="ProcessorArchitecture" Compare="ValueNotEqualTo" Value="AMD64" />
+		
+        <!-- Block install if user does not have admin privileges -->
+        <FailIf Property="AdminUser" Compare="ValueEqualTo" Value="false" String="AdminRequired"/>
+
+
+      </InstallConditions>
+      
+      <ExitCodes>
+        <ExitCode Value="0" Result="Success"/>
+        <ExitCode Value="3010" Result="SuccessReboot"/>
+        <DefaultExitCode Result="Fail" FormatMessageFromSystem="true" String="GeneralFailure" />
+      </ExitCodes>
+      
+    </Command>
+  </Commands>
+</Product>
