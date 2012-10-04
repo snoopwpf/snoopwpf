@@ -118,6 +118,16 @@
 							Source="..\Build\Release\ManagedInjector64-4.0.dll"
 						/>
 					</Component>
+
+					<Directory Id="SnoopScriptsFolder" Name="Scripts">
+						<Component Id="SnoopScriptsComponent" Guid="65AD97C3-5B32-4020-892C-1D0E38656D6D">
+							<File
+								Id="SnoopScriptsFile"
+								Name="Snoop.psm1"
+								Source="..\Build\Release\Scripts\Snoop.psm1"
+							/>
+						</Component>
+					</Directory>
 				</Directory>
 			</Directory>
 
@@ -135,6 +145,7 @@
 
 		<Feature Id="ProductFeature" Title="Snoop" Description="Snoop, the WPF Spying Utility" Level="1" ConfigurableDirectory="INSTALLDIR">
 			<ComponentRef Id="Snoop"/>
+			<ComponentRef Id="SnoopScriptsComponent"/>
 			<ComponentRef Id="ProgramMenuDir"/>
 		</Feature>
 
