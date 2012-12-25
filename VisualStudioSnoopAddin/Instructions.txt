@@ -1,0 +1,16 @@
+﻿Project settings:
+	Debug:
+		- Start External Program - C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\devenv.exe
+		- Command Line Arguments - /resetaddin VisualStudioSnoopAddin.Connect
+		- Working Directory - C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\
+
+Building:
+1) The project MUST reside in this directory: %VSAPPDATA%\Projects. (VSAPPDATA% refers to Documents/Visual Studio 2010/2012). 
+2) Build the project (don't run it)
+3) Now you can start debugging.
+
+To Deploy without building:
+	Visual Studio 2010
+		- Copy the contents from "...\Addin Binaries\Visual Studio 2010" to "...Documents/Visual Studio 2010/Addins"
+	Visual Studio 2012
+		- Copy the contents from "...\Addin Binaries\Visual Studio 2012" to "...Documents/Visual Studio 2012/Addins"

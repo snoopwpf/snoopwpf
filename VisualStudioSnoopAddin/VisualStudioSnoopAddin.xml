@@ -4,6 +4,22 @@
         <name>VisualStudioSnoopAddin</name>
     </assembly>
     <members>
+        <member name="T:VisualStudioSnoopAddin.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:VisualStudioSnoopAddin.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:VisualStudioSnoopAddin.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
         <member name="T:VisualStudioSnoopAddin.Connect">
             <summary>The object for implementing an Add-in.</summary>
             <seealso class='IDTExtensibility2' />
@@ -55,22 +71,6 @@
             <param term='varOut'>Parameters passed from the command handler to the caller.</param>
             <param term='handled'>Informs the caller if the command was handled or not.</param>
             <seealso class='Exec' />
-        </member>
-        <member name="T:VisualStudioSnoopAddin.Properties.Resources">
-            <summary>
-              A strongly-typed resource class, for looking up localized strings, etc.
-            </summary>
-        </member>
-        <member name="P:VisualStudioSnoopAddin.Properties.Resources.ResourceManager">
-            <summary>
-              Returns the cached ResourceManager instance used by this class.
-            </summary>
-        </member>
-        <member name="P:VisualStudioSnoopAddin.Properties.Resources.Culture">
-            <summary>
-              Overrides the current thread's CurrentUICulture property for all
-              resource lookups using this strongly typed resource class.
-            </summary>
         </member>
     </members>
 </doc>

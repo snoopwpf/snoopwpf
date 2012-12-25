@@ -118,6 +118,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\1.bmp" />
+    <Content Include="Instructions.txt" />
     <Content Include="VisualStudioSnoopAddin.AddIn" />
   </ItemGroup>
   <ItemGroup>
