@@ -5,7 +5,8 @@
 		- Working Directory - C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\
 
 Building:
-1) The project MUST reside in this directory: %VSAPPDATA%\Projects. (VSAPPDATA% refers to Documents/Visual Studio 2010/2012). 
+1) The solution MUST reside in this directory: %VSAPPDATA%\Projects\VisualStudioAddin. (VSAPPDATA% refers to Documents/Visual Studio 2010/2012). 
+	- Note that the project will reside in %VSAPPDATA%\Projects\VisualStudioAddin\VisualStudioAddin\.
 2) Build the project (don't run it)
 3) Now you can start debugging.
 
