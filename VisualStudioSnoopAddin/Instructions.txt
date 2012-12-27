@@ -13,5 +13,7 @@ Building:
 To Deploy without building:
 	Visual Studio 2010
 		- Copy the contents from "...\Addin Binaries\Visual Studio 2010" to "...Documents/Visual Studio 2010/Addins"
+		- Start Visual Studio 2010.
 	Visual Studio 2012
 		- Copy the contents from "...\Addin Binaries\Visual Studio 2012" to "...Documents/Visual Studio 2012/Addins"
+		- Start Visual Studio 2012
