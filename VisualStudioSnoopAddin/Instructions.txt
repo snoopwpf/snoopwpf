@@ -13,7 +13,9 @@ Building:
 To Deploy without building:
 	Visual Studio 2010
 		- Copy the contents from "...\Addin Binaries\Visual Studio 2010" to "...Documents/Visual Studio 2010/Addins"
+		- Right click on the extracted file, "VisualStudioSnoopAddin.dll", go to the general tab, and click "Unblock" if applicable.
 		- Start Visual Studio 2010.
 	Visual Studio 2012
 		- Copy the contents from "...\Addin Binaries\Visual Studio 2012" to "...Documents/Visual Studio 2012/Addins"
+		- Right click on the extracted file, "VisualStudioSnoopAddin.dll", go to the general tab, and click "Unblock" if applicable.
 		- Start Visual Studio 2012
