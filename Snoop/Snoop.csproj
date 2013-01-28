@@ -101,6 +101,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="DebugListenerTab\DebugListenerControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DebugListenerTab\SetFiltersWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="EditUserFilters.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -180,6 +188,12 @@
     <Compile Include="Converters\CsvStringToArrayConverter.cs" />
     <Compile Include="Converters\IsSupportedRuntimeTypeConverter.cs" />
     <Compile Include="Converters\SnoopParameterInfoConverter.cs" />
+    <Compile Include="DebugListenerTab\DebugListenerControl.xaml.cs">
+      <DependentUpon>DebugListenerControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DebugListenerTab\SetFiltersWindow.xaml.cs">
+      <DependentUpon>SetFiltersWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DelayedCall.cs" />
     <Compile Include="EditTextBox.cs" />
     <Compile Include="EditUserFilters.xaml.cs">
@@ -191,6 +205,7 @@
     <Compile Include="EventsListener.cs" />
     <Compile Include="EventTracker.cs" />
     <Compile Include="Infrastructure\ComboBoxSettings.cs" />
+    <Compile Include="Infrastructure\ExtensionMethods.cs" />
     <Compile Include="Infrastructure\ISkipDelve.cs" />
     <Compile Include="Infrastructure\ObservableCollectionExtensions.cs" />
     <Compile Include="Infrastructure\RelayCommand.cs" />

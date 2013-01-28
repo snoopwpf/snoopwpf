@@ -22,6 +22,7 @@ All other rights reserved.
 	ShowInTaskbar="True"
 	SnapsToDevicePixels="True"
 	Focusable="False"
+    xmlns:DebugListenerNS="clr-namespace:Snoop.DebugListenerTab"
 	DataContext="{Binding RelativeSource={RelativeSource Self}}"
 >
 	<Window.Resources>
@@ -323,7 +324,25 @@ All other rights reserved.
 					</TextBlock>
 				</TabItem.Header>
 			</TabItem>
-		</TabControl>
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Style="{x:Null}" Text="Debug Listener">
+						<TextBlock.ToolTip>
+							<StackPanel MaxWidth="300">
+								<TextBlock Style="{x:Null}" Text="Methods View"/>
+								<TextBlock
+									Style="{x:Null}"
+									Text="Shows and filters debug events."
+									TextWrapping="Wrap"
+								/>
+							</StackPanel>
+						</TextBlock.ToolTip>
+					</TextBlock>
+                </TabItem.Header>
+
+                <DebugListenerNS:DebugListenerControl />
+            </TabItem>
+        </TabControl>
 
 		<!-- Horizontal GridSplitter (between the tab control (with the property grid/events view) and the previewer) -->
 		<GridSplitter

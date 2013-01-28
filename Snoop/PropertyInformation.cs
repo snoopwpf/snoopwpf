@@ -18,6 +18,7 @@ using System.IO;
 using Snoop.Infrastructure;
 using System.Linq;
 
+
 namespace Snoop
 {
 	public class PropertyInformation : DependencyObject, IComparable, INotifyPropertyChanged
@@ -599,22 +600,30 @@ namespace Snoop
 						ignoreUpdate = false;
 
 						// this needs to happen on idle so that we can actually run the binding, which may occur asynchronously.
-						Dispatcher.BeginInvoke
-						(
-							DispatcherPriority.ApplicationIdle,
-							new DispatcherOperationCallback
-							(
-								delegate(object source)
-								{
-									bindingError = builder.ToString();
-									this.OnPropertyChanged("BindingError");
-									PresentationTraceSources.DataBindingSource.Listeners.Remove(tracer);
-									writer.Close();
-									return null;
-								}
-							),
-							null
-						);
+                       
+                        //Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
+                        //    {
+                        //        bindingError = builder.ToString();
+                        //        this.OnPropertyChanged("BindingError");
+                        //        PresentationTraceSources.DataBindingSource.Listeners.Remove(tracer);
+                        //        writer.Close();
+                        //    });
+                        Dispatcher.BeginInvoke
+                        (
+                            DispatcherPriority.ApplicationIdle,
+                            new DispatcherOperationCallback
+                            (
+                                delegate(object source)
+                                {
+                                    bindingError = builder.ToString();
+                                    this.OnPropertyChanged("BindingError");
+                                    PresentationTraceSources.DataBindingSource.Listeners.Remove(tracer);
+                                    writer.Close();
+                                    return null;
+                                }
+                            ),
+                            null
+                        );
 					}
 					else
 					{

@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="Snoop.DebugListenerTab.DebugListenerControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <Grid Name="gridTopRow">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <CheckBox Name="checkBoxStartListening" Margin="10" Checked="checkBoxStartListening_Checked" Unchecked="checkBoxStartListening_Unchecked"
+                      Content="Start Listening" />
+
+            <StackPanel Orientation="Horizontal" Margin="10,0,10,10" Grid.Row="1">
+                <Button Name="buttonClear"  Width="75" Height="25" HorizontalAlignment="Left" Content="Clear Text" Click="buttonClear_Click"/>
+                <Button Name="buttonClearFilters" Margin="10,0,0,0" Width="75" Height="25" HorizontalAlignment="Left" Content="Clear Filters" Click="buttonClearFilters_Click"/>
+                <Button Name="buttonSetFilters" Margin="10,0,0,0" Width="75" Height="25" HorizontalAlignment="Left" Content="Set Filters" Click="buttonSetFilters_Click"/>
+                
+            </StackPanel>
+            
+        </Grid>
+        <TextBox Name="textBoxDebugContent" IsReadOnly="True" Grid.Row="1" Margin="10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" />
+    </Grid>
+</UserControl>
