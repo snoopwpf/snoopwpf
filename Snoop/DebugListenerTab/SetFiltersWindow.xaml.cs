@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
 
 namespace Snoop.DebugListenerTab
 {
@@ -105,7 +106,8 @@ namespace Snoop.DebugListenerTab
     {
         StartsWith,
         EndsWith,
-        Contains
+        Contains,
+        RegularExpression
     }
 
     public abstract class SnoopFilter : INotifyPropertyChanged
@@ -156,6 +158,8 @@ namespace Snoop.DebugListenerTab
                     return debugLine.StartsWith(text);
                 case DebugListenerTab.FilterType.EndsWith:
                     return debugLine.EndsWith(text);
+                case DebugListenerTab.FilterType.RegularExpression:
+                    return Regex.IsMatch(debugLine, text);
             }
             return false;
         }

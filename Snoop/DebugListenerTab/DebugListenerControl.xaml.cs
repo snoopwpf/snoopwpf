@@ -13,6 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Diagnostics;
 using Snoop.Infrastructure;
+using System.Windows.Threading;
 
 namespace Snoop.DebugListenerTab
 {
@@ -46,7 +47,8 @@ namespace Snoop.DebugListenerTab
         public void Write(string str)
         {
             //this.Dispatcher.InvokeActionSafe((
-            this.Dispatcher.InvokeActionSafe(() => DoWrite(str));
+            //this.Dispatcher.InvokeActionSafe(() => DoWrite(str));
+            this.Dispatcher.BeginInvoke(DispatcherPriority.Render, () => DoWrite(str));
         }
 
         private void DoWrite(string str)
