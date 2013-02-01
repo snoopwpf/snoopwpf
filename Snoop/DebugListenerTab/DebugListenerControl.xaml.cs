@@ -76,6 +76,9 @@ namespace Snoop.DebugListenerTab
         private void buttonSetFilters_Click(object sender, RoutedEventArgs e)
         {
             SetFiltersWindow setFiltersWindow = new SetFiltersWindow(filtersViewModel);
+            setFiltersWindow.Topmost = true;
+            setFiltersWindow.Owner = Window.GetWindow(this);
+            setFiltersWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             setFiltersWindow.ShowDialog();
         }
 
