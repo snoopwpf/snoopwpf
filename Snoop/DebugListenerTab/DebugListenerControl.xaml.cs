@@ -34,7 +34,7 @@ namespace Snoop.DebugListenerTab
         private void checkBoxStartListening_Checked(object sender, RoutedEventArgs e)
         {
             Debug.Listeners.Add(snoopDebugListener);
-            PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.Verbose;
+            //PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.Verbose;
             PresentationTraceSources.DataBindingSource.Listeners.Add(snoopDebugListener);
         }
 
@@ -68,13 +68,30 @@ namespace Snoop.DebugListenerTab
 
         private void buttonClearFilters_Click(object sender, RoutedEventArgs e)
         {
-            filtersViewModel.ClearFilters();
+            var result = MessageBox.Show("Are you sure you want to clear your filters?", "Clear Filters Confirmation", MessageBoxButton.YesNo);
+            if (result == MessageBoxResult.Yes)
+                filtersViewModel.ClearFilters();
         }
 
         private void buttonSetFilters_Click(object sender, RoutedEventArgs e)
         {
             SetFiltersWindow setFiltersWindow = new SetFiltersWindow(filtersViewModel);
             setFiltersWindow.ShowDialog();
+        }
+
+        private void comboBoxPresentationTraceLevel_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.comboBoxPresentationTraceLevel == null || this.comboBoxPresentationTraceLevel.Items == null || this.comboBoxPresentationTraceLevel.Items.Count <= this.comboBoxPresentationTraceLevel.SelectedIndex || this.comboBoxPresentationTraceLevel.SelectedIndex < 0)
+                return;
+
+            var selectedComboBoxItem = this.comboBoxPresentationTraceLevel.Items[this.comboBoxPresentationTraceLevel.SelectedIndex] as ComboBoxItem;
+            if (selectedComboBoxItem == null || selectedComboBoxItem.Tag == null)
+                return;
+
+
+            var sourceLevel = (SourceLevels)Enum.Parse(typeof(SourceLevels), selectedComboBoxItem.Tag.ToString());
+            PresentationTraceSources.DataBindingSource.Switch.Level = sourceLevel;
+
         }
     }
 

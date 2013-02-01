@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="400">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -12,14 +12,33 @@
         </Grid.RowDefinitions>
         
         <Grid Name="gridTopRow">
-            <Grid.RowDefinitions>
+            <Grid.RowDefinitions>                
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <CheckBox Name="checkBoxStartListening" Margin="10" Checked="checkBoxStartListening_Checked" Unchecked="checkBoxStartListening_Unchecked"
-                      Content="Start Listening" />
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            
+            <CheckBox Name="checkBoxStartListening" Margin="10" Checked="checkBoxStartListening_Checked" Unchecked="checkBoxStartListening_Unchecked" Content="Start Listening" />
 
-            <StackPanel Orientation="Horizontal" Margin="10,0,10,10" Grid.Row="1">
+            <StackPanel Orientation="Horizontal" Grid.Column="1">
+                <TextBlock Text="WPF Trace Level: " VerticalAlignment="Center" Margin="0,0,10,0" />
+                <ComboBox Name="comboBoxPresentationTraceLevel" Width="100" Height="25" SelectedIndex="2" SelectionChanged="comboBoxPresentationTraceLevel_SelectionChanged">
+                    <ComboBoxItem Content="Off" Tag="Off" />
+                    <ComboBoxItem Content="Critical" Tag="Critical"  />
+                    <ComboBoxItem Content="Error" Tag="Error" />
+                    <ComboBoxItem Content="Warning" Tag="Warning"  />
+                    <ComboBoxItem Content="Information" Tag="Information" />
+                    <ComboBoxItem Content="Verbose" Tag="Verbose" />
+                    <ComboBoxItem Content="Activity Tracing" Tag="ActivityTracing" />
+                    <ComboBoxItem Content="All" Tag="All"  />
+                </ComboBox>
+            </StackPanel>
+
+
+            <StackPanel Orientation="Horizontal" Margin="10,0,10,10" Grid.Row="1" Grid.ColumnSpan="2">
                 <Button Name="buttonClear"  Width="75" Height="25" HorizontalAlignment="Left" Content="Clear Text" Click="buttonClear_Click"/>
                 <Button Name="buttonClearFilters" Margin="10,0,0,0" Width="75" Height="25" HorizontalAlignment="Left" Content="Clear Filters" Click="buttonClearFilters_Click"/>
                 <Button Name="buttonSetFilters" Margin="10,0,0,0" Width="75" Height="25" HorizontalAlignment="Left" Content="Set Filters" Click="buttonSetFilters_Click"/>
