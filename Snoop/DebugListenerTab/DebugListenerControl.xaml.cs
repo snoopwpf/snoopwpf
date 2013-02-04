@@ -48,16 +48,16 @@ namespace Snoop.DebugListenerTab
         {
             //this.Dispatcher.InvokeActionSafe((
             //this.Dispatcher.InvokeActionSafe(() => DoWrite(str));
-            this.Dispatcher.BeginInvoke(DispatcherPriority.Render, () => DoWrite(str));
+            if (!filtersViewModel.IsSet || filtersViewModel.FilterMatches(str))
+            {
+                this.Dispatcher.BeginInvoke(DispatcherPriority.Render, () => DoWrite(str));
+            }
         }
 
         private void DoWrite(string str)
         {
-            if (!filtersViewModel.IsSet || filtersViewModel.FilterMatches(str))
-            {
-                this.textBoxDebugContent.AppendText(str + "\n");
-                this.textBoxDebugContent.ScrollToEnd();
-            }
+            this.textBoxDebugContent.AppendText(str + "\n");            
+            this.textBoxDebugContent.ScrollToEnd();
         }
 
 

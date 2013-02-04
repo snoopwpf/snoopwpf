@@ -10,19 +10,56 @@
             <RowDefinition Height="50" />
         </Grid.RowDefinitions>
         <Grid Margin="20">
-            <StackPanel>
-                <ListBox ItemsSource="{Binding Path=Filters}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <!--<StackPanel>-->
+                <ListBox Name="listBoxFilters"  ItemsSource="{Binding Path=Filters}" SelectionMode="Extended"  AlternationCount="2">
+                    <ListBox.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Name="menuItemGroupFilters" Click="menuItemGroupFilters_Click">
+                                <MenuItem.Header>
+                                    <TextBlock Text="Group Filters" />
+                                </MenuItem.Header>
+                            </MenuItem>
+                        <MenuItem Name="menuItemClearFilterGroups" Click="menuItemClearFilterGroups_Click">
+                            <MenuItem.Header>
+                                <TextBlock Text="Clear Filter Groups" />
+                            </MenuItem.Header>
+                        </MenuItem>
+                    </ContextMenu>
+                    </ListBox.ContextMenu>
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListBoxItem}">
+                            <Style.Triggers>                                
+                                <DataTrigger Binding="{Binding Path=IsGrouped}" Value="True">
+                                    <Setter Property="Background" Value="#FFEAEAEA" />
+                                </DataTrigger>                        
+                            </Style.Triggers>
+                            <!--<Style.Triggers>
+
+                                <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                                    <Setter Property="Background" Value="Transparent"></Setter>
+                                </Trigger>
+                                <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                    <Setter Property="Background" Value="#FFEAEAEA"></Setter>
+                                </Trigger>
+                                
+                            </Style.Triggers>-->
+                        </Style>
+                    </ListBox.ItemContainerStyle>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                <ComboBox Width="100" Name="comboBoxFilterTypes" SelectedIndex="{Binding Path=FilterType, Mode=TwoWay,Converter={x:Static converters:FilterTypeToIntConverter.Default}}">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10" Name="stackPanelFilter">
+                                <ComboBox Width="100" Height="23" Name="comboBoxFilterTypes" SelectedIndex="{Binding Path=FilterType, Mode=TwoWay,Converter={x:Static converters:FilterTypeToIntConverter.Default}}">
                                     <ComboBoxItem Content="Starts With" />                                    
                                     <ComboBoxItem Content="Ends With" />
                                     <ComboBoxItem Content="Contains" />
                                     <ComboBoxItem Content="Regular Expression" />
                                 </ComboBox>
-                                <TextBox Width="150" Margin="10,0,0,0" Text="{Binding Path=Text, Mode=TwoWay}" />
-                                <Button Name="buttonRemoveFilter" Margin="10,0,0,0" Width="18" Height="18"  Click="buttonRemoveFilter_Click">
+                                <TextBox Name="textBlockFilter" Loaded="textBlockFilter_Loaded" Width="150" Height="23" Margin="10,0,0,0" Text="{Binding Path=Text, Mode=TwoWay}" />
+                                <Button Name="buttonRemoveFilter" Margin="10,0,0,0" Width="14" Height="14"  Click="buttonRemoveFilter_Click">
                                     <Grid>
                                         <Path
 				                            Stretch="Fill"
@@ -69,8 +106,8 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>-->
                 
-                <Button Margin="0,10,0,0" Name="buttonAddFilter" Click="buttonAddFilter_Click" Content="Add Another Filter" Width="110" Height="25" HorizontalAlignment="Left" />                
-            </StackPanel>
+                <Button Margin="0,10,0,0" Grid.Row="1" VerticalAlignment="Bottom" Name="buttonAddFilter" Click="buttonAddFilter_Click" Content="Add Another Filter" Width="110" Height="25" HorizontalAlignment="Left" />                
+            <!--</StackPanel>-->
         </Grid>
         <Button Name="buttonSetFilter" Margin="10,0,0,0" Grid.Row="1" HorizontalAlignment="Left" Height="25" Width="110" Content="Set Filter" Click="buttonSetFilter_Click" />
     </Grid>
