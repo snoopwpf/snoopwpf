@@ -46,6 +46,6 @@
             </StackPanel>
             
         </Grid>
-        <TextBox Name="textBoxDebugContent" IsReadOnly="True" Grid.Row="1" Margin="10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" />
+        <TextBox Name="textBoxDebugContent" IsReadOnly="True" Grid.Row="1" Margin="10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" />
     </Grid>
 </UserControl>
