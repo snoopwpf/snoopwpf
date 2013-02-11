@@ -22,19 +22,21 @@ namespace Snoop.DebugListenerTab
     /// </summary>
     public partial class DebugListenerControl : UserControl, IListener
     {
-        private readonly FiltersViewModel filtersViewModel = new FiltersViewModel();
+        private readonly FiltersViewModel filtersViewModel;// = new FiltersViewModel();
         private readonly SnoopDebugListener snoopDebugListener = new SnoopDebugListener();
         public DebugListenerControl()
         {
+            filtersViewModel = new FiltersViewModel(Properties.Settings.Default.SnoopDebugFilters);
+            this.DataContext = filtersViewModel;
+
             InitializeComponent();
-            
+  
             snoopDebugListener.RegisterListener(this);
         }
 
         private void checkBoxStartListening_Checked(object sender, RoutedEventArgs e)
         {
             Debug.Listeners.Add(snoopDebugListener);
-            //PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.Verbose;
             PresentationTraceSources.DataBindingSource.Listeners.Add(snoopDebugListener);
         }
 
@@ -46,8 +48,6 @@ namespace Snoop.DebugListenerTab
 
         public void Write(string str)
         {
-            //this.Dispatcher.InvokeActionSafe((
-            //this.Dispatcher.InvokeActionSafe(() => DoWrite(str));
             if (!filtersViewModel.IsSet || filtersViewModel.FilterMatches(str))
             {
                 this.Dispatcher.BeginInvoke(DispatcherPriority.Render, () => DoWrite(str));
@@ -64,13 +64,17 @@ namespace Snoop.DebugListenerTab
         private void buttonClear_Click(object sender, RoutedEventArgs e)
         {
             this.textBoxDebugContent.Clear();
+            
         }
 
         private void buttonClearFilters_Click(object sender, RoutedEventArgs e)
         {
             var result = MessageBox.Show("Are you sure you want to clear your filters?", "Clear Filters Confirmation", MessageBoxButton.YesNo);
             if (result == MessageBoxResult.Yes)
+            {
                 filtersViewModel.ClearFilters();
+                Properties.Settings.Default.SnoopDebugFilters = null;
+            }
         }
 
         private void buttonSetFilters_Click(object sender, RoutedEventArgs e)

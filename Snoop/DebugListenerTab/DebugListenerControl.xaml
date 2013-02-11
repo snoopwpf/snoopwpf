@@ -3,9 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="400">
-    <Grid>
+             mc:Ignorable="d" >
+    <Grid >
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -41,8 +40,10 @@
             <StackPanel Orientation="Horizontal" Margin="10,0,10,10" Grid.Row="1" Grid.ColumnSpan="2">
                 <Button Name="buttonClear"  Width="75" Height="25" HorizontalAlignment="Left" Content="Clear Text" Click="buttonClear_Click"/>
                 <Button Name="buttonClearFilters" Margin="10,0,0,0" Width="75" Height="25" HorizontalAlignment="Left" Content="Clear Filters" Click="buttonClearFilters_Click"/>
-                <Button Name="buttonSetFilters" Margin="10,0,0,0" Width="75" Height="25" HorizontalAlignment="Left" Content="Set Filters" Click="buttonSetFilters_Click"/>
-                
+                <Button Name="buttonSetFilters" Margin="10,0,0,0" Width="75" Height="25" HorizontalAlignment="Left" Content="Edit Filter" Click="buttonSetFilters_Click"/>
+                <TextBlock Name="textBlockStatus" Margin="10,0,0,0" Text="{Binding Path=FilterStatus}" />
+                <!--<TextBlock Margin="10,5,0,0" Text="Use Existing Filter: " />
+                <ComboBox Name="comboBoxExistingFilters" Width="115" Margin="10,0,0,0" />-->
             </StackPanel>
             
         </Grid>

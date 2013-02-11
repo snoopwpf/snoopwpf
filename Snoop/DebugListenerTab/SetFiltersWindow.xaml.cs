@@ -13,6 +13,8 @@ using System.Windows.Shapes;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Snoop.DebugListenerTab
 {
@@ -30,12 +32,27 @@ namespace Snoop.DebugListenerTab
 
         }
 
+
+        private List<SnoopSingleFilter> initialFilters;
         public SetFiltersWindow(FiltersViewModel viewModel)
         {
             this.DataContext = viewModel;
 
             InitializeComponent();
+            initialFilters = MakeDeepCopyOfFilters(this.ViewModel.Filters); 
+            this.Closing += SetFiltersWindow_Closing;
+        }
 
+        void SetFiltersWindow_Closing(object sender, CancelEventArgs e)
+        {
+            if (_setFilterClicked)
+                return;
+
+            var saveChanges = MessageBox.Show("Save changes?", "Changes", MessageBoxButton.YesNo) == MessageBoxResult.Yes;
+            if (saveChanges)
+                return;
+
+            this.ViewModel.InitializeFilters(initialFilters);
         }
 
 
@@ -57,15 +74,29 @@ namespace Snoop.DebugListenerTab
             if (filter == null)
                 return;
 
-            //ViewModel.Filters.Remove(filter);
             ViewModel.RemoveFilter(filter);
-           
         }
-
+        private bool _setFilterClicked = false;
         private void buttonSetFilter_Click(object sender, RoutedEventArgs e)
         {
-            this.ViewModel.IsSet = true;
+            SaveFiltersToSettings();
+
+            //this.ViewModel.IsSet = true;
+            this.ViewModel.SetIsSet();
+            _setFilterClicked = true;
             this.Close();
+        }
+
+        private void SaveFiltersToSettings()
+        {
+            List<SnoopSingleFilter> singleFilters = new List<SnoopSingleFilter>();
+            foreach (var filter in this.ViewModel.Filters)
+            {
+                if (filter is SnoopSingleFilter)
+                    singleFilters.Add((SnoopSingleFilter)filter);
+            }
+
+            Properties.Settings.Default.SnoopDebugFilters = singleFilters.ToArray();
         }
 
         private void textBlockFilter_Loaded(object sender, RoutedEventArgs e)
@@ -97,18 +128,100 @@ namespace Snoop.DebugListenerTab
         private void menuItemClearFilterGroups_Click(object sender, RoutedEventArgs e)
         {
             this.ViewModel.ClearFilterGroups();
-        } 
+        }        
+
+        private List<SnoopSingleFilter> MakeDeepCopyOfFilters(IEnumerable<SnoopFilter> filters)
+        {
+            List<SnoopSingleFilter> snoopSingleFilters = new List<SnoopSingleFilter>();
+
+            foreach (var filter in filters)
+            {
+                var singleFilter = filter as SnoopSingleFilter;
+                if (singleFilter == null)
+                    continue;
+
+                var newFilter = (SnoopSingleFilter)singleFilter.Clone();
+
+                snoopSingleFilters.Add(newFilter);
+            }
+
+            return snoopSingleFilters;
+        }
+
+        //private SnoopSingleFilter MakeDeepCopyOfFilter(SnoopSingleFilter filter)
+        //{
+        //    try
+        //    {
+        //        BinaryFormatter formatter = new BinaryFormatter();
+        //        var ms = new System.IO.MemoryStream();
+        //        formatter.Serialize(ms, filter);
+        //        SnoopSingleFilter deepCopy = (SnoopSingleFilter)formatter.Deserialize(ms);
+        //        ms.Close();
+        //        return deepCopy;
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return null;
+        //    }
+        //}
     }
 
+  
+    [Serializable]
     public class FiltersViewModel : INotifyPropertyChanged
     {
         private List<SnoopMultipleFilter> multipleFilters = new List<SnoopMultipleFilter>();
 
         public FiltersViewModel()
         {
-            //this.Filters = new ObservableCollection<SnoopFilter>();
-            //Filters.Add(new SnoopSingleFilter());
             filters.Add(new SnoopSingleFilter());
+            FilterStatus = _isSet ? "Filter is ON" : "Filter is OFF";
+        }
+
+        public FiltersViewModel(IList<SnoopSingleFilter> singleFilters)
+        {
+            InitializeFilters(singleFilters);
+        }
+
+        public void InitializeFilters(IList<SnoopSingleFilter> singleFilters)
+        {
+            this.filters.Clear();
+
+            if (singleFilters == null)
+            {
+                filters.Add(new SnoopSingleFilter());
+                this.IsSet = false;
+                return;
+            }
+
+            foreach (var filter in singleFilters)
+                this.filters.Add(filter);
+
+            //var groupings = singleFilters.Select(x => x.IsGrouped).GroupBy(x => x.GroupId);
+            var groupings = (from x in singleFilters where x.IsGrouped select x).GroupBy(x => x.GroupId);
+            foreach (var grouping in groupings)
+            {
+                var multipleFilter = new SnoopMultipleFilter();
+                var groupedFilters = grouping.ToArray();
+                if (groupedFilters.Length == 0)
+                    continue;
+
+                multipleFilter.AddRange(groupedFilters, groupedFilters[0].GroupId);
+                this.multipleFilters.Add(multipleFilter);
+            }
+
+            SetIsSet();
+        }
+
+        internal void SetIsSet()
+        {
+            if (filters == null)
+                this.IsSet = false;
+
+            if (filters.Count == 1 && filters[0] is SnoopSingleFilter && string.IsNullOrEmpty(((SnoopSingleFilter)filters[0]).Text))
+                this.IsSet = false;
+            else
+                this.IsSet = true;
         }
 
         public void ClearFilters()
@@ -117,6 +230,7 @@ namespace Snoop.DebugListenerTab
             //Filters.Add(new SnoopSingleFilter());
             filters.Clear();
             filters.Add(new SnoopSingleFilter());
+            this.IsSet = false;
         }
 
         public bool FilterMatches(string str)
@@ -139,11 +253,34 @@ namespace Snoop.DebugListenerTab
             return false;
         }
 
+        private string GetFirstNonUsedGroupId()
+        {
+            int index = 1;
+            while (true)
+            {
+                if (!GroupIdTaken(index.ToString()))
+                    return index.ToString();
+
+                index++;
+            }
+            
+        }
+
+        private bool GroupIdTaken(string groupID)
+        {
+            foreach (var filter in multipleFilters)
+            {
+                if (groupID.Equals(filter.GroupId))
+                    return true;
+            }
+            return false;
+        }
+
         public void GroupFilters(IEnumerable<SnoopFilter> filtersToGroup)
         {
             SnoopMultipleFilter multipleFilter = new SnoopMultipleFilter();
-            multipleFilter.AddRange(filtersToGroup);
-
+            multipleFilter.AddRange(filtersToGroup, (multipleFilters.Count + 1).ToString());
+                       
             multipleFilters.Add(multipleFilter);
         }
 
@@ -176,7 +313,34 @@ namespace Snoop.DebugListenerTab
             this.multipleFilters.Clear();
         }
 
-        public bool IsSet { get; set; }
+        private bool _isSet;
+        private string _filterStatus;
+        public bool IsSet
+        {
+            get
+            {
+                return _isSet;
+            }
+            set
+            {
+                _isSet = value;
+                RaisePropertyChanged("IsSet");
+                FilterStatus = _isSet ? "Filter is ON" : "Filter is OFF";
+            }
+        }
+
+        public string FilterStatus
+        {
+            get
+            {
+                return _filterStatus;
+            }
+            set
+            {
+                _filterStatus = value;
+                RaisePropertyChanged("FilterStatus");
+            }
+        }
 
         private ObservableCollection<SnoopFilter> filters = new ObservableCollection<SnoopFilter>();
         public IEnumerable<SnoopFilter> Filters
@@ -206,6 +370,7 @@ namespace Snoop.DebugListenerTab
         RegularExpression
     }
 
+    [Serializable]
     public class SnoopMultipleFilter : SnoopFilter
     {
         private List<SnoopFilter> _singleFilters = new List<SnoopFilter>();
@@ -225,6 +390,21 @@ namespace Snoop.DebugListenerTab
             get
             {
                 return false;
+            }
+        }
+
+        public override string GroupId
+        {
+            get
+            {
+                if (_singleFilters.Count == 0)
+                    return string.Empty;
+
+                return _singleFilters[0].GroupId;
+            }
+            set
+            {
+                throw new NotSupportedException();
             }
         }
 
@@ -249,7 +429,7 @@ namespace Snoop.DebugListenerTab
             _singleFilters.Remove(singleFilter);
         }
 
-        public void AddRange(IEnumerable<SnoopFilter> filters)
+        public void AddRange(IEnumerable<SnoopFilter> filters, string groupID)
         {
             foreach (var filter in filters)
             {
@@ -257,6 +437,7 @@ namespace Snoop.DebugListenerTab
                     throw new NotSupportedException("The filter is not grouped");
 
                 filter.IsGrouped = true;
+                filter.GroupId = groupID;
             }
             _singleFilters.AddRange(filters);
         }
@@ -274,9 +455,11 @@ namespace Snoop.DebugListenerTab
         }
     }
 
+    [Serializable]
     public abstract class SnoopFilter : INotifyPropertyChanged
     {
-        private bool _isGrouped;
+        protected bool _isGrouped = false;
+        protected string _groupId = string.Empty;
 
         public abstract bool FilterMatches(string debugLine);
 
@@ -298,6 +481,20 @@ namespace Snoop.DebugListenerTab
             {
                 _isGrouped = value;
                 this.RaisePropertyChanged("IsGrouped");
+                GroupId = string.Empty;
+            }
+        }
+
+        public virtual string GroupId
+        {
+            get
+            {
+                return _groupId;
+            }
+            set
+            {
+                _groupId = value;
+                this.RaisePropertyChanged("GroupId");
             }
         }
 
@@ -311,15 +508,18 @@ namespace Snoop.DebugListenerTab
         }
     }
 
-    public class SnoopSingleFilter : SnoopFilter
+    [Serializable]
+    public class SnoopSingleFilter : SnoopFilter, ICloneable
     {
+        private string _text;
+
         public SnoopSingleFilter()
         {
             this.Text = string.Empty;
         }
 
         public FilterType FilterType { get; set; }
-        private string _text;
+        
         
         public string Text
         {
@@ -350,6 +550,17 @@ namespace Snoop.DebugListenerTab
                     return Regex.IsMatch(debugLine, text);
             }
             return false;
+        }
+
+        public object Clone()
+        {
+            SnoopSingleFilter newFilter = new SnoopSingleFilter();
+            newFilter._groupId = this._groupId;
+            newFilter._isGrouped = this._isGrouped;
+            newFilter._text = this._text;
+            newFilter.FilterType = this.FilterType;
+
+            return newFilter;
         }
     }
 }
