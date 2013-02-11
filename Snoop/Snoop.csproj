@@ -184,6 +184,7 @@
     <Compile Include="ApplicationTreeItem.cs" />
     <Compile Include="BringIntoViewBehavior.cs" />
     <Compile Include="Converters\ArgbToPartsConverter.cs" />
+    <Compile Include="Converters\FilterTypeToIntConverter.cs" />
     <Compile Include="Converters\IsPowerShellInstalledToVisibilityConverter.cs" />
     <Compile Include="Converters\CsvStringToArrayConverter.cs" />
     <Compile Include="Converters\IsSupportedRuntimeTypeConverter.cs" />
@@ -191,9 +192,16 @@
     <Compile Include="DebugListenerTab\DebugListenerControl.xaml.cs">
       <DependentUpon>DebugListenerControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DebugListenerTab\FiltersViewModel.cs" />
+    <Compile Include="DebugListenerTab\FilterType.cs" />
+    <Compile Include="DebugListenerTab\IListener.cs" />
     <Compile Include="DebugListenerTab\SetFiltersWindow.xaml.cs">
       <DependentUpon>SetFiltersWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DebugListenerTab\SnoopDebugListener.cs" />
+    <Compile Include="DebugListenerTab\SnoopFilter.cs" />
+    <Compile Include="DebugListenerTab\SnoopMultipleFilter.cs" />
+    <Compile Include="DebugListenerTab\SnoopSingleFilter.cs" />
     <Compile Include="DelayedCall.cs" />
     <Compile Include="EditTextBox.cs" />
     <Compile Include="EditUserFilters.xaml.cs">
