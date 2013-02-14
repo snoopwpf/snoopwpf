@@ -36,20 +36,25 @@ namespace Snoop.DebugListenerTab
         public SetFiltersWindow(FiltersViewModel viewModel)
         {
             this.DataContext = viewModel;
-
+            viewModel.ResetDirtyFlag();
             InitializeComponent();
-            initialFilters = MakeDeepCopyOfFilters(this.ViewModel.Filters); 
-            this.Closing += SetFiltersWindow_Closing;
+            initialFilters = MakeDeepCopyOfFilters(this.ViewModel.Filters);
+            //this.Closing += SetFiltersWindow_Closing;
+            this.Closed += new EventHandler(SetFiltersWindow_Closed);
         }
 
-        void SetFiltersWindow_Closing(object sender, CancelEventArgs e)
+        void SetFiltersWindow_Closed(object sender, EventArgs e)
         {
-            if (_setFilterClicked)
+            if (_setFilterClicked || !this.ViewModel.IsDirty)
                 return;
 
             var saveChanges = MessageBox.Show("Save changes?", "Changes", MessageBoxButton.YesNo) == MessageBoxResult.Yes;
             if (saveChanges)
+            {
+                this.ViewModel.SetIsSet();
+                SaveFiltersToSettings();
                 return;
+            }
 
             this.ViewModel.InitializeFilters(initialFilters);
         }
@@ -127,7 +132,7 @@ namespace Snoop.DebugListenerTab
         private void menuItemClearFilterGroups_Click(object sender, RoutedEventArgs e)
         {
             this.ViewModel.ClearFilterGroups();
-        }        
+        }
 
         private List<SnoopSingleFilter> MakeDeepCopyOfFilters(IEnumerable<SnoopFilter> filters)
         {
@@ -163,7 +168,7 @@ namespace Snoop.DebugListenerTab
         //        return null;
         //    }
         //}
-    } 
+    }
 
 }
 

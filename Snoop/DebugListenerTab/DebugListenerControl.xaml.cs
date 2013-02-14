@@ -30,7 +30,7 @@ namespace Snoop.DebugListenerTab
             this.DataContext = filtersViewModel;
 
             InitializeComponent();
-  
+
             snoopDebugListener.RegisterListener(this);
         }
 
@@ -56,7 +56,7 @@ namespace Snoop.DebugListenerTab
 
         private void DoWrite(string str)
         {
-            this.textBoxDebugContent.AppendText(str + "\n");            
+            this.textBoxDebugContent.AppendText(str + "\n");
             this.textBoxDebugContent.ScrollToEnd();
         }
 
@@ -64,7 +64,7 @@ namespace Snoop.DebugListenerTab
         private void buttonClear_Click(object sender, RoutedEventArgs e)
         {
             this.textBoxDebugContent.Clear();
-            
+
         }
 
         private void buttonClearFilters_Click(object sender, RoutedEventArgs e)
@@ -104,6 +104,6 @@ namespace Snoop.DebugListenerTab
 
 
 
-    
+
 
 }

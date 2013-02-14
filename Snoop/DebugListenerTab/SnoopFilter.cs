@@ -11,6 +11,20 @@ namespace Snoop.DebugListenerTab
     {
         protected bool _isGrouped = false;
         protected string _groupId = string.Empty;
+        protected bool _isDirty = false;
+
+        public void ResetDirtyFlag()
+        {
+            _isDirty = false;
+        }
+
+        public bool IsDirty
+        {
+            get
+            {
+                return _isDirty;
+            }
+        }
 
         public abstract bool FilterMatches(string debugLine);
 
@@ -53,6 +67,7 @@ namespace Snoop.DebugListenerTab
 
         protected void RaisePropertyChanged(string propertyName)
         {
+            _isDirty = true;
             var handler = this.PropertyChanged;
             if (handler != null)
                 handler(this, new PropertyChangedEventArgs(propertyName));

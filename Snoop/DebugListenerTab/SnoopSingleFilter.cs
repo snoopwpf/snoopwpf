@@ -45,9 +45,21 @@ namespace Snoop.DebugListenerTab
                 case DebugListenerTab.FilterType.EndsWith:
                     return debugLine.EndsWith(text);
                 case DebugListenerTab.FilterType.RegularExpression:
-                    return Regex.IsMatch(debugLine, text);
+                    return TryMatch(debugLine, text);
             }
             return false;
+        }
+
+        private static bool TryMatch(string input, string pattern)
+        {
+            try
+            {
+                return Regex.IsMatch(input, pattern);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public object Clone()

@@ -21,6 +21,32 @@ namespace Snoop.DebugListenerTab
     public class FiltersViewModel : INotifyPropertyChanged
     {
         private List<SnoopMultipleFilter> multipleFilters = new List<SnoopMultipleFilter>();
+        private bool _isDirty = false;
+
+        public void ResetDirtyFlag()
+        {
+            _isDirty = false;
+            foreach (var filter in this.filters)
+            {
+                filter.ResetDirtyFlag();
+            }
+        }
+
+        public bool IsDirty
+        {
+            get
+            {
+                if (_isDirty)
+                    return true;
+
+                foreach (var filter in this.filters)
+                {
+                    if (filter.IsDirty)
+                        return true;
+                }
+                return false;
+            }
+        }
 
         public FiltersViewModel()
         {
@@ -47,7 +73,6 @@ namespace Snoop.DebugListenerTab
             foreach (var filter in singleFilters)
                 this.filters.Add(filter);
 
-            //var groupings = singleFilters.Select(x => x.IsGrouped).GroupBy(x => x.GroupId);
             var groupings = (from x in singleFilters where x.IsGrouped select x).GroupBy(x => x.GroupId);
             foreach (var grouping in groupings)
             {
@@ -136,12 +161,13 @@ namespace Snoop.DebugListenerTab
 
         public void AddFilter(SnoopFilter filter)
         {
-
+            _isDirty = true;
             this.filters.Add(filter);
         }
 
         public void RemoveFilter(SnoopFilter filter)
         {
+            _isDirty = true;
             var singleFilter = filter as SnoopSingleFilter;
             if (singleFilter != null)
             {
