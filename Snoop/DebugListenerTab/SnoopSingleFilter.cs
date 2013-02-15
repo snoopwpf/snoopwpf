@@ -80,7 +80,7 @@ namespace Snoop.DebugListenerTab
             newFilter._isGrouped = this._isGrouped;
             newFilter._text = this._text;
             newFilter.FilterType = this.FilterType;
-
+            newFilter._isInverse = this._isInverse;
             return newFilter;
         }
     }

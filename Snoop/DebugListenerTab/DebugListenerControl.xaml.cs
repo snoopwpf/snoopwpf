@@ -56,7 +56,7 @@ namespace Snoop.DebugListenerTab
 
         private void DoWrite(string str)
         {
-            this.textBoxDebugContent.AppendText(str + "\n");
+            this.textBoxDebugContent.AppendText(str + Environment.NewLine);
             this.textBoxDebugContent.ScrollToEnd();
         }
 
