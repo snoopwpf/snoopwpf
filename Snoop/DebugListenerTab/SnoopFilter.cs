@@ -12,6 +12,8 @@ namespace Snoop.DebugListenerTab
         protected bool _isGrouped = false;
         protected string _groupId = string.Empty;
         protected bool _isDirty = false;
+        protected bool _isInverse;
+        //protected string _isInverseText = string.Empty;
 
         public void ResetDirtyFlag()
         {
@@ -33,6 +35,31 @@ namespace Snoop.DebugListenerTab
             get
             {
                 return true;
+            }
+        }
+
+        public bool IsInverse
+        {
+            get
+            {
+                return _isInverse;
+            }
+            set
+            {
+                if (value != _isInverse)
+                {
+                    _isInverse = value;
+                    RaisePropertyChanged("IsInverse");
+                    RaisePropertyChanged("IsInverseText");
+                }
+            }
+        }
+
+        public string IsInverseText
+        {
+            get
+            {
+                return _isInverse ? "NOT" : string.Empty;
             }
         }
 

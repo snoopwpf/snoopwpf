@@ -36,18 +36,29 @@ namespace Snoop.DebugListenerTab
         {
             debugLine = debugLine.ToLower();
             var text = Text.ToLower();
+            bool filterMatches = false;
             switch (FilterType)
             {
-                case DebugListenerTab.FilterType.Contains:
-                    return debugLine.Contains(text);
-                case DebugListenerTab.FilterType.StartsWith:
-                    return debugLine.StartsWith(text);
-                case DebugListenerTab.FilterType.EndsWith:
-                    return debugLine.EndsWith(text);
-                case DebugListenerTab.FilterType.RegularExpression:
-                    return TryMatch(debugLine, text);
+                case FilterType.Contains:
+                    filterMatches = debugLine.Contains(text);
+                    break;
+                case FilterType.StartsWith:
+                    filterMatches = debugLine.StartsWith(text);
+                    break;
+                case FilterType.EndsWith:
+                    filterMatches = debugLine.EndsWith(text);
+                    break;
+                case FilterType.RegularExpression:
+                    filterMatches = TryMatch(debugLine, text);
+                    break;
             }
-            return false;
+
+            if (IsInverse)
+            {
+                filterMatches = !filterMatches;
+            }
+
+            return filterMatches;
         }
 
         private static bool TryMatch(string input, string pattern)

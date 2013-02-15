@@ -152,6 +152,17 @@ namespace Snoop.DebugListenerTab
             return snoopSingleFilters;
         }
 
+        private void menuItemSetInverse_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (SnoopFilter filter in this.listBoxFilters.SelectedItems)
+            {
+                if (filter == null)
+                    continue;
+
+                filter.IsInverse = !filter.IsInverse;
+            }
+        }
+
         //private SnoopSingleFilter MakeDeepCopyOfFilter(SnoopSingleFilter filter)
         //{
         //    try
