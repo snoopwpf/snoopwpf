@@ -21,11 +21,11 @@ namespace Snoop.DebugListenerTab
     public class FiltersViewModel : INotifyPropertyChanged
     {
         private List<SnoopMultipleFilter> multipleFilters = new List<SnoopMultipleFilter>();
-        private bool _isDirty = false;
+        private bool isDirty = false;
 
         public void ResetDirtyFlag()
         {
-            _isDirty = false;
+            isDirty = false;
             foreach (var filter in this.filters)
             {
                 filter.ResetDirtyFlag();
@@ -36,7 +36,7 @@ namespace Snoop.DebugListenerTab
         {
             get
             {
-                if (_isDirty)
+                if (isDirty)
                     return true;
 
                 foreach (var filter in this.filters)
@@ -101,10 +101,9 @@ namespace Snoop.DebugListenerTab
 
         public void ClearFilters()
         {
-            //Filters.Clear();
-            //Filters.Add(new SnoopSingleFilter());
-            filters.Clear();
-            filters.Add(new SnoopSingleFilter());
+            this.multipleFilters.Clear();
+            this.filters.Clear();
+            this.filters.Add(new SnoopSingleFilter());
             this.IsSet = false;
         }
 
@@ -161,20 +160,28 @@ namespace Snoop.DebugListenerTab
 
         public void AddFilter(SnoopFilter filter)
         {
-            _isDirty = true;
+            isDirty = true;
             this.filters.Add(filter);
         }
 
         public void RemoveFilter(SnoopFilter filter)
         {
-            _isDirty = true;
+            isDirty = true;
             var singleFilter = filter as SnoopSingleFilter;
             if (singleFilter != null)
             {
-                foreach (var multipeFilter in this.multipleFilters)
+                //foreach (var multipeFilter in this.multipleFilters)
+                int index = 0;
+                while (index < this.multipleFilters.Count)
                 {
+                    var multipeFilter = this.multipleFilters[index];
                     if (multipeFilter.ContainsFilter(singleFilter))
                         multipeFilter.RemoveFilter(singleFilter);
+
+                    if (!multipeFilter.IsValidMultipleFilter)
+                        this.multipleFilters.RemoveAt(index);
+                    else
+                        index++;
                 }
             }
             this.filters.Remove(filter);
