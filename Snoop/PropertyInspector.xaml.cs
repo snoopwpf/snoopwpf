@@ -141,9 +141,9 @@ namespace Snoop
 
             if (e.OldValue != null && e.NewValue != null && inspector.checkBoxClearAfterDelve.IsChecked.HasValue && inspector.checkBoxClearAfterDelve.IsChecked.Value)
             {
-                inspector.targetToFilter[e.OldValue] = inspector.PropertiesFilter.Text;
+                inspector.targetToFilter[e.OldValue.GetType()] = inspector.PropertiesFilter.Text;
                 string text = string.Empty;
-                inspector.targetToFilter.TryGetValue(e.NewValue, out text);
+                inspector.targetToFilter.TryGetValue(e.NewValue.GetType(), out text);
                 inspector.PropertiesFilter.Text = text ?? string.Empty;
             }
         }        
