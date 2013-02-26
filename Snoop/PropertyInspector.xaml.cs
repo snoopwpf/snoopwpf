@@ -131,6 +131,7 @@ namespace Snoop
                 new PropertyMetadata(PropertyInspector.HandleTargetChanged)
             );
 
+        
         private static void HandleTargetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             PropertyInspector inspector = (PropertyInspector)d;
@@ -139,14 +140,15 @@ namespace Snoop
             if (e.NewValue != null)
                 inspector.inspectStack.Add(e.NewValue);
 
-            if (e.OldValue != null && e.NewValue != null && inspector.checkBoxClearAfterDelve.IsChecked.HasValue && inspector.checkBoxClearAfterDelve.IsChecked.Value)
+            if (inspector.lastRootTarget == inspector.RootTarget && e.OldValue != null && e.NewValue != null && inspector.checkBoxClearAfterDelve.IsChecked.HasValue && inspector.checkBoxClearAfterDelve.IsChecked.Value)
             {
                 inspector.targetToFilter[e.OldValue.GetType()] = inspector.PropertiesFilter.Text;
                 string text = string.Empty;
                 inspector.targetToFilter.TryGetValue(e.NewValue.GetType(), out text);
                 inspector.PropertiesFilter.Text = text ?? string.Empty;
             }
-        }        
+            inspector.lastRootTarget = inspector.RootTarget;
+        }    
 
         private string GetDelvePath(Type rootTargetType)
         {
@@ -542,6 +544,7 @@ namespace Snoop
         private List<PropertyInformation> _delvePathList = new List<PropertyInformation>();
 
         private Inspector inspector;
+        private object lastRootTarget = null;
         private readonly Dictionary<object, string> targetToFilter = new Dictionary<object, string>();
 
         private readonly PropertyFilterSet[] _defaultFilterSets = new PropertyFilterSet[]
