@@ -132,9 +132,7 @@
   <PropertyGroup>
     <PreBuildEvent>if not exist "$(SolutionDir)..\..\Addins\$(ProjectName).AddIn" xcopy "$(ProjectDir)$(ProjectName).AddIn" "$(SolutionDir)..\..\Addins\"</PreBuildEvent>
     <PostBuildEvent>del "$(SolutionDir)..\..\Addins\$(ProjectName).dll"
-del "$(SolutionDir)..\..\Addins\$(ProjectName).pdb"
-xcopy "$(TargetDir)$(ProjectName).dll" "$(SolutionDir)..\..\Addins\"
-xcopy "$(TargetDir)$(ProjectName).pdb" "$(SolutionDir)..\..\Addins\"</PostBuildEvent>
+xcopy "$(TargetDir)$(ProjectName).dll" "$(SolutionDir)..\..\Addins\"</PostBuildEvent>
   </PropertyGroup>
   <ProjectExtensions />
   <Target Name="AfterBuild">
