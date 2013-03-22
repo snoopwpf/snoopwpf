@@ -678,6 +678,18 @@ namespace Snoop
 				}
 			}
 
+			if (obj != null)
+			{
+				// allow displaying additional information such as fields, non-public 
+				// properties and "uncommonfields".
+				foreach (var prop in NonPublicPropertyInfoCache.GetProperties(obj))
+				{
+					var propInfo = new PropertyInformation(obj, null, prop.Name, prop.DisplayName);
+					propInfo.property = prop;
+					propInfo.Value = prop.GetValue(obj);
+					props.Add(propInfo);
+				}
+			}
 
 			// sort the properties
 			props.Sort();
@@ -827,5 +839,361 @@ namespace Snoop
 		}
 		#endregion
 
+		#region NonPublicPropertyInfoCache class
+		/// <summary>
+		/// Helper class for obtaining the PropertyDescriptor instances that represent the 
+		/// non-public information such as fields, non-public properties and the uncommon fields.
+		/// </summary>
+		private class NonPublicPropertyInfoCache
+		{
+			#region Member Variables
+
+			[ThreadStatic]
+			private static Dictionary<Type, IList<PropertyDescriptor>> _typeFields;
+
+			#endregion //Member Variables
+
+			#region Internal Methods
+
+			#region GetProperties
+			internal static IList<PropertyDescriptor> GetProperties(object target)
+			{
+				var type = target.GetType();
+
+				if (_typeFields == null)
+					_typeFields = new Dictionary<Type, IList<PropertyDescriptor>>();
+
+				List<PropertyDescriptor> allProps = new List<PropertyDescriptor>();
+
+				while (type != null)
+				{
+					IList<PropertyDescriptor> props;
+
+					if (!_typeFields.TryGetValue(type, out props))
+					{
+						_typeFields[type] = props = CreateNonPublicProperties(type);
+					}
+
+					allProps.AddRange(props);
+
+					type = type.BaseType;
+				}
+
+				return allProps;
+			}
+			#endregion //GetProperties
+
+			#endregion //Internal Methods
+
+			#region Private Methods
+
+			#region AddFields
+			private static void AddFields(Type type, List<PropertyDescriptor> props)
+			{
+				var fields = type.GetFields(System.Reflection.BindingFlags.Instance 
+					| System.Reflection.BindingFlags.NonPublic 
+					| System.Reflection.BindingFlags.Public 
+					| System.Reflection.BindingFlags.DeclaredOnly);
+
+				foreach (var field in fields)
+				{
+					var prop = new FieldInfoPropertyDescriptor(field);
+					props.Add(prop);
+				}
+			}
+			#endregion //AddFields
+
+			#region AddNonPublicProperties
+			private static void AddNonPublicProperties(Type type, List<PropertyDescriptor> props)
+			{
+				var properties = type.GetProperties(System.Reflection.BindingFlags.Instance 
+					| System.Reflection.BindingFlags.NonPublic 
+					| System.Reflection.BindingFlags.DeclaredOnly);
+
+				foreach (var property in properties)
+				{
+					var indexes = property.GetIndexParameters();
+
+					// skip indexed properties
+					if (null != indexes && indexes.Length > 0)
+						continue;
+
+					// ignore write only properties
+					if (!property.CanRead)
+						continue;
+
+					var prop = new PropertyInfoPropertyDescriptor(property);
+					props.Add(prop);
+				}
+			}
+			#endregion //AddNonPublicProperties
+
+			#region AddUncommonProperties
+			private static void AddUncommonProperties(Type type, List<PropertyDescriptor> props)
+			{
+				var uncommonType = UncommonFieldPropertyDescriptor.UncommonFieldType;
+
+				if (uncommonType != null)
+				{
+					var uncommonFields = type.GetFields(System.Reflection.BindingFlags.Static 
+						| System.Reflection.BindingFlags.DeclaredOnly 
+						| System.Reflection.BindingFlags.NonPublic);
+
+					foreach (var field in uncommonFields)
+					{
+						if (field.FieldType.IsGenericType && field.FieldType.GetGenericTypeDefinition() == uncommonType)
+						{
+							props.Add(new UncommonFieldPropertyDescriptor(field));
+						}
+					}
+				}
+			}
+			#endregion //AddUncommonProperties
+
+			#region CreateNonPublicProperties
+			private static List<PropertyDescriptor> CreateNonPublicProperties(Type type)
+			{
+				var list = new List<PropertyDescriptor>();
+
+				AddUncommonProperties(type, list);
+				AddFields(type, list);
+				AddNonPublicProperties(type, list);
+
+				return list;
+			}
+			#endregion //CreateNonPublicProperties
+
+			#endregion //Private Methods
+		} 
+		#endregion //NonPublicPropertyInfoCache class
+
+		#region FieldInfoPropertyDescriptor class
+		/// <summary>
+		/// Custom property descriptor to deal with FieldInfo instances
+		/// </summary>
+		private class FieldInfoPropertyDescriptor : PropertyDescriptor
+		{
+			#region Member Variables
+
+			private System.Reflection.FieldInfo _field;
+			private string _displayName;
+
+			#endregion //Member Variables
+
+			#region Constructor
+			internal FieldInfoPropertyDescriptor(System.Reflection.FieldInfo field)
+				: base(field.Name, null)
+			{
+				_field = field;
+				_displayName = field.DeclaringType.Name + "." + field.Name;
+			}
+			#endregion //Constructor
+
+			#region PropertyDescriptor overrides
+			public override bool CanResetValue(object component)
+			{
+				return false;
+			}
+
+			public override Type ComponentType
+			{
+				get { return _field.DeclaringType; }
+			}
+
+			public override string DisplayName
+			{
+				get { return _displayName; }
+			}
+
+			public override object GetValue(object component)
+			{
+				return _field.GetValue(component);
+			}
+
+			public override bool IsReadOnly
+			{
+				get { return !_field.IsInitOnly; }
+			}
+
+			public override Type PropertyType
+			{
+				get { return _field.FieldType; }
+			}
+
+			public override void ResetValue(object component)
+			{
+				throw new NotImplementedException();
+			}
+
+			public override void SetValue(object component, object value)
+			{
+				_field.SetValue(component, value);
+			}
+
+			public override bool ShouldSerializeValue(object component)
+			{
+				return true;
+			}
+			#endregion //PropertyDescriptor overrides
+		}
+		#endregion //FieldInfoPropertyDescriptor class
+
+		#region PropertyInfoPropertyDescriptor class
+		/// <summary>
+		/// Custom property descriptor to deal with PropertyInfo instances
+		/// </summary>
+		private class PropertyInfoPropertyDescriptor : PropertyDescriptor
+		{
+			#region Member Variables
+
+			private System.Reflection.PropertyInfo _property;
+			private string _displayName;
+
+			#endregion //Member Variables
+
+			#region Constructor
+			internal PropertyInfoPropertyDescriptor(System.Reflection.PropertyInfo property)
+				: base(property.Name, null)
+			{
+				_property = property;
+				_displayName = property.DeclaringType.Name + "." + property.Name;
+			}
+			#endregion //Constructor
+
+			#region PropertyDescriptor overrides
+			public override bool CanResetValue(object component)
+			{
+				return false;
+			}
+
+			public override Type ComponentType
+			{
+				get { return _property.DeclaringType; }
+			}
+
+			public override string DisplayName
+			{
+				get { return _displayName; }
+			}
+
+			public override object GetValue(object component)
+			{
+				return _property.GetValue(component, null);
+			}
+
+			public override bool IsReadOnly
+			{
+				get { return !_property.CanWrite; }
+			}
+
+			public override Type PropertyType
+			{
+				get { return _property.PropertyType; }
+			}
+
+			public override void ResetValue(object component)
+			{
+				throw new NotImplementedException();
+			}
+
+			public override void SetValue(object component, object value)
+			{
+				_property.SetValue(component, value, null);
+			}
+
+			public override bool ShouldSerializeValue(object component)
+			{
+				return true;
+			}
+			#endregion //PropertyDescriptor overrides
+		}
+		#endregion //PropertyInfoPropertyDescriptor class
+
+		#region UncommonFieldPropertyDescriptor class
+		/// <summary>
+		/// Custom property descriptor to deal with UncommonField&lt;T&gt; which WPF uses similar to dependency properties and are stored in the entry values of the DependencyObject
+		/// </summary>
+		private class UncommonFieldPropertyDescriptor : PropertyDescriptor
+		{
+			#region Member Variables
+
+			private System.Reflection.FieldInfo _uncommonField;
+			private System.Reflection.MethodInfo _getValueMethod;
+			private System.Reflection.MethodInfo _clearValueMethod;
+			private System.Reflection.MethodInfo _setValueMethod;
+			private Type _propertyType;
+			private string _displayName;
+
+			internal static readonly Type UncommonFieldType;
+
+			#endregion //Member Variables
+
+			#region Constructor
+			static UncommonFieldPropertyDescriptor()
+			{
+				UncommonFieldType = typeof(DependencyObject).Assembly.GetType("System.Windows.UncommonField`1");
+			}
+
+			internal UncommonFieldPropertyDescriptor(System.Reflection.FieldInfo uncommonField)
+				: base(uncommonField.Name, null)
+			{
+				_uncommonField = uncommonField;
+				_propertyType = uncommonField.FieldType.GetGenericArguments()[0];
+				_getValueMethod = uncommonField.FieldType.GetMethod("GetValue");
+				_setValueMethod = uncommonField.FieldType.GetMethod("SetValue");
+				_clearValueMethod = uncommonField.FieldType.GetMethod("ClearValue");
+
+				_displayName = uncommonField.DeclaringType.Name + "." + uncommonField.Name;
+			}
+			#endregion //Constructor
+
+			#region PropertyDescriptor overrides
+			public override bool CanResetValue(object component)
+			{
+				return true;
+			}
+
+			public override string DisplayName
+			{
+				get { return _displayName; }
+			}
+
+			public override Type ComponentType
+			{
+				get { return _uncommonField.DeclaringType; }
+			}
+
+			public override object GetValue(object component)
+			{
+				return _getValueMethod.Invoke(_uncommonField.GetValue(null), new object[] { component });
+			}
+
+			public override bool IsReadOnly
+			{
+				get { return false; }
+			}
+
+			public override Type PropertyType
+			{
+				get { return _propertyType; }
+			}
+
+			public override void ResetValue(object component)
+			{
+				_clearValueMethod.Invoke(_uncommonField.GetValue(null), new object[] { component });
+			}
+
+			public override void SetValue(object component, object value)
+			{
+				_setValueMethod.Invoke(_uncommonField.GetValue(null), new object[] { component, value });
+			}
+
+			public override bool ShouldSerializeValue(object component)
+			{
+				return true;
+			}
+			#endregion //PropertyDescriptor overrides
+		}
+		#endregion //UncommonFieldPropertyDescriptor class
 	}
 }
