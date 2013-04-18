@@ -10,12 +10,172 @@ using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
 using System.Runtime.ConstrainedExecution;
 using System.Windows;
+using System.IO;
 
 namespace Snoop
 {
+
+    /// <summary>
+    /// Class for ILSpy messaging. We'll move this after code review.
+    /// </summary>
+    public static class ILSpyInterop
+    {
+        public const string ILSPY_PREFIX = "ILSpy:";
+        public const string ILSPY_NAVIGATE_TO_TYPE = "/navigateTo:T:";
+        public const string ILSPY_NAVIGATE_TO_METHOD = "/navigateTo:M:";
+        public const string ILSPY_LINE_BREAK = "\r\n";
+        private static readonly string NAVIGATE_TO_TYPE_MESSAGE;//Format of message to be sent to an existing ilspy process via send message.
+        private static readonly string NAVIGATE_TO_METHOD_MESSAGE;//Format of message to be sent to an existing ilspy process via send message.
+        private static readonly string NAVIGATE_TO_TYPE_ARGUMENT;//Format of command line argument to be sent when starting ILSpy
+        private static readonly string NAVIGATE_TO_METHOD_ARGUMENT;//Format of command line argument to be sent when starting ILSpy
+
+        static ILSpyInterop()
+        {
+            NAVIGATE_TO_TYPE_MESSAGE = ILSPY_PREFIX + ILSPY_LINE_BREAK + "{0}" + ILSPY_LINE_BREAK + ILSPY_NAVIGATE_TO_TYPE + "{1}";
+            NAVIGATE_TO_METHOD_MESSAGE = ILSPY_PREFIX + ILSPY_LINE_BREAK + "{0}" + ILSPY_LINE_BREAK + ILSPY_NAVIGATE_TO_METHOD + "{1}";
+            //"\"{0}\" /navigateTo:T:{1}"
+            NAVIGATE_TO_TYPE_ARGUMENT = "\"{0}\" " + ILSPY_NAVIGATE_TO_TYPE + "{1}";
+            NAVIGATE_TO_METHOD_ARGUMENT = "\"{0}\" " + ILSPY_NAVIGATE_TO_METHOD + "{1}";
+        }
+
+        public static void OpenTypeInILSpy(string fullAssemblyPath, string fullTypeName, Process ilSpyProcess)
+        {
+            IntPtr windowHandle = ilSpyProcess.MainWindowHandle;
+            string args = string.Format(NAVIGATE_TO_TYPE_MESSAGE, fullAssemblyPath, fullTypeName);
+            NativeMethods.SetForegroundWindow(ilSpyProcess.MainWindowHandle);
+            NativeMethods.Send(windowHandle, args);
+
+        }
+
+        public static void OpenTypeInILSpy(string fullAssemblyPath, string fullTypeName, IntPtr windowHandle)
+        {
+            fullTypeName = fullTypeName.Replace('+', '.');
+            string args = string.Format(NAVIGATE_TO_TYPE_MESSAGE, fullAssemblyPath, fullTypeName);
+            NativeMethods.SetForegroundWindow(windowHandle);
+            NativeMethods.Send(windowHandle, args);
+
+        }
+
+        public static void OpenMethodInILSpy(string fullAssemblyPath, string fullTypeName, string methodName, IntPtr windowHandle)
+        {
+            fullTypeName = fullTypeName.Replace('+', '.');
+            string args = string.Format(NAVIGATE_TO_METHOD_MESSAGE, fullAssemblyPath, fullTypeName + "." + methodName);
+            NativeMethods.SetForegroundWindow(windowHandle);
+            NativeMethods.Send(windowHandle, args);
+
+        }
+
+        //public static Process GetOrCreateILSpyProcess(string fullAssemblyPath, string fullTypeName)
+        //{
+        //    fullTypeName = fullTypeName.Replace('+', '.');
+        //    //string arguments = string.Format("\"{0}\" /navigateTo:T:{1}", fullAssemblyPath, fullTypeName);
+        //    //string sendToProcessArgs = string.Format("ILSpy:\r\n{0}\r\n/navigateTo:T:{1}", fullAssemblyPath, fullTypeName);
+        //    string arguments = string.Format(NAVIGATE_TO_TYPE_ARGUMENT, fullAssemblyPath, fullTypeName);
+        //    string sendToProcessArgs = string.Format(NAVIGATE_TO_TYPE_MESSAGE, fullAssemblyPath, fullTypeName);
+        //    return CreateILSpyProcessWithArguments(fullAssemblyPath, fullTypeName, arguments, sendToProcessArgs);
+        //}
+
+        //public static Process GetOrCreateILSpyProcess(string fullAssemblyPath, string fullTypeName, string methodName)
+        //{
+        //    fullTypeName = fullTypeName.Replace('+', '.');
+        //    //string arguments = string.Format("\"{0}\" /navigateTo:M:{1}", fullAssemblyPath, fullTypeName + "." + methodName);
+        //    //string sendToProcessArgs = string.Format("ILSpy:\r\n{0}\r\n/navigateTo:M:{1}", fullAssemblyPath, fullTypeName + "." + methodName);
+        //    string arguments = string.Format(NAVIGATE_TO_METHOD_ARGUMENT, fullAssemblyPath, fullTypeName + "." + methodName);
+        //    string sendToProcessArgs = string.Format(NAVIGATE_TO_METHOD_MESSAGE, fullAssemblyPath, fullTypeName + "." + methodName);
+
+        //    return CreateILSpyProcessWithArguments(fullAssemblyPath, fullTypeName, arguments, sendToProcessArgs);
+        //}
+
+        public static Process GetILSpyProcess()
+        {
+            var processes = Process.GetProcessesByName("ILSpy");
+            if (processes.Length > 0)
+            {
+                var ilSpyProcess = processes[0];
+                NativeMethods.SetForegroundWindow(ilSpyProcess.MainWindowHandle);
+                //NativeMethods.Send(ilSpyProcess.MainWindowHandle, sendToProcessArgs);
+
+                return ilSpyProcess;
+            }
+            return null;
+        }
+
+        private static Process CreateILSpyProcessWithArguments(string fullAssemblyPath, string fullTypeName, string arguments, string sendToProcessArgs)
+        {
+            Process ilSpyProcess = null;
+            var location = typeof(Snoop.SnoopUI).Assembly.Location;
+            var directory = Path.GetDirectoryName(location);
+            directory = Path.Combine(directory, "ILSpy");
+            var ilSpyProgram = Path.Combine(directory, "ILSpy.exe");
+
+            var processes = Process.GetProcessesByName("ILSpy");
+            if (processes.Length > 0)
+            {
+                ilSpyProcess = processes[0];
+                NativeMethods.SetForegroundWindow(ilSpyProcess.MainWindowHandle);
+                NativeMethods.Send(ilSpyProcess.MainWindowHandle, sendToProcessArgs);
+
+                return ilSpyProcess;
+            }
+
+            ilSpyProcess = new Process();
+            ilSpyProcess.StartInfo.FileName = ilSpyProgram;
+            ilSpyProcess.StartInfo.WorkingDirectory = directory;
+            ilSpyProcess.StartInfo.Arguments = arguments;
+            //ilSpyProcess.EnableRaisingEvents = true;
+            ilSpyProcess.Start();
+            return ilSpyProcess;
+        }
+    }
+
+    //ILSPY
+    [StructLayout(LayoutKind.Sequential)]
+    public struct CopyDataStruct
+    {
+        public IntPtr Padding;
+        public int Size;
+        public IntPtr Buffer;
+
+        public CopyDataStruct(IntPtr padding, int size, IntPtr buffer)
+        {
+            this.Padding = padding;
+            this.Size = size;
+            this.Buffer = buffer;
+        }
+    }
+
 	public static class NativeMethods
-	{
-		public static IntPtr[] ToplevelWindows
+    {
+
+        #region ILSpy
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessageTimeout(
+            IntPtr hWnd, uint msg, IntPtr wParam, ref CopyDataStruct lParam,
+            uint flags, uint timeout, out IntPtr result);
+
+        [DllImport("user32.dll")]
+        public static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        public const uint WM_COPYDATA = 0x4a;
+
+        public static IntPtr Send(IntPtr hWnd, string message)
+        {
+            const uint SMTO_NORMAL = 0;
+
+            CopyDataStruct lParam;
+            lParam.Padding = IntPtr.Zero;
+            lParam.Size = message.Length * 2;
+            lParam.Buffer = Marshal.StringToHGlobalUni(message);
+
+            IntPtr result;
+            NativeMethods.SendMessageTimeout(hWnd, NativeMethods.WM_COPYDATA, IntPtr.Zero, ref lParam, SMTO_NORMAL, 3000,
+                                             out result);
+            return result;
+        }
+
+        #endregion
+
+        public static IntPtr[] ToplevelWindows
 		{
 			get
 			{

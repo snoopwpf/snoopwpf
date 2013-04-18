@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
+using System.Threading;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -20,6 +21,8 @@ using System.Reflection;
 using System.Linq;
 
 using Snoop.Converters;
+using System.IO;
+using System.Text;
 
 namespace Snoop.MethodsTab
 {
@@ -35,7 +38,37 @@ namespace Snoop.MethodsTab
             DependencyPropertyDescriptor.FromProperty(MethodsControl.IsSelectedProperty, typeof(MethodsControl)).AddValueChanged(this, IsSelectedChanged);
 
             this._checkBoxUseDataContext.Checked += _checkBoxUseDataContext_Checked;
-            this._checkBoxUseDataContext.Unchecked += new RoutedEventHandler(_checkBoxUseDataContext_Unchecked);
+            this._checkBoxUseDataContext.Unchecked += _checkBoxUseDataContext_Unchecked;
+
+            this._checkBoxShowPrivateMethods.Checked += _checkBoxShowPrivateMethods_Checked;
+            this._checkBoxShowPrivateMethods.Unchecked += _checkBoxShowPrivateMethods_Unchecked;
+
+            //this._buttonDecompile.Click += DecompileMethodClick;
+            //this._buttonOpenFolder.Click += OpenFolderClick;
+            this._buttonNavigateILSpy.Click += NavigateILSpyClick;
+            this._buttonObjectNavigateILSpy.Click += buttonObjectNavigateILSpy_Click;
+            this._buttonInvoke.Click += InvokeMethodClick;
+
+        }
+
+
+
+        #region Private fields
+
+        private Process ilSpyProcess;
+
+        #endregion
+
+
+
+        void _checkBoxShowPrivateMethods_Unchecked(object sender, RoutedEventArgs e)
+        {
+            PopulateMethodsCombobox(this);
+        }
+
+        void _checkBoxShowPrivateMethods_Checked(object sender, RoutedEventArgs e)
+        {
+            PopulateMethodsCombobox(this);
         }
 
         void _checkBoxUseDataContext_Unchecked(object sender, RoutedEventArgs e)
@@ -96,8 +129,6 @@ namespace Snoop.MethodsTab
             }
         }
 
-
-
         public bool IsSelected
         {
             get { return (bool)GetValue(IsSelectedProperty); }
@@ -109,7 +140,6 @@ namespace Snoop.MethodsTab
             DependencyProperty.Register("IsSelected", typeof(bool), typeof(MethodsControl), new UIPropertyMetadata(false));
 
 
-
         private static void TargetChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
             if (e.NewValue != e.OldValue)
@@ -118,22 +148,40 @@ namespace Snoop.MethodsTab
 
                 methodsControl.EnableOrDisableDataContextCheckbox();
 
-                var methodInfos = GetMethodInfos(methodsControl.Target);
-                methodsControl.comboBoxMethods.ItemsSource = methodInfos;
+                PopulateMethodsCombobox(methodsControl);
+            }
+        }
 
-                methodsControl.resultProperties.Visibility = Visibility.Collapsed;
-                methodsControl.resultStringContainer.Visibility = Visibility.Collapsed;
-                methodsControl.parametersContainer.Visibility = Visibility.Collapsed;
+        private static void PopulateMethodsCombobox(MethodsControl methodsControl)
+        {
+            var methodInfos = GetMethodInfos(methodsControl.Target, methodsControl._checkBoxShowPrivateMethods.IsChecked.HasValue && methodsControl._checkBoxShowPrivateMethods.IsChecked.Value);
+            methodsControl.comboBoxMethods.ItemsSource = methodInfos;
 
-                //if this target has the previous method info, set it
-                for (int i = 0; i < methodInfos.Count && methodsControl._previousMethodInformation != null; i++)
+            methodsControl.resultProperties.Visibility = Visibility.Collapsed;
+            methodsControl.resultStringContainer.Visibility = Visibility.Collapsed;
+            methodsControl.parametersContainer.Visibility = Visibility.Collapsed;
+
+            //SetPreviousSelectedMethod(methodsControl);
+            methodsControl.SetPreviousSelectedMethod();
+        }
+
+        private void SetPreviousSelectedMethod()
+        {
+
+            var currentMethodInfos =
+                this.comboBoxMethods.ItemsSource as IList<SnoopMethodInformation>;
+            if (currentMethodInfos == null)
+                return;
+
+            this.comboBoxMethods.SelectedIndex = -1;
+
+            for (int i = 0; i < currentMethodInfos.Count && this._previousMethodInformation != null; i++)
+            {
+                var methodInfo = currentMethodInfos[i];
+                if (methodInfo.Equals(this._previousMethodInformation))
                 {
-                    var methodInfo = methodInfos[i];
-                    if (methodInfo.Equals(methodsControl._previousMethodInformation))
-                    {
-                        methodsControl.comboBoxMethods.SelectedIndex = i;
-                        break;
-                    }
+                    this.comboBoxMethods.SelectedIndex = i;
+                    break;
                 }
             }
         }
@@ -158,7 +206,7 @@ namespace Snoop.MethodsTab
         {
             var selectedMethod = this.comboBoxMethods.SelectedValue as SnoopMethodInformation;
             if (selectedMethod == null || this.Target == null)
-                return;            
+                return;
 
             var parameters = selectedMethod.GetParameters(this.Target.GetType());
             this.itemsControlParameters.ItemsSource = parameters;
@@ -185,6 +233,7 @@ namespace Snoop.MethodsTab
             if (selectedMethod == null)
                 return;
 
+
             object[] parameters = new object[this.itemsControlParameters.Items.Count];
 
             if (!TryToCreateParameters(parameters))
@@ -192,6 +241,128 @@ namespace Snoop.MethodsTab
 
             TryToInvokeMethod(selectedMethod, parameters);
         }
+
+
+        private void buttonObjectNavigateILSpy_Click(object sender, RoutedEventArgs e)
+        {
+
+            var type = this.Target.GetType();
+            if (ilSpyProcess == null || ilSpyProcess.HasExited)
+            {
+                ilSpyProcess = ILSpyInterop.GetILSpyProcess();
+            }
+
+
+            if (ilSpyProcess == null)
+            {
+                MessageBox.Show("Please run ILSpy to open the type in ILSpy");
+                return;
+            }
+               
+            ILSpyInterop.OpenTypeInILSpy(type.Assembly.Location, type.FullName, ilSpyProcess.MainWindowHandle);
+
+        }
+
+        private void NavigateILSpyClick(object sender, RoutedEventArgs e)
+        {
+            var snoopMethodInfo = this.comboBoxMethods.SelectedValue as SnoopMethodInformation;
+            if (snoopMethodInfo == null)
+            {
+                MessageBox.Show("Please select a method.");
+                return;
+            }
+            var selectedItem = snoopMethodInfo.MethodInfo;
+
+            if (ilSpyProcess == null || ilSpyProcess.HasExited)
+            {
+                //ilSpyProcess = ILSpyInterop.GetOrCreateILSpyProcess(selectedItem.DeclaringType.Assembly.Location, selectedItem.DeclaringType.FullName);
+                //ilSpyProcess = ILSpyInterop.GetOrCreateILSpyProcess(selectedItem.DeclaringType.Assembly.Location, selectedItem.DeclaringType.FullName, selectedItem.Name);
+                ilSpyProcess = ILSpyInterop.GetILSpyProcess();
+            }
+
+            if (ilSpyProcess == null)
+            {
+                MessageBox.Show("Please run ILSpy to open the method in ILSpy");
+                return;
+            }
+        
+
+            ILSpyInterop.OpenMethodInILSpy(selectedItem.DeclaringType.Assembly.Location, selectedItem.DeclaringType.FullName, selectedItem.Name, ilSpyProcess.MainWindowHandle);
+             
+        }
+
+        //private void OpenFolderClick(object sender, RoutedEventArgs e)
+        //{
+
+        //    if (ilSpyProcess != null && !ilSpyProcess.HasExited)
+        //        return;
+
+        //    var location = typeof(Snoop.SnoopUI).Assembly.Location;
+        //    var directory = Path.GetDirectoryName(location);
+        //    directory = Path.Combine(directory, "ILSpy");
+        //    var ilSpyProgram = Path.Combine(directory, "ILSpy.exe");
+
+        //    var processes = Process.GetProcessesByName("ILSpy");
+        //    if (processes.Length > 0)
+        //    {
+        //        ilSpyProcess = processes[0];
+        //        ilSpyProcess.EnableRaisingEvents = true;
+        //        this._buttonNavigateILSpy.IsEnabled = true;
+        //        ilSpyProcess.Exited += new EventHandler(ilSpyProcess_Exited);
+        //        return;
+        //    }
+
+        //    ilSpyProcess = new Process();
+        //    ilSpyProcess.StartInfo.FileName = ilSpyProgram;// "ConsoleApplicationDecompile.exe";//decompileProgramName;
+        //    ilSpyProcess.StartInfo.WorkingDirectory = directory;
+        //    ilSpyProcess.EnableRaisingEvents = true;
+        //    ilSpyProcess.Start();
+        //    //ilSpyProcess.Exited += new EventHandler(ilSpyProcess_Exited);
+        //    //this._buttonNavigateILSpy.IsEnabled = true;
+
+
+        //}
+
+        void ilSpyProcess_Exited(object sender, EventArgs e)
+        {
+            Dispatcher.BeginInvoke((Action)IlSpyProcessExited);
+        }
+
+
+        private void IlSpyProcessExited()
+        {
+            ilSpyProcess = null;
+            //this._buttonNavigateILSpy.IsEnabled = false;
+            //throw new NotImplementedException();
+        }
+
+        //public void DecompileMethodClick(object sender, RoutedEventArgs e)
+        //{
+        //    var selectedMethod = this.comboBoxMethods.SelectedValue as SnoopMethodInformation;
+        //    if (selectedMethod == null)
+        //        return;
+
+        //    SetDecompileVisibilities();
+
+        //    var source = DecompileMethod(selectedMethod.MethodInfo);
+        //    this.textBlockSourceCode.Text = source;
+        //}
+
+        //public string DecompileMethod(MethodInfo methodToDecompile)
+        //{
+        //    if (Environment.Version.Major < 4)
+        //    {
+        //        var sourceCode = this.ilSpyIntegration.DecompileMethodUsingExternalProcess(methodToDecompile);
+        //        return sourceCode;
+        //    }
+        //    else
+        //    {
+        //        var sourceCode = this.ilSpyIntegration.DecompileMethodByLoadingAssembly(methodToDecompile);
+        //        return sourceCode;
+        //    }
+
+        //}
+
 
         private bool TryToCreateParameters(object[] parameters)
         {
@@ -241,7 +412,7 @@ namespace Snoop.MethodsTab
                 }
                 else
                 {
-                    this.resultStringContainer.Visibility = this.textBlockResult.Visibility = this.textBlockResultLabel.Visibility = System.Windows.Visibility.Visible;                    
+                    this.resultStringContainer.Visibility = this.textBlockResult.Visibility = this.textBlockResultLabel.Visibility = System.Windows.Visibility.Visible;
                 }
 
                 this.textBlockResultLabel.Text = "Result as string: ";
@@ -283,13 +454,16 @@ namespace Snoop.MethodsTab
             }
         }
 
-        private static IList<SnoopMethodInformation> GetMethodInfos(object o)
+        private static IList<SnoopMethodInformation> GetMethodInfos(object o, bool getPrivateMethods)
         {
             if (o == null)
                 return new ObservableCollection<SnoopMethodInformation>();
-
             Type t = o.GetType();
-            var methods = t.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.InvokeMethod);
+            var bindingFlags = getPrivateMethods
+                                   ? BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.InvokeMethod
+                                   : BindingFlags.Instance | BindingFlags.Public | BindingFlags.InvokeMethod;
+
+            var methods = t.GetMethods(bindingFlags);
 
             var methodsToReturn = new List<SnoopMethodInformation>();
 
@@ -300,10 +474,10 @@ namespace Snoop.MethodsTab
 
                 var info = new SnoopMethodInformation(method);
                 info.MethodName = method.Name;
-                
+
                 methodsToReturn.Add(info);
             }
-            methodsToReturn.Sort();            
+            methodsToReturn.Sort();
 
             return methodsToReturn;
         }
@@ -327,5 +501,5 @@ namespace Snoop.MethodsTab
         }
 
     }
-       
+
 }
