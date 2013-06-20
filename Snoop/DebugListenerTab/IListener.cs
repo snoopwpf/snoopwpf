@@ -5,9 +5,8 @@ using System.Text;
 
 namespace Snoop.DebugListenerTab
 {
-    public interface IListener
-    {
-        void Write(string str);
-
-    }
+	public interface IListener
+	{
+		void Write(string str);
+	}
 }
