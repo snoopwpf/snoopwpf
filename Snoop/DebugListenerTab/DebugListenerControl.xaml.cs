@@ -24,6 +24,8 @@ namespace Snoop.DebugListenerTab
 	{
 		private readonly FiltersViewModel filtersViewModel;// = new FiltersViewModel();
 		private readonly SnoopDebugListener snoopDebugListener = new SnoopDebugListener();
+        private StringBuilder allText = new StringBuilder();
+
 		public DebugListenerControl()
 		{
 			filtersViewModel = new FiltersViewModel(Properties.Settings.Default.SnoopDebugFilters);
@@ -48,6 +50,7 @@ namespace Snoop.DebugListenerTab
 
 		public void Write(string str)
 		{
+            allText.Append(str + Environment.NewLine);
 			if (!filtersViewModel.IsSet || filtersViewModel.FilterMatches(str))
 			{
 				this.Dispatcher.BeginInvoke(DispatcherPriority.Render, () => DoWrite(str));
@@ -64,6 +67,7 @@ namespace Snoop.DebugListenerTab
 		private void buttonClear_Click(object sender, RoutedEventArgs e)
 		{
 			this.textBoxDebugContent.Clear();
+            allText = new StringBuilder();
 		}
 
 		private void buttonClearFilters_Click(object sender, RoutedEventArgs e)
@@ -73,6 +77,7 @@ namespace Snoop.DebugListenerTab
 			{
 				filtersViewModel.ClearFilters();
 				Properties.Settings.Default.SnoopDebugFilters = null;
+                this.textBoxDebugContent.Text = allText.ToString();
 			}
 		}
 
@@ -83,6 +88,14 @@ namespace Snoop.DebugListenerTab
 			setFiltersWindow.Owner = Window.GetWindow(this);
 			setFiltersWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 			setFiltersWindow.ShowDialog();
+
+            string[] allLines = allText.ToString().Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            this.textBoxDebugContent.Clear();
+            foreach (string line in allLines)
+            {
+                if (filtersViewModel.FilterMatches(line))
+                    this.textBoxDebugContent.AppendText(line + Environment.NewLine);
+            }
 		}
 
 		private void comboBoxPresentationTraceLevel_SelectionChanged(object sender, SelectionChangedEventArgs e)
