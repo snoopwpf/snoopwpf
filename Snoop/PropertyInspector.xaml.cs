@@ -112,7 +112,7 @@ namespace Snoop
 		public object Target
 		{
 			get { return this.GetValue(PropertyInspector.TargetProperty); }
-			set { this.SetValue(PropertyInspector.TargetProperty, value); }
+			set { this.SetValue(PropertyInspector.TargetProperty, PropertyInformation.WrapValue(value)); }
 		}
 
 		public static readonly DependencyProperty TargetProperty =

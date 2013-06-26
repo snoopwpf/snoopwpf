@@ -103,7 +103,7 @@ namespace Snoop
 		public object Value
 		{
 			get { return this.GetValue(PropertyInformation.ValueProperty); }
-			set { this.SetValue(PropertyInformation.ValueProperty, value); }
+			set { this.SetValue(PropertyInformation.ValueProperty, PropertyInformation.WrapValue(value)); }
 		}
 		public static readonly DependencyProperty ValueProperty =
 			DependencyProperty.Register
@@ -816,6 +816,21 @@ namespace Snoop
             return -1;
         }
 
+		public static object WrapValue(object newValue)
+		{
+			// when the PropertyInspector.Target or the PropertyInformation.Value is set to a 
+			// BindingExpression an exception is being generated:
+			// "Cannot set Expression. It is marked as 'NonShareable' and has already been used."
+			// to get around this we'll wrap the expression in an object so the DP is not set 
+			// to a BindingExpression
+			if (newValue is Expression)
+			{
+				return new PropertyInformation.ValueWrapper(newValue);
+			}
+
+			return newValue;
+		}
+
 		#region IComparable Members
 		public int CompareTo(object obj)
 		{
@@ -1195,5 +1210,94 @@ namespace Snoop
 			#endregion //PropertyDescriptor overrides
 		}
 		#endregion //UncommonFieldPropertyDescriptor class
+
+		#region ValueWrapper class
+		internal class ValueWrapper : ICustomTypeDescriptor
+        {
+            private object _value;
+            private Type _type;
+
+            internal ValueWrapper(object value)
+            {
+                _value = value;
+                _type = value.GetType();
+            }
+
+            public override int GetHashCode()
+            {
+                return _value.GetHashCode();
+            }
+
+            public override bool Equals(object obj)
+            {
+                return _value.Equals(obj);
+            }
+
+            public override string ToString()
+            {
+                return _value.ToString();
+            }
+
+            public AttributeCollection GetAttributes()
+            {
+                return TypeDescriptor.GetAttributes(_value);
+            }
+
+            public string GetClassName()
+            {
+                return TypeDescriptor.GetClassName(_value);
+            }
+
+            public string GetComponentName()
+            {
+                return TypeDescriptor.GetComponentName(_value);
+            }
+
+            public TypeConverter GetConverter()
+            {
+                return TypeDescriptor.GetConverter(_value);
+            }
+
+            public EventDescriptor GetDefaultEvent()
+            {
+                return TypeDescriptor.GetDefaultEvent(_value);
+            }
+
+            public PropertyDescriptor GetDefaultProperty()
+            {
+                return TypeDescriptor.GetDefaultProperty(_value);
+            }
+
+            public object GetEditor(Type editorBaseType)
+            {
+                return TypeDescriptor.GetEditor(_value, editorBaseType);
+            }
+
+            public EventDescriptorCollection GetEvents(Attribute[] attributes)
+            {
+                return TypeDescriptor.GetEvents(_value, attributes);
+            }
+
+            public EventDescriptorCollection GetEvents()
+            {
+                return TypeDescriptor.GetEvents(_value);
+            }
+
+            public PropertyDescriptorCollection GetProperties(Attribute[] attributes)
+            {
+                return TypeDescriptor.GetProperties(_value, attributes);
+            }
+
+            public PropertyDescriptorCollection GetProperties()
+            {
+                return TypeDescriptor.GetProperties(_value);
+            }
+
+            public object GetPropertyOwner(PropertyDescriptor pd)
+            {
+                return _value;
+            }
+		}
+		#endregion //ValueWrapper class
 	}
 }
