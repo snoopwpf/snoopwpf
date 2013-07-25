@@ -172,6 +172,7 @@
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </None>
     <Content Include="Scripts\Snoop.psm1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

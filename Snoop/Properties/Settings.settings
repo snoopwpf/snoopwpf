@@ -2,9 +2,8 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Snoop.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="SnoopUIWindowPlacement" Type="System.String" Scope="User">
-      <Value Profile="(Default)">
-        &lt;?xml version="1.0" encoding="utf-16"?&gt;
+    <Setting Name="SnoopUIWindowPlacement" Type="Snoop.WINDOWPLACEMENT" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
         &lt;WINDOWPLACEMENT xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
         &lt;length&gt;44&lt;/length&gt;
         &lt;flags&gt;0&lt;/flags&gt;
@@ -26,9 +25,8 @@
         &lt;/WINDOWPLACEMENT&gt;
       </Value>
     </Setting>
-    <Setting Name="AppChooserWindowPlacement" Type="System.String" Scope="User">
-      <Value Profile="(Default)">
-        &lt;?xml version="1.0" encoding="utf-16"?&gt;
+    <Setting Name="AppChooserWindowPlacement" Type="Snoop.WINDOWPLACEMENT" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
         &lt;WINDOWPLACEMENT xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
         &lt;length&gt;44&lt;/length&gt;
         &lt;flags&gt;0&lt;/flags&gt;
@@ -50,9 +48,8 @@
         &lt;/WINDOWPLACEMENT&gt;
       </Value>
     </Setting>
-    <Setting Name="ZoomerWindowPlacement" Type="System.String" Scope="User">
-      <Value Profile="(Default)">
-        &lt;?xml version="1.0" encoding="utf-16"?&gt;
+    <Setting Name="ZoomerWindowPlacement" Type="Snoop.WINDOWPLACEMENT" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
         &lt;WINDOWPLACEMENT xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
         &lt;length&gt;44&lt;/length&gt;
         &lt;flags&gt;0&lt;/flags&gt;
@@ -74,9 +71,8 @@
         &lt;/WINDOWPLACEMENT&gt;
       </Value>
     </Setting>
-    <Setting Name="PropertyFilterSets" Type="System.String" Scope="User">
-      <Value Profile="(Default)">
-        &lt;?xml version="1.0" encoding="utf-16"?&gt;
+    <Setting Name="PropertyFilterSets" Type="PropertyFilterSet[]" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
         &lt;ArrayOfPropertyFilterSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
         &lt;PropertyFilterSet&gt;
@@ -134,7 +130,7 @@
     <Setting Name="ShowPreviewer" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="SnoopDebugFilters" Type="System.String" Scope="User">
+    <Setting Name="SnoopDebugFilters" Type="Snoop.DebugListenerTab.SnoopSingleFilter[]" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>
