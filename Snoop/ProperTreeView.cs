@@ -176,6 +176,15 @@ namespace Snoop
         private Point offset;
     }
 
+    /// <summary>
+    /// I really like the concept of the WPF Behavior class, but I do not want to include another
+    /// assembly in Snoop since I want to keep it as light and portable as possible (and backwards-
+    /// compatible with version 3.5). I really wanted to encapsulate the drag-n-drop functionality
+    /// in another class, and thought that this was the optimal approach. Any feedback would be greatly
+    /// appreciated.
+    /// </summary>
+    /// <typeparam name="T">The type of the item being dragged.</typeparam>
+    /// <typeparam name="ContainerType">The type of the container of the items being dragged (such as Grid, or in our case below, TreeView).</typeparam>
     public abstract class DragDropBehavior<T, ContainerType>
         where T : Control
         where ContainerType : Control
