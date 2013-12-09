@@ -224,11 +224,11 @@ namespace Snoop
 
                 var item = VisualTreeHelper2.GetAncestor<ContainerType>(_item);
                 Point p = e.GetPosition(item);
-                AddAddornerToTree(p);
+                AddAddornerToContainer(p);
                 DragDrop.DoDragDrop(ellipse,
                                      data,
                                      DragDropEffects.All);
-                RemoveAddornerFromTree();
+                RemoveAddornerFromContainer();
             }
 
             e.Handled = true;
@@ -253,9 +253,9 @@ namespace Snoop
             e.Handled = true;
         }
 
-        private void AddAddornerToTree(Point p)
+        private void AddAddornerToContainer(Point p)
         {
-            var treeView = VisualTreeHelper2.GetAncestor<TreeView>(_item);
+            var treeView = VisualTreeHelper2.GetAncestor<ContainerType>(_item);
             if (treeView != null)
             {
                 var adornerLayer = System.Windows.Documents.AdornerLayer.GetAdornerLayer(treeView);
@@ -265,9 +265,9 @@ namespace Snoop
             }
         }
 
-        private void RemoveAddornerFromTree()
+        private void RemoveAddornerFromContainer()
         {
-            var treeView = VisualTreeHelper2.GetAncestor<TreeView>(_item);
+            var treeView = VisualTreeHelper2.GetAncestor<ContainerType>(_item);
             if (treeView != null)
             {
                 var adornerLayer = System.Windows.Documents.AdornerLayer.GetAdornerLayer(treeView);
