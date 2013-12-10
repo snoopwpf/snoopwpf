@@ -183,7 +183,7 @@ namespace Snoop
     /// in another class, and thought that this was the optimal approach. Any feedback would be greatly
     /// appreciated.
     /// </summary>
-    /// <typeparam name="T">The type of the item being dragged.</typeparam>
+    /// <typeparam name="T">The type of the container being dragged.</typeparam>
     /// <typeparam name="ContainerType">The type of the container of the items being dragged (such as Grid, or in our case below, TreeView).</typeparam>
     public abstract class DragDropBehavior<T, ContainerType>
         where T : Control
@@ -193,10 +193,10 @@ namespace Snoop
         {
             _item = item;
             item.AllowDrop = true;
-            item.Drop += ProperTreeViewItem_Drop;
-            item.MouseMove += ProperTreeViewItem_MouseMove;
-            item.DragOver += ProperTreeViewItem_DragOver;
-            item.DragLeave += ProperTreeViewItem_DragLeave;
+            item.Drop += Item_Drop;
+            item.MouseMove += Item_MouseMove;
+            item.DragOver += Item_DragOver;
+            item.DragLeave += Item_DragLeave;
 
         }
 
@@ -206,7 +206,11 @@ namespace Snoop
 
         protected abstract void OnDrop(DragEventArgs e);
 
-        private void ProperTreeViewItem_Drop(object sender, DragEventArgs e)
+        protected abstract void OnDragOver(DragEventArgs e);
+
+        protected abstract void OnDragLeave(DragEventArgs e);
+
+        private void Item_Drop(object sender, DragEventArgs e)
         {
             _item.Background = Brushes.Transparent;
             OnDrop(e);
@@ -214,7 +218,7 @@ namespace Snoop
         }
 
         private static DragAdorner _dragAdorner;
-        private void ProperTreeViewItem_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        private void Item_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
             var ellipse = sender as FrameworkElement;
 
@@ -222,9 +226,10 @@ namespace Snoop
             {
                 object data = PackageDataForDrag();
 
-                var item = VisualTreeHelper2.GetAncestor<ContainerType>(_item);
-                Point p = e.GetPosition(item);
+                var container = VisualTreeHelper2.GetAncestor<ContainerType>(_item);
+                Point p = e.GetPosition(container);
                 AddAddornerToContainer(p);
+                container.AllowDrop = true;
                 DragDrop.DoDragDrop(ellipse,
                                      data,
                                      DragDropEffects.All);
@@ -235,15 +240,15 @@ namespace Snoop
         }
 
 
-        private void ProperTreeViewItem_DragLeave(object sender, DragEventArgs e)
+        private void Item_DragLeave(object sender, DragEventArgs e)
         {
-            _item.Background = Brushes.Transparent;
+            this.OnDragLeave(e);
             e.Handled = true;
         }
 
-        private void ProperTreeViewItem_DragOver(object sender, DragEventArgs e)
+        private void Item_DragOver(object sender, DragEventArgs e)
         {
-            _item.Background = Brushes.Yellow;
+            this.OnDragOver(e);
             var containerElement = VisualTreeHelper2.GetAncestor<ContainerType>(_item);
             if (_dragAdorner != null)
             {
@@ -288,12 +293,22 @@ namespace Snoop
 
         protected override void OnDrop(DragEventArgs e)
         {
-            object[] data = (object[])e.Data.GetData(typeof(object[]));
             TreeItemDragDropData treeItemData = null;
             if ((treeItemData = e.Data.GetData(typeof(TreeItemDragDropData)) as TreeItemDragDropData) != null)
             {
                 TreeItemDrop(treeItemData);
             }
+        }
+
+
+        protected override void OnDragOver(DragEventArgs e)
+        {
+            _item.Background = Brushes.Yellow;
+        }
+
+        protected override void OnDragLeave(DragEventArgs e)
+        {
+            _item.Background = Brushes.Transparent;
         }
 
         private void TreeItemDrop(TreeItemDragDropData treeItemData)
