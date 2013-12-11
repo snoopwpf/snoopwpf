@@ -197,7 +197,6 @@ namespace Snoop
             item.MouseMove += Item_MouseMove;
             item.DragOver += Item_DragOver;
             item.DragLeave += Item_DragLeave;
-
         }
 
         protected T _item;
