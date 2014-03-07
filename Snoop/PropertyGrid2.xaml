@@ -87,13 +87,39 @@ All other rights reserved.
 			</ControlTemplate>
 
 			<my:ValueEditorTemplateSelector x:Key="EditorSelector">
-				<my:ValueEditorTemplateSelector.StandardTemplate>
+                <my:ValueEditorTemplateSelector.LongStringTemplate>
+                    <DataTemplate>
+                        <DockPanel>
+                            <!-- add mouse wheel editor to right of value (only visible when IsSelected and CanEdit) -->
+                            <editors:MouseWheelValueEditor/>
+
+                            <my:StandardValueEditor
+                                TextBoxHeight="48"
+                                VerticalScrollBarVisibility="Auto"
+                                DockPanel.Dock="Top"
+								PropertyType="{Binding PropertyType}"
+								Value="{Binding Value, Mode=TwoWay}"
+								DescriptiveValue="{Binding DescriptiveValue, Mode=OneWay}"
+								IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
+								IsEditable="{Binding CanEdit}"
+								PropertyInfo="{Binding}"
+							/>
+
+                            <!-- to allow ValueEditor to live on the left and not stretch -->
+                            <Border/>
+                        </DockPanel>
+                    </DataTemplate>
+                </my:ValueEditorTemplateSelector.LongStringTemplate>
+                
+                <my:ValueEditorTemplateSelector.StandardTemplate>
 					<DataTemplate>
 						<DockPanel>
 							<!-- add mouse wheel editor to right of value (only visible when IsSelected and CanEdit) -->
 							<editors:MouseWheelValueEditor/>
 
 							<my:StandardValueEditor
+                                TextBoxHeight="16"
+                                DockPanel.Dock="Top"
 								PropertyType="{Binding PropertyType}"
 								Value="{Binding Value, Mode=TwoWay}"
 								DescriptiveValue="{Binding DescriptiveValue, Mode=OneWay}"
