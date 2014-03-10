@@ -48,6 +48,8 @@ namespace Snoop.Shell
                     sharedRunspace.ThreadOptions = PSThreadOptions.UseCurrentThread;
                     sharedRunspace.ApartmentState = ApartmentState.STA;
                     sharedRunspace.Open();
+
+
                     //this.host = new SnoopPSHost(x => this.outputTextBox.AppendText(x));
                     //this.runspace = RunspaceFactory.CreateRunspace(this.host, iis);
                     //this.runspace.ThreadOptions = PSThreadOptions.UseCurrentThread;
