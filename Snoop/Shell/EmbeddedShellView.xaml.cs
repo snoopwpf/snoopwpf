@@ -44,7 +44,9 @@ namespace Snoop.Shell
 
             // default required if you intend to inject scriptblocks into the host application
             Runspace.DefaultRunspace = this.runspace;
+
         }
+
 
         /// <summary>
         /// Initiates the startup routine and configures the runspace for use.
@@ -52,7 +54,7 @@ namespace Snoop.Shell
         public void Start(SnoopUI ui)
         {
             Invoke(string.Format("new-psdrive {0} {0} -root /", ShellConstants.DriveName));
-
+            ui.Closing += ui_Closing;
             // synchronize selected and root tree elements
             ui.PropertyChanged += (sender, e) =>
             {
@@ -84,6 +86,11 @@ namespace Snoop.Shell
             Invoke(string.Format("write-host 'To get started, try using the ${0} and ${1} variables.'", ShellConstants.Root, ShellConstants.Selected));
 
             FindAndLoadProfile(folder);
+        }
+
+        void ui_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            this.runspace.Close();
         }
 
         public void SetVariable(string name, object instance)
