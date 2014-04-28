@@ -758,7 +758,7 @@ namespace Snoop
 		private VisualTreeItem FindItem(object target)
 		{
 			VisualTreeItem node = this.rootVisualTreeItem.FindNode(target);
-			Visual rootVisual = this.rootVisualTreeItem.MainVisual;
+			object rootVisual = this.rootVisualTreeItem.MainVisual;
 			if (node == null)
 			{
 				Visual visual = target as Visual;
@@ -771,7 +771,7 @@ namespace Snoop
 					}
 
 					// If not in the root tree, make the root be the tree the visual is in.
-					if (!visual.IsDescendantOf(rootVisual))
+					if (!CommonTreeHelper.IsDescendantOf(visual,rootVisual))
 					{
 						var presentationSource = PresentationSource.FromVisual(visual);
 						if (presentationSource == null)

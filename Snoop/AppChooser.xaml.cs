@@ -95,6 +95,7 @@ namespace Snoop
 
 			try
 			{
+                
 				// load the window placement details from the user settings.
 				WINDOWPLACEMENT wp = (WINDOWPLACEMENT)Properties.Settings.Default.AppChooserWindowPlacement;
 				wp.length = Marshal.SizeOf(typeof(WINDOWPLACEMENT));

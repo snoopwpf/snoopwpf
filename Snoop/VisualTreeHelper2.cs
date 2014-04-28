@@ -12,8 +12,8 @@ namespace Snoop
 	public static class VisualTreeHelper2
 	{
 		public delegate TResult Func<T1, T2, TResult>(T1 v1, T2 v2);
-		public delegate HitTestFilterBehavior EnumerateTreeFilterCallback(Visual visual, object misc);
-		public delegate HitTestResultBehavior EnumerateTreeResultCallback(Visual visual, object misc);
+		public delegate HitTestFilterBehavior EnumerateTreeFilterCallback(object visual, object misc);
+        public delegate HitTestResultBehavior EnumerateTreeResultCallback(object visual, object misc);
 
 		public static bool IsFrameworkElementName(Visual visual, object name)
 		{
@@ -62,11 +62,11 @@ namespace Snoop
 			return GetAncestor<T>(cur, null, null, null);
 		}
 
-		private static bool DoEnumerateTree(Visual reference, EnumerateTreeFilterCallback filterCallback, EnumerateTreeResultCallback enumeratorCallback, object misc)
+        private static bool DoEnumerateTree(object reference, EnumerateTreeFilterCallback filterCallback, EnumerateTreeResultCallback enumeratorCallback, object misc)
 		{
-			for (int i = 0; i < VisualTreeHelper.GetChildrenCount(reference); ++i)
+            for (int i = 0; i < CommonTreeHelper.GetChildrenCount(reference); ++i)
 			{
-				Visual child = (Visual)VisualTreeHelper.GetChild(reference, i);
+                object child = CommonTreeHelper.GetChild(reference, i);
 
 				HitTestFilterBehavior filterResult = HitTestFilterBehavior.Continue;
 				if (filterCallback != null)

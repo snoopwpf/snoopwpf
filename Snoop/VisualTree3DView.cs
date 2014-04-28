@@ -114,7 +114,7 @@ namespace Snoop
 				}
 				for (int i = 0; i < childrenCount; i++)
 				{
-					Visual childVisual = VisualTreeHelper.GetChild(visual, i) as Visual;
+                    Visual childVisual = CommonTreeHelper.GetChild(visual, i) as Visual;
 					if (childVisual != null)
 					{
 						Model3D childModel = this.ConvertVisualToModel3D(childVisual, ref z);

@@ -18,7 +18,7 @@ namespace Snoop
 		}
 
 
-		public override Visual MainVisual
+		public override object MainVisual
 		{
 			get
 			{

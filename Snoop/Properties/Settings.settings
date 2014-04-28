@@ -135,7 +135,9 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="SnoopDebugFilters" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">
+              
+            </Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -94,7 +94,7 @@ namespace Snoop
 
 			ItemsPresenter itemsPresenter = null;
 			VisualTreeHelper2.EnumerateTree(root, null,
-				delegate(Visual visual, object misc)
+                delegate(object visual, object misc)
 				{
 					itemsPresenter = visual as ItemsPresenter;
 					if (itemsPresenter != null && itemsPresenter.TemplatedParent == root)
