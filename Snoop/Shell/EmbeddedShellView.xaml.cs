@@ -24,6 +24,7 @@ namespace Snoop.Shell
         private readonly Runspace runspace;
         private readonly SnoopPSHost host;
         private int historyIndex;
+        private CommandCompletion completion;
 
         public EmbeddedShellView()
         {
@@ -44,6 +45,8 @@ namespace Snoop.Shell
 
             // default required if you intend to inject scriptblocks into the host application
             Runspace.DefaultRunspace = this.runspace;
+
+            this.completion = new CommandCompletion(runspace, commandTextBox, outputTextBox);
         }
 
         /// <summary>
@@ -159,8 +162,13 @@ namespace Snoop.Shell
                     Invoke(this.commandTextBox.Text, true);
                     this.commandTextBox.Clear();
                     break;
+                case Key.Tab:
+                    completion.CompleteCommand(reverse: Keyboard.Modifiers == ModifierKeys.Shift);
+                    e.Handled = true;
+                    break;
             }
         }
+
 
         private void Invoke(string script, bool addToHistory = false)
         {
