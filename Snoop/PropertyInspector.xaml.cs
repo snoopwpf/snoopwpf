@@ -422,9 +422,8 @@ namespace Snoop
 					var ret = new List<PropertyFilterSet>();
 
 					try
-					{
-						var userFilters = Properties.Settings.Default.PropertyFilterSets.DSR<List<PropertyFilterSet>>();
-						ret.AddRange(userFilters.ToArray() ?? _defaultFilterSets);
+					{						
+						ret.AddRange(_defaultFilterSets);
 					}
 					catch (Exception ex)
 					{
@@ -440,9 +439,7 @@ namespace Snoop
 			}
 			set
 			{
-				_filterSets = value;
-				Properties.Settings.Default.PropertyFilterSets = _filterSets.SR();
-				Properties.Settings.Default.Save();
+				_filterSets = value;				
 			}
 		}
 

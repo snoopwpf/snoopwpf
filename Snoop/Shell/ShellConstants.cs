@@ -52,15 +52,15 @@ namespace Snoop.Shell
         {
             get
             {
-                var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\PowerShell\1\PowerShellEngine");
-                if (key != null)
-                {
-                    object keyValue = key.GetValue("PowerShellVersion");
-                    if ("2.0".Equals(keyValue))
-                    {
-                        return true;
-                    }
-                }
+                //var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\PowerShell\1\PowerShellEngine");
+                //if (key != null)
+                //{
+                //    object keyValue = key.GetValue("PowerShellVersion");
+                //    if ("2.0".Equals(keyValue))
+                //    {
+                //        return true;
+                //    }
+                //}
 
                 return false;
             }

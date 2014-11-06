@@ -10,6 +10,11 @@ using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
 using System.Runtime.ConstrainedExecution;
 using System.Windows;
+using System.Linq;
+using System.Reflection;
+using System.Collections;
+using System.Windows.Media;
+using DevExpress.Xpf.Core.Internal;
 
 namespace Snoop
 {
@@ -166,4 +171,106 @@ namespace Snoop
 		[return: MarshalAs(UnmanagedType.Bool)]
 		static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
 	}
+    public static class DXMethods {
+        public static int RenderChildrenCount(object obj) {
+            return ReflectionHelper.CreateInstanceMethodHandler<Func<object, int>>(obj, "get_RenderChildrenCount", BindingFlags.NonPublic | BindingFlags.Instance, obj.GetType(), false, null, typeof(object))(obj);
+        }
+        public static FrameworkElement GetParent(object elementHost) {
+            return ReflectionHelper.CreateInstanceMethodHandler<Func<object, FrameworkElement>>(elementHost, "get_Parent", BindingFlags.Public | BindingFlags.Instance, GetCoreAssembly(elementHost).GetType("DevExpress.Xpf.Core.Native.IElementHost"), false, null, typeof(object))(elementHost);
+        }
+        public static bool Is(object obj, string typeName, string typeNamespace, bool isInterface) {
+            if (obj == null)
+                return false;
+            var type = obj.GetType();
+            while(type!=null) {
+                Type[] types = new Type[] { type };
+                if(isInterface) {
+                    types = types.Concat(type.GetInterfaces()).ToArray();
+                }
+                foreach(var typeOrInterface in types) {
+                    bool isValidType = 
+                        (string.IsNullOrEmpty(typeNamespace) ? true : string.Equals(typeNamespace, typeOrInterface.Namespace))
+                        && (string.IsNullOrEmpty(typeName) ? true : string.Equals(typeName, typeOrInterface.Name));
+                    if (isValidType)
+                        return true;
+                }                
+                type = type.BaseType;
+            }
+            return false;
+        }
+
+        public static void Render(object factory, object dc, object context) {
+            ReflectionHelper.CreateInstanceMethodHandler<Action<object, object, object>>(factory, "Render", BindingFlags.Public | BindingFlags.Instance, factory.GetType(), true, null, typeof(object))(factory, dc, context);
+        }
+
+        public static bool IsChrome(object obj) {
+            return Is(obj, "Chrome", "DevExpress.Xpf.Core.Native", false);
+        }
+        public static bool IsIFrameworkRenderElementContext(object obj) {
+            return Is(obj, "IFrameworkRenderElementContext", "DevExpress.Xpf.Core.Native", true);
+        }
+        public static bool IsFrameworkRenderElementContext(object obj) {
+            return Is(obj, "FrameworkRenderElementContext", "DevExpress.Xpf.Core.Native", false);
+        }
+        public static Assembly GetCoreAssembly(object obj) {
+            if (Is(obj, null, "DevExpress.Xpf.Core.Native", false)) {
+                return obj.GetType().Assembly;
+            }
+            return null;
+        }        
+    }    
+    public class RenderTreeHelper {
+        [ThreadStatic]
+        static Func<object, IEnumerable> renderDescendants;
+        public static IEnumerable<object> RenderDescendants(object context) {
+            if (renderDescendants == null)
+                renderDescendants = ReflectionHelper.CreateInstanceMethodHandler<Func<object, IEnumerable>>(
+                    null,
+                    "RenderDescendants",
+                    BindingFlags.Public | BindingFlags.Static,
+                    DXMethods.GetCoreAssembly(context).GetType("DevExpress.Xpf.Core.Native.RenderTreeHelper"),
+                    true, typeof(IEnumerable), null
+                    );
+            return renderDescendants(context).OfType<object>();
+        }
+        [ThreadStatic]
+        static Func<object, Transform> transformToRoot;
+        public static Transform TransformToRoot(object frec) {
+            if (transformToRoot == null)
+                transformToRoot = ReflectionHelper.CreateInstanceMethodHandler<Func<object, Transform>>(
+                    null,
+                    "TransformToRoot",
+                    BindingFlags.Public | BindingFlags.Static,
+                    DXMethods.GetCoreAssembly(frec).GetType("DevExpress.Xpf.Core.Native.RenderTreeHelper"),
+                    true, typeof(Transform), null
+                    );
+            return transformToRoot(frec);
+        }
+        [ThreadStatic]
+        static Func<object, IEnumerable> renderAncestors;
+        public static IEnumerable<object> RenderAncestors(object context) {
+            if (renderAncestors == null)
+                renderAncestors = ReflectionHelper.CreateInstanceMethodHandler<Func<object, IEnumerable>>(
+                    null,
+                    "RenderAncestors",
+                    BindingFlags.Public | BindingFlags.Static,
+                    DXMethods.GetCoreAssembly(context).GetType("DevExpress.Xpf.Core.Native.RenderTreeHelper"),
+                    true, typeof(IEnumerable), null
+                    );
+            return renderAncestors(context).OfType<object>();
+        }
+        [ThreadStatic]
+        static Func<object, object, object> hitTest;
+        public static object HitTest(object root, Point point) {
+            if (hitTest == null)
+                hitTest = ReflectionHelper.CreateInstanceMethodHandler<Func<object, object, object>>(
+                    null,
+                    "HitTest",
+                    BindingFlags.Public | BindingFlags.Static,
+                    DXMethods.GetCoreAssembly(root).GetType("DevExpress.Xpf.Core.Native.RenderTreeHelper"),
+                    true, typeof(object), null, 2
+                    );
+            return hitTest(root, point);
+        }
+    }
 }

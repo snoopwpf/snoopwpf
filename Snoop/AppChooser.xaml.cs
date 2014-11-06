@@ -92,21 +92,6 @@ namespace Snoop
 		protected override void OnSourceInitialized(EventArgs e)
 		{
 			base.OnSourceInitialized(e);
-
-			try
-			{
-                
-				// load the window placement details from the user settings.
-				WINDOWPLACEMENT wp = (WINDOWPLACEMENT)Properties.Settings.Default.AppChooserWindowPlacement;
-				wp.length = Marshal.SizeOf(typeof(WINDOWPLACEMENT));
-				wp.flags = 0;
-				wp.showCmd = (wp.showCmd == Win32.SW_SHOWMINIMIZED ? Win32.SW_SHOWNORMAL : wp.showCmd);
-				IntPtr hwnd = new WindowInteropHelper(this).Handle;
-				Win32.SetWindowPlacement(hwnd, ref wp);
-			}
-			catch
-			{
-			}
 		}
 		protected override void OnClosing(CancelEventArgs e)
 		{
@@ -115,9 +100,7 @@ namespace Snoop
 			// persist the window placement details to the user settings.
 			WINDOWPLACEMENT wp = new WINDOWPLACEMENT();
 			IntPtr hwnd = new WindowInteropHelper(this).Handle;
-			Win32.GetWindowPlacement(hwnd, out wp);
-			Properties.Settings.Default.AppChooserWindowPlacement = wp;
-			Properties.Settings.Default.Save();
+			Win32.GetWindowPlacement(hwnd, out wp);			
 		}
 
 

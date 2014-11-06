@@ -11,7 +11,6 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Controls;
-using DevExpress.Xpf.Core.Native;
 
 namespace Snoop.Infrastructure
 {
@@ -21,9 +20,8 @@ namespace Snoop.Infrastructure
         {
             if (item is Window && CommonTreeHelper.GetChildrenCount(item) == 1)
                 item = CommonTreeHelper.GetChild(item, 0);
-            if (item is FrameworkRenderElementContext) {
-                FrameworkRenderElementContext frec = (FrameworkRenderElementContext)item;
-                return CreateRectangleForFrameworkRenderElement(frec);
+            if (DXMethods.IsFrameworkRenderElementContext(item)) {                
+                return CreateRectangleForFrameworkRenderElement(item);
             }
             if (item is FrameworkElement)
             {
@@ -64,18 +62,19 @@ namespace Snoop.Infrastructure
             return null;
         }
 
-        private static UIElement CreateRectangleForFrameworkRenderElement(FrameworkRenderElementContext frec) {
+        private static UIElement CreateRectangleForFrameworkRenderElement(object frec) {
             VisualBrush brush = new VisualBrush(new FREDrawingVisual(frec));
             brush.Stretch = Stretch.Uniform;
             Rectangle rect = new Rectangle();
             rect.Fill = brush;
-            if (frec.RenderSize.Height == 0 && frec.RenderSize.Width == 0)//sometimes the actual size might be 0 despite there being a rendered visual with a size greater than 0. This happens often on a custom panel (http://snoopwpf.codeplex.com/workitem/7217). Having a fixed size visual brush remedies the problem.
+            var df = ((dynamic)frec);
+            if (df.RenderSize.Height == 0 && df.RenderSize.Width == 0)//sometimes the actual size might be 0 despite there being a rendered visual with a size greater than 0. This happens often on a custom panel (http://snoopwpf.codeplex.com/workitem/7217). Having a fixed size visual brush remedies the problem.
             {
                 rect.Width = 50;
                 rect.Height = 50;
             } else {
-                rect.Width = frec.RenderSize.Width;
-                rect.Height = frec.RenderSize.Height;
+                rect.Width = df.RenderSize.Width;
+                rect.Height = df.RenderSize.Height;
             }
             return rect;
         }

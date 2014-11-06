@@ -13,7 +13,6 @@ using System.Windows.Data;
 using System;
 using System.Windows.Controls;
 using System.Text;
-using DevExpress.Xpf.Core.Native;
 
 namespace Snoop
 {
@@ -22,7 +21,7 @@ namespace Snoop
 		public static VisualTreeItem Construct(object target, VisualTreeItem parent)
 		{
 			VisualTreeItem visualTreeItem;
-            if(target is FrameworkRenderElementContext)
+            if(DXMethods.IsFrameworkRenderElementContext(target))
                 visualTreeItem = new VisualItem(target, parent);
 			else if (target is Visual)
 				visualTreeItem = new VisualItem((Visual)target, parent);
@@ -213,8 +212,8 @@ namespace Snoop
 			// it might be faster to have a map for the lookup
 			// check into this at some point            
             if (this.Target == target) {
-                if (this.Target is IChrome && target is IInputElement) {
-                    var root = ((IChrome)this.Target).Root;
+                if (DXMethods.IsChrome(Target) && target is IInputElement) {
+                    var root = ((dynamic)this.Target).Root;
                     if (root != null) {
                         var child = RenderTreeHelper.HitTest(root, System.Windows.Input.Mouse.GetPosition((IInputElement)target));
                         var node = FindNode(child);

@@ -57,29 +57,8 @@ namespace Snoop
 		public int showCmd;
 		public POINT minPosition;
 		public POINT maxPosition;
-		public RECT normalPosition;
-        public static implicit operator string(WINDOWPLACEMENT placement) {
-            return placement.SR();
-        }
-        public static implicit operator WINDOWPLACEMENT(string placement) {
-            return placement.DSR<WINDOWPLACEMENT>();
-        }
-	}
-
-    public static class XSH {
-        public static string SR<T>(this T val) {
-            XmlSerializer serializer = new XmlSerializer(typeof(T));
-            StringBuilder builder =new StringBuilder();
-            StringWriter writer = new StringWriter(builder);
-            serializer.Serialize(writer, val);
-            return builder.ToString();
-        }
-        public static T DSR<T>(this string val) {
-            XmlSerializer serializer = new XmlSerializer(typeof(T));
-            StringReader reader = new StringReader(val);
-            return (T)serializer.Deserialize(reader);
-        }
-    }
+		public RECT normalPosition;        
+	}    
 
 	public static class Win32
 	{

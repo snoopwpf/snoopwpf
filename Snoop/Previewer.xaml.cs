@@ -3,7 +3,6 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-using DevExpress.Xpf.Core.Native;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -108,7 +107,7 @@ namespace Snoop
 
 		private void HandleTargetOrIsActiveChanged()
 		{
-			if (this.IsActive && (this.Target is Visual || this.Target is FrameworkRenderElementContext))
+			if (this.IsActive && (this.Target is Visual || DXMethods.IsFrameworkRenderElementContext(this.Target)))
 			{
                 this.Zoomer.Target = this.Target;
 			}
@@ -122,7 +121,7 @@ namespace Snoop
 
 		private void HandleCanMagnify(object sender, CanExecuteRoutedEventArgs e)
 		{
-			e.CanExecute = (this.Target as Visual) != null || (this.Target as FrameworkRenderElementContext)!=null;
+			e.CanExecute = (this.Target as Visual) != null || DXMethods.IsFrameworkRenderElementContext(this.Target);
 			e.Handled = true;
 		}
 		private void HandleMagnify(object sender, ExecutedRoutedEventArgs e)

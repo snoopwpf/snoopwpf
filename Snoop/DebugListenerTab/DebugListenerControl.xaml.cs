@@ -27,10 +27,7 @@ namespace Snoop.DebugListenerTab
         private StringBuilder allText = new StringBuilder();
 
 		public DebugListenerControl()
-		{
-            filtersViewModel = new FiltersViewModel(Properties.Settings.Default.SnoopDebugFilters.DSR<List<SnoopSingleFilter>>());
-			this.DataContext = filtersViewModel;
-
+		{            
 			InitializeComponent();
 
 			snoopDebugListener.RegisterListener(this);
