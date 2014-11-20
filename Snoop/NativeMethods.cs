@@ -172,8 +172,9 @@ namespace Snoop
 		static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
 	}
     public static class DXMethods {
+        static readonly ReflectionHelper Helper = new ReflectionHelper();
         public static int RenderChildrenCount(object obj) {
-            return ReflectionHelper.CreateInstanceMethodHandler<Func<object, int>>(obj, "get_RenderChildrenCount", BindingFlags.NonPublic | BindingFlags.Instance, obj.GetType(), false, null, typeof(object))(obj);
+            return Helper.GetInstanceMethodHandler<object, Func<object, int>>(obj, "get_RenderChildrenCount", BindingFlags.NonPublic | BindingFlags.Instance)(obj);
         }
         public static FrameworkElement GetParent(object elementHost) {
             return ReflectionHelper.CreateInstanceMethodHandler<Func<object, FrameworkElement>>(elementHost, "get_Parent", BindingFlags.Public | BindingFlags.Instance, GetCoreAssembly(elementHost).GetType("DevExpress.Xpf.Core.Native.IElementHost"), false, null, typeof(object))(elementHost);
@@ -183,14 +184,14 @@ namespace Snoop
                 return false;
             var type = obj.GetType();
             while(type!=null) {
-                Type[] types = new Type[] { type };
+                Type[] types = { type };
                 if(isInterface) {
                     types = types.Concat(type.GetInterfaces()).ToArray();
                 }
                 foreach(var typeOrInterface in types) {
                     bool isValidType = 
-                        (string.IsNullOrEmpty(typeNamespace) ? true : string.Equals(typeNamespace, typeOrInterface.Namespace))
-                        && (string.IsNullOrEmpty(typeName) ? true : string.Equals(typeName, typeOrInterface.Name));
+                        (string.IsNullOrEmpty(typeNamespace) || string.Equals(typeNamespace, typeOrInterface.Namespace))
+                        && (string.IsNullOrEmpty(typeName) || string.Equals(typeName, typeOrInterface.Name));
                     if (isValidType)
                         return true;
                 }                
@@ -217,7 +218,11 @@ namespace Snoop
                 return obj.GetType().Assembly;
             }
             return null;
-        }        
+        }
+        public static object GetRenderChild(object source, int index) {
+            return Helper.GetInstanceMethodHandler<object, Func<object, int, object>>(
+                source, "GetRenderChild", BindingFlags.NonPublic | BindingFlags.Instance)(source, index);
+        }
     }    
     public class RenderTreeHelper {
         [ThreadStatic]

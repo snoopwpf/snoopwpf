@@ -234,7 +234,7 @@ namespace Snoop
                         return control;
                     return null;
                 }
-                DXMethods.GetCoreAssembly(source).GetType("DevExpress.Xpf.Core.Native.IFrameworkRenderElementContext").GetMethod("GetRenderChild", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).Invoke(source, new object[] { index });
+                return DXMethods.GetRenderChild(source, index);
             }
             if (source is Visual)
                 return VisualTreeHelper.GetChild((Visual)source, index);
