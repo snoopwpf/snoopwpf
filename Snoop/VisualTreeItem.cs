@@ -19,10 +19,6 @@ namespace Snoop
 {
 	public class VisualTreeItem : INotifyPropertyChanged
 	{
-	    public VisualTreeItem()
-	    {
-	        
-	    }
 		public static VisualTreeItem Construct(object target, VisualTreeItem parent)
 		{
 			VisualTreeItem visualTreeItem;
