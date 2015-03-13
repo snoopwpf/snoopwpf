@@ -205,7 +205,7 @@ namespace Snoop
         }
 
         public static bool IsChrome(object obj) {
-            return Is(obj, "Chrome", "DevExpress.Xpf.Core.Native", false);
+            return Is(obj, "IChrome", "DevExpress.Xpf.Core.Native", true);
         }
         public static bool IsIFrameworkRenderElementContext(object obj) {
             return Is(obj, "IFrameworkRenderElementContext", "DevExpress.Xpf.Core.Native", true);
