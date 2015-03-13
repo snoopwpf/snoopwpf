@@ -126,7 +126,7 @@ namespace Snoop
 					tmp = VisualTreeHelper.GetParent(tmp);
 				}
 
-				_maxDepth = (240 - rootLayoutDepth) / levelLayoutDepth;
+				_maxDepth = (200 - rootLayoutDepth) / levelLayoutDepth;
 				_rootItem = new WeakReference((VisualTreeItem)root.DataContext);
 			}
 		}
