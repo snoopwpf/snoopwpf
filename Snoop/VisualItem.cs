@@ -208,7 +208,7 @@ namespace Snoop
     public static class CommonTreeHelper {
         public static int GetChildrenCount(object source){
             if (DXMethods.IsChrome(source)) {
-                object root = ((dynamic)source).Root;
+                object root = DXMethods.GetRoot(source);
                 if (root != null)
                     return 1;
             }
@@ -222,9 +222,7 @@ namespace Snoop
         }
         public static object GetChild(object source, int index) {
             if (DXMethods.IsChrome(source)) {
-                var chrome = ((dynamic)source);
-                if (index == 0 && chrome.Root != null)
-                    return chrome.Root;
+                return DXMethods.GetRoot(source);
             }
             if (DXMethods.IsIFrameworkRenderElementContext(source)) {                
                 var control = DXMethods.Is(source, "RenderControlBaseContext", "DevExpress.Xpf.Core.Native", false) ? ((dynamic)source).Control : null;

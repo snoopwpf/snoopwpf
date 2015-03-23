@@ -213,7 +213,7 @@ namespace Snoop
 			// check into this at some point            
             if (this.Target == target) {
                 if (DXMethods.IsChrome(Target) && target is IInputElement) {
-                    var root = ((dynamic)this.Target).Root;
+                    var root = DXMethods.GetRoot(Target);
                     if (root != null) {
                         var child = RenderTreeHelper.HitTest(root, System.Windows.Input.Mouse.GetPosition((IInputElement)target));
                         var node = FindNode(child);

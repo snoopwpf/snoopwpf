@@ -199,6 +199,29 @@ namespace Snoop
             }
             return false;
         }
+        public static bool Is(object obj, string typeName, string typeNamespace, bool isInterface, out Type targetType) {
+            targetType = null;
+            if (obj == null)                
+                return false;
+            var type = obj.GetType();
+            while (type != null) {
+                Type[] types = { type };
+                if (isInterface) {
+                    types = types.Concat(type.GetInterfaces()).ToArray();
+                }
+                foreach (var typeOrInterface in types) {
+                    bool isValidType =
+                        (string.IsNullOrEmpty(typeNamespace) || string.Equals(typeNamespace, typeOrInterface.Namespace))
+                        && (string.IsNullOrEmpty(typeName) || string.Equals(typeName, typeOrInterface.Name));
+                    if (isValidType) {
+                        targetType = typeOrInterface;
+                        return true;
+                    }                        
+                }
+                type = type.BaseType;
+            }
+            return false;
+        }
 
         public static void Render(object factory, object dc, object context) {
             ReflectionHelper.CreateInstanceMethodHandler<Action<object, object, object>>(factory, "Render", BindingFlags.Public | BindingFlags.Instance, factory.GetType(), true, null, typeof(object))(factory, dc, context);
@@ -206,6 +229,16 @@ namespace Snoop
 
         public static bool IsChrome(object obj) {
             return Is(obj, "IChrome", "DevExpress.Xpf.Core.Native", true);
+        }
+        static Func<object, object> getRoot;
+        public static object GetRoot(object chrome) {
+            Type iChromeType;
+            if (!Is(chrome, "IChrome", "DevExpress.Xpf.Core.Native", true, out iChromeType))
+                return null;
+            if (getRoot == null) {
+                getRoot = ReflectionHelper.CreateInstanceMethodHandler<Func<object, object>>(null, "get_Root", BindingFlags.Public | BindingFlags.Instance, iChromeType, false, typeof(object), typeof(object));
+            }
+            return getRoot(chrome);
         }
         public static bool IsIFrameworkRenderElementContext(object obj) {
             return Is(obj, "IFrameworkRenderElementContext", "DevExpress.Xpf.Core.Native", true);
