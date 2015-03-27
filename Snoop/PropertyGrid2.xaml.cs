@@ -238,8 +238,14 @@ namespace Snoop
 			GridViewColumnHeader headerClicked = (GridViewColumnHeader)args.OriginalSource;
 
 			direction = GetNewSortDirection(headerClicked);
+            if (headerClicked.Column == null)
+                return;
 
-			switch (((TextBlock)headerClicked.Column.Header).Text)
+            var columnHeader = headerClicked.Column.Header as TextBlock;
+            if (columnHeader == null)
+                return;
+
+            switch (columnHeader.Text)
 			{
 				case "Name":
 					this.Sort(PropertyGrid2.CompareNames, direction);
