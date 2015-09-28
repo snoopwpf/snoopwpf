@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snoop", "Snoop\Snoop.csproj", "{6ADE40E1-7624-475C-80C5-9883AA4712EF}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -12,24 +12,54 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagedInjectorLauncher64-4
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ManagedInjector64-4.0", "ManagedInjector\ManagedInjector64-4.0.vcxproj", "{A27C8B34-2527-4258-8C07-D2720C576B90}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagedInjectorLauncher32-4.0", "ManagedInjectorLauncher\ManagedInjectorLauncher32-4.0.csproj", "{837EED94-D254-4F58-8949-635015DE371D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ManagedInjector32-4.0", "ManagedInjector\ManagedInjector32-4.0.vcxproj", "{8072B47B-5611-4BAB-8EF4-CB3125D676A5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|x86 = Debug|x86
 		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{6ADE40E1-7624-475C-80C5-9883AA4712EF}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{6ADE40E1-7624-475C-80C5-9883AA4712EF}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6ADE40E1-7624-475C-80C5-9883AA4712EF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6ADE40E1-7624-475C-80C5-9883AA4712EF}.Debug|x86.Build.0 = Debug|Any CPU
 		{6ADE40E1-7624-475C-80C5-9883AA4712EF}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{6ADE40E1-7624-475C-80C5-9883AA4712EF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{6ADE40E1-7624-475C-80C5-9883AA4712EF}.Release|x86.ActiveCfg = Release|Any CPU
+		{6ADE40E1-7624-475C-80C5-9883AA4712EF}.Release|x86.Build.0 = Release|Any CPU
 		{21E131D3-760F-4E93-8BDD-502591BD1F97}.Debug|Mixed Platforms.ActiveCfg = Debug|x64
 		{21E131D3-760F-4E93-8BDD-502591BD1F97}.Debug|Mixed Platforms.Build.0 = Debug|x64
+		{21E131D3-760F-4E93-8BDD-502591BD1F97}.Debug|x86.ActiveCfg = Debug|x64
 		{21E131D3-760F-4E93-8BDD-502591BD1F97}.Release|Mixed Platforms.ActiveCfg = Release|x64
 		{21E131D3-760F-4E93-8BDD-502591BD1F97}.Release|Mixed Platforms.Build.0 = Release|x64
+		{21E131D3-760F-4E93-8BDD-502591BD1F97}.Release|x86.ActiveCfg = Release|x64
 		{A27C8B34-2527-4258-8C07-D2720C576B90}.Debug|Mixed Platforms.ActiveCfg = Debug|x64
 		{A27C8B34-2527-4258-8C07-D2720C576B90}.Debug|Mixed Platforms.Build.0 = Debug|x64
+		{A27C8B34-2527-4258-8C07-D2720C576B90}.Debug|x86.ActiveCfg = Debug|x64
 		{A27C8B34-2527-4258-8C07-D2720C576B90}.Release|Mixed Platforms.ActiveCfg = Release|x64
 		{A27C8B34-2527-4258-8C07-D2720C576B90}.Release|Mixed Platforms.Build.0 = Release|x64
+		{A27C8B34-2527-4258-8C07-D2720C576B90}.Release|x86.ActiveCfg = Release|x64
+		{837EED94-D254-4F58-8949-635015DE371D}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{837EED94-D254-4F58-8949-635015DE371D}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{837EED94-D254-4F58-8949-635015DE371D}.Debug|x86.ActiveCfg = Debug|x86
+		{837EED94-D254-4F58-8949-635015DE371D}.Debug|x86.Build.0 = Debug|x86
+		{837EED94-D254-4F58-8949-635015DE371D}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{837EED94-D254-4F58-8949-635015DE371D}.Release|Mixed Platforms.Build.0 = Release|x86
+		{837EED94-D254-4F58-8949-635015DE371D}.Release|x86.ActiveCfg = Release|x86
+		{837EED94-D254-4F58-8949-635015DE371D}.Release|x86.Build.0 = Release|x86
+		{8072B47B-5611-4BAB-8EF4-CB3125D676A5}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{8072B47B-5611-4BAB-8EF4-CB3125D676A5}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{8072B47B-5611-4BAB-8EF4-CB3125D676A5}.Debug|x86.ActiveCfg = Debug|Win32
+		{8072B47B-5611-4BAB-8EF4-CB3125D676A5}.Debug|x86.Build.0 = Debug|Win32
+		{8072B47B-5611-4BAB-8EF4-CB3125D676A5}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{8072B47B-5611-4BAB-8EF4-CB3125D676A5}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{8072B47B-5611-4BAB-8EF4-CB3125D676A5}.Release|x86.ActiveCfg = Release|Win32
+		{8072B47B-5611-4BAB-8EF4-CB3125D676A5}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
