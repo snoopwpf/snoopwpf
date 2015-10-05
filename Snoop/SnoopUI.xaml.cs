@@ -30,6 +30,7 @@ namespace Snoop
 		#region Public Static Routed Commands
 		public static readonly RoutedCommand IntrospectCommand = new RoutedCommand("Introspect", typeof(SnoopUI));
 		public static readonly RoutedCommand RefreshCommand = new RoutedCommand("Refresh", typeof(SnoopUI));
+		public static readonly RoutedCommand ExportCommand = new RoutedCommand("Export", typeof(SnoopUI));
 		public static readonly RoutedCommand HelpCommand = new RoutedCommand("Help", typeof(SnoopUI));
 		public static readonly RoutedCommand InspectCommand = new RoutedCommand("Inspect", typeof(SnoopUI));
 		public static readonly RoutedCommand SelectFocusCommand = new RoutedCommand("SelectFocus", typeof(SnoopUI));
@@ -43,6 +44,7 @@ namespace Snoop
 		{
 			SnoopUI.IntrospectCommand.InputGestures.Add(new KeyGesture(Key.I, ModifierKeys.Control));
 			SnoopUI.RefreshCommand.InputGestures.Add(new KeyGesture(Key.F5));
+			SnoopUI.ExportCommand.InputGestures.Add(new KeyGesture(Key.S, ModifierKeys.Control));
 			SnoopUI.HelpCommand.InputGestures.Add(new KeyGesture(Key.F1));
 			SnoopUI.ClearSearchFilterCommand.InputGestures.Add(new KeyGesture(Key.Escape));
 			SnoopUI.CopyPropertyChangesCommand.InputGestures.Add(new KeyGesture(Key.C, ModifierKeys.Control | ModifierKeys.Shift));
@@ -75,6 +77,7 @@ namespace Snoop
 
 			this.CommandBindings.Add(new CommandBinding(SnoopUI.IntrospectCommand, this.HandleIntrospection));
 			this.CommandBindings.Add(new CommandBinding(SnoopUI.RefreshCommand, this.HandleRefresh));
+			this.CommandBindings.Add(new CommandBinding(SnoopUI.ExportCommand, this.HandleExport));
 			this.CommandBindings.Add(new CommandBinding(SnoopUI.HelpCommand, this.HandleHelp));
 
 			this.CommandBindings.Add(new CommandBinding(SnoopUI.InspectCommand, this.HandleInspect));
@@ -669,6 +672,35 @@ namespace Snoop
 				Mouse.OverrideCursor = saveCursor;
 			}
 		}
+		private void HandleExport(object sender, ExecutedRoutedEventArgs e)
+		{
+			Cursor saveCursor = Mouse.OverrideCursor;
+			Mouse.OverrideCursor = Cursors.Wait;
+
+			String desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+			Process proc = Process.GetCurrentProcess();
+			String file = System.IO.Path.Combine(desktop, string.Format("{0} - [{1}].xml", proc.ProcessName, proc.Id));
+			// Append "(n)" suffix to avoid overwriting existing files.
+			for (int i = 1; i < 10000; i++)
+			{
+				if (!System.IO.File.Exists(file))
+				{
+					break;
+				}
+				file = System.IO.Path.Combine(desktop, string.Format("{0} - [{1}] ({2}).xml", proc.ProcessName, proc.Id, i));
+			}
+			System.IO.StreamWriter writer = new System.IO.StreamWriter(file);
+			try
+			{
+				XMLTreeWriter.DumpTree(this.Root, writer);
+				MessageBox.Show(string.Format("The tree has been exported to {0}.", file), "Tree exported", MessageBoxButton.OK);
+			}
+			finally
+			{
+				writer.Close();
+				Mouse.OverrideCursor = saveCursor;
+			}
+		}
 		private void HandleHelp(object sender, ExecutedRoutedEventArgs e)
 		{
 			//Help help = new Help();
@@ -1091,4 +1123,67 @@ namespace Snoop
 		
 	}
 
+	public class XMLTreeWriter
+	{
+		public static void DumpTree(VisualTreeItem root, System.IO.StreamWriter writer)
+		{
+			writer.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+			writer.WriteLine("<root>");
+			DumpItem(root, writer);
+			writer.WriteLine("</root>");
+		}
+
+		private static void DumpItem(VisualTreeItem item, System.IO.StreamWriter writer)
+		{
+			// Base indent
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i <= item.Depth; i++)
+			{
+				sb.Append("  ");
+			}
+			String baseIndent = sb.ToString();
+			// Write node element
+			writer.Write(baseIndent);
+			writer.Write("<node");
+			if (!string.IsNullOrEmpty(item.Name))
+			{
+				writer.Write(" name=\"");
+				writer.Write(EscapeXML(item.Name));
+				writer.Write("\"");
+			}
+			writer.WriteLine(">");
+			foreach (PropertyInformation propInfo in PropertyInformation.GetProperties(item.Target))
+			{
+				if (!"Children".Equals(propInfo.DisplayName) && !"Parent".Equals(propInfo.DisplayName))
+				{
+					writer.Write(baseIndent);
+					writer.Write("  <property name=\"");
+					writer.Write(EscapeXML(propInfo.DisplayName));
+					writer.Write("\" value=\"");
+					object val = propInfo.Value;
+					if (val != null)
+					{
+						writer.Write(EscapeXML(val.ToString()));
+					}
+					writer.WriteLine("\"/>");
+				}
+				propInfo.Teardown();
+			}
+			foreach (VisualTreeItem child in item.Children)
+			{
+				DumpItem(child, writer);
+			}
+			writer.Write(baseIndent);
+			writer.WriteLine("</node>");
+		}
+
+		private static String EscapeXML(String str)
+		{
+			return str.Replace("&", "&amp;") // & must be first to avoid double-escaping
+				.Replace("\"", "&quot;")
+				.Replace("'", "&apos;")
+				.Replace("<", "&lt;")
+				.Replace(">", "&gt;");
+		}
+	}
 }

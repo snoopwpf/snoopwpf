@@ -119,40 +119,68 @@ All other rights reserved.
 			<ColumnDefinition Width="2*"/>
 		</Grid.ColumnDefinitions>
 
-		<!-- Filter Combo Box -->
-		<ComboBox
-			x:Name="filterComboBox"
-			i:ComboBoxSettings.IsSnoopPart="True"
-			IsEditable="True"
-			Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}"
-			Margin="2,2,22,2"
-		>
-			<ComboBoxItem>
-				<TextBlock Style="{x:Null}" Text="Clear any filter applied to the tree view"/>
-			</ComboBoxItem>
-			<ComboBoxItem>
-				<TextBlock Style="{x:Null}" Text="Show only visuals with binding errors"/>
-			</ComboBoxItem>
-			<ComboBox.ToolTip>
-				<TextBlock Style="{x:Null}" Text="Enter text in the combo box to filter the tree view by name or type"/>
-			</ComboBox.ToolTip>
-		</ComboBox>
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="1*"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
+			</Grid.ColumnDefinitions>
+			
+			<!-- Filter Combo Box -->
+			<ComboBox
+				x:Name="filterComboBox"
+				i:ComboBoxSettings.IsSnoopPart="True"
+				IsEditable="True"
+				Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}"
+				Margin="2,2,2,2"
+			>
+				<ComboBoxItem>
+					<TextBlock Style="{x:Null}" Text="Clear any filter applied to the tree view"/>
+				</ComboBoxItem>
+				<ComboBoxItem>
+					<TextBlock Style="{x:Null}" Text="Show only visuals with binding errors"/>
+				</ComboBoxItem>
+				<ComboBox.ToolTip>
+					<TextBlock Style="{x:Null}" Text="Enter text in the combo box to filter the tree view by name or type"/>
+				</ComboBox.ToolTip>
+			</ComboBox>
 
-		<!-- Refresh Button -->
-		<Button
-			Style="{StaticResource refreshButton}"
-			Width="18"
-			Height="18"
-			HorizontalAlignment="Right"
-			VerticalAlignment="Center"
-			Margin="0,2,2,2"
-			Command="{x:Static local:SnoopUI.RefreshCommand}"
-		>
-			<Image Source="{StaticResource reloadDrawingImage}"/>
-			<Button.ToolTip>
-				<TextBlock Style="{x:Null}" Text="Refresh the tree view"/>
-			</Button.ToolTip>
-		</Button>
+			<!-- Refresh Button -->
+			<Button
+				Style="{StaticResource refreshButton}"
+				Width="18"
+				Height="18"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center"
+				Margin="2,2,2,2"
+				Command="{x:Static local:SnoopUI.RefreshCommand}"
+				Grid.Column="1"
+			>
+				<Image Source="{StaticResource reloadDrawingImage}"/>
+				<Button.ToolTip>
+					<TextBlock Style="{x:Null}" Text="Refresh the tree view"/>
+				</Button.ToolTip>
+			</Button>
+
+			<!-- Export Button -->
+			<Button
+				Style="{StaticResource refreshButton}"
+				Width="18"
+				Height="18"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center"
+				Margin="2,2,2,2"
+				Command="{x:Static local:SnoopUI.ExportCommand}"
+				Grid.Column="2"
+			>
+				<Image Source="{StaticResource exportDrawingImage}"
+					   Margin="1
+					   "/>
+				<Button.ToolTip>
+					<TextBlock Style="{x:Null}" Text="Export tree as XML"/>
+				</Button.ToolTip>
+			</Button>
+		</Grid>
 
 		<!-- Visual Tree TreeView -->
 		<local:ProperTreeView
