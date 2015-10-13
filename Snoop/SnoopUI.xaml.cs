@@ -1127,13 +1127,22 @@ namespace Snoop
 	{
 		public static void DumpTree(VisualTreeItem root, System.IO.StreamWriter writer)
 		{
+			XMLTreeWriter treeWriter = new XMLTreeWriter(writer);
 			writer.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 			writer.WriteLine("<root>");
-			DumpItem(root, writer);
+			treeWriter.DumpItem(root);
 			writer.WriteLine("</root>");
 		}
 
-		private static void DumpItem(VisualTreeItem item, System.IO.StreamWriter writer)
+		private readonly System.IO.StreamWriter Writer;
+		private Visual RootVisual;
+
+		private XMLTreeWriter(System.IO.StreamWriter writer)
+		{
+			Writer = writer;
+		}
+
+		private void DumpItem(VisualTreeItem item)
 		{
 			// Base indent
 			StringBuilder sb = new StringBuilder();
@@ -1143,38 +1152,61 @@ namespace Snoop
 			}
 			String baseIndent = sb.ToString();
 			// Write node element
-			writer.Write(baseIndent);
-			writer.Write("<node");
-			if (!string.IsNullOrEmpty(item.Name))
+			Writer.Write(baseIndent);
+			Writer.Write("<node");
+			String nodeName = item.Name;
+			if (string.IsNullOrEmpty(nodeName))
 			{
-				writer.Write(" name=\"");
-				writer.Write(EscapeXML(item.Name));
-				writer.Write("\"");
+				nodeName = item.ToString();
 			}
-			writer.WriteLine(">");
+			Writer.Write(" name=\"");
+			Writer.Write(EscapeXML(nodeName));
+			Writer.Write("\"");
+			Writer.WriteLine(">");
 			foreach (PropertyInformation propInfo in PropertyInformation.GetProperties(item.Target))
 			{
 				if (!"Children".Equals(propInfo.DisplayName) && !"Parent".Equals(propInfo.DisplayName))
 				{
-					writer.Write(baseIndent);
-					writer.Write("  <property name=\"");
-					writer.Write(EscapeXML(propInfo.DisplayName));
-					writer.Write("\" value=\"");
-					object val = propInfo.Value;
-					if (val != null)
-					{
-						writer.Write(EscapeXML(val.ToString()));
-					}
-					writer.WriteLine("\"/>");
+					Writer.Write(baseIndent);
+					WriteProperty(propInfo.DisplayName, propInfo.Value);
 				}
 				propInfo.Teardown();
 			}
+			FrameworkElement elem = item.Target as FrameworkElement;
+			if (elem != null)
+			{
+				if (RootVisual == null)
+				{
+					RootVisual = elem;
+				}
+				Rect bounds = elem.TransformToAncestor(RootVisual).TransformBounds(VisualTreeHelper.GetDescendantBounds(elem));
+				if (!bounds.IsEmpty)
+				{
+					Writer.Write(baseIndent);
+					WriteProperty("x-BoundsInClientArea", bounds.ToString());
+					//bounds.Offset(new Vector(0, SystemParameters.WindowCaptionHeight));
+					//Writer.Write(baseIndent);
+					//WriteProperty("x-BoundsInWindow", bounds.ToString());
+				}
+			}
 			foreach (VisualTreeItem child in item.Children)
 			{
-				DumpItem(child, writer);
+				DumpItem(child);
 			}
-			writer.Write(baseIndent);
-			writer.WriteLine("</node>");
+			Writer.Write(baseIndent);
+			Writer.WriteLine("</node>");
+		}
+
+		private void WriteProperty(String name, object val)
+		{
+			Writer.Write("  <property name=\"");
+			Writer.Write(EscapeXML(name));
+			Writer.Write("\" value=\"");
+			if (val != null)
+			{
+				Writer.Write(EscapeXML(val.ToString()));
+			}
+			Writer.WriteLine("\"/>");
 		}
 
 		private static String EscapeXML(String str)
