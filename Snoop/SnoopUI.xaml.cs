@@ -1179,14 +1179,21 @@ namespace Snoop
 				{
 					RootVisual = elem;
 				}
-				Rect bounds = elem.TransformToAncestor(RootVisual).TransformBounds(VisualTreeHelper.GetDescendantBounds(elem));
-				if (!bounds.IsEmpty)
+				try
 				{
-					Writer.Write(baseIndent);
-					WriteProperty("x-BoundsInClientArea", bounds.ToString());
-					//bounds.Offset(new Vector(0, SystemParameters.WindowCaptionHeight));
-					//Writer.Write(baseIndent);
-					//WriteProperty("x-BoundsInWindow", bounds.ToString());
+					Rect bounds = elem.TransformToAncestor(RootVisual).TransformBounds(VisualTreeHelper.GetDescendantBounds(elem));
+					if (!bounds.IsEmpty)
+					{
+						Writer.Write(baseIndent);
+						WriteProperty("x-BoundsInClientArea", bounds.ToString());
+						//bounds.Offset(new Vector(0, SystemParameters.WindowCaptionHeight));
+						//Writer.Write(baseIndent);
+						//WriteProperty("x-BoundsInWindow", bounds.ToString());
+					}
+				}
+				catch (Exception)
+				{
+					// In case this element is not a child of the root. Ignore.
 				}
 			}
 			foreach (VisualTreeItem child in item.Children)
