@@ -128,29 +128,57 @@ namespace Snoop.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\r\n        <?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n        <ArrayOfPropertyFilter" +
-            "Set xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\r\n        xmlns:xsd=\"ht" +
-            "tp://www.w3.org/2001/XMLSchema\">\r\n        <PropertyFilterSet>\r\n        <DisplayN" +
-            "ame>Layout</DisplayName>\r\n        <IsDefault>false</IsDefault>\r\n        <IsEditC" +
-            "ommand>false</IsEditCommand>\r\n        <Properties>\r\n        <string>width</strin" +
-            "g>\r\n        <string>height</string>\r\n        <string>actualwidth</string>\r\n     " +
-            "   <string>actualheight</string>\r\n        <string>margin</string>\r\n        <stri" +
-            "ng>padding</string>\r\n        <string>canvas.left</string>\r\n        <string>canva" +
-            "s.top</string>\r\n        </Properties>\r\n        </PropertyFilterSet>\r\n        <Pr" +
-            "opertyFilterSet>\r\n        <DisplayName>Grid/Dock</DisplayName>\r\n        <IsDefau" +
-            "lt>false</IsDefault>\r\n        <IsEditCommand>false</IsEditCommand>\r\n        <Pro" +
-            "perties>\r\n        <string>grid.</string>\r\n        <string>dockpanel.dock</string" +
-            ">\r\n        </Properties>\r\n        </PropertyFilterSet>\r\n        <PropertyFilterS" +
-            "et>\r\n        <DisplayName>Color</DisplayName>\r\n        <IsDefault>false</IsDefau" +
-            "lt>\r\n        <IsEditCommand>false</IsEditCommand>\r\n        <Properties>\r\n       " +
-            " <string>color</string>\r\n        <string>background</string>\r\n        <string>fo" +
-            "reground</string>\r\n        <string>borderbrush</string>\r\n        <string>fill</s" +
-            "tring>\r\n        <string>stroke</string>\r\n        </Properties>\r\n        </Proper" +
-            "tyFilterSet>\r\n        <PropertyFilterSet>\r\n        <DisplayName>ItemsControl</Di" +
-            "splayName>\r\n        <IsDefault>false</IsDefault>\r\n        <IsEditCommand>false</" +
-            "IsEditCommand>\r\n        <Properties>\r\n        <string>items</string>\r\n        <s" +
-            "tring>selected</string>\r\n        </Properties>\r\n        </PropertyFilterSet>\r\n  " +
-            "      </ArrayOfPropertyFilterSet>\r\n      ")]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"
+        <?xml version=""1.0"" encoding=""utf-16""?>
+        <ArrayOfPropertyFilterSet xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance""
+            xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+            <PropertyFilterSet>
+                <DisplayName>Layout</DisplayName>
+                <IsDefault>false</IsDefault>
+                <IsEditCommand>false</IsEditCommand>
+                <Properties>
+                    <string>width</string>
+                    <string>height</string>
+                    <string>actualwidth</string>
+                    <string>actualheight</string>
+                    <string>margin</string>
+                    <string>padding</string>
+                    <string>canvas.left</string>
+                    <string>canvas.top</string>
+                </Properties>
+            </PropertyFilterSet>
+            <PropertyFilterSet>
+                <DisplayName>Grid/Dock</DisplayName>
+                <IsDefault>false</IsDefault>
+                <IsEditCommand>false</IsEditCommand>
+                <Properties>
+                    <string>grid.</string>
+                    <string>dockpanel.dock</string>
+                </Properties>
+            </PropertyFilterSet>
+            <PropertyFilterSet>
+                <DisplayName>Color</DisplayName>
+                <IsDefault>false</IsDefault>
+                <IsEditCommand>false</IsEditCommand>
+                <Properties>
+                    <string>color</string>
+                    <string>background</string>
+                    <string>foreground</string>
+                    <string>borderbrush</string>
+                    <string>fill</string>
+                    <string>stroke</string>
+                </Properties>
+            </PropertyFilterSet>
+            <PropertyFilterSet>
+                <DisplayName>ItemsControl</DisplayName>
+                <IsDefault>false</IsDefault>
+                <IsEditCommand>false</IsEditCommand>
+                <Properties>
+                    <string>items</string>
+                    <string>selected</string>
+                </Properties>
+            </PropertyFilterSet>
+        </ArrayOfPropertyFilterSet>")]
         public PropertyFilterSet[] PropertyFilterSets
         {
             get {
