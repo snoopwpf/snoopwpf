@@ -14,7 +14,6 @@ using System.Linq;
 using System.Reflection;
 using System.Collections;
 using System.Windows.Media;
-using DevExpress.Xpf.Core.Internal;
 
 namespace Snoop
 {
