@@ -227,7 +227,7 @@ namespace Snoop
         }
 
         public static bool IsChrome(object obj) {
-            return Is(obj, "IChrome", "DevExpress.Xpf.Core.Native", true);
+            return Is(obj, "IChrome", "DevExpress.Xpf.Core.Native", true) && !Is(obj, "LightweightCellEditor", "DevExpress.Xpf.Grid", false);
         }
         static Func<object, object> getRoot;
         public static object GetRoot(object chrome) {
