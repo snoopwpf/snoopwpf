@@ -584,7 +584,7 @@ namespace Snoop
 				{
 					this.isDatabound = true;
 
-					if (expression.HasError || expression.Status != BindingStatus.Active)
+                    if (expression.HasError || expression.Status != BindingStatus.Active && !(expression is PriorityBindingExpression))
 					{
 						this.isInvalidBinding = true;
 
