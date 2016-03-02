@@ -253,7 +253,7 @@ namespace Snoop
 				case "Value":
 					this.Sort(PropertyGrid2.CompareValues, direction);
 					break;
-				case "ValueSource":
+				case "Value Source":
 					this.Sort(PropertyGrid2.CompareValueSources, direction);
 					break;
 			}
