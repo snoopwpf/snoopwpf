@@ -26,8 +26,8 @@ namespace Snoop.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"
-        <?xml version=""1.0"" encoding=""utf-16""?>
+        [global::System.Configuration.DefaultSettingValueAttribute(
+      @"<?xml version=""1.0"" encoding=""utf-16""?>
         <WINDOWPLACEMENT xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
         <length>44</length>
         <flags>0</flags>
@@ -60,8 +60,8 @@ namespace Snoop.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"
-        <?xml version=""1.0"" encoding=""utf-16""?>
+        [global::System.Configuration.DefaultSettingValueAttribute(
+      @"<?xml version=""1.0"" encoding=""utf-16""?>
         <WINDOWPLACEMENT xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
         <length>44</length>
         <flags>0</flags>
@@ -94,8 +94,8 @@ namespace Snoop.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"
-        <?xml version=""1.0"" encoding=""utf-16""?>
+        [global::System.Configuration.DefaultSettingValueAttribute(
+      @"<?xml version=""1.0"" encoding=""utf-16""?>
         <WINDOWPLACEMENT xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
         <length>44</length>
         <flags>0</flags>
@@ -128,7 +128,7 @@ namespace Snoop.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\r\n        <?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n        <ArrayOfPropertyFilter" +
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n        <ArrayOfPropertyFilter" +
             "Set xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\r\n        xmlns:xsd=\"ht" +
             "tp://www.w3.org/2001/XMLSchema\">\r\n        <PropertyFilterSet>\r\n        <DisplayN" +
             "ame>Layout</DisplayName>\r\n        <IsDefault>false</IsDefault>\r\n        <IsEditC" +
