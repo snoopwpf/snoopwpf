@@ -562,12 +562,18 @@ namespace Snoop
 			try
 			{
 				// load the window placement details from the user settings.
-				WINDOWPLACEMENT wp = (WINDOWPLACEMENT)Properties.Settings.Default.SnoopUIWindowPlacement;
-				wp.length = Marshal.SizeOf(typeof(WINDOWPLACEMENT));
-				wp.flags = 0;
-				wp.showCmd = (wp.showCmd == Win32.SW_SHOWMINIMIZED ? Win32.SW_SHOWNORMAL : wp.showCmd);
-				IntPtr hwnd = new WindowInteropHelper(this).Handle;
-				Win32.SetWindowPlacement(hwnd, ref wp);
+				WINDOWPLACEMENT wp = Properties.Settings.Default.SnoopUIWindowPlacement;
+				if (wp.length > 0)
+				{
+					this.SetPlacement(wp);
+				}
+				else
+				{
+					// first time up: move to the corner
+					WindowStartupLocation = WindowStartupLocation.Manual;
+					Top = 20;
+					Left = 0;
+				}
 
 				// load whether all properties are shown by default
 				this.PropertyGrid.ShowDefaults = Properties.Settings.Default.ShowDefaults;
@@ -603,10 +609,13 @@ namespace Snoop
 			EditedPropertiesHelper.DumpObjectsWithEditedProperties();
 
 			// persist the window placement details to the user settings.
-			WINDOWPLACEMENT wp = new WINDOWPLACEMENT();
-			IntPtr hwnd = new WindowInteropHelper(this).Handle;
-			Win32.GetWindowPlacement(hwnd, out wp);
-			Properties.Settings.Default.SnoopUIWindowPlacement = wp;
+			var wp = this.GetPlacement();
+			if (wp.HasValue)
+				Properties.Settings.Default.SnoopUIWindowPlacement = wp.Value;
+//			WINDOWPLACEMENT wp = new WINDOWPLACEMENT();
+//			IntPtr hwnd = new WindowInteropHelper(this).Handle;
+//			Win32.GetWindowPlacement(hwnd, out wp);
+//			Properties.Settings.Default.SnoopUIWindowPlacement = wp;
 
 			// persist whether all properties are shown by default
 			Properties.Settings.Default.ShowDefaults = this.PropertyGrid.ShowDefaults;

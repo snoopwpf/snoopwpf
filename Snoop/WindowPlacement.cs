@@ -5,6 +5,8 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Windows;
+using System.Windows.Interop;
 
 namespace Snoop
 {
@@ -67,5 +69,45 @@ namespace Snoop
 
 		public const int SW_SHOWNORMAL = 1;
 		public const int SW_SHOWMINIMIZED = 2;
+	}
+
+	public static class WindowPlacement
+	{
+		// Win32 API declarations to set and get window placement
+		[DllImport("user32.dll")]
+		static extern bool SetWindowPlacement(IntPtr hWnd, [In] ref WINDOWPLACEMENT lpwndpl);
+
+		[DllImport("user32.dll")]
+		static extern bool GetWindowPlacement(IntPtr hWnd, out WINDOWPLACEMENT lpwndpl);
+
+		const int SW_SHOWNORMAL = 1;
+		const int SW_SHOWMINIMIZED = 2;
+
+		public static void SetPlacement(this Window window, WINDOWPLACEMENT wp)
+		{
+			try
+			{
+				wp.length = Marshal.SizeOf(typeof(WINDOWPLACEMENT));
+				wp.flags = 0;
+				if (wp.showCmd == SW_SHOWMINIMIZED)
+					wp.showCmd = SW_SHOWNORMAL;
+				IntPtr hwnd = new WindowInteropHelper(window).Handle;
+				SetWindowPlacement(hwnd, ref wp);
+			}
+			catch (Exception ex)
+			{
+				System.Diagnostics.Debug.WriteLine(ex.Message);
+			}
+		}
+
+		public static WINDOWPLACEMENT? GetPlacement(this Window window)
+		{
+			WINDOWPLACEMENT wp = new WINDOWPLACEMENT();
+			IntPtr hwnd = new WindowInteropHelper(window).Handle;
+			if (GetWindowPlacement(hwnd, out wp))
+				return wp;
+			else
+				return null;
+		}
 	}
 }

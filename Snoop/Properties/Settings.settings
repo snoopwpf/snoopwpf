@@ -6,7 +6,7 @@
       <Value Profile="(Default)">
         &lt;?xml version="1.0" encoding="utf-16"?&gt;
         &lt;WINDOWPLACEMENT xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-        &lt;length&gt;44&lt;/length&gt;
+        &lt;length&gt;0&lt;/length&gt;
         &lt;flags&gt;0&lt;/flags&gt;
         &lt;showCmd&gt;1&lt;/showCmd&gt;
         &lt;minPosition&gt;
@@ -30,7 +30,7 @@
       <Value Profile="(Default)">
         &lt;?xml version="1.0" encoding="utf-16"?&gt;
         &lt;WINDOWPLACEMENT xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-        &lt;length&gt;44&lt;/length&gt;
+        &lt;length&gt;0&lt;/length&gt;
         &lt;flags&gt;0&lt;/flags&gt;
         &lt;showCmd&gt;1&lt;/showCmd&gt;
         &lt;minPosition&gt;
@@ -54,7 +54,7 @@
       <Value Profile="(Default)">
         &lt;?xml version="1.0" encoding="utf-16"?&gt;
         &lt;WINDOWPLACEMENT xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-        &lt;length&gt;44&lt;/length&gt;
+        &lt;length&gt;0&lt;/length&gt;
         &lt;flags&gt;0&lt;/flags&gt;
         &lt;showCmd&gt;1&lt;/showCmd&gt;
         &lt;minPosition&gt;
