@@ -9,12 +9,13 @@ All other rights reserved.
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
 	xmlns:local="clr-namespace:Snoop"
-	xmlns:MethodsTabNS="clr-namespace:Snoop.MethodsTab"
 	xmlns:i="clr-namespace:Snoop.Infrastructure"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:d="http://schemas.microsoft.com/expression/interactivedesigner/2006" 
 	xmlns:shell="clr-namespace:Snoop.Shell" 
 	xmlns:conv="clr-namespace:Snoop.Converters"
+	xmlns:MethodsTabNS="clr-namespace:Snoop.MethodsTab"
+    xmlns:DebugListenerNS="clr-namespace:Snoop.DebugListenerTab"
 	mc:Ignorable="d"
 	Icon="Snoop.ico"
 	Title="Snoop"
@@ -279,7 +280,7 @@ All other rights reserved.
 						</TextBlock.ToolTip>
 					</TextBlock>
 				</TabItem.Header>
-				<local:EventsView />
+				<local:EventsView/>
 			</TabItem>
 
 			<TabItem>
@@ -322,6 +323,24 @@ All other rights reserved.
 						</TextBlock.ToolTip>
 					</TextBlock>
 				</TabItem.Header>
+			</TabItem>
+			<TabItem>
+				<TabItem.Header>
+					<TextBlock Style="{x:Null}" Text="Debug Listener">
+						<TextBlock.ToolTip>
+							<StackPanel MaxWidth="300">
+								<TextBlock Style="{x:Null}" Text="Debug Listener"/>
+								<TextBlock
+									Style="{x:Null}"
+									Text="Shows and filters debug output from the application being Snooped."
+									TextWrapping="Wrap"
+								/>
+							</StackPanel>
+						</TextBlock.ToolTip>
+					</TextBlock>
+				</TabItem.Header>
+
+				<DebugListenerNS:DebugListenerControl/>
 			</TabItem>
 		</TabControl>
 

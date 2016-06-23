@@ -18,6 +18,7 @@ using System.IO;
 using Snoop.Infrastructure;
 using System.Linq;
 
+
 namespace Snoop
 {
 	public class PropertyInformation : DependencyObject, IComparable, INotifyPropertyChanged
@@ -583,7 +584,7 @@ namespace Snoop
 				{
 					this.isDatabound = true;
 
-					if (expression.HasError || expression.Status != BindingStatus.Active)
+                    if (expression.HasError || expression.Status != BindingStatus.Active && !(expression is PriorityBindingExpression))
 					{
 						this.isInvalidBinding = true;
 
@@ -597,6 +598,15 @@ namespace Snoop
 						d.ClearValue(dp);
 						BindingOperations.SetBinding(d, dp, expression.ParentBindingBase);
 						ignoreUpdate = false;
+
+						// cplotts note: maciek ... are you saying that this is another, more concise way to dispatch the following code?
+						//Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
+						//    {
+						//        bindingError = builder.ToString();
+						//        this.OnPropertyChanged("BindingError");
+						//        PresentationTraceSources.DataBindingSource.Listeners.Remove(tracer);
+						//        writer.Close();
+						//    });
 
 						// this needs to happen on idle so that we can actually run the binding, which may occur asynchronously.
 						Dispatcher.BeginInvoke

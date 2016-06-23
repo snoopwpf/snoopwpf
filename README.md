@@ -6,7 +6,7 @@
 
 <h2>Snoop 2.8.0</h2>
 
-<p>The most recent version of Snoop, <a href="http://snoopwpf.codeplex.com/releases/view/87261">Snoop 2.8.0</a>, was released on October 4th, 2012. Go to one of download pages (<a href="http://snoopwpf.codeplex.com/releases/view/87261">CodePlex</a> or <a href="https://github.com/cplotts/snoopwpf/downloads">GitHub</a>) to download it. Most notably, with this release, Bailey Ling has added a PowerShell scripting tab.</p>
+<p>The most recent version of Snoop, <a href="http://snoopwpf.codeplex.com/releases/view/87261">Snoop 2.8.0</a>, was released on October 4th, 2012. Go to the download page on <a href="http://snoopwpf.codeplex.com/releases/view/87261">CodePlex</a> to download it. Most notably, with this release, Bailey Ling has added a PowerShell scripting tab.</p>
 
 <h2>Git</h2>
 

@@ -84,7 +84,7 @@ namespace Snoop
 				typeof(Previewer),
 				new FrameworkPropertyMetadata
 				(
-					(bool)false,
+					(bool)true,
 					new PropertyChangedCallback(OnIsActiveChanged)
 				)
 			);

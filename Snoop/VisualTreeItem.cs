@@ -37,7 +37,8 @@ namespace Snoop
 		}
 		protected VisualTreeItem(object target, VisualTreeItem parent)
 		{
-			this.target = target;
+		    if (target == null) throw new ArgumentNullException("target");
+		    this.target = target;
 			this.parent = parent;
 			if (parent != null)
 				this.depth = parent.depth + 1;
@@ -180,7 +181,7 @@ namespace Snoop
 		{
 			this.name = (this.target is FrameworkElement) ? ((FrameworkElement)this.target).Name : string.Empty;
 
-			this.nameLower = this.name.ToLower();
+			this.nameLower = (this.name ?? "").ToLower();
 			this.typeNameLower = this.Target != null ? this.Target.GetType().Name.ToLower() : string.Empty;
 
 			List<VisualTreeItem> toBeRemoved = new List<VisualTreeItem>(this.Children);
