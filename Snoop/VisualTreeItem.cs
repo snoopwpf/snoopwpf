@@ -21,8 +21,9 @@ namespace Snoop
 		public static VisualTreeItem Construct(object target, VisualTreeItem parent)
 		{
 			VisualTreeItem visualTreeItem;
-
-			if (target is Visual)
+            if(DXMethods.IsFrameworkRenderElementContext(target))
+                visualTreeItem = new VisualItem(target, parent);
+			else if (target is Visual)
 				visualTreeItem = new VisualItem((Visual)target, parent);
 			else if (target is ResourceDictionary)
 				visualTreeItem = new ResourceDictionaryItem((ResourceDictionary)target, parent);
@@ -150,10 +151,11 @@ namespace Snoop
 		private bool isExpanded = false;
 
 
-		public virtual Visual MainVisual
+		public virtual object MainVisual
 		{
 			get { return null; }
 		}
+        public virtual Brush Foreground { get { return Brushes.Black; } }
 		public virtual Brush TreeBackgroundBrush
 		{
 			get { return new SolidColorBrush(Color.FromArgb(255, 240, 240, 240)); }
@@ -208,10 +210,19 @@ namespace Snoop
 		public VisualTreeItem FindNode(object target)
 		{
 			// it might be faster to have a map for the lookup
-			// check into this at some point
-
-			if (this.Target == target)
-				return this;
+			// check into this at some point            
+            if (this.Target == target) {
+                if (DXMethods.IsChrome(Target) && target is IInputElement) {
+                    var root = DXMethods.GetRoot(Target);
+                    if (root != null) {
+                        var child = RenderTreeHelper.HitTest(root, System.Windows.Input.Mouse.GetPosition((IInputElement)target));
+                        var node = FindNode(child);
+                        if (node != null)
+                            return node;
+                    }
+                }
+                return this;
+            }				
 
 			foreach (VisualTreeItem child in this.Children)
 			{

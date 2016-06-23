@@ -107,10 +107,9 @@ namespace Snoop
 
 		private void HandleTargetOrIsActiveChanged()
 		{
-			if (this.IsActive && this.Target is Visual)
+			if (this.IsActive && (this.Target is Visual || DXMethods.IsFrameworkRenderElementContext(this.Target)))
 			{
-				Visual visual = (Visual)this.Target;
-				this.Zoomer.Target = visual;
+                this.Zoomer.Target = this.Target;
 			}
 			else
 			{
@@ -122,7 +121,7 @@ namespace Snoop
 
 		private void HandleCanMagnify(object sender, CanExecuteRoutedEventArgs e)
 		{
-			e.CanExecute = (this.Target as Visual) != null;
+			e.CanExecute = (this.Target as Visual) != null || DXMethods.IsFrameworkRenderElementContext(this.Target);
 			e.Handled = true;
 		}
 		private void HandleMagnify(object sender, ExecutedRoutedEventArgs e)

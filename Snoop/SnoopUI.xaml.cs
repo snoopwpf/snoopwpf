@@ -557,27 +557,7 @@ namespace Snoop
 		#region Protected Event Overrides
 		protected override void OnSourceInitialized(EventArgs e)
 		{
-			base.OnSourceInitialized(e);
-
-			try
-			{
-				// load the window placement details from the user settings.
-				WINDOWPLACEMENT wp = (WINDOWPLACEMENT)Properties.Settings.Default.SnoopUIWindowPlacement;
-				wp.length = Marshal.SizeOf(typeof(WINDOWPLACEMENT));
-				wp.flags = 0;
-				wp.showCmd = (wp.showCmd == Win32.SW_SHOWMINIMIZED ? Win32.SW_SHOWNORMAL : wp.showCmd);
-				IntPtr hwnd = new WindowInteropHelper(this).Handle;
-				Win32.SetWindowPlacement(hwnd, ref wp);
-
-				// load whether all properties are shown by default
-				this.PropertyGrid.ShowDefaults = Properties.Settings.Default.ShowDefaults;
-
-				// load whether the previewer is shown by default
-				this.PreviewArea.IsActive = Properties.Settings.Default.ShowPreviewer;
-			}
-			catch
-			{
-			}
+			base.OnSourceInitialized(e);		
 		}
 		/// <summary>
 		/// Cleanup when closing the window.
@@ -606,7 +586,6 @@ namespace Snoop
 			WINDOWPLACEMENT wp = new WINDOWPLACEMENT();
 			IntPtr hwnd = new WindowInteropHelper(this).Handle;
 			Win32.GetWindowPlacement(hwnd, out wp);
-			Properties.Settings.Default.SnoopUIWindowPlacement = wp;
 
 			// persist whether all properties are shown by default
 			Properties.Settings.Default.ShowDefaults = this.PropertyGrid.ShowDefaults;
@@ -758,7 +737,7 @@ namespace Snoop
 		private VisualTreeItem FindItem(object target)
 		{
 			VisualTreeItem node = this.rootVisualTreeItem.FindNode(target);
-			Visual rootVisual = this.rootVisualTreeItem.MainVisual;
+			object rootVisual = this.rootVisualTreeItem.MainVisual;
 			if (node == null)
 			{
 				Visual visual = target as Visual;
@@ -771,7 +750,7 @@ namespace Snoop
 					}
 
 					// If not in the root tree, make the root be the tree the visual is in.
-					if (!visual.IsDescendantOf(rootVisual))
+					if (!CommonTreeHelper.IsDescendantOf(visual,rootVisual))
 					{
 						var presentationSource = PresentationSource.FromVisual(visual);
 						if (presentationSource == null)

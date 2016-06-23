@@ -147,7 +147,6 @@ namespace Snoop.DebugListenerTab
 					singleFilters.Add((SnoopSingleFilter)filter);
 			}
 
-			Properties.Settings.Default.SnoopDebugFilters = singleFilters.ToArray();
 		}
 
 		private List<SnoopSingleFilter> MakeDeepCopyOfFilters(IEnumerable<SnoopFilter> filters)

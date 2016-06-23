@@ -49,7 +49,7 @@ namespace Snoop
 				}
 				else
 				{
-					binding = new Binding(propertyName);
+                    binding = new Binding() { Path = new PropertyPath("(0)", new object[] { this.Property }) };
 				}
 
 				binding.Source = target;
@@ -128,7 +128,7 @@ namespace Snoop
 				{
 					if (!Debugger.IsAttached)
 						Debugger.Launch();
-					Debugger.Break();
+				    Debugger.Break();
 				}
 
 				this.HasChangedRecently = true;

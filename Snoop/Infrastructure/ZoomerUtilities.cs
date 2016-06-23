@@ -18,9 +18,11 @@ namespace Snoop.Infrastructure
     {
         public static UIElement CreateIfPossible(object item)
         {
-            if (item is Window && VisualTreeHelper.GetChildrenCount((Visual)item) == 1)
-                item = VisualTreeHelper.GetChild((Visual)item, 0);
-
+            if (item is Window && CommonTreeHelper.GetChildrenCount(item) == 1)
+                item = CommonTreeHelper.GetChild(item, 0);
+            if (DXMethods.IsFrameworkRenderElementContext(item)) {                
+                return CreateRectangleForFrameworkRenderElement(item);
+            }
             if (item is FrameworkElement)
             {
                 FrameworkElement uiElement = (FrameworkElement)item;
@@ -58,6 +60,23 @@ namespace Snoop.Infrastructure
                 return image;
             }
             return null;
+        }
+
+        private static UIElement CreateRectangleForFrameworkRenderElement(object frec) {
+            VisualBrush brush = new VisualBrush(new FREDrawingVisual(frec));
+            brush.Stretch = Stretch.Uniform;
+            Rectangle rect = new Rectangle();
+            rect.Fill = brush;
+            var df = ((dynamic)frec);
+            if (df.RenderSize.Height == 0 && df.RenderSize.Width == 0)//sometimes the actual size might be 0 despite there being a rendered visual with a size greater than 0. This happens often on a custom panel (http://snoopwpf.codeplex.com/workitem/7217). Having a fixed size visual brush remedies the problem.
+            {
+                rect.Width = 50;
+                rect.Height = 50;
+            } else {
+                rect.Width = df.RenderSize.Width;
+                rect.Height = df.RenderSize.Height;
+            }
+            return rect;
         }
 
         private static UIElement CreateRectangleForVisual(Visual uiElement)

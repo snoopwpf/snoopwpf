@@ -4,7 +4,10 @@
 // All other rights reserved.
 
 using System;
+using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
+using System.Xml.Serialization;
 
 namespace Snoop
 {
@@ -54,8 +57,8 @@ namespace Snoop
 		public int showCmd;
 		public POINT minPosition;
 		public POINT maxPosition;
-		public RECT normalPosition;
-	}
+		public RECT normalPosition;        
+	}    
 
 	public static class Win32
 	{
