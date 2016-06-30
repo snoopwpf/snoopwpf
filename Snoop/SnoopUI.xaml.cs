@@ -461,9 +461,6 @@ namespace Snoop
 					return;
 				}
 				this.Owner = ownerWindow;
-
-				// watch for window closing so we can spit out the changed properties
-				ownerWindow.Closing += SnoopedWindowClosingHandler;
 			}
 
 			SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
@@ -481,9 +478,6 @@ namespace Snoop
 			if (ownerWindow != null)
 			{
 				this.Owner = ownerWindow;
-
-				// watch for window closing so we can spit out the changed properties
-				ownerWindow.Closing += SnoopedWindowClosingHandler;
 			}
 
 			SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
@@ -586,21 +580,10 @@ namespace Snoop
 		{
 			base.OnClosing(e);
 
-			// unsubscribe to owner window closing event
-			// replaces previous attempts to hookup to MainWindow.Closing on the wrong dispatcher thread
-			// This one should be running on the right dispatcher thread since this SnoopUI instance
-			// is wired up to the dispatcher thread/window that it owns
-			if ( Owner != null )
-			{
-				Owner.Closing -= SnoopedWindowClosingHandler;
-			}
-
 			this.CurrentSelection = null;
 
 			InputManager.Current.PreProcessInput -= this.HandlePreProcessInput;
 			EventsListener.Stop();
-
-			EditedPropertiesHelper.DumpObjectsWithEditedProperties();
 
 			// persist the window placement details to the user settings.
 			WINDOWPLACEMENT wp = new WINDOWPLACEMENT();
@@ -618,19 +601,6 @@ namespace Snoop
 			Properties.Settings.Default.Save();
 
 			SnoopPartsRegistry.RemoveSnoopVisualTreeRoot(this);
-		}
-
-		/// <summary>
-		/// Event handler for a snooped window closing. This is our chance to spit out 
-		/// all the properties that changed during the snoop session for that window.
-		/// Note: there may be multiple snooped windows (when in multiple dispatcher mode)
-		/// and each window is hooked up to it's own instance of SnoopUI and this event.
-		/// </summary>
-		private void SnoopedWindowClosingHandler(object sender, CancelEventArgs e)
-		{
-			// changing the selection captures any changes in the selected item at the time of window closing 
-			this.CurrentSelection = null;
-		    EditedPropertiesHelper.DumpObjectsWithEditedProperties();
 		}
 
 		#endregion
