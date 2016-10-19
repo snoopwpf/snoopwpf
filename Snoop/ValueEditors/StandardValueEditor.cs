@@ -88,10 +88,17 @@ namespace Snoop
 			object value = this.Value;
 		    if (value != null)
 		    {
-		        var fallbackCulture = Thread.CurrentThread.CurrentCulture;
-                Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-                this.StringValue = value.ToString();
-		        Thread.CurrentThread.CurrentCulture = fallbackCulture;
+                var fallbackCulture = Thread.CurrentThread.CurrentCulture;
+
+                try
+                {
+		            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+		            this.StringValue = value.ToString();
+		        }
+		        finally
+		        {
+                    Thread.CurrentThread.CurrentCulture = fallbackCulture;
+                }
 		    }
 				
 			else
