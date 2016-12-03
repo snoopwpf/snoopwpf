@@ -25,6 +25,9 @@ namespace Snoop.Shell
         private readonly SnoopPSHost host;
         private int historyIndex;
 
+        static Runspace sharedRunspace = null;
+        static SnoopPSHost sharedHost = null;
+        static readonly object sharedLock = new object();
         public EmbeddedShellView()
         {
             InitializeComponent();
@@ -36,11 +39,26 @@ namespace Snoop.Shell
             iis.AuthorizationManager = new AuthorizationManager(Guid.NewGuid().ToString());
             iis.Providers.Add(new SessionStateProviderEntry(ShellConstants.DriveName, typeof(VisualTreeProvider), string.Empty));
 
-            this.host = new SnoopPSHost(x => this.outputTextBox.AppendText(x));
-            this.runspace = RunspaceFactory.CreateRunspace(this.host, iis);
-            this.runspace.ThreadOptions = PSThreadOptions.UseCurrentThread;
-            this.runspace.ApartmentState = ApartmentState.STA;
-            this.runspace.Open();
+            lock (sharedLock)
+            {
+                if (sharedRunspace == null)
+                {
+                    sharedHost = new SnoopPSHost(x => this.outputTextBox.AppendText(x));
+                    sharedRunspace = RunspaceFactory.CreateRunspace(sharedHost, iis);
+                    sharedRunspace.ThreadOptions = PSThreadOptions.UseCurrentThread;
+                    sharedRunspace.ApartmentState = ApartmentState.STA;
+                    sharedRunspace.Open();
+
+
+                    //this.host = new SnoopPSHost(x => this.outputTextBox.AppendText(x));
+                    //this.runspace = RunspaceFactory.CreateRunspace(this.host, iis);
+                    //this.runspace.ThreadOptions = PSThreadOptions.UseCurrentThread;
+                    //this.runspace.ApartmentState = ApartmentState.STA;
+                    //this.runspace.Open();
+                }
+            }
+            this.host = sharedHost;
+            this.runspace = sharedRunspace;
 
             // default required if you intend to inject scriptblocks into the host application
             Runspace.DefaultRunspace = this.runspace;

@@ -12,11 +12,11 @@ All other rights reserved.
 	<Style TargetType="{x:Type my:StandardValueEditor}">
 		<Style.Resources>
 			<DataTemplate x:Key="UnselectedValueTemplate">
-				<TextBlock Style="{x:Null}" Text="{Binding DescriptiveValue}"/>
+                <TextBlock Style="{x:Null}" Text="{Binding DescriptiveValue}" MaxHeight="16"/>
 			</DataTemplate>
 
 			<DataTemplate x:Key="SelectedValueTemplate">
-				<my:EditTextBox Height="16" Text="{Binding StringValue}" HorizontalAlignment="Stretch" Padding="1" BorderThickness="0" Background="White" VerticalContentAlignment="Center"/>
+                <my:EditTextBox Height="{Binding TextBoxHeight}" VerticalScrollBarVisibility="{Binding VerticalScrollBarVisibility}" Text="{Binding StringValue}" HorizontalAlignment="Stretch" Padding="1" BorderThickness="0" Background="White" VerticalContentAlignment="Center"/>
 			</DataTemplate>
 		</Style.Resources>
 		

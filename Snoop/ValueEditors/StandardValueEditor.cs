@@ -7,6 +7,7 @@ using System.Windows;
 using System;
 using System.ComponentModel;
 using System.Windows.Data;
+using System.Windows.Controls;
 
 namespace Snoop
 {
@@ -16,6 +17,29 @@ namespace Snoop
 		{
 		}
 
+
+
+        public ScrollBarVisibility VerticalScrollBarVisibility
+        {
+            get { return (ScrollBarVisibility)GetValue(VerticalScrollBarVisibilityProperty); }
+            set { SetValue(VerticalScrollBarVisibilityProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for VerticalScrollBarVisibility.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty VerticalScrollBarVisibilityProperty =
+            DependencyProperty.Register("VerticalScrollBarVisibility", typeof(ScrollBarVisibility), typeof(StandardValueEditor), new PropertyMetadata(ScrollBarVisibility.Hidden));
+
+
+
+        public double TextBoxHeight
+        {
+            get { return (double)GetValue(TextBoxHeightProperty); }
+            set { SetValue(TextBoxHeightProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for TextBoxHeight.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty TextBoxHeightProperty =
+            DependencyProperty.Register("TextBoxHeight", typeof(double), typeof(StandardValueEditor), new PropertyMetadata(0.0d));
 
 		public string StringValue
 		{

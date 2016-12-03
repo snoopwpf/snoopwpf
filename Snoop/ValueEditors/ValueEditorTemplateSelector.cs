@@ -12,6 +12,13 @@ namespace Snoop
 {
 	public class ValueEditorTemplateSelector : DataTemplateSelector
 	{
+        public DataTemplate LongStringTemplate
+        {
+            get { return this.longStringTemplate; }
+            set { this.longStringTemplate = value; }
+        }
+        private DataTemplate longStringTemplate;
+
 		public DataTemplate StandardTemplate
 		{
 			get { return this.standardTemplate; }
@@ -40,12 +47,24 @@ namespace Snoop
 		}
 		private DataTemplate brushTemplate;
 
+        /// <summary>
+        /// Returns the number of lines in the string.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        private int NumberOfLines(string str)
+        {
+            var array = str.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            return array.Length;
+        }
 
 		public override DataTemplate SelectTemplate(object item, DependencyObject container)
 		{
 			PropertyInformation property = (PropertyInformation)item;
 
-			if (property.PropertyType.IsEnum)
+            if (property.Value is string && NumberOfLines((string)property.Value) > 3)
+                return this.longStringTemplate;
+			else if (property.PropertyType.IsEnum)
 				return this.EnumTemplate;
 			else if (property.PropertyType.Equals(typeof(bool)))
 				return this.BoolTemplate;
