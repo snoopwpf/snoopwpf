@@ -184,6 +184,7 @@
     <Compile Include="ApplicationTreeItem.cs" />
     <Compile Include="BringIntoViewBehavior.cs" />
     <Compile Include="Converters\ArgbToPartsConverter.cs" />
+    <Compile Include="Converters\ControlTemplateToXamlConverter.cs" />
     <Compile Include="Converters\FilterTypeToIntConverter.cs" />
     <Compile Include="Converters\IsPowerShellInstalledToVisibilityConverter.cs" />
     <Compile Include="Converters\CsvStringToArrayConverter.cs" />

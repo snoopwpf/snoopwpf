@@ -100,8 +100,9 @@ All other rights reserved.
 
 			<local:ObjectToStringConverter x:Key="niceNamer"/>
 			<conv:IsPowerShellInstalledToVisibilityConverter  x:Key="isPowerShellInstalled"/>
+            <conv:ControlTemplateToXamlConverter x:Key="ControlTemplateToXamlConverter"/>
 
-			<DataTemplate x:Key="stylelessTextBlockDataTemplate">
+            <DataTemplate x:Key="stylelessTextBlockDataTemplate">
 				<TextBlock Style="{x:Null}" Text="{Binding}"/>
 			</DataTemplate>
 		</ResourceDictionary>
@@ -342,7 +343,27 @@ All other rights reserved.
 
 				<DebugListenerNS:DebugListenerControl/>
 			</TabItem>
-		</TabControl>
+
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Style="{x:Null}" Text="ControlTemplate">
+                        <TextBlock.ToolTip>
+                            <StackPanel MaxWidth="300">
+                                <TextBlock Style="{x:Null}" Text="ControlTemplate"/>
+                                <TextBlock
+									Style="{x:Null}"
+									Text="Show you the selection's controltemplate src"
+									TextWrapping="Wrap"
+								/>
+                            </StackPanel>
+                        </TextBlock.ToolTip>
+					</TextBlock>
+                </TabItem.Header>
+                <Grid>
+                    <TextBox x:Name="txtTemplate" Text="{Binding CurrentSelection.Target,Mode=OneWay, Converter={StaticResource ControlTemplateToXamlConverter}}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
 
 		<!-- Horizontal GridSplitter (between the tab control (with the property grid/events view) and the previewer) -->
 		<GridSplitter
