@@ -29,7 +29,7 @@ namespace Snoop.Properties {
         [global::System.Configuration.DefaultSettingValueAttribute(
       @"<?xml version=""1.0"" encoding=""utf-16""?>
         <WINDOWPLACEMENT xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
-        <length>44</length>
+        <length>0</length>
         <flags>0</flags>
         <showCmd>1</showCmd>
         <minPosition>
@@ -65,7 +65,7 @@ namespace Snoop.Properties {
         [global::System.Configuration.DefaultSettingValueAttribute(@"
         <?xml version=""1.0"" encoding=""utf-16""?>
         <WINDOWPLACEMENT xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
-        <length>44</length>
+        <length>0</length>
         <flags>0</flags>
         <showCmd>1</showCmd>
         <minPosition>
@@ -98,7 +98,7 @@ namespace Snoop.Properties {
         [global::System.Configuration.DefaultSettingValueAttribute(
       @"<?xml version=""1.0"" encoding=""utf-16""?>
         <WINDOWPLACEMENT xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
-        <length>44</length>
+        <length>0</length>
         <flags>0</flags>
         <showCmd>1</showCmd>
         <minPosition>
