@@ -4,7 +4,7 @@
 	<!-- Product code changes AND version number changes (first 3 digits), then a major upgrade will be triggered. -->
 	
 	<!-- One spot to update version :) -->
-	<?define ProductVersion="2.8.0" ?>
+	<?define ProductVersion="2.9.1" ?>
 	<Product
 		Id="*"
 		Name="Snoop"

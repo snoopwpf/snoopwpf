@@ -4,9 +4,9 @@
 
 <p>It allows you to spy/browse the visual tree of a running application (without the need for a debugger) ... and change properties ... amongst other things.</p>
 
-<h2>Snoop 2.8.0</h2>
+<h2>Snoop 2.9.1 depends on .NET Framework4.5</h2>
 
-<p>The most recent version of Snoop, <a href="http://snoopwpf.codeplex.com/releases/view/87261">Snoop 2.8.0</a>, was released on October 4th, 2012. Go to the download page on <a href="http://snoopwpf.codeplex.com/releases/view/87261">CodePlex</a> to download it. Most notably, with this release, Bailey Ling has added a PowerShell scripting tab.</p>
+<p>The most recent version of Snoop, <a href="http://snoopwpf.codeplex.com/releases/view/87261">Snoop 2.9.1</a>, was released on Dec 2th, 2017. Go to the download page on <a href="https://github.com/Rhuaer/snoopwpf/releases">Github</a> to download it. Most notably, with this release, Bailey Ling has added a PowerShell scripting tab.</p>
 
 <h2>Git</h2>
 

@@ -96,12 +96,19 @@ namespace Snoop
 			try
 			{
 				// load the window placement details from the user settings.
-				WINDOWPLACEMENT wp = (WINDOWPLACEMENT)Properties.Settings.Default.AppChooserWindowPlacement;
-				wp.length = Marshal.SizeOf(typeof(WINDOWPLACEMENT));
-				wp.flags = 0;
-				wp.showCmd = (wp.showCmd == Win32.SW_SHOWMINIMIZED ? Win32.SW_SHOWNORMAL : wp.showCmd);
-				IntPtr hwnd = new WindowInteropHelper(this).Handle;
-				Win32.SetWindowPlacement(hwnd, ref wp);
+				WINDOWPLACEMENT wp = Properties.Settings.Default.AppChooserWindowPlacement;
+				if (wp.length > 0)
+				{
+					this.SetPlacement(wp);
+				}
+				else
+				{
+					// first time up: move to the corner, keep correct window size
+					WindowStartupLocation = System.Windows.WindowStartupLocation.Manual;
+					WindowState = System.Windows.WindowState.Normal;
+					Top = 0;
+					Left = 0;
+				}
 			}
 			catch
 			{
@@ -112,11 +119,12 @@ namespace Snoop
 			base.OnClosing(e);
 
 			// persist the window placement details to the user settings.
-			WINDOWPLACEMENT wp = new WINDOWPLACEMENT();
-			IntPtr hwnd = new WindowInteropHelper(this).Handle;
-			Win32.GetWindowPlacement(hwnd, out wp);
-			Properties.Settings.Default.AppChooserWindowPlacement = wp;
-			Properties.Settings.Default.Save();
+			var placement = this.GetPlacement();
+			if (placement.HasValue)
+			{
+				Properties.Settings.Default.AppChooserWindowPlacement = placement.Value;
+				Properties.Settings.Default.Save();
+			}
 		}
 
 
