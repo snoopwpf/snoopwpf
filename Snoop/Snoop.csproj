@@ -88,6 +88,7 @@
     </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="UIAutomationProvider">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
@@ -149,6 +150,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="TriggersTab\TriggersView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="ZoomerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -173,6 +178,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Resource Include="Resources\active.png" />
+    <Resource Include="Resources\inactive.png" />
+    <Resource Include="Resources\triggeritem.png" />
     <Content Include="Scripts\Snoop.psm1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -182,8 +190,11 @@
   <ItemGroup>
     <Compile Include="AdornerContainer.cs" />
     <Compile Include="ApplicationTreeItem.cs" />
+    <Compile Include="BindingDisplayHelper.cs" />
     <Compile Include="BringIntoViewBehavior.cs" />
     <Compile Include="Converters\ArgbToPartsConverter.cs" />
+    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Converters\DynamicResourceToValueConverter.cs" />
     <Compile Include="Converters\FilterTypeToIntConverter.cs" />
     <Compile Include="Converters\IsPowerShellInstalledToVisibilityConverter.cs" />
     <Compile Include="Converters\CsvStringToArrayConverter.cs" />
@@ -221,6 +232,7 @@
     <Compile Include="Infrastructure\SnoopModes.cs" />
     <Compile Include="Infrastructure\SnoopPartsRegistry.cs" />
     <Compile Include="Infrastructure\ResourceKeyCache.cs" />
+    <Compile Include="Infrastructure\TemplateHelper.cs" />
     <Compile Include="Infrastructure\WhenLoaded.cs" />
     <Compile Include="Infrastructure\ZoomerUtilities.cs" />
     <Compile Include="Injector.cs" />
@@ -248,6 +260,15 @@
     <Compile Include="ObjectToStringConverter.cs" />
     <Compile Include="PertinentPropertyFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Converters\BrushStopsConverter.cs" />
+    <Compile Include="TriggersTab\Triggers\ConditionItem.cs" />
+    <Compile Include="TriggersTab\Triggers\DataTriggerItem.cs" />
+    <Compile Include="TriggersTab\Triggers\MultiDataTriggerItem.cs" />
+    <Compile Include="TriggersTab\Triggers\MultiTriggerItem.cs" />
+    <Compile Include="TriggersTab\Triggers\SetterItem.cs" />
+    <Compile Include="TriggersTab\Triggers\TriggerItem.cs" />
+    <Compile Include="TriggersTab\Triggers\TriggerItemBase.cs" />
+    <Compile Include="TriggersTab\Triggers\TriggerItemFactory.cs" />
     <Compile Include="Shell\ShellConstants.cs" />
     <Compile Include="Shell\EmbeddedShellView.xaml.cs">
       <DependentUpon>EmbeddedShellView.xaml</DependentUpon>
@@ -256,6 +277,9 @@
     <Compile Include="Shell\SnoopPSHostRawUserInterface.cs" />
     <Compile Include="Shell\SnoopPSHostUserInterface.cs" />
     <Compile Include="Shell\VisualTreeProvider.cs" />
+    <Compile Include="TriggersTab\TriggersView.xaml.cs">
+      <DependentUpon>TriggersView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ZoomerControl.xaml.cs">
       <DependentUpon>ZoomerControl.xaml</DependentUpon>
     </Compile>
@@ -398,7 +422,6 @@
   <ItemGroup>
     <Resource Include="Resources\SnoopCrosshairsCursor.png" />
   </ItemGroup>
-  <ItemGroup />
   <ProjectExtensions>
     <InteractiveDesigner>
       <ProjectExtensions>
