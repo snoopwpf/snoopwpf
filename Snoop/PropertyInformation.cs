@@ -79,7 +79,7 @@ namespace Snoop
 	    /// </summary>
 	    /// <param name="target">target object being shown in the property grid</param>
 	    /// <param name="property">the property around which we are contructing this PropertyInformation object</param>
-	    /// <param name="propertyName">the property name for the property that we use in the binding in the case of a non-dependency property</param>
+	    /// <param name="setter">the <see cref="Setter"/> from which the value should be retrieved</param>
 	    /// <param name="propertyDisplayName">the display name for the property that goes in the name column</param>
 	    public PropertyInformation(object target, PropertyDescriptor property, Setter setter, string propertyDisplayName)
 	    {
