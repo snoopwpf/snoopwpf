@@ -88,6 +88,16 @@
                 condition.StateChanged -= this.OnConditionStateChanged;
                 condition.Dispose();
             }
+
+            foreach (var setter in this.setters)
+            {
+                if (setter.Value == null)
+                {
+                    continue;
+                }
+
+                setter.Value.Teardown();
+            }
         }
 
         #endregion
