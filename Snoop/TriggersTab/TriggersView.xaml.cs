@@ -36,7 +36,7 @@ namespace Snoop.TriggersTab
         }
 
         private static void OnIsSelectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {            
+        {
             var view = (TriggersView)d;
 
             view.Update();
@@ -120,36 +120,38 @@ namespace Snoop.TriggersTab
 
         private void UpdateTriggerList(object target)
         {
-            if (target != null)
+            if (target == null)
             {
-                var fe = target as FrameworkElement;
-                if (fe != null)
-                {
-                    if (fe.Style != null)
-                    {
-                        this.AddTriggers(fe, fe.Style.Triggers, TriggerSource.Style);
-                    }
+                return;
+            }
 
-                    this.AddTriggers(fe, fe.Triggers, TriggerSource.Element);
+            var fe = target as FrameworkElement;
+            if (fe != null)
+            {
+                if (fe.Style != null)
+                {
+                    this.AddTriggers(fe, fe.Style.Triggers, TriggerSource.Style);
                 }
 
-                var control = target as Control;
-                if (control != null && control.Template != null)
-                {
-                    this.AddTriggers(control, control.Template.Triggers, TriggerSource.ControlTemplate);
-                }
+                this.AddTriggers(fe, fe.Triggers, TriggerSource.Element);
+            }
 
-                var contentControl = target as ContentControl;
-                if (contentControl != null && contentControl.ContentTemplate != null)
-                {
-                    this.AddTriggers(contentControl, contentControl.ContentTemplate.Triggers, TriggerSource.DataTemplate);
-                }
+            var control = target as Control;
+            if (control != null && control.Template != null)
+            {
+                this.AddTriggers(control, control.Template.Triggers, TriggerSource.ControlTemplate);
+            }
 
-                var contentPresenter = target as ContentPresenter;
-                if (contentPresenter != null && contentPresenter.ContentTemplate != null)
-                {
-                    this.AddTriggers(contentPresenter, contentPresenter.ContentTemplate.Triggers, TriggerSource.DataTemplate);
-                }
+            var contentControl = target as ContentControl;
+            if (contentControl != null && contentControl.ContentTemplate != null)
+            {
+                this.AddTriggers(contentControl, contentControl.ContentTemplate.Triggers, TriggerSource.DataTemplate);
+            }
+
+            var contentPresenter = target as ContentPresenter;
+            if (contentPresenter != null && contentPresenter.ContentTemplate != null)
+            {
+                this.AddTriggers(contentPresenter, contentPresenter.ContentTemplate.Triggers, TriggerSource.DataTemplate);
             }
         }
 
