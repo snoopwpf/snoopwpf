@@ -26,29 +26,44 @@
 
     public abstract class TriggerItemBase : INotifyPropertyChanged, IDisposable
     {
+        private readonly TriggerBase trigger;
+
         private readonly List<ConditionItem> conditions = new List<ConditionItem>();
         private readonly List<SetterItem> setters = new List<SetterItem>();
-        private bool isActive;
+        private readonly List<TriggerActionItem> enterActions = new List<TriggerActionItem>();
+        private readonly List<TriggerActionItem> exitActions = new List<TriggerActionItem>();
+        private bool isActive;        
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="TriggerItemBase" /> class.
         /// </summary>
-        protected TriggerItemBase(DependencyObject instance, TriggerType triggerType, TriggerSource triggerSource)
+        protected TriggerItemBase(TriggerBase trigger, DependencyObject instance, TriggerType triggerType, TriggerSource triggerSource)
         {
+            this.trigger = trigger;
             this.Instance = instance;
             this.TriggerType = triggerType;
             this.TriggerSource = triggerSource;
         }
 
         /// <summary>
-        ///     Gets or the setters.
-        /// </summary>
-        public ICollectionView Setters { get; protected set; }
-
-        /// <summary>
         ///     Gets the conditions.
         /// </summary>
-        public ICollectionView Conditions { get; protected set; }
+        public ICollectionView Conditions { get; private set; }
+
+        /// <summary>
+        ///     Gets or the setters.
+        /// </summary>
+        public ICollectionView Setters { get; private set; }
+
+        /// <summary>
+        ///     Gets or the EnterActions.
+        /// </summary>
+        public ICollectionView EnterActions { get; private set; }
+
+        /// <summary>
+        ///     Gets or the ExitActions.
+        /// </summary>
+        public ICollectionView ExitActions { get; private set; }
 
         /// <summary>
         ///     Gets the source of the trigger.
@@ -108,9 +123,6 @@
         /// </summary>
         public void Initialize()
         {
-            this.setters.AddRange(this.GetSetters());
-            this.Setters = new ListCollectionView(this.setters);
-
             this.conditions.AddRange(this.GetConditions());
 
             foreach (var condition in this.conditions)
@@ -120,12 +132,31 @@
 
             this.Conditions = new ListCollectionView(this.conditions);
 
+            this.setters.AddRange(this.GetSetters());
+            this.Setters = new ListCollectionView(this.setters);
+
+            this.enterActions.AddRange(this.GetEnterActions());
+            this.EnterActions = new ListCollectionView(this.enterActions);
+
+            this.exitActions.AddRange(this.GetExitActions());
+            this.ExitActions = new ListCollectionView(this.exitActions);
+
             this.OnConditionStateChanged(this, EventArgs.Empty);
         }
 
+        protected abstract IEnumerable<ConditionItem> GetConditions();
+
         protected abstract IEnumerable<SetterItem> GetSetters();
 
-        protected abstract IEnumerable<ConditionItem> GetConditions();
+        protected virtual IEnumerable<TriggerActionItem> GetEnterActions()
+        {
+            return this.trigger.EnterActions.Select(x => TriggerActionItemFactory.GetTriggerActionItem(x, this.Instance, this.TriggerSource));
+        }
+
+        protected virtual  IEnumerable<TriggerActionItem> GetExitActions()
+        {
+            return this.trigger.ExitActions.Select(x => TriggerActionItemFactory.GetTriggerActionItem(x, this.Instance, this.TriggerSource));
+        }
 
         #region Private Members
 

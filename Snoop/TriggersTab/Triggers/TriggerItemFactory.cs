@@ -23,6 +23,10 @@
             {
                 triggerItem = new MultiDataTriggerItem((MultiDataTrigger)trigger, source, triggerSource);
             }
+            else if (trigger is EventTrigger)
+            {
+                triggerItem = new EventTriggerItem((EventTrigger)trigger, source, triggerSource);
+            }
             else
             {
                 return null;

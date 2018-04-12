@@ -11,7 +11,7 @@
         private readonly Trigger trigger;
 
         public TriggerItem(Trigger trigger, FrameworkElement source, TriggerSource triggerSource)
-            : base(source, TriggerType.Trigger, triggerSource)
+            : base(trigger, source, TriggerType.Trigger, triggerSource)
         {
             this.trigger = trigger;
             this.source = source;

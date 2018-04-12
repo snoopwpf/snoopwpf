@@ -15,7 +15,7 @@
         ///     Initializes a new instance of the <see cref="MultiTriggerItem" /> class.
         /// </summary>
         public MultiTriggerItem(MultiTrigger trigger, FrameworkElement source, TriggerSource triggerSource)
-            : base(source, TriggerType.MultiTrigger, triggerSource)
+            : base(trigger, source, TriggerType.MultiTrigger, triggerSource)
         {
             this.trigger = trigger;
             this.source = source;

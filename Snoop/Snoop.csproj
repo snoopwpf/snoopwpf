@@ -264,9 +264,12 @@
     <Compile Include="Converters\BrushStopsConverter.cs" />
     <Compile Include="TriggersTab\Triggers\ConditionItem.cs" />
     <Compile Include="TriggersTab\Triggers\DataTriggerItem.cs" />
+    <Compile Include="TriggersTab\Triggers\EventTriggerItem.cs" />
     <Compile Include="TriggersTab\Triggers\MultiDataTriggerItem.cs" />
     <Compile Include="TriggersTab\Triggers\MultiTriggerItem.cs" />
     <Compile Include="TriggersTab\Triggers\SetterItem.cs" />
+    <Compile Include="TriggersTab\Triggers\TriggerActionItem.cs" />
+    <Compile Include="TriggersTab\Triggers\TriggerActionItemFactory.cs" />
     <Compile Include="TriggersTab\Triggers\TriggerItem.cs" />
     <Compile Include="TriggersTab\Triggers\TriggerItemBase.cs" />
     <Compile Include="TriggersTab\Triggers\TriggerItemFactory.cs" />

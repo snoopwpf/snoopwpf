@@ -10,7 +10,7 @@
         private readonly MultiDataTrigger trigger;
 
         public MultiDataTriggerItem(MultiDataTrigger trigger, FrameworkElement source, TriggerSource triggerSource)
-            : base(source, TriggerType.MultiDataTrigger, triggerSource)
+            : base(trigger, source, TriggerType.MultiDataTrigger, triggerSource)
         {
             this.trigger = trigger;
             this.source = source;

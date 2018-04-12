@@ -43,6 +43,31 @@
                 </Setter>
             </Style>
 
+            <ControlTemplate x:Key="Snoop.TriggersView.ListBoxControlTemplate"
+                             TargetType="{x:Type ListBox}">
+                <Border Name="Bd"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        SnapsToDevicePixels="true"
+                        Padding="1">
+                    <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                </Border>
+                <ControlTemplate.Triggers>
+                    <Trigger Property="IsEnabled"
+                                Value="false">
+                        <Setter TargetName="Bd"
+                                Property="Background"
+                                Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+                    </Trigger>
+                    <Trigger Property="IsGrouping"
+                                Value="true">
+                        <Setter Property="ScrollViewer.CanContentScroll"
+                                Value="false"/>
+                    </Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+
             <!-- ========================= -->
             <!-- Values                    -->
             <!-- ========================= -->
@@ -177,6 +202,22 @@
                     </DataTrigger>
                 </DataTemplate.Triggers>
             </DataTemplate>
+            
+            <!-- ========================= -->
+            <!-- TriggerActions            -->
+            <!-- ========================= -->
+
+            <DataTemplate DataType="{x:Type triggers:TriggerActionItem}">
+                <Grid Margin="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock x:Name="key" Grid.Column="0" Style="{x:Null}" Text="{Binding DescriptiveValue, Mode=OneWay}" ToolTip="{Binding ToolTip, Mode=OneWay}" Background="Transparent"
+                               TextTrimming="CharacterEllipsis"
+                               ToolTipService.ShowDuration="60000" />
+                </Grid>
+            </DataTemplate>
 
             <!-- ========================= -->
             <!-- Triggers                  -->
@@ -188,7 +229,7 @@
                                         Header="{Binding TriggerType}">
                     <StackPanel>
                         <TextBlock Style="{x:Null}" Text="Conditions" Margin="4,4,4,0" />
-                        <ItemsControl Margin="8,4" ItemsSource="{Binding Conditions}">
+                        <ItemsControl Style="{x:Null}" Margin="8,4" ItemsSource="{Binding Conditions}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate DataType="{x:Type triggers:ConditionItem}">
                                     <StackPanel Orientation="Horizontal">
@@ -207,40 +248,32 @@
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
                         <TextBlock Style="{x:Null}" Text="Setters" Margin="4,4,4,0" />
-                        <ListBox Margin="8,4" ItemsSource="{Binding Setters}" Grid.IsSharedSizeScope="True"
+                        <ListBox Style="{x:Null}"
+                                 Template="{StaticResource Snoop.TriggersView.ListBoxControlTemplate}"
+                                 Margin="8,4" ItemsSource="{Binding Setters}" Grid.IsSharedSizeScope="True"
                                  ScrollViewer.VerticalScrollBarVisibility="Disabled"
                                  Visibility="{Binding Setters.IsEmpty, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}, ConverterParameter=True}"
-                                 SelectedItem="{Binding SelectedSetterItem, RelativeSource={RelativeSource AncestorType=triggersTab:TriggersView}, Mode=TwoWay}">
-                            <ListBox.Template>
-                                <ControlTemplate TargetType="{x:Type ListBox}">
-                                    <Border Name="Bd"
-                                            Background="{TemplateBinding Background}"
-                                            BorderBrush="{TemplateBinding BorderBrush}"
-                                            BorderThickness="{TemplateBinding BorderThickness}"
-                                            SnapsToDevicePixels="true"
-                                            Padding="1">
-                                        <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsEnabled"
-                                                 Value="false">
-                                            <Setter TargetName="Bd"
-                                                    Property="Background"
-                                                    Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
-                                        </Trigger>
-                                        <Trigger Property="IsGrouping"
-                                                 Value="true">
-                                            <Setter Property="ScrollViewer.CanContentScroll"
-                                                    Value="false"/>
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </ListBox.Template>
-                        </ListBox>
+                                 SelectedItem="{Binding SelectedSetterItem, RelativeSource={RelativeSource AncestorType=triggersTab:TriggersView}, Mode=TwoWay}" />
                         <TextBlock Style="{x:Null}" Margin="8,4"
                                    Text="The trigger has no setters"
                                    Visibility="{Binding Setters.IsEmpty, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}}"
                                    Opacity="0.6" />
+
+                        <TextBlock Style="{x:Null}" Text="EnterActions" Margin="4,4,4,0"
+                                   Visibility="{Binding EnterActions.IsEmpty, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}, ConverterParameter=True}" />
+                        <ListBox Style="{x:Null}"
+                                 Template="{StaticResource Snoop.TriggersView.ListBoxControlTemplate}"
+                                 Margin="8,4" ItemsSource="{Binding EnterActions}" Grid.IsSharedSizeScope="True"
+                                 ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                 Visibility="{Binding EnterActions.IsEmpty, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}, ConverterParameter=True}" />
+                                 
+                        <TextBlock Style="{x:Null}" Text="ExitActions" Margin="4,4,4,0"
+                                   Visibility="{Binding ExitActions.IsEmpty, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}, ConverterParameter=True}" />
+                        <ListBox Style="{x:Null}"
+                                 Template="{StaticResource Snoop.TriggersView.ListBoxControlTemplate}"
+                                 Margin="8,4" ItemsSource="{Binding ExitActions}" Grid.IsSharedSizeScope="True"
+                                 ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                 Visibility="{Binding ExitActions.IsEmpty, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}, ConverterParameter=True}" />
                     </StackPanel>
                 </HeaderedContentControl>
                 <DataTemplate.Triggers>

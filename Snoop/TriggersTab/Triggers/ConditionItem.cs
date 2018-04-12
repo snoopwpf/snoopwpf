@@ -35,7 +35,7 @@
         {
             this.dependencyPropertyDescriptor = propertyDescriptor;
 
-            this.BindCurrentValue(conditionContainer, propertyDescriptor.DependencyProperty);
+            this.BindCurrentValue(conditionContainer, this.dependencyPropertyDescriptor.DependencyProperty);
         }
 
         /// <summary>
@@ -51,7 +51,7 @@
             this.BindCurrentValue(conditionContainer, this.attachedPropertySlot.DependencyProperty);
         }
 
-        private ConditionItem(DependencyObject conditionContainer, object targetValue, string displayName)
+        public ConditionItem(DependencyObject conditionContainer, object targetValue, string displayName)
         {
             if (conditionContainer == null)
             {
@@ -100,6 +100,11 @@
         {
             get
             {
+                if (BindingOperations.IsDataBound(this, CurrentValueProperty) == false)
+                {
+                    return string.Empty;
+                }
+
                 var value = this.CurrentValue;
                 if (value != null)
                 {

@@ -13,7 +13,7 @@
         ///     Initializes a new instance of the <see cref="DataTriggerItem" /> class.
         /// </summary>
         public DataTriggerItem(DataTrigger trigger, FrameworkElement source, TriggerSource triggerSource)
-            : base(source, TriggerType.DataTrigger, triggerSource)
+            : base(trigger, source, TriggerType.DataTrigger, triggerSource)
         {
             this.dataTrigger = trigger;
             this.source = source;
