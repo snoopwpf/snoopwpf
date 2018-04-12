@@ -79,35 +79,23 @@ namespace Snoop
 	    /// </summary>
 	    /// <param name="target">target object being shown in the property grid</param>
 	    /// <param name="property">the property around which we are contructing this PropertyInformation object</param>
-	    /// <param name="setter">the <see cref="Setter"/> from which the value should be retrieved</param>
+	    /// <param name="binding">the <see cref="BindingBase"/> from which the value should be retrieved</param>
 	    /// <param name="propertyDisplayName">the display name for the property that goes in the name column</param>
-	    public PropertyInformation(object target, PropertyDescriptor property, Setter setter, string propertyDisplayName)
+	    public PropertyInformation(object target, PropertyDescriptor property, BindingBase binding, string propertyDisplayName)
 	    {
 	        this.target = target;
 	        this.property = property;
 	        this.displayName = propertyDisplayName;
 
-	        if (property != null)
+	        try
 	        {
-	            // create a data binding between the actual property value on the target object
-	            // and the Value dependency property on this PropertyInformation object
-
-                var binding = new Binding("Value");
-
-	            binding.Source = setter;
-	            binding.Mode = property.IsReadOnly ? BindingMode.OneWay : BindingMode.TwoWay;
-	            binding.Converter = new DynamicResourceToValueConverter(target);
-
-	            try
-	            {
-	                BindingOperations.SetBinding(this, PropertyInformation.ValueProperty, binding);
-	            }
-	            catch (Exception)
-	            {
-	                // cplotts note:
-	                // warning: i saw a problem get swallowed by this empty catch (Exception) block.
-	                // in other words, this empty catch block could be hiding some potential future errors.
-	            }
+	            BindingOperations.SetBinding(this, PropertyInformation.ValueProperty, binding);
+	        }
+	        catch (Exception)
+	        {
+	            // cplotts note:
+	            // warning: i saw a problem get swallowed by this empty catch (Exception) block.
+	            // in other words, this empty catch block could be hiding some potential future errors.
 	        }
 
 	        this.Update();

@@ -91,12 +91,7 @@
 
             foreach (var setter in this.setters)
             {
-                if (setter.Value == null)
-                {
-                    continue;
-                }
-
-                setter.Value.Teardown();
+                setter.Dispose();
             }
         }
 

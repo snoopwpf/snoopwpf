@@ -15,7 +15,7 @@
         private readonly DependencyObject conditionContainer;
         private readonly object targetValue;
 
-        private readonly int attachedPropertyIndex = -1;
+        private readonly AttachedPropertySlot attachedPropertySlot;
 
         private readonly DependencyPropertyDescriptor dependencyPropertyDescriptor;
         
@@ -46,11 +46,9 @@
         {
             this.conditionBinding = conditionBinding;
 
-            this.attachedPropertyIndex = this.GetNextFreeAttachedPropertyIndex();
-            var attachedPropertyFromIndex = GetAttachedPropertyFromIndex(this.attachedPropertyIndex);
-            BindingOperations.SetBinding(this.conditionContainer, attachedPropertyFromIndex, this.conditionBinding);
+            this.attachedPropertySlot = AttachedPropertyManager.GetAndBindAttachedPropertySlot(this.conditionContainer, this.conditionBinding);            
             
-            this.BindCurrentValue(conditionContainer, attachedPropertyFromIndex);
+            this.BindCurrentValue(conditionContainer, this.attachedPropertySlot.DependencyProperty);
         }
 
         private ConditionItem(DependencyObject conditionContainer, object targetValue, string displayName)
@@ -183,7 +181,7 @@
             // and the Value dependency property on this PropertyInformation object
             var bindingForCurrentValue = new Binding
                           {
-                              Path = new PropertyPath("(0)", new object[] { dependencyProperty }),
+                              Path = new PropertyPath("(0)", dependencyProperty),
                               Source = instance,
                               Mode = BindingMode.OneWay
                           };
@@ -200,45 +198,15 @@
             }
         }
 
-        private int GetNextFreeAttachedPropertyIndex()
-        {
-            for (var i = 0; i < int.MaxValue; i++)
-            {
-                var attachedProperty = GetAttachedPropertyFromIndex(i);
-                var localValue = ((DependencyObject)this.conditionContainer).ReadLocalValue(attachedProperty);
-
-                if (localValue == DependencyProperty.UnsetValue)
-                {
-                    return i;
-                }
-            }
-
-            return -1;
-        }
-
-        private static DependencyProperty GetAttachedPropertyFromIndex(int index)
-        {
-            DependencyProperty attachedProperty;
-            if (attachedDependencyProperties.TryGetValue(index, out attachedProperty) == false)
-            {
-                attachedProperty = DependencyProperty.RegisterAttached("ConditionItem_AttachedProperty_" + index, typeof(object), typeof(FrameworkElement), new FrameworkPropertyMetadata(null));
-                attachedDependencyProperties.Add(index, attachedProperty);
-            }
-
-            return attachedProperty;
-        }
-
-        private static readonly Dictionary<int, DependencyProperty> attachedDependencyProperties = new Dictionary<int, DependencyProperty>(64);        
-
         #region IDisposable Members
 
         public void Dispose()
         {
             BindingOperations.ClearBinding(this, CurrentValueProperty);
 
-            if (this.attachedPropertyIndex != -1)
+            if (this.attachedPropertySlot != null)
             {
-                BindingOperations.ClearBinding(this.conditionContainer, GetAttachedPropertyFromIndex(this.attachedPropertyIndex));
+                this.attachedPropertySlot.Dispose();
             }
         }
 
