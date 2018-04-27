@@ -21,7 +21,9 @@ using System.Linq;
 
 namespace Snoop
 {
-	public class PropertyInformation : DependencyObject, IComparable, INotifyPropertyChanged
+    using Snoop.Converters;
+
+    public class PropertyInformation : DependencyObject, IComparable, INotifyPropertyChanged
 	{
 		/// <summary>
 		/// Normal constructor used when constructing PropertyInformation objects for properties.
@@ -71,6 +73,35 @@ namespace Snoop
 
 			this.isRunning = true;
 		}
+
+	    /// <summary>
+	    /// Normal constructor used when constructing PropertyInformation objects for properties.
+	    /// </summary>
+	    /// <param name="target">target object being shown in the property grid</param>
+	    /// <param name="property">the property around which we are contructing this PropertyInformation object</param>
+	    /// <param name="binding">the <see cref="BindingBase"/> from which the value should be retrieved</param>
+	    /// <param name="propertyDisplayName">the display name for the property that goes in the name column</param>
+	    public PropertyInformation(object target, PropertyDescriptor property, BindingBase binding, string propertyDisplayName)
+	    {
+	        this.target = target;
+	        this.property = property;
+	        this.displayName = propertyDisplayName;
+
+	        try
+	        {
+	            BindingOperations.SetBinding(this, PropertyInformation.ValueProperty, binding);
+	        }
+	        catch (Exception)
+	        {
+	            // cplotts note:
+	            // warning: i saw a problem get swallowed by this empty catch (Exception) block.
+	            // in other words, this empty catch block could be hiding some potential future errors.
+	        }
+
+	        this.Update();
+
+	        this.isRunning = true;
+	    }
 
 		/// <summary>
 		/// Constructor used when constructing PropertyInformation objects for an item in a collection.
@@ -212,7 +243,15 @@ namespace Snoop
 					// Add brackets around types to distinguish them from values.
 					// Replace long type names with short type names for some specific types, for easier readability.
 					// FUTURE: This could be extended to other types.
-					if (this.property != null &&
+				    if (value is BindingBase)
+				    {
+				        stringValue = string.Format("[{0}]", "Binding");
+				    }
+				    else if (value is DynamicResourceExtension)
+				    {
+				        stringValue = string.Format("[{0}]", "DynamicResource");
+				    }
+					else if (this.property != null &&
 						(this.property.PropertyType == typeof(Brush) || this.property.PropertyType == typeof(Style)))
 					{
 						stringValue = string.Format("[{0}]", value.GetType().Name);

@@ -16,7 +16,8 @@ All other rights reserved.
 	xmlns:conv="clr-namespace:Snoop.Converters"
 	xmlns:MethodsTabNS="clr-namespace:Snoop.MethodsTab"
     xmlns:DebugListenerNS="clr-namespace:Snoop.DebugListenerTab"
-	mc:Ignorable="d"
+    xmlns:triggersTab="clr-namespace:Snoop.TriggersTab"
+    mc:Ignorable="d"
 	Icon="Snoop.ico"
 	Title="Snoop"
 	Background="#FFE0DFE3"
@@ -30,6 +31,7 @@ All other rights reserved.
 			<ResourceDictionary.MergedDictionaries>
 				<ResourceDictionary Source="ProperTreeViewResources.xaml"/>
 				<ResourceDictionary Source="Icons.xaml"/>
+                <ResourceDictionary Source="Simple Styles.xaml"/>
 			</ResourceDictionary.MergedDictionaries>
 
 			<Style x:Key="refreshButton" TargetType="{x:Type Button}">
@@ -282,6 +284,24 @@ All other rights reserved.
 				</TabItem.Header>
 				<local:EventsView/>
 			</TabItem>
+		    <TabItem>
+		        <TabItem.Header>
+		            <TextBlock Style="{x:Null}" Text="Triggers">
+		                <TextBlock.ToolTip>
+		                    <StackPanel MaxWidth="300">
+		                        <TextBlock Style="{x:Null}" Text="Triggers View"/>
+		                        <TextBlock
+		                            Style="{x:Null}"
+		                            Text="Lists all triggers on currently selected object."
+		                            TextWrapping="Wrap"
+		                        />
+		                    </StackPanel>
+		                </TextBlock.ToolTip>
+		            </TextBlock>
+		        </TabItem.Header>
+		        <triggersTab:TriggersView RootTarget="{Binding CurrentSelection.Target}"
+		                                  IsSelected="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}" />
+		    </TabItem>
 
 			<TabItem>
 				<TabItem.Header>
