@@ -553,26 +553,32 @@ namespace Snoop
 		{
 			base.OnSourceInitialized(e);
 
-			try
+		    // load whether all properties are shown by default
+		    this.PropertyGrid.ShowDefaults = Properties.Settings.Default.ShowDefaults;
+
+		    // load whether the previewer is shown by default
+		    this.PreviewArea.IsActive = Properties.Settings.Default.ShowPreviewer;
+
+		    if (Properties.Settings.Default.SnoopUIWindowPlacement.HasValue == false)
+		    {
+		        return;
+		    }
+
+		    try
 			{
 				// load the window placement details from the user settings.
-				WINDOWPLACEMENT wp = (WINDOWPLACEMENT)Properties.Settings.Default.SnoopUIWindowPlacement;
+				var wp = Properties.Settings.Default.SnoopUIWindowPlacement.Value;
 				wp.length = Marshal.SizeOf(typeof(WINDOWPLACEMENT));
 				wp.flags = 0;
 				wp.showCmd = (wp.showCmd == Win32.SW_SHOWMINIMIZED ? Win32.SW_SHOWNORMAL : wp.showCmd);
-				IntPtr hwnd = new WindowInteropHelper(this).Handle;
+				var hwnd = new WindowInteropHelper(this).Handle;
 				Win32.SetWindowPlacement(hwnd, ref wp);
-
-				// load whether all properties are shown by default
-				this.PropertyGrid.ShowDefaults = Properties.Settings.Default.ShowDefaults;
-
-				// load whether the previewer is shown by default
-				this.PreviewArea.IsActive = Properties.Settings.Default.ShowPreviewer;
 			}
 			catch
 			{
 			}
 		}
+
 		/// <summary>
 		/// Cleanup when closing the window.
 		/// </summary>
@@ -586,8 +592,8 @@ namespace Snoop
 			EventsListener.Stop();
 
 			// persist the window placement details to the user settings.
-			WINDOWPLACEMENT wp = new WINDOWPLACEMENT();
-			IntPtr hwnd = new WindowInteropHelper(this).Handle;
+			var wp = new WINDOWPLACEMENT();
+			var hwnd = new WindowInteropHelper(this).Handle;
 			Win32.GetWindowPlacement(hwnd, out wp);
 			Properties.Settings.Default.SnoopUIWindowPlacement = wp;
 

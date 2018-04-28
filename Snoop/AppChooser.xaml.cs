@@ -93,32 +93,37 @@ namespace Snoop
 		{
 			base.OnSourceInitialized(e);
 
-			try
+		    if (Properties.Settings.Default.AppChooserWindowPlacement.HasValue == false)
+		    {
+		        return;
+		    }
+
+		    try
 			{
 				// load the window placement details from the user settings.
-				WINDOWPLACEMENT wp = (WINDOWPLACEMENT)Properties.Settings.Default.AppChooserWindowPlacement;
+				var wp = Properties.Settings.Default.AppChooserWindowPlacement.Value;
 				wp.length = Marshal.SizeOf(typeof(WINDOWPLACEMENT));
 				wp.flags = 0;
 				wp.showCmd = (wp.showCmd == Win32.SW_SHOWMINIMIZED ? Win32.SW_SHOWNORMAL : wp.showCmd);
-				IntPtr hwnd = new WindowInteropHelper(this).Handle;
+				var hwnd = new WindowInteropHelper(this).Handle;
 				Win32.SetWindowPlacement(hwnd, ref wp);
 			}
 			catch
 			{
 			}
 		}
+
 		protected override void OnClosing(CancelEventArgs e)
 		{
 			base.OnClosing(e);
 
 			// persist the window placement details to the user settings.
-			WINDOWPLACEMENT wp = new WINDOWPLACEMENT();
-			IntPtr hwnd = new WindowInteropHelper(this).Handle;
+			var wp = new WINDOWPLACEMENT();
+			var hwnd = new WindowInteropHelper(this).Handle;
 			Win32.GetWindowPlacement(hwnd, out wp);
 			Properties.Settings.Default.AppChooserWindowPlacement = wp;
 			Properties.Settings.Default.Save();
 		}
-
 
 		private bool HasProcess(Process process)
 		{
