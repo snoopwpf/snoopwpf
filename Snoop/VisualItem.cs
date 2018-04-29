@@ -128,7 +128,12 @@ namespace Snoop
 		    if (window != null) 
 		    { 
 		        foreach (Window ownedWindow in window.OwnedWindows) 
-		        { 
+		        {
+		            if (ownedWindow.CheckAccess() == false)
+		            {
+                        continue;
+		            }
+
 		            // don't recreate existing items but reload them instead
 		            var existingItem = toBeRemoved.FirstOrDefault(x => ReferenceEquals(x.Target, ownedWindow));
 		            if (existingItem != null)
