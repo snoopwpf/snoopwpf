@@ -453,15 +453,7 @@ namespace Snoop
 			}
 			Load(root);
 
-			Window ownerWindow = SnoopWindowUtils.FindOwnerWindow();
-			if (ownerWindow != null)
-			{
-				if (ownerWindow.Dispatcher != this.Dispatcher)
-				{
-					return;
-				}
-				this.Owner = ownerWindow;
-			}
+		    this.Owner = SnoopWindowUtils.FindOwnerWindow(this);
 
 			SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
 			this.Dispatcher.UnhandledException += new DispatcherUnhandledExceptionEventHandler(UnhandledExceptionHandler);

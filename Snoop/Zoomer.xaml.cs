@@ -110,9 +110,7 @@ namespace Snoop
 		{
 			this.Target = root;
 
-			Window ownerWindow = SnoopWindowUtils.FindOwnerWindow();
-			if (ownerWindow != null)
-				this.Owner = ownerWindow;
+		    this.Owner = SnoopWindowUtils.FindOwnerWindow(this);
 
 			SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
 
