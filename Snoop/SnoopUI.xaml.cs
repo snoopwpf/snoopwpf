@@ -468,6 +468,8 @@ namespace Snoop
 
 			Show();
 			Activate();
+
+			InputManager.Current.PushMenuMode(PresentationSource.FromVisual(this));
 		}
 		public void Inspect(object root, Window ownerWindow)
 		{
@@ -583,6 +585,7 @@ namespace Snoop
 			this.CurrentSelection = null;
 
 			InputManager.Current.PreProcessInput -= this.HandlePreProcessInput;
+			InputManager.Current.PopMenuMode(PresentationSource.FromVisual(this));
 			EventsListener.Stop();
 
 			// persist the window placement details to the user settings.

@@ -182,7 +182,7 @@
     <Resource Include="Resources\inactive.png" />
     <Resource Include="Resources\triggeritem.png" />
     <Content Include="Scripts\Snoop.psm1">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="VisualTreeItem.cd" />
   </ItemGroup>
