@@ -24,10 +24,12 @@
 		<StackPanel HorizontalAlignment="Right">
 			<CheckBox
 				x:Name="autoExpandCheckBox"
+			    Style="{x:Null}"
 			>
-				<TextBlock Text="Auto-expand"/>
+				<TextBlock Style="{x:Null}" Text="Auto-expand"/>
 				<CheckBox.ToolTip>
 					<TextBlock
+					    Style="{x:Null}"
 						MaxWidth="300"
 						Text="Automatically expands the selected tree item when changed from the PowerShell provider."
 						TextWrapping="Wrap"
@@ -37,6 +39,7 @@
 		</StackPanel>
 		<TextBox
 			x:Name="outputTextBox"
+		    Style="{x:Null}"
 			Grid.Row="1"
 			AcceptsReturn="True"
 			ScrollViewer.VerticalScrollBarVisibility="Auto"
@@ -44,12 +47,13 @@
 		/>
 		<TextBox
 			x:Name="commandTextBox"
+		    Style="{x:Null}"
 			Grid.Row="2"
 		>
 			<TextBox.ToolTip>
 				<StackPanel MaxWidth="300">
-					<TextBlock Text="F5 - Reload Profile"/>
-					<TextBlock Text="F12 - Clear Output"/>
+					<TextBlock Style="{x:Null}" Text="F5 - Reload Profile"/>
+					<TextBlock Style="{x:Null}" Text="F12 - Clear Output"/>
 				</StackPanel>
 			</TextBox.ToolTip>
 		</TextBox>

@@ -55,6 +55,7 @@ All other rights reserved.
 						</Border.BorderBrush>
 						<ContentPresenter
 							x:Name="ContentPresenter"
+						    Style="{x:Null}"
 							Margin="1,1,1,1"
 							Content="{TemplateBinding Content}"
 							ContentTemplate="{TemplateBinding ContentTemplate}"
@@ -146,6 +147,7 @@ All other rights reserved.
 						</Border.BorderBrush>
 						<ContentPresenter
 							x:Name="ContentPresenter"
+						    Style="{x:Null}"
 							Margin="1,1,1,1"
 							Content="{TemplateBinding Content}"
 							ContentTemplate="{TemplateBinding ContentTemplate}"
@@ -237,6 +239,7 @@ All other rights reserved.
 						</Border.BorderBrush>
 						<ContentPresenter
 							x:Name="ContentPresenter"
+						    Style="{x:Null}"
 							Margin="1,1,1,1"
 							Content="{TemplateBinding Content}"
 							ContentTemplate="{TemplateBinding ContentTemplate}"
@@ -299,6 +302,7 @@ All other rights reserved.
 		<my:ZoomerControl x:Name="Zoomer"/>
 
 		<Button
+		    Style="{x:Null}"
 			Width="22"
 			Height="20"
 			HorizontalAlignment="Right"
@@ -307,7 +311,7 @@ All other rights reserved.
 			Template="{DynamicResource ButtonLeft}"
 			Command="{x:Static my:Previewer.MagnifyCommand}"
 		>
-			<Image x:Name="Image" Source="{DynamicResource magnifyingGlassDrawingImage}"/>
+			<Image x:Name="Image" Style="{x:Null}" Source="{DynamicResource magnifyingGlassDrawingImage}"/>
 			<Button.ToolTip>
 				<StackPanel>
 					<TextBlock Style="{x:Null}" Text="Bring up the Magnify window on"/>
@@ -317,6 +321,7 @@ All other rights reserved.
 		</Button>
 
 		<ToggleButton
+		    Style="{x:Null}"
 			Width="22"
 			Height="20"
 			HorizontalAlignment="Right"
@@ -325,7 +330,7 @@ All other rights reserved.
 			Template="{DynamicResource ButtonMiddle}"
 			IsChecked="{Binding IsActive}"
 		>
-			<Image Source="{DynamicResource powerDrawingImage}"/>
+			<Image Style="{x:Null}" Source="{DynamicResource powerDrawingImage}"/>
 			<ToggleButton.ToolTip>
 				<StackPanel>
 					<TextBlock Style="{x:Null}" Text="Enable/disable preview area (i.e. the"/>
@@ -335,6 +340,7 @@ All other rights reserved.
 		</ToggleButton>
 
 		<Button
+		    Style="{x:Null}"
 			Width="22"
 			Height="20"
 			HorizontalAlignment="Right"
@@ -342,7 +348,7 @@ All other rights reserved.
 			Template="{DynamicResource ButtonRight}"
 			Command="{x:Static my:Previewer.ScreenshotCommand}"
 		>
-			<Image Margin="1" Source="{DynamicResource cameraDrawingImage}"/>
+			<Image Style="{x:Null}" Margin="1" Source="{DynamicResource cameraDrawingImage}"/>
 			<Button.ToolTip>
 				<TextBlock Style="{x:Null}" Text="Save the current preview as bitmap."/>
 			</Button.ToolTip>

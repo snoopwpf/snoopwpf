@@ -22,35 +22,35 @@
 				<ColumnDefinition Width="Auto"/>
 			</Grid.ColumnDefinitions>
 
-			<CheckBox Name="checkBoxStartListening" Margin="10" Checked="checkBoxStartListening_Checked" Unchecked="checkBoxStartListening_Unchecked">
+			<CheckBox Name="checkBoxStartListening" Style="{x:Null}" Margin="10" Checked="checkBoxStartListening_Checked" Unchecked="checkBoxStartListening_Unchecked">
 				<TextBlock Style="{x:Null}" Text="Start Listening"/>
 			</CheckBox>
 
 			<StackPanel Orientation="Horizontal" Grid.Column="1">
-				<TextBlock Text="WPF Trace Level: " VerticalAlignment="Center" Margin="0,0,10,0"/>
-				<ComboBox Name="comboBoxPresentationTraceLevel" Width="100" Height="25" SelectedIndex="2" SelectionChanged="comboBoxPresentationTraceLevel_SelectionChanged">
-					<ComboBoxItem Tag="Off">
+				<TextBlock Style="{x:Null}" Text="WPF Trace Level: " VerticalAlignment="Center" Margin="0,0,10,0"/>
+				<ComboBox Name="comboBoxPresentationTraceLevel" Style="{x:Null}" Width="100" Height="25" SelectedIndex="2" SelectionChanged="comboBoxPresentationTraceLevel_SelectionChanged">
+					<ComboBoxItem Style="{x:Null}" Tag="Off">
 						<TextBlock Style="{x:Null}" Text="Off"/>
 					</ComboBoxItem>
-					<ComboBoxItem Tag="Critical">
+					<ComboBoxItem Style="{x:Null}" Tag="Critical">
 						<TextBlock Style="{x:Null}" Text="Critical"/>
 					</ComboBoxItem>
-					<ComboBoxItem Tag="Error">
+					<ComboBoxItem Style="{x:Null}" Tag="Error">
 						<TextBlock Style="{x:Null}" Text="Error"/>
 					</ComboBoxItem>
-					<ComboBoxItem Tag="Warning">
+					<ComboBoxItem Style="{x:Null}" Tag="Warning">
 						<TextBlock Style="{x:Null}" Text="Warning"/>
 					</ComboBoxItem>
-					<ComboBoxItem Tag="Information">
+					<ComboBoxItem Style="{x:Null}" Tag="Information">
 						<TextBlock Style="{x:Null}" Text="Information"/>
 					</ComboBoxItem>
-					<ComboBoxItem Tag="Verbose">
+					<ComboBoxItem Style="{x:Null}" Tag="Verbose">
 						<TextBlock Style="{x:Null}" Text="Verbose"/>
 					</ComboBoxItem>
-					<ComboBoxItem Tag="Activity Tracing">
+					<ComboBoxItem Style="{x:Null}" Tag="Activity Tracing">
 						<TextBlock Style="{x:Null}" Text="Activity Tracing"/>
 					</ComboBoxItem>
-					<ComboBoxItem Tag="All">
+					<ComboBoxItem Style="{x:Null}" Tag="All">
 						<TextBlock Style="{x:Null}" Text="All"/>
 					</ComboBoxItem>
 				</ComboBox>
@@ -58,19 +58,19 @@
 
 
 			<StackPanel Orientation="Horizontal" Margin="10,0,10,10" Grid.Row="1" Grid.ColumnSpan="2">
-				<Button Name="buttonClear" Width="75" Height="25" HorizontalAlignment="Left" Click="buttonClear_Click">
+				<Button Name="buttonClear" Style="{x:Null}" Width="75" Height="25" HorizontalAlignment="Left" Click="buttonClear_Click">
 					<TextBlock Style="{x:Null}" Text="Clear Text"/>
 				</Button>
-				<Button Name="buttonClearFilters" Margin="10,0,0,0" Width="75" Height="25" HorizontalAlignment="Left" Click="buttonClearFilters_Click">
+				<Button Name="buttonClearFilters" Style="{x:Null}" Margin="10,0,0,0" Width="75" Height="25" HorizontalAlignment="Left" Click="buttonClearFilters_Click">
 					<TextBlock Style="{x:Null}" Text="Clear Filters"/>
 				</Button>
-				<Button Name="buttonSetFilters" Margin="10,0,0,0" Width="75" Height="25" HorizontalAlignment="Left" Click="buttonSetFilters_Click">
+				<Button Name="buttonSetFilters" Style="{x:Null}" Margin="10,0,0,0" Width="75" Height="25" HorizontalAlignment="Left" Click="buttonSetFilters_Click">
 					<TextBlock Style="{x:Null}" Text="Edit Filter"/>
 				</Button>
-				<TextBlock Name="textBlockStatus" Margin="10,0,0,0" Text="{Binding Path=FilterStatus}"/>
+				<TextBlock Name="textBlockStatus" Style="{x:Null}" Margin="10,0,0,0" Text="{Binding Path=FilterStatus}"/>
 			</StackPanel>
 
 		</Grid>
-		<TextBox Name="textBoxDebugContent" IsReadOnly="True" Grid.Row="1" Margin="10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
+		<TextBox Name="textBoxDebugContent" Style="{x:Null}" IsReadOnly="True" Grid.Row="1" Margin="10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
 	</Grid>
 </UserControl>

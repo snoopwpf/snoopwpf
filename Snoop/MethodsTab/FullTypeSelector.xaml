@@ -14,13 +14,13 @@ All other rights reserved.
       SizeToContent="WidthAndHeight">
 
     <Grid Height="282" Width="587">
-        <ComboBox Height="29" HorizontalAlignment="Left" Margin="16,37,0,0" SelectionChanged="comboBoxAssemblies_SelectionChanged" Name="comboBoxAssemblies" VerticalAlignment="Top" Width="507" />
-        <ComboBox Height="30" HorizontalAlignment="Left" Margin="16,110,0,0" Name="comboBoxTypes" VerticalAlignment="Top" Width="507" />
-        <Label Content="Choose assembly" Height="26" HorizontalAlignment="Left" Margin="20,5,0,0" Name="label1" VerticalAlignment="Top" Width="186" />
-        <Label Content="Choose type" Height="32" HorizontalAlignment="Left" Margin="20,84,0,0" Name="label2" VerticalAlignment="Top" Width="185" />
-        <Button Content="Create instance" Height="31" HorizontalAlignment="Left" Margin="20,231,0,0" Name="buttonCreateInstance" Click="buttonCreateInstance_Click" VerticalAlignment="Top" Width="165" />
-        <Button Content="Cancel" Height="31" HorizontalAlignment="Left" Margin="205,231,0,0" Name="buttonCancel" Click="buttonCancel_Click" VerticalAlignment="Top" Width="159" />
-        <Label Content="Type in a value to convert from a string. Otherwise, leave blank to create default new instance." Height="25" HorizontalAlignment="Left" Margin="12,156,0,0" Name="label3" VerticalAlignment="Top" Width="518" />
-        <TextBox Name="textBoxConvertFrom" Height="25" HorizontalAlignment="Left" Margin="16,187,0,0"  VerticalAlignment="Top" Width="413" />
+        <ComboBox Style="{x:Null}" Height="29" HorizontalAlignment="Left" Margin="16,37,0,0" SelectionChanged="comboBoxAssemblies_SelectionChanged" Name="comboBoxAssemblies" VerticalAlignment="Top" Width="507" />
+        <ComboBox Style="{x:Null}" Height="30" HorizontalAlignment="Left" Margin="16,110,0,0" Name="comboBoxTypes" VerticalAlignment="Top" Width="507" />
+        <Label Style="{x:Null}" Content="Choose assembly" Height="26" HorizontalAlignment="Left" Margin="20,5,0,0" Name="label1" VerticalAlignment="Top" Width="186" />
+        <Label Style="{x:Null}" Content="Choose type" Height="32" HorizontalAlignment="Left" Margin="20,84,0,0" Name="label2" VerticalAlignment="Top" Width="185" />
+        <Button Style="{x:Null}" Content="Create instance" Height="31" HorizontalAlignment="Left" Margin="20,231,0,0" Name="buttonCreateInstance" Click="buttonCreateInstance_Click" VerticalAlignment="Top" Width="165" />
+        <Button Style="{x:Null}" Content="Cancel" Height="31" HorizontalAlignment="Left" Margin="205,231,0,0" Name="buttonCancel" Click="buttonCancel_Click" VerticalAlignment="Top" Width="159" />
+        <Label Style="{x:Null}" Content="Type in a value to convert from a string. Otherwise, leave blank to create default new instance." Height="25" HorizontalAlignment="Left" Margin="12,156,0,0" Name="label3" VerticalAlignment="Top" Width="518" />
+        <TextBox Name="textBoxConvertFrom" Style="{x:Null}" Height="25" HorizontalAlignment="Left" Margin="16,187,0,0"  VerticalAlignment="Top" Width="413" />
     </Grid>
 </Window>

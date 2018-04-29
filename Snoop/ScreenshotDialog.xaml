@@ -79,7 +79,7 @@ All other rights reserved.
 				Style="{StaticResource PhotoFrameStyle}"
 				DataContext="{Binding}"
 			/>
-			<TextBlock Grid.Row="1" TextAlignment="Center">Screenshot To Be Saved</TextBlock>
+			<TextBlock Style="{x:Null}" Grid.Row="1" TextAlignment="Center">Screenshot To Be Saved</TextBlock>
 		</Grid>
 
 		<Grid
@@ -93,6 +93,7 @@ All other rights reserved.
 			>
 				<ComboBox
 					x:Name="dpiBox"
+				    Style="{x:Null}"
 					Grid.Column="1"
 					Width="75"
 					Margin="0,0,5,0"
@@ -119,6 +120,7 @@ All other rights reserved.
 				HorizontalAlignment="Right"
 			>
 				<Button
+				    Style="{x:Null}"
 					Width="75"
 					Margin="0,0,5,5"
 					IsDefault="True"
@@ -127,6 +129,7 @@ All other rights reserved.
 					<TextBlock Style="{x:Null}" Text="Save"/>
 				</Button>
 				<Button
+				    Style="{x:Null}"
 					Width="75"
 					Margin="0,0,5,5"
 					IsCancel="True"

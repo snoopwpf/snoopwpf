@@ -34,6 +34,7 @@ All other rights reserved.
 					Text="{Binding ParameterName}"
 				/>
 				<ComboBox
+				    Style="{x:Null}"
 					Grid.Column="1"
 					Width="129"
 					HorizontalAlignment="Left"
@@ -57,6 +58,7 @@ All other rights reserved.
 					Text="{Binding ParameterName}"
 				/>
 				<ComboBox
+				    Style="{x:Null}"
 					Grid.Column="1"
 					Width="129"
 					HorizontalAlignment="Left"
@@ -106,6 +108,7 @@ All other rights reserved.
 					Text="{Binding ParameterName}"
 				/>
 				<Button
+				    Style="{x:Null}"
 					Grid.Column="1"
 					Width="150"
 					Height="25"
@@ -115,6 +118,7 @@ All other rights reserved.
 					<TextBlock Style="{x:Null}" Text="Create/Modify Parameter"/>
 				</Button>
 				<Button
+				    Style="{x:Null}"
 					Grid.Column="2"
 					Width="150"
 					Height="25"
@@ -146,6 +150,7 @@ All other rights reserved.
 
 		<StackPanel Orientation="Horizontal" Grid.Row="0">
 			<Button
+			    Style="{x:Null}"
 				Height="30"
 				Width="100"
 				VerticalAlignment="Center"
@@ -179,6 +184,7 @@ All other rights reserved.
 
 		<CheckBox
 			x:Name="_checkBoxUseDataContext"
+		    Style="{x:Null}"
 			Grid.Row="1"
 		>
 			<TextBlock Style="{x:Null}" Text="Use DataContext Property"/>
@@ -192,7 +198,7 @@ All other rights reserved.
 				FontWeight="Bold"
 				Text="Method:"
 			/>
-			<ComboBox x:Name="comboBoxMethods" Width="350" Height="25"/>
+			<ComboBox x:Name="comboBoxMethods" Style="{x:Null}" Width="350" Height="25"/>
 		</StackPanel>
 
 		<StackPanel
@@ -209,6 +215,7 @@ All other rights reserved.
 			/>
 			<ItemsControl
 				x:Name="itemsControlParameters"
+			    Style="{x:Null}"
 				Grid.Row="1"
 				Margin="0,10,0,0"
 				ItemTemplateSelector="{StaticResource SnoopParameterInformationTemplateSelector}"
@@ -216,6 +223,7 @@ All other rights reserved.
 		</StackPanel>
 
 		<Button
+		    Style="{x:Null}"
 			Grid.Row="4"
 			Width="200"
 			Height="25"

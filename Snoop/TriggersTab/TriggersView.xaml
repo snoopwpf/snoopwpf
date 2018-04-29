@@ -28,14 +28,17 @@
                                     BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" Margin="2">
                                 <Grid>
                                     <Border Background="#0F000000" Height="18" VerticalAlignment="Top" />
-                                    <ContentPresenter TextBlock.FontWeight="Bold" TextBlock.FontSize="11"
+                                    <ContentPresenter Style="{x:Null}"
+                                                      TextBlock.FontWeight="Bold" TextBlock.FontSize="11"
                                                       TextBlock.Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" 
                                                       Content="{TemplateBinding Header}"
                                                       VerticalAlignment="Top" Margin="20,0,0,0" />
-                                    <Image x:Name="icon" Source="/Snoop;component/Resources/triggeritem.png"
+                                    <Image x:Name="icon" 
+                                           Style="{x:Null}"
+                                           Source="/Snoop;component/Resources/triggeritem.png"
                                            Margin="4,2,0,0"
                                            VerticalAlignment="Top" HorizontalAlignment="Left" Width="12" Height="12" />
-                                    <ContentPresenter Content="{TemplateBinding Content}" Margin="4,16,4,4" />
+                                    <ContentPresenter Style="{x:Null}" Content="{TemplateBinding Content}" Margin="4,16,4,4" />
                                 </Grid>
                             </Border>
                         </ControlTemplate>
@@ -51,7 +54,7 @@
                         BorderThickness="{TemplateBinding BorderThickness}"
                         SnapsToDevicePixels="true"
                         Padding="1">
-                    <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                    <ItemsPresenter Style="{x:Null}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                 </Border>
                 <ControlTemplate.Triggers>
                     <Trigger Property="IsEnabled"
@@ -192,7 +195,7 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock x:Name="key" Grid.Column="0" Style="{x:Null}" Text="{Binding Value.DisplayName, Mode=OneWay}" Background="Transparent" />
-                    <ContentPresenter x:Name="value" Grid.Column="1" Margin="4,0,0,0" Content="{Binding Value}" ContentTemplateSelector="{StaticResource EditorSelector}" />
+                    <ContentPresenter x:Name="value" Style="{x:Null}" Grid.Column="1" Margin="4,0,0,0" Content="{Binding Value}" ContentTemplateSelector="{StaticResource EditorSelector}" />
                 </Grid>
 
                 <DataTemplate.Triggers>
@@ -233,9 +236,13 @@
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate DataType="{x:Type triggers:ConditionItem}">
                                     <StackPanel Orientation="Horizontal">
-                                        <Image x:Name="image" Source="/Snoop;component/Resources/inactive.png"
+                                        <Image x:Name="image" 
+                                               Style="{x:Null}"
+                                               Source="/Snoop;component/Resources/inactive.png"
                                                Height="16" Width="16" />
-                                        <TextBlock x:Name="conditionText" Text="{Binding Condition}" />
+                                        <TextBlock x:Name="conditionText" 
+                                                   Style="{x:Null}"
+                                                   Text="{Binding Condition}" />
                                     </StackPanel>
                                     <DataTemplate.Triggers>
                                         <DataTrigger Binding="{Binding IsActive}" Value="True">
@@ -292,8 +299,8 @@
             <!--<RowDefinition Height="1*"/>-->
         </Grid.RowDefinitions>
 
-        <ScrollViewer Grid.Row="0" HorizontalScrollBarVisibility="Disabled">
-            <ItemsControl ItemsSource="{Binding TriggerItems, ElementName=triggerView}">
+        <ScrollViewer Style="{x:Null}" Grid.Row="0" HorizontalScrollBarVisibility="Disabled">
+            <ItemsControl Style="{x:Null}" ItemsSource="{Binding TriggerItems, ElementName=triggerView}">
                 <ItemsControl.GroupStyle>
                     <GroupStyle>
                         <GroupStyle.ContainerStyle>
@@ -303,7 +310,8 @@
                                     <Setter.Value>
                                         <ControlTemplate TargetType="{x:Type GroupItem}">
                                             <StackPanel Margin="8">
-                                                <TextBlock Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+                                                <TextBlock Style="{x:Null}"
+                                                           Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
                                                            VerticalAlignment="Center"
                                                            FontWeight="Bold"
                                                            Text="{Binding Path=Name}" />
@@ -331,7 +339,8 @@
         </Grid>-->
     </Grid>
 
-    <TextBlock HorizontalAlignment="Center"
+    <TextBlock Style="{x:Null}"
+               HorizontalAlignment="Center"
                VerticalAlignment="Center"
                Text="The element has no triggers"
                Visibility="{Binding HasTriggerItems, ElementName=triggerView, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}}"
