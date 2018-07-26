@@ -4,14 +4,15 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
 using Snoop.Infrastructure;
 
 namespace Snoop
 {
-	public static class SnoopWindowUtils
+    using System.Runtime.InteropServices;
+    using System.Windows.Interop;
+
+    public static class SnoopWindowUtils
 	{
 		public static Window FindOwnerWindow()
 		{
@@ -73,5 +74,36 @@ namespace Snoop
 
 			return ownerWindow;
 		}
+
+	    public static void LoadWindowPlacement(Window window, WINDOWPLACEMENT? windowPlacement)
+	    {
+	        if (windowPlacement.HasValue == false)
+	        {
+	            return;
+	        }
+
+	        try
+	        {
+	            // load the window placement details from the user settings.
+	            var wp = windowPlacement.Value;
+	            wp.length = Marshal.SizeOf(typeof(WINDOWPLACEMENT));
+	            wp.flags = 0;
+	            wp.showCmd = (wp.showCmd == Win32.SW_SHOWMINIMIZED ? Win32.SW_SHOWNORMAL : wp.showCmd);
+	            var hwnd = new WindowInteropHelper(window).Handle;
+	            Win32.SetWindowPlacement(hwnd, ref wp);
+	        }
+	        catch
+	        {
+	        }
+	    }
+
+	    public static void SaveWindowPlacement(Window window, Action<WINDOWPLACEMENT> saveAction)
+	    {
+	        WINDOWPLACEMENT windowPlacement;
+	        var hwnd = new WindowInteropHelper(window).Handle;
+	        Win32.GetWindowPlacement(hwnd, out windowPlacement);
+
+	        saveAction(windowPlacement);
+	    }
 	}
 }

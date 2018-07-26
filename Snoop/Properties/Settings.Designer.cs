@@ -23,112 +23,43 @@ namespace Snoop.Properties {
                 return defaultInstance;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(
-      @"<?xml version=""1.0"" encoding=""utf-16""?>
-        <WINDOWPLACEMENT xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
-        <length>44</length>
-        <flags>0</flags>
-        <showCmd>1</showCmd>
-        <minPosition>
-        <X>-1</X>
-        <Y>-1</Y>
-        </minPosition>
-        <maxPosition>
-        <X>-1</X>
-        <Y>-1</Y>
-        </maxPosition>
-        <normalPosition>
-        <Left>10</Left>
-        <Top>10</Top>
-        <Right>650</Right>
-        <Bottom>490</Bottom>
-        </normalPosition>
-        </WINDOWPLACEMENT>
-      ")]
-        public WINDOWPLACEMENT SnoopUIWindowPlacement
-        {
-            get
-            {
-                return ((WINDOWPLACEMENT)(this["SnoopUIWindowPlacement"]));
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public WINDOWPLACEMENT? SnoopUIWindowPlacement {
+            get {
+                return ((WINDOWPLACEMENT?)(this["SnoopUIWindowPlacement"]));
             }
-            set
-            {
+            set {
                 this["SnoopUIWindowPlacement"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"
-        <?xml version=""1.0"" encoding=""utf-16""?>
-        <WINDOWPLACEMENT xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
-        <length>44</length>
-        <flags>0</flags>
-        <showCmd>1</showCmd>
-        <minPosition>
-        <X>-1</X>
-        <Y>-1</Y>
-        </minPosition>
-        <maxPosition>
-        <X>-1</X>
-        <Y>-1</Y>
-        </maxPosition>
-        <normalPosition>
-        <Left>10</Left>
-        <Top>10</Top>
-        <Right>541</Right>
-        <Bottom>36</Bottom>
-        </normalPosition>
-        </WINDOWPLACEMENT>
-      ")]
-        public WINDOWPLACEMENT AppChooserWindowPlacement {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public WINDOWPLACEMENT? AppChooserWindowPlacement {
             get {
-                return ((WINDOWPLACEMENT)(this["AppChooserWindowPlacement"]));
+                return ((WINDOWPLACEMENT?)(this["AppChooserWindowPlacement"]));
             }
             set {
                 this["AppChooserWindowPlacement"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(
-      @"<?xml version=""1.0"" encoding=""utf-16""?>
-        <WINDOWPLACEMENT xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
-        <length>44</length>
-        <flags>0</flags>
-        <showCmd>1</showCmd>
-        <minPosition>
-        <X>-1</X>
-        <Y>-1</Y>
-        </minPosition>
-        <maxPosition>
-        <X>-1</X>
-        <Y>-1</Y>
-        </maxPosition>
-        <normalPosition>
-        <Left>10</Left>
-        <Top>10</Top>
-        <Right>541</Right>
-        <Bottom>36</Bottom>
-        </normalPosition>
-        </WINDOWPLACEMENT>
-      ")]
-        public WINDOWPLACEMENT ZoomerWindowPlacement
-        {
-            get
-            {
-                return ((WINDOWPLACEMENT)(this["ZoomerWindowPlacement"]));
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public WINDOWPLACEMENT? ZoomerWindowPlacement {
+            get {
+                return ((WINDOWPLACEMENT?)(this["ZoomerWindowPlacement"]));
             }
-            set
-            {
+            set {
                 this["ZoomerWindowPlacement"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n        <ArrayOfPropertyFilter" +
