@@ -9,14 +9,15 @@ using System.Collections.Generic;
 
 namespace Snoop
 {
-	public class ApplicationTreeItem : ResourceContainerItem
+    using System.Linq;
+
+    public class ApplicationTreeItem : ResourceContainerItem
 	{
 		public ApplicationTreeItem(Application application, VisualTreeItem parent)
 			: base(application, parent)
 		{
 			this.application = application;
 		}
-
 
 		public override Visual MainVisual
 		{
@@ -36,30 +37,31 @@ namespace Snoop
 			// having the call to base.Reload here ... puts the application resources at the very top of the tree view
 			base.Reload(toBeRemoved);
 
-			// what happens in the case where the application's main window is invisible?
-			// in this case, the application will only have one visual item underneath it: the collapsed/hidden window.
-			// however, you are still able to ctrl-shift mouse over the visuals in the visible window.
-			// when you do this, snoop reloads the visual tree with the visible window as the root (versus the application).
+		    foreach (Window window in this.application.Windows) 
+		    { 
+		        if (window.CheckAccess() == false) 
+		        { 
+		            continue; 
+		        }
 
-			if (this.application.MainWindow != null)
-			{
-				bool foundMainWindow = false;
-				foreach (VisualTreeItem item in toBeRemoved)
-				{
-					if (item.Target == this.application.MainWindow)
-					{
-						toBeRemoved.Remove(item);
-						item.Reload();
-						foundMainWindow = true;
-						break;
-					}
-				}
+                // windows which have an owner are added as child items in VisualItem, so we have to skip them here
+		        if (window.Owner != null)
+		        {
+                    continue;
+		        }
 
-				if (!foundMainWindow)
-					this.Children.Add(VisualTreeItem.Construct(this.application.MainWindow, this));
-			}
+                // don't recreate existing items but reload them instead
+		        var existingItem = toBeRemoved.FirstOrDefault(x => ReferenceEquals(x.Target, window));
+                if (existingItem != null)
+		        {
+		            toBeRemoved.Remove(existingItem);
+		            existingItem.Reload();
+                    continue;
+		        }
+
+		        this.Children.Add(VisualTreeItem.Construct(window, this)); 
+		    }
 		}
-
 
 		private Application application;
 	}
