@@ -14,29 +14,29 @@ namespace Snoop
 
     public static class SnoopWindowUtils
 	{
-		public static Window FindOwnerWindow()
+		public static Window FindOwnerWindow(Window ownedWindow)
 		{
-			Window ownerWindow = null;
+            Window ownerWindow = null;
 
 			if (SnoopModes.MultipleDispatcherMode)
 			{
 				foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
 				{
-					if
-					(
-						presentationSource.RootVisual is Window &&
-						((Window)presentationSource.RootVisual).Dispatcher.CheckAccess() &&
-						((Window)presentationSource.RootVisual).Visibility == Visibility.Visible
-					)
+				    var window = presentationSource.RootVisual as Window;
+				    if (window != null 
+						&& window.Dispatcher.CheckAccess() 
+						&& window.Visibility == Visibility.Visible)
 					{
-						ownerWindow = (Window)presentationSource.RootVisual;
+						ownerWindow = window;
 						break;
 					}
 				}
 			}
 			else if (Application.Current != null)
 			{
-				if (Application.Current.MainWindow != null && Application.Current.MainWindow.Visibility == Visibility.Visible)
+				if (Application.Current.MainWindow != null 
+				    && Application.Current.MainWindow.CheckAccess()
+				    && Application.Current.MainWindow.Visibility == Visibility.Visible)
 				{
 					// first: set the owner window as the current application's main window, if visible.
 					ownerWindow = Application.Current.MainWindow;
@@ -46,7 +46,8 @@ namespace Snoop
 					// second: try and find a visible window in the list of the current application's windows
 					foreach (Window window in Application.Current.Windows)
 					{
-						if (window.Visibility == Visibility.Visible)
+						if (window.CheckAccess()
+					        && window.Visibility == Visibility.Visible)
 						{
 							ownerWindow = window;
 							break;
@@ -60,19 +61,29 @@ namespace Snoop
 				// third: try and find a visible window in the list of current presentation sources
 				foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
 				{
-					if
-					(
-						presentationSource.RootVisual is Window &&
-						((Window)presentationSource.RootVisual).Visibility == Visibility.Visible
-					)
+				    var window = presentationSource.RootVisual as Window;
+				    if (window != null 
+						&& window.CheckAccess()
+						&& window.Visibility == Visibility.Visible)
 					{
-						ownerWindow = (Window)presentationSource.RootVisual;
+						ownerWindow = window;
 						break;
 					}
 				}
 			}
 
-			return ownerWindow;
+		    if (ReferenceEquals(ownerWindow, ownedWindow))
+		    {
+		        return null;
+		    }
+
+		    if (ownerWindow != null
+		        && ownerWindow.Dispatcher != ownedWindow.Dispatcher)
+		    {
+		        return null;
+		    }
+
+		    return ownerWindow;
 		}
 
 	    public static void LoadWindowPlacement(Window window, WINDOWPLACEMENT? windowPlacement)
