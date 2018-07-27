@@ -16,33 +16,33 @@ All other rights reserved.
 >
 	<Grid.Resources>
 		<ResourceDictionary>
-			<ContextMenu x:Key="PropertyMenu">
-				<MenuItem Command="{x:Static my:PropertyInspector.DelveCommand}" CommandParameter="{Binding}">
+			<ContextMenu x:Key="PropertyMenu" Style="{x:Null}">
+				<MenuItem Style="{x:Null}" Command="{x:Static my:PropertyInspector.DelveCommand}" CommandParameter="{Binding}">
 					<MenuItem.Header>
 						<TextBlock Style="{x:Null}" Text="Delve"/>
 					</MenuItem.Header>
 				</MenuItem>
-				<MenuItem Command="{x:Static my:PropertyInspector.DelveBindingCommand}" CommandParameter="{Binding}">
+				<MenuItem Style="{x:Null}" Command="{x:Static my:PropertyInspector.DelveBindingCommand}" CommandParameter="{Binding}">
 					<MenuItem.Header>
 						<TextBlock Style="{x:Null}" Text="Delve Binding"/>
 					</MenuItem.Header>
 				</MenuItem>
-				<MenuItem Command="{x:Static my:PropertyInspector.DelveBindingExpressionCommand}" CommandParameter="{Binding}">
+				<MenuItem Style="{x:Null}" Command="{x:Static my:PropertyInspector.DelveBindingExpressionCommand}" CommandParameter="{Binding}">
 					<MenuItem.Header>
 						<TextBlock Style="{x:Null}" Text="Delve BindingExpression"/>
 					</MenuItem.Header>
 				</MenuItem>
-				<MenuItem Command="{x:Static my:PropertyGrid2.ShowBindingErrorsCommand}" CommandParameter="{Binding}">
+				<MenuItem Style="{x:Null}" Command="{x:Static my:PropertyGrid2.ShowBindingErrorsCommand}" CommandParameter="{Binding}">
 					<MenuItem.Header>
 						<TextBlock Style="{x:Null}" Text="Display Binding Errors"/>
 					</MenuItem.Header>
 				</MenuItem>
-				<MenuItem Command="{x:Static my:PropertyGrid2.ClearCommand}" CommandParameter="{Binding}">
+				<MenuItem Style="{x:Null}" Command="{x:Static my:PropertyGrid2.ClearCommand}" CommandParameter="{Binding}">
 					<MenuItem.Header>
 						<TextBlock Style="{x:Null}" Text="Clear/Reset"/>
 					</MenuItem.Header>
 				</MenuItem>
-				<MenuItem Command="{x:Static my:PropertyInspector.SnipXamlCommand}" CommandParameter="{Binding}">
+				<MenuItem Style="{x:Null}" Command="{x:Static my:PropertyInspector.SnipXamlCommand}" CommandParameter="{Binding}">
 					<MenuItem.Header>
 						<TextBlock Style="{x:Null}" Text="Copy this brush"/>
 					</MenuItem.Header>
@@ -77,7 +77,7 @@ All other rights reserved.
 
 			<ControlTemplate x:Key="BreakpointTemplate" TargetType="{x:Type CheckBox}">
 				<Grid>
-					<Image Name="Icon" Source="{DynamicResource noBreakpointDrawingImage}" Width="12" Height="12"/>
+					<Image Name="Icon" Style="{x:Null}" Source="{DynamicResource noBreakpointDrawingImage}" Width="12" Height="12"/>
 				</Grid>
 				<ControlTemplate.Triggers>
 					<Trigger Property="IsChecked" Value="True">
@@ -188,6 +188,7 @@ All other rights reserved.
 
 	<ListView
 		x:Name="ListView"
+	    Style="{x:Null}"
 		Grid.RowSpan="2"
 		MinHeight="0"
 		MinWidth="0"
@@ -250,7 +251,7 @@ All other rights reserved.
 				<GridViewColumn Width="25">
 					<GridViewColumn.CellTemplate>
 						<DataTemplate>
-							<CheckBox IsChecked="{Binding BreakOnChange}" Template="{StaticResource BreakpointTemplate}">
+							<CheckBox Style="{x:Null}" IsChecked="{Binding BreakOnChange}" Template="{StaticResource BreakpointTemplate}">
 								<CheckBox.ToolTip>
 									<TextBlock Style="{x:Null}" Text="Click here to toggle a debug breakpoint on and off."/>
 								</CheckBox.ToolTip>
@@ -301,7 +302,7 @@ All other rights reserved.
 					</GridViewColumn.Header>
 					<GridViewColumn.CellTemplate>
 						<DataTemplate>
-							<ContentControl x:Name="ContentHost" Content="{Binding}" ContentTemplate="{StaticResource ValueSourceTemplate}"/>
+							<ContentControl x:Name="ContentHost" Style="{x:Null}" Content="{Binding}" ContentTemplate="{StaticResource ValueSourceTemplate}"/>
 						</DataTemplate>
 					</GridViewColumn.CellTemplate>
 				</GridViewColumn>

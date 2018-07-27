@@ -121,6 +121,7 @@ All other rights reserved.
 									ClickMode="Press"
 								/>
 								<ContentPresenter
+								    Style="{x:Null}"
 									DataContext="{x:Null}"
 									HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
 									Content="{TemplateBinding Header}"
@@ -132,6 +133,7 @@ All other rights reserved.
 						</Border>
 						<ItemsPresenter
 							x:Name="ItemsHost"
+						    Style="{x:Null}"
 							Grid.Row="1"
 							Grid.Column="1"
 							Grid.ColumnSpan="2"

@@ -49,6 +49,7 @@ All other rights reserved.
     <Grid Grid.Row="1">
         <TextBox
 			x:Name="PropertiesFilter"
+            Style="{x:Null}"
 			Text="{Binding ElementName=propertyInspector, Path=StringFilter, UpdateSourceTrigger=PropertyChanged}"
 			Margin="0,0,260,2"
 			MinHeight="0"
@@ -60,6 +61,7 @@ All other rights reserved.
         </TextBox>
         <CheckBox Name="checkBoxClearAfterDelve" Content="Clear after delve" HorizontalAlignment="Right" Margin="0,3,150,0" />
         <ToggleButton
+            Style="{x:Null}"
 			IsChecked="{Binding ElementName=propertyInspector, Path=ShowDefaults}"
 			Width="18"
 			Height="18"
@@ -93,7 +95,7 @@ All other rights reserved.
                     </Style.Triggers>
                 </Style>
             </Button.Style>
-            <Image Source="{StaticResource scopeUpDrawingImage}" Margin="3"/>
+            <Image Style="{x:Null}" Source="{StaticResource scopeUpDrawingImage}" Margin="3"/>
             <Button.ToolTip>
                 <StackPanel>
                     <TextBlock Style="{x:Null}" Text="Click this button to pop up 1 level in scope"/>
@@ -102,6 +104,7 @@ All other rights reserved.
             </Button.ToolTip>
         </Button>
         <ComboBox
+            Style="{x:Null}"
 			x:Name="FilterSetCombo"
 			i:ComboBoxSettings.IsSnoopPart="True"
 			Width="100"

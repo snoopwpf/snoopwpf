@@ -33,19 +33,19 @@ All other rights reserved.
 		</Grid.Background>
 
 		<Grid.ContextMenu>
-			<ContextMenu>
-				<MenuItem Command="{x:Static xv:Zoomer.SwitchTo2DCommand}">
+			<ContextMenu Style="{x:Null}">
+				<MenuItem Style="{x:Null}" Command="{x:Static xv:Zoomer.SwitchTo2DCommand}">
 					<MenuItem.Header>
 						<TextBlock Style="{x:Null}" Text="2D view"/>
 					</MenuItem.Header>
 				</MenuItem>
-				<MenuItem Command="{x:Static xv:Zoomer.SwitchTo3DCommand}">
+				<MenuItem Style="{x:Null}" Command="{x:Static xv:Zoomer.SwitchTo3DCommand}">
 					<MenuItem.Header>
 						<TextBlock Style="{x:Null}" Text="3D view"/>
 					</MenuItem.Header>
 				</MenuItem>
 				<Separator/>
-				<MenuItem Command="{x:Static xv:Zoomer.ResetCommand}">
+				<MenuItem Style="{x:Null}" Command="{x:Static xv:Zoomer.ResetCommand}">
 					<MenuItem.Header>
 						<TextBlock Style="{x:Null}" Text="Reset"/>
 					</MenuItem.Header>
@@ -53,7 +53,7 @@ All other rights reserved.
 			</ContextMenu>
 		</Grid.ContextMenu>
 
-		<Viewbox x:Name="Viewbox"/>
+		<Viewbox x:Name="Viewbox" Style="{x:Null}" />
 
 		<StackPanel
 			Orientation="Horizontal"
@@ -94,6 +94,7 @@ All other rights reserved.
 
 		<Slider
 			x:Name="ColorSlider"
+		    Style="{x:Null}"
 			Width="100"
 			HorizontalAlignment="Right"
 			VerticalAlignment="Top"
@@ -112,6 +113,7 @@ All other rights reserved.
 
 		<Slider
 			x:Name="ZScaleSlider"
+		    Style="{x:Null}"
 			Width="100"
 			HorizontalAlignment="Right"
 			VerticalAlignment="Bottom"

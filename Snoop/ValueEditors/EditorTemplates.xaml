@@ -23,7 +23,7 @@ All other rights reserved.
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type my:StandardValueEditor}">
-					<ContentPresenter Name="ValueHolder" ContentTemplate="{StaticResource UnselectedValueTemplate}" Content="{Binding RelativeSource={RelativeSource TemplatedParent}}">
+					<ContentPresenter Name="ValueHolder" Style="{x:Null}" ContentTemplate="{StaticResource UnselectedValueTemplate}" Content="{Binding RelativeSource={RelativeSource TemplatedParent}}">
 						<ContentPresenter.ToolTip>
 							<TextBlock Style="{x:Null}" Text="{TemplateBinding DescriptiveValue}"/>
 						</ContentPresenter.ToolTip>
@@ -55,11 +55,13 @@ All other rights reserved.
 					<StackPanel Orientation="Horizontal">
 						<CheckBox
 							x:Name="PART_CheckBox"
+						    Style="{x:Null}"
 							IsChecked="{Binding Value, Mode=TwoWay}"
 							IsEnabled="{TemplateBinding IsEditable}"
 							VerticalAlignment="Center"
 						/>
-						<TextBlock Margin="3,0" 
+						<TextBlock Style="{x:Null}" 
+						           Margin="3,0" 
 											 Text="{Binding Path=DescriptiveValue}"
 											 Visibility="{Binding Path=IsExpression, Converter={StaticResource BooleanToVisibilityConverter}}"
 											 VerticalAlignment="Center"
@@ -84,8 +86,8 @@ All other rights reserved.
 			<DataTemplate x:Key="UnselectedValueTemplate">
 				<Grid Height="16" HorizontalAlignment="Left">
                     <Grid.ToolTip>
-                        <ToolTip>
-                            <ListBox ItemsSource="{Binding Value, Converter={x:Static converters:BrushStopsConverter.DefaultInstance}}" 
+                        <ToolTip Style="{x:Null}">
+                            <ListBox Style="{x:Null}" ItemsSource="{Binding Value, Converter={x:Static converters:BrushStopsConverter.DefaultInstance}}" 
                                         Height="200"
                                         Width="200">
                                 <ItemsControl.ItemTemplate>
@@ -96,11 +98,13 @@ All other rights reserved.
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="40" />
                                             </Grid.ColumnDefinitions>
-                                            <TextBlock Grid.Column="0" 
+                                            <TextBlock Style="{x:Null}"
+                                                       Grid.Column="0" 
                                                        Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
                                                        Text="{Binding Offset}" 
                                                        Margin="4" />
-                                            <TextBlock Grid.Column="1" 
+                                            <TextBlock Style="{x:Null}"
+                                                       Grid.Column="1" 
                                                        Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
                                                        Text="{Binding ColorText}" 
                                                        Margin="4" />
@@ -139,7 +143,7 @@ All other rights reserved.
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type my:BrushValueEditor}">
-					<ContentPresenter Name="ValueHolder" ContentTemplate="{StaticResource UnselectedValueTemplate}" Content="{Binding RelativeSource={RelativeSource TemplatedParent}}"/>
+					<ContentPresenter Name="ValueHolder" Style="{x:Null}" ContentTemplate="{StaticResource UnselectedValueTemplate}" Content="{Binding RelativeSource={RelativeSource TemplatedParent}}"/>
 
 					<ControlTemplate.Triggers>
 						<DataTrigger Binding="{Binding Value}" Value="{x:Null}">
@@ -166,14 +170,14 @@ All other rights reserved.
 			</DataTemplate>
 
 			<DataTemplate x:Key="SelectedValueTemplate">
-				<ComboBox Height="16" Padding="2,-2,2,0" ItemsSource="{Binding Values}" IsSynchronizedWithCurrentItem="True"/>
+				<ComboBox Style="{x:Null}" Height="16" Padding="2,-2,2,0" ItemsSource="{Binding Values}" IsSynchronizedWithCurrentItem="True"/>
 			</DataTemplate>
 		</Style.Resources>
 
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type my:EnumValueEditor}">
-					<ContentPresenter Name="ValueHolder" ContentTemplate="{StaticResource UnselectedValueTemplate}" Content="{Binding RelativeSource={RelativeSource TemplatedParent}}"/>
+					<ContentPresenter Name="ValueHolder" Style="{x:Null}" ContentTemplate="{StaticResource UnselectedValueTemplate}" Content="{Binding RelativeSource={RelativeSource TemplatedParent}}"/>
 
 					<ControlTemplate.Triggers>
 						<MultiTrigger>
