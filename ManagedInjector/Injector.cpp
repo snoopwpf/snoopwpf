@@ -8,6 +8,9 @@
 #include "Injector.h"
 #include <vcclr.h>
 
+#using <System.Dll>
+#using <System.XML.Dll>
+
 using namespace ManagedInjector;
 
 static unsigned int WM_GOBABYGO = ::RegisterWindowMessage(L"Injector_GOBABYGO!");
@@ -16,10 +19,32 @@ static HHOOK _messageHookHandle;
 //-----------------------------------------------------------------------------
 //Spying Process functions follow
 //-----------------------------------------------------------------------------
-void Injector::Launch(System::IntPtr windowHandle, System::String^ assembly, System::String^ className, System::String^ methodName)
+void Injector::Launch(System::IntPtr windowHandle, InjectorData^ injectorData)
 {
-	System::String^ assemblyClassAndMethod = assembly + "$" + className + "$" + methodName;
-	pin_ptr<const wchar_t> acmLocal = PtrToStringChars(assemblyClassAndMethod);
+	System::String^ transportDataString;
+
+	{
+		auto serializer = gcnew System::Xml::Serialization::XmlSerializer(InjectorData::typeid);
+
+	    StringWriter^ stream;
+		try
+		{
+			stream = gcnew System::IO::StringWriter();
+		    {
+		        serializer->Serialize(stream, injectorData);
+	    		transportDataString = stream->ToString();
+		    }
+		}
+		finally
+		{
+			if (stream != nullptr)
+			{
+				delete stream;
+			}
+		}
+	}
+
+	pin_ptr<const wchar_t> acmLocal = PtrToStringChars(transportDataString);
 
 	HINSTANCE hinstDLL;	
 
@@ -36,7 +61,7 @@ void Injector::Launch(System::IntPtr windowHandle, System::String^ assembly, Sys
 			if (hProcess)
 			{
 				LogMessage("Got process handle", true);
-				int buffLen = (assemblyClassAndMethod->Length + 1) * sizeof(wchar_t);
+				int buffLen = (transportDataString->Length + 1) * sizeof(wchar_t);
 				void* acmRemote = ::VirtualAllocEx(hProcess, NULL, buffLen, MEM_COMMIT, PAGE_READWRITE);
 
 				if (acmRemote)
@@ -101,25 +126,35 @@ LRESULT __stdcall MessageHookProc(int nCode, WPARAM wparam, LPARAM lparam)
 
 			String^ acmLocal = gcnew System::String(acmRemote);
 			System::Diagnostics::Debug::WriteLine(System::String::Format("acmLocal = {0}", acmLocal));
-			cli::array<System::String^>^ acmSplit = acmLocal->Split('$');
 
-			System::Diagnostics::Debug::WriteLine(String::Format("About to load assembly {0}", acmSplit[0]));
-			System::Reflection::Assembly^ assembly = System::Reflection::Assembly::LoadFile(acmSplit[0]);
+			auto serializer = gcnew System::Xml::Serialization::XmlSerializer(InjectorData::typeid);
+
+			auto stringReader = gcnew System::IO::StringReader(acmLocal);
+			auto injectorData = (InjectorData^)serializer->Deserialize(stringReader);
+
+			System::Diagnostics::Debug::WriteLine(String::Format("About to load assembly {0}", injectorData->AssemblyName));
+			System::Reflection::Assembly^ assembly = System::Reflection::Assembly::LoadFile(injectorData->AssemblyName);
 			if (assembly != nullptr)
 			{
-				System::Diagnostics::Debug::WriteLine(String::Format("About to load type {0}", acmSplit[1]));
-				System::Type^ type = assembly->GetType(acmSplit[1]);
+				System::Diagnostics::Debug::WriteLine(String::Format("About to load type {0}", injectorData->ClassName));
+				System::Type^ type = assembly->GetType(injectorData->ClassName);
 				if (type != nullptr)
 				{
-					System::Diagnostics::Debug::WriteLine(String::Format("Just loaded the type {0}", acmSplit[1]));
-					System::Reflection::MethodInfo^ methodInfo = type->GetMethod(acmSplit[2], System::Reflection::BindingFlags::Static | System::Reflection::BindingFlags::Public);
+					System::Diagnostics::Debug::WriteLine(String::Format("Just loaded the type {0}", injectorData->ClassName));
+
+					System::Diagnostics::Debug::WriteLine(String::Format("About to get method info for {0}", injectorData->MethodName));
+					System::Reflection::MethodInfo^ methodInfo = type->GetMethod(injectorData->MethodName, System::Reflection::BindingFlags::Static | System::Reflection::BindingFlags::Public);
 					if (methodInfo != nullptr)
 					{
-						System::Diagnostics::Debug::WriteLine(System::String::Format("About to invoke {0} on type {1}", methodInfo->Name, acmSplit[1]));
-						Object ^ returnValue = methodInfo->Invoke(nullptr, nullptr);
+						System::Diagnostics::Debug::WriteLine(String::Format("Just got method info for {0}", injectorData->MethodName));
+
+						System::Diagnostics::Debug::WriteLine(System::String::Format("About to invoke {0} on type {1}", methodInfo->Name, injectorData->ClassName));
+						auto args = gcnew array<System::Object^>(1);
+						args[0] = injectorData->SettingsFile;
+						Object ^ returnValue = methodInfo->Invoke(nullptr, args);
 						if (nullptr == returnValue)
 							returnValue = "NULL";
-						System::Diagnostics::Debug::WriteLine(String::Format("Return value of {0} on type {1} is {2}", methodInfo->Name, acmSplit[1], returnValue));
+						System::Diagnostics::Debug::WriteLine(String::Format("Return value of {0} on type {1} is {2}", methodInfo->Name, injectorData->ClassName, returnValue));
 					}
 				}
 			}

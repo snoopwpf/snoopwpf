@@ -22,8 +22,14 @@ using Snoop.Shell;
 
 namespace Snoop
 {
+    using System.Configuration;
+    using System.IO;
+    using System.IO.Pipes;
+    using System.Xml.Serialization;
+    using Snoop.Properties;
+
     #region SnoopUI
-    public partial class SnoopUI : INotifyPropertyChanged
+	public partial class SnoopUI : INotifyPropertyChanged
 	{
 		#region Public Static Routed Commands
 		public static readonly RoutedCommand IntrospectCommand = new RoutedCommand("Introspect", typeof(SnoopUI));
@@ -136,10 +142,10 @@ namespace Snoop
 	    #endregion
 
 		#region Public Static Methods
-
-	    // ReSharper disable once UnusedMember.Global
-	    public static bool GoBabyGo()
+		public static bool GoBabyGo(string settingsFile)
 		{
+		    var transportSettings = WindowInfo.TransientSettingsData.Load(settingsFile);
+
 			try
 			{
 				SnoopApplication();

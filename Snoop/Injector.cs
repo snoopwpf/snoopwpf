@@ -19,7 +19,7 @@ namespace Snoop
 	        return bitness + "-" + clr;
 	    }
 
-		internal static void Launch(WindowInfo windowInfo, Assembly assembly, string className, string methodName)
+		internal static void Launch(IntPtr windowHandle, Assembly assembly, string className, string methodName, string settingsFile)
 		{
 			var location = Assembly.GetEntryAssembly().Location;
 			var directory = Path.GetDirectoryName(location);
@@ -31,8 +31,15 @@ namespace Snoop
 		                                   ? "runas"
 		                                   : null
 		                    };           
+		    using (var process = Process.Start(file, windowHandle + " \"" + assembly.Location + "\" \"" + className + "\" \"" + methodName + "\" \"" + settingsFile + "\""))
+		    {
+		        if (process != null)
+		        {
+                    process.WaitForExit();
+		        }
+		    }
 
-			Process.Start(startInfo);
+            File.Delete(settingsFile);
 		}
 	}
 }
