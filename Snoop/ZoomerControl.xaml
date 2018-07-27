@@ -32,10 +32,11 @@ All other rights reserved.
 			</Binding>
 		</Grid.Background>
 
-		<Viewbox x:Name="Viewbox"/>
+		<Viewbox x:Name="Viewbox" Style="{x:Null}" />
 
 		<Slider
 			x:Name="ColorSlider"
+		    Style="{x:Null}"
 			Width="100"
 			HorizontalAlignment="Right"
 			VerticalAlignment="Top"

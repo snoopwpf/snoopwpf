@@ -40,7 +40,7 @@ All other rights reserved.
 			</DataTemplate>
 
 			<DataTemplate DataType="{x:Type my:EventTracker}">
-				<CheckBox IsChecked="{Binding IsEnabled}">
+				<CheckBox Style="{x:Null}" IsChecked="{Binding IsEnabled}">
 					<TextBlock Style="{x:Null}" Text="{Binding RoutedEvent.Name}"/>
 				</CheckBox>
 			</DataTemplate>
@@ -56,12 +56,13 @@ All other rights reserved.
 						<RowDefinition Height="*"/>
 					</Grid.RowDefinitions>
 					<StackPanel Orientation="Horizontal">
-						<ContentControl Content="{Binding EventArgs}" Focusable="False"/>
+						<ContentControl Style="{x:Null}" Content="{Binding EventArgs}" Focusable="False"/>
 						<TextBlock Style="{x:Null}" Text=" on "/>
 						<TextBlock Style="{x:Null}" Text="{Binding Originator.Handler, Converter={StaticResource NiceNamer}}" Grid.Column="1"/>
 					</StackPanel>
 					<ContentControl
 						x:Name="Handler"
+					    Style="{x:Null}"
 						Grid.Row="1"
 						Grid.ColumnSpan="2"
 						Visibility="Collapsed"
@@ -165,7 +166,7 @@ All other rights reserved.
 																	<GradientStop Offset="0" Color="sc#1, 0.398262918, 0.398262918, 0.398262918"/>
 																</LinearGradientBrush>
 															</Border.BorderBrush>
-															<Canvas x:Name="Canvas" Width="16" Height="16">
+															<Canvas x:Name="Canvas" Style="{x:Null}" Width="16" Height="16">
 																<Path
 																	x:Name="Path"
 																	Width="10.0079642791082"
@@ -207,6 +208,7 @@ All other rights reserved.
 					</Border>
 					<Popup
 						x:Name="PART_Popup"
+					    Style="{x:Null}"
 						IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource Mode=TemplatedParent, AncestorType={x:Null}}}"
 						Focusable="False"
 						Placement="Bottom"
@@ -224,8 +226,9 @@ All other rights reserved.
 								BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}"
 								BorderThickness="1,1,1,1"
 							/>
-							<ScrollViewer x:Name="ScrollViewer" Margin="1,1,1,1">
+							<ScrollViewer x:Name="ScrollViewer" Style="{x:Null}" Margin="1,1,1,1">
 								<ItemsControl
+								    Style="{x:Null}"
 									ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource TemplatedParent}}"
 									KeyboardNavigation.DirectionalNavigation="Contained"
 								>
@@ -282,6 +285,7 @@ All other rights reserved.
 
 	<ComboBox
 		x:Name="EventChooser"
+	    Style="{x:Null}"
 		i:ComboBoxSettings.IsSnoopPart="True"
 		HorizontalAlignment="Stretch"
 		VerticalAlignment="Stretch"
@@ -296,6 +300,7 @@ All other rights reserved.
 	</ComboBox>
 
 	<Button
+	    Style="{x:Null}"
 		Width="18"
 		Height="18"
 		HorizontalAlignment="Right"
@@ -323,6 +328,7 @@ All other rights reserved.
 
 	<TreeView
 		x:Name="EventTree"
+	    Style="{x:Null}"
 		SelectedItemChanged="EventTree_SelectedItemChanged"
 		Grid.Row="1"
 		ItemsSource="{Binding ElementName=Events, Path=InterestingEvents}"

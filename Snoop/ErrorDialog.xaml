@@ -63,6 +63,7 @@ All other rights reserved.
 		<StackPanel Grid.Row="4" HorizontalAlignment="Center" Margin="0,10,0,0" Orientation="Horizontal">
 			<Button
 				x:Name="_buttonCopyToClipboard"
+			    Style="{x:Null}"
 				Width="175"
 				Height="32"
 				Margin="0,0,15,0"
@@ -71,14 +72,14 @@ All other rights reserved.
 				<TextBlock Style="{x:Null}" Text="Copy Exception to Clipboard"/>
 			</Button>
 			<StackPanel Orientation="Vertical" Grid.Row="3">
-				<TextBlock>
-					<Hyperlink NavigateUri="http://snoopwpf.codeplex.com/WorkItem/Create?ProjectName=snoopwpf" RequestNavigate="Hyperlink_RequestNavigate">
+				<TextBlock Style="{x:Null}">
+					<Hyperlink Style="{x:Null}" NavigateUri="http://snoopwpf.codeplex.com/WorkItem/Create?ProjectName=snoopwpf" RequestNavigate="Hyperlink_RequestNavigate">
 						<TextBlock Style="{x:Null}" Text="Click Here to create an issue on CodePlex."/>
 					</Hyperlink>
 				</TextBlock>
 
-				<TextBlock>
-					<Hyperlink NavigateUri="https://github.com/cplotts/snoopwpf/issues/new" RequestNavigate="Hyperlink_RequestNavigate">
+				<TextBlock Style="{x:Null}">
+					<Hyperlink Style="{x:Null}" NavigateUri="https://github.com/cplotts/snoopwpf/issues/new" RequestNavigate="Hyperlink_RequestNavigate">
 						<TextBlock Style="{x:Null}" Text="Click Here to create an issue on GitHub."/>
 					</Hyperlink>
 				</TextBlock>
@@ -88,6 +89,7 @@ All other rights reserved.
 		<StackPanel Grid.Row="5" HorizontalAlignment="Center" Margin="0,40,0,0" Orientation="Horizontal">
 			<CheckBox
 				x:Name="_checkBoxRemember"
+			    Style="{x:Null}"
 				Grid.Row="5"
 				VerticalAlignment="Center"
 				Margin="0,0,10,0"
@@ -101,15 +103,16 @@ All other rights reserved.
 						TextWrapping="Wrap"
 					>
 						<TextBlock.Inlines>
-							<Run Text="This checkbox will remember whether you want to mark the exception handled or not, in the case that there are many unhandled exceptions, so that the dialog does not keep coming up."/>
-							<LineBreak/>
-							<LineBreak/>
-							<Run Text="Note that clicking this checkbox and choosing one of the close buttons, also, in essence, stops this dialog from ever coming up again ... even in the case of a different unhandled exception ... until you Snoop the application all over again."/>
+							<Run Style="{x:Null}" Text="This checkbox will remember whether you want to mark the exception handled or not, in the case that there are many unhandled exceptions, so that the dialog does not keep coming up."/>
+							<LineBreak Style="{x:Null}" />
+							<LineBreak Style="{x:Null}" />
+							<Run Style="{x:Null}" Text="Note that clicking this checkbox and choosing one of the close buttons, also, in essence, stops this dialog from ever coming up again ... even in the case of a different unhandled exception ... until you Snoop the application all over again."/>
 						</TextBlock.Inlines>
 					</TextBlock>
 				</CheckBox.ToolTip>
 			</CheckBox>
 			<Button
+			    Style="{x:Null}"
 				Width="200"
 				Height="32"
 				Margin="0,0,10,0"
@@ -126,6 +129,7 @@ All other rights reserved.
 				</Button.ToolTip>
 			</Button>
 			<Button
+			    Style="{x:Null}"
 				Width="200"
 				Height="32"
 				Click="CloseAndMarkHandled_Click"

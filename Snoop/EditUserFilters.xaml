@@ -45,6 +45,7 @@ All other rights reserved.
 		<TextBox
 			Grid.Row="1"
 			Grid.Column="1"
+		    Style="{x:Null}"
 			VerticalAlignment="Center"
 			Text="{Binding Path=SelectedItem.DisplayName, ElementName=filterSetList}"
 		/>
@@ -67,6 +68,7 @@ All other rights reserved.
 
 		<ListBox
 			x:Name="filterSetList"
+		    Style="{x:Null}"
 			Grid.Row="0"
 			Grid.ColumnSpan="2"
 			ItemsSource="{Binding ItemsSource}"
@@ -89,6 +91,7 @@ All other rights reserved.
 			Orientation="Horizontal"
 		>
 			<Button
+			    Style="{x:Null}"
 				Width="75"
 				IsDefault="True"
 				Click="OkHandler"
@@ -96,6 +99,7 @@ All other rights reserved.
 				<TextBlock Style="{x:Null}" Text="OK"/>
 			</Button>
 			<Button
+			    Style="{x:Null}"
 				Width="75"
 				Margin="5,0,0,0"
 				IsCancel="True"
@@ -113,26 +117,29 @@ All other rights reserved.
 		>
 			<Button
 				x:Name="MoveUp"
+			    Style="{x:Null}"
 				Width="20"
 				Height="20"
 				Click="UpHandler"
 			>
-				<Image Source="{StaticResource scopeUpDrawingImage}" Margin="3"/>
+				<Image Style="{x:Null}" Source="{StaticResource scopeUpDrawingImage}" Margin="3"/>
 			</Button>
 			<Button
 				x:Name="MoveDown"
+			    Style="{x:Null}"
 				Width="20"
 				Height="20"
 				Margin="0,5,0,0"
 				Click="DownHandler"
 			>
-				<Image Source="{StaticResource scopeUpDrawingImage}" Margin="3" RenderTransformOrigin="0.5,0.5">
+				<Image Style="{x:Null}" Source="{StaticResource scopeUpDrawingImage}" Margin="3" RenderTransformOrigin="0.5,0.5">
 					<Image.RenderTransform>
 						<RotateTransform Angle="180"/>
 					</Image.RenderTransform>
 				</Image>
 			</Button>
 			<Button
+			    Style="{x:Null}"
 				Width="50"
 				Margin="0,10,0,0"
 				Click="AddHandler"
@@ -141,6 +148,7 @@ All other rights reserved.
 			</Button>
 			<Button
 				x:Name="DeleteItem"
+			    Style="{x:Null}"
 				Width="50"
 				Margin="0,5,0,0"
 				Click="DeleteHandler"

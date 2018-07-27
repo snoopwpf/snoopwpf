@@ -24,6 +24,7 @@ All other rights reserved.
 	ShowInTaskbar="True"
 	SnapsToDevicePixels="True"
 	Focusable="False"
+    Style="{x:Null}"
 	DataContext="{Binding RelativeSource={RelativeSource Self}}"
 >
 	<Window.Resources>
@@ -124,6 +125,7 @@ All other rights reserved.
 		<!-- Filter Combo Box -->
 		<ComboBox
 			x:Name="filterComboBox"
+            Style="{x:Null}"
 			i:ComboBoxSettings.IsSnoopPart="True"
 			IsEditable="True"
 			Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}"
@@ -217,6 +219,7 @@ All other rights reserved.
 		<!-- Vertical GridSplitter (between the visual tree tree view and the tab control (with the property grid/events view)) -->
 		<GridSplitter
 			x:Name="GridSplitter"
+		    Style="{x:Null}"
 			Grid.Row="0"
 			Grid.RowSpan="3"
 			Grid.Column="1"
@@ -229,11 +232,12 @@ All other rights reserved.
 
 		<!-- Tab Control (for the property grid, the data context property grid, and the events view) -->
 		<TabControl
+		    Style="{x:Null}"
 			Grid.Column="1"
 			Grid.RowSpan="2"
 			Margin="2,2,2,0"
 		>
-			<TabItem>
+			<TabItem Style="{x:Null}">
 				<TabItem.Header>
 					<TextBlock Style="{x:Null}" Text="Properties">
 						<TextBlock.ToolTip>
@@ -250,7 +254,7 @@ All other rights reserved.
 				</TabItem.Header>
 				<local:PropertyInspector x:Name="PropertyGrid" RootTarget="{Binding CurrentSelection.Target}"/>
 			</TabItem>
-			<TabItem>
+			<TabItem Style="{x:Null}">
 				<TabItem.Header>
 					<TextBlock Style="{x:Null}" Text="Data Context">
 						<TextBlock.ToolTip>
@@ -267,7 +271,7 @@ All other rights reserved.
 				</TabItem.Header>
 				<local:PropertyInspector x:Name="DataContextPropertyGrid" RootTarget="{Binding CurrentSelection.Target.DataContext}"/>
 			</TabItem>
-			<TabItem>
+			<TabItem Style="{x:Null}">
 				<TabItem.Header>
 					<TextBlock Style="{x:Null}" Text="Events">
 						<TextBlock.ToolTip>
@@ -284,7 +288,7 @@ All other rights reserved.
 				</TabItem.Header>
 				<local:EventsView/>
 			</TabItem>
-		    <TabItem>
+		    <TabItem Style="{x:Null}">
 		        <TabItem.Header>
 		            <TextBlock Style="{x:Null}" Text="Triggers">
 		                <TextBlock.ToolTip>
@@ -303,7 +307,7 @@ All other rights reserved.
 		                                  IsSelected="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}" />
 		    </TabItem>
 
-			<TabItem>
+			<TabItem Style="{x:Null}">
 				<TabItem.Header>
 					<TextBlock Style="{x:Null}" Text="Methods">
 						<TextBlock.ToolTip>
@@ -327,6 +331,7 @@ All other rights reserved.
 
 			<TabItem
 				x:Name="PowerShellTab"
+			    Style="{x:Null}"
 				Visibility="{Binding Converter={StaticResource isPowerShellInstalled}}"
 			>
 				<TabItem.Header>
@@ -344,7 +349,7 @@ All other rights reserved.
 					</TextBlock>
 				</TabItem.Header>
 			</TabItem>
-			<TabItem>
+			<TabItem Style="{x:Null}">
 				<TabItem.Header>
 					<TextBlock Style="{x:Null}" Text="Debug Listener">
 						<TextBlock.ToolTip>
@@ -366,6 +371,7 @@ All other rights reserved.
 
 		<!-- Horizontal GridSplitter (between the tab control (with the property grid/events view) and the previewer) -->
 		<GridSplitter
+		    Style="{x:Null}"
 			Grid.Row="2"
 			Grid.Column="1"
 			Height="4"
@@ -384,11 +390,11 @@ All other rights reserved.
 		/>
 
 		<!-- StatusBar -->
-		<StatusBar Grid.Row="3" Grid.ColumnSpan="4">
+		<StatusBar Style="{x:Null}" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="0">
 			<StackPanel Orientation="Horizontal">
 				<StackPanel Orientation="Horizontal">
-					<TextBlock Text="Keyboard.FocusedElement:"/>
-					<TextBlock Margin="3,0,0,0">
+					<TextBlock Style="{x:Null}" Text="Keyboard.FocusedElement:"/>
+					<TextBlock Style="{x:Null}" Margin="3,0,0,0">
 						<local:NoFocusHyperlink
 							Focusable="False"
 							Command="{x:Static local:SnoopUI.SelectFocusCommand}"
@@ -397,18 +403,18 @@ All other rights reserved.
 							<TextBlock Text="{Binding CurrentFocus, Converter={StaticResource niceNamer}}"/>
 						</local:NoFocusHyperlink>
 					</TextBlock>
-					<TextBlock Text="; "/>
+					<TextBlock Style="{x:Null}" Text="; "/>
 					<StackPanel.ToolTip>
 						<StackPanel>
-							<TextBlock Text="This is the object that has keyboard focus."/>
-							<TextBlock Text="Click the link to select this object."/>
+							<TextBlock Style="{x:Null}" Text="This is the object that has keyboard focus."/>
+							<TextBlock Style="{x:Null}" Text="Click the link to select this object."/>
 						</StackPanel>
 					</StackPanel.ToolTip>
 				</StackPanel>
 
 				<StackPanel Orientation="Horizontal">
-					<TextBlock Text="Current FocusScope:"/>
-					<TextBlock Margin="3,0,0,0">
+					<TextBlock Style="{x:Null}" Text="Current FocusScope:"/>
+					<TextBlock Style="{x:Null}" Margin="3,0,0,0">
 						<local:NoFocusHyperlink
 							Focusable="False"
 							Command="{x:Static local:SnoopUI.SelectFocusScopeCommand}"
@@ -419,8 +425,8 @@ All other rights reserved.
 					</TextBlock>
 					<StackPanel.ToolTip>
 						<StackPanel>
-							<TextBlock Text="This is the object that is the root of the current focus scope."/>
-							<TextBlock Text="Click the link to select this object."/>
+							<TextBlock Style="{x:Null}" Text="This is the object that is the root of the current focus scope."/>
+							<TextBlock Style="{x:Null}" Text="Click the link to select this object."/>
 						</StackPanel>
 					</StackPanel.ToolTip>
 				</StackPanel>

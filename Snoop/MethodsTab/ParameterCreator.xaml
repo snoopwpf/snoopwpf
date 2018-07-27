@@ -24,15 +24,15 @@ All other rights reserved.
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <TextBlock Name="TextBlockDescription" x:FieldModifier="public" FontWeight="Bold" Grid.Column="0" HorizontalAlignment="Left" TextWrapping="Wrap" />
+        <TextBlock Name="TextBlockDescription" x:FieldModifier="public" Style="{x:Null}" FontWeight="Bold" Grid.Column="0" HorizontalAlignment="Left" TextWrapping="Wrap" />
         <snoopNS:PropertyInspector x:Name="propertyInspector" Grid.Row="1"
                                  RootTarget="{Binding Path=RootTarget, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:ParameterCreator}}}" 
                                  NameValueOnly="True"
                                  />
 
         <StackPanel Margin="15,15,0,15" Grid.Row="2" Orientation="Horizontal">
-            <Button Name="btnOK" Height="25" Width="100" Grid.Row="1" Margin="0,0,0,0" Click="OKClick" Content="OK" HorizontalAlignment="Left" VerticalAlignment="Center" />
-            <Button Name="btnCancel" Height="25" Width="100" Grid.Row="1" Margin="15,0,0,0" Click="CancelClick" Content="Canel" HorizontalAlignment="Left" VerticalAlignment="Center" />
+            <Button Name="btnOK" Style="{x:Null}" Height="25" Width="100" Grid.Row="1" Margin="0,0,0,0" Click="OKClick" Content="OK" HorizontalAlignment="Left" VerticalAlignment="Center" />
+            <Button Name="btnCancel" Style="{x:Null}" Height="25" Width="100" Grid.Row="1" Margin="15,0,0,0" Click="CancelClick" Content="Canel" HorizontalAlignment="Left" VerticalAlignment="Center" />
         </StackPanel>
         
     </Grid>
