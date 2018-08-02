@@ -1,6 +1,6 @@
 <h1>Snoop</h1>
 
-<p>Snoop is the open source WPF spying utility created by Pete Blois when he was employed at Microsoft and now maintained by myself <a href="http://www.cplotts.com">Cory Plotts</a>. Over time contributions have been added by several people, most notably: <a href="http://blogs.interknowlogy.com/author/danhanan/">Dan Hanan</a>, <a href="http://blog.yasiv.com/">Andrei Kashcha</a>, Maciek Rakowski, Jason Jibben, Bailey Ling, and Bastian Schmidt).</p>
+<p>Snoop is the open source WPF spying utility created by Pete Blois when he was employed at Microsoft and now maintained by myself <a href="http://www.cplotts.com">Cory Plotts</a>. Over time contributions have been added by several people, most notably: <a href="http://blogs.interknowlogy.com/author/danhanan/">Dan Hanan</a>, <a href="http://blog.yasiv.com/">Andrei Kashcha</a>, Maciek Rakowski, Jason Jibben, Bailey Ling, and Bastian Schmidt.</p>
 
 <p>It allows you to spy/browse the visual tree of a running application (without the need for a debugger) ... and change properties ... amongst other things.</p>
 
@@ -10,7 +10,7 @@
 
 <h2>Documentation on How to Use Snoop</h2>
 
-<p>Unfortunately there isn't any exhaustive documentation on how to use Snoop and there are plenty of hidden features. If someone is willing to work on this, please let me know. On the bright side, it is a pretty easy utility to use and learn. I have made three videos which should get some quick started.</p>
+<p>Unfortunately there isn't any exhaustive documentation on how to use Snoop and there are plenty of hidden features. If someone is willing to work on this, please let me know. On the bright side, it is a pretty easy utility to use and learn. I have made three videos which should get most people quick started.</p>
 
 <p>Here are the links to the current Snoop Tips &amp; Tricks: <a href="http://www.cplotts.com/2011/02/10/snoop-tips-tricks-1-ctrl-shift-mouse-over/">#1</a>, <a href="http://www.cplotts.com/2011/02/14/snoop-tips-tricks-2-snooping-transient-visuals/">#2</a>, <a href="http://www.cplotts.com/2012/05/31/snoop-tips-tricks-3-the-crosshairs/">#3</a>.</p>
 
@@ -22,6 +22,8 @@
 
 <p>Most people will only need to load the SnoopOnly.sln solution file. This solution will build under most versions of Visual Studio, most notably Visual Studio 2017. The main Snoop project intentionally targets .NET 3.5 Client Profile because Snoop has, for years, supported Snooping both .NET 3.5 and .NET 4.0 applications. At some point in the future, we will change this and Snoop will only support Snooping .NET 4.0 (and forward) applications.</p>
 
-<p>The full Snoop.sln solution file includes the projects for the managed injector and the managed injector launcher projects ... as well as the installer. Currently, Snoop can only fully be built (Snoop.sln) with Visual Studio 2010 and with the Windows Installer XML Toolset v3.5 installed. The WiX Toolset v3.5 is not easily available anymore. I have an Wix35.msi saved that I can happily give to anyone who wants to build the installer (contact me on https://gitter.im/snoopwpf/Lobby). One other interesting piece of related info is that Setup.exe is a bootstrapper that installs the MSVC++ 2010 redestributables that then launches Snoop.msi. I don't have the source code for this bootstrapper as it was done by a friend of mine.</p>
+<p>The full Snoop.sln solution file includes the projects for the managed injector and the managed injector launcher projects ... as well as the installer. Currently, Snoop can only fully be built (Snoop.sln) with Visual Studio 2010 and with the Windows Installer XML Toolset v3.5 installed. The WiX Toolset v3.5 is not easily available anymore. I have an Wix35.msi saved that I can happily give to anyone who wants to build the installer. <a href="https://gitter.im/snoopwpf/Lobby">Contact</a> me on Snoop's new Gitter community.</p>
 
-<p>I am also looking for someone who might want to help update the installer so that it uses a modern version of WiX ... or in general to own the installer part of Snoop as I have little interest in that. <a href="https://gitter.im/snoopwpf/">Contact</a> me if you are interested.</p>
+<p>One other interesting piece of related info is that Setup.exe is a bootstrapper that installs the MSVC++ 2010 redestributables that then launches Snoop.msi. I don't have the source code for this bootstrapper as it was done by a friend of mine. Setup.exe is included in the source code.</p>
+
+<p>I am also looking for someone who might want to help update the installer so that it uses a modern version of WiX ... or in general to own the installer part of Snoop as I have little interest in that. <a href="https://gitter.im/snoopwpf/Lobby">Contact</a> me if you are interested.</p>
