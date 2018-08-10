@@ -25,10 +25,6 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
-    // TODO: Place code here.
-    MSG msg;
-    HACCEL hAccelTable;
-
     INITCOMMONCONTROLSEX st;
     st.dwSize = sizeof(INITCOMMONCONTROLSEX);
     st.dwICC = ICC_TAB_CLASSES | ICC_DATE_CLASSES;
