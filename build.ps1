@@ -1,3 +1,5 @@
+#Requires -Version 5
+
 Param(
     [Parameter(Mandatory=$False)]
     [string]$Configuration = "Release",
@@ -33,8 +35,13 @@ if ($Package) {
 
     $nuspec = Join-Path $PSScriptRoot chocolatey\snoop.nuspec
     $version = (Get-Item (Join-Path $buildOutput "snoop.exe")).VersionInfo.FileVersion
-    $outputDirectory = Join-Path $PSScriptRoot "build/chocolatey"
+    $outputDirectory = Join-Path $PSScriptRoot "build/publish"
 
     "Creating chocolatey package for version $version"
     &nuget pack "$nuspec" -Version $version -Properties Configuration=$Configuration -OutputDirectory "$outputDirectory" -NoPackageAnalysis
+
+    "Creating zip for version $version"
+    $zipOutput = (Join-Path $outputDirectory "Snoop.$version.zip")
+    Remove-Item $zipOutput -ErrorAction SilentlyContinue
+    Compress-Archive -Path $buildOutput\Scripts, $buildOutput\*.dll, $buildOutput\*.pdb, $buildOutput\*.exe, $buildOutput\*.config -DestinationPath $zipOutput
 }
