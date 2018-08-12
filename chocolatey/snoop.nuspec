@@ -17,16 +17,13 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="tools\chocolateyInstall.ps1" target="tools\chocolateyInstall.ps1" />
-    <file src="..\build\$Configuration$\Scripts\Snoop.psm1" target="tools\Scripts\Snoop.psm1" />
-    <file src="..\build\$Configuration$\ManagedInjector32-4.0.dll" target="tools\ManagedInjector32-4.0.dll" />
-    <file src="..\build\$Configuration$\ManagedInjector64-4.0.dll" target="tools\ManagedInjector64-4.0.dll" />
-    <file src="..\build\$Configuration$\ManagedInjectorLauncher32-4.0.exe" target="tools\ManagedInjectorLauncher32-4.0.exe" />
-    <file src="..\build\$Configuration$\ManagedInjectorLauncher32-4.0.exe.ignore" target="tools\ManagedInjectorLauncher32-4.0.exe.ignore" />
-    <file src="..\build\$Configuration$\ManagedInjectorLauncher64-4.0.exe" target="tools\ManagedInjectorLauncher64-4.0.exe" />
-    <file src="..\build\$Configuration$\ManagedInjectorLauncher64-4.0.exe.ignore" target="tools\ManagedInjectorLauncher64-4.0.exe.ignore" />
-    <file src="..\build\$Configuration$\Snoop.exe" target="tools\Snoop.exe" />
-    <file src="..\build\$Configuration$\Snoop.exe.config" target="tools\Snoop.exe.config" />
-    <file src="..\build\$Configuration$\Snoop.exe.gui" target="tools\Snoop.exe.gui" />
+    <file src="tools\*" target="tools\" />
+    <file src="..\build\$Configuration$\Scripts\*" target="tools\Scripts\" />
+    <file src="..\build\$Configuration$\*.config" target="tools\" />
+    <file src="..\build\$Configuration$\*.dll" target="tools\" />    
+    <file src="..\build\$Configuration$\*.exe" target="tools\" />
+    <file src="..\build\$Configuration$\*.pdb" target="tools\" />
+    <file src="..\build\$Configuration$\*.ignore" target="tools\" />
+    <file src="..\build\$Configuration$\*.gui" target="tools\" />
   </files>
 </package>
