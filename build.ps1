@@ -25,6 +25,10 @@ if ($null -eq $msbuild -or !(Test-Path $msbuild)) {
 # Build solution
 & $msbuild Snoop.sln /property:Configuration=$Configuration /v:m /nologo
 
+if ($LASTEXITCODE -ne 0) {
+    Write-Error "Build failed."
+}
+
 if ($Package) {
     if ($null -eq (Get-Command nuget)) {
         Write-Error "nuget could not be found. To package this project you need nuget. You can install nuget using 'choco install nuget -y'."
