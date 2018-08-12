@@ -10,7 +10,7 @@ Param(
 $ErrorActionPreference = "Stop"
 
 if ($null -eq (Get-Command vswhere)) {
-    Write-Error "vswhere could not be found. To build this project you need vswhere."
+    Write-Error "vswhere could not be found. To build this project you need vswhere. You can install vswhere using 'choco install vswhere -y'."
 }
 
 $path = vswhere -latest -products * -requires Microsoft.Component.MSBuild -property installationPath
@@ -19,7 +19,7 @@ if ($path) {
 }
 
 if ($null -eq $msbuild -or !(Test-Path $msbuild)) {
-    Write-Error "msbuild could not be found"
+    Write-Error "MSBuild could not be found."
 }
 
 # Build solution
@@ -27,7 +27,7 @@ if ($null -eq $msbuild -or !(Test-Path $msbuild)) {
 
 if ($Package) {
     if ($null -eq (Get-Command nuget)) {
-        Write-Error "nuget could not be found. To package this project you need nuget."
+        Write-Error "nuget could not be found. To package this project you need nuget. You can install nuget using 'choco install nuget -y'."
     }
 
     $buildOutput = Join-Path $PSScriptRoot "build/$Configuration"
