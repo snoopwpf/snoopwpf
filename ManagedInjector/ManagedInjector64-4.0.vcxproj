@@ -14,14 +14,6 @@
     <ProjectGuid>{A27C8B34-2527-4258-8C07-D2720C576B90}</ProjectGuid>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <RootNamespace>ManagedInjector</RootNamespace>
-    <SccProjectName>
-    </SccProjectName>
-    <SccAuxPath>
-    </SccAuxPath>
-    <SccLocalPath>
-    </SccLocalPath>
-    <SccProvider>
-    </SccProvider>
     <Keyword>ManagedCProj</Keyword>
     <ProjectName>ManagedInjector64-4.0</ProjectName>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
