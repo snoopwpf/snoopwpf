@@ -10,7 +10,7 @@
   skip_tags: true
   image: Visual Studio 2017
   configuration: Release
-  platform: Any CPU
+  platform: Mixed Platforms
   test: off
 
   pull_requests:
