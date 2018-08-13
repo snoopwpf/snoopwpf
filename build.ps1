@@ -45,6 +45,10 @@ if ($Package) {
     "Creating chocolatey package for version $version"
     &nuget pack "$(Join-Path $PSScriptRoot 'chocolatey\snoop.nuspec')" -Version $version -Properties Configuration=$Configuration -OutputDirectory "$outputDirectory" -NoPackageAnalysis
 
+    if ($LASTEXITCODE -ne 0) {
+        Write-Error "Creating chocolatey package failed."
+    }
+
     "Creating zip for version $version"
     $zipOutput = (Join-Path $outputDirectory "Snoop.$version.zip")
     Remove-Item $zipOutput -ErrorAction SilentlyContinue
