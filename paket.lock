@@ -1,0 +1,7 @@
+REDIRECTS: OFF
+SPECIFIC-VERSION: FALSE
+NUGET
+  remote: https://api.nuget.org/v3/index.json
+    nuget.commandline (4.7.1)
+    vswhere (2.5.2)
+    wix (3.11.1)
