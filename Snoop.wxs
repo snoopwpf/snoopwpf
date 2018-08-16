@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"> 
+  <!-- ID="*" will generate a new GUID for product code at time of build. --> 
+  <!-- Product code changes AND version number changes (first 3 digits), then a major upgrade will be triggered. --> 
+   
+  <Product 
+    Id="*" 
+    Name="Snoop" 
+    Manufacturer="Cory Plotts" 
+    Language="1033" 
+    Version="$(var.ProductVersion)" 
+    UpgradeCode="FBEC01D7-CE1B-46F4-9498-71A96FEA8A15" 
+  > 
+    <Package InstallerVersion="301" Compressed="yes"/> 
+ 
+    <MajorUpgrade AllowDowngrades="no" DowngradeErrorMessage="Newer version already installed." AllowSameVersionUpgrades="yes" />
+     
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR"/> 
+ 
+    <Media Id="1" Cabinet="media1.cab" EmbedCab="yes"/> 
+ 
+    <Directory Id="TARGETDIR" Name="SourceDir"> 
+      <Directory Id="ProgramFilesFolder"> 
+        <Directory Id="INSTALLDIR" Name="Snoop"> 
+          <Component Id="Snoop" Guid="5624FD27-2409-4E5A-86E1-7C1A9C52A2F4"> 
+            <File 
+              Id="SnoopEXE" 
+              Name="Snoop.exe" 
+              Source="Snoop.exe" 
+              KeyPath="yes" 
+            > 
+              <Shortcut 
+                Id="desktopSnoopShortcut" 
+                Directory="DesktopFolder" 
+                Name="Snoop $(var.ProductVersion)" 
+                WorkingDirectory="INSTALLDIR" 
+                Icon="Snoop.exe" 
+                IconIndex="0" 
+                Advertise="yes" 
+              /> 
+              <Shortcut 
+                Id="startMenuSnoopShortcut" 
+                Directory="ProgramMenuDir" 
+                Name="Snoop $(var.ProductVersion)" 
+                WorkingDirectory="INSTALLDIR" 
+                Icon="Snoop.exe" 
+                IconIndex="0" 
+                Advertise="yes" 
+              /> 
+            </File> 
+ 
+            <File 
+              Id="SnoopCFG" 
+              Name="Snoop.exe.config" 
+              Source="Snoop.exe.config" 
+            /> 
+ 
+            <File 
+              Id="ManagedInjectorLauncher3240" 
+              Name="ManagedInjectorLauncher32-4.0.exe" 
+              Source="ManagedInjectorLauncher32-4.0.exe" 
+            /> 
+            <File 
+              Id="ManagedInjector3240" 
+              Name="ManagedInjector32-4.0.dll" 
+              Source="ManagedInjector32-4.0.dll" 
+            /> 
+ 
+            <File 
+              Id="ManagedInjectorLauncher6440" 
+              Name="ManagedInjectorLauncher64-4.0.exe" 
+              Source="ManagedInjectorLauncher64-4.0.exe" 
+            /> 
+            <File 
+              Id="ManagedInjector6440" 
+              Name="ManagedInjector64-4.0.dll" 
+              Source="ManagedInjector64-4.0.dll" 
+            /> 
+          </Component> 
+ 
+          <Directory Id="SnoopScriptsFolder" Name="Scripts"> 
+            <Component Id="SnoopScriptsComponent" Guid="65AD97C3-5B32-4020-892C-1D0E38656D6D"> 
+              <File 
+                Id="SnoopScriptsFile" 
+                Name="Snoop.psm1" 
+                Source="Scripts\Snoop.psm1" 
+              /> 
+            </Component> 
+          </Directory> 
+        </Directory> 
+      </Directory> 
+ 
+      <Directory Id="ProgramMenuFolder" Name="Programs"> 
+        <Directory Id="ProgramMenuDir" Name="Snoop"> 
+          <Component Id="ProgramMenuDir" Guid="F04C55F5-09D6-40CD-90E3-FA46E5E4A93D"> 
+            <RemoveFolder Id='ProgramMenuDir' On='uninstall'/> 
+            <RegistryValue Root='HKCU' Key='Software\[ProductName]' Type='string' Value='' KeyPath='yes'/> 
+          </Component> 
+        </Directory> 
+      </Directory> 
+ 
+      <Directory Id="DesktopFolder" Name="Desktop"/> 
+    </Directory> 
+ 
+    <Feature Id="ProductFeature" Title="Snoop" Description="Snoop, the WPF Spying Utility" Level="1" ConfigurableDirectory="INSTALLDIR"> 
+      <ComponentRef Id="Snoop"/> 
+      <ComponentRef Id="SnoopScriptsComponent"/> 
+      <ComponentRef Id="ProgramMenuDir"/> 
+    </Feature> 
+ 
+    <UIRef Id="WixUI_InstallDir"/> 
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf"/> 
+    <WixVariable Id="WixUIBannerBmp" Value="..\..\Artwork\Banner.bmp"/> 
+    <WixVariable Id="WixUIDialogBmp" Value="..\..\Artwork\Dialog.bmp"/> 
+    <!-- <WixVariable Id="WixUIExclamationIco" Value="Bitmaps\Exclamation.ico"/> 
+    <WixVariable Id="WixUIInfoIco" Value="Bitmaps\Information.ico"/> 
+    <WixVariable Id="WixUINewIco" Value="Bitmaps\New.ico"/> 
+    <WixVariable Id="WixUIUpIco" Value="Bitmaps\Up.ico"/>  -->
+ 
+    <Icon Id="Snoop.exe" SourceFile="Snoop.exe"/>
+    <Icon Id="icon.ico" SourceFile="..\..\Artwork\Snoop.ico"/>
+    <Property Id="ARPPRODUCTICON" Value="icon.ico" />
+  </Product> 
+</Wix>
