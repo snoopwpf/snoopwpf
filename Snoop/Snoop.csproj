@@ -11,7 +11,7 @@
     <RootNamespace>Snoop</RootNamespace>
     <AssemblyName>Snoop</AssemblyName>
     <BaseIntermediateOutputPath>$(SolutionDir)\Intermediate\Snoop\$(ConfigurationName)</BaseIntermediateOutputPath>
-    <ApplicationIcon>Snoop.ico</ApplicationIcon>
+    <ApplicationIcon>..\Artwork\Snoop.ico</ApplicationIcon>
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
@@ -141,7 +141,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Snoop.ico" />
+    <Resource Include="..\Artwork\Snoop.ico" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="SnoopabilityFeedbackWindow.xaml">
