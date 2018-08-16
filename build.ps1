@@ -37,6 +37,7 @@ if ($LASTEXITCODE -ne 0) {
 
 if ($Package) {
     $buildOutput = Join-Path $PSScriptRoot "build/$Configuration"
+    $intermediateOutput = Join-Path $PSScriptRoot "Intermediate"
     $version = (Get-Item (Join-Path $buildOutput "snoop.exe")).VersionInfo.FileVersion
     $outputDirectory = Join-Path $PSScriptRoot "build/publish"
 
@@ -58,13 +59,13 @@ if ($Package) {
 
     "Creating msi for version $version"
     $msiOutput = Join-Path $outputDirectory "Snoop.$version.msi"
-    & $candle Snoop.wxs -ext WixUIExtension -o Intermediate/Snoop.wixobj -dProductVersion="$version" -nologo
+    & $candle Snoop.wxs -ext WixUIExtension -o "$intermediateOutput/Snoop.wixobj" -dProductVersion="$version" -nologo
 
     if ($LASTEXITCODE -ne 0) {
         Write-Error "Candle failed."
     }
 
-    & $light -out "$msioutput" -b "$buildOutput" Intermediate/Snoop.wixobj -ext WixUIExtension -dProductVersion=$version -nologo
+    & $light -out "$msioutput" -b "$buildOutput" "$intermediateOutput/Snoop.wixobj" -ext WixUIExtension -dProductVersion=$version -pdbout "$intermediateOutput/Snoop.wixpdb" -nologo
 
     if ($LASTEXITCODE -ne 0) {
         Write-Error "Light failed."
