@@ -7,9 +7,9 @@
     <authors>Cory Plotts</authors>
     <owners>cplotts</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <licenseUrl>https://github.com/cplotts/snoopwpf/license</licenseUrl>
+    <licenseUrl>https://github.com/cplotts/snoopwpf/License.txt</licenseUrl>
     <projectUrl>https://github.com/cplotts/snoopwpf/</projectUrl>
-    <iconUrl>https://github.com/cplotts/snoopwpf/Artwork/snoop.png</iconUrl>
+    <iconUrl>https://github.com/cplotts/snoopwpf/raw/master/Artwork/Snoop.ico</iconUrl>
     <description>Snoop allows you to spy/browse the visual tree of a running WPF application (without the need for a debugger) ... and change properties ... amongst other things.</description>
     <tags>snoop spy wpf</tags>
     <dependencies>
@@ -17,6 +17,7 @@
     </dependencies>
   </metadata>
   <files>
+    <file src="..\License.txt" target="tools\" />
     <file src="tools\*" target="tools\" />
     <file src="..\build\$Configuration$\Scripts\*" target="tools\Scripts\" />
     <file src="..\build\$Configuration$\*.config" target="tools\" />
