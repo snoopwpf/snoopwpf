@@ -1,0 +1,26 @@
+# configuration for develop and master branch
+
+-
+  branches:
+    only:
+      - master
+      - develop
+      - Chocolatey
+
+  skip_tags: true
+  image: Visual Studio 2017
+  configuration: Release
+  platform: Mixed Platforms
+  test: off
+
+  pull_requests:
+    do_not_increment_build_number: false
+
+  build_script:
+    - ps: .\build.ps1 -Package -Verbose
+
+  artifacts:
+    - path: \build\publish\*.*
+
+  nuget:
+    disable_publish_on_pr: true

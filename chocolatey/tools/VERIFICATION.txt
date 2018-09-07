@@ -1,0 +1,7 @@
+﻿VERIFICATION
+Verification is intended to assist the Chocolatey moderators and community
+in verifying that this package's contents are trustworthy.
+ 
+This package is published by the vendor itself. 
+There is no need to include checksums in this file as the binaries are 
+all contained in this package and not aquired from a third party website.
