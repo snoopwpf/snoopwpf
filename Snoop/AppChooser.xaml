@@ -17,6 +17,7 @@ All other rights reserved.
 	Title="Snoop"
 	SizeToContent="Width"
 	Height="26"
+    MinHeight="26"
 	ResizeMode="NoResize"
 	MouseLeftButtonDown="HandleMouseLeftButtonDown"
 	SnapsToDevicePixels="False"
