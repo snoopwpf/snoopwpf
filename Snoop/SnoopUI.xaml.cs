@@ -455,30 +455,21 @@ namespace Snoop
 
 				return;
 			}
-			Load(root);
 
-		    this.Owner = SnoopWindowUtils.FindOwnerWindow(this);
-
-			SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
-			this.Dispatcher.UnhandledException += new DispatcherUnhandledExceptionEventHandler(UnhandledExceptionHandler);
-
-			Show();
-			Activate();
+            this.Inspect(root, SnoopWindowUtils.FindOwnerWindow(this));
 		}
+
 		public void Inspect(object root, Window ownerWindow)
 		{
 			this.Dispatcher.UnhandledException += new DispatcherUnhandledExceptionEventHandler(UnhandledExceptionHandler);
 
 			Load(root);
 
-			if (ownerWindow != null)
-			{
-				this.Owner = ownerWindow;
-			}
+			this.Owner = ownerWindow;
 
 			SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
-
-			Show();
+		    
+		    Show();
 			Activate();
 		}
 
