@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 (c) Copyright Cory Plotts.
 This source is subject to the Microsoft Public License (Ms-PL).
 Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
@@ -11,6 +11,9 @@ All other rights reserved.
 	Title="Unhandled Exception Occurred - Snoop"
 	Width="640"
 	Height="480"
+    MinWidth="640"
+    MinHeight="480"
+    ResizeMode="CanResizeWithGrip"
 >
 	<Grid Margin="10">
 		<Grid.RowDefinitions>
@@ -34,7 +37,7 @@ All other rights reserved.
 			Style="{x:Null}"
 			Grid.Row="1"
 			Margin="0,10,0,0"
-			Text="Stack:"
+			Text="Exception details:"
 		/>
 		<TextBox
 			Style="{x:Null}"
@@ -49,7 +52,7 @@ All other rights reserved.
 		<StackPanel Grid.Row="3" Margin="0,20,0,0">
 			<TextBlock
 				Style="{x:Null}"
-				Text="Take a look at the above stack (you can resize this dialog). If you think the exception is related to an issue in Snoop (versus the application you are Snooping), we would be very grateful if you could copy the stack trace to the clipboard and paste it into an issue at GitHub."
+				Text="Take a look at the above exception details (you can resize this dialog). If you think the exception is related to an issue in Snoop (versus the application you are Snooping), we would be very grateful if you could copy the stack trace to the clipboard and paste it into an issue at GitHub."
 				TextWrapping="Wrap"
 			/>
 			<TextBlock
@@ -60,7 +63,7 @@ All other rights reserved.
 			/>
 		</StackPanel>
  
-		<StackPanel Grid.Row="4" HorizontalAlignment="Center" Margin="0,10,0,0" Orientation="Horizontal">
+		<StackPanel Grid.Row="4" HorizontalAlignment="Left" Margin="0,10,0,0" Orientation="Horizontal">
 			<Button
 				x:Name="_buttonCopyToClipboard"
 			    Style="{x:Null}"
@@ -80,7 +83,7 @@ All other rights reserved.
 			</StackPanel>
 		</StackPanel>
 
-		<StackPanel Grid.Row="5" HorizontalAlignment="Center" Margin="0,40,0,0" Orientation="Horizontal">
+		<StackPanel Grid.Row="5" HorizontalAlignment="Left" Margin="0,10,0,0" Orientation="Horizontal">
 			<CheckBox
 				x:Name="_checkBoxRemember"
 			    Style="{x:Null}"
