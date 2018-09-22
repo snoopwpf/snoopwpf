@@ -434,10 +434,11 @@ namespace Snoop
 		#endregion
 
 		#region Public Methods
+
 		public void Inspect()
 		{
-			object root = FindRoot();
-			if (root == null)
+			var foundRoot = this.FindRoot();
+			if (foundRoot == null)
 			{
 				if (!SnoopModes.MultipleDispatcherMode)
 				{
@@ -456,21 +457,23 @@ namespace Snoop
 				return;
 			}
 
-            this.Inspect(root, SnoopWindowUtils.FindOwnerWindow(this));
+            this.Inspect(foundRoot, SnoopWindowUtils.FindOwnerWindow(this));
 		}
 
-		public void Inspect(object root, Window ownerWindow)
+		public void Inspect(object rootToInspect, Window ownerWindow)
 		{
-			this.Dispatcher.UnhandledException += new DispatcherUnhandledExceptionEventHandler(UnhandledExceptionHandler);
+		    ErrorDialog.ShowDialog(new Exception("Test-Exception"));
 
-			Load(root);
+			this.Dispatcher.UnhandledException += this.UnhandledExceptionHandler;
+
+		    this.Load(rootToInspect);
 
 			this.Owner = ownerWindow;
 
 			SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
 		    
-		    Show();
-			Activate();
+		    this.Show();
+		    this.Activate();
 		}
 
 		private void UnhandledExceptionHandler(object sender, DispatcherUnhandledExceptionEventArgs e)
@@ -510,7 +513,6 @@ namespace Snoop
 				m_reducedDepthRoot = newRoot;
 			}
 		}
-
 
 		/// <summary>
 		/// Loop through the properties in the current PropertyGrid and save away any properties
@@ -800,7 +802,7 @@ namespace Snoop
 
 		private object FindRoot()
 		{
-			object root = null;
+			object foundRoot = null;
 
 			if (SnoopModes.MultipleDispatcherMode)
 			{
@@ -813,14 +815,14 @@ namespace Snoop
 						((UIElement)presentationSource.RootVisual).Dispatcher.CheckAccess()
 					)
 					{
-						root = presentationSource.RootVisual;
+						foundRoot = presentationSource.RootVisual;
 						break;
 					}
 				}
 			}
 			else if (Application.Current != null)
 			{
-				root = Application.Current;
+				foundRoot = Application.Current;
 			}
 			else
 			{
@@ -839,7 +841,7 @@ namespace Snoop
 						((UIElement)presentationSource.RootVisual).Visibility == Visibility.Visible
 					)
 					{
-						root = presentationSource.RootVisual;
+						foundRoot = presentationSource.RootVisual;
 						break;
 					}
 				}
@@ -856,21 +858,21 @@ namespace Snoop
 				}
 			}
 
-			return root;
+			return foundRoot;
 		}
 
-		private void Load(object root)
+		private void Load(object newRoot)
 		{
-			this.root = root;
+			this.root = newRoot;
 
 			this.visualTreeItems.Clear();
 
-			this.Root = VisualTreeItem.Construct(root, null);
+			this.Root = VisualTreeItem.Construct(newRoot, null);
 			this.CurrentSelection = this.rootVisualTreeItem;
 
 			this.SetFilter(this.filter);
 
-			this.OnPropertyChanged("Root");
+			this.OnPropertyChanged(nameof(this.Root));
 		}
 		#endregion
 
