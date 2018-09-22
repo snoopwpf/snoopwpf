@@ -49,7 +49,7 @@ All other rights reserved.
 		<StackPanel Grid.Row="3" Margin="0,20,0,0">
 			<TextBlock
 				Style="{x:Null}"
-				Text="Take a look at the above stack (you can resize this dialog). If you think the exception is related to an issue in Snoop (versus the application you are Snooping), we would be very grateful if you could copy the stack trace to the clipboard and paste it into an issue at either CodePlex or GitHub."
+				Text="Take a look at the above stack (you can resize this dialog). If you think the exception is related to an issue in Snoop (versus the application you are Snooping), we would be very grateful if you could copy the stack trace to the clipboard and paste it into an issue at GitHub."
 				TextWrapping="Wrap"
 			/>
 			<TextBlock
@@ -71,14 +71,8 @@ All other rights reserved.
 			>
 				<TextBlock Style="{x:Null}" Text="Copy Exception to Clipboard"/>
 			</Button>
-			<StackPanel Orientation="Vertical" Grid.Row="3">
-				<TextBlock Style="{x:Null}">
-					<Hyperlink Style="{x:Null}" NavigateUri="http://snoopwpf.codeplex.com/WorkItem/Create?ProjectName=snoopwpf" RequestNavigate="Hyperlink_RequestNavigate">
-						<TextBlock Style="{x:Null}" Text="Click Here to create an issue on CodePlex."/>
-					</Hyperlink>
-				</TextBlock>
-
-				<TextBlock Style="{x:Null}">
+            <StackPanel Orientation="Vertical" Grid.Row="3">
+                <TextBlock Style="{x:Null}">
 					<Hyperlink Style="{x:Null}" NavigateUri="https://github.com/cplotts/snoopwpf/issues/new" RequestNavigate="Hyperlink_RequestNavigate">
 						<TextBlock Style="{x:Null}" Text="Click Here to create an issue on GitHub."/>
 					</Hyperlink>
