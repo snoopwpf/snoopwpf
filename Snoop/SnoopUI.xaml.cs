@@ -16,16 +16,14 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using System.Windows.Forms.Integration;
-using System.Runtime.InteropServices;
-using System.Windows.Interop;
 using System.Threading;
 using Snoop.Infrastructure;
 using Snoop.Shell;
 
 namespace Snoop
 {
-	#region SnoopUI
-	public partial class SnoopUI : INotifyPropertyChanged
+    #region SnoopUI
+    public partial class SnoopUI : INotifyPropertyChanged
 	{
 		#region Public Static Routed Commands
 		public static readonly RoutedCommand IntrospectCommand = new RoutedCommand("Introspect", typeof(SnoopUI));
@@ -138,16 +136,18 @@ namespace Snoop
 	    #endregion
 
 		#region Public Static Methods
-		public static bool GoBabyGo()
+
+	    // ReSharper disable once UnusedMember.Global
+	    public static bool GoBabyGo()
 		{
 			try
 			{
 				SnoopApplication();
 				return true;
 			}
-			catch (Exception ex)
+			catch (Exception exception)
 			{
-				MessageBox.Show(string.Format("There was an error snooping! Message = {0}\n\nStack Trace:\n{1}", ex.Message, ex.StackTrace), "Error Snooping", MessageBoxButton.OK);
+			    ErrorDialog.ShowExceptionMessageBox(exception, "Error Snooping", "There was an error snooping the application.");
 				return false;
 			}
 		}
@@ -156,9 +156,13 @@ namespace Snoop
 		{
 			Dispatcher dispatcher;
 			if (Application.Current == null)
+            {
 				dispatcher = Dispatcher.CurrentDispatcher;
+            }
 			else
+            {
 				dispatcher = Application.Current.Dispatcher;
+            }
 
 			if (dispatcher.CheckAccess())
 			{
@@ -211,7 +215,7 @@ namespace Snoop
 				var result =
 					MessageBox.Show
 					(
-						"Snoop has noticed windows running in multiple dispatchers!\n\n" +
+						"Snoop has noticed windows running in multiple dispatchers.\n\n" +
 						"Would you like to enter multiple dispatcher mode, and have a separate Snoop window for each dispatcher?\n\n" +
 						"Without having a separate Snoop window for each dispatcher, you will not be able to Snoop the windows in the dispatcher threads outside of the main dispatcher. " +
 						"Also, note, that if you bring up additional windows in additional dispatchers (after Snooping), you will need to Snoop again in order to launch Snoop windows for those additional dispatchers.",
@@ -442,7 +446,7 @@ namespace Snoop
 					//the message below would be wrong.
 					MessageBox.Show
 					(
-						"Can't find a current application or a PresentationSource root visual!",
+						"Can't find a current application or a PresentationSource root visual.",
 						"Can't Snoop",
 						MessageBoxButton.OK,
 						MessageBoxImage.Exclamation
@@ -479,27 +483,22 @@ namespace Snoop
 		}
 
 		private void UnhandledExceptionHandler(object sender, DispatcherUnhandledExceptionEventArgs e)
-		{
-			if (SnoopModes.IgnoreExceptions)
-			{
-				return;
-			}
+        {
+            if (SnoopModes.IgnoreExceptions)
+            {
+                return;
+            }
 
-			if (SnoopModes.SwallowExceptions)
-			{
-				e.Handled = true;
-				return;
-			}
+            if (SnoopModes.SwallowExceptions)
+            {
+                e.Handled = true;
+                return;
+            }
 
-			// should we check if the exception came from Snoop? perhaps seeing if any Snoop call is in the stack trace?
-			ErrorDialog dialog = new ErrorDialog();
-			dialog.Exception = e.Exception;
-			var result = dialog.ShowDialog();
-			if (result.HasValue && result.Value)
-				e.Handled = true;
-		}
+            e.Handled = ErrorDialog.ShowDialog(e.Exception);
+        }
 
-		public void ApplyReduceDepthFilter(VisualTreeItem newRoot)
+        public void ApplyReduceDepthFilter(VisualTreeItem newRoot)
 		{
 			if (m_reducedDepthRoot != newRoot)
 			{

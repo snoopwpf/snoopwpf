@@ -75,11 +75,11 @@ namespace Snoop
             {
                 string xaml = XamlWriter.Save(((PropertyInformation)e.Parameter).Value);
                 Clipboard.SetData(DataFormats.Text, xaml);
-                MessageBox.Show("This brush has been copied to the clipboard. You can paste it into your project.", "Brush copied", MessageBoxButton.OK);
+                MessageBox.Show("Brush has been copied to the clipboard. You can paste it into your project.", "Brush copied", MessageBoxButton.OK);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                MessageBox.Show(ex.Message);
+                ErrorDialog.ShowExceptionMessageBox(exception);
             }
         }
 
@@ -446,10 +446,9 @@ namespace Snoop
                         var userFilters = Properties.Settings.Default.PropertyFilterSets;
                         ret.AddRange(userFilters ?? _defaultFilterSets);
                     }
-                    catch (Exception ex)
+                    catch (Exception exception)
                     {
-                        string msg = String.Format("Error reading user filters from settings. Using defaults.\r\n\r\n{0}", ex.Message);
-                        MessageBox.Show(msg, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+                        ErrorDialog.ShowExceptionMessageBox(exception, "Error reading user filters from settings. Using default filters.");
                         ret.Clear();
                         ret.AddRange(_defaultFilterSets);
                     }

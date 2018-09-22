@@ -4,29 +4,17 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using Snoop.Infrastructure;
 
 namespace Snoop
 {
-	/// <summary>
-	/// Interaction logic for ErrorDialog.xaml
-	/// </summary>
-	public partial class ErrorDialog : Window
+	public partial class ErrorDialog
 	{
 		public ErrorDialog()
 		{
-			InitializeComponent();
+			this.InitializeComponent();
 
 			this.Loaded += ErrorDialog_Loaded;
 			this.Closed += ErrorDialog_Closed;
@@ -34,12 +22,36 @@ namespace Snoop
 
 		public Exception Exception { get; set; }
 
-		private void ErrorDialog_Loaded(object sender, RoutedEventArgs e)
+	    public static bool ShowDialog(Exception exception)
+	    {
+	        // should we check if the exception came from Snoop? perhaps seeing if any Snoop call is in the stack trace?
+	        var dialog = new ErrorDialog
+	                     {
+	                         Exception = exception
+	                     };
+	        var result = dialog.ShowDialog();
+	        if (result.HasValue 
+	            && result.Value)
+	        {
+	            return true;
+	        }
+
+	        return false;
+	    }
+
+	    public static void ShowExceptionMessageBox(Exception exception, string title = null, string message = null)
+	    {
+	        var finalMessage = (message ?? string.Empty) + $"\nException:\n{exception}";
+	        MessageBox.Show(finalMessage.TrimStart(), title ?? "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+	    }
+
+	    private void ErrorDialog_Loaded(object sender, RoutedEventArgs e)
 		{
 			this._textBlockException.Text = this.GetExceptionMessage();
 
 			SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
 		}
+
 		private void ErrorDialog_Closed(object sender, EventArgs e)
 		{
 			SnoopPartsRegistry.RemoveSnoopVisualTreeRoot(this);
@@ -51,10 +63,9 @@ namespace Snoop
 			{
 				Clipboard.SetText(this.GetExceptionMessage());
 			}
-			catch (Exception ex)
+			catch (Exception exception)
 			{
-				string message = string.Format("There was an error copying to the clipboard:\nMessage = {0}\n\nPlease copy the exception from the above textbox manually!", ex.Message);
-				MessageBox.Show(message, "Error copying to clipboard");
+			    ShowExceptionMessageBox(exception, "Error copying to clipboard", "There was an error copying to the clipboard.\nPlease copy the exception from the above textbox manually.");
 			}
 		}
 		private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
@@ -63,10 +74,10 @@ namespace Snoop
 			{
 				System.Diagnostics.Process.Start(e.Uri.AbsoluteUri);
 			}
-			catch (Exception)
+			catch (Exception exception)
 			{
-				string message = string.Format("There was an error starting the browser. Please visit \"{0}\" to create the issue.", e.Uri.AbsoluteUri);
-				MessageBox.Show(message, "Error starting browser");
+				var message = $"There was an error starting the browser. Please visit \"{e.Uri.AbsoluteUri}\" manually to create an issue.";
+			    ShowExceptionMessageBox(exception, "Error starting browser", message);
 			}
 		}
 
@@ -82,10 +93,12 @@ namespace Snoop
 		private void CloseAndMarkHandled_Click(object sender, RoutedEventArgs e)
 		{
 			this.DialogResult = true;
+
 			if (CheckBoxRememberIsChecked())
 			{
 				SnoopModes.SwallowExceptions = true;
 			}
+
 			this.Close();
 		}
 
@@ -95,6 +108,7 @@ namespace Snoop
 			GetExceptionString(this.Exception, builder);
 			return builder.ToString();
 		}
+
 		private static void GetExceptionString(Exception exception, StringBuilder builder, bool isInner = false)
 		{
 			if (exception == null)
