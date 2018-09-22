@@ -39,10 +39,10 @@ namespace Snoop
 	        return false;
 	    }
 
-	    public static void ShowExceptionMessageBox(Exception exception, string title = null, string message = null)
+	    public static void ShowExceptionMessageBox(Exception exception, string title = "Exception", string message = "")
 	    {
-	        var finalMessage = (message ?? string.Empty) + $"\nException:\n{exception}";
-	        MessageBox.Show(finalMessage.TrimStart(), title ?? "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+	        var finalMessage = message + $"\nException:\n{exception}";
+	        MessageBox.Show(finalMessage.TrimStart(), title, MessageBoxButton.OK, MessageBoxImage.Error);
 	    }
 
 	    private void ErrorDialog_Loaded(object sender, RoutedEventArgs e)
