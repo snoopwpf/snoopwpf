@@ -74,7 +74,10 @@ namespace Snoop.Infrastructure
 
         private static UIElement CreateRectangleForFrameworkElement(FrameworkElement uiElement)
         {
-            VisualBrush brush = new VisualBrush(uiElement);
+            VisualBrush brush = VisualCaptureUtil.CreateVisualBrushSafe(uiElement);
+            if (brush == null)
+                return null;
+
             brush.Stretch = Stretch.Uniform;
             Rectangle rect = new Rectangle();
             rect.Fill = brush;
