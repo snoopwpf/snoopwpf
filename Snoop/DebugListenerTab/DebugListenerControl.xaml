@@ -47,7 +47,7 @@
 					<ComboBoxItem Style="{x:Null}" Tag="Verbose">
 						<TextBlock Style="{x:Null}" Text="Verbose"/>
 					</ComboBoxItem>
-					<ComboBoxItem Style="{x:Null}" Tag="Activity Tracing">
+					<ComboBoxItem Style="{x:Null}" Tag="ActivityTracing">
 						<TextBlock Style="{x:Null}" Text="Activity Tracing"/>
 					</ComboBoxItem>
 					<ComboBoxItem Style="{x:Null}" Tag="All">
