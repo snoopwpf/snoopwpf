@@ -17,6 +17,7 @@ using System.Windows.Data;
 namespace Snoop
 {
     using System.Linq;
+    using System.Windows.Interop;
 
     /// <summary>
 	/// Main class that represents a visual in the visual tree
@@ -67,12 +68,11 @@ namespace Snoop
 		{
 			get
 			{
-				VisualBrush brush = new VisualBrush(this.Visual);
+				VisualBrush brush = VisualCaptureUtil.CreateVisualBrushSafe(this.Visual);
 				brush.Stretch = Stretch.Uniform;
 				return brush;
 			}
 		}
-
 
 		protected override ResourceDictionary ResourceDictionary
 		{
