@@ -462,8 +462,6 @@ namespace Snoop
 
 		public void Inspect(object rootToInspect, Window ownerWindow)
 		{
-		    ErrorDialog.ShowDialog(new Exception("Test-Exception"));
-
 			this.Dispatcher.UnhandledException += this.UnhandledExceptionHandler;
 
 		    this.Load(rootToInspect);
