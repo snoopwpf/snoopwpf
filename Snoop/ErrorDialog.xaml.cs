@@ -4,39 +4,62 @@
 // All other rights reserved.
 
 using System;
-using System.Text;
 using System.Windows;
 using Snoop.Infrastructure;
 
 namespace Snoop
 {
-	public partial class ErrorDialog
+    public partial class ErrorDialog
 	{
+	    private bool exceptionAlreadyHandled;
+
 		public ErrorDialog()
 		{
 			this.InitializeComponent();
 
-			this.Loaded += ErrorDialog_Loaded;
-			this.Closed += ErrorDialog_Closed;
+			this.Loaded += this.ErrorDialog_Loaded;
+			this.Closed += this.ErrorDialog_Closed;
 		}
 
-		public Exception Exception { get; set; }
+		public Exception Exception { get; private set; }
 
-	    public static bool ShowDialog(Exception exception)
+	    public bool ExceptionAlreadyHandled
+	    {
+	        get => this.exceptionAlreadyHandled;
+	        private set 
+	        { 
+	            this.exceptionAlreadyHandled = value;
+	            this.HandledExceptionPanel.Visibility = value
+	                                                        ? Visibility.Visible
+	                                                        : Visibility.Collapsed;
+
+	            this.UnhandledExceptionPanel.Visibility = value
+	                                                        ? Visibility.Collapsed
+	                                                        : Visibility.Visible;
+	        }
+	    }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns><c>true</c> is the exception should be marked handled and <c>false</c> if the exception should NOT be </returns>
+	    public static bool ShowDialog(Exception exception, string title = "Error occurred", string caption = "An error has occured", bool exceptionAlreadyHandled = false)
 	    {
 	        // should we check if the exception came from Snoop? perhaps seeing if any Snoop call is in the stack trace?
 	        var dialog = new ErrorDialog
 	                     {
-	                         Exception = exception
+	                         Title = title + " - Snoop",
+	                         captionTextBlock =
+	                         {
+	                             Text = caption
+	                         },
+	                         Exception = exception,
+                             ExceptionAlreadyHandled = exceptionAlreadyHandled
 	                     };
-	        var result = dialog.ShowDialog();
-	        if (result.HasValue 
-	            && result.Value)
-	        {
-	            return true;
-	        }
 
-	        return false;
+	        var result = dialog.ShowDialog();
+
+	        return (result ?? false) == false;
 	    }
 
 	    public static void ShowExceptionMessageBox(Exception exception, string title = "Exception", string message = "")
@@ -65,14 +88,19 @@ namespace Snoop
 			}
 			catch (Exception exception)
 			{
-			    ShowExceptionMessageBox(exception, "Error copying to clipboard", "There was an error copying to the clipboard.\nPlease copy the exception from the above textbox manually.");
+			    ShowExceptionMessageBox(exception, "Error copying to clipboard", "There was an error copying to the clipboard.\nPlease copy the error details from the above textbox manually.");
 			}
 		}
+
 		private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
 		{
 			try
 			{
-				System.Diagnostics.Process.Start(e.Uri.AbsoluteUri);
+			    var body = this.GenerateIssueBody();
+                
+			    var titleParameter = Uri.EscapeDataString(this.Exception.Message);
+			    var bodyParameter = Uri.EscapeDataString(body);
+				System.Diagnostics.Process.Start($"https://github.com/cplotts/snoopwpf/issues/new?title={titleParameter}&body={bodyParameter}");
 			}
 			catch (Exception exception)
 			{
@@ -83,18 +111,21 @@ namespace Snoop
 
 		private void CloseDoNotMarkHandled_Click(object sender, RoutedEventArgs e)
 		{
-			this.DialogResult = false;
-			if (CheckBoxRememberIsChecked())
+			this.DialogResult = true;
+
+			if (this.CheckBoxRememberIsChecked())
 			{
 				SnoopModes.IgnoreExceptions = true;
 			}
+
 			this.Close();
 		}
+
 		private void CloseAndMarkHandled_Click(object sender, RoutedEventArgs e)
 		{
-			this.DialogResult = true;
+			this.DialogResult = false;
 
-			if (CheckBoxRememberIsChecked())
+			if (this.CheckBoxRememberIsChecked())
 			{
 				SnoopModes.SwallowExceptions = true;
 			}
@@ -104,28 +135,41 @@ namespace Snoop
 
 		private string GetExceptionMessage()
 		{
-			StringBuilder builder = new StringBuilder();
-			GetExceptionString(this.Exception, builder);
-			return builder.ToString();
-		}
-
-		private static void GetExceptionString(Exception exception, StringBuilder builder, bool isInner = false)
-		{
-			if (exception == null)
-				return;
-
-			if (isInner)
-				builder.AppendLine("\n\nInnerException:\n");
-
-			builder.AppendLine(string.Format("Message: {0}", exception.Message));
-			builder.AppendLine(string.Format("Stacktrace:\n{0}", exception.StackTrace));
-
-			GetExceptionString(exception.InnerException, builder, true);
+		    return this.Exception.ToString();
 		}
 
 		private bool CheckBoxRememberIsChecked()
 		{
 			return this._checkBoxRemember.IsChecked.HasValue && this._checkBoxRemember.IsChecked.Value;
 		}
+
+	    private string GenerateIssueBody()
+	    {
+	        return $@"**Place your issue description here.**
+
+Exception details:
+{this.Exception}
+
+---
+### Environment
+- Snoop {this.GetType().Assembly.GetName().Version}
+- Windows {GetWindowsVersion()}
+- .NET Framework {Environment.Version}";
+	    }
+
+	    private static string GetWindowsVersion()
+	    {
+	        try
+	        {
+	            using (var registryKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion"))
+	            {
+	                return (string)registryKey.GetValue("CurrentVersion") + "." + (string)registryKey.GetValue("CurrentBuild");
+	            }
+	        }
+	        catch (Exception)
+	        {
+	            return Environment.OSVersion.Version + " " + Environment.OSVersion.ServicePack;
+	        }	        
+	    }
 	}
 }

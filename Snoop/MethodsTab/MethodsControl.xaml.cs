@@ -223,7 +223,7 @@ namespace Snoop.MethodsTab
             }
             catch (Exception exception)
             {
-                ErrorDialog.ShowExceptionMessageBox(exception, "Error creating parameter");
+                ErrorDialog.ShowDialog(exception, "Error creating parameter", exceptionAlreadyHandled: true);
                 return false;
             }
         }
@@ -262,7 +262,7 @@ namespace Snoop.MethodsTab
             }
             catch (Exception exception)
             {
-                ErrorDialog.ShowExceptionMessageBox(exception, $"Error invoking method '{selectedMethod.MethodName}'");
+                ErrorDialog.ShowDialog(exception, $"Error invoking method '{selectedMethod.MethodName}'", exceptionAlreadyHandled: true);
             }
         }
 

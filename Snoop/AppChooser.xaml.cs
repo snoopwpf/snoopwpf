@@ -349,18 +349,18 @@ namespace Snoop
 	{
 		public AttachFailedHandler(WindowInfo window, AppChooser appChooser = null)
 		{
-			window.AttachFailed += OnSnoopAttachFailed;
-			_appChooser = appChooser;
+			window.AttachFailed += this.OnSnoopAttachFailed;
+			this.appChooser = appChooser;
 		}
 
 		private void OnSnoopAttachFailed(object sender, AttachFailedEventArgs e)
 		{
-            ErrorDialog.ShowExceptionMessageBox(e.AttachException, "Can't Snoop the process", $"Failed to attach to '{e.WindowName}'.");
-	    
-		    // TODO This should be implmemented through the event broker, not like this.
-		    this._appChooser?.Refresh();
+            ErrorDialog.ShowDialog(e.AttachException, "Can't Snoop the process", $"Failed to attach to '{e.WindowName}'.", exceptionAlreadyHandled: true);
+	        
+		    // TODO This should be implemented through the event broker, not like this.
+		    this.appChooser?.Refresh();
 		}
 
-		private AppChooser _appChooser;
+		private readonly AppChooser appChooser;
 	}
 }

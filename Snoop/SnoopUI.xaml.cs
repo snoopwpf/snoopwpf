@@ -147,7 +147,7 @@ namespace Snoop
 			}
 			catch (Exception exception)
 			{
-			    ErrorDialog.ShowExceptionMessageBox(exception, "Error Snooping", "There was an error snooping the application.");
+			    ErrorDialog.ShowDialog(exception, "Error Snooping", "There was an error snooping the application.", exceptionAlreadyHandled: true);
 				return false;
 			}
 		}
