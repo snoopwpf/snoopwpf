@@ -698,7 +698,12 @@ namespace Snoop
 		/// </summary>
 		private VisualTreeItem FindItem(object target)
 		{
-			VisualTreeItem node = this.rootVisualTreeItem.FindNode(target);
+		    if (this.rootVisualTreeItem == null)
+		    {
+		        return null;
+		    }
+
+		    VisualTreeItem node = this.rootVisualTreeItem.FindNode(target);
 			Visual rootVisual = this.rootVisualTreeItem.MainVisual;
 			if (node == null)
 			{
