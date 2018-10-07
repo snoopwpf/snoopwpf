@@ -1,4 +1,4 @@
-﻿namespace Snoop.TriggersTab.Triggers
+namespace Snoop.TriggersTab.Triggers
 {
     using System;
     using System.Collections.Generic;
@@ -53,12 +53,7 @@
 
         public ConditionItem(DependencyObject conditionContainer, object targetValue, string displayName)
         {
-            if (conditionContainer == null)
-            {
-                throw new ArgumentNullException("conditionContainer", "Instance must not be null.");
-            }
-
-            this.conditionContainer = conditionContainer;
+            this.conditionContainer = conditionContainer ?? throw new ArgumentNullException(nameof(conditionContainer), "Condition container must not be null.");
             this.targetValue = targetValue;
 
             this.displayName = displayName;
@@ -153,7 +148,7 @@
         {
             get
             {
-                return string.Format("{0} == {1} TargetValue: {2}", this.DisplayName, this.TargetValue, this.StringValue);
+                return $"{this.DisplayName} == {this.TargetValue} TargetValue: {this.StringValue}";
             }
         }
 
@@ -163,7 +158,7 @@
             {
                 return string.IsNullOrEmpty(this.SourceName)
                            ? this.displayName
-                           : string.Format("{0} ({1})", this.displayName, this.SourceName);
+                           : $"{this.displayName} ({this.SourceName})";
             }
         }
 
@@ -242,11 +237,7 @@
 
         private void NotifyStateChanged()
         {
-            var handler = this.StateChanged;
-            if (handler != null)
-            {
-                handler.Invoke(this, EventArgs.Empty);
-            }
+            this.StateChanged?.Invoke(this, EventArgs.Empty);
         }
 
         #endregion
