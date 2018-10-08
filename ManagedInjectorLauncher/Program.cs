@@ -22,7 +22,7 @@ namespace ManagedInjectorLauncher
 			var methodName = args[3];
 		    var settingsFile = args[4];
 
-		    var transportData = new TransportData
+		    var transportData = new InjectorData
 		                        {
                                     AssemblyName = assemblyName,
                                     ClassName = className,

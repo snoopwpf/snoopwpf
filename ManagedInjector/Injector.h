@@ -13,16 +13,7 @@ using namespace System::IO;
 
 namespace ManagedInjector
 {
-	public ref class InjectorData : System::Object
-	{
-		public:
-
-			property System::String^ AssemblyName;
-			property System::String^ ClassName;
-			property System::String^ MethodName;
-
-			property System::String^ SettingsFile;
-	};
+	ref class InjectorData;
 
 	public ref class Injector : System::Object
 	{
