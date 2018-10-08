@@ -1,7 +1,6 @@
 namespace Snoop.TriggersTab.Triggers
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Windows;
@@ -23,19 +22,25 @@ namespace Snoop.TriggersTab.Triggers
         ///     Initializes a new instance of the <see cref="ConditionItem" /> class.
         /// </summary>
         public ConditionItem(DependencyProperty dependencyProperty, DependencyObject conditionContainer, object targetValue)
-            : this(DependencyPropertyDescriptor.FromProperty(dependencyProperty, conditionContainer.GetType()), conditionContainer, targetValue)
+            : this(dependencyProperty, GetDependencyPropertyDescriptor(dependencyProperty, conditionContainer), conditionContainer, targetValue)
         {
         }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ConditionItem" /> class.
         /// </summary>
-        public ConditionItem(DependencyPropertyDescriptor propertyDescriptor, DependencyObject conditionContainer, object targetValue)
-            : this(conditionContainer, targetValue, propertyDescriptor.DisplayName)
+        public ConditionItem(DependencyProperty dependencyProperty, DependencyPropertyDescriptor propertyDescriptor, DependencyObject conditionContainer, object targetValue)
+            : this(conditionContainer, targetValue, GetDisplayName(dependencyProperty, propertyDescriptor))
         {
             this.dependencyPropertyDescriptor = propertyDescriptor;
 
-            this.BindCurrentValue(conditionContainer, this.dependencyPropertyDescriptor.DependencyProperty);
+            if (this.dependencyPropertyDescriptor == null)
+            {
+                this.HasError = true;
+                this.Error = $"DependencyPropertyDescriptor for '{this.DisplayName}' could not be found.{Environment.NewLine}In case of an attached property this might be caused by a missing \"get\"-method for that property.";
+            }
+
+            this.BindCurrentValue(conditionContainer, dependencyProperty);
         }
 
         /// <summary>
@@ -59,6 +64,10 @@ namespace Snoop.TriggersTab.Triggers
             this.displayName = displayName;
         }
 
+        public bool HasError { get; }
+
+        public string Error { get; }
+
         public object CurrentValue
         {
             get { return this.GetValue(ConditionItem.CurrentValueProperty); }
@@ -66,7 +75,7 @@ namespace Snoop.TriggersTab.Triggers
         }
 
         public static readonly DependencyProperty CurrentValueProperty =
-            DependencyProperty.Register("CurrentValue", typeof(object), typeof(ConditionItem), new PropertyMetadata(HandleCurrentValueChanged));        
+            DependencyProperty.Register(nameof(CurrentValue), typeof(object), typeof(ConditionItem), new PropertyMetadata(HandleCurrentValueChanged));        
 
         private static void HandleCurrentValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -81,10 +90,10 @@ namespace Snoop.TriggersTab.Triggers
                 return;
             }
 
-            this.OnPropertyChanged("StringValue");
-            this.OnPropertyChanged("IsActive");
-            this.OnPropertyChanged("CurrentValue");
-            this.OnPropertyChanged("Condition");
+            this.OnPropertyChanged(nameof(this.StringValue));
+            this.OnPropertyChanged(nameof(this.IsActive));
+            this.OnPropertyChanged(nameof(this.CurrentValue));
+            this.OnPropertyChanged(nameof(this.Condition));
 
             this.NotifyStateChanged();
         }
@@ -204,10 +213,7 @@ namespace Snoop.TriggersTab.Triggers
         {
             BindingOperations.ClearBinding(this, CurrentValueProperty);
 
-            if (this.attachedPropertySlot != null)
-            {
-                this.attachedPropertySlot.Dispose();
-            }
+            this.attachedPropertySlot?.Dispose();
         }
 
         #endregion
@@ -220,10 +226,7 @@ namespace Snoop.TriggersTab.Triggers
             Debug.Assert(this.GetType().GetProperty(propertyName) != null);
 
             var handler = this.PropertyChanged;
-            if (handler != null)
-            {
-                handler.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         #endregion
@@ -238,6 +241,21 @@ namespace Snoop.TriggersTab.Triggers
         private void NotifyStateChanged()
         {
             this.StateChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private static DependencyPropertyDescriptor GetDependencyPropertyDescriptor(DependencyProperty dependencyProperty, DependencyObject targetType)
+        {
+            return DependencyPropertyDescriptor.FromProperty(dependencyProperty, targetType.GetType());
+        }
+
+        private static string GetDisplayName(DependencyProperty dependencyProperty, DependencyPropertyDescriptor propertyDescriptor)
+        {
+            if (propertyDescriptor != null)
+            {
+                return propertyDescriptor.DisplayName;
+            }
+
+            return $"{dependencyProperty.OwnerType.Name}.{dependencyProperty.Name}";
         }
 
         #endregion

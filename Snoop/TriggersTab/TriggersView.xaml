@@ -235,20 +235,54 @@
                         <ItemsControl Style="{x:Null}" Margin="8,4" ItemsSource="{Binding Conditions}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate DataType="{x:Type triggers:ConditionItem}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image x:Name="image" 
-                                               Style="{x:Null}"
-                                               Source="/Snoop;component/Resources/inactive.png"
-                                               Height="16" Width="16" />
-                                        <TextBlock x:Name="conditionText" 
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image x:Name="image" 
                                                    Style="{x:Null}"
-                                                   Text="{Binding Condition}" />
-                                    </StackPanel>
+                                                   Source="/Snoop;component/Resources/inactive.png"
+                                                   Height="16" 
+                                                   Width="16" />
+                                            <TextBlock x:Name="conditionText"
+                                                       Style="{x:Null}"
+                                                       Margin="2 0 0 0"
+                                                       Text="{Binding Condition}" />
+                                        </StackPanel>
+
+                                        <Border Grid.Row="1" 
+                                                x:Name="errorPane"
+                                                Visibility="Collapsed"
+                                                Background="Red"
+                                                TextElement.Foreground="White">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image x:Name="warningImage" 
+                                                       Style="{x:Null}"
+                                                       Source="/Snoop;component/Resources/Warning.png"
+                                                       Height="16" 
+                                                       Width="16"
+                                                       ToolTip="{Binding Error}" />
+
+                                                <TextBlock x:Name="errorText" 
+                                                           Style="{x:Null}"
+                                                           Margin="2 0 0 0"
+                                                           Text="{Binding Error}" />
+                                            </StackPanel>
+                                        </Border>
+                                    </Grid>
+
                                     <DataTemplate.Triggers>
                                         <DataTrigger Binding="{Binding IsActive}" Value="True">
                                             <Setter Property="Source" Value="/Snoop;component/Resources/active.png"
                                                     TargetName="image" />
                                             <Setter Property="FontWeight" Value="Bold" TargetName="conditionText" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding HasError}" Value="True">
+                                            <Setter Property="Visibility"
+                                                    Value="Visible"
+                                                    TargetName="errorPane" />
                                         </DataTrigger>
                                     </DataTemplate.Triggers>
                                 </DataTemplate>
