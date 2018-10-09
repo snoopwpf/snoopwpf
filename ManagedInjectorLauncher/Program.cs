@@ -22,7 +22,7 @@ namespace ManagedInjectorLauncher
 			var methodName = args[3];
 		    var settingsFile = args[4];
 
-		    var transportData = new InjectorData
+		    var injectorData = new InjectorData
 		                        {
                                     AssemblyName = assemblyName,
                                     ClassName = className,
@@ -30,14 +30,14 @@ namespace ManagedInjectorLauncher
                                     SettingsFile = settingsFile
 		                        };
 
-			Injector.Launch(windowHandle, transportData);
+			Injector.Launch(windowHandle, injectorData);
 
             //check to see that it was injected, and if not, retry with the main window handle.
             var process = GetProcessFromWindowHandle(windowHandle);
             if (process != null && !CheckInjectedStatus(process) && process.MainWindowHandle != windowHandle)
             {
                 Injector.LogMessage("Could not inject with current handle... retrying with MainWindowHandle", true);
-                Injector.Launch(process.MainWindowHandle, transportData);
+                Injector.Launch(process.MainWindowHandle, injectorData);
                 CheckInjectedStatus(process);
             }
 		}

@@ -22,7 +22,7 @@ static HHOOK _messageHookHandle;
 //-----------------------------------------------------------------------------
 void Injector::Launch(IntPtr windowHandle, InjectorData^ injectorData)
 {
-	String^ transportDataString;
+	auto transportDataString = String::Empty;
 
 	{
 		auto serializer = gcnew Xml::Serialization::XmlSerializer(InjectorData::typeid);
@@ -45,7 +45,7 @@ void Injector::Launch(IntPtr windowHandle, InjectorData^ injectorData)
 		}
 	}
 
-	pin_ptr<const wchar_t> acmLocal = PtrToStringChars(transportDataString);
+	const pin_ptr<const wchar_t> acmLocal = PtrToStringChars(transportDataString);
 
 	HINSTANCE hinstDLL;	
 
@@ -63,12 +63,12 @@ void Injector::Launch(IntPtr windowHandle, InjectorData^ injectorData)
 			{
 				LogMessage("Got process handle", true);
 				int buffLen = (transportDataString->Length + 1) * sizeof(wchar_t);
-				void* acmRemote = VirtualAllocEx(hProcess, NULL, buffLen, MEM_COMMIT, PAGE_READWRITE);
+				void* acmRemote = VirtualAllocEx(hProcess, nullptr, buffLen, MEM_COMMIT, PAGE_READWRITE);
 
 				if (acmRemote)
 				{
 					LogMessage("VirtualAllocEx successful", true);
-					WriteProcessMemory(hProcess, acmRemote, acmLocal, buffLen, NULL);
+					WriteProcessMemory(hProcess, acmRemote, acmLocal, buffLen, nullptr);
 				
 					_messageHookHandle = ::SetWindowsHookEx(WH_CALLWNDPROC, &MessageHookProc, hinstDLL, threadID);
 
