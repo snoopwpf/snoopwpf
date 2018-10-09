@@ -144,7 +144,7 @@ namespace Snoop
 		#region Public Static Methods
 		public static bool GoBabyGo(string settingsFile)
 		{
-		    var transportSettings = WindowInfo.TransientSettingsData.Load(settingsFile);
+		    TransientSettingsData.LoadCurrent(settingsFile);
 
 			try
 			{

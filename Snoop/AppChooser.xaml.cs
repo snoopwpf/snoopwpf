@@ -15,6 +15,7 @@ namespace Snoop
 {
     using System.IO.Pipes;
     using System.Xml.Serialization;
+    using Snoop.Data;
     using Snoop.Properties;
 
     public partial class AppChooser
@@ -294,9 +295,7 @@ namespace Snoop
 			Mouse.OverrideCursor = Cursors.Wait;
 			try
 			{
-				Injector.Launch(this.HWnd, typeof(SnoopUI).Assembly, typeof(SnoopUI).FullName, "GoBabyGo", new TransientSettingsData().WriteToFile());
-
-                //this.SendSettingsToSnoopedApplication();
+				Injector.Launch(this.HWnd, typeof(SnoopUI).Assembly, typeof(SnoopUI).FullName, "GoBabyGo", new TransientSettingsData(Settings.Default).WriteToFile());
             }
 			catch (Exception e)
 			{
@@ -305,76 +304,12 @@ namespace Snoop
 			Mouse.OverrideCursor = null;
 		}
 
-	    private void SendSettingsToSnoopedApplication()
-	    {
-	        try
-	        {
-	            // Send settings to the snooped application
-	            using (var client = new NamedPipeClientStream(string.Format("Snoop_{0}", this.OwningProcess.Id)))
-	            {
-	                client.Connect();
-
-	                using (var streamWriter = new StreamWriter(client))
-	                {
-	                    var serializer = new XmlSerializer(typeof(TransientSettingsData));
-	                    using (TextWriter textWriter = new StringWriter())
-	                    {
-	                        serializer.Serialize(textWriter, new TransientSettingsData());
-	                        streamWriter.WriteLine(textWriter.ToString());
-	                    }
-	                    
-	                    streamWriter.Flush();
-	                }
-	            }
-	        }
-	        catch (Exception e)
-	        {
-                Trace.WriteLine("Failed to send settings to snooped application.");
-                Trace.WriteLine(e);
-	        }
-	    }
-
-	    public sealed class TransientSettingsData
-	    {
-	        private static readonly XmlSerializer serializer = new XmlSerializer(typeof(TransientSettingsData));
-
-	        public TransientSettingsData()
-	        {
-	            this.SetWindowOwner = true;
-	            this.UseMultipleDispatcherMode = null;
-	        }
-
-	        public bool SetWindowOwner { get; set; }
-
-	        public bool? UseMultipleDispatcherMode { get; set; }
-
-	        public string WriteToFile()
-	        {
-	            var settingsFile = Path.GetTempFileName();
-
-	            using (var stream = new FileStream(settingsFile, FileMode.Create))
-	            {
-	                serializer.Serialize(stream, this);	                   
-	            }
-
-	            return settingsFile;
-	        }
-
-	        public static TransientSettingsData Load(string file)
-	        {
-	            using (var stream = new FileStream(file, FileMode.Open))
-	            {
-	                return (TransientSettingsData)serializer.Deserialize(stream);
-	            }
-	        }
-	    }
-
 	    public void Magnify()
 		{
 			Mouse.OverrideCursor = Cursors.Wait;
 			try
 			{
-				Injector.Launch(this.HWnd, typeof(Zoomer).Assembly, typeof(Zoomer).FullName, "GoBabyGo", new TransientSettingsData().WriteToFile());
+				Injector.Launch(this.HWnd, typeof(Zoomer).Assembly, typeof(Zoomer).FullName, "GoBabyGo", new TransientSettingsData(Settings.Default).WriteToFile());
 			}
 			catch (Exception e)
 			{
