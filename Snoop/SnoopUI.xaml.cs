@@ -26,6 +26,7 @@ namespace Snoop
     using System.IO;
     using System.IO.Pipes;
     using System.Xml.Serialization;
+    using Snoop.Data;
     using Snoop.Properties;
 
     #region SnoopUI
@@ -161,22 +162,23 @@ namespace Snoop
 		public static void SnoopApplication()
 		{
 			Dispatcher dispatcher;
-			if (Application.Current == null)
-            {
-				dispatcher = Dispatcher.CurrentDispatcher;
-            }
-			else
-            {
-				dispatcher = Application.Current.Dispatcher;
-            }
+		    if (Application.Current == null)
+		    {
+		        dispatcher = Dispatcher.CurrentDispatcher;
+		    }
+		    else
+		    {
+		        dispatcher = Application.Current.Dispatcher;
+		    }
 
 			if (dispatcher.CheckAccess())
 			{
-				SnoopUI snoop = new SnoopUI();
+			    var snoop = new SnoopUI();
 				var title = TryGetMainWindowTitle();
+
 				if (!string.IsNullOrEmpty(title))
 				{
-					snoop.Title = string.Format("{0} - Snoop", title);
+					snoop.Title = $"{title} - Snoop";
 				}
 
 				snoop.Inspect();
@@ -185,29 +187,39 @@ namespace Snoop
 			}
 			else
 			{
-				dispatcher.Invoke((Action)SnoopApplication);
+				dispatcher.Invoke((Action)(SnoopApplication));
 				return;
 			}
 		}
 
-		private static void CheckForOtherDispatchers(Dispatcher mainDispatcher)
+	    private static void CheckForOtherDispatchers(Dispatcher mainDispatcher)
 		{
-			// check and see if any of the root visuals have a different mainDispatcher
+		    if (TransientSettingsData.Current.MultipleDispatcherMode == MultipleDispatcherMode.NeverUse)
+		    {
+		        return;
+		    }
+
+		    // check and see if any of the root visuals have a different mainDispatcher
 			// if so, ask the user if they wish to enter multiple mainDispatcher mode.
 			// if they do, launch a snoop ui for every additional mainDispatcher.
 			// see http://snoopwpf.codeplex.com/workitem/6334 for more info.
 
-			List<Visual> rootVisuals = new List<Visual>();
-			List<Dispatcher> dispatchers = new List<Dispatcher>();
-			dispatchers.Add(mainDispatcher);
-			foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
+		    var rootVisuals = new List<Visual>();
+		    var dispatchers = new List<Dispatcher>
+		                      {
+		                          mainDispatcher
+		                      };
+
+		    foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
 			{
-				Visual presentationSourceRootVisual = presentationSource.RootVisual;
+				var presentationSourceRootVisual = presentationSource.RootVisual;
 
-                if (!(presentationSourceRootVisual is Window))
-					continue;
+			    if (!(presentationSourceRootVisual is Window))
+			    {
+			        continue;
+			    }
 
-				Dispatcher presentationSourceRootVisualDispatcher = presentationSourceRootVisual.Dispatcher;
+			    var presentationSourceRootVisualDispatcher = presentationSourceRootVisual.Dispatcher;
 
 				if (dispatchers.IndexOf(presentationSourceRootVisualDispatcher) == -1)
 				{
@@ -216,26 +228,40 @@ namespace Snoop
 				}
 			}
 
+		    var useMultipleDispatcherMode = false;
 			if (rootVisuals.Count > 0)
 			{
-				var result =
-					MessageBox.Show
-					(
-						"Snoop has noticed windows running in multiple dispatchers.\n\n" +
-						"Would you like to enter multiple dispatcher mode, and have a separate Snoop window for each dispatcher?\n\n" +
-						"Without having a separate Snoop window for each dispatcher, you will not be able to Snoop the windows in the dispatcher threads outside of the main dispatcher. " +
-						"Also, note, that if you bring up additional windows in additional dispatchers (after Snooping), you will need to Snoop again in order to launch Snoop windows for those additional dispatchers.",
-						"Enter Multiple Dispatcher Mode",
-						MessageBoxButton.YesNo,
-						MessageBoxImage.Question
-					);
+                // Should we skip the question and always use multiple dispatcher mode?
+			    if (TransientSettingsData.Current.MultipleDispatcherMode == MultipleDispatcherMode.AlwaysUse)
+			    {
+			        useMultipleDispatcherMode = true;
+			    }
+                else
+                {
+				    var result =
+					    MessageBox.Show
+					    (
+						    "Snoop has noticed windows running in multiple dispatchers!\n\n" +
+						    "Would you like to enter multiple dispatcher mode, and have a separate Snoop window for each dispatcher?\n\n" +
+						    "Without having a separate Snoop window for each dispatcher, you will not be able to Snoop the windows in the dispatcher threads outside of the main dispatcher. " +
+						    "Also, note, that if you bring up additional windows in additional dispatchers (after Snooping), you will need to Snoop again in order to launch Snoop windows for those additional dispatchers.",
+						    "Enter Multiple Dispatcher Mode",
+						    MessageBoxButton.YesNo,
+						    MessageBoxImage.Question
+					    );
 
-				if (result == MessageBoxResult.Yes)
-				{
-					SnoopModes.MultipleDispatcherMode = true;
-					Thread thread = new Thread(new ParameterizedThreadStart(DispatchOut));
-					thread.Start(rootVisuals);
-				}
+				    if (result == MessageBoxResult.Yes)
+				    {
+				        useMultipleDispatcherMode = true;
+				    }
+                }
+
+			    if (useMultipleDispatcherMode)
+			    {
+			        SnoopModes.MultipleDispatcherMode = true;
+			        var thread = new Thread(DispatchOut);
+			        thread.Start(rootVisuals);
+			    }
 			}
 		}
 
@@ -886,6 +912,7 @@ namespace Snoop
 		#endregion
 
 		#region Private Fields
+
 		private bool fromTextBox = true;
 		private DispatcherTimer filterTimer;
 
