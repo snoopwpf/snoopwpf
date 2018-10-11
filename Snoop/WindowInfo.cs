@@ -2,8 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics;
-    using System.Linq;    
+    using System.Linq;
+    using System.Runtime.InteropServices;
     using System.Windows.Input;
 
     public class WindowInfo
@@ -11,8 +13,11 @@
 	    private static readonly Dictionary<int, bool> processIDToValidityMap = new Dictionary<int, bool>();
 
 	    private IList<NativeMethods.MODULEENTRY32> modules;
+	    private Process owningProcess;
+	    private bool? isOwningProcess64Bit;
+	    private bool? isOwningProcessElevated;	    
 
-		public WindowInfo(IntPtr hwnd)
+	    public WindowInfo(IntPtr hwnd)
 		{
 			this.HWnd = hwnd;			
 		}
@@ -45,7 +50,7 @@
 
 		    using (hModuleSnap)
 		    {
-		        me32.dwSize = (uint)System.Runtime.InteropServices.Marshal.SizeOf(me32);
+		        me32.dwSize = (uint)Marshal.SizeOf(me32);
 
 		        if (NativeMethods.Module32First(hModuleSnap, ref me32))
 		        {
@@ -95,30 +100,39 @@
 					}
 					else
 					{
-						// a process is valid to snoop if it contains a dependency on PresentationFramework, PresentationCore, or milcore (wpfgfx).
-						// this includes the files:
-						// PresentationFramework.dll, PresentationFramework.ni.dll
-						// PresentationCore.dll, PresentationCore.ni.dll
-						// wpfgfx_v0300.dll (WPF 3.0/3.5)
-						// wpfgrx_v0400.dll (WPF 4.0)
+                        // WPF-Windows have a class name that starts with "HwndWrapper["
+					    if (NativeMethods.GetClassName(this.HWnd).StartsWith("HwndWrapper[", StringComparison.CurrentCultureIgnoreCase))
+					    {
+					        isValid = true;
+					    }
 
-						// note: sometimes PresentationFramework.dll doesn't show up in the list of modules.
-						// so, it makes sense to also check for the unmanaged milcore component (wpfgfx_vxxxx.dll).
-						// see for more info: http://snoopwpf.codeplex.com/Thread/View.aspx?ThreadId=236335
+					    if (isValid == false)
+					    {
+					        // a process is valid to snoop if it contains a dependency on PresentationFramework, PresentationCore, or milcore (wpfgfx).
+					        // this includes the files:
+					        // PresentationFramework.dll, PresentationFramework.ni.dll
+					        // PresentationCore.dll, PresentationCore.ni.dll
+					        // wpfgfx_v0300.dll (WPF 3.0/3.5)
+					        // wpfgrx_v0400.dll (WPF 4.0)
 
-						// sometimes the module names aren't always the same case. compare case insensitive.
-						// see for more info: http://snoopwpf.codeplex.com/workitem/6090
+					        // note: sometimes PresentationFramework.dll doesn't show up in the list of modules.
+					        // so, it makes sense to also check for the unmanaged milcore component (wpfgfx_vxxxx.dll).
+					        // see for more info: http://snoopwpf.codeplex.com/Thread/View.aspx?ThreadId=236335
 
-						foreach (var module in this.Modules)
-						{
-							if (module.szModule.StartsWith("PresentationFramework", StringComparison.OrdinalIgnoreCase) 
-								|| module.szModule.StartsWith("PresentationCore", StringComparison.OrdinalIgnoreCase) 
-								|| module.szModule.StartsWith("wpfgfx", StringComparison.OrdinalIgnoreCase))
-							{
-								isValid = true;
-								break;
-							}
-						}
+					        // sometimes the module names aren't always the same case. compare case insensitive.
+					        // see for more info: http://snoopwpf.codeplex.com/workitem/6090
+
+					        foreach (var module in this.Modules)
+					        {
+					            if (module.szModule.StartsWith("PresentationFramework", StringComparison.OrdinalIgnoreCase)
+					                || module.szModule.StartsWith("PresentationCore", StringComparison.OrdinalIgnoreCase)
+					                || module.szModule.StartsWith("wpfgfx", StringComparison.OrdinalIgnoreCase))
+					            {
+					                isValid = true;
+					                break;
+					            }
+					        }
+					    }
 					}
 
 					processIDToValidityMap[process.Id] = isValid;
@@ -132,7 +146,11 @@
 			}
 		}
 
-		public Process OwningProcess => NativeMethods.GetWindowThreadProcess(this.HWnd);
+		public Process OwningProcess => this.owningProcess ?? (this.owningProcess = NativeMethods.GetWindowThreadProcess(this.HWnd));
+
+	    public bool IsOwningProcess64Bit => (this.isOwningProcess64Bit ?? (this.isOwningProcess64Bit = IsProcess64Bit(this.OwningProcess))) == true;
+
+	    public bool IsOwningProcessElevated => (this.isOwningProcessElevated ?? (this.isOwningProcessElevated = IsProcessElevated(this.OwningProcess))) == true;
 
 	    public IntPtr HWnd { get; }
 
@@ -156,7 +174,7 @@
 
 			try
 			{
-				Injector.Launch(this.HWnd, typeof(SnoopUI).Assembly, typeof(SnoopUI).FullName, "GoBabyGo");
+				Injector.Launch(this, typeof(SnoopUI).Assembly, typeof(SnoopUI).FullName, "GoBabyGo");
 			}
 			catch (Exception e)
 			{
@@ -172,7 +190,7 @@
 
 			try
 			{
-				Injector.Launch(this.HWnd, typeof(Zoomer).Assembly, typeof(Zoomer).FullName, "GoBabyGo");
+				Injector.Launch(this, typeof(Zoomer).Assembly, typeof(Zoomer).FullName, "GoBabyGo");
 			}
 			catch (Exception e)
 			{
@@ -185,6 +203,46 @@
 		private void OnFailedToAttach(Exception e)
 		{
 		    this.AttachFailed?.Invoke(this, new AttachFailedEventArgs(e, this.Description));
-		}			
+		}
+
+	    // see https://msdn.microsoft.com/en-us/library/windows/desktop/ms684139%28v=vs.85%29.aspx
+	    public static bool IsProcess64Bit(Process process)
+	    {
+            if (Environment.Is64BitOperatingSystem == false)
+            {
+                return false;
+            }
+
+            // if this method is not available in your version of .NET, use GetNativeSystemInfo via P/Invoke instead
+	        using (var processHandle = NativeMethods.OpenProcess(process, NativeMethods.ProcessAccessFlags.QueryLimitedInformation))
+	        {
+	            if (processHandle.IsInvalid)
+	            {
+	                throw new Exception("Could not query process information.");
+	            }
+
+	            if (NativeMethods.IsWow64Process(processHandle.DangerousGetHandle(), out var isWow64) == false)
+	            {
+	                throw new Win32Exception();
+	            }
+
+	            return isWow64 == false;
+	        }
+	    }
+
+	    private static bool IsProcessElevated(Process process)
+	    {
+	        using (var processHandle = NativeMethods.OpenProcess(process, NativeMethods.ProcessAccessFlags.QueryInformation))
+	        {
+	            if (processHandle.IsInvalid)
+	            {
+	                var error = Marshal.GetLastWin32Error();
+
+	                return error == NativeMethods.ERROR_ACCESS_DENIED;
+	            }
+
+	            return false;
+	        }
+	    }
 	}
 }
