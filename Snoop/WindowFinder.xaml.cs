@@ -133,7 +133,7 @@ namespace Snoop
 
 			if (!_feedbackWindow.IsVisible)
 			{
-				_feedbackWindow.SnoopTargetName = _windowUnderCursor.Description;
+				_feedbackWindow.DataContext = _windowUnderCursor;
 
 				UpdateFeedbackWindowPosition();
 				_feedbackWindow.Show();

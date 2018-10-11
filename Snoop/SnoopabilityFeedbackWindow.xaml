@@ -7,7 +7,9 @@ All other rights reserved.
 <Window
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:snoop="clr-namespace:Snoop"
+    mc:Ignorable="d"
 	x:Class="Snoop.SnoopabilityFeedbackWindow"
 	ShowInTaskbar="False"
 	WindowStyle="None"
@@ -15,8 +17,7 @@ All other rights reserved.
 	Background="Transparent"
 	Topmost="True"
 	Height="40"
-	SizeToContent="Width"
->
+	SizeToContent="Width" d:DataContext="{d:DesignInstance snoop:WindowInfo}">
 	<Window.Resources>
 		<Storyboard x:Key="dogAnimationStoryboard" RepeatBehavior="Forever" AutoReverse="True">
 			<PointAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="dogAnimated" Storyboard.TargetProperty="(Shape.Fill).(LinearGradientBrush.StartPoint)">
@@ -90,11 +91,9 @@ All other rights reserved.
 			Background="White"
 			CornerRadius="4" VerticalAlignment="Center"
 		>
-			<TextBlock
-				x:Name="tbWindowName"
-				TextTrimming="CharacterEllipsis"
-				Padding="3,0,3,1"
-			/>
+			<TextBlock TextTrimming="CharacterEllipsis"
+				       Padding="3,0,3,1"
+                       Text="{Binding Description}" />
 		</Border>
 	</Grid>
 </Window>
