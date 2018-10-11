@@ -186,6 +186,8 @@ namespace Snoop
 		[DllImport("kernel32.dll", SetLastError = true)]
 		static public extern bool CloseHandle(IntPtr hHandle);
 
+        [DllImport("user32.dll")]
+        public static extern IntPtr LoadImage(IntPtr hinst, string lpszName, uint uType, int cxDesired, int cyDesired, uint fuLoad);
 
 		// anvaka's changes below
 
