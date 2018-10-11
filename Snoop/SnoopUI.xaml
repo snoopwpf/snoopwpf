@@ -20,6 +20,8 @@ All other rights reserved.
     mc:Ignorable="d"
 	Icon="Snoop.ico"
 	Title="Snoop"
+    MinWidth="480"
+    MinHeight="320"
 	Background="#FFE0DFE3"
 	ShowInTaskbar="True"
 	SnapsToDevicePixels="True"

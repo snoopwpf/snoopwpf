@@ -221,9 +221,9 @@ namespace Snoop.MethodsTab
                 }
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                MessageBox.Show(ex.Message, "Error creating parameter");
+                ErrorDialog.ShowDialog(exception, "Error creating parameter", exceptionAlreadyHandled: true);
                 return false;
             }
         }
@@ -260,10 +260,9 @@ namespace Snoop.MethodsTab
                     this.propertyInspector.RootTarget = returnValue;
                 }
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                string message = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
-                MessageBox.Show(message, "Error invoking method");
+                ErrorDialog.ShowDialog(exception, $"Error invoking method '{selectedMethod.MethodName}'", exceptionAlreadyHandled: true);
             }
         }
 

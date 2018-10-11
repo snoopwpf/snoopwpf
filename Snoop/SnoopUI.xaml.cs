@@ -16,16 +16,14 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using System.Windows.Forms.Integration;
-using System.Runtime.InteropServices;
-using System.Windows.Interop;
 using System.Threading;
 using Snoop.Infrastructure;
 using Snoop.Shell;
 
 namespace Snoop
 {
-	#region SnoopUI
-	public partial class SnoopUI : INotifyPropertyChanged
+    #region SnoopUI
+    public partial class SnoopUI : INotifyPropertyChanged
 	{
 		#region Public Static Routed Commands
 		public static readonly RoutedCommand IntrospectCommand = new RoutedCommand("Introspect", typeof(SnoopUI));
@@ -138,16 +136,18 @@ namespace Snoop
 	    #endregion
 
 		#region Public Static Methods
-		public static bool GoBabyGo()
+
+	    // ReSharper disable once UnusedMember.Global
+	    public static bool GoBabyGo()
 		{
 			try
 			{
 				SnoopApplication();
 				return true;
 			}
-			catch (Exception ex)
+			catch (Exception exception)
 			{
-				MessageBox.Show(string.Format("There was an error snooping! Message = {0}\n\nStack Trace:\n{1}", ex.Message, ex.StackTrace), "Error Snooping", MessageBoxButton.OK);
+			    ErrorDialog.ShowDialog(exception, "Error Snooping", "There was an error snooping the application.", exceptionAlreadyHandled: true);
 				return false;
 			}
 		}
@@ -156,9 +156,13 @@ namespace Snoop
 		{
 			Dispatcher dispatcher;
 			if (Application.Current == null)
+            {
 				dispatcher = Dispatcher.CurrentDispatcher;
+            }
 			else
+            {
 				dispatcher = Application.Current.Dispatcher;
+            }
 
 			if (dispatcher.CheckAccess())
 			{
@@ -211,7 +215,7 @@ namespace Snoop
 				var result =
 					MessageBox.Show
 					(
-						"Snoop has noticed windows running in multiple dispatchers!\n\n" +
+						"Snoop has noticed windows running in multiple dispatchers.\n\n" +
 						"Would you like to enter multiple dispatcher mode, and have a separate Snoop window for each dispatcher?\n\n" +
 						"Without having a separate Snoop window for each dispatcher, you will not be able to Snoop the windows in the dispatcher threads outside of the main dispatcher. " +
 						"Also, note, that if you bring up additional windows in additional dispatchers (after Snooping), you will need to Snoop again in order to launch Snoop windows for those additional dispatchers.",
@@ -430,10 +434,11 @@ namespace Snoop
 		#endregion
 
 		#region Public Methods
+
 		public void Inspect()
 		{
-			object root = FindRoot();
-			if (root == null)
+			var foundRoot = this.FindRoot();
+			if (foundRoot == null)
 			{
 				if (!SnoopModes.MultipleDispatcherMode)
 				{
@@ -442,7 +447,7 @@ namespace Snoop
 					//the message below would be wrong.
 					MessageBox.Show
 					(
-						"Can't find a current application or a PresentationSource root visual!",
+						"Can't find a current application or a PresentationSource root visual.",
 						"Can't Snoop",
 						MessageBoxButton.OK,
 						MessageBoxImage.Exclamation
@@ -451,55 +456,41 @@ namespace Snoop
 
 				return;
 			}
-			Load(root);
 
-		    this.Owner = SnoopWindowUtils.FindOwnerWindow(this);
-
-			SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
-			this.Dispatcher.UnhandledException += new DispatcherUnhandledExceptionEventHandler(UnhandledExceptionHandler);
-
-			Show();
-			Activate();
+            this.Inspect(foundRoot, SnoopWindowUtils.FindOwnerWindow(this));
 		}
-		public void Inspect(object root, Window ownerWindow)
+
+		public void Inspect(object rootToInspect, Window ownerWindow)
 		{
-			this.Dispatcher.UnhandledException += new DispatcherUnhandledExceptionEventHandler(UnhandledExceptionHandler);
+			this.Dispatcher.UnhandledException += this.UnhandledExceptionHandler;
 
-			Load(root);
+		    this.Load(rootToInspect);
 
-			if (ownerWindow != null)
-			{
-				this.Owner = ownerWindow;
-			}
+			this.Owner = ownerWindow;
 
 			SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
-
-			Show();
-			Activate();
+		    
+		    this.Show();
+		    this.Activate();
 		}
 
 		private void UnhandledExceptionHandler(object sender, DispatcherUnhandledExceptionEventArgs e)
-		{
-			if (SnoopModes.IgnoreExceptions)
-			{
-				return;
-			}
+        {
+            if (SnoopModes.IgnoreExceptions)
+            {
+                return;
+            }
 
-			if (SnoopModes.SwallowExceptions)
-			{
-				e.Handled = true;
-				return;
-			}
+            if (SnoopModes.SwallowExceptions)
+            {
+                e.Handled = true;
+                return;
+            }
 
-			// should we check if the exception came from Snoop? perhaps seeing if any Snoop call is in the stack trace?
-			ErrorDialog dialog = new ErrorDialog();
-			dialog.Exception = e.Exception;
-			var result = dialog.ShowDialog();
-			if (result.HasValue && result.Value)
-				e.Handled = true;
-		}
+            e.Handled = ErrorDialog.ShowDialog(e.Exception);
+        }
 
-		public void ApplyReduceDepthFilter(VisualTreeItem newRoot)
+        public void ApplyReduceDepthFilter(VisualTreeItem newRoot)
 		{
 			if (m_reducedDepthRoot != newRoot)
 			{
@@ -520,7 +511,6 @@ namespace Snoop
 				m_reducedDepthRoot = newRoot;
 			}
 		}
-
 
 		/// <summary>
 		/// Loop through the properties in the current PropertyGrid and save away any properties
@@ -706,7 +696,12 @@ namespace Snoop
 		/// </summary>
 		private VisualTreeItem FindItem(object target)
 		{
-			VisualTreeItem node = this.rootVisualTreeItem.FindNode(target);
+		    if (this.rootVisualTreeItem == null)
+		    {
+		        return null;
+		    }
+
+		    VisualTreeItem node = this.rootVisualTreeItem.FindNode(target);
 			Visual rootVisual = this.rootVisualTreeItem.MainVisual;
 			if (node == null)
 			{
@@ -810,7 +805,7 @@ namespace Snoop
 
 		private object FindRoot()
 		{
-			object root = null;
+			object foundRoot = null;
 
 			if (SnoopModes.MultipleDispatcherMode)
 			{
@@ -823,14 +818,14 @@ namespace Snoop
 						((UIElement)presentationSource.RootVisual).Dispatcher.CheckAccess()
 					)
 					{
-						root = presentationSource.RootVisual;
+						foundRoot = presentationSource.RootVisual;
 						break;
 					}
 				}
 			}
 			else if (Application.Current != null)
 			{
-				root = Application.Current;
+				foundRoot = Application.Current;
 			}
 			else
 			{
@@ -849,7 +844,7 @@ namespace Snoop
 						((UIElement)presentationSource.RootVisual).Visibility == Visibility.Visible
 					)
 					{
-						root = presentationSource.RootVisual;
+						foundRoot = presentationSource.RootVisual;
 						break;
 					}
 				}
@@ -866,21 +861,21 @@ namespace Snoop
 				}
 			}
 
-			return root;
+			return foundRoot;
 		}
 
-		private void Load(object root)
+		private void Load(object newRoot)
 		{
-			this.root = root;
+			this.root = newRoot;
 
 			this.visualTreeItems.Clear();
 
-			this.Root = VisualTreeItem.Construct(root, null);
+			this.Root = VisualTreeItem.Construct(newRoot, null);
 			this.CurrentSelection = this.rootVisualTreeItem;
 
 			this.SetFilter(this.filter);
 
-			this.OnPropertyChanged("Root");
+			this.OnPropertyChanged(nameof(this.Root));
 		}
 		#endregion
 

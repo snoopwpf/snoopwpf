@@ -298,6 +298,7 @@ namespace Snoop
 		public void Snoop()
 		{
 			Mouse.OverrideCursor = Cursors.Wait;
+
 			try
 			{
 				Injector.Launch(this.HWnd, typeof(SnoopUI).Assembly, typeof(SnoopUI).FullName, "GoBabyGo");
@@ -306,6 +307,7 @@ namespace Snoop
 			{
 				OnFailedToAttach(e);
 			}
+
 			Mouse.OverrideCursor = null;
 		}
 		public void Magnify()
@@ -324,56 +326,41 @@ namespace Snoop
 
 		private void OnFailedToAttach(Exception e)
 		{
-			var handler = AttachFailed;
-			if (handler != null)
-			{
-				handler(this, new AttachFailedEventArgs(e, this.Description));
-			}
+		    this.AttachFailed?.Invoke(this, new AttachFailedEventArgs(e, this.Description));
 		}
 		
-		private static Dictionary<int, bool> processIDToValidityMap = new Dictionary<int, bool>();
+		private static readonly Dictionary<int, bool> processIDToValidityMap = new Dictionary<int, bool>();
 	}
 
 	public class AttachFailedEventArgs : EventArgs
 	{
-		public Exception AttachException { get; private set; }
-		public string WindowName { get; private set; }
-
 		public AttachFailedEventArgs(Exception attachException, string windowName)
 		{
 			AttachException = attachException;
 			WindowName = windowName;
-		}		
+		}
+
+	    public Exception AttachException { get; }
+
+	    public string WindowName { get; }
 	}
 
 	public class AttachFailedHandler
 	{
 		public AttachFailedHandler(WindowInfo window, AppChooser appChooser = null)
 		{
-			window.AttachFailed += OnSnoopAttachFailed;
-			_appChooser = appChooser;
+			window.AttachFailed += this.OnSnoopAttachFailed;
+			this.appChooser = appChooser;
 		}
 
 		private void OnSnoopAttachFailed(object sender, AttachFailedEventArgs e)
 		{
-			System.Windows.MessageBox.Show
-			(
-				string.Format
-				(
-					"Failed to attach to {0}. Exception occured:{1}{2}",
-					e.WindowName,
-					Environment.NewLine,
-					e.AttachException.ToString()
-				),
-				"Can't Snoop the process!"
-			);
-			if (_appChooser != null)
-			{
-				// TODO This should be implmemented through the event broker, not like this.
-				_appChooser.Refresh();
-			}
+            ErrorDialog.ShowDialog(e.AttachException, "Can't Snoop the process", $"Failed to attach to '{e.WindowName}'.", exceptionAlreadyHandled: true);
+	        
+		    // TODO This should be implemented through the event broker, not like this.
+		    this.appChooser?.Refresh();
 		}
 
-		private AppChooser _appChooser;
+		private readonly AppChooser appChooser;
 	}
 }

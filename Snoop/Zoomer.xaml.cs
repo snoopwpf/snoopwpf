@@ -96,7 +96,7 @@ namespace Snoop
 			{
 				MessageBox.Show
 				(
-					"Can't find a current application or a PresentationSource root visual!",
+					"Can't find a current application or a PresentationSource root visual.",
 					"Can't Magnify",
 					MessageBoxButton.OK,
 					MessageBoxImage.Exclamation
