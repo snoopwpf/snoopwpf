@@ -127,7 +127,7 @@ namespace Snoop
 			if (this._feedbackWindow == null)
 			{
 			    this._feedbackWindow = new SnoopabilityFeedbackWindow();
-
+                this._feedbackWindow.PreviewKeyDown += this._feedbackWindow_PreviewKeyDown;
 				// we don't have to worry about not having an application or not having a main window,
 				// for, we are still in Snoop's process and not in the injected process.
 				// so, go ahead and grab the Application.Current.MainWindow.
@@ -149,9 +149,18 @@ namespace Snoop
 			}
 		}
 
-		private void RemoveVisualFeedback()
+        private void _feedbackWindow_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape)
+            {
+                this.StopSnoopTargetsSearch();
+            }
+        }
+
+        private void RemoveVisualFeedback()
 		{
-			if (this._feedbackWindow != null && this._feedbackWindow.IsVisible)
+			if (this._feedbackWindow != null 
+			    && this._feedbackWindow.IsVisible)
 			{
 			    this._feedbackWindow.Hide();
 			}
@@ -159,7 +168,8 @@ namespace Snoop
 
 		private bool IsVisualFeedbackWindow(IntPtr hwnd)
 		{
-			return hwnd != IntPtr.Zero && hwnd == this._feedbackWindowHandle;
+			return hwnd != IntPtr.Zero 
+			       && hwnd == this._feedbackWindowHandle;
 		}
 
 		private void UpdateFeedbackWindowPosition()
