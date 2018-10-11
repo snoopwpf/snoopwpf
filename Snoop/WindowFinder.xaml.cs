@@ -1,4 +1,4 @@
-﻿// (c) Copyright Cory Plotts.
+// (c) Copyright Cory Plotts.
 // This source is subject to the Microsoft Public License (Ms-PL).
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
@@ -20,72 +20,78 @@ namespace Snoop
 	    private IntPtr _feedbackWindowHandle;
 	    private Cursor _crosshairsCursor;
 
-		public WindowFinder()
+	    public WindowFinder()
 		{
 		    this.InitializeComponent();
 
 		    this._crosshairsCursor = new Cursor(Assembly.GetExecutingAssembly().GetManifestResourceStream("Snoop.Resources.SnoopCrosshairsCursor.cur"));
-
-		    this.PreviewMouseLeftButtonDown += this.WindowFinderMouseLeftButtonDown;
-		    this.MouseMove += this.WindowFinderMouseMove;
-		    this.MouseLeftButtonUp += this.WindowFinderMouseLeftButtonUp;
 		}
 
 	    private bool IsDragging { get; set; }
 
 		public WindowFinderType WindowFinderType { get; set; }
 
-		private void WindowFinderMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-		{
-		    this.StartSnoopTargetsSearch();
-			e.Handled = true;
-		}
+	    /// <inheritdoc />
+	    protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
+	    {
+	        this.StartSnoopTargetsSearch();
+	        e.Handled = true;
 
-		private void WindowFinderMouseMove(object sender, MouseEventArgs e)
-		{
-			if (!this.IsDragging)
-            {
-                return;
-            }
+            base.OnPreviewMouseLeftButtonDown(e);
+	    }
 
-            if (Mouse.LeftButton == MouseButtonState.Released)
-			{
-			    this.StopSnoopTargetsSearch();
-				return;
-			}
+	    /// <inheritdoc />
+	    protected override void OnMouseMove(MouseEventArgs e)
+	    {
+            base.OnMouseMove(e);
+
+	        if (!this.IsDragging)
+	        {
+	            return;
+	        }
+
+	        if (Mouse.LeftButton == MouseButtonState.Released)
+	        {
+	            this.StopSnoopTargetsSearch();
+	            return;
+	        }
 			
-			var windowUnderCursor = NativeMethods.GetWindowUnderMouse();
-			if (this._windowUnderCursor == null)
-			{
-			    this._windowUnderCursor = new WindowInfo(windowUnderCursor);
-			}
+	        var windowUnderCursor = NativeMethods.GetWindowUnderMouse();
+	        if (this._windowUnderCursor == null)
+	        {
+	            this._windowUnderCursor = new WindowInfo(windowUnderCursor);
+	        }
 
-			if (this.IsVisualFeedbackWindow(windowUnderCursor))
-			{
-				// if the window under the cursor is the feedback window, just ignore it.
-				return;
-			}
+	        if (this.IsVisualFeedbackWindow(windowUnderCursor))
+	        {
+	            // if the window under the cursor is the feedback window, just ignore it.
+	            return;
+	        }
 
-			if (windowUnderCursor != this._windowUnderCursor.HWnd)
-			{
-				// the window under the cursor has changed
+	        if (windowUnderCursor != this._windowUnderCursor.HWnd)
+	        {
+	            // the window under the cursor has changed
+	            this.RemoveVisualFeedback();
+	            this._windowUnderCursor = new WindowInfo(windowUnderCursor);
 
-			    this.RemoveVisualFeedback();
-			    this._windowUnderCursor = new WindowInfo(windowUnderCursor);
-				if (this._windowUnderCursor.IsValidProcess)
-				{
-				    this.ShowVisualFeedback();
-				}
-			}
+	            if (this._windowUnderCursor.IsValidProcess)
+	            {
+	                this.ShowVisualFeedback();
+	            }
+	        }
 
-		    this.UpdateFeedbackWindowPosition();
-		}
+	        this.UpdateFeedbackWindowPosition();
+	    }
 
-		private void WindowFinderMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-		{
+	    /// <inheritdoc />
+	    protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+	    {
+            base.OnMouseLeftButtonUp(e);
+
 		    this.StopSnoopTargetsSearch();
 
-			if (this._windowUnderCursor != null && this._windowUnderCursor.IsValidProcess)
+			if (this._windowUnderCursor != null 
+			    && this._windowUnderCursor.IsValidProcess)
 			{
 				if (this.WindowFinderType == WindowFinderType.Snoop)
 				{
