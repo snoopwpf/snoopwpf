@@ -7,3 +7,5 @@ redirects: off
 nuget nuget.commandline
 nuget vswhere
 nuget wix
+
+nuget Microsoft.PowerShell.3.ReferenceAssemblies
