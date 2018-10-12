@@ -5,12 +5,9 @@
 
 namespace Snoop
 {
-    using System;
     using System.Windows;
-    using System.Windows.Forms;
-    using System.Windows.Interop;
     using System.Windows.Media;
-    using System.Windows.Media.Imaging;
+    using Snoop.Infrastructure;
 
     public partial class SnoopabilityFeedbackWindow
 	{
@@ -18,7 +15,7 @@ namespace Snoop
 		{
 		    this.InitializeComponent();
 
-            this.SetCurrentValue(UACImageSourceProperty, GetImageSource("#106"));
+            this.SetCurrentValue(UACImageSourceProperty, SystemIconHelper.GetImageSource(SystemIconHelper.SystemIcon.UACShield));
 		}
 
 	    public static readonly DependencyProperty UACImageSourceProperty = DependencyProperty.Register(nameof(UACImageSource), typeof(ImageSource), typeof(SnoopabilityFeedbackWindow), new PropertyMetadata(default(ImageSource)));
@@ -27,17 +24,6 @@ namespace Snoop
 	    {
 	        get { return (ImageSource)this.GetValue(UACImageSourceProperty); }
 	        set { this.SetValue(UACImageSourceProperty, value); }
-	    }
-
-	    private static ImageSource GetImageSource(string name)
-	    {
-	        const int LR_SHARED = 0x00008000;
-            const int IMAGE_ICON = 1;
-	        
-	        var image = NativeMethods.LoadImage(IntPtr.Zero, name, IMAGE_ICON, SystemInformation.IconSize.Width, SystemInformation.IconSize.Height, LR_SHARED);
-	        var imageSource = Imaging.CreateBitmapSourceFromHIcon(image, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-
-	        return imageSource;
 	    }
 	}
 }
