@@ -22,7 +22,7 @@ namespace Snoop
 
 		public AppChooser()
 		{
-			this.windowsView = CollectionViewSource.GetDefaultView(this.windows);
+			this.Windows = CollectionViewSource.GetDefaultView(this.windows);
 
 			this.InitializeComponent();
 
@@ -33,19 +33,14 @@ namespace Snoop
 			this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, this.HandleCloseCommand));
 		}
 
-
 		public static readonly RoutedCommand InspectCommand = new RoutedCommand();
 		public static readonly RoutedCommand RefreshCommand = new RoutedCommand();
 		public static readonly RoutedCommand MagnifyCommand = new RoutedCommand();
 		public static readonly RoutedCommand MinimizeCommand = new RoutedCommand();
 
+        public ICollectionView Windows { get; }
 
-		public ICollectionView Windows
-		{
-			get { return this.windowsView; }
-		}
-		private ICollectionView windowsView;
-		private ObservableCollection<WindowInfo> windows = new ObservableCollection<WindowInfo>();
+        private readonly ObservableCollection<WindowInfo> windows = new ObservableCollection<WindowInfo>();
 
 		public void Refresh()
 		{
@@ -71,7 +66,7 @@ namespace Snoop
 						}
 
 						if (this.windows.Count > 0)
-							this.windowsView.MoveCurrentTo(this.windows[0]);
+							this.Windows.MoveCurrentTo(this.windows[0]);
 					}
 					finally
 					{
@@ -111,19 +106,19 @@ namespace Snoop
 
 		private void HandleCanInspectOrMagnifyCommand(object sender, CanExecuteRoutedEventArgs e)
 		{
-			if (this.windowsView.CurrentItem != null)
+			if (this.Windows.CurrentItem != null)
 				e.CanExecute = true;
 			e.Handled = true;
 		}
 		private void HandleInspectCommand(object sender, ExecutedRoutedEventArgs e)
 		{
-			WindowInfo window = (WindowInfo)this.windowsView.CurrentItem;
+			WindowInfo window = (WindowInfo)this.Windows.CurrentItem;
 			if (window != null)
 				window.Snoop();
 		}
 		private void HandleMagnifyCommand(object sender, ExecutedRoutedEventArgs e)
 		{
-			WindowInfo window = (WindowInfo)this.windowsView.CurrentItem;
+			WindowInfo window = (WindowInfo)this.Windows.CurrentItem;
 			if (window != null)
 				window.Magnify();
 		}
