@@ -5,25 +5,11 @@
 
 namespace Snoop
 {
-    using System.Windows;
-    using System.Windows.Media;
-    using Snoop.Infrastructure;
-
     public partial class SnoopabilityFeedbackWindow
 	{
 		public SnoopabilityFeedbackWindow()
 		{
 		    this.InitializeComponent();
-
-            this.SetCurrentValue(UACImageSourceProperty, SystemIconHelper.GetImageSource(SystemIconHelper.SystemIcon.UACShield));
 		}
-
-	    public static readonly DependencyProperty UACImageSourceProperty = DependencyProperty.Register(nameof(UACImageSource), typeof(ImageSource), typeof(SnoopabilityFeedbackWindow), new PropertyMetadata(default(ImageSource)));
-
-	    public ImageSource UACImageSource
-	    {
-	        get { return (ImageSource)this.GetValue(UACImageSourceProperty); }
-	        set { this.SetValue(UACImageSourceProperty, value); }
-	    }
 	}
 }

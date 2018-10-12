@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 (c) Copyright Cory Plotts.
 This source is subject to the Microsoft Public License (Ms-PL).
 Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
@@ -9,7 +9,8 @@ All other rights reserved.
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:snoop="clr-namespace:Snoop"
-        xmlns:forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+        xmlns:converters="clr-namespace:Snoop.Converters"
+        xmlns:infrastructure="clr-namespace:Snoop.Infrastructure"
         mc:Ignorable="d"
         x:Class="Snoop.SnoopabilityFeedbackWindow"
         x:Name="Window"
@@ -57,11 +58,11 @@ All other rights reserved.
 
         <Border Grid.Column="0"
                 Style="{x:Null}"
-                Width="{Binding Source={x:Static forms:SystemInformation.IconSize}, Path=Width}"
-                Height="{Binding Source={x:Static forms:SystemInformation.IconSize}, Path=Height}">
+                Width="32"
+                Height="32">
             <Image Style="{x:Null}"
                    Visibility="{Binding IsOwningProcessElevated, Converter={StaticResource BooleanToVisibilityConverter}}"
-                   Source="{Binding ElementName=Window, Path=UACImageSource}" />
+                   Source="{Binding Source={x:Static infrastructure:SystemIcon.UACShield}, Converter={x:Static converters:SystemIconToImageSourceConverter.Instance}, ConverterParameter=32}" />
         </Border>
 
         <Grid Grid.Column="1"

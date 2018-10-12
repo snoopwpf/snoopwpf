@@ -46,7 +46,6 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
@@ -155,6 +154,7 @@
     <Compile Include="Converters\CsvStringToArrayConverter.cs" />
     <Compile Include="Converters\IsSupportedRuntimeTypeConverter.cs" />
     <Compile Include="Converters\SnoopParameterInfoConverter.cs" />
+    <Compile Include="Converters\SystemIconToImageSourceConverter.cs" />
     <Compile Include="DebugListenerTab\DebugListenerControl.xaml.cs">
       <DependentUpon>DebugListenerControl.xaml</DependentUpon>
     </Compile>
