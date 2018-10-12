@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 (c) Copyright Cory Plotts.
 This source is subject to the Microsoft Public License (Ms-PL).
 Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
@@ -22,8 +22,6 @@ All other rights reserved.
         SizeToContent="Width" 
         d:DataContext="{d:DesignInstance snoop:WindowInfo}">
     <Window.Resources>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-
         <Storyboard x:Key="dogAnimationStoryboard" RepeatBehavior="Forever" AutoReverse="True">
             <PointAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="dogAnimated"
                                           Storyboard.TargetProperty="(Shape.Fill).(LinearGradientBrush.StartPoint)">
