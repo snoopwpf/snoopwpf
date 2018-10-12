@@ -1,7 +1,9 @@
 REDIRECTS: OFF
 SPECIFIC-VERSION: FALSE
+RESTRICTION: == net40
 NUGET
   remote: https://api.nuget.org/v3/index.json
+    Microsoft.PowerShell.3.ReferenceAssemblies (1.0)
     nuget.commandline (4.7.1)
     vswhere (2.5.2)
     wix (3.11.1)
