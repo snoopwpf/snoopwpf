@@ -58,9 +58,11 @@ All other rights reserved.
         </Grid.ColumnDefinitions>
 
         <Border Grid.Column="0"
+                Style="{x:Null}"
                 Width="{Binding Source={x:Static forms:SystemInformation.IconSize}, Path=Width}"
                 Height="{Binding Source={x:Static forms:SystemInformation.IconSize}, Path=Height}">
-            <Image Visibility="{Binding IsOwningProcessElevated, Converter={StaticResource BooleanToVisibilityConverter}}"
+            <Image Style="{x:Null}"
+                   Visibility="{Binding IsOwningProcessElevated, Converter={StaticResource BooleanToVisibilityConverter}}"
                    Source="{Binding ElementName=Window, Path=UACImageSource}" />
         </Border>
 
