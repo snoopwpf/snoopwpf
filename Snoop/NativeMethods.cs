@@ -138,6 +138,21 @@ namespace Snoop
 	                   : string.Empty;
 	    }
 
+        [DllImport("user32.dll", SetLastError=true, CharSet=CharSet.Auto)]
+        private static extern int GetWindowTextLength(IntPtr hWnd);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int maxCount);
+
+        public static string GetText(IntPtr hWnd)
+        {
+            // Allocate correct string length first
+            var length = GetWindowTextLength(hWnd);
+            var sb = new StringBuilder(length + 1);
+            GetWindowText(hWnd, sb, sb.Capacity);
+            return sb.ToString();
+        }
+
 	    [Flags]
 	    public enum ProcessAccessFlags : uint
 	    {
