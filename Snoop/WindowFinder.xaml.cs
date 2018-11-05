@@ -120,6 +120,9 @@ namespace Snoop
 		    this.Cursor = Cursors.Arrow;
 		    this.snoopCrosshairsImage.Visibility = Visibility.Visible;
 		    this.RemoveVisualFeedback();
+
+		    // clear out cached process info to make the force refresh do the process check over again.
+		    WindowInfo.ClearCachedWindowHandleInfo();
 		}
 
 		private void ShowVisualFeedback()

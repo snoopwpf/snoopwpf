@@ -10,12 +10,13 @@
 
     public class WindowInfo
 	{
-	    private static readonly Dictionary<int, bool> processIDToValidityMap = new Dictionary<int, bool>();
+	    private static readonly Dictionary<IntPtr, bool> windowHandleToValidityMap = new Dictionary<IntPtr, bool>();
 
 	    private IList<NativeMethods.MODULEENTRY32> modules;
 	    private Process owningProcess;
 	    private bool? isOwningProcess64Bit;
-	    private bool? isOwningProcessElevated;	    
+	    private bool? isOwningProcessElevated;
+	    private static readonly int snoopProcessId = Process.GetCurrentProcess().Id;
 
 	    public WindowInfo(IntPtr hwnd)
 		{
@@ -24,9 +25,9 @@
 
 	    public event EventHandler<AttachFailedEventArgs> AttachFailed;
 
-        public static void ClearCachedProcessInfo()
+        public static void ClearCachedWindowHandleInfo()
 		{
-			processIDToValidityMap.Clear();
+			windowHandleToValidityMap.Clear();
 		}
 
 		public IList<NativeMethods.MODULEENTRY32> Modules => this.modules ?? (this.modules = this.GetModules().ToList());
@@ -74,20 +75,20 @@
                         return false;
                     }
 
+				    // see if we have cached the process validity previously, if so, return it.
+				    if (windowHandleToValidityMap.TryGetValue(this.HWnd, out isValid))
+				    {
+				        return isValid;
+				    }
+
                     var process = this.OwningProcess;
 					if (process == null)
                     {
                         return false;
                     }
 
-                    // see if we have cached the process validity previously, if so, return it.
-                    if (processIDToValidityMap.TryGetValue(process.Id, out isValid))
-                    {
-                        return isValid;
-                    }
-
                     // else determine the process validity and cache it.
-                    if (process.Id == Process.GetCurrentProcess().Id)
+                    if (process.Id == snoopProcessId)
 					{
 						isValid = false;
 
@@ -135,7 +136,7 @@
 					    }
 					}
 
-					processIDToValidityMap[process.Id] = isValid;
+					windowHandleToValidityMap[this.HWnd] = isValid;
 				}
 			    catch
 			    {
@@ -159,7 +160,14 @@
 			get
 			{
 				var process = this.OwningProcess;
-				return $"{process.MainWindowTitle} - {process.ProcessName} [{process.Id}]";
+			    var windowTitle = NativeMethods.GetText(this.HWnd);
+
+			    if (string.IsNullOrEmpty(windowTitle))
+			    {
+			        windowTitle = process.MainWindowTitle;
+			    }
+
+			    return $"{windowTitle} - {process.ProcessName} [{process.Id}]";
 			}
 		}
 

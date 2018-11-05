@@ -57,8 +57,9 @@ namespace Snoop
 
 						foreach (IntPtr windowHandle in NativeMethods.ToplevelWindows)
 						{
-							WindowInfo window = new WindowInfo(windowHandle);
-							if (window.IsValidProcess && !this.HasProcess(window.OwningProcess))
+							var window = new WindowInfo(windowHandle);
+							if (window.IsValidProcess 
+							    && !this.HasProcess(window.OwningProcess))
 							{
 								new AttachFailedHandler(window, this);
 								this.windows.Add(window);
@@ -125,7 +126,7 @@ namespace Snoop
 		private void HandleRefreshCommand(object sender, ExecutedRoutedEventArgs e)
 		{
 			// clear out cached process info to make the force refresh do the process check over again.
-			WindowInfo.ClearCachedProcessInfo();
+			WindowInfo.ClearCachedWindowHandleInfo();
 			this.Refresh();
 		}
 		private void HandleMinimizeCommand(object sender, ExecutedRoutedEventArgs e)
