@@ -1,4 +1,4 @@
-﻿// (c) Copyright Cory Plotts.
+// (c) Copyright Cory Plotts.
 // This source is subject to the Microsoft Public License (Ms-PL).
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
@@ -11,6 +11,7 @@ namespace Snoop
 {
     using System.Runtime.InteropServices;
     using System.Windows.Interop;
+    using Rectangle = System.Drawing.Rectangle;
 
     public static class SnoopWindowUtils
 	{
@@ -88,7 +89,8 @@ namespace Snoop
 
 	    public static void LoadWindowPlacement(Window window, WINDOWPLACEMENT? windowPlacement)
 	    {
-	        if (windowPlacement.HasValue == false)
+	        if (windowPlacement.HasValue == false
+	            || IsVisibleOnAnyScreen(windowPlacement.Value.normalPosition))
 	        {
 	            return;
 	        }
@@ -115,6 +117,21 @@ namespace Snoop
 	        Win32.GetWindowPlacement(hwnd, out windowPlacement);
 
 	        saveAction(windowPlacement);
+	    }
+
+	    private static bool IsVisibleOnAnyScreen(RECT rect)
+	    {
+	        var rectangle = new Rectangle(rect.Left, rect.Top, rect.Width, rect.Height);
+
+	        foreach (var screen in System.Windows.Forms.Screen.AllScreens)
+	        {
+	            if (screen.WorkingArea.IntersectsWith(rectangle))
+	            {
+	                return true;
+	            }
+	        }
+
+	        return false;
 	    }
 	}
 }

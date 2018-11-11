@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 
 namespace Snoop
 {
-	// AK: TODO: Move this to NativeMethods.cs
+    // AK: TODO: Move this to NativeMethods.cs
 
 	// RECT structure required by WINDOWPLACEMENT structure
 	[Serializable]
@@ -27,6 +27,10 @@ namespace Snoop
 			this.Right = right;
 			this.Bottom = bottom;
 		}
+
+	    public int Width => this.Right - this.Left;
+
+	    public int Height => this.Bottom - this.Top;
 	}
 
 	// POINT structure required by WINDOWPLACEMENT structure
