@@ -90,7 +90,7 @@ namespace Snoop
 	    public static void LoadWindowPlacement(Window window, WINDOWPLACEMENT? windowPlacement)
 	    {
 	        if (windowPlacement.HasValue == false
-	            || IsVisibleOnAnyScreen(windowPlacement.Value.normalPosition))
+	            || IsVisibleOnAnyScreen(windowPlacement.Value.normalPosition) == false)
 	        {
 	            return;
 	        }
