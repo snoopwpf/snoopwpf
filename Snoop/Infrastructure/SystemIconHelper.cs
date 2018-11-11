@@ -27,10 +27,9 @@
 
         private static ImageSource GetImageSource(string name, int width, int height)
         {
-            const int LR_SHARED = 0x00008000;
             const int IMAGE_ICON = 1;
 	        
-            var image = NativeMethods.LoadImage(IntPtr.Zero, name, IMAGE_ICON, width, height, LR_SHARED);
+            var image = NativeMethods.LoadImage(IntPtr.Zero, name, IMAGE_ICON, width, height, 0);
             var imageSource = Imaging.CreateBitmapSourceFromHIcon(image, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
 
             return imageSource;
