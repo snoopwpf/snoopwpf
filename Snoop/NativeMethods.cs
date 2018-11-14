@@ -37,6 +37,7 @@ namespace Snoop
 				return windowList.ToArray();
 			}
 		}
+
 		public static Process GetWindowThreadProcess(IntPtr hwnd)
 		{
 			int processID;
@@ -121,6 +122,14 @@ namespace Snoop
 
 		[DllImport("user32.dll")]
 		public static extern int GetWindowThreadProcessId(IntPtr hwnd, out int processId);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool IsWindow(IntPtr hwnd);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool IsWindowVisible(IntPtr hwnd);
 
 	    [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
 	    private static extern int GetClassName(IntPtr hwnd, StringBuilder className, int maxCount);
