@@ -37,9 +37,10 @@ namespace Snoop
 			// having the call to base.Reload here ... puts the application resources at the very top of the tree view
 			base.Reload(toBeRemoved);
 
-		    foreach (Window window in this.application.Windows) 
+		    foreach (Window window in this.application.Windows)
 		    { 
-		        if (window.CheckAccess() == false) 
+		        if (window.IsInitialized == false
+		            || window.CheckAccess() == false) 
 		        { 
 		            continue; 
 		        }
