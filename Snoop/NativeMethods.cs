@@ -13,8 +13,12 @@ using System.Windows;
 
 namespace Snoop
 {
-	public static class NativeMethods
-	{
+    using System.Text;
+
+    public static class NativeMethods
+    {
+        public const int ERROR_ACCESS_DENIED = 5;
+
 		public static IntPtr[] ToplevelWindows
 		{
 			get
@@ -33,6 +37,7 @@ namespace Snoop
 				return windowList.ToArray();
 			}
 		}
+
 		public static Process GetWindowThreadProcess(IntPtr hwnd)
 		{
 			int processID;
@@ -86,6 +91,20 @@ namespace Snoop
 			}
 		}
 
+        public class ProcessHandle : SafeHandleZeroOrMinusOneIsInvalid
+        {
+            private ProcessHandle()
+                : base(true)
+            {
+            }
+
+            [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
+            override protected bool ReleaseHandle()
+            {
+                return NativeMethods.CloseHandle(handle);
+            }
+        }
+
 		[Flags]
 		public enum SnapshotFlags : uint
 		{
@@ -104,7 +123,76 @@ namespace Snoop
 		[DllImport("user32.dll")]
 		public static extern int GetWindowThreadProcessId(IntPtr hwnd, out int processId);
 
-		[DllImport("kernel32", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool IsWindow(IntPtr hwnd);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool IsWindowVisible(IntPtr hwnd);
+
+	    [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+	    private static extern int GetClassName(IntPtr hwnd, StringBuilder className, int maxCount);
+
+	    public static string GetClassName(IntPtr hwnd)
+	    {
+	        // Pre-allocate 256 characters, since this is the maximum class name length.
+	        var className = new StringBuilder(256);
+
+	        //Get the window class name
+	        var result = GetClassName(hwnd, className, className.Capacity);
+
+	        return result != 0
+	                   ? className.ToString()
+	                   : string.Empty;
+	    }
+
+        [DllImport("user32.dll", SetLastError=true, CharSet=CharSet.Auto)]
+        private static extern int GetWindowTextLength(IntPtr hWnd);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int maxCount);
+
+        public static string GetText(IntPtr hWnd)
+        {
+            // Allocate correct string length first
+            var length = GetWindowTextLength(hWnd);
+            var sb = new StringBuilder(length + 1);
+            GetWindowText(hWnd, sb, sb.Capacity);
+            return sb.ToString();
+        }
+
+	    [Flags]
+	    public enum ProcessAccessFlags : uint
+	    {
+	        All = 0x001F0FFF,
+	        Terminate = 0x00000001,
+	        CreateThread = 0x00000002,
+	        VirtualMemoryOperation = 0x00000008,
+	        VirtualMemoryRead = 0x00000010,
+	        VirtualMemoryWrite = 0x00000020,
+	        DuplicateHandle = 0x00000040,
+	        CreateProcess = 0x000000080,
+	        SetQuota = 0x00000100,
+	        SetInformation = 0x00000200,
+	        QueryInformation = 0x00000400,
+	        QueryLimitedInformation = 0x00001000,
+	        Synchronize = 0x00100000
+	    }
+
+	    [DllImport("kernel32.dll", SetLastError = true)]
+	    private static extern ProcessHandle OpenProcess(ProcessAccessFlags processAccess, bool bInheritHandle, int processId);
+
+	    public static ProcessHandle OpenProcess(Process proc, ProcessAccessFlags flags)
+	    {
+	        return OpenProcess(flags, false, proc.Id);
+	    }
+
+        [DllImport("kernel32.dll", SetLastError = true, CallingConvention = CallingConvention.Winapi)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool IsWow64Process([In] IntPtr process, [Out] out bool wow64Process);
+
+	    [DllImport("kernel32", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
 		internal static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
 
 		[DllImport("kernel32")]
@@ -122,6 +210,8 @@ namespace Snoop
 		[DllImport("kernel32.dll", SetLastError = true)]
 		static public extern bool CloseHandle(IntPtr hHandle);
 
+        [DllImport("user32.dll")]
+        public static extern IntPtr LoadImage(IntPtr hinst, string lpszName, uint uType, int cxDesired, int cyDesired, uint fuLoad);
 
 		// anvaka's changes below
 

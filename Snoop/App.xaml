@@ -18,7 +18,9 @@ All other rights reserved.
 				<ResourceDictionary Source="Simple Styles.xaml"/>
 			</ResourceDictionary.MergedDictionaries>
 
-			<!-- appChooserButtonStyle -->
+		    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
+            <!-- appChooserButtonStyle -->
 			<Style x:Key="appChooserButtonStyle" TargetType="{x:Type Button}">
 				<Setter Property="FocusVisualStyle">
 					<Setter.Value>
