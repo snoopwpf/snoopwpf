@@ -13,16 +13,11 @@ using System.Windows.Threading;
 
 namespace Snoop
 {
-    using System.IO.Pipes;
-    using System.Xml.Serialization;
-    using Snoop.Data;
-    using Snoop.Properties;
-
     public partial class AppChooser
 	{
 		static AppChooser()
 		{
-			AppChooser.RefreshCommand.InputGestures.Add(new KeyGesture(Key.F5));
+			RefreshCommand.InputGestures.Add(new KeyGesture(Key.F5));
 		}
 
 		public AppChooser()
@@ -31,10 +26,10 @@ namespace Snoop
 
 			this.InitializeComponent();
 
-			this.CommandBindings.Add(new CommandBinding(AppChooser.RefreshCommand, this.HandleRefreshCommand));
-			this.CommandBindings.Add(new CommandBinding(AppChooser.InspectCommand, this.HandleInspectCommand, this.HandleCanInspectOrMagnifyCommand));
-			this.CommandBindings.Add(new CommandBinding(AppChooser.MagnifyCommand, this.HandleMagnifyCommand, this.HandleCanInspectOrMagnifyCommand));
-			this.CommandBindings.Add(new CommandBinding(AppChooser.MinimizeCommand, this.HandleMinimizeCommand));
+			this.CommandBindings.Add(new CommandBinding(RefreshCommand, this.HandleRefreshCommand));
+			this.CommandBindings.Add(new CommandBinding(InspectCommand, this.HandleInspectCommand, this.HandleCanInspectOrMagnifyCommand));
+			this.CommandBindings.Add(new CommandBinding(MagnifyCommand, this.HandleMagnifyCommand, this.HandleCanInspectOrMagnifyCommand));
+			this.CommandBindings.Add(new CommandBinding(MinimizeCommand, this.HandleMinimizeCommand));
 			this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, this.HandleCloseCommand));
 		}
 
@@ -51,16 +46,16 @@ namespace Snoop
 		{
 			this.windows.Clear();
 
-			Dispatcher.BeginInvoke
+		    this.Dispatcher.BeginInvoke
 			(
-				System.Windows.Threading.DispatcherPriority.Loaded,
+				DispatcherPriority.Loaded,
 				(DispatcherOperationCallback)delegate
 				{
 					try
 					{
 						Mouse.OverrideCursor = Cursors.Wait;
 
-						foreach (IntPtr windowHandle in NativeMethods.ToplevelWindows)
+						foreach (var windowHandle in NativeMethods.ToplevelWindows)
 						{
 							var window = new WindowInfo(windowHandle);
 							if (window.IsValidProcess 
@@ -72,8 +67,10 @@ namespace Snoop
 						}
 
 						if (this.windows.Count > 0)
-							this.Windows.MoveCurrentTo(this.windows[0]);
-					}
+                        {
+                            this.Windows.MoveCurrentTo(this.windows[0]);
+                        }
+                    }
 					finally
 					{
 						Mouse.OverrideCursor = null;
@@ -104,40 +101,51 @@ namespace Snoop
 
 		private bool HasProcess(Process process)
 		{
-			foreach (WindowInfo window in this.windows)
-				if (window.OwningProcess.Id == process.Id)
-					return true;
-			return false;
+			foreach (var window in this.windows)
+            {
+                if (window.OwningProcess.Id == process.Id)
+                {
+                    return true;
+                }
+            }
+
+            return false;
 		}
 
 		private void HandleCanInspectOrMagnifyCommand(object sender, CanExecuteRoutedEventArgs e)
 		{
 			if (this.Windows.CurrentItem != null)
-				e.CanExecute = true;
-			e.Handled = true;
+            {
+                e.CanExecute = true;
+            }
+
+            e.Handled = true;
 		}
+
 		private void HandleInspectCommand(object sender, ExecutedRoutedEventArgs e)
 		{
-			WindowInfo window = (WindowInfo)this.Windows.CurrentItem;
-			if (window != null)
-				window.Snoop();
+			var window = (WindowInfo)this.Windows.CurrentItem;
+		    window?.Snoop();
 		}
+
 		private void HandleMagnifyCommand(object sender, ExecutedRoutedEventArgs e)
 		{
-			WindowInfo window = (WindowInfo)this.Windows.CurrentItem;
-			if (window != null)
-				window.Magnify();
+			var window = (WindowInfo)this.Windows.CurrentItem;
+		    window?.Magnify();
 		}
+
 		private void HandleRefreshCommand(object sender, ExecutedRoutedEventArgs e)
 		{
 			// clear out cached process info to make the force refresh do the process check over again.
 			WindowInfo.ClearCachedWindowHandleInfo();
 			this.Refresh();
 		}
+
 		private void HandleMinimizeCommand(object sender, ExecutedRoutedEventArgs e)
 		{
 			this.WindowState = System.Windows.WindowState.Minimized;
 		}
+
 		private void HandleCloseCommand(object sender, ExecutedRoutedEventArgs e)
 		{
 			this.Close();
@@ -334,8 +342,8 @@ namespace Snoop
 	{
 		public AttachFailedEventArgs(Exception attachException, string windowName)
 		{
-			AttachException = attachException;
-			WindowName = windowName;
+		    this.AttachException = attachException;
+		    this.WindowName = windowName;
 		}
 
 	    public Exception AttachException { get; }
