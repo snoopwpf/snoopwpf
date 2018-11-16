@@ -20,6 +20,7 @@ namespace Snoop
 			: base(application, parent)
 		{
 			this.application = application;
+		    this.IsExpanded = true;
 		}
 
 		public override Visual MainVisual => this.application.MainWindow;
