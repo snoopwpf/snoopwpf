@@ -496,11 +496,11 @@ namespace Snoop
 		{
 			this.Dispatcher.UnhandledException += this.UnhandledExceptionHandler;
 
+		    SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
+
 		    this.Load(rootToInspect);
 
-			this.Owner = ownerWindow;
-
-			SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
+			this.Owner = ownerWindow;			
 		    
 		    this.Show();
 		    this.Activate();
