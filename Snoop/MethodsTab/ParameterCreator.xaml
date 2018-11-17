@@ -32,7 +32,7 @@ All other rights reserved.
 
         <StackPanel Margin="15,15,0,15" Grid.Row="2" Orientation="Horizontal">
             <Button Name="btnOK" Style="{x:Null}" Height="25" Width="100" Grid.Row="1" Margin="0,0,0,0" Click="OKClick" Content="OK" HorizontalAlignment="Left" VerticalAlignment="Center" />
-            <Button Name="btnCancel" Style="{x:Null}" Height="25" Width="100" Grid.Row="1" Margin="15,0,0,0" Click="CancelClick" Content="Canel" HorizontalAlignment="Left" VerticalAlignment="Center" />
+            <Button Name="btnCancel" Style="{x:Null}" Height="25" Width="100" Grid.Row="1" Margin="15,0,0,0" Click="CancelClick" Content="Cancel" HorizontalAlignment="Left" VerticalAlignment="Center" />
         </StackPanel>
         
     </Grid>
