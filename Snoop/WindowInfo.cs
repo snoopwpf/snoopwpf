@@ -166,10 +166,18 @@
 				var process = this.OwningProcess;
 			    var windowTitle = NativeMethods.GetText(this.HWnd);
 
-			    if (string.IsNullOrEmpty(windowTitle))
-			    {
-			        windowTitle = process.MainWindowTitle;
-			    }
+				if (string.IsNullOrEmpty(windowTitle))
+				{
+					try
+					{
+						windowTitle = process.MainWindowTitle;
+					}
+					catch (InvalidOperationException)
+					{
+						// The process closed while we were trying to evaluate it
+						return string.Empty;
+					}
+				}
 
 			    return $"{windowTitle} - {process.ProcessName} [{process.Id}]";
 			}
