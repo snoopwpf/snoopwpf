@@ -1,0 +1,5 @@
+﻿<Project>
+    <PropertyGroup>
+        <BaseIntermediateOutputPath>..\Intermediate\$(ConfigurationName)\$(Platform)</BaseIntermediateOutputPath>
+    </PropertyGroup>
+</Project>

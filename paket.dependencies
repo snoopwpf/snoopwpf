@@ -1,6 +1,6 @@
 source https://api.nuget.org/v3/index.json
 
-framework: auto-detect
+framework: net40
 specific_version: false
 redirects: off
 

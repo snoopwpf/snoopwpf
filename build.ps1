@@ -32,6 +32,9 @@ if ($null -eq $msbuild -or !(Test-Path $msbuild)) {
     Write-Error "MSBuild could not be found."
 }
 
+"Restoring solution"
+& $msbuild Snoop.sln /t:Restore /property:Configuration=$Configuration /v:m /nologo
+
 "Building solution"
 & $msbuild Snoop.sln /property:Configuration=$Configuration /v:m /nologo
 
