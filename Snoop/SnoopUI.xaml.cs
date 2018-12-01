@@ -196,6 +196,9 @@ namespace Snoop
 			dispatchers.Add(mainDispatcher);
 			foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
 			{
+                if(!presentationSource.CheckAccess())
+                    continue;
+
 				Visual presentationSourceRootVisual = presentationSource.RootVisual;
 
                 if (!(presentationSourceRootVisual is Window))
