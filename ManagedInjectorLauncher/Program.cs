@@ -8,6 +8,8 @@ using ManagedInjector;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
+using ManagedInjector;
+
 namespace ManagedInjectorLauncher
 {
     public static class Program
@@ -15,6 +17,8 @@ namespace ManagedInjectorLauncher
 		public static void Main(string[] args)
 		{            
             Injector.LogMessage("Starting the injection process...", false);
+
+		    //Debugger.Launch();
 
 			var windowHandle = (IntPtr)long.Parse(args[0]);
 			var assemblyName = args[1];

@@ -1,18 +1,13 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <AssemblyTitle>ManagedInjectorLauncher</AssemblyTitle>
-    <Platform>x64</Platform>
+    <PlatformTarget>x64</PlatformTarget>
     <OutputType>WinExe</OutputType>
     <RootNamespace>ManagedInjectorLauncher</RootNamespace>
-    <TargetFramework>net40</TargetFramework>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <OutputPath>..\Build\$(Configuration)\</OutputPath>
-    <DebugType>full</DebugType>
-
-    <!-- <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)\Intermediate\$(AssemblyTitle)\$(ConfigurationName)\$(Platform)</BaseIntermediateOutputPath> -->
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>

@@ -7,8 +7,7 @@
     <OutputType>WinExe</OutputType>
     <ApplicationIcon>..\Artwork\Snoop.ico</ApplicationIcon>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <OutputPath>..\Build\$(Configuration)\</OutputPath>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>    
     <DebugType>full</DebugType>
     <ExtrasEnableWpfProjectSetup>true</ExtrasEnableWpfProjectSetup>
     <UseWpf>true</UseWpf>
@@ -100,6 +99,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <PackageReference Include="microsoft.powershell.3.referenceassemblies" Version="1.0.0" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="paket.references" />
     <Content Include="Scripts\Snoop.psm1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -365,5 +367,4 @@
     <Resource Include="Resources\triggeritem.png" />
     <Resource Include="Resources\Warning.png" />
   </ItemGroup>
-  <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>

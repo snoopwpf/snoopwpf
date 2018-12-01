@@ -38,13 +38,13 @@ namespace Snoop.DebugListenerTab
 
 		private void checkBoxStartListening_Checked(object sender, RoutedEventArgs e)
 		{
-			Debug.Listeners.Add(snoopDebugListener);
+			Trace.Listeners.Add(snoopDebugListener);
 			PresentationTraceSources.DataBindingSource.Listeners.Add(snoopDebugListener);
 		}
 
 		private void checkBoxStartListening_Unchecked(object sender, RoutedEventArgs e)
 		{
-			Debug.Listeners.Remove(SnoopDebugListener.ListenerName);
+		    Trace.Listeners.Remove(SnoopDebugListener.ListenerName);
 			PresentationTraceSources.DataBindingSource.Listeners.Remove(snoopDebugListener);
 		}
 

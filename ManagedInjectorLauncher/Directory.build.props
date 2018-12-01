@@ -1,5 +1,7 @@
 ﻿<Project>
+    <Import Project="../Directory.build.props" />
+
     <PropertyGroup>
-        <BaseIntermediateOutputPath>..\Intermediate\$(ConfigurationName)\$(Platform)</BaseIntermediateOutputPath>
+        <BaseIntermediateOutputPath>..\bin\obj\$(ConfigurationName)\$(MSBuildProjectName)</BaseIntermediateOutputPath>
     </PropertyGroup>
 </Project>
