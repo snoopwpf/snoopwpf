@@ -5,9 +5,6 @@
 
 #pragma once
 
-__declspec(dllexport)
-LRESULT __stdcall MessageHookProc(int nCode, WPARAM wparam, LPARAM lparam);
-
 using namespace System;
 using namespace System::IO;
 
