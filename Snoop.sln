@@ -5,9 +5,9 @@ VisualStudioVersion = 15.0.28307.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snoop", "Snoop\Snoop.csproj", "{ACA9A018-ABF3-4C60-995F-99C4777CED71}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagedInjector32-4.0", "ManagedInjector\ManagedInjector32-4.0.vcxproj", "{8072B47B-5611-4BAB-8EF4-CB3125D676A5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ManagedInjector32-4.0", "ManagedInjector\ManagedInjector32-4.0.vcxproj", "{8072B47B-5611-4BAB-8EF4-CB3125D676A5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagedInjector64-4.0", "ManagedInjector\ManagedInjector64-4.0.vcxproj", "{A27C8B34-2527-4258-8C07-D2720C576B90}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ManagedInjector64-4.0", "ManagedInjector\ManagedInjector64-4.0.vcxproj", "{A27C8B34-2527-4258-8C07-D2720C576B90}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagedInjectorLauncher32-4.0", "ManagedInjectorLauncher\ManagedInjectorLauncher32-4.0.csproj", "{ACA9A018-ABF3-4C60-995F-99C4777CED74}"
 EndProject
