@@ -98,8 +98,6 @@ namespace Snoop
 	            // in other words, this empty catch block could be hiding some potential future errors.
 	        }
 
-	        this.UsesCustomValueBinding = true;
-
 	        this.Update();
 
 	        this.isRunning = true;
@@ -127,8 +125,6 @@ namespace Snoop
 			this.isRunning = false;
 			BindingOperations.ClearAllBindings(this);
 		}
-
-	    public bool UsesCustomValueBinding { get; }
 
         public object Target { get; }
 
