@@ -274,26 +274,27 @@ namespace Snoop
 					stringValue = "Transparent";
 				}
 
-				DependencyObject dependencyObject = this.Target as DependencyObject;
-				if (dependencyObject != null && this.DependencyProperty != null)
+			    if (this.Target is DependencyObject dependencyObject)
 				{
 					// Cache the resource key for this item if not cached already. This could be done for more types, but would need to optimize perf.
 					string resourceKey = null;
-					if (this.property != null &&
-						(this.property.PropertyType == typeof(Style) || this.property.PropertyType == typeof(Brush)))
+					if (this.property != null 
+					    && (this.property.PropertyType == typeof(Style) || this.property.PropertyType == typeof(Brush)))
 					{
-						object resourceItem = dependencyObject.GetValue(this.DependencyProperty);
+						var resourceItem = value;
 						resourceKey = ResourceKeyCache.GetKey(resourceItem);
+
 						if (string.IsNullOrEmpty(resourceKey))
 						{
-							resourceKey = ResourceDictionaryKeyHelpers.GetKeyOfResourceItem(dependencyObject, this.DependencyProperty);
+							resourceKey = ResourceDictionaryKeyHelpers.GetKeyOfResourceItem(dependencyObject, resourceItem);
 							ResourceKeyCache.Cache(resourceItem, resourceKey);
 						}
+
 						Debug.Assert(resourceKey != null);
 					}
 
 					// Display both the value and the resource key, if there's a key for this property.
-					if (!string.IsNullOrEmpty(resourceKey))
+					if (string.IsNullOrEmpty(resourceKey) == false)
 					{
 						return string.Format("{0} {1}", resourceKey, stringValue);
 					}
