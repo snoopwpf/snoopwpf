@@ -128,6 +128,8 @@ namespace Snoop
 			BindingOperations.ClearAllBindings(this);
 		}
 
+	    public bool UsesCustomValueBinding { get; }
+
         public object Target { get; }
 
 	    public object Value
