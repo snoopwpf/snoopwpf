@@ -215,10 +215,10 @@ All other rights reserved.
 				<Style.Triggers>
 
                     <Trigger Property="ItemsControl.AlternationIndex" Value="0">
-                        <Setter Property="Background" Value="Transparent"></Setter>
+                        <Setter Property="Background" Value="Transparent" />
                     </Trigger>
                     <Trigger Property="ItemsControl.AlternationIndex" Value="1">
-                        <Setter Property="Background" Value="#FFEAEAEA"></Setter>
+                        <Setter Property="Background" Value="#FFEAEAEA" />
                     </Trigger>
                     
                     <DataTrigger Binding="{Binding IsLocallySet}" Value="False">
@@ -250,7 +250,7 @@ All other rights reserved.
 			<GridView>
 				<GridViewColumn Width="25">
 					<GridViewColumn.CellTemplate>
-						<DataTemplate>
+						<DataTemplate DataType="my:PropertyInformation">
 							<CheckBox Style="{x:Null}" IsChecked="{Binding BreakOnChange}" Template="{StaticResource BreakpointTemplate}">
 								<CheckBox.ToolTip>
 									<TextBlock Style="{x:Null}" Text="Click here to toggle a debug breakpoint on and off."/>

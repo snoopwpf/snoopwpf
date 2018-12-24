@@ -13,6 +13,10 @@ using System.Windows.Threading;
 
 namespace Snoop
 {
+    using System.Windows;
+    using Snoop.Properties;
+    using Snoop.Views;
+
     public partial class AppChooser
 	{
 		static AppChooser()
@@ -29,14 +33,16 @@ namespace Snoop
 			this.CommandBindings.Add(new CommandBinding(RefreshCommand, this.HandleRefreshCommand));
 			this.CommandBindings.Add(new CommandBinding(InspectCommand, this.HandleInspectCommand, this.HandleCanInspectOrMagnifyCommand));
 			this.CommandBindings.Add(new CommandBinding(MagnifyCommand, this.HandleMagnifyCommand, this.HandleCanInspectOrMagnifyCommand));
-			this.CommandBindings.Add(new CommandBinding(MinimizeCommand, this.HandleMinimizeCommand));
+		    this.CommandBindings.Add(new CommandBinding(SettingsCommand, this.HandleSettingsCommand));
+            this.CommandBindings.Add(new CommandBinding(MinimizeCommand, this.HandleMinimizeCommand));
 			this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, this.HandleCloseCommand));
 		}
 
 		public static readonly RoutedCommand InspectCommand = new RoutedCommand();
 		public static readonly RoutedCommand RefreshCommand = new RoutedCommand();
 		public static readonly RoutedCommand MagnifyCommand = new RoutedCommand();
-		public static readonly RoutedCommand MinimizeCommand = new RoutedCommand();
+	    public static readonly RoutedCommand SettingsCommand = new RoutedCommand();
+        public static readonly RoutedCommand MinimizeCommand = new RoutedCommand();
 
         public ICollectionView Windows { get; }
 
@@ -141,7 +147,26 @@ namespace Snoop
 			this.Refresh();
 		}
 
-		private void HandleMinimizeCommand(object sender, ExecutedRoutedEventArgs e)
+	    private void HandleSettingsCommand(object sender, ExecutedRoutedEventArgs e)
+	    {
+	        var window = new Window
+	                     {
+	                         Content = new SettingsView(),
+	                         Title = "Settings for snoop",
+                             Owner = this,
+	                         MinWidth = 480,
+	                         MinHeight = 320,
+                             Width = 480,
+                             Height = 320,
+                             WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                             WindowStyle = WindowStyle.ToolWindow
+	                     };
+	        window.ShowDialog();
+            // Reload here to require users to explicitly save the settings from the dialog. Reload just discards any unsaved changes.
+            Settings.Default.Reload();
+	    }        
+
+        private void HandleMinimizeCommand(object sender, ExecutedRoutedEventArgs e)
 		{
 			this.WindowState = System.Windows.WindowState.Minimized;
 		}

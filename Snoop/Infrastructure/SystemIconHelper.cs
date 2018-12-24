@@ -1,38 +1,72 @@
 ﻿namespace Snoop.Infrastructure
 {
     using System;
+    using System.Runtime.InteropServices;
     using System.Windows;
     using System.Windows.Interop;
+    using System.Windows.Markup;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
 
-    public enum SystemIcon
+    public class SystemIcon
     {
-        UACShield = 106
+        public const string ImageResDll = @"%SystemRoot%\system32\imageres.dll";
+
+        public SystemIcon(string origin, int iconIdOrIndex)
+        {
+            this.Origin = origin;
+            this.IconIdOrIndex = iconIdOrIndex;
+        }
+
+        public string Origin { get; }
+
+        // Negative values reflect a resource id
+        public int IconIdOrIndex { get; }
+
+        public static readonly SystemIcon Shield = new SystemIcon(ImageResDll, -78);
+
+        public static readonly SystemIcon Settings = new SystemIcon(ImageResDll, -114);
     }
 
     public static class SystemIconHelper
     {
+        [DllImport("shell32.dll")]
+        private static extern IntPtr ExtractIcon(IntPtr hInst, string lpszExeFileName, int nIconIndex);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern int DestroyIcon(IntPtr hIcon);
+
         public static ImageSource GetImageSource(SystemIcon systemIcon, int width, int height)
         {
-            switch (systemIcon)
-            {
-                case SystemIcon.UACShield:
-                    return GetImageSource("#106", width, height);
-                    
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(systemIcon), systemIcon, null);
-            }
+            return GetImageSource(systemIcon.Origin, systemIcon.IconIdOrIndex, width, height);
         }
 
-        private static ImageSource GetImageSource(string name, int width, int height)
+        private static ImageSource GetImageSource(string filePath, int iconIdOrIndex, int width, int height)
         {
-            const int IMAGE_ICON = 1;
-	        
-            var image = NativeMethods.LoadImage(IntPtr.Zero, name, IMAGE_ICON, width, height, 0);
-            var imageSource = Imaging.CreateBitmapSourceFromHIcon(image, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+            var iconHandle = ExtractIcon(IntPtr.Zero, filePath, iconIdOrIndex);
 
-            return imageSource;
+            if (iconHandle == IntPtr.Zero)
+            {
+                return null;
+            }
+
+            try
+            {
+                return Imaging.CreateBitmapSourceFromHIcon(iconHandle, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(width, height));
+            }
+            finally
+            {
+                DestroyIcon(iconHandle);
+            }
+        }
+    }
+
+    public class SystemImageMarkupExtension : MarkupExtension
+    {
+        /// <inheritdoc />
+        public override object ProvideValue(IServiceProvider serviceProvider)
+        {
+            
         }
     }
 }

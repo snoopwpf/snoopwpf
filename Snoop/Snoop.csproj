@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -107,6 +107,10 @@
     <Page Include="TriggersTab\TriggersView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ZoomerControl.xaml">
       <SubType>Designer</SubType>
@@ -242,6 +246,9 @@
     <Compile Include="Shell\VisualTreeProvider.cs" />
     <Compile Include="TriggersTab\TriggersView.xaml.cs">
       <DependentUpon>TriggersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="WindowInfo.cs" />
     <Compile Include="ZoomerControl.xaml.cs">

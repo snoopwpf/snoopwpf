@@ -62,7 +62,7 @@ All other rights reserved.
                 Height="32">
             <Image Style="{x:Null}"
                    Visibility="{Binding IsOwningProcessElevated, Converter={StaticResource BooleanToVisibilityConverter}}"
-                   Source="{Binding Source={x:Static infrastructure:SystemIcon.UACShield}, Converter={x:Static converters:SystemIconToImageSourceConverter.Instance}, ConverterParameter=32}" />
+                   Source="{Binding Source={x:Static infrastructure:SystemIcon.Shield}, Converter={x:Static converters:SystemIconToImageSourceConverter.Instance}, ConverterParameter=32}" />
         </Border>
 
         <Grid Grid.Column="1"
