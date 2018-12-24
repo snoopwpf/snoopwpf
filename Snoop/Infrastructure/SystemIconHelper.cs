@@ -60,13 +60,4 @@
             }
         }
     }
-
-    public class SystemImageMarkupExtension : MarkupExtension
-    {
-        /// <inheritdoc />
-        public override object ProvideValue(IServiceProvider serviceProvider)
-        {
-            
-        }
-    }
 }
