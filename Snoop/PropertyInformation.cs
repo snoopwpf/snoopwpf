@@ -164,12 +164,15 @@ namespace Snoop
                     Debugger.Break();
 				}
 
-				this.HasChangedRecently = true;
+				this.HasChangedRecently = (e.OldValue?.Equals(e.NewValue) ?? e.OldValue == e.NewValue) == false;
+
 				if (this.changeTimer == null)
 				{
-					this.changeTimer = new DispatcherTimer();
-					this.changeTimer.Interval = TimeSpan.FromSeconds(1.5);
-					this.changeTimer.Tick += this.HandleChangeExpiry;
+				    this.changeTimer = new DispatcherTimer
+				                       {
+				                           Interval = TimeSpan.FromSeconds(1.5)
+				                       };
+				    this.changeTimer.Tick += this.HandleChangeExpiry;
 					this.changeTimer.Start();
 				}
 				else
