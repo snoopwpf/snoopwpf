@@ -196,7 +196,7 @@ namespace Snoop
 			dispatchers.Add(mainDispatcher);
 			foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
 			{
-                if(!presentationSource.CheckAccess())
+                if(presentationSource.Dispatcher.Thread.IsBackground)
                     continue;
 
 				Visual presentationSourceRootVisual = presentationSource.RootVisual;
