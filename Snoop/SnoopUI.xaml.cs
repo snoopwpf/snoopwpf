@@ -134,13 +134,18 @@ namespace Snoop
             }
         }
 
-	    #endregion
+        #endregion
 
 		#region Public Static Methods
 		public static bool GoBabyGo(string settingsFile)
 		{
 		    TransientSettingsData.LoadCurrent(settingsFile);
 
+            return new CrossDomainSnoop().CrossDomainGoBabyGo();
+        }
+
+	    public static bool GoBabyGoSingleAppDomain()
+		{
 			try
 			{
 				SnoopApplication();
@@ -465,7 +470,8 @@ namespace Snoop
 			var foundRoot = this.FindRoot();
 			if (foundRoot == null)
 			{
-				if (!SnoopModes.MultipleDispatcherMode)
+				if (SnoopModes.MultipleDispatcherMode == false
+				    && SnoopModes.MultipleAppDomainMode == false)
 				{
 					//SnoopModes.MultipleDispatcherMode is always false for all scenarios except for cases where we are running multiple dispatchers.
 					//If SnoopModes.MultipleDispatcherMode was set to true, then there definitely was a root visual found in another dispatcher, so

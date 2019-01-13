@@ -108,7 +108,7 @@
 					else
 					{
                         // WPF-Windows have a defined class name
-					    if (windowClassNameRegex.IsMatch(NativeMethods.GetClassName(this.HWnd)))
+					    if (windowClassNameRegex.IsMatch(this.ClassName))
 					    {
 					        isValid = true;
 					    }
@@ -185,7 +185,9 @@
 			}
 		}
 
-		public override string ToString()
+	    public string ClassName => NativeMethods.GetClassName(this.HWnd);
+
+        public override string ToString()
 		{
 			return this.Description;
 		}

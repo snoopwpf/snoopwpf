@@ -184,6 +184,7 @@
     </Compile>
     <Compile Include="EventsListener.cs" />
     <Compile Include="EventTracker.cs" />
+    <Compile Include="Infrastructure\AppDomainHelper.cs" />
     <Compile Include="Infrastructure\AttachedPropertyManager.cs" />
     <Compile Include="Infrastructure\ClipboardHelper.cs" />
     <Compile Include="Infrastructure\ComboBoxSettings.cs" />
@@ -220,6 +221,20 @@
     <Compile Include="MethodsTab\TypeSelector.xaml.cs">
       <DependentUpon>TypeSelector.xaml</DependentUpon>
     </Compile>
+    <Compile Include="mscoree\CorRuntimeHost.cs" />
+    <Compile Include="mscoree\CorRuntimeHostClass.cs" />
+    <Compile Include="mscoree\ICorConfiguration.cs" />
+    <Compile Include="mscoree\ICorRuntimeHost.cs" />
+    <Compile Include="mscoree\IDebuggerInfo.cs" />
+    <Compile Include="mscoree\IDebuggerThreadControl.cs" />
+    <Compile Include="mscoree\IGCHost.cs" />
+    <Compile Include="mscoree\IGCHostControl.cs" />
+    <Compile Include="mscoree\IGCThreadControl.cs" />
+    <Compile Include="mscoree\IValidator.cs" />
+    <Compile Include="mscoree\IVEHandler.cs" />
+    <Compile Include="mscoree\tag_VerError.cs" />
+    <Compile Include="mscoree\_COR_GC_STATS.cs" />
+    <Compile Include="mscoree\_COR_GC_THREAD_STATS.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="ObjectToStringConverter.cs" />
     <Compile Include="PertinentPropertyFilter.cs" />
