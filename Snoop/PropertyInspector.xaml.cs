@@ -73,8 +73,8 @@ namespace Snoop
         {
             try
             {
-                string xaml = XamlWriter.Save(((PropertyInformation)e.Parameter).Value);
-                Clipboard.SetData(DataFormats.Text, xaml);
+                var xaml = XamlWriter.Save(((PropertyInformation)e.Parameter).Value);
+                ClipboardHelper.SetText(xaml);
                 MessageBox.Show("Brush has been copied to the clipboard. You can paste it into your project.", "Brush copied", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception exception)

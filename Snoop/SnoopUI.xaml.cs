@@ -1029,10 +1029,7 @@ namespace Snoop
 			}
 
 			Debug.WriteLine(sb.ToString());
-			Clipboard.SetText(sb.ToString());
-		}
-
-		
+		    ClipboardHelper.SetText(sb.ToString());
+		}		
 	}
-
 }

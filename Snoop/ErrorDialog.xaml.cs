@@ -82,14 +82,7 @@ namespace Snoop
 
 		private void _buttonCopyToClipboard_Click(object sender, RoutedEventArgs e)
 		{
-			try
-			{
-				Clipboard.SetText(this.GetExceptionMessage());
-			}
-			catch (Exception exception)
-			{
-			    ShowExceptionMessageBox(exception, "Error copying to clipboard", "There was an error copying to the clipboard.\nPlease copy the error details from the above textbox manually.");
-			}
+			ClipboardHelper.SetText(this.GetExceptionMessage());
 		}
 
 		private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)

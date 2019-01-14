@@ -180,6 +180,7 @@
     <Compile Include="EventsListener.cs" />
     <Compile Include="EventTracker.cs" />
     <Compile Include="Infrastructure\AttachedPropertyManager.cs" />
+    <Compile Include="Infrastructure\ClipboardHelper.cs" />
     <Compile Include="Infrastructure\ComboBoxSettings.cs" />
     <Compile Include="Infrastructure\ExtensionMethods.cs" />
     <Compile Include="Infrastructure\ISkipDelve.cs" />
