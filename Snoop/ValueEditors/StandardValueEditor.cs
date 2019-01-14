@@ -6,6 +6,8 @@
 using System.Windows;
 using System;
 using System.ComponentModel;
+using System.Globalization;
+using System.Threading;
 using System.Windows.Data;
 
 namespace Snoop
@@ -84,8 +86,21 @@ namespace Snoop
 			this.isUpdatingValue = true;
 
 			object value = this.Value;
-			if (value != null)
-				this.StringValue = value.ToString();
+		    if (value != null)
+		    {
+                var fallbackCulture = Thread.CurrentThread.CurrentCulture;
+
+                try
+                {
+		            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+		            this.StringValue = value.ToString();
+		        }
+		        finally
+		        {
+                    Thread.CurrentThread.CurrentCulture = fallbackCulture;
+                }
+		    }
+				
 			else
 				this.StringValue = string.Empty;
 
