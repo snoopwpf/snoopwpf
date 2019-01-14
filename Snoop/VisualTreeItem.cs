@@ -13,6 +13,7 @@ using System.Windows.Data;
 using System;
 using System.Windows.Controls;
 using System.Text;
+using System.Windows.Automation;
 
 namespace Snoop
 {
@@ -179,9 +180,17 @@ namespace Snoop
 		/// </summary>
 		public void Reload()
 		{
-			this.name = (this.target is FrameworkElement) ? ((FrameworkElement)this.target).Name : string.Empty;
+            var targetFrameworkElement = target as FrameworkElement;
+            if (targetFrameworkElement != null)
+		    {
+                this.name = targetFrameworkElement.Name;
+		        if (string.IsNullOrEmpty(name))
+                    this.name = AutomationProperties.GetAutomationId(targetFrameworkElement);
+		    }
+		    if (this.name == null)
+		        this.name = string.Empty;
 
-			this.nameLower = (this.name ?? "").ToLower();
+		    this.nameLower = (this.name ?? "").ToLower();
 			this.typeNameLower = this.Target != null ? this.Target.GetType().Name.ToLower() : string.Empty;
 
 			List<VisualTreeItem> toBeRemoved = new List<VisualTreeItem>(this.Children);
