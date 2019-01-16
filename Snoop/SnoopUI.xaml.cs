@@ -17,18 +17,12 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using System.Windows.Forms.Integration;
 using System.Threading;
+using Snoop.Data;
 using Snoop.Infrastructure;
 using Snoop.Shell;
 
 namespace Snoop
 {
-    using System.Configuration;
-    using System.IO;
-    using System.IO.Pipes;
-    using System.Xml.Serialization;
-    using Snoop.Data;
-    using Snoop.Properties;
-
     #region SnoopUI
 	public partial class SnoopUI : INotifyPropertyChanged
 	{
@@ -188,8 +182,7 @@ namespace Snoop
 			else
 			{
 				dispatcher.Invoke((Action)(SnoopApplication));
-				return;
-			}
+            }
 		}
 
 	    private static void CheckForOtherDispatchers(Dispatcher mainDispatcher)
@@ -277,8 +270,8 @@ namespace Snoop
 					(
 						() =>
 						{
-							SnoopUI snoopOtherDispatcher = new SnoopUI();
-							snoopOtherDispatcher.Inspect(v, v as Window);
+							var snoopOtherDispatcher = new SnoopUI();
+							snoopOtherDispatcher.Inspect(v);
 						}
 					)
 				);
@@ -489,10 +482,10 @@ namespace Snoop
 				return;
 			}
 
-            this.Inspect(foundRoot, SnoopWindowUtils.FindOwnerWindow(this));
+            this.Inspect(foundRoot);
 		}
 
-		public void Inspect(object rootToInspect, Window ownerWindow)
+		public void Inspect(object rootToInspect)
 		{
 			this.Dispatcher.UnhandledException += this.UnhandledExceptionHandler;
 
@@ -500,9 +493,9 @@ namespace Snoop
 
 		    this.Load(rootToInspect);
 
-			this.Owner = ownerWindow;			
-		    
-		    this.Show();
+            this.Owner = SnoopWindowUtils.FindOwnerWindow(this);
+
+            this.Show();
 		    this.Activate();
 		}
 
