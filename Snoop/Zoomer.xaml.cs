@@ -21,7 +21,9 @@ using Snoop.Infrastructure;
 
 namespace Snoop
 {
-	public partial class Zoomer
+    using Snoop.Data;
+
+    public partial class Zoomer
 	{
 		static Zoomer()
 		{
@@ -70,22 +72,28 @@ namespace Snoop
 			this.Viewbox.RenderTransform = this.transform;
 		}
 
-		public static void GoBabyGo()
+		public static void GoBabyGo(string settingsFile)
 		{
-			Dispatcher dispatcher;
-			if (Application.Current == null && !SnoopModes.MultipleDispatcherMode)
-				dispatcher = Dispatcher.CurrentDispatcher;
-			else
-				dispatcher = Application.Current.Dispatcher;
+            TransientSettingsData.LoadCurrent(settingsFile);
 
-			if (dispatcher.CheckAccess())
+            Dispatcher dispatcher;
+            if (Application.Current == null)
+            {
+                dispatcher = Dispatcher.CurrentDispatcher;
+            }
+            else
+            {
+                dispatcher = Application.Current.Dispatcher;
+            }
+
+            if (dispatcher.CheckAccess())
 			{
-				Zoomer zoomer = new Zoomer();
+				var zoomer = new Zoomer();
 				zoomer.Magnify();
 			}
 			else
 			{
-				dispatcher.Invoke((Action)GoBabyGo);
+				dispatcher.Invoke((Action)(() => GoBabyGo(settingsFile)));
 			}
 		}
 
@@ -420,67 +428,6 @@ namespace Snoop
 
 			return root;
 		}
-		private void SetOwnerWindow()
-		{
-			Window ownerWindow = null;
-
-			if (SnoopModes.MultipleDispatcherMode)
-			{
-				foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
-				{
-					if
-					(
-						presentationSource.RootVisual is Window &&
-						((Window)presentationSource.RootVisual).Dispatcher.CheckAccess()
-					)
-					{
-						ownerWindow = (Window)presentationSource.RootVisual;
-						break;
-					}
-				}
-			}
-			else if (Application.Current != null)
-			{
-				if (Application.Current.MainWindow != null && Application.Current.MainWindow.Visibility == Visibility.Visible)
-				{
-					// first: set the owner window as the current application's main window, if visible.
-					ownerWindow = Application.Current.MainWindow;
-				}
-				else
-				{
-					// second: try and find a visible window in the list of the current application's windows
-					foreach (Window window in Application.Current.Windows)
-					{
-						if (window.Visibility == Visibility.Visible)
-						{
-							ownerWindow = window;
-							break;
-						}
-					}
-				}
-			}
-
-			if (ownerWindow == null)
-			{
-				// third: try and find a visible window in the list of current presentation sources
-				foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
-				{
-					if
-					(
-						presentationSource.RootVisual is Window &&
-						((Window)presentationSource.RootVisual).Visibility == Visibility.Visible
-					)
-					{
-						ownerWindow = (Window)presentationSource.RootVisual;
-						break;
-					}
-				}
-			}
-
-			if (ownerWindow != null)
-				this.Owner = ownerWindow;
-		}
-
 
 		private TranslateTransform translation = new TranslateTransform();
 		private ScaleTransform zoom = new ScaleTransform();
