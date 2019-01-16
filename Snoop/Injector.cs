@@ -25,7 +25,7 @@ namespace Snoop
 			var directory = Path.GetDirectoryName(location);
 			var file = Path.Combine(directory, $"ManagedInjectorLauncher{GetSuffix(windowInfo)}.exe");
 
-		    var startInfo = new ProcessStartInfo(file, $"{windowInfo.HWnd} \"{assembly.Location}\" \"{className}\" \"{methodName}\"")
+		    var startInfo = new ProcessStartInfo(file, $"{windowInfo.HWnd} \"{assembly.Location}\" \"{className}\" \"{methodName}\" \"{settingsFile}\"")
 		                    {
 		                        Verb = windowInfo.IsOwningProcessElevated
 		                                   ? "runas"
