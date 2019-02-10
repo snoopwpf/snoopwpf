@@ -31,22 +31,29 @@ All other rights reserved.
 
     <Grid.RowDefinitions>
         <RowDefinition Height="Auto"/>
+        <RowDefinition Height="Auto"/>
         <RowDefinition Height="22"/>
         <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
 
-    <!--<TextBlock Margin="2" Text="{Binding ElementName=propertyInspector, Path=DelvePath}">
-		<TextBlock.ToolTip>
-			<TextBlock Style="{x:Null}" Text="This is the type of currently selected object"/>
-		</TextBlock.ToolTip>
-	</TextBlock>-->
-    <TextBox Margin="2" Style="{x:Null}" BorderThickness="0" Text="{Binding ElementName=propertyInspector, Path=DelvePath, Mode=OneWay}" Background="Transparent"  TextWrapping="Wrap" AcceptsReturn="True" IsReadOnly="True">
+    <TextBox Grid.Row="0" Margin="2" Style="{x:Null}" BorderThickness="0" Text="{Binding ElementName=propertyInspector, Path=DelvePath, Mode=OneWay}" Background="Transparent" TextWrapping="Wrap" AcceptsReturn="False" IsReadOnly="True">
         <TextBox.ToolTip>
-            <TextBlock Style="{x:Null}" Text="This is the type of currently selected object"/>
+            <TextBlock Style="{x:Null}" Text="This is the delve path of the currently selected object"/>
         </TextBox.ToolTip>
     </TextBox>
 
-    <Grid Grid.Row="1">
+    <TextBlock Grid.Row="1" Margin="2" Style="{x:Null}" Background="Transparent" TextWrapping="Wrap">
+        <Hyperlink Style="{x:Null}" 
+                   Command="{x:Static my:PropertyInspector.NavigateToAssemblyInExplorerCommand}" 
+                   CommandParameter="{Binding ElementName=propertyInspector, Path=DelveType, Mode=OneWay}">
+            <TextBlock Style="{x:Null}" Text="{Binding ElementName=propertyInspector, Path=DelveType.FullName, Mode=OneWay}" />
+        </Hyperlink>
+        <TextBlock.ToolTip>
+            <TextBlock Style="{x:Null}" Text="This is the type of the currently selected object"/>
+        </TextBlock.ToolTip>
+    </TextBlock>
+
+    <Grid Grid.Row="2">
         <TextBox
 			x:Name="PropertiesFilter"
             Style="{x:Null}"
@@ -126,7 +133,7 @@ All other rights reserved.
 
     <my:PropertyGrid2
 		x:Name="PropertyGrid"
-		Grid.Row="2"
+		Grid.Row="3"
 		Grid.Column="1"
 		MinHeight="0"
 		MinWidth="0"
