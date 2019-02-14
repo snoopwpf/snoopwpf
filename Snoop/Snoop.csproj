@@ -108,6 +108,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\SettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ZoomerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -156,6 +160,7 @@
     <Compile Include="Converters\IsSupportedRuntimeTypeConverter.cs" />
     <Compile Include="Converters\SnoopParameterInfoConverter.cs" />
     <Compile Include="Converters\SystemIconToImageSourceConverter.cs" />
+    <Compile Include="Data\TransientSettingsData.cs" />
     <Compile Include="DebugListenerTab\DebugListenerControl.xaml.cs">
       <DependentUpon>DebugListenerControl.xaml</DependentUpon>
     </Compile>
@@ -241,6 +246,9 @@
     <Compile Include="Shell\VisualTreeProvider.cs" />
     <Compile Include="TriggersTab\TriggersView.xaml.cs">
       <DependentUpon>TriggersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="WindowInfo.cs" />
     <Compile Include="ZoomerControl.xaml.cs">

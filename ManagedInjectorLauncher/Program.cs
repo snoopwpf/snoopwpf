@@ -4,35 +4,40 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using ManagedInjector;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace ManagedInjectorLauncher
 {
-	class Program
+    public static class Program
 	{
-		static void Main(string[] args)
+		public static void Main(string[] args)
 		{            
             Injector.LogMessage("Starting the injection process...", false);
 
-			var windowHandle = (IntPtr)Int64.Parse(args[0]);
+			var windowHandle = (IntPtr)long.Parse(args[0]);
 			var assemblyName = args[1];
 			var className = args[2];
 			var methodName = args[3];
+		    var settingsFile = args[4];
 
-			Injector.Launch(windowHandle, assemblyName, className, methodName);
+		    var injectorData = new InjectorData
+		                        {
+                                    AssemblyName = assemblyName,
+                                    ClassName = className,
+                                    MethodName = methodName,
+                                    SettingsFile = settingsFile
+		                        };
+
+			Injector.Launch(windowHandle, injectorData);
 
             //check to see that it was injected, and if not, retry with the main window handle.
             var process = GetProcessFromWindowHandle(windowHandle);
             if (process != null && !CheckInjectedStatus(process) && process.MainWindowHandle != windowHandle)
             {
                 Injector.LogMessage("Could not inject with current handle... retrying with MainWindowHandle", true);
-                Injector.Launch(process.MainWindowHandle, assemblyName, className, methodName);
+                Injector.Launch(process.MainWindowHandle, injectorData);
                 CheckInjectedStatus(process);
             }
 		}

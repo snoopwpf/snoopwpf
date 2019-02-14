@@ -10,29 +10,24 @@ using System.Collections.Generic;
 namespace Snoop
 {
     using System.Linq;
+    using Snoop.Infrastructure;
 
     public class ApplicationTreeItem : ResourceContainerItem
 	{
+	    private readonly Application application;
+
 		public ApplicationTreeItem(Application application, VisualTreeItem parent)
 			: base(application, parent)
 		{
 			this.application = application;
+		    this.IsExpanded = true;
 		}
 
-		public override Visual MainVisual
-		{
-			get
-			{
-				return this.application.MainWindow;
-			}
-		}
+		public override Visual MainVisual => this.application.MainWindow;
 
-		protected override ResourceDictionary ResourceDictionary
-		{
-			get { return this.application.Resources; }
-		}
+	    protected override ResourceDictionary ResourceDictionary => this.application.Resources;
 
-		protected override void Reload(List<VisualTreeItem> toBeRemoved)
+	    protected override void Reload(List<VisualTreeItem> toBeRemoved)
 		{
 			// having the call to base.Reload here ... puts the application resources at the very top of the tree view
 			base.Reload(toBeRemoved);
@@ -40,7 +35,8 @@ namespace Snoop
 		    foreach (Window window in this.application.Windows)
 		    { 
 		        if (window.IsInitialized == false
-		            || window.CheckAccess() == false) 
+		            || window.CheckAccess() == false
+		            || window.IsPartOfSnoopVisualTree())
 		        { 
 		            continue; 
 		        }
@@ -62,8 +58,6 @@ namespace Snoop
 
 		        this.Children.Add(VisualTreeItem.Construct(window, this)); 
 		    }
-		}
-
-		private Application application;
+		}		
 	}
 }

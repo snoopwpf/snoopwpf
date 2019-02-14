@@ -31,6 +31,9 @@ if ($null -eq $msbuild -or !(Test-Path $msbuild)) {
 "Building solution"
 & $msbuild Snoop.sln /property:Configuration=$Configuration /v:m /nologo
 
+#"Building Test-Harnesses"
+#& $msbuild ".\TestHarnesses\Snoop TestHarnesses.sln" /property:Configuration=$Configuration /v:m /nologo
+
 if ($LASTEXITCODE -ne 0) {
     Write-Error "Build failed."
 }

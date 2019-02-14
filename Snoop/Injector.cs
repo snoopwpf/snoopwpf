@@ -19,20 +19,25 @@ namespace Snoop
 	        return bitness + "-" + clr;
 	    }
 
-		internal static void Launch(WindowInfo windowInfo, Assembly assembly, string className, string methodName)
+		internal static void Launch(WindowInfo windowInfo, Assembly assembly, string className, string methodName, string settingsFile)
 		{
 			var location = Assembly.GetEntryAssembly().Location;
 			var directory = Path.GetDirectoryName(location);
 			var file = Path.Combine(directory, $"ManagedInjectorLauncher{GetSuffix(windowInfo)}.exe");
 
-		    var startInfo = new ProcessStartInfo(file, $"{windowInfo.HWnd} \"{assembly.Location}\" \"{className}\" \"{methodName}\"")
+		    var startInfo = new ProcessStartInfo(file, $"{windowInfo.HWnd} \"{assembly.Location}\" \"{className}\" \"{methodName}\" \"{settingsFile}\"")
 		                    {
 		                        Verb = windowInfo.IsOwningProcessElevated
 		                                   ? "runas"
 		                                   : null
 		                    };           
+		    
+            using (var process = Process.Start(startInfo))
+            {
+                process?.WaitForExit();
+            }
 
-			Process.Start(startInfo);
+            File.Delete(settingsFile);
 		}
 	}
 }

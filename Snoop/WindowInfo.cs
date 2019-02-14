@@ -8,6 +8,8 @@
     using System.Runtime.InteropServices;
     using System.Text.RegularExpressions;
     using System.Windows.Input;
+    using Snoop.Data;
+    using Snoop.Properties;
 
     public class WindowInfo
 	{
@@ -194,7 +196,7 @@
 
 			try
 			{
-				Injector.Launch(this, typeof(SnoopUI).Assembly, typeof(SnoopUI).FullName, "GoBabyGo");
+				Injector.Launch(this, typeof(SnoopUI).Assembly, typeof(SnoopUI).FullName, "GoBabyGo", new TransientSettingsData(Settings.Default).WriteToFile());
 			}
 			catch (Exception e)
 			{
@@ -210,7 +212,7 @@
 
 			try
 			{
-				Injector.Launch(this, typeof(Zoomer).Assembly, typeof(Zoomer).FullName, "GoBabyGo");
+				Injector.Launch(this, typeof(Zoomer).Assembly, typeof(Zoomer).FullName, "GoBabyGo", new TransientSettingsData(Settings.Default).WriteToFile());
 			}
 			catch (Exception e)
 			{

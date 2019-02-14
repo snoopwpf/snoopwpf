@@ -191,6 +191,7 @@ All other rights reserved.
 			<ColumnDefinition Width="Auto"/>
 			<ColumnDefinition Width="Auto"/>
 			<ColumnDefinition Width="Auto"/>
+		    <ColumnDefinition Width="Auto"/>
 		</Grid.ColumnDefinitions>
 
 		<!-- semi-transparent black background (is this needed?) -->
@@ -257,7 +258,7 @@ All other rights reserved.
                                 Height="16">
                             <Image Style="{x:Null}"
                                    Visibility="{Binding IsOwningProcessElevated, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                   Source="{Binding Source={x:Static infrastructure:SystemIcon.UACShield}, Converter={x:Static converters:SystemIconToImageSourceConverter.Instance}, ConverterParameter=16}" />
+                                   Source="{Binding Source={x:Static infrastructure:SystemIcon.Shield}, Converter={x:Static converters:SystemIconToImageSourceConverter.Instance}, ConverterParameter=16}" />
                         </Border>
 
                         <TextBlock Grid.Column="1" 
@@ -583,10 +584,21 @@ All other rights reserved.
 			<my:WindowFinder Margin="2,0,0,0" WindowFinderType="Snoop" ToolTip="Drag and drop this crosshairs over a WPF window in order to Snoop it."/>
 		</StackPanel>
 
+        <Button Grid.Column="4" 
+                Style="{StaticResource appChooserButtonStyle}" 
+                Width="20"
+                Height="20"
+                Margin="0,0,8,0"
+                ToolTip="Change Snoop settings."
+                Command="{x:Static my:AppChooser.SettingsCommand}">
+            <Image Style="{x:Null}"
+                   Source="{Binding Source={x:Static infrastructure:SystemIcon.Settings}, Converter={x:Static converters:SystemIconToImageSourceConverter.Instance}, ConverterParameter=16}" />
+        </Button>
+
 		<!-- minimizeButton -->
 		<Button
 			x:Name="minimizeButton"
-			Grid.Column="4"
+			Grid.Column="5"
 			Width="20"
 			Height="20"
 			Style="{DynamicResource appChooserMinimizeCloseButtonStyle}"
@@ -608,7 +620,7 @@ All other rights reserved.
 		<!-- closeButton -->
 		<Button
 			x:Name="closeButton"
-			Grid.Column="5"
+			Grid.Column="6"
 			Width="20"
 			Height="20"
 			Margin="2,0,4,0"

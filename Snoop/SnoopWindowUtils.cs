@@ -11,13 +11,19 @@ namespace Snoop
 {
     using System.Runtime.InteropServices;
     using System.Windows.Interop;
+    using Snoop.Data;
     using Rectangle = System.Drawing.Rectangle;
 
     public static class SnoopWindowUtils
 	{
 		public static Window FindOwnerWindow(Window ownedWindow)
 		{
-            Window ownerWindow = null;
+		    if (TransientSettingsData.Current.SetWindowOwner == false)
+		    {
+		        return null;
+		    }
+
+		    Window ownerWindow = null;
 
 			if (SnoopModes.MultipleDispatcherMode)
 			{

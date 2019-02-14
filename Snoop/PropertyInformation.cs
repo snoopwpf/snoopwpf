@@ -29,7 +29,7 @@ namespace Snoop
 		/// Normal constructor used when constructing PropertyInformation objects for properties.
 		/// </summary>
 		/// <param name="target">target object being shown in the property grid</param>
-		/// <param name="property">the property around which we are contructing this PropertyInformation object</param>
+		/// <param name="property">the property around which we are constructing this PropertyInformation object</param>
 		/// <param name="propertyName">the property name for the property that we use in the binding in the case of a non-dependency property</param>
 		/// <param name="propertyDisplayName">the display name for the property that goes in the name column</param>
 		public PropertyInformation(object target, PropertyDescriptor property, string propertyName, string propertyDisplayName)
@@ -74,14 +74,14 @@ namespace Snoop
 			this.isRunning = true;
 		}
 
-	    /// <summary>
-	    /// Normal constructor used when constructing PropertyInformation objects for properties.
-	    /// </summary>
-	    /// <param name="target">target object being shown in the property grid</param>
-	    /// <param name="property">the property around which we are contructing this PropertyInformation object</param>
-	    /// <param name="binding">the <see cref="BindingBase"/> from which the value should be retrieved</param>
-	    /// <param name="propertyDisplayName">the display name for the property that goes in the name column</param>
-	    public PropertyInformation(object target, PropertyDescriptor property, BindingBase binding, string propertyDisplayName)
+        /// <summary>
+        /// Normal constructor used when constructing PropertyInformation objects for properties.
+        /// </summary>
+        /// <param name="target">target object being shown in the property grid</param>
+        /// <param name="property">the property around which we are constructing this PropertyInformation object</param>
+        /// <param name="binding">the <see cref="BindingBase"/> from which the value should be retrieved</param>
+        /// <param name="propertyDisplayName">the display name for the property that goes in the name column</param>
+        public PropertyInformation(object target, PropertyDescriptor property, BindingBase binding, string propertyDisplayName)
 	    {
 	        this.Target = target;
 	        this.property = property;
@@ -142,13 +142,13 @@ namespace Snoop
 				typeof(PropertyInformation),
 				new PropertyMetadata(new PropertyChangedCallback(PropertyInformation.HandleValueChanged))
 			);
-
-		private static void HandleValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		
+	    private static void HandleValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
-			((PropertyInformation)d).OnValueChanged();
+			((PropertyInformation)d).OnValueChanged(e);
 		}
 
-		protected virtual void OnValueChanged()
+		protected virtual void OnValueChanged(DependencyPropertyChangedEventArgs e)
 		{
 			this.Update();
 
@@ -164,12 +164,15 @@ namespace Snoop
                     Debugger.Break();
 				}
 
-				this.HasChangedRecently = true;
+				this.HasChangedRecently = (e.OldValue?.Equals(e.NewValue) ?? e.OldValue == e.NewValue) == false;
+
 				if (this.changeTimer == null)
 				{
-					this.changeTimer = new DispatcherTimer();
-					this.changeTimer.Interval = TimeSpan.FromSeconds(1.5);
-					this.changeTimer.Tick += this.HandleChangeExpiry;
+				    this.changeTimer = new DispatcherTimer
+				                       {
+				                           Interval = TimeSpan.FromSeconds(1.5)
+				                       };
+				    this.changeTimer.Tick += this.HandleChangeExpiry;
 					this.changeTimer.Start();
 				}
 				else
