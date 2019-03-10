@@ -25,6 +25,10 @@ if ($path) {
 }
 
 if ($null -eq $msbuild -or !(Test-Path $msbuild)) {
+    $msbuild = Join-Path $path 'MSBuild/Current/Bin/MSBuild.exe'
+}
+
+if ($null -eq $msbuild -or !(Test-Path $msbuild)) {
     Write-Error "MSBuild could not be found."
 }
 
