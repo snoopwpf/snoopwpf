@@ -9,7 +9,6 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>    
     <DebugType>full</DebugType>
-    <ExtrasEnableWpfProjectSetup>true</ExtrasEnableWpfProjectSetup>
     <UseWpf>true</UseWpf>
   </PropertyGroup>
   <ItemGroup>
