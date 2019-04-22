@@ -4,11 +4,10 @@
 // All other rights reserved.
 
 using System;
+using System.Linq;
 using ManagedInjector;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-
-using ManagedInjector;
 
 namespace ManagedInjectorLauncher
 {
@@ -18,9 +17,12 @@ namespace ManagedInjectorLauncher
 		{            
             Injector.LogMessage("Starting the injection process...", false);
 
-		    //Debugger.Launch();
+            if (args.Any(x => x.Equals("-debug", StringComparison.OrdinalIgnoreCase)))
+            {
+                Debugger.Launch();
+            }
 
-			var windowHandle = (IntPtr)long.Parse(args[0]);
+            var windowHandle = (IntPtr)long.Parse(args[0]);
 			var assemblyName = args[1];
 			var className = args[2];
 			var methodName = args[3];
