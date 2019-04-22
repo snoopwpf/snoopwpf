@@ -5,22 +5,24 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.0;net40</TargetFrameworks>
+
+    <!--<TargetName>$(AssemblyName).$(TargetFramework)</TargetName>-->
+
     <OutputPath>..\bin\$(Configuration)\</OutputPath>
-    <BaseIntermediateOutputPath>..\bin\obj\$(ConfigurationName)\$(MSBuildProjectName)</BaseIntermediateOutputPath>
-    <DisableImplicitFrameworkReferences Condition="'$(TargetFramework)' != 'netcoreapp3.0'">true</DisableImplicitFrameworkReferences>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <BaseIntermediateOutputPath>..\bin\obj\$(ConfigurationName)\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
+    <IntermediateOutputPath>$(BaseIntermediateOutputPath)$(Configuration)\$(TargetFramework)\$(Platform)\</IntermediateOutputPath>
   </PropertyGroup>
 
-  <!-- Set the reference for the other targets -->
-  <ItemGroup Condition="'$(TargetFramework)' != 'netcoreapp3.0'">
-      <Reference Include="Microsoft.CSharp" />
-      <Reference Include="PresentationCore" />
-      <Reference Include="PresentationFramework" />
-      <Reference Include="System" />
-      <Reference Include="System.Core" />
-      <Reference Include="System.Drawing" />
-      <Reference Include="System.Xaml" />
-      <Reference Include="System.Xml" />
-      <Reference Include="System.Xml.Linq" />
-      <Reference Include="WindowsBase" />
-  </ItemGroup>
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DebugType>full</DebugType>
+  </PropertyGroup>
 </Project>

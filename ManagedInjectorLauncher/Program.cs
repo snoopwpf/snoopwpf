@@ -5,17 +5,18 @@
 
 using System;
 using System.Linq;
-using ManagedInjector;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace ManagedInjectorLauncher
 {
+    using Snoop;
+
     public static class Program
 	{
 		public static void Main(string[] args)
-		{            
-            Injector.LogMessage("Starting the injection process...", false);
+		{
+            InjectorHelper.LogMessage("Starting the injection process...", false);
 
             if (args.Any(x => x.Equals("-debug", StringComparison.OrdinalIgnoreCase)))
             {
@@ -36,14 +37,14 @@ namespace ManagedInjectorLauncher
                                     SettingsFile = settingsFile
 		                        };
 
-			Injector.Launch(windowHandle, injectorData);
+            InjectorHelper.Launch(windowHandle, injectorData);
 
             //check to see that it was injected, and if not, retry with the main window handle.
             var process = GetProcessFromWindowHandle(windowHandle);
             if (process != null && !CheckInjectedStatus(process) && process.MainWindowHandle != windowHandle)
             {
-                Injector.LogMessage("Could not inject with current handle... retrying with MainWindowHandle", true);
-                Injector.Launch(process.MainWindowHandle, injectorData);
+                InjectorHelper.LogMessage("Could not inject with current handle... retrying with MainWindowHandle", true);
+                InjectorHelper.Launch(process.MainWindowHandle, injectorData);
                 CheckInjectedStatus(process);
             }
 		}
@@ -54,14 +55,14 @@ namespace ManagedInjectorLauncher
             GetWindowThreadProcessId(windowHandle, out processId);
             if (processId == 0)
             {
-                Injector.LogMessage(string.Format("could not get process for window handle {0}", windowHandle), true);
+                InjectorHelper.LogMessage(string.Format("could not get process for window handle {0}", windowHandle), true);
                 return null;
             }
 
             var process = Process.GetProcessById(processId);
             if (process == null)
             {
-                Injector.LogMessage(string.Format("could not get process for PID = {0}", processId), true);
+                InjectorHelper.LogMessage(string.Format("could not get process for PID = {0}", processId), true);
                 return null;
             }
             return process;
@@ -80,11 +81,11 @@ namespace ManagedInjectorLauncher
             }
             if (containsFile)
             {
-                Injector.LogMessage(string.Format("Successfully injected Snoop for process {0} (PID = {1})", process.ProcessName, process.Id), true);
+                InjectorHelper.LogMessage(string.Format("Successfully injected Snoop for process {0} (PID = {1})", process.ProcessName, process.Id), true);
             }
             else
             {
-                Injector.LogMessage(string.Format("Failed to inject for process {0} (PID = {1})", process.ProcessName, process.Id), true);
+                InjectorHelper.LogMessage(string.Format("Failed to inject for process {0} (PID = {1})", process.ProcessName, process.Id), true);
             }
 
             return containsFile;

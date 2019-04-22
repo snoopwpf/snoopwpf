@@ -13,11 +13,11 @@ namespace Snoop
 	{
 	    private static string GetSuffix(WindowInfo windowInfo)
 	    {
-	        var bitness = windowInfo.IsOwningProcess64Bit ? "64" : "32";
+	        var bitness = windowInfo.IsOwningProcess64Bit ? "x64" : "x86";
 	        var clr = "4.0";
 
-	        return bitness + "-" + clr;
-	    }
+            return bitness;  // + "-" + clr;
+        }
 
 		internal static void Launch(WindowInfo windowInfo, Assembly assembly, string className, string methodName, string settingsFile)
 		{
@@ -25,6 +25,10 @@ namespace Snoop
             {
                 throw new FileNotFoundException("The generated temporary settings file could not be found.", settingsFile);
             }
+            
+			var location = Assembly.GetEntryAssembly().Location;
+			var directory = Path.GetDirectoryName(location);
+			var file = Path.Combine(directory, $"ManagedInjectorLauncher.{GetSuffix(windowInfo)}.exe");
 
             try
             {

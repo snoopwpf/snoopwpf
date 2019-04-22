@@ -1,17 +1,24 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.136
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snoop", "Snoop\Snoop.csproj", "{ACA9A018-ABF3-4C60-995F-99C4777CED71}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ManagedInjector32-4.0", "ManagedInjector\ManagedInjector32-4.0.vcxproj", "{8072B47B-5611-4BAB-8EF4-CB3125D676A5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagedInjector", "ManagedInjector\ManagedInjector.csproj", "{9ADEEB14-A467-42D8-BF60-C0CD452F048B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ManagedInjector64-4.0", "ManagedInjector\ManagedInjector64-4.0.vcxproj", "{A27C8B34-2527-4258-8C07-D2720C576B90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagedInjectorLauncher", "ManagedInjectorLauncher\ManagedInjectorLauncher.csproj", "{ACA9A018-ABF3-4C60-995F-99C4777CED75}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagedInjectorLauncher32-4.0", "ManagedInjectorLauncher\ManagedInjectorLauncher32-4.0.csproj", "{ACA9A018-ABF3-4C60-995F-99C4777CED74}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagedInjectorLauncher64-4.0", "ManagedInjectorLauncher\ManagedInjectorLauncher64-4.0.csproj", "{ACA9A018-ABF3-4C60-995F-99C4777CED75}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7D074176-B8A0-4814-87EB-4C4086C6CE60}"
+	ProjectSection(SolutionItems) = preProject
+		appveyor.yml = appveyor.yml
+		Directory.build.props = Directory.build.props
+		Directory.build.targets = Directory.build.targets
+		global.json = global.json
+		paket.dependencies = paket.dependencies
+		paket.lock = paket.lock
+		README.md = README.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B21F490B-8556-45C6-8BE2-CF41E8A621DF}"
 	ProjectSection(SolutionItems) = preProject
@@ -29,22 +36,14 @@ Global
 		{ACA9A018-ABF3-4C60-995F-99C4777CED71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ACA9A018-ABF3-4C60-995F-99C4777CED71}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ACA9A018-ABF3-4C60-995F-99C4777CED71}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8072B47B-5611-4BAB-8EF4-CB3125D676A5}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{8072B47B-5611-4BAB-8EF4-CB3125D676A5}.Debug|Any CPU.Build.0 = Debug|Win32
-		{8072B47B-5611-4BAB-8EF4-CB3125D676A5}.Release|Any CPU.ActiveCfg = Release|Win32
-		{8072B47B-5611-4BAB-8EF4-CB3125D676A5}.Release|Any CPU.Build.0 = Release|Win32
-		{A27C8B34-2527-4258-8C07-D2720C576B90}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{A27C8B34-2527-4258-8C07-D2720C576B90}.Debug|Any CPU.Build.0 = Debug|x64
-		{A27C8B34-2527-4258-8C07-D2720C576B90}.Release|Any CPU.ActiveCfg = Release|x64
-		{A27C8B34-2527-4258-8C07-D2720C576B90}.Release|Any CPU.Build.0 = Release|x64
-		{ACA9A018-ABF3-4C60-995F-99C4777CED74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ACA9A018-ABF3-4C60-995F-99C4777CED74}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ACA9A018-ABF3-4C60-995F-99C4777CED74}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ACA9A018-ABF3-4C60-995F-99C4777CED74}.Release|Any CPU.Build.0 = Release|Any CPU
 		{ACA9A018-ABF3-4C60-995F-99C4777CED75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{ACA9A018-ABF3-4C60-995F-99C4777CED75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ACA9A018-ABF3-4C60-995F-99C4777CED75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ACA9A018-ABF3-4C60-995F-99C4777CED75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9ADEEB14-A467-42D8-BF60-C0CD452F048B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9ADEEB14-A467-42D8-BF60-C0CD452F048B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9ADEEB14-A467-42D8-BF60-C0CD452F048B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9ADEEB14-A467-42D8-BF60-C0CD452F048B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
