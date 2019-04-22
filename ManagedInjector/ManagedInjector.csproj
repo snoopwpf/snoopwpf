@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
+    <TargetFrameworks>net40;netcoreapp3.0</TargetFrameworks>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
@@ -10,7 +11,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!--<Compile Include="..\Shared\InjectorHelper.cs" Link="InjectorHelper.cs" />-->
+    <Compile Include="..\Shared\InjectorHelper.cs" Link="InjectorHelper.cs" />
+    <Compile Include="..\Snoop\NativeMethods.cs" Link="NativeMethods.cs" />
   </ItemGroup>
 
   <Target Name="DllExport" Condition="Exists('$(TargetPath)')" AfterTargets="CopyFilesToOutputDirectory">

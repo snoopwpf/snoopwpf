@@ -63,7 +63,15 @@ namespace Snoop
                 //var version = applicationInfo.RuntimeVersion.Contains("4") ? "40" : "35";
                 //var hookName = string.Format("Hook{0}_{1}.dll", applicationInfo.Bitness, version);
 
-                var hookName = "ManagedInjector.netcoreapp3.0.x64.dll";
+                var bitness = Environment.Is64BitProcess
+                    ? "x64"
+                    : "x86";
+
+                var framework = IsDotNetCoreProcess(process)
+                                    ? "netcoreapp3.0"
+                                    : "net40";
+
+                var hookName = $"ManagedInjector.{framework}.{bitness}.dll";
 
                 var hInstance = NativeMethods.LoadLibrary(hookName);
 
@@ -109,7 +117,14 @@ namespace Snoop
                         throw new Win32Exception(Marshal.GetLastWin32Error());
                     }
 
-                    NativeMethods.VirtualFreeEx(process.Handle, remoteAddress, bufLen, NativeMethods.AllocationType.Release);
+                    try
+                    {
+                        NativeMethods.VirtualFreeEx(hProcess, remoteAddress, bufLen, NativeMethods.AllocationType.Release);
+                    }
+                    catch (Exception e)
+                    {
+                        LogMessage(e.ToString(), true);
+                    }
                 }
                 else
                 {
@@ -119,109 +134,21 @@ namespace Snoop
                 NativeMethods.FreeLibrary(hInstance);
             }
         }
-    }
 
-    public static class NativeMethods
-    {
-        [Flags]
-        public enum ProcessAccessFlags : uint
+        private static bool IsDotNetCoreProcess(Process process)
         {
-            All = 0x001F0FFF,
-            Terminate = 0x00000001,
-            CreateThread = 0x00000002,
-            VmOperation = 0x00000008,
-            VmRead = 0x00000010,
-            VmWrite = 0x00000020,
-            DupHandle = 0x00000040,
-            SetInformation = 0x00000200,
-            QueryInformation = 0x00000400,
-            Synchronize = 0x00100000
+            var modules = NativeMethods.GetModules(process);
+
+            foreach (var module in modules)
+            {
+                if (module.szModule.IndexOf("wpfgfx_cor3", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
-
-        [Flags]
-        public enum AllocationType
-        {
-            Commit = 0x1000,
-            Reserve = 0x2000,
-            Decommit = 0x4000,
-            Release = 0x8000,
-            Reset = 0x80000,
-            Physical = 0x400000,
-            TopDown = 0x100000,
-            WriteWatch = 0x200000,
-            LargePages = 0x20000000
-        }
-
-        [Flags]
-        public enum MemoryProtection
-        {
-            Execute = 0x10,
-            ExecuteRead = 0x20,
-            ExecuteReadWrite = 0x40,
-            ExecuteWriteCopy = 0x80,
-            NoAccess = 0x01,
-            ReadOnly = 0x02,
-            ReadWrite = 0x04,
-            WriteCopy = 0x08,
-            GuardModifierflag = 0x100,
-            NoCacheModifierflag = 0x200,
-            WriteCombineModifierflag = 0x400
-        }
-
-        public enum HookType : int
-        {
-            WH_JOURNALRECORD = 0,
-            WH_JOURNALPLAYBACK = 1,
-            WH_KEYBOARD = 2,
-            WH_GETMESSAGE = 3,
-            WH_CALLWNDPROC = 4,
-            WH_CBT = 5,
-            WH_SYSMSGFILTER = 6,
-            WH_MOUSE = 7,
-            WH_HARDWARE = 8,
-            WH_DEBUG = 9,
-            WH_SHELL = 10,
-            WH_FOREGROUNDIDLE = 11,
-            WH_CALLWNDPROCRET = 12,
-            WH_KEYBOARD_LL = 13,
-            WH_MOUSE_LL = 14
-        }
-
-        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        public static extern uint RegisterWindowMessage(string lpString);
-
-        [DllImport("kernel32.dll"), SuppressUnmanagedCodeSecurity]
-        public static extern IntPtr OpenProcess(ProcessAccessFlags dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, int dwProcessId);
-
-        [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
-        public static extern IntPtr VirtualAllocEx(IntPtr hProcess, IntPtr lpAddress, uint dwSize, AllocationType flAllocationType, MemoryProtection flProtect);
-
-        [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
-        public static extern bool VirtualFreeEx(IntPtr hProcess, IntPtr lpAddress, int dwSize, AllocationType dwFreeType);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, IntPtr lpBuffer, uint nSize, out int lpNumberOfBytesWritten);
-
-        [DllImport("kernel32", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
-        public static extern UIntPtr GetProcAddress(IntPtr hModule, string procName);
-
-        [DllImport("user32.Dll")]
-        public static extern int GetWindowThreadProcessId(IntPtr hwnd, out int processId);
-
-        [DllImport("user32.dll", SetLastError = true)]
-        public static extern IntPtr SetWindowsHookEx(HookType hookType, UIntPtr lpfn, IntPtr hMod, uint dwThreadId);
-
-        [DllImport("user32.dll", SetLastError = true)]
-        public static extern bool UnhookWindowsHookEx(IntPtr hhk);
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
-
-        [DllImport("kernel32", SetLastError = true)]
-        public static extern IntPtr LoadLibrary(string lpFileName);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool FreeLibrary(IntPtr hModule);
     }
 
     public class InjectorData

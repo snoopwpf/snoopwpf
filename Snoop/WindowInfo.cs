@@ -36,38 +36,7 @@ namespace Snoop
 			windowHandleToValidityMap.Clear();
 		}
 
-		public IList<NativeMethods.MODULEENTRY32> Modules => this.modules ?? (this.modules = this.GetModules().ToList());
-
-	    /// <summary>
-		/// Similar to System.Diagnostics.WinProcessManager.GetModuleInfos,
-		/// except that we include 32 bit modules when Snoop runs in 64 bit mode.
-		/// See http://blogs.msdn.com/b/jasonz/archive/2007/05/11/code-sample-is-your-process-using-the-silverlight-clr.aspx
-		/// </summary>
-		private IEnumerable<NativeMethods.MODULEENTRY32> GetModules()
-		{
-		    NativeMethods.GetWindowThreadProcessId(this.HWnd, out var processId);
-
-			var me32 = new NativeMethods.MODULEENTRY32();
-			var hModuleSnap = NativeMethods.CreateToolhelp32Snapshot(NativeMethods.SnapshotFlags.Module | NativeMethods.SnapshotFlags.Module32, processId);
-
-		    if (hModuleSnap.IsInvalid)
-		    {
-		        yield break;
-		    }
-
-		    using (hModuleSnap)
-		    {
-		        me32.dwSize = (uint)Marshal.SizeOf(me32);
-
-		        if (NativeMethods.Module32First(hModuleSnap, ref me32))
-		        {
-		            do
-		            {
-		                yield return me32;
-		            } while (NativeMethods.Module32Next(hModuleSnap, ref me32));
-		        }
-		    }
-		}
+		public IList<NativeMethods.MODULEENTRY32> Modules => this.modules ?? (this.modules = NativeMethods.GetModules(this.HWnd).ToList());
 
 		public bool IsValidProcess
 		{

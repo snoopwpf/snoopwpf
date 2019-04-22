@@ -13,6 +13,8 @@ using System.Windows;
 
 namespace Snoop
 {
+    using System.Drawing;
+    using System.Security;
     using System.Text;
 
     public static class NativeMethods
@@ -142,7 +144,58 @@ namespace Snoop
 			All = 0x0000001F
 		}
 
-		[DllImport("user32.dll")]
+        /// <summary>
+        /// Similar to System.Diagnostics.WinProcessManager.GetModuleInfos,
+        /// except that we include 32 bit modules when Snoop runs in 64 bit mode.
+        /// See http://blogs.msdn.com/b/jasonz/archive/2007/05/11/code-sample-is-your-process-using-the-silverlight-clr.aspx
+        /// </summary>
+        public static IEnumerable<NativeMethods.MODULEENTRY32> GetModules(IntPtr windowHandle)
+        {
+            NativeMethods.GetWindowThreadProcessId(windowHandle, out var processId);
+
+            return GetModules(processId);
+        }
+
+        /// <summary>
+        /// Similar to System.Diagnostics.WinProcessManager.GetModuleInfos,
+        /// except that we include 32 bit modules when Snoop runs in 64 bit mode.
+        /// See http://blogs.msdn.com/b/jasonz/archive/2007/05/11/code-sample-is-your-process-using-the-silverlight-clr.aspx
+        /// </summary>
+        public static IEnumerable<NativeMethods.MODULEENTRY32> GetModules(Process process)
+        {
+            return GetModules(process.Id);
+        }
+
+        /// <summary>
+        /// Similar to System.Diagnostics.WinProcessManager.GetModuleInfos,
+        /// except that we include 32 bit modules when Snoop runs in 64 bit mode.
+        /// See http://blogs.msdn.com/b/jasonz/archive/2007/05/11/code-sample-is-your-process-using-the-silverlight-clr.aspx
+        /// </summary>
+        public static IEnumerable<NativeMethods.MODULEENTRY32> GetModules(int processId)
+        {
+            var me32 = new NativeMethods.MODULEENTRY32();
+            var hModuleSnap = NativeMethods.CreateToolhelp32Snapshot(NativeMethods.SnapshotFlags.Module | NativeMethods.SnapshotFlags.Module32, processId);
+
+            if (hModuleSnap.IsInvalid)
+            {
+                yield break;
+            }
+
+            using (hModuleSnap)
+            {
+                me32.dwSize = (uint)Marshal.SizeOf(me32);
+
+                if (NativeMethods.Module32First(hModuleSnap, ref me32))
+                {
+                    do
+                    {
+                        yield return me32;
+                    } while (NativeMethods.Module32Next(hModuleSnap, ref me32));
+                }
+            }
+        }
+
+        [DllImport("user32.dll")]
 		private static extern int EnumWindows(EnumWindowsCallBackDelegate callback, IntPtr lParam);
 
 		[DllImport("user32.dll")]
@@ -205,8 +258,8 @@ namespace Snoop
 	        Synchronize = 0x00100000
 	    }
 
-	    [DllImport("kernel32.dll", SetLastError = true)]
-	    private static extern ProcessHandle OpenProcess(ProcessAccessFlags processAccess, bool bInheritHandle, int processId);
+        [DllImport("kernel32.dll", SetLastError = true), SuppressUnmanagedCodeSecurity]
+	    public static extern ProcessHandle OpenProcess(ProcessAccessFlags processAccess, bool bInheritHandle, int processId);
 
 	    public static ProcessHandle OpenProcess(Process proc, ProcessAccessFlags flags)
 	    {
@@ -218,7 +271,7 @@ namespace Snoop
         public static extern bool IsWow64Process([In] IntPtr process, [Out] out bool wow64Process);
 
 	    [DllImport("kernel32", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
-		internal static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
+		internal static extern UIntPtr GetProcAddress(IntPtr hModule, string procName);
 
 		[DllImport("kernel32")]
 		public extern static IntPtr LoadLibrary(string librayName);
@@ -265,5 +318,138 @@ namespace Snoop
 		[DllImport("user32.dll")]
 		[return: MarshalAs(UnmanagedType.Bool)]
 		static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
-	}
+
+        [DllImport("user32.dll")]
+        public static extern bool SetWindowPlacement(IntPtr hWnd, [In] ref WINDOWPLACEMENT lpwndpl);
+
+        [DllImport("user32.dll")]
+        public static extern bool GetWindowPlacement(IntPtr hWnd, out WINDOWPLACEMENT lpwndpl);
+
+        public const int SW_SHOWNORMAL = 1;
+        public const int SW_SHOWMINIMIZED = 2;
+
+        [Flags]
+        public enum AllocationType
+        {
+            Commit = 0x1000,
+            Reserve = 0x2000,
+            Decommit = 0x4000,
+            Release = 0x8000,
+            Reset = 0x80000,
+            Physical = 0x400000,
+            TopDown = 0x100000,
+            WriteWatch = 0x200000,
+            LargePages = 0x20000000
+        }
+
+        [Flags]
+        public enum MemoryProtection
+        {
+            Execute = 0x10,
+            ExecuteRead = 0x20,
+            ExecuteReadWrite = 0x40,
+            ExecuteWriteCopy = 0x80,
+            NoAccess = 0x01,
+            ReadOnly = 0x02,
+            ReadWrite = 0x04,
+            WriteCopy = 0x08,
+            GuardModifierflag = 0x100,
+            NoCacheModifierflag = 0x200,
+            WriteCombineModifierflag = 0x400
+        }
+
+        public enum HookType : int
+        {
+            WH_JOURNALRECORD = 0,
+            WH_JOURNALPLAYBACK = 1,
+            WH_KEYBOARD = 2,
+            WH_GETMESSAGE = 3,
+            WH_CALLWNDPROC = 4,
+            WH_CBT = 5,
+            WH_SYSMSGFILTER = 6,
+            WH_MOUSE = 7,
+            WH_HARDWARE = 8,
+            WH_DEBUG = 9,
+            WH_SHELL = 10,
+            WH_FOREGROUNDIDLE = 11,
+            WH_CALLWNDPROCRET = 12,
+            WH_KEYBOARD_LL = 13,
+            WH_MOUSE_LL = 14
+        }
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern uint RegisterWindowMessage(string lpString);
+
+        [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
+        public static extern IntPtr VirtualAllocEx(ProcessHandle hProcess, IntPtr lpAddress, uint dwSize, AllocationType flAllocationType, MemoryProtection flProtect);
+
+        [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
+        public static extern bool VirtualFreeEx(ProcessHandle hProcess, IntPtr lpAddress, int dwSize, AllocationType dwFreeType);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool WriteProcessMemory(ProcessHandle hProcess, IntPtr lpBaseAddress, IntPtr lpBuffer, uint nSize, out int lpNumberOfBytesWritten);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern IntPtr SetWindowsHookEx(HookType hookType, UIntPtr lpfn, IntPtr hMod, uint dwThreadId);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern bool UnhookWindowsHookEx(IntPtr hhk);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool FreeLibrary(IntPtr hModule);
+    }
+
+    // RECT structure required by WINDOWPLACEMENT structure
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential)]
+    public struct RECT
+    {
+        public int Left;
+        public int Top;
+        public int Right;
+        public int Bottom;
+
+        public RECT(int left, int top, int right, int bottom)
+        {
+            this.Left = left;
+            this.Top = top;
+            this.Right = right;
+            this.Bottom = bottom;
+        }
+
+        public int Width => this.Right - this.Left;
+
+        public int Height => this.Bottom - this.Top;
+    }
+
+    // POINT structure required by WINDOWPLACEMENT structure
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential)]
+    public struct POINT
+    {
+        public int X;
+        public int Y;
+
+        public POINT(int x, int y)
+        {
+            this.X = x;
+            this.Y = y;
+        }
+    }
+
+    // WINDOWPLACEMENT stores the position, size, and state of a window
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential)]
+    public struct WINDOWPLACEMENT
+    {
+        public int length;
+        public int flags;
+        public int showCmd;
+        public POINT minPosition;
+        public POINT maxPosition;
+        public RECT normalPosition;
+    }
 }

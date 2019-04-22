@@ -1,17 +1,16 @@
 ﻿using System;
 
-namespace ManagedInjector2
+namespace ManagedInjector
 {
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
-    using System.Net.Mime;
     using System.Reflection;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Windows;
     using System.Xml.Serialization;
-    //using Snoop;
+    using Snoop;
 
     public static class Injector
     {
@@ -19,7 +18,7 @@ namespace ManagedInjector2
 
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         private static extern uint RegisterWindowMessage(string lpString);
-
+        
         [StructLayout(LayoutKind.Sequential)]
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
         [SuppressMessage("ReSharper", "InconsistentNaming")]
@@ -54,37 +53,37 @@ namespace ManagedInjector2
 
                     MessageBox.Show("Hi from snoop");
 
-                    //var transportDataString = Marshal.PtrToStringUni(wparam);
-                    //InjectorData injectorData = null;
+                    var transportDataString = Marshal.PtrToStringUni(wparam);
+                    InjectorData injectorData = null;
 
-                    //{
-                    //    var serializer = new XmlSerializer(typeof(InjectorData));
+                    {
+                        var serializer = new XmlSerializer(typeof(InjectorData));
 
-                    //    using (var stream = new StringReader(transportDataString))
-                    //    {
-                    //        injectorData = (InjectorData)serializer.Deserialize(stream);
-                    //    }
-                    //}
+                        using (var stream = new StringReader(transportDataString))
+                        {
+                            injectorData = (InjectorData)serializer.Deserialize(stream);
+                        }
+                    }
 
-                    //var assembly = Assembly.Load(injectorData.AssemblyName);
+                    var assembly = Assembly.Load(injectorData.AssemblyName);
 
-                    //if (assembly != null)
-                    //{
-                    //    var type = assembly.GetType(injectorData.ClassName);
+                    if (assembly != null)
+                    {
+                        var type = assembly.GetType(injectorData.ClassName);
 
-                    //    if (type != null)
-                    //    {
-                    //        var method = type.GetMethod(injectorData.MethodName, BindingFlags.Static | BindingFlags.Public);
+                        if (type != null)
+                        {
+                            var method = type.GetMethod(injectorData.MethodName, BindingFlags.Static | BindingFlags.Public);
 
-                    //        if (method != null)
-                    //        {
-                    //            method.Invoke(null, new[]
-                    //                                {
-                    //                                    injectorData.SettingsFile
-                    //                                });
-                    //        }
-                    //    }
-                    //}
+                            if (method != null)
+                            {
+                                method.Invoke(null, new[]
+                                                    {
+                                                        injectorData.SettingsFile
+                                                    });
+                            }
+                        }
+                    }
                 }
             }
 

@@ -107,9 +107,9 @@ namespace Snoop
 	            var wp = windowPlacement.Value;
 	            wp.length = Marshal.SizeOf(typeof(WINDOWPLACEMENT));
 	            wp.flags = 0;
-	            wp.showCmd = (wp.showCmd == Win32.SW_SHOWMINIMIZED ? Win32.SW_SHOWNORMAL : wp.showCmd);
+	            wp.showCmd = (wp.showCmd == NativeMethods.SW_SHOWMINIMIZED ? NativeMethods.SW_SHOWNORMAL : wp.showCmd);
 	            var hwnd = new WindowInteropHelper(window).Handle;
-	            Win32.SetWindowPlacement(hwnd, ref wp);
+                NativeMethods.SetWindowPlacement(hwnd, ref wp);
 	        }
 	        catch
 	        {
@@ -120,7 +120,7 @@ namespace Snoop
 	    {
 	        WINDOWPLACEMENT windowPlacement;
 	        var hwnd = new WindowInteropHelper(window).Handle;
-	        Win32.GetWindowPlacement(hwnd, out windowPlacement);
+            NativeMethods.GetWindowPlacement(hwnd, out windowPlacement);
 
 	        saveAction(windowPlacement);
 	    }
