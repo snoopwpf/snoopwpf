@@ -4,7 +4,6 @@ namespace Snoop
     using System.ComponentModel;
     using System.Diagnostics;
     using System.IO;
-    using System.Reflection;
     using System.Runtime.InteropServices;
     using System.Security;
     using System.Xml.Serialization;
@@ -17,8 +16,8 @@ namespace Snoop
         {
             messageId = NativeMethods.RegisterWindowMessage("Injector_GOBABYGO!");
         }
-
-        public static void LogMessage(String message, bool append)
+        
+        public static void LogMessage(string message, bool append)
         {
             var applicationDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             applicationDataPath += "\\Snoop";
