@@ -873,20 +873,19 @@ namespace Snoop
 						break;
 					}
 				}
-
-
-				if (System.Windows.Forms.Application.OpenForms.Count > 0)
-				{
-					// this is windows forms -> wpf interop
-
-					// call ElementHost.EnableModelessKeyboardInterop to allow the Snoop UI window
-					// to receive keyboard messages. if you don't call this method,
-					// you will be unable to edit properties in the property grid for windows forms interop.
-					ElementHost.EnableModelessKeyboardInterop(this);
-				}
 			}
 
-			return foundRoot;
+            if (System.Windows.Forms.Application.OpenForms.Count > 0)
+            {
+                // this is windows forms -> wpf interop
+
+                // call ElementHost.EnableModelessKeyboardInterop to allow the Snoop UI window
+                // to receive keyboard messages. if you don't call this method,
+                // you will be unable to edit properties in the property grid for windows forms interop.
+                ElementHost.EnableModelessKeyboardInterop(this);
+            }
+
+            return foundRoot;
 		}
 
 		private void Load(object newRoot)
