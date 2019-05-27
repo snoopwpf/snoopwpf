@@ -20,6 +20,7 @@ using Snoop.Infrastructure;
 using System.Text;
 using System.Windows.Markup;
 using System.Windows.Media;
+using System.IO;
 
 namespace Snoop
 {
@@ -30,6 +31,7 @@ namespace Snoop
         public static readonly RoutedCommand DelveCommand = new RoutedCommand();
         public static readonly RoutedCommand DelveBindingCommand = new RoutedCommand();
         public static readonly RoutedCommand DelveBindingExpressionCommand = new RoutedCommand();
+        public static readonly RoutedCommand NavigateToAssemblyInExplorerCommand = new RoutedCommand("NavigateToAssemblyInExplorer", typeof(PropertyInspector));
 
         public PropertyInspector()
         {
@@ -45,6 +47,7 @@ namespace Snoop
             this.CommandBindings.Add(new CommandBinding(PropertyInspector.DelveCommand, this.HandleDelve, this.CanDelve));
             this.CommandBindings.Add(new CommandBinding(PropertyInspector.DelveBindingCommand, this.HandleDelveBinding, this.CanDelveBinding));
             this.CommandBindings.Add(new CommandBinding(PropertyInspector.DelveBindingExpressionCommand, this.HandleDelveBindingExpression, this.CanDelveBindingExpression));
+            this.CommandBindings.Add(new CommandBinding(PropertyInspector.NavigateToAssemblyInExplorerCommand, this.HandleNavigateToAssemblyInExplorer, this.CanNavigateToAssemblyInExplorer));
 
             // watch for mouse "back" button
             this.MouseDown += new MouseButtonEventHandler(MouseDownHandler);
@@ -95,14 +98,16 @@ namespace Snoop
             get { return this.GetValue(PropertyInspector.RootTargetProperty); }
             set { this.SetValue(PropertyInspector.RootTargetProperty, value); }
         }
+
         public static readonly DependencyProperty RootTargetProperty =
             DependencyProperty.Register
             (
-                "RootTarget",
+                nameof(RootTarget),
                 typeof(object),
                 typeof(PropertyInspector),
                 new PropertyMetadata(PropertyInspector.HandleRootTargetChanged)
             );
+
         private static void HandleRootTargetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             PropertyInspector inspector = (PropertyInspector)d;
@@ -111,7 +116,8 @@ namespace Snoop
             inspector.Target = e.NewValue;
 
             inspector._delvePathList.Clear();
-            inspector.OnPropertyChanged("DelvePath");
+            inspector.OnPropertyChanged(nameof(DelvePath));
+            inspector.OnPropertyChanged(nameof(DelveType));
 
             inspector.targetToFilter.Clear();
         }
@@ -125,17 +131,16 @@ namespace Snoop
         public static readonly DependencyProperty TargetProperty =
             DependencyProperty.Register
             (
-                "Target",
+                nameof(Target),
                 typeof(object),
                 typeof(PropertyInspector),
                 new PropertyMetadata(PropertyInspector.HandleTargetChanged)
             );
-
         
         private static void HandleTargetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             PropertyInspector inspector = (PropertyInspector)d;
-            inspector.OnPropertyChanged("Type");
+            inspector.OnPropertyChanged(nameof(Type));
 
             if (e.NewValue != null)
                 inspector.inspectStack.Add(e.NewValue);
@@ -150,9 +155,9 @@ namespace Snoop
             inspector.lastRootTarget = inspector.RootTarget;
         }    
 
-        private string GetDelvePath(Type rootTargetType)
+        private string GetCurrentDelvePath(Type rootTargetType)
         {
-            StringBuilder delvePath = new StringBuilder(rootTargetType.Name);
+            var delvePath = new StringBuilder(rootTargetType.Name);
 
             foreach (var propInfo in _delvePathList)
             {
@@ -170,31 +175,33 @@ namespace Snoop
             return delvePath.ToString();
         }
 
-        private string GetCurrentTypeName(Type rootTargetType)
+        private Type GetCurrentDelveType(Type rootTargetType)
         {
-            string type = string.Empty;
             if (_delvePathList.Count > 0)
             {
-                ISkipDelve skipDelve = _delvePathList[_delvePathList.Count - 1].Value as ISkipDelve;
-                if (skipDelve != null && skipDelve.NextValue != null && skipDelve.NextValueType != null)
+                var lastDelveEntry = _delvePathList.Last();
+
+                if (lastDelveEntry.Value is ISkipDelve skipDelve
+                    && skipDelve.NextValue != null
+                    && skipDelve.NextValueType != null)
                 {
-                    return skipDelve.NextValueType.ToString();//we want to make this "future friendly", so we take into account that the string value of the property type may change.
+                    return skipDelve.NextValueType; //we want to make this "future friendly", so we take into account that the string value of the property type may change.
                 }
-                else if (_delvePathList[_delvePathList.Count - 1].Value != null)
+                else if (lastDelveEntry.Value != null)
                 {
-                    type = _delvePathList[_delvePathList.Count - 1].Value.GetType().ToString();
+                    return lastDelveEntry.Value.GetType();
                 }
                 else
                 {
-                    type = _delvePathList[_delvePathList.Count - 1].PropertyType.ToString();
+                    return lastDelveEntry.PropertyType;
                 }
             }
             else if (_delvePathList.Count == 0)
             {
-                type = rootTargetType.FullName;
+                return rootTargetType;
             }
 
-            return type;
+            return null;
         }
 
         /// <summary>
@@ -205,13 +212,28 @@ namespace Snoop
             get
             {
                 if (this.RootTarget == null)
+                {
                     return "object is NULL";
+                }
 
                 Type rootTargetType = this.RootTarget.GetType();
-                string delvePath = GetDelvePath(rootTargetType);
-                string type = GetCurrentTypeName(rootTargetType);
+                string delvePath = GetCurrentDelvePath(rootTargetType);
 
-                return string.Format("{0}\n({1})", delvePath, type);
+                return delvePath;
+            }
+        }
+
+        public Type DelveType
+        {
+            get
+            {
+                if (this.RootTarget == null)
+                {
+                    return null;
+                }
+
+                var rootTargetType = this.RootTarget.GetType();
+                return this.GetCurrentDelveType(rootTargetType);
             }
         }
 
@@ -220,7 +242,10 @@ namespace Snoop
             get
             {
                 if (this.Target != null)
+                {
                     return this.Target.GetType();
+                }
+
                 return null;
             }
         }
@@ -251,7 +276,8 @@ namespace Snoop
                 if (this._delvePathList.Count > 0)
                 {
                     this._delvePathList.RemoveAt(this._delvePathList.Count - 1);
-                    this.OnPropertyChanged("DelvePath");
+                    this.OnPropertyChanged(nameof(this.DelvePath));
+                    this.OnPropertyChanged(nameof(this.DelveType));
                 }
             }
         }
@@ -286,8 +312,9 @@ namespace Snoop
                 // and if it's equal to the current (original) target, we won't raise the property-changed event,
                 // and therefore, we don't add to our delveStack (the real one).
 
-                this._delvePathList.Add(((PropertyInformation)e.Parameter));
-                this.OnPropertyChanged("DelvePath");
+                this._delvePathList.Add((PropertyInformation)e.Parameter);
+                this.OnPropertyChanged(nameof(this.DelvePath));
+                this.OnPropertyChanged(nameof(this.DelveType));
             }
 
             if (this.checkBoxClearAfterDelve.IsChecked.HasValue && this.checkBoxClearAfterDelve.IsChecked.Value)
@@ -322,6 +349,40 @@ namespace Snoop
             if (e.Parameter != null && ((PropertyInformation)e.Parameter).BindingExpression != null)
                 e.CanExecute = true;
             e.Handled = true;
+        }
+
+        private void HandleNavigateToAssemblyInExplorer(object sender, ExecutedRoutedEventArgs e)
+        {
+            var assembly = ((Type)e.Parameter).Assembly;
+            var path = assembly.Location;
+
+            if (string.IsNullOrEmpty(path))
+            {
+                path = assembly.CodeBase;
+            }
+
+            var processStartInfo = new ProcessStartInfo
+            {
+                FileName = "explorer",
+                UseShellExecute = true,
+                WindowStyle = ProcessWindowStyle.Normal,
+                Arguments = $"/e,/select,\"{path}\""
+            };
+
+            try
+            {
+                using (Process.Start(processStartInfo))
+                {
+                }
+            }
+            catch
+            {
+            }
+        }
+
+        private void CanNavigateToAssemblyInExplorer(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = e.Parameter is Type;
         }
 
         public PropertyFilter PropertyFilter
@@ -595,8 +656,7 @@ namespace Snoop
         protected void OnPropertyChanged(string propertyName)
         {
             Debug.Assert(this.GetType().GetProperty(propertyName) != null);
-            if (this.PropertyChanged != null)
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
     }
