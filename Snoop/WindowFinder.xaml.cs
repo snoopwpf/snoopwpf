@@ -50,7 +50,7 @@ namespace Snoop
 	            return;
 	        }
 
-	        if (Mouse.LeftButton == MouseButtonState.Released)
+	        if (e.LeftButton == MouseButtonState.Released)
 	        {
 	            this.StopSnoopTargetsSearch();
 	            return;
