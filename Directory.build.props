@@ -6,8 +6,6 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.0;net40</TargetFrameworks>
 
-    <!--<TargetName>$(AssemblyName).$(TargetFramework)</TargetName>-->
-
     <OutputPath>..\bin\$(Configuration)\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <BaseIntermediateOutputPath>..\bin\obj\$(ConfigurationName)\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
@@ -15,7 +13,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <!-- <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet> -->
   </PropertyGroup>
 
   <PropertyGroup>

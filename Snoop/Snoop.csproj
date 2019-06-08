@@ -8,6 +8,11 @@
     <ApplicationIcon>..\Artwork\Snoop.ico</ApplicationIcon>
     <UseWpf>true</UseWpf>
   </PropertyGroup>
+
+  <!-- <PropertyGroup>
+    <AssemblyName>$(AssemblyName).$(TargetFramework)</AssemblyName>
+  </PropertyGroup> -->
+
   <ItemGroup>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="WindowsFormsIntegration" />
