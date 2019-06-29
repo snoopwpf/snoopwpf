@@ -184,7 +184,7 @@
     </Compile>
     <Compile Include="EventsListener.cs" />
     <Compile Include="EventTracker.cs" />
-    <Compile Include="Infrastructure\AppDomainHelper.cs" />
+    <Compile Include="Infrastructure\CrossAppDomainSnoop.cs" />
     <Compile Include="Infrastructure\AttachedPropertyManager.cs" />
     <Compile Include="Infrastructure\ClipboardHelper.cs" />
     <Compile Include="Infrastructure\ComboBoxSettings.cs" />

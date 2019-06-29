@@ -141,7 +141,7 @@ namespace Snoop
 		{
 		    TransientSettingsData.LoadCurrent(settingsFile);
 
-            return new CrossDomainSnoop().CrossDomainGoBabyGo();
+            return new CrossAppDomainSnoop().CrossDomainGoBabyGo();
         }
 
 	    public static bool GoBabyGoSingleAppDomain()

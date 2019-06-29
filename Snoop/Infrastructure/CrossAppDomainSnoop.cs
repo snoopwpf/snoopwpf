@@ -9,7 +9,7 @@
     using Snoop.Infrastructure;
     using Snoop.mscoree;
 
-    public class CrossDomainSnoop : MarshalByRefObject
+    public class CrossAppDomainSnoop : MarshalByRefObject
     {
         private IList<AppDomain> appDomains;
         private AutoResetEvent autoResetEvent;
@@ -40,14 +40,14 @@
             {
                 SnoopModes.MultipleAppDomainMode = true;
 
-                var assemblyFullName = typeof(CrossDomainSnoop).Assembly.Location;
-                var fullName = typeof(CrossDomainSnoop).FullName;
+                var assemblyFullName = typeof(CrossAppDomainSnoop).Assembly.Location;
+                var fullName = typeof(CrossAppDomainSnoop).FullName;
 
                 foreach (var appDomain in this.appDomains)
                 {
-                    var crossDomainSnoop = (CrossDomainSnoop)appDomain.CreateInstanceFromAndUnwrap(assemblyFullName, fullName);
+                    var crossAppDomainSnoop = (CrossAppDomainSnoop)appDomain.CreateInstanceFromAndUnwrap(assemblyFullName, fullName);
                     //runs in a separate AppDomain
-                    var appDomainSucceeded = crossDomainSnoop.RunGoBabyGo();
+                    var appDomainSucceeded = crossAppDomainSnoop.RunGoBabyGo();
                     succeeded = succeeded || appDomainSucceeded;
                 }
             }
