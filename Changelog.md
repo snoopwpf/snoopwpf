@@ -16,6 +16,8 @@
   -  [#73](../../issues/73) - Add options to prevent multiple dispatcher question and setting of owner on snoop windows
   -  [#89](../../issues/89) - Improved exception handling and error dialog
   -  [#92](../../issues/92) - Adding support for snooping elevated processes from a non elevated snoop instance
+  -  [#116](../../issues/116) - Doesn't find PresentationSource hosted in CustomTaskPane (ElementHost) in Office VSTO Add-in  
+  This means snoop is now able to spy on multiple app domains.
   -  [#119](../../issues/119) - Adding hyperlink for current delve object to enable explorer navigation
 
 ## 2.10
