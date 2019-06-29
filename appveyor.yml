@@ -7,7 +7,7 @@
       - develop
 
   skip_tags: true
-  image: Visual Studio 2019
+  image: Visual Studio 2017
   configuration: Release
   platform: Mixed Platforms
   test: off
