@@ -11,21 +11,25 @@
 
         public TransientSettingsData()
         {
-            this.SetWindowOwner = true;
+            this.MultipleAppDomainMode = MultipleAppDomainMode.Ask;
             this.MultipleDispatcherMode = MultipleDispatcherMode.Ask;
+            this.SetWindowOwner = true;
         }
 
         internal TransientSettingsData(Settings settings)
         {
-            this.SetWindowOwner = settings.SetOwnerWindow;
+            this.MultipleAppDomainMode = settings.MultipleAppDomainMode;
             this.MultipleDispatcherMode = settings.MultipleDispatcherMode;
+            this.SetWindowOwner = settings.SetOwnerWindow;
         }
 
         public static TransientSettingsData Current { get; private set; }
 
-        public bool SetWindowOwner { get; set; }
+        public MultipleAppDomainMode MultipleAppDomainMode { get; set; }
 
         public MultipleDispatcherMode MultipleDispatcherMode { get; set; }
+
+        public bool SetWindowOwner { get; set; }
 
         public string WriteToFile()
         {
@@ -60,6 +64,13 @@
                 return Current = (TransientSettingsData)serializer.Deserialize(stream);
             }
         }
+    }
+
+    public enum MultipleAppDomainMode
+    {
+        Ask,
+        AlwaysUse,
+        NeverUse
     }
 
     public enum MultipleDispatcherMode

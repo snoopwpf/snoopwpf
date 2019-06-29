@@ -6,6 +6,7 @@
     using System.Runtime.InteropServices;
     using System.Threading;
     using System.Windows;
+    using Snoop.Data;
     using Snoop.Infrastructure;
     using Snoop.mscoree;
 
@@ -16,23 +17,29 @@
 
         public bool CrossDomainGoBabyGo(string settingsFile)
         {
-            var staThread = new Thread(this.EnumAppDomains);
-            staThread.SetApartmentState(ApartmentState.STA); //STA is required when enumerating app domains
-            this.autoResetEvent = new AutoResetEvent(false);
-            staThread.Start();
+            TransientSettingsData.LoadCurrentIfRequired(settingsFile);
 
-            this.autoResetEvent.WaitOne();
+            if (TransientSettingsData.Current.MultipleAppDomainMode == MultipleAppDomainMode.AlwaysUse
+                || TransientSettingsData.Current.MultipleAppDomainMode == MultipleAppDomainMode.Ask)
+            {
+                var staThread = new Thread(this.EnumAppDomains);
+                staThread.SetApartmentState(ApartmentState.STA); //STA is required when enumerating app domains
+                this.autoResetEvent = new AutoResetEvent(false);
+                staThread.Start();
 
+                this.autoResetEvent.WaitOne();
+            }
+
+            var numberOfAppDomains = this.appDomains?.Count ?? 1;
             var succeeded = false;
 
-            if (this.appDomains == null 
-                || this.appDomains.Count == 0)
+            if (numberOfAppDomains <= 1)
             {
-                Trace.WriteLine("Snoop wasn't able to enumerate app domains. Trying to run in single app domain mode.");
+                Trace.WriteLine("Snoop wasn't able to enumerate app domains or MultipleAppDomainMode was disabled. Trying to run in single app domain mode.");
 
                 succeeded = SnoopUI.GoBabyGoForCurrentAppDomain(settingsFile);
             }
-            else if (this.appDomains.Count == 1)
+            else if (numberOfAppDomains == 1)
             {
                 Trace.WriteLine("Only found one app domain. Running in single app domain mode.");
 
@@ -40,19 +47,50 @@
             }
             else
             {
-                Trace.WriteLine($"Found {this.appDomains.Count} app domains. Running in multiple app domain mode.");
+                Trace.WriteLine($"Found {numberOfAppDomains} app domains. Running in multiple app domain mode.");
 
-                SnoopModes.MultipleAppDomainMode = true;
-
-                var assemblyFullName = typeof(CrossAppDomainSnoop).Assembly.Location;
-                var fullName = typeof(CrossAppDomainSnoop).FullName;
-
-                foreach (var appDomain in this.appDomains)
+                var shouldUseMultipleAppDomainMode = true;
+                if (TransientSettingsData.Current.MultipleAppDomainMode == MultipleAppDomainMode.Ask)
                 {
-                    var crossAppDomainSnoop = (CrossAppDomainSnoop)appDomain.CreateInstanceFromAndUnwrap(assemblyFullName, fullName);
-                    //runs in a separate AppDomain
-                    var appDomainSucceeded = crossAppDomainSnoop.GoBabyGoForCurrentAppDomain(settingsFile);
-                    succeeded = succeeded || appDomainSucceeded;
+				    var result =
+					    MessageBox.Show
+					    (
+						    "Snoop has noticed multiple app domains.\n\n" +
+						    "Would you like to enter multiple app domain mode, and have a separate Snoop window for each app domain?\n\n" +
+						    "Without having a separate Snoop window for each app domain, you will not be able to Snoop the windows in the app domains outside of the main app domain. ",
+						    "Enter Multiple AppDomain Mode",
+						    MessageBoxButton.YesNo,
+						    MessageBoxImage.Question
+					    );
+
+				    if (result == MessageBoxResult.Yes)
+				    {
+				        shouldUseMultipleAppDomainMode = true;
+				    }
+                    else
+                    {
+                        shouldUseMultipleAppDomainMode = false;
+                    }
+                }
+
+                if (shouldUseMultipleAppDomainMode == false)
+                {
+                    succeeded = SnoopUI.GoBabyGoForCurrentAppDomain(settingsFile);
+                }
+                else
+                {
+                    SnoopModes.MultipleAppDomainMode = true;
+
+                    var assemblyFullName = typeof(CrossAppDomainSnoop).Assembly.Location;
+                    var fullName = typeof(CrossAppDomainSnoop).FullName;
+
+                    foreach (var appDomain in this.appDomains)
+                    {
+                        var crossAppDomainSnoop = (CrossAppDomainSnoop)appDomain.CreateInstanceFromAndUnwrap(assemblyFullName, fullName);
+                        //runs in a separate AppDomain
+                        var appDomainSucceeded = crossAppDomainSnoop.GoBabyGoForCurrentAppDomain(settingsFile);
+                        succeeded = succeeded || appDomainSucceeded;
+                    }
                 }
             }
 

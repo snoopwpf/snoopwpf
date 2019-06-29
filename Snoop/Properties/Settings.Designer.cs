@@ -163,6 +163,18 @@ namespace Snoop.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Ask")]
+        public global::Snoop.Data.MultipleAppDomainMode MultipleAppDomainMode {
+            get {
+                return ((global::Snoop.Data.MultipleAppDomainMode)(this["MultipleAppDomainMode"]));
+            }
+            set {
+                this["MultipleAppDomainMode"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Ask")]
         public global::Snoop.Data.MultipleDispatcherMode MultipleDispatcherMode {
             get {
                 return ((global::Snoop.Data.MultipleDispatcherMode)(this["MultipleDispatcherMode"]));

@@ -82,6 +82,9 @@
     <Setting Name="SetOwnerWindow" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="MultipleAppDomainMode" Type="Snoop.Data.MultipleAppDomainMode" Scope="User">
+        <Value Profile="(Default)">Ask</Value>
+    </Setting>
     <Setting Name="MultipleDispatcherMode" Type="Snoop.Data.MultipleDispatcherMode" Scope="User">
         <Value Profile="(Default)">Ask</Value>
     </Setting>

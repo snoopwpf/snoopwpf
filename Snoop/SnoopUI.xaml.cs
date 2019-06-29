@@ -137,9 +137,10 @@ namespace Snoop
         #endregion
 
 		#region Public Static Methods
+
 		public static bool GoBabyGo(string settingsFile)
 		{
-		    TransientSettingsData.LoadCurrentIfRequired(settingsFile);
+		    TransientSettingsData.LoadCurrent(settingsFile);
 
             return new CrossAppDomainSnoop().CrossDomainGoBabyGo(settingsFile);
         }

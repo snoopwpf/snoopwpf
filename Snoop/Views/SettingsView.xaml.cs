@@ -11,6 +11,7 @@
     {
         private static readonly HashSet<string> realSettingsProperties = new HashSet<string>
                                                                         {
+                                                                            nameof(Settings.Default.MultipleAppDomainMode),
                                                                             nameof(Settings.Default.MultipleDispatcherMode),
                                                                             nameof(Settings.Default.SetOwnerWindow)
                                                                         };

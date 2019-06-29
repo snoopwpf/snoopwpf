@@ -17,7 +17,7 @@ namespace Snoop.Infrastructure
         /// Whether Snoop is Snooping in a situation where there are multiple dispatchers.
         /// The main Snoop UI is needed for each dispatcher.
         /// </summary>
-        public static bool MultipleDispatcherMode { get; set; }        
+        public static bool MultipleDispatcherMode { get; set; }
 
         public static bool SwallowExceptions { get; set; }
 
