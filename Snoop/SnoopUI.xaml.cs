@@ -139,15 +139,19 @@ namespace Snoop
 		#region Public Static Methods
 		public static bool GoBabyGo(string settingsFile)
 		{
-		    TransientSettingsData.LoadCurrent(settingsFile);
+		    TransientSettingsData.LoadCurrentIfRequired(settingsFile);
 
-            return new CrossAppDomainSnoop().CrossDomainGoBabyGo();
+            return new CrossAppDomainSnoop().CrossDomainGoBabyGo(settingsFile);
         }
 
-	    public static bool GoBabyGoSingleAppDomain()
+	    public static bool GoBabyGoForCurrentAppDomain(string settingsFile)
 		{
 			try
 			{
+				TransientSettingsData.LoadCurrentIfRequired(settingsFile);
+
+				Trace.WriteLine($"Running snoop in app domain \"{AppDomain.CurrentDomain.FriendlyName}\".");
+
 				SnoopApplication();
 				return true;
 			}
@@ -160,6 +164,8 @@ namespace Snoop
 
 		public static void SnoopApplication()
 		{
+			Trace.WriteLine("Snooping application.");
+
 			Dispatcher dispatcher;
 		    if (Application.Current == null)
 		    {
@@ -172,7 +178,9 @@ namespace Snoop
 
 			if (dispatcher.CheckAccess())
 			{
-			    var snoop = new SnoopUI();
+				Trace.WriteLine("Starting snoop UI.");
+
+				var snoop = new SnoopUI();
 				var title = TryGetMainWindowTitle();
 
 				if (!string.IsNullOrEmpty(title))
@@ -186,6 +194,8 @@ namespace Snoop
 			}
 			else
 			{
+				Trace.WriteLine("Current dispatcher runs on a different thread.");
+
 				dispatcher.Invoke((Action)(SnoopApplication));
             }
 		}
@@ -465,7 +475,7 @@ namespace Snoop
 
 		#region Public Methods
 
-		public void Inspect()
+		public bool Inspect()
 		{
 			var foundRoot = this.FindRoot();
 			if (foundRoot == null)
@@ -483,13 +493,19 @@ namespace Snoop
 						MessageBoxButton.OK,
 						MessageBoxImage.Exclamation
 					);
-				}
+                }
 
-				return;
+                // This path should only be hit if we don't find a root in some dispatcher or app domain.
+                // This is not really critical as not every dispatcher/app domain must meet this requirement.
+                Trace.WriteLine("Can't find a current application or a PresentationSource root visual.");
+
+				return false;
 			}
 
             this.Inspect(foundRoot);
-		}
+
+            return true;
+        }
 
 		public void Inspect(object rootToInspect)
 		{
@@ -501,8 +517,12 @@ namespace Snoop
 
             this.Owner = SnoopWindowUtils.FindOwnerWindow(this);
 
+			Trace.WriteLine("Showing snoop UI...");
+
             this.Show();
 		    this.Activate();
+
+			Trace.WriteLine("Shown and activated snoop UI...");
 		}
 
 		private void UnhandledExceptionHandler(object sender, DispatcherUnhandledExceptionEventArgs e)

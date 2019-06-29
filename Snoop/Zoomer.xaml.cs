@@ -74,7 +74,7 @@ namespace Snoop
 
 		public static void GoBabyGo(string settingsFile)
 		{
-            TransientSettingsData.LoadCurrent(settingsFile);
+            TransientSettingsData.LoadCurrentIfRequired(settingsFile);
 
             Dispatcher dispatcher;
             if (Application.Current == null)
