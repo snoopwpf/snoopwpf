@@ -6,7 +6,15 @@
 
 ## Snoop 2.11.0
 You can read the [changelog](Changelog.md) for details on what changed in this version.
-There are currently some known issues with the latest Windows 10 1903 update which are causing the window finder from working properly.
+
+Highlights:
+- Support for multiple app domains
+- Auto elevation to enable snooping of elevated processes without running snoop as administrator
+- Persistent settings for various settings
+- Improved error dialog and issue reporting
+
+Known issues:
+- Some changes in Windows 10 1903 or .NET 4.8 are causing the window finder from working properly.  
 You can use the application dropdown as a workaround.
 
 <h2>Snoop 2.10.0</h2>

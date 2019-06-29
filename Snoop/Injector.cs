@@ -21,23 +21,42 @@ namespace Snoop
 
 		internal static void Launch(WindowInfo windowInfo, Assembly assembly, string className, string methodName, string settingsFile)
 		{
-			var location = Assembly.GetEntryAssembly().Location;
-			var directory = Path.GetDirectoryName(location);
-			var file = Path.Combine(directory, $"ManagedInjectorLauncher{GetSuffix(windowInfo)}.exe");
-
-		    var startInfo = new ProcessStartInfo(file, $"{windowInfo.HWnd} \"{assembly.Location}\" \"{className}\" \"{methodName}\" \"{settingsFile}\"")
-		                    {
-		                        Verb = windowInfo.IsOwningProcessElevated
-		                                   ? "runas"
-		                                   : null
-		                    };           
-		    
-            using (var process = Process.Start(startInfo))
+            if (File.Exists(settingsFile) == false)
             {
-                process?.WaitForExit();
+                throw new FileNotFoundException("The generated temporary settings file could not be found.", settingsFile);
             }
 
-            File.Delete(settingsFile);
-		}
+            try
+            {
+                var location = Assembly.GetExecutingAssembly().Location;
+                var directory = Path.GetDirectoryName(location) ?? string.Empty;
+                var file = Path.Combine(directory, $"ManagedInjectorLauncher{GetSuffix(windowInfo)}.exe");
+
+                if (File.Exists(file) == false)
+                {
+                    const string message = @"Could not find the injector launcher.
+Snoop requires this component, which is part of the snoop project, to do it's job.
+If you compiled snoop you should compile all required components.
+If you downloaded snoop you should not omit any files contained in the archive you downloaded.";
+                    throw new FileNotFoundException(message, file);
+                }
+
+                var startInfo = new ProcessStartInfo(file, $"{windowInfo.HWnd} \"{assembly.Location}\" \"{className}\" \"{methodName}\" \"{settingsFile}\"")
+                                {
+                                    Verb = windowInfo.IsOwningProcessElevated
+                                               ? "runas"
+                                               : null
+                                };           
+		    
+                using (var process = Process.Start(startInfo))
+                {
+                    process?.WaitForExit();
+                }
+            }
+            finally
+            {
+                File.Delete(settingsFile);
+            }
+        }
 	}
 }

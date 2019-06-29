@@ -38,7 +38,32 @@ namespace Snoop
 			}
 		}
 
-		public static Process GetWindowThreadProcess(IntPtr hwnd)
+        public static List<IntPtr> GetRootWindowsOfCurrentProcess()
+        {
+            using (var currentProcess = Process.GetCurrentProcess())
+            {
+                return GetRootWindowsOfProcess(currentProcess.Id);
+            }
+        }
+
+        public static List<IntPtr> GetRootWindowsOfProcess(int pid)
+        {
+            var rootWindows = ToplevelWindows;
+            var dsProcRootWindows = new List<IntPtr>();
+
+            foreach (var hWnd in rootWindows)
+            {
+                NativeMethods.GetWindowThreadProcessId(hWnd, out var processId);
+                if (processId == pid)
+                {
+                    dsProcRootWindows.Add(hWnd);
+                }
+            }
+
+            return dsProcRootWindows;
+        }
+
+        public static Process GetWindowThreadProcess(IntPtr hwnd)
 		{
 			int processID;
 			NativeMethods.GetWindowThreadProcessId(hwnd, out processID);
