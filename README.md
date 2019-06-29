@@ -4,9 +4,14 @@
 
 <p>It allows you to spy/browse the visual tree of a running application (without the need for a debugger) ... and change properties ... amongst other things.</p>
 
+## Snoop 2.11.0
+You can read the [changelog](Changelog.md) for details on what changed in this version.
+There are currently some known issues with the latest Windows 10 1903 update which are causing the window finder from working properly.
+You can use the application dropdown as a workaround.
+
 <h2>Snoop 2.10.0</h2>
 
-<p>The most recent version of Snoop, <a href="https://github.com/cplotts/snoopwpf/releases/tag/2.10.0">Snoop 2.10.0</a>, was released on September 19th, 2018. In 2.10.0 we finally got rid of support for Snooping WPF 3.5 applications. This allowed us to move the Snoop projects forward to Visual Studio 2017 ... which should make it much easier to work with Snoop's source code.</p>
+<p><a href="https://github.com/cplotts/snoopwpf/releases/tag/2.10.0">Snoop 2.10.0</a>, was released on September 19th, 2018. In 2.10.0 we finally got rid of support for Snooping WPF 3.5 applications. This allowed us to move the Snoop projects forward to Visual Studio 2017 ... which should make it much easier to work with Snoop's source code.</p>
 
 <h2>Snoop 2.9.0</h2>
 
