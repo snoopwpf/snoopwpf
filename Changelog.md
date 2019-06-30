@@ -1,6 +1,6 @@
 ﻿# Changelog for snoop
 
-## 2.11 (preview)
+## 2.11.0
 - ### Bug fixes
   -  [#53](../../issues/53) - Path Data values have wrong format (should use invariant culture) (thanks @jongleur1983)
   -  [#55](../../issues/55) - Keyboard events not passed to snoop UI window (thanks @stutton)
@@ -19,12 +19,13 @@
   -  [#116](../../issues/116) - Doesn't find PresentationSource hosted in CustomTaskPane (ElementHost) in Office VSTO Add-in  
   This means snoop is now able to spy on multiple app domains.
   -  [#119](../../issues/119) - Adding hyperlink for current delve object to enable explorer navigation
+  - The window finder was rewritten to not use a separate window but a dynamically generated mouse cursor instead
 
-## 2.10
+## 2.10.0
 - ### Breaking changes
   - Dropped support for .NET 3.5
   - You now need Visual C++ 2015 Runtime to run snoop
 
-## 2.9
+## 2.9.0
 - ### Improvements
   - Added a new triggers tab to view triggers from ControlTemplates and Styles
