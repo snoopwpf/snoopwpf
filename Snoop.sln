@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.16
@@ -16,6 +16,12 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ManagedInjector32-4.0", "ManagedInjector\ManagedInjector32-4.0.vcxproj", "{8072B47B-5611-4BAB-8EF4-CB3125D676A5}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ManagedInjector64-4.0", "ManagedInjector\ManagedInjector64-4.0.vcxproj", "{A27C8B34-2527-4258-8C07-D2720C576B90}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B21F490B-8556-45C6-8BE2-CF41E8A621DF}"
+	ProjectSection(SolutionItems) = preProject
+		Changelog.md = Changelog.md
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
