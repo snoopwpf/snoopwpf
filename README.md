@@ -11,11 +11,11 @@ It allows you to spy/browse the visual tree of a running application (without th
 - [![Join the chat at https://gitter.im/snoopwpf/Lobby](https://img.shields.io/badge/GITTER-join%20chat-green.svg?style=flat-square)](https://gitter.im/snoopwpf/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 - [![Twitter](https://img.shields.io/badge/twitter-%40batzendev-blue.svg?style=flat-square)](https://twitter.com/batzendev)
 
-## Where can i download snoop?/How can i install snoop?
+## Where can i download Snoop?/How can i install Snoop?
 - [chocolatey](https://chocolatey.org/packages/snoop)
 - [github releases](https://github.com/snoopwpf/snoopwpf/releases)
 - [appveyor](https://ci.appveyor.com/project/batzen/snoopwpf) for the latest preview versions (built on every code change)
-- Please note that you need at least .NET Framework 4.0 and the Microsoft Visual C++ Redistributable(s) 2017 to run snoop
+- Please note that you need at least .NET Framework 4.0 and the Microsoft Visual C++ Redistributable(s) 2017 to run Snoop
 
 # Versions
 ## [2.11.0](../../releases/tag/2.11.0)
