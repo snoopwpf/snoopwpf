@@ -6,10 +6,9 @@
 namespace Snoop
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
-    using System.Reflection;
     using System.Windows;
-    using System.Windows.Controls;
     using System.Windows.Input;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
@@ -26,7 +25,7 @@ namespace Snoop
         private static readonly Point cursorHotSpot = new Point(16, 20);
         private readonly Cursor crosshairsCursor;
         private Point _startPoint;
-        private WindowInfo windowUnderCursor;
+        private WindowInfo currentWindowInfo;
         private readonly LowLevelMouseHook lowLevelMouseHook;
 
         private Cursor currentWindowInfoCursor;
@@ -78,8 +77,8 @@ namespace Snoop
 
             this.StopSnoopTargetsSearch();
 
-            if (this.windowUnderCursor != null
-                && this.windowUnderCursor.IsValidProcess)
+            if (this.currentWindowInfo != null
+                && this.currentWindowInfo.IsValidProcess)
             {
                 if (this.WindowFinderType == WindowFinderType.Snoop)
                 {
@@ -106,16 +105,14 @@ namespace Snoop
         private void LowLevelMouseMove(object sender, LowLevelMouseHook.LowLevelMouseMoveEventArgs e)
         {
             var windowUnderCursor = NativeMethods.GetWindowUnderMouse();
-            if (this.windowUnderCursor == null)
-            {
-                this.windowUnderCursor = new WindowInfo(windowUnderCursor);
-            }
 
             // the window under the cursor has changed
-            if (windowUnderCursor != this.windowUnderCursor.HWnd)
+            if (windowUnderCursor != this.currentWindowInfo?.HWnd)
             {
-                this.windowUnderCursor = new WindowInfo(windowUnderCursor);
-                this.WindowInfoControl.DataContext = this.windowUnderCursor;
+                this.currentWindowInfo = new WindowInfo(windowUnderCursor);
+                this.WindowInfoControl.DataContext = this.currentWindowInfo;
+
+                Trace.WriteLine($"Window under cursor: {this.currentWindowInfo.TraceInfo}");
 
                 this.UpdateCursor();
             }
@@ -127,7 +124,7 @@ namespace Snoop
             Keyboard.Focus(this.btnStartWindowsSearch);
 
             this.snoopCrosshairsImage.Visibility = Visibility.Hidden;
-            this.windowUnderCursor = null;
+            this.currentWindowInfo = null;
 
             this.lowLevelMouseHook.Start();
 
@@ -150,7 +147,7 @@ namespace Snoop
 
         private void UpdateCursor()
         {
-            if (this.windowUnderCursor?.IsValidProcess == true)
+            if (this.currentWindowInfo?.IsValidProcess == true)
             {
                 this.lastWindowInfoCursor = this.currentWindowInfoCursor;
 
@@ -172,14 +169,14 @@ namespace Snoop
 
         private void AttachSnoop()
         {
-            new AttachFailedHandler(this.windowUnderCursor);
-            this.windowUnderCursor.Snoop();
+            new AttachFailedHandler(this.currentWindowInfo);
+            this.currentWindowInfo.Snoop();
         }
 
         private void AttachMagnify()
         {
-            new AttachFailedHandler(this.windowUnderCursor);
-            this.windowUnderCursor.Magnify();
+            new AttachFailedHandler(this.currentWindowInfo);
+            this.currentWindowInfo.Magnify();
         }
 
         // https://stackoverflow.com/a/27077188/122048

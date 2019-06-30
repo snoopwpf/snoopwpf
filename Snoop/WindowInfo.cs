@@ -187,6 +187,8 @@
 
 	    public string ClassName => NativeMethods.GetClassName(this.HWnd);
 
+        public string TraceInfo => $"{this.Description} [{this.HWnd}] {this.ClassName}";
+
         public override string ToString()
 		{
 			return this.Description;
