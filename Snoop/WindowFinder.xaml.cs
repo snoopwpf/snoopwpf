@@ -183,7 +183,7 @@ namespace Snoop
         }
 
         // https://stackoverflow.com/a/27077188/122048
-        private static Cursor ConvertToCursor(UIElement control, Point hotSpot = default)
+        private static Cursor ConvertToCursor(UIElement control, Point hotSpot = default(Point))
         {
             // convert FrameworkElement to PNG stream
             using (var pngStream = new MemoryStream())
