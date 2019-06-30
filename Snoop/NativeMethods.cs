@@ -238,21 +238,6 @@ namespace Snoop
         [DllImport("user32.dll")]
         public static extern IntPtr LoadImage(IntPtr hinst, string lpszName, uint uType, int cxDesired, int cyDesired, uint fuLoad);
 
-		// anvaka's changes below
-
-
-		public static Point GetCursorPosition()
-		{
-			var pos = new Point();
-			var win32Point = new POINT();
-			if (GetCursorPos(ref win32Point))
-			{
-				pos.X = win32Point.X;
-				pos.Y = win32Point.Y;
-			}
-			return pos;
-		}
-
 		public static IntPtr GetWindowUnderMouse()
 		{
 			POINT pt = new POINT();

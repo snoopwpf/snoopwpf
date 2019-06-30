@@ -112,6 +112,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="WindowInfoControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ZoomerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -121,10 +125,6 @@
     <Resource Include="..\Artwork\Snoop.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="SnoopabilityFeedbackWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="ValueEditors\EditorTemplates.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -189,6 +189,7 @@
     <Compile Include="Infrastructure\ClipboardHelper.cs" />
     <Compile Include="Infrastructure\ComboBoxSettings.cs" />
     <Compile Include="Infrastructure\ExtensionMethods.cs" />
+    <Compile Include="Infrastructure\LowLevelMouseHook.cs" />
     <Compile Include="Infrastructure\ISkipDelve.cs" />
     <Compile Include="Infrastructure\ObservableCollectionExtensions.cs" />
     <Compile Include="Infrastructure\RelayCommand.cs" />
@@ -266,6 +267,9 @@
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="WindowInfo.cs" />
+    <Compile Include="WindowInfoControl.xaml.cs">
+      <DependentUpon>WindowInfoControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ZoomerControl.xaml.cs">
       <DependentUpon>ZoomerControl.xaml</DependentUpon>
     </Compile>
@@ -335,9 +339,6 @@
     </Compile>
     <Compile Include="SettingBindingExtension.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="SnoopabilityFeedbackWindow.xaml.cs">
-      <DependentUpon>SnoopabilityFeedbackWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="SnoopWindowUtils.cs" />
     <Compile Include="TrackballBehavior.cs" />
     <Compile Include="ValueEditors\BoolValueEditor.cs" />
@@ -379,12 +380,6 @@
       <DependentUpon>Previewer.xaml</DependentUpon>
     </Compile>
     <Compile Include="VisualTree3DView.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\SnoopCrosshairsCursor.cur" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\SnoopCrosshairsCursor.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Choose>
