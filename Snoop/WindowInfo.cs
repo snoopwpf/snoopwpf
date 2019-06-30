@@ -192,21 +192,23 @@
 			return this.Description;
 		}
 
-		public void Snoop()
+        public void Snoop()
 		{
 			Mouse.OverrideCursor = Cursors.Wait;
 
-			try
-			{
-				Injector.Launch(this, typeof(SnoopUI).Assembly, typeof(SnoopUI).FullName, "GoBabyGo", new TransientSettingsData(Settings.Default).WriteToFile());
-			}
-			catch (Exception e)
-			{
-			    this.OnFailedToAttach(e);
-			}
-
-			Mouse.OverrideCursor = null;
-		}
+            try
+            {
+                Injector.Launch(this, typeof(SnoopUI).Assembly, typeof(SnoopUI).FullName, "GoBabyGo", new TransientSettingsData(Settings.Default).WriteToFile());
+            }
+            catch (Exception e)
+            {
+                this.OnFailedToAttach(e);
+            }
+            finally
+            {
+                Mouse.OverrideCursor = null;
+            }
+        }
 
 		public void Magnify()
 		{
@@ -220,9 +222,11 @@
 			{
 			    this.OnFailedToAttach(e);
 			}
-
-			Mouse.OverrideCursor = null;
-		}
+            finally
+            {
+                Mouse.OverrideCursor = null;
+            }
+        }
 
 		private void OnFailedToAttach(Exception e)
 		{
