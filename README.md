@@ -18,7 +18,7 @@ It allows you to spy/browse the visual tree of a running application (without th
 - Please note that you need at least .NET Framework 4.0 and the Microsoft Visual C++ Redistributable(s) 2017 to run snoop
 
 # Versions
-## [2.11.0](releases/tag/2.11.0)
+## [2.11.0](/releases/tag/2.11.0)
 You can read the [changelog](Changelog.md) for details on what changed in this version.
 
 Highlights:
@@ -28,12 +28,12 @@ Highlights:
 - Improved error dialog and issue reporting
 - Rewritten window finder
 
-## [2.10.0](releases/tag/2.10.0)
+## [2.10.0](/releases/tag/2.10.0)
 Was released on September 19th, 2018. 
 In this version we finally got rid of support for Snooping WPF 3.5 applications. 
 This allowed us to move the Snoop projects forward to Visual Studio 2017 which should make it much easier to work with Snoop's source code.
 
-## [2.9.0](releases/tag/2.9.0)
+## [2.9.0](/releases/tag/2.9.0)
 Was released on July 27th, 2018. 
 The big addition in this version was the inclusion of the triggers tab which was a useful feature of another WPF spying utility called WPF Inspector (written by [Christan Moser](https://github.com/ChristianMoser)). 
 It was ported to Snoop by Bastian Schmidt.
