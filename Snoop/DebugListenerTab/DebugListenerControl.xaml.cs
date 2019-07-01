@@ -85,9 +85,7 @@ namespace Snoop.DebugListenerTab
 		{
 			SetFiltersWindow setFiltersWindow = new SetFiltersWindow(filtersViewModel);
 			setFiltersWindow.Topmost = true;
-			setFiltersWindow.Owner = Window.GetWindow(this);
-			setFiltersWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-			setFiltersWindow.ShowDialog();
+			setFiltersWindow.ShowDialogEx(this);
 
             string[] allLines = allText.ToString().Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             this.textBoxDebugContent.Clear();

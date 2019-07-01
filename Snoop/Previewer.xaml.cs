@@ -9,7 +9,9 @@ using System.Windows.Media;
 
 namespace Snoop
 {
-	public partial class Previewer
+    using Snoop.Infrastructure;
+
+    public partial class Previewer
 	{
 		public static readonly RoutedCommand MagnifyCommand = new RoutedCommand("Magnify", typeof(SnoopUI));
 		public static readonly RoutedCommand ScreenshotCommand = new RoutedCommand("Screenshot", typeof(SnoopUI));
@@ -137,13 +139,18 @@ namespace Snoop
 			e.CanExecute = (this.Target as Visual) != null;
 			e.Handled = true;
 		}
+
 		private void HandleScreenshot(object sender, ExecutedRoutedEventArgs e)
 		{
-			Visual visual = this.Target as Visual;
+			var visual = this.Target as Visual;
 
-			ScreenshotDialog dialog = new ScreenshotDialog();
-			dialog.DataContext = visual;
-			dialog.ShowDialog();
+            var dialog = new ScreenshotDialog
+                         {
+                             DataContext = visual
+                         };
+
+            dialog.ShowDialogEx(this);
+
 			e.Handled = true;
 		}
 	}

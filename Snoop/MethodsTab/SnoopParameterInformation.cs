@@ -106,8 +106,7 @@ namespace Snoop.MethodsTab
                 paramCreator.RootTarget = this.ParameterValue;
             }
 
-            paramCreator.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            paramCreator.ShowDialog();
+            paramCreator.ShowDialogEx(this);
 
             if (paramCreator.DialogResult.HasValue && paramCreator.DialogResult.Value)
             {

@@ -455,15 +455,7 @@ namespace Snoop
                 {
                     var dlg = new EditUserFilters { UserFilters = CopyFilterSets(UserFilterSets) };
 
-                    // set owning window to center over if we can find it up the tree
-                    var snoopWindow = VisualTreeHelper2.GetAncestor<Window>(this);
-                    if (snoopWindow != null)
-                    {
-                        dlg.Owner = snoopWindow;
-                        dlg.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                    }
-
-                    bool? res = dlg.ShowDialog();
+                    var res = dlg.ShowDialogEx(this);
                     if (res.GetValueOrDefault())
                     {
                         // take the adjusted values from the dialog, setter will SAVE them to user properties

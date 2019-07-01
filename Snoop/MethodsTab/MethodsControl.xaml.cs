@@ -316,8 +316,8 @@ namespace Snoop.MethodsTab
             paramCreator.TextBlockDescription.Text = "Delve into the new desired target by double-clicking on the property. Clicking OK will select the currently delved property to be the new target.";
             paramCreator.Title = "Change Target";
             paramCreator.RootTarget = this.RootTarget;
-            paramCreator.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            paramCreator.ShowDialog();
+            
+            paramCreator.ShowDialogEx(this);
 
             if (paramCreator.DialogResult.HasValue && paramCreator.DialogResult.Value)
             {
