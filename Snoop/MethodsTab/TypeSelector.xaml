@@ -5,15 +5,22 @@ Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 All other rights reserved.
 -->
 <Window x:Class="Snoop.MethodsTab.TypeSelector"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
-             d:DesignHeight="173" d:DesignWidth="524" SizeToContent="WidthAndHeight">
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        mc:Ignorable="d"
+        d:DesignHeight="173" 
+        d:DesignWidth="524" 
+        SizeToContent="WidthAndHeight"
+        Style="{x:Null}"
+        InheritanceBehavior="SkipToThemeNext">
     <Grid Height="130" Width="495">
-        <ComboBox Style="{x:Null}" Height="30" HorizontalAlignment="Left" Margin="29,32,0,0" Name="comboBoxTypes" VerticalAlignment="Top" Width="439" />
-        <Button Style="{x:Null}" Content="Create Instance" Height="30" HorizontalAlignment="Left" Margin="29,88,0,0" Name="buttonCreateInstance" Click="buttonCreateInstance_Click" VerticalAlignment="Top" Width="136" />
-        <Button Style="{x:Null}" Content="Cancel" Height="30" HorizontalAlignment="Left" Margin="188,88,0,0" Name="buttonCancel" Click="buttonCancel_Click" VerticalAlignment="Top" Width="130" />
+        <ComboBox Style="{x:Null}" Height="30" HorizontalAlignment="Left" Margin="29,32,0,0" Name="comboBoxTypes"
+                  VerticalAlignment="Top" Width="439" />
+        <Button Style="{x:Null}" Content="Create Instance" Height="30" HorizontalAlignment="Left" Margin="29,88,0,0"
+                Name="buttonCreateInstance" Click="buttonCreateInstance_Click" VerticalAlignment="Top" Width="136" />
+        <Button Style="{x:Null}" Content="Cancel" Height="30" HorizontalAlignment="Left" Margin="188,88,0,0"
+                Name="buttonCancel" Click="buttonCancel_Click" VerticalAlignment="Top" Width="130" />
     </Grid>
 </Window>

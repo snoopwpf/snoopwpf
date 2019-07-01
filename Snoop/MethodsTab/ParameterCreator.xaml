@@ -12,8 +12,11 @@ All other rights reserved.
       mc:Ignorable="d" 
       xmlns:local="clr-namespace:Snoop.MethodsTab"
       xmlns:snoopNS="clr-namespace:Snoop"
-      Width="700" Height="350"
-	Title="ParameterCreator">
+      Width="700" 
+      Height="350"
+      Title="ParameterCreator"
+      Style="{x:Null}"
+      InheritanceBehavior="SkipToThemeNext">
 
     <Grid>
         <Grid.RowDefinitions>

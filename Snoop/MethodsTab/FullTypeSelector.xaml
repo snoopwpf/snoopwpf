@@ -10,8 +10,11 @@ All other rights reserved.
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       mc:Ignorable="d" 
-      d:DesignHeight="354" d:DesignWidth="647"
-      SizeToContent="WidthAndHeight">
+      d:DesignHeight="354" 
+      d:DesignWidth="647"
+      SizeToContent="WidthAndHeight"
+      Style="{x:Null}"
+      InheritanceBehavior="SkipToThemeNext">
 
     <Grid Height="282" Width="587">
         <ComboBox Style="{x:Null}" Height="29" HorizontalAlignment="Left" Margin="16,37,0,0" SelectionChanged="comboBoxAssemblies_SelectionChanged" Name="comboBoxAssemblies" VerticalAlignment="Top" Width="507" />

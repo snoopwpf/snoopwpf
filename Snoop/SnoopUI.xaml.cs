@@ -53,7 +53,6 @@ namespace Snoop
 		{
 			this.filterCall = new DelayedCall(this.ProcessFilter, DispatcherPriority.Background);
 
-			this.InheritanceBehavior = InheritanceBehavior.SkipToThemeNext;
 			this.InitializeComponent();
 
 			// wrap the following PresentationTraceSources.Refresh() call in a try/catch

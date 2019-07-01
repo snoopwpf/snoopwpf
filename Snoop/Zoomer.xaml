@@ -14,7 +14,8 @@ All other rights reserved.
 	Width="400"
 	Height="400"
 	FocusManager.FocusedElement="{Binding ElementName=DocumentRoot}"
->
+    Style="{x:Null}"
+    InheritanceBehavior="SkipToThemeNext">
 	<Grid
 		x:Name="DocumentRoot"
 		Cursor="SizeAll"

@@ -22,11 +22,11 @@ All other rights reserved.
 	Title="Snoop"
     MinWidth="480"
     MinHeight="320"
-	Background="#FFE0DFE3"
 	ShowInTaskbar="True"
 	SnapsToDevicePixels="True"
 	Focusable="False"
     Style="{x:Null}"
+    InheritanceBehavior="SkipToThemeNext"
 	DataContext="{Binding RelativeSource={RelativeSource Self}}"
 >
 	<Window.Resources>

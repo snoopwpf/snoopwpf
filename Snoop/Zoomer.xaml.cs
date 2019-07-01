@@ -50,6 +50,7 @@ namespace Snoop
 			Zoomer.SwitchTo2DCommand.InputGestures.Add(new KeyGesture(Key.F2));
 			Zoomer.SwitchTo3DCommand.InputGestures.Add(new KeyGesture(Key.F3));
 		}
+
 		public Zoomer()
 		{
 			this.CommandBindings.Add(new CommandBinding(Zoomer.ResetCommand, this.HandleReset, this.CanReset));
@@ -61,8 +62,6 @@ namespace Snoop
 			this.CommandBindings.Add(new CommandBinding(Zoomer.PanDownCommand, this.HandlePanDown));
 			this.CommandBindings.Add(new CommandBinding(Zoomer.SwitchTo2DCommand, this.HandleSwitchTo2D));
 			this.CommandBindings.Add(new CommandBinding(Zoomer.SwitchTo3DCommand, this.HandleSwitchTo3D, this.CanSwitchTo3D));
-
-			this.InheritanceBehavior = InheritanceBehavior.SkipToThemeNext;
 
 			this.InitializeComponent();
 

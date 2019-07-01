@@ -13,7 +13,8 @@ All other rights reserved.
     MinWidth="640"
     MinHeight="480"
     ResizeMode="CanResizeWithGrip"
->
+    Style="{x:Null}"
+    InheritanceBehavior="SkipToThemeNext">
 	<Grid Margin="10">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>

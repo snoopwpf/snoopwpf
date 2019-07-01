@@ -6,7 +6,8 @@
 	Title="SetFiltersWindow"
 	Height="300"
 	Width="450"
->
+    Style="{x:Null}"
+    InheritanceBehavior="SkipToThemeNext">
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*"/>
