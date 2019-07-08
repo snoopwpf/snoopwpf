@@ -1,4 +1,4 @@
-﻿namespace Snoop
+namespace Snoop
 {
     using System;
     using System.Collections.Generic;
@@ -187,7 +187,7 @@
 
 	    public string ClassName => NativeMethods.GetClassName(this.HWnd);
 
-        public string TraceInfo => $"{this.Description} [{this.HWnd}] {this.ClassName}";
+        public string TraceInfo => $"{this.Description} [{this.HWnd.ToInt64():X8}] {this.ClassName}";
 
         public override string ToString()
 		{
