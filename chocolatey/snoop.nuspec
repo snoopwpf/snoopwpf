@@ -4,13 +4,16 @@
     <id>snoop</id>
     <version>$Version$</version>
     <title>Snoop</title>
-    <authors>Cory Plotts</authors>
-    <owners>cplotts</owners>
+    <authors>Cory Plotts,Bastian Schmidt</authors>
+    <owners>cplotts,batzen</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <licenseUrl>https://raw.githubusercontent.com/cplotts/snoopwpf/master/License.txt</licenseUrl>
-    <projectUrl>https://github.com/cplotts/snoopwpf/</projectUrl>
-    <iconUrl>https://github.com/cplotts/snoopwpf/raw/master/Artwork/Snoop.ico</iconUrl>
-    <description>Snoop allows you to spy/browse the visual tree of a running WPF application (without the need for a debugger) ... and change properties ... amongst other things.</description>
+    <licenseUrl>https://raw.githubusercontent.com/snoopwpf/snoopwpf/master/License.txt</licenseUrl>
+    <projectUrl>https://github.com/snoopwpf/snoopwpf/</projectUrl>
+    <iconUrl>https://github.com/snoopwpf/snoopwpf/raw/master/Artwork/Snoop.ico</iconUrl>
+    <description>
+    Snoop allows you to spy/browse the visual tree of a running WPF application (without the need for a debugger) ... and change properties ... amongst other things.
+    A changelog can be found at https://github.com/snoopwpf/snoopwpf/blob/master/Changelog.md.
+    </description>
     <tags>snoop spy wpf</tags>
     <dependencies>
       <dependency id="vcredist140" version="14.12.25810" />
