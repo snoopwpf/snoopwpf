@@ -35,26 +35,28 @@ namespace Snoop
 				bounds = VisualTreeHelper.GetDescendantBounds(visual);
 			}
 
-			double sizeFactor = dpi / BaseDpi;
+			var scale = dpi / BaseDpi;
+            var finalImageSize = new Size((int)(bounds.Width * scale), (int)(bounds.Height * scale));
+
 			RenderTargetBitmap rtb =
 				new RenderTargetBitmap
 				(
-					(int)(bounds.Width * sizeFactor),
-					(int)(bounds.Height * sizeFactor),
+                    (int)finalImageSize.Width,
+                    (int)finalImageSize.Height,
 					dpi,
 					dpi,
 					PixelFormats.Pbgra32
 				);
 
-			DrawingVisual dv = new DrawingVisual();
-			using (DrawingContext ctx = dv.RenderOpen())
-			{
-				VisualBrush vb = new VisualBrush(visual);
-				ctx.DrawRectangle(vb, null, new Rect(new Point(), bounds.Size));
-			}
-			rtb.Render(dv);
+            DrawingVisual dv = new DrawingVisual();
+            using (DrawingContext ctx = dv.RenderOpen())
+            {
+                VisualBrush vb = new VisualBrush(visual);
+                ctx.DrawRectangle(vb, null, new Rect(new Point(), bounds.Size));
+            }
+            rtb.Render(dv);
 
-			SaveRTBAsPNG(rtb, filename);
+            SaveRTBAsPNG(rtb, filename);
 		}
 
 		public static VisualBrush CreateVisualBrushSafe(Visual visual)
