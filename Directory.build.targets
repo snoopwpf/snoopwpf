@@ -1,9 +1,9 @@
 ﻿<Project>
   <!-- Assembly info -->
   <PropertyGroup>
-    <Company>Cory Plotts</Company>
+    <Company>snoopwpf</Company>
     <Product>Snoop</Product>
-    <Copyright>Copyright © Cory Plotts 2010-2018</Copyright>
+    <Copyright>Copyright © Cory Plotts, Bastian Schmidt 2010-2019</Copyright>
     <AssemblyVersion>2.11.0.0</AssemblyVersion>
     <FileVersion>2.11.0.0</FileVersion>
   </PropertyGroup>
