@@ -169,7 +169,7 @@ namespace Snoop
 
             try
             {
-                Injector.Launch(this, typeof(SnoopUI).Assembly, typeof(SnoopUI).FullName, "GoBabyGo", new TransientSettingsData(Settings.Default).WriteToFile());
+                InjectorLauncher.Launch(this, typeof(SnoopUI).Assembly, typeof(SnoopUI).FullName, "GoBabyGo", new TransientSettingsData(Settings.Default).WriteToFile());
             }
             catch (Exception e)
             {
@@ -187,7 +187,7 @@ namespace Snoop
 
 			try
 			{
-				Injector.Launch(this, typeof(Zoomer).Assembly, typeof(Zoomer).FullName, "GoBabyGo", new TransientSettingsData(Settings.Default).WriteToFile());
+				InjectorLauncher.Launch(this, typeof(Zoomer).Assembly, typeof(Zoomer).FullName, "GoBabyGo", new TransientSettingsData(Settings.Default).WriteToFile());
 			}
 			catch (Exception e)
 			{

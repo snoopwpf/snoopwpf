@@ -6,12 +6,12 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
 
-  <!--<PropertyGroup>
+  <!-- <PropertyGroup>
     <TargetName>$(AssemblyName).$(TargetFramework)</TargetName>
-  </PropertyGroup>-->
+  </PropertyGroup> -->
   
   <ItemGroup>
-    <Compile Include="..\Shared\InjectorHelper.cs" Link="InjectorHelper.cs" />
+    <Compile Include="..\Shared\InjectorData.cs" Link="InjectorData.cs" />
     <Compile Include="..\Snoop\NativeMethods.cs" Link="NativeMethods.cs" />
   </ItemGroup>
   

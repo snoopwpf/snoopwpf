@@ -4,14 +4,17 @@
     <TargetFrameworks>net40;netcoreapp3.0</TargetFrameworks>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <UseWPF>true</UseWPF>
+
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <HasRuntimeOutput>true</HasRuntimeOutput>
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetName>$(AssemblyName).$(TargetFramework)</TargetName>
+    <AssemblyName>$(AssemblyName).$(TargetFramework)</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\Shared\InjectorHelper.cs" Link="InjectorHelper.cs" />
+    <Compile Include="..\Shared\InjectorData.cs" Link="InjectorData.cs" />
     <Compile Include="..\Snoop\NativeMethods.cs" Link="NativeMethods.cs" />
   </ItemGroup>
 

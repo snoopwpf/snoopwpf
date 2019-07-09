@@ -106,7 +106,7 @@ namespace Snoop
 
         private void InitShell()
         {
-            if (ShellConstants.IsPowerShellInstalled)
+            if (ShellConstants.IsPowerShellInstalled == false)
             {
                 var shell = new EmbeddedShellView();
                 shell.Start(this);
@@ -178,7 +178,7 @@ namespace Snoop
 
 			if (dispatcher.CheckAccess())
 			{
-				Trace.WriteLine("Starting snoop UI.");
+				Trace.WriteLine("Starting snoop UI...");
 
 				var snoop = new SnoopUI();
 				var title = TryGetMainWindowTitle();
@@ -522,7 +522,7 @@ namespace Snoop
             this.Show();
 		    this.Activate();
 
-			Trace.WriteLine("Shown and activated snoop UI...");
+			Trace.WriteLine("Shown and activated snoop UI.");
 		}
 
 		private void UnhandledExceptionHandler(object sender, DispatcherUnhandledExceptionEventArgs e)

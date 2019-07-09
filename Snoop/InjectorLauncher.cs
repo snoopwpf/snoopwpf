@@ -8,15 +8,20 @@ namespace Snoop
     using System.Diagnostics;
     using System.Reflection;
     using System.IO;
+    using System.Linq;
 
-    public static class Injector
+    public static class InjectorLauncher
 	{
 	    private static string GetSuffix(WindowInfo windowInfo)
 	    {
-	        var bitness = windowInfo.IsOwningProcess64Bit ? "x64" : "x86";
-	        var clr = "4.0";
+	        var bitness = windowInfo.IsOwningProcess64Bit 
+                ? "x64" 
+                : "x86";
+	        var clr = windowInfo.Modules.Any(x => x.szModule.StartsWith("wpfgfx_cor3"))
+                ? "netcoreapp3.0"
+                : "net40";
 
-            return bitness;  // + "-" + clr;
+            return bitness;
         }
 
 		internal static void Launch(WindowInfo windowInfo, Assembly assembly, string className, string methodName, string settingsFile)
@@ -26,15 +31,11 @@ namespace Snoop
                 throw new FileNotFoundException("The generated temporary settings file could not be found.", settingsFile);
             }
             
-			var location = Assembly.GetEntryAssembly().Location;
-			var directory = Path.GetDirectoryName(location);
-			var file = Path.Combine(directory, $"ManagedInjectorLauncher.{GetSuffix(windowInfo)}.exe");
-
             try
             {
                 var location = Assembly.GetExecutingAssembly().Location;
                 var directory = Path.GetDirectoryName(location) ?? string.Empty;
-                var file = Path.Combine(directory, $"ManagedInjectorLauncher{GetSuffix(windowInfo)}.exe");
+                var file = Path.Combine(directory, $"ManagedInjectorLauncher.{GetSuffix(windowInfo)}.exe");
 
                 if (File.Exists(file) == false)
                 {

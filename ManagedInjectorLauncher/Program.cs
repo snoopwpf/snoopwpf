@@ -36,7 +36,7 @@ namespace ManagedInjectorLauncher
                                    SettingsFile = settingsFile
                                };
 
-            InjectorHelper.Launch(windowHandle, injectorData);
+            InjectorHelper.InjectIntoProcess(windowHandle, injectorData);
 
             //check to see that it was injected, and if not, retry with the main window handle.
             var process = GetProcessFromWindowHandle(windowHandle);
@@ -45,7 +45,7 @@ namespace ManagedInjectorLauncher
                 && process.MainWindowHandle != windowHandle)
             {
                 InjectorHelper.LogMessage("Could not inject with current handle... retrying with MainWindowHandle", true);
-                InjectorHelper.Launch(process.MainWindowHandle, injectorData);
+                InjectorHelper.InjectIntoProcess(process.MainWindowHandle, injectorData);
                 CheckInjectedStatus(process);
             }
         }

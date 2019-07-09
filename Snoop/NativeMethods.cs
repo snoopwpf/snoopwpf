@@ -16,6 +16,7 @@ namespace Snoop
     using System.Drawing;
     using System.Security;
     using System.Text;
+    using System.Threading;
 
     public static class NativeMethods
     {
@@ -273,7 +274,10 @@ namespace Snoop
 	    [DllImport("kernel32", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
 		internal static extern UIntPtr GetProcAddress(IntPtr hModule, string procName);
 
-		[DllImport("kernel32")]
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr GetModuleHandle(string lpModuleName);
+
+        [DllImport("kernel32")]
 		public extern static IntPtr LoadLibrary(string librayName);
 
 		[DllImport("kernel32.dll", SetLastError = true)]
@@ -400,6 +404,21 @@ namespace Snoop
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool FreeLibrary(IntPtr hModule);
+
+        [DllImport("kernel32.dll")]
+        public static extern IntPtr CreateRemoteThread(IntPtr hProcess,
+                                                IntPtr lpThreadAttributes, uint dwStackSize, UIntPtr lpStartAddress,
+                                                IntPtr lpParameter, uint dwCreationFlags, out IntPtr lpThreadId);
+
+        // Thread proc, to be used with Create*Thread
+        public delegate int ThreadProc(IntPtr param);
+
+        [DllImport("kernel32.dll")]
+        static extern IntPtr CreateRemoteThread(IntPtr hProcess,
+                                                IntPtr lpThreadAttributes, uint dwStackSize, ThreadProc lpStartAddress, IntPtr lpParameter, uint dwCreationFlags, IntPtr lpThreadId);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern WaitResult WaitForSingleObject(IntPtr handle, uint timeoutInMilliseconds = 0xFFFFFFFF);
     }
 
     // RECT structure required by WINDOWPLACEMENT structure
@@ -451,5 +470,18 @@ namespace Snoop
         public POINT minPosition;
         public POINT maxPosition;
         public RECT normalPosition;
+    }
+
+    public enum Wait
+    {
+        INFINITE = -1,
+    }
+
+    public enum WaitResult
+    {
+        WAIT_ABANDONED = 0x80,
+        WAIT_OBJECT_0 = 0x00,
+        WAIT_TIMEOUT = 0x102,
+        WAIT_FAILED = -1
     }
 }

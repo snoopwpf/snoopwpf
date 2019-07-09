@@ -1,12 +1,12 @@
-namespace Snoop
+namespace ManagedInjectorLauncher
 {
     using System;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.IO;
     using System.Runtime.InteropServices;
-    using System.Security;
     using System.Xml.Serialization;
+    using Snoop;
 
     public static class InjectorHelper
     {
@@ -34,15 +34,19 @@ namespace Snoop
                 File.Delete(pathname);
             }
 
+            var logMessage = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss") + " : " + message;
+
+            Trace.WriteLine(logMessage);
+
             var fi = new FileInfo(pathname);
 
             using (var sw = fi.AppendText())
             {
-                sw.WriteLine(DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss") + " : " + message);
+                sw.WriteLine(logMessage);
             }
         }
 
-        public static void Launch(IntPtr windowHandle, InjectorData injectorData)
+        public static void InjectIntoProcess(IntPtr windowHandle, InjectorData injectorData)
         {
             var transportDataString = string.Empty;
 
@@ -60,16 +64,13 @@ namespace Snoop
 
             using (var process = Process.GetProcessById(processId))
             {
-                //var version = applicationInfo.RuntimeVersion.Contains("4") ? "40" : "35";
-                //var hookName = string.Format("Hook{0}_{1}.dll", applicationInfo.Bitness, version);
+                //Debugger.Launch();
 
                 var bitness = Environment.Is64BitProcess
                     ? "x64"
                     : "x86";
 
-                var framework = IsDotNetCoreProcess(process)
-                                    ? "netcoreapp3.0"
-                                    : "net40";
+                var framework = GetTargetFramework(process);
 
                 var hookName = $"ManagedInjector.{framework}.{bitness}.dll";
 
@@ -80,8 +81,14 @@ namespace Snoop
                     throw new Win32Exception(Marshal.GetLastWin32Error());
                 }
 
-                var bufLen = (transportDataString.Length + 1) * Marshal.SizeOf(typeof(char));
                 var hProcess = NativeMethods.OpenProcess(NativeMethods.ProcessAccessFlags.All, false, processId);
+
+                if (framework == "netcoreapp3.0")
+                {
+                    InjectIJWHost(hProcess);
+                }
+
+                var bufLen = (transportDataString.Length + 1) * Marshal.SizeOf(typeof(char));
                 var remoteAddress = NativeMethods.VirtualAllocEx(hProcess, IntPtr.Zero, (uint)bufLen,
                                                                    NativeMethods.AllocationType.Commit,
                                                                    NativeMethods.MemoryProtection.ReadWrite);
@@ -97,7 +104,7 @@ namespace Snoop
                     {
                         throw Marshal.GetExceptionForHR(Marshal.GetLastWin32Error());
                     }
-
+                    
                     var procAddress = NativeMethods.GetProcAddress(hInstance, "MessageHookProc");
 
                     if (procAddress == UIntPtr.Zero)
@@ -135,7 +142,62 @@ namespace Snoop
             }
         }
 
-        private static bool IsDotNetCoreProcess(Process process)
+        private static void InjectIJWHost(NativeMethods.ProcessHandle hProcess)
+        {
+            var ijwHostPath = @"C:\DEV\OSS_Own\snoopwpf\bin\Debug\ijwhost.dll";
+            var bufLen = (ijwHostPath.Length + 1) * Marshal.SizeOf(typeof(char));
+            var remoteAddress = NativeMethods.VirtualAllocEx(hProcess, IntPtr.Zero, (uint)bufLen,
+                                                               NativeMethods.AllocationType.Commit,
+                                                               NativeMethods.MemoryProtection.ReadWrite);
+
+            if (remoteAddress != IntPtr.Zero)
+            {
+                var address = Marshal.StringToHGlobalUni(ijwHostPath);
+                var size = (uint)(sizeof(char) * ijwHostPath.Length);
+
+                NativeMethods.WriteProcessMemory(hProcess, remoteAddress, address, size, out var bytesWritten);
+
+                if (bytesWritten == 0)
+                {
+                    throw Marshal.GetExceptionForHR(Marshal.GetLastWin32Error());
+                }
+
+                var hKernel32 = NativeMethods.GetModuleHandle("kernel32");
+
+                // Load "LibSpy.dll" into the remote process
+                // (via CreateRemoteThread & LoadLibrary)
+                IntPtr remoteThreadId;
+                var remoteThread = NativeMethods.CreateRemoteThread(hProcess.DangerousGetHandle(), 
+                                                               IntPtr.Zero, 
+                                                               0, 
+                                                               NativeMethods.GetProcAddress(hKernel32, "LoadLibraryW"),
+                                                               remoteAddress, 
+                                                               0, 
+                                                               out remoteThreadId);
+
+                if (remoteThread != IntPtr.Zero)
+                {
+                    NativeMethods.WaitForSingleObject(remoteThread);
+                }
+
+                NativeMethods.CloseHandle(remoteThread);
+
+                try
+                {
+                    NativeMethods.VirtualFreeEx(hProcess, remoteAddress, bufLen, NativeMethods.AllocationType.Release);
+                }
+                catch (Exception e)
+                {
+                    LogMessage(e.ToString(), true);
+                }
+            }
+            else
+            {
+                throw new Win32Exception(Marshal.GetLastWin32Error());
+            }
+        }
+
+        private static string GetTargetFramework(Process process)
         {
             var modules = NativeMethods.GetModules(process);
 
@@ -143,22 +205,11 @@ namespace Snoop
             {
                 if (module.szModule.IndexOf("wpfgfx_cor3", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
-                    return true;
+                    return "netcoreapp3.0";
                 }
             }
 
-            return false;
+            return "net40";
         }
-    }
-
-    public class InjectorData
-    {
-        public string AssemblyName { get; set; }
-
-        public string ClassName { get; set; }
-
-        public string MethodName { get; set; }
-
-        public string SettingsFile { get; set; }
     }
 }
