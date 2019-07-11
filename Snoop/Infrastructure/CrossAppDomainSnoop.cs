@@ -63,17 +63,14 @@
 						    MessageBoxImage.Question
 					    );
 
-				    if (result == MessageBoxResult.Yes)
+				    if (result != MessageBoxResult.Yes)
 				    {
-				        shouldUseMultipleAppDomainMode = true;
-				    }
-                    else
-                    {
                         shouldUseMultipleAppDomainMode = false;
                     }
                 }
 
-                if (shouldUseMultipleAppDomainMode == false)
+                if (shouldUseMultipleAppDomainMode == false
+                    || this.appDomains == null)
                 {
                     succeeded = SnoopUI.GoBabyGoForCurrentAppDomain(settingsFile);
                 }
@@ -94,11 +91,11 @@
                 }
             }
 
-            if (!succeeded)
+            if (succeeded == false)
             {
                 MessageBox.Show
                     (
-                        "Can't find a current application or a PresentationSource root visual!",
+                        "Can't find a current application or a PresentationSource root visual.",
                         "Can't Snoop",
                         MessageBoxButton.OK,
                         MessageBoxImage.Exclamation
