@@ -69,20 +69,7 @@ namespace ManagedInjectorLauncher
             {
                 //Debugger.Launch();
 
-                var bitness = Environment.Is64BitProcess
-                    ? "x64"
-                    : "x86";
-
                 var framework = GetTargetFramework(process);
-
-                var hookName = $"ManagedInjector.{framework}.{bitness}.dll";
-
-                var hInstance = NativeMethods.LoadLibrary(hookName);
-
-                if (hInstance == IntPtr.Zero)
-                {
-                    throw new Win32Exception(Marshal.GetLastWin32Error());
-                }
 
                 var hProcess = NativeMethods.OpenProcess(NativeMethods.ProcessAccessFlags.All, false, processId);
 
@@ -91,57 +78,7 @@ namespace ManagedInjectorLauncher
                     InjectIJWHost(hProcess);
                 }
 
-                var bufLen = (transportDataString.Length + 1) * Marshal.SizeOf(typeof(char));
-                var remoteAddress = NativeMethods.VirtualAllocEx(hProcess, IntPtr.Zero, (uint)bufLen,
-                                                                   NativeMethods.AllocationType.Commit,
-                                                                   NativeMethods.MemoryProtection.ReadWrite);
-
-                if (remoteAddress != IntPtr.Zero)
-                {
-                    var address = Marshal.StringToHGlobalUni(transportDataString);
-                    var size = (uint)(sizeof(char) * transportDataString.Length);
-
-                    NativeMethods.WriteProcessMemory(hProcess, remoteAddress, address, size, out var bytesWritten);
-
-                    if (bytesWritten == 0)
-                    {
-                        throw Marshal.GetExceptionForHR(Marshal.GetLastWin32Error());
-                    }
-                    
-                    var procAddress = NativeMethods.GetProcAddress(hInstance, "MessageHookProc");
-
-                    if (procAddress == UIntPtr.Zero)
-                    {
-                        throw new Win32Exception(Marshal.GetLastWin32Error());
-                    }
-
-                    var hookHandle = NativeMethods.SetWindowsHookEx(NativeMethods.HookType.WH_CALLWNDPROC, procAddress, hInstance, threadId);
-
-                    if (hookHandle != IntPtr.Zero)
-                    {
-                        NativeMethods.SendMessage(windowHandle, messageId, remoteAddress, IntPtr.Zero);
-                        NativeMethods.UnhookWindowsHookEx(hookHandle);
-                    }
-                    else
-                    {
-                        throw new Win32Exception(Marshal.GetLastWin32Error());
-                    }
-
-                    try
-                    {
-                        NativeMethods.VirtualFreeEx(hProcess, remoteAddress, bufLen, NativeMethods.AllocationType.Release);
-                    }
-                    catch (Exception e)
-                    {
-                        LogMessage(e.ToString(), true);
-                    }
-                }
-                else
-                {
-                    throw new Win32Exception(Marshal.GetLastWin32Error());
-                }
-
-                NativeMethods.FreeLibrary(hInstance);
+                InjectSnoop(windowHandle, framework, transportDataString, hProcess, threadId);
             }
         }
 
@@ -198,6 +135,72 @@ namespace ManagedInjectorLauncher
             {
                 throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+        }
+
+        private static void InjectSnoop(IntPtr windowHandle, string framework, string transportDataString, NativeMethods.ProcessHandle hProcess, uint threadId)
+        {
+            var bitness = Environment.Is64BitProcess
+                              ? "x64"
+                              : "x86";
+
+            var hookName = $"ManagedInjector.{framework}.{bitness}.dll";
+
+            var hInstance = NativeMethods.LoadLibrary(hookName);
+
+            if (hInstance == IntPtr.Zero)
+            {
+                throw new Win32Exception(Marshal.GetLastWin32Error());
+            }
+
+            var bufLen = (transportDataString.Length + 1) * Marshal.SizeOf(typeof(char));
+            var remoteAddress = NativeMethods.VirtualAllocEx(hProcess, IntPtr.Zero, (uint)bufLen, NativeMethods.AllocationType.Commit, NativeMethods.MemoryProtection.ReadWrite);
+
+            if (remoteAddress != IntPtr.Zero)
+            {
+                var address = Marshal.StringToHGlobalUni(transportDataString);
+                var size = (uint)(sizeof(char) * transportDataString.Length);
+
+                NativeMethods.WriteProcessMemory(hProcess, remoteAddress, address, size, out var bytesWritten);
+
+                if (bytesWritten == 0)
+                {
+                    throw Marshal.GetExceptionForHR(Marshal.GetLastWin32Error());
+                }
+
+                var procAddress = NativeMethods.GetProcAddress(hInstance, "MessageHookProc");
+
+                if (procAddress == UIntPtr.Zero)
+                {
+                    throw new Win32Exception(Marshal.GetLastWin32Error());
+                }
+
+                var hookHandle = NativeMethods.SetWindowsHookEx(NativeMethods.HookType.WH_CALLWNDPROC, procAddress, hInstance, threadId);
+
+                if (hookHandle != IntPtr.Zero)
+                {
+                    NativeMethods.SendMessage(windowHandle, messageId, remoteAddress, IntPtr.Zero);
+                    NativeMethods.UnhookWindowsHookEx(hookHandle);
+                }
+                else
+                {
+                    throw new Win32Exception(Marshal.GetLastWin32Error());
+                }
+
+                try
+                {
+                    NativeMethods.VirtualFreeEx(hProcess, remoteAddress, bufLen, NativeMethods.AllocationType.Release);
+                }
+                catch (Exception e)
+                {
+                    LogMessage(e.ToString(), true);
+                }
+            }
+            else
+            {
+                throw new Win32Exception(Marshal.GetLastWin32Error());
+            }
+
+            NativeMethods.FreeLibrary(hInstance);
         }
 
         private static string GetTargetFramework(Process process)
