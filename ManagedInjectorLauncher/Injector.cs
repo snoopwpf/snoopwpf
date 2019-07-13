@@ -4,6 +4,7 @@ namespace ManagedInjectorLauncher
     using System.ComponentModel;
     using System.Diagnostics;
     using System.IO;
+    using System.Reflection;
     using System.Runtime.InteropServices;
     using System.Xml.Serialization;
     using Snoop;
@@ -51,7 +52,7 @@ namespace ManagedInjectorLauncher
 
         public static void InjectIntoProcess(IntPtr windowHandle, InjectorData injectorData)
         {
-            var transportDataString = string.Empty;
+            string transportDataString;
 
             {
                 var serializer = new XmlSerializer(typeof(InjectorData));
@@ -67,8 +68,6 @@ namespace ManagedInjectorLauncher
 
             using (var process = Process.GetProcessById(processId))
             {
-                //Debugger.Launch();
-
                 var framework = GetTargetFramework(process);
 
                 var bitness = Environment.Is64BitProcess
@@ -82,7 +81,8 @@ namespace ManagedInjectorLauncher
                     InjectIJWHost(hProcess, bitness);
                 }
 
-                InjectSnoop(windowHandle, framework, bitness, transportDataString, hProcess, threadId);
+                //InjectSnoop(windowHandle, framework, bitness, transportDataString, hProcess, threadId);
+                InjectSnoopDirect(hProcess, framework, bitness, transportDataString);
             }
         }
 
@@ -90,15 +90,30 @@ namespace ManagedInjectorLauncher
         {
             var ijwHostPath = GetPathToIJWHost(hProcess, bitness);
 
-            var bufLen = (ijwHostPath.Length + 1) * Marshal.SizeOf(typeof(char));
-            var remoteAddress = NativeMethods.VirtualAllocEx(hProcess, IntPtr.Zero, (uint)bufLen,
-                                                               NativeMethods.AllocationType.Commit,
-                                                               NativeMethods.MemoryProtection.ReadWrite);
+            // We also have to inject the ijwhost.dll into this process, otherwise a later call to LoadLibrary on that DLL will fail
+            {
+                var hLibrary = NativeMethods.LoadLibrary(ijwHostPath);
+
+                if (hLibrary == IntPtr.Zero)
+                {
+                    throw new Win32Exception(Marshal.GetLastWin32Error());
+                }
+            }
+
+            LoadLibraryInForeignProcess(hProcess, ijwHostPath);
+        }
+
+        private static void LoadLibraryInForeignProcess(NativeMethods.ProcessHandle hProcess, string pathToDll)
+        {
+            var stringForRemoteProcess = pathToDll;
+
+            var bufLen = (stringForRemoteProcess.Length + 1) * Marshal.SizeOf(typeof(char));
+            var remoteAddress = NativeMethods.VirtualAllocEx(hProcess, IntPtr.Zero, (uint)bufLen, NativeMethods.AllocationType.Commit, NativeMethods.MemoryProtection.ReadWrite);
 
             if (remoteAddress != IntPtr.Zero)
             {
-                var address = Marshal.StringToHGlobalUni(ijwHostPath);
-                var size = (uint)(sizeof(char) * ijwHostPath.Length);
+                var address = Marshal.StringToHGlobalUni(stringForRemoteProcess);
+                var size = (uint)(sizeof(char) * stringForRemoteProcess.Length);
 
                 NativeMethods.WriteProcessMemory(hProcess, remoteAddress, address, size, out var bytesWritten);
 
@@ -107,18 +122,12 @@ namespace ManagedInjectorLauncher
                     throw Marshal.GetExceptionForHR(Marshal.GetLastWin32Error());
                 }
 
-                var hKernel32 = NativeMethods.GetModuleHandle("kernel32");
+                var hLibrary = NativeMethods.GetModuleHandle("kernel32");
 
-                // Load "LibSpy.dll" into the remote process
+                // Load dll into the remote process
                 // (via CreateRemoteThread & LoadLibrary)
                 IntPtr remoteThreadId;
-                var remoteThread = NativeMethods.CreateRemoteThread(hProcess.DangerousGetHandle(), 
-                                                               IntPtr.Zero, 
-                                                               0, 
-                                                               NativeMethods.GetProcAddress(hKernel32, "LoadLibraryW"),
-                                                               remoteAddress, 
-                                                               0, 
-                                                               out remoteThreadId);
+                var remoteThread = NativeMethods.CreateRemoteThread(hProcess.DangerousGetHandle(), IntPtr.Zero, 0, NativeMethods.GetProcAddress(hLibrary, "LoadLibraryW"), remoteAddress, 0, out remoteThreadId);
 
                 if (remoteThread != IntPtr.Zero)
                 {
@@ -154,8 +163,6 @@ namespace ManagedInjectorLauncher
             string hostfxrPath = null;
 
             Trace.WriteLine($"Trying to find loaded module '{hostfxrDllFilename}'...");
-
-            Debugger.Launch();
 
             var modules = NativeMethods.GetModulesFromProcessHandle(hProcess.DangerousGetHandle());
 
@@ -255,6 +262,72 @@ namespace ManagedInjectorLauncher
             }
 
             NativeMethods.FreeLibrary(hInstance);
+        }
+
+        private static void InjectSnoopDirect(NativeMethods.ProcessHandle hProcess, string framework, string bitness, string transportDataString)
+        {
+            var pathToHookDll = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), $"ManagedInjector.{framework}.{bitness}.dll");
+
+            var hLibrary = NativeMethods.LoadLibrary(pathToHookDll);
+
+            if (hLibrary == IntPtr.Zero)
+            {
+                throw new Win32Exception(Marshal.GetLastWin32Error());
+            }
+
+            LoadLibraryInForeignProcess(hProcess, pathToHookDll);
+
+            var stringForRemoteProcess = transportDataString;
+
+            var bufLen = (stringForRemoteProcess.Length + 1) * Marshal.SizeOf(typeof(char));
+            var remoteAddress = NativeMethods.VirtualAllocEx(hProcess, IntPtr.Zero, (uint)bufLen,
+                                                               NativeMethods.AllocationType.Commit,
+                                                               NativeMethods.MemoryProtection.ReadWrite);
+
+            if (remoteAddress != IntPtr.Zero)
+            {
+                var address = Marshal.StringToHGlobalUni(stringForRemoteProcess);
+                var size = (uint)(sizeof(char) * stringForRemoteProcess.Length);
+
+                NativeMethods.WriteProcessMemory(hProcess, remoteAddress, address, size, out var bytesWritten);
+
+                if (bytesWritten == 0)
+                {
+                    throw Marshal.GetExceptionForHR(Marshal.GetLastWin32Error());
+                }
+
+                // Load dll into the remote process
+                // (via CreateRemoteThread & LoadLibrary)
+                var remoteThread = NativeMethods.CreateRemoteThread(hProcess.DangerousGetHandle(),
+                                                               IntPtr.Zero,
+                                                               0,
+                                                               NativeMethods.GetProcAddress(hLibrary, "LoadSnoop"),
+                                                               remoteAddress,
+                                                               0,
+                                                               out _);
+
+                if (remoteThread != IntPtr.Zero)
+                {
+                    NativeMethods.WaitForSingleObject(remoteThread);
+                }
+
+                NativeMethods.CloseHandle(remoteThread);
+
+                try
+                {
+                    NativeMethods.VirtualFreeEx(hProcess, remoteAddress, bufLen, NativeMethods.AllocationType.Release);
+                }
+                catch (Exception e)
+                {
+                    LogMessage(e.ToString(), true);
+                }
+            }
+            else
+            {
+                throw new Win32Exception(Marshal.GetLastWin32Error());
+            }
+
+            NativeMethods.FreeLibrary(hLibrary);
         }
 
         private static string GetTargetFramework(Process process)

@@ -1,4 +1,4 @@
-namespace ManagedInjector
+﻿namespace ManagedInjector
 {
     using System;
     using System.Diagnostics;
@@ -51,43 +51,50 @@ namespace ManagedInjector
 
                 if (msg.message == messageId)
                 {
-                    //Debugger.Launch();
-
                     Trace.WriteLine($"MessageHookProc in .NET {code} {msg.wparam} {msg.lparam}");
                     Trace.WriteLine(new FrameworkAndSystemVersionInfo());
 
                     var transportDataString = Marshal.PtrToStringUni(msg.wparam);
-                    InjectorData injectorData;
-
-                    {
-                        var serializer = new XmlSerializer(typeof(InjectorData));
-
-                        using (var stream = new StringReader(transportDataString))
-                        {
-                            injectorData = (InjectorData)serializer.Deserialize(stream);
-                        }
-                    }
-
-                    var assembly = Assembly.LoadFrom(injectorData.AssemblyName);
-
-                    var type = assembly.GetType(injectorData.ClassName);
-
-                    if (type != null)
-                    {
-                        var method = type.GetMethod(injectorData.MethodName, BindingFlags.Static | BindingFlags.Public);
-
-                        if (method != null)
-                        {
-                            method.Invoke(null, new[]
-                                                {
-                                                    injectorData.SettingsFile
-                                                });
-                        }
-                    }
+                    LoadSnoop(transportDataString);
                 }
             }
 
             return CallNextHookEx(IntPtr.Zero, code, wparam, lparam);
+        }
+
+        [PublicAPI]
+        [DllExport]
+        public static void LoadSnoop([MarshalAs(UnmanagedType.LPWStr)] string transportDataString)
+        {
+            //Debugger.Launch();
+
+            InjectorData injectorData;
+
+            {
+                var serializer = new XmlSerializer(typeof(InjectorData));
+
+                using (var stream = new StringReader(transportDataString))
+                {
+                    injectorData = (InjectorData)serializer.Deserialize(stream);
+                }
+            }
+
+            var assembly = Assembly.LoadFrom(injectorData.AssemblyName);
+
+            var type = assembly.GetType(injectorData.ClassName);
+
+            if (type != null)
+            {
+                var method = type.GetMethod(injectorData.MethodName, BindingFlags.Static | BindingFlags.Public);
+
+                if (method != null)
+                {
+                    method.Invoke(null, new[]
+                                        {
+                                            injectorData.SettingsFile
+                                        });
+                }
+            }
         }
     }
 
