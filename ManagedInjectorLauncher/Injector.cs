@@ -8,11 +8,14 @@ namespace ManagedInjectorLauncher
     using System.Xml.Serialization;
     using Snoop;
 
-    public static class InjectorHelper
+    /// <summary>
+    /// Class responsible for injecting snoop into a foreign process.
+    /// </summary>
+    public static class Injector
     {
         private static readonly uint messageId;
 
-        static InjectorHelper()
+        static Injector()
         {
             messageId = NativeMethods.RegisterWindowMessage("Injector_GOBABYGO!");
         }

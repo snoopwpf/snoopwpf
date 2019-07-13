@@ -10,6 +10,9 @@ namespace Snoop
     using System.IO;
     using System.Linq;
 
+    /// <summary>
+    /// Class responsible for launching a new injector process.
+    /// </summary>
     public static class InjectorLauncher
 	{
 	    private static string GetSuffix(WindowInfo windowInfo)
