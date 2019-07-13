@@ -331,11 +331,8 @@ All other rights reserved.
 				/>
 			</TabItem>
 
-			<TabItem
-				x:Name="PowerShellTab"
-			    Style="{x:Null}"
-				Visibility="{Binding Converter={StaticResource isPowerShellInstalled}}"
-			>
+			<TabItem Style="{x:Null}"
+				     Visibility="{Binding Converter={StaticResource isPowerShellInstalled}}">
 				<TabItem.Header>
 					<TextBlock Style="{x:Null}" Text="PowerShell">
 						<TextBlock.ToolTip>
@@ -350,7 +347,10 @@ All other rights reserved.
 						</TextBlock.ToolTip>
 					</TextBlock>
 				</TabItem.Header>
+
+                <shell:EmbeddedShellView IsSelected="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}" />
 			</TabItem>
+
 			<TabItem Style="{x:Null}">
 				<TabItem.Header>
 					<TextBlock Style="{x:Null}" Text="Debug Listener">

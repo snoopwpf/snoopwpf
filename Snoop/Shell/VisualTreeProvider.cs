@@ -29,7 +29,7 @@ namespace Snoop.Shell
         }
 
         private readonly Timer selectedTimer;
-        private string lastLocation;
+        private string lastLocation = string.Empty;
 
         public VisualTreeProvider()
         {

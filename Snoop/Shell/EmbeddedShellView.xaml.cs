@@ -14,6 +14,9 @@ using System.Windows.Input;
 
 namespace Snoop.Shell
 {
+    using System.Windows;
+    using Snoop.Infrastructure;
+
     /// <summary>
     /// Interaction logic for EmbeddedShellView.xaml
     /// </summary>
@@ -21,69 +24,135 @@ namespace Snoop.Shell
     {
         public event Action<VisualTreeItem> ProviderLocationChanged = delegate { }; 
 
-        private readonly Runspace runspace;
-        private readonly SnoopPSHost host;
+        private Runspace runspace;
+        private SnoopPSHost host;
         private int historyIndex;
+
+        private bool isStarted;
 
         public EmbeddedShellView()
         {
             InitializeComponent();
 
             this.commandTextBox.PreviewKeyDown += OnCommandTextBoxPreviewKeyDown;
+        }
 
-            // ignore execution-policy
-            var iis = InitialSessionState.CreateDefault();
-            iis.AuthorizationManager = new AuthorizationManager(Guid.NewGuid().ToString());
-            iis.Providers.Add(new SessionStateProviderEntry(ShellConstants.DriveName, typeof(VisualTreeProvider), string.Empty));
+        public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(EmbeddedShellView), new PropertyMetadata(default(bool), OnIsSelectedChanged));
+        
+        public bool IsSelected
+        {
+            get { return (bool)this.GetValue(IsSelectedProperty); }
+            set { this.SetValue(IsSelectedProperty, value); }
+        }
 
-            this.host = new SnoopPSHost(x => this.outputTextBox.AppendText(x));
-            this.runspace = RunspaceFactory.CreateRunspace(this.host, iis);
-            this.runspace.ThreadOptions = PSThreadOptions.UseCurrentThread;
-            this.runspace.ApartmentState = ApartmentState.STA;
-            this.runspace.Open();
+        private static void OnIsSelectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var view = (EmbeddedShellView)d;
 
-            // default required if you intend to inject scriptblocks into the host application
-            Runspace.DefaultRunspace = this.runspace;
+            if ((bool)e.NewValue == false)
+            {
+                return;
+            }
+
+            view.WhenLoaded(x => ((EmbeddedShellView)x).Start(VisualTreeHelper2.GetAncestor<SnoopUI>(view)));
         }
 
         /// <summary>
         /// Initiates the startup routine and configures the runspace for use.
         /// </summary>
-        public void Start(SnoopUI ui)
+        private void Start(SnoopUI snoopUi)
         {
-            Invoke(string.Format("new-psdrive {0} {0} -root /", ShellConstants.DriveName));
-
-            // synchronize selected and root tree elements
-            ui.PropertyChanged += (sender, e) =>
+            if (this.isStarted)
             {
-                switch (e.PropertyName)
-                {
-                    case "CurrentSelection":
-                        SetVariable(ShellConstants.Selected, ui.CurrentSelection);
-                        break;
-                    case "Root":
-                        SetVariable(ShellConstants.Root, ui.Root);
-                        break;
-                }
-            };
+                return;
+            }
 
-            // allow scripting of the host controls
-            SetVariable("snoopui", ui);
-            SetVariable("ui", this);
+            if (ShellConstants.IsPowerShellInstalled == false)
+            {
+                return;
+            }
 
-            // marshall back to the UI thread when the provider notifiers of a location change
-            var action = new Action<VisualTreeItem>(item => this.Dispatcher.BeginInvoke(new Action(() => this.ProviderLocationChanged(item))));
-            this.SetVariable(ShellConstants.LocationChangedActionKey, action);
+            this.isStarted = true;
 
-            string folder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Scripts");
-            Invoke(string.Format("import-module \"{0}\"", Path.Combine(folder, ShellConstants.SnoopModule)));
+            {
+                // ignore execution-policy
+                var iis = InitialSessionState.CreateDefault();
+                iis.AuthorizationManager = new AuthorizationManager(Guid.NewGuid().ToString());
+                iis.Providers.Add(new SessionStateProviderEntry(ShellConstants.DriveName, typeof(VisualTreeProvider), string.Empty));
 
-            this.outputTextBox.Clear();
-            Invoke("write-host 'Welcome to the Snoop PowerShell console!'");
-            Invoke("write-host '----------------------------------------'");
-            Invoke(string.Format("write-host 'To get started, try using the ${0} and ${1} variables.'", ShellConstants.Root, ShellConstants.Selected));
+                this.host = new SnoopPSHost(x => this.outputTextBox.AppendText(x));
+                this.runspace = RunspaceFactory.CreateRunspace(this.host, iis);
+                this.runspace.ThreadOptions = PSThreadOptions.UseCurrentThread;
 
-            FindAndLoadProfile(folder);
+                #if NET40
+                this.runspace.ApartmentState = ApartmentState.STA;
+                #endif
+
+                this.runspace.Open();
+
+                // default required if you intend to inject scriptblocks into the host application
+                Runspace.DefaultRunspace = this.runspace;
+            }
+
+            {
+                Invoke(string.Format("new-psdrive {0} {0} -root /", ShellConstants.DriveName));
+
+                // synchronize selected and root tree elements
+                snoopUi.PropertyChanged += (sender, e) =>
+                                      {
+                                          switch (e.PropertyName)
+                                          {
+                                              case nameof(SnoopUI.CurrentSelection):
+                                                  SetVariable(ShellConstants.Selected, snoopUi.CurrentSelection);
+                                                  break;
+                                              case nameof(SnoopUI.Root):
+                                                  SetVariable(ShellConstants.Root, snoopUi.Root);
+                                                  break;
+                                          }
+                                      };
+
+                // allow scripting of the host controls
+                SetVariable("snoopui", snoopUi);
+                SetVariable("ui", this);
+                SetVariable(ShellConstants.Root, snoopUi.Root);
+                SetVariable(ShellConstants.Selected, snoopUi.CurrentSelection);
+
+                // marshall back to the UI thread when the provider notifiers of a location change
+                var action = new Action<VisualTreeItem>(item => this.Dispatcher.BeginInvoke(new Action(() => this.ProviderLocationChanged(item))));
+                this.SetVariable(ShellConstants.LocationChangedActionKey, action);
+
+                string folder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Scripts");
+                Invoke(string.Format("import-module \"{0}\"", Path.Combine(folder, ShellConstants.SnoopModule)));
+
+                this.outputTextBox.Clear();
+                Invoke("write-host 'Welcome to the Snoop PowerShell console!'");
+                Invoke("write-host '----------------------------------------'");
+                Invoke(string.Format("write-host 'To get started, try using the ${0} and ${1} variables.'", ShellConstants.Root, ShellConstants.Selected));
+
+                FindAndLoadProfile(folder);
+
+                this.NotifySelected(snoopUi.CurrentSelection);
+            }
+
+            {
+                RoutedPropertyChangedEventHandler<object> onSelectedItemChanged = (sender, e) => this.NotifySelected(snoopUi.CurrentSelection);
+                Action<VisualTreeItem> onProviderLocationChanged = item => this.Dispatcher.BeginInvoke(new Action(() =>
+                                                                                                                  {
+                                                                                                                      item.IsSelected = true;
+                                                                                                                      snoopUi.CurrentSelection = item;
+                                                                                                                  }));
+
+                // sync the current location
+                snoopUi.Tree.SelectedItemChanged += onSelectedItemChanged;
+                this.ProviderLocationChanged += onProviderLocationChanged;
+
+                // clean up garbage!
+                snoopUi.Closed += delegate
+                                  {
+                                      snoopUi.Tree.SelectedItemChanged -= onSelectedItemChanged;
+                                      this.ProviderLocationChanged -= onProviderLocationChanged;
+                                  };
+            }
         }
 
         public void SetVariable(string name, object instance)

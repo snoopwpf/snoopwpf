@@ -19,7 +19,6 @@ using System.Windows.Forms.Integration;
 using System.Threading;
 using Snoop.Data;
 using Snoop.Infrastructure;
-using Snoop.Shell;
 
 namespace Snoop
 {
@@ -93,44 +92,15 @@ namespace Snoop
 			// so we catch it here, and relay it to the ZoomerControl.
 			this.MouseWheel += this.SnoopUI_MouseWheel;
 
-			filterTimer = new DispatcherTimer();
-			filterTimer.Interval = TimeSpan.FromSeconds(0.3);
-			filterTimer.Tick += (s, e) =>
+            this.filterTimer = new DispatcherTimer
+                               {
+                                   Interval = TimeSpan.FromSeconds(0.3)
+                               };
+            this.filterTimer.Tick += (s, e) =>
 			{
-				EnqueueAfterSettingFilter();
-				filterTimer.Stop();
+                this.EnqueueAfterSettingFilter();
+                this.filterTimer.Stop();
 			};
-
-		    InitShell();
-		}
-
-        private void InitShell()
-        {
-            if (ShellConstants.IsPowerShellInstalled == false)
-            {
-                var shell = new EmbeddedShellView();
-                shell.Start(this);
-
-                this.PowerShellTab.Content = shell;
-
-                RoutedPropertyChangedEventHandler<object> onSelectedItemChanged = (sender, e) => shell.NotifySelected(this.CurrentSelection);
-                Action<VisualTreeItem> onProviderLocationChanged = item => this.Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    item.IsSelected = true;
-                    this.CurrentSelection = item;
-                }));
-
-                // sync the current location
-                this.Tree.SelectedItemChanged += onSelectedItemChanged;
-                shell.ProviderLocationChanged += onProviderLocationChanged;
-
-                // clean up garbage!
-                this.Closed += delegate
-                {
-                    this.Tree.SelectedItemChanged -= onSelectedItemChanged;
-                    shell.ProviderLocationChanged -= onProviderLocationChanged;
-                };
-            }
         }
 
         #endregion
