@@ -36,7 +36,7 @@ namespace Snoop
 			windowHandleToValidityMap.Clear();
 		}
 
-		public IList<NativeMethods.MODULEENTRY32> Modules => this.modules ?? (this.modules = NativeMethods.GetModules(this.HWnd).ToList());
+		public IList<NativeMethods.MODULEENTRY32> Modules => this.modules ?? (this.modules = NativeMethods.GetModulesFromWindowHandle(this.HWnd).ToList());
 
 		public bool IsValidProcess
 		{

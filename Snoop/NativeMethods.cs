@@ -13,10 +13,8 @@ using System.Windows;
 
 namespace Snoop
 {
-    using System.Drawing;
     using System.Security;
     using System.Text;
-    using System.Threading;
 
     public static class NativeMethods
     {
@@ -88,6 +86,7 @@ namespace Snoop
 			return true;
 		}
 
+        [DebuggerDisplay("{" + nameof(MODULEENTRY32.szModule) + "}")]
 		[StructLayoutAttribute(LayoutKind.Sequential)]
 		public struct MODULEENTRY32
 		{
@@ -150,11 +149,21 @@ namespace Snoop
         /// except that we include 32 bit modules when Snoop runs in 64 bit mode.
         /// See http://blogs.msdn.com/b/jasonz/archive/2007/05/11/code-sample-is-your-process-using-the-silverlight-clr.aspx
         /// </summary>
-        public static IEnumerable<NativeMethods.MODULEENTRY32> GetModules(IntPtr windowHandle)
+        public static IEnumerable<NativeMethods.MODULEENTRY32> GetModulesFromWindowHandle(IntPtr windowHandle)
         {
             NativeMethods.GetWindowThreadProcessId(windowHandle, out var processId);
 
             return GetModules(processId);
+        }
+
+        /// <summary>
+        /// Similar to System.Diagnostics.WinProcessManager.GetModuleInfos,
+        /// except that we include 32 bit modules when Snoop runs in 64 bit mode.
+        /// See http://blogs.msdn.com/b/jasonz/archive/2007/05/11/code-sample-is-your-process-using-the-silverlight-clr.aspx
+        /// </summary>
+        public static IEnumerable<NativeMethods.MODULEENTRY32> GetModulesFromProcessHandle(IntPtr processHandle)
+        {
+            return GetModules(GetProcessId(processHandle));
         }
 
         /// <summary>
@@ -201,6 +210,9 @@ namespace Snoop
 
 		[DllImport("user32.dll")]
 		public static extern int GetWindowThreadProcessId(IntPtr hwnd, out int processId);
+
+        [DllImport("Kernel32.dll")]
+        public static extern int GetProcessId(IntPtr processHandle);
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
