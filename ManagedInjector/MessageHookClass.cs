@@ -1,4 +1,4 @@
-﻿namespace ManagedInjector
+namespace ManagedInjector
 {
     using System;
     using System.Diagnostics;
@@ -13,6 +13,9 @@
     using JetBrains.Annotations;
     using Snoop;
 
+    /// <summary>
+    /// Class responsible for loading the main snoop assembly after this class got injected into a foreign process.
+    /// </summary>
     public static class MessageHookClass
     {
         private static readonly uint messageId;
