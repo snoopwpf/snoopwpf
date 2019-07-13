@@ -53,7 +53,17 @@ namespace ManagedInjectorLauncher
                 && process.MainWindowHandle != windowHandle)
             {
                 Injector.LogMessage("Could not inject with current handle... retrying with MainWindowHandle", true);
-                Injector.InjectIntoProcess(process.MainWindowHandle, injectorData);
+
+                try
+                {
+                    Injector.InjectIntoProcess(process.MainWindowHandle, injectorData);
+                }
+                catch (Exception exception)
+                {
+                    Trace.WriteLine(exception.ToString());
+                    return 1;
+                }
+
                 if (CheckInjectedStatus(process) == false)
                 {
                     return 1;
@@ -69,10 +79,11 @@ namespace ManagedInjectorLauncher
 
         private static Process GetProcessFromWindowHandle(IntPtr windowHandle)
         {
-            GetWindowThreadProcessId(windowHandle, out var processId);
+            NativeMethods.GetWindowThreadProcessId(windowHandle, out var processId);
+
             if (processId == 0)
             {
-                Injector.LogMessage($"could not get process for window handle {windowHandle}", true);
+                Injector.LogMessage($"Could not get process for window handle {windowHandle}", true);
                 return null;
             }
 
@@ -83,7 +94,7 @@ namespace ManagedInjectorLauncher
             }
             catch (Exception e)
             {
-                Injector.LogMessage($"could not get process for PID = {processId}.", true);
+                Injector.LogMessage($"Could not get process for PID = {processId}.", true);
                 Injector.LogMessage(e.ToString(), true);
             }
 
@@ -94,6 +105,7 @@ namespace ManagedInjectorLauncher
         {
             var containsFile = false;
             process.Refresh();
+
             foreach (ProcessModule module in process.Modules)
             {
                 if (module.FileName.Contains("ManagedInjector"))
@@ -104,17 +116,14 @@ namespace ManagedInjectorLauncher
 
             if (containsFile)
             {
-                Injector.LogMessage(string.Format("Successfully injected Snoop for process {0} (PID = {1})", process.ProcessName, process.Id), true);
+                Injector.LogMessage($"Successfully injected Snoop for process {process.ProcessName} (PID = {process.Id})", true);
             }
             else
             {
-                Injector.LogMessage(string.Format("Failed to inject for process {0} (PID = {1})", process.ProcessName, process.Id), true);
+                Injector.LogMessage($"Failed to inject for process {process.ProcessName} (PID = {process.Id})", true);
             }
 
             return containsFile;
         }
-
-        [DllImport("user32.dll")]
-        public static extern int GetWindowThreadProcessId(IntPtr hwnd, out int processId);
     }
 }
