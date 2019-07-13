@@ -8,7 +8,6 @@ namespace Snoop
     using System.Diagnostics;
     using System.Reflection;
     using System.IO;
-    using System.Linq;
 
     /// <summary>
     /// Class responsible for launching a new injector process.
@@ -20,14 +19,11 @@ namespace Snoop
 	        var bitness = windowInfo.IsOwningProcess64Bit 
                 ? "x64" 
                 : "x86";
-	        var clr = windowInfo.Modules.Any(x => x.szModule.StartsWith("wpfgfx_cor3"))
-                ? "netcoreapp3.0"
-                : "net40";
 
             return bitness;
         }
 
-		internal static void Launch(WindowInfo windowInfo, Assembly assembly, string className, string methodName, string settingsFile)
+		public static void Launch(WindowInfo windowInfo, Assembly assembly, string className, string methodName, string settingsFile)
 		{
             if (File.Exists(settingsFile) == false)
             {
