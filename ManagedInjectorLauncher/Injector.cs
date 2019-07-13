@@ -71,20 +71,25 @@ namespace ManagedInjectorLauncher
 
                 var framework = GetTargetFramework(process);
 
+                var bitness = Environment.Is64BitProcess
+                                  ? "x64"
+                                  : "x86";
+
                 var hProcess = NativeMethods.OpenProcess(NativeMethods.ProcessAccessFlags.All, false, processId);
 
                 if (framework == "netcoreapp3.0")
                 {
-                    InjectIJWHost(hProcess);
+                    InjectIJWHost(hProcess, bitness);
                 }
 
-                InjectSnoop(windowHandle, framework, transportDataString, hProcess, threadId);
+                InjectSnoop(windowHandle, framework, bitness, transportDataString, hProcess, threadId);
             }
         }
 
-        private static void InjectIJWHost(NativeMethods.ProcessHandle hProcess)
+        private static void InjectIJWHost(NativeMethods.ProcessHandle hProcess, string bitness)
         {
-            var ijwHostPath = @"C:\DEV\OSS_Own\snoopwpf\bin\Debug\ijwhost.dll";
+            var ijwHostPath = GetPathToIJWHost(hProcess, bitness);
+
             var bufLen = (ijwHostPath.Length + 1) * Marshal.SizeOf(typeof(char));
             var remoteAddress = NativeMethods.VirtualAllocEx(hProcess, IntPtr.Zero, (uint)bufLen,
                                                                NativeMethods.AllocationType.Commit,
@@ -137,12 +142,61 @@ namespace ManagedInjectorLauncher
             }
         }
 
-        private static void InjectSnoop(IntPtr windowHandle, string framework, string transportDataString, NativeMethods.ProcessHandle hProcess, uint threadId)
+        private static string GetPathToIJWHost(NativeMethods.ProcessHandle hProcess, string bitness)
         {
-            var bitness = Environment.Is64BitProcess
-                              ? "x64"
-                              : "x86";
+            const string ijwhostDllFilename = "ijwhost.dll";
+            const string hostfxrDllFilename = "hostfxr.dll";
 
+            Trace.WriteLine($"Trying to find path to '{ijwhostDllFilename}'...");
+
+            //var samplePath = @"C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64\3.0.0-preview6-27804-01\runtimes\win-x64\native\ijwhost.dll";
+            //var hostfxrPath = @"C:\Program Files\dotnet\host\fxr\3.0.0-preview6-27804-01\hostfxr.dll";
+            string hostfxrPath = null;
+
+            Trace.WriteLine($"Trying to find loaded module '{hostfxrDllFilename}'...");
+
+            Debugger.Launch();
+
+            var modules = NativeMethods.GetModulesFromProcessHandle(hProcess.DangerousGetHandle());
+
+            foreach (var module in modules)
+            {
+                if (module.szModule.Equals(hostfxrDllFilename, StringComparison.OrdinalIgnoreCase))
+                {
+                    hostfxrPath = module.szExePath;
+                    Trace.WriteLine($"Found path to '{hostfxrDllFilename}' with value '{hostfxrPath}'.");
+                    break;
+                }
+            }
+
+            if (string.IsNullOrEmpty(hostfxrPath))
+            {
+                throw new FileNotFoundException($"Could not find path to '{hostfxrDllFilename}'.", hostfxrDllFilename);
+            }
+
+            var hostfxrDirectoryPath = Path.GetDirectoryName(hostfxrPath);
+
+            if (string.IsNullOrEmpty(hostfxrDirectoryPath) == false)
+            {
+                var dotnetPath = Path.GetFullPath(Path.Combine(hostfxrDirectoryPath, @"..\..\.."));
+                var frameworkVersion = new DirectoryInfo(hostfxrDirectoryPath).Name;
+
+                var ijwHostDllPath = $@"{dotnetPath}\packs\Microsoft.NETCore.App.Host.win-{bitness}\{frameworkVersion}\runtimes\win-{bitness}\native\{ijwhostDllFilename}";
+
+                Trace.WriteLine($"Path to '{ijwhostDllFilename}' might be '{ijwHostDllPath}'.");
+
+                if (File.Exists(ijwHostDllPath))
+                {
+                    Trace.WriteLine($"Path to '{ijwhostDllFilename}' is '{ijwHostDllPath}'.");
+                    return ijwHostDllPath;
+                }
+            }
+
+            throw new FileNotFoundException($"Could not find path to '{ijwhostDllFilename}'.", ijwhostDllFilename);
+        }
+
+        private static void InjectSnoop(IntPtr windowHandle, string framework, string bitness, string transportDataString, NativeMethods.ProcessHandle hProcess, uint threadId)
+        {
             var hookName = $"ManagedInjector.{framework}.{bitness}.dll";
 
             var hInstance = NativeMethods.LoadLibrary(hookName);
