@@ -2,7 +2,6 @@
 {
     using System;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -11,62 +10,21 @@
     using System.Text;
     using System.Xml.Serialization;
     using JetBrains.Annotations;
-    using Snoop;
 
     /// <summary>
     /// Class responsible for loading the main snoop assembly after this class got injected into a foreign process.
     /// </summary>
-    public static class MessageHookClass
+    public static class SnoopLoader
     {
-        private static readonly uint messageId;
-
-        [StructLayout(LayoutKind.Sequential)]
-        [SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
-        [SuppressMessage("ReSharper", "IdentifierTypo")]
-        [SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Local")]
-        private struct CWPSTRUCT
-        {
-            public IntPtr lparam;
-            public IntPtr wparam;
-            public int message;
-            public IntPtr hwnd;
-        }
-
-        [DllImport("user32.dll")]
-        private static extern int CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
-
-        static MessageHookClass()
-        {
-            messageId = NativeMethods.RegisterWindowMessage("Injector_GOBABYGO!");
-        }
-
-        [PublicAPI]
-        [DllExport]
-        public static int MessageHookProc(int code, IntPtr wparam, IntPtr lparam)
-        {
-            if (code == 0)
-            {
-                var msg = (CWPSTRUCT)Marshal.PtrToStructure(lparam, typeof(CWPSTRUCT));
-
-                if (msg.message == messageId)
-                {
-                    Trace.WriteLine($"MessageHookProc in .NET {code} {msg.wparam} {msg.lparam}");
-                    Trace.WriteLine(new FrameworkAndSystemVersionInfo());
-
-                    var transportDataString = Marshal.PtrToStringUni(msg.wparam);
-                    LoadSnoop(transportDataString);
-                }
-            }
-
-            return CallNextHookEx(IntPtr.Zero, code, wparam, lparam);
-        }
-
         [PublicAPI]
         [DllExport]
         public static void LoadSnoop([MarshalAs(UnmanagedType.LPWStr)] string transportDataString)
         {
             //Debugger.Launch();
+
+            Trace.WriteLine($"Beginning load in foreign process...");
+            Trace.WriteLine("Framework information:");
+            Trace.WriteLine(new FrameworkAndSystemVersionInfo());
 
             InjectorData injectorData;
 
@@ -79,21 +37,30 @@
                 }
             }
 
+            Trace.WriteLine($"Loading assembly '{injectorData.AssemblyName}'...");
+
             var assembly = Assembly.LoadFrom(injectorData.AssemblyName);
+
+            Trace.WriteLine($"Assembly '{injectorData.AssemblyName}' loaded.");
 
             var type = assembly.GetType(injectorData.ClassName);
 
-            if (type != null)
+            if (type == null)
             {
-                var method = type.GetMethod(injectorData.MethodName, BindingFlags.Static | BindingFlags.Public);
+                Trace.WriteLine($"{injectorData.ClassName} could not be found in {injectorData.AssemblyName}");
+                return;
+            }
 
-                if (method != null)
-                {
-                    method.Invoke(null, new[]
-                                        {
-                                            injectorData.SettingsFile
-                                        });
-                }
+            var method = type.GetMethod(injectorData.MethodName, BindingFlags.Static | BindingFlags.Public);
+
+            if (method != null)
+            {
+                Trace.WriteLine($"Invoking snoop startup method...");
+
+                method.Invoke(null, new[]
+                                    {
+                                        injectorData.SettingsFile
+                                    });
             }
         }
     }

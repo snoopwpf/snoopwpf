@@ -124,9 +124,9 @@ namespace Snoop
 
 		public Process OwningProcess => this.owningProcess ?? (this.owningProcess = NativeMethods.GetWindowThreadProcess(this.HWnd));
 
-	    public bool IsOwningProcess64Bit => (this.isOwningProcess64Bit ?? (this.isOwningProcess64Bit = IsProcess64Bit(this.OwningProcess))) == true;
+	    public bool IsOwningProcess64Bit => (this.isOwningProcess64Bit ?? (this.isOwningProcess64Bit = NativeMethods.IsProcess64Bit(this.OwningProcess))) == true;
 
-	    public bool IsOwningProcessElevated => (this.isOwningProcessElevated ?? (this.isOwningProcessElevated = IsProcessElevated(this.OwningProcess))) == true;
+	    public bool IsOwningProcessElevated => (this.isOwningProcessElevated ?? (this.isOwningProcessElevated = NativeMethods.IsProcessElevated(this.OwningProcess))) == true;
 
 	    public IntPtr HWnd { get; }
 
@@ -203,45 +203,5 @@ namespace Snoop
 		{
 		    this.AttachFailed?.Invoke(this, new AttachFailedEventArgs(e, this.Description));
 		}
-
-	    // see https://msdn.microsoft.com/en-us/library/windows/desktop/ms684139%28v=vs.85%29.aspx
-	    public static bool IsProcess64Bit(Process process)
-	    {
-            if (Environment.Is64BitOperatingSystem == false)
-            {
-                return false;
-            }
-
-            // if this method is not available in your version of .NET, use GetNativeSystemInfo via P/Invoke instead
-	        using (var processHandle = NativeMethods.OpenProcess(process, NativeMethods.ProcessAccessFlags.QueryLimitedInformation))
-	        {
-	            if (processHandle.IsInvalid)
-	            {
-	                throw new Exception("Could not query process information.");
-	            }
-
-	            if (NativeMethods.IsWow64Process(processHandle.DangerousGetHandle(), out var isWow64) == false)
-	            {
-	                throw new Win32Exception();
-	            }
-
-	            return isWow64 == false;
-	        }
-	    }
-
-	    private static bool IsProcessElevated(Process process)
-	    {
-	        using (var processHandle = NativeMethods.OpenProcess(process, NativeMethods.ProcessAccessFlags.QueryInformation))
-	        {
-	            if (processHandle.IsInvalid)
-	            {
-	                var error = Marshal.GetLastWin32Error();
-
-	                return error == NativeMethods.ERROR_ACCESS_DENIED;
-	            }
-
-	            return false;
-	        }
-	    }
-	}
+    }
 }

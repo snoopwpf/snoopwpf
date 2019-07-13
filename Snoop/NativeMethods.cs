@@ -13,6 +13,7 @@ using System.Windows;
 
 namespace Snoop
 {
+    using System.ComponentModel;
     using System.Security;
     using System.Text;
 
@@ -87,7 +88,7 @@ namespace Snoop
 		}
 
         [DebuggerDisplay("{" + nameof(MODULEENTRY32.szModule) + "}")]
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MODULEENTRY32
 		{
 			public uint dwSize;
@@ -114,7 +115,7 @@ namespace Snoop
 			[ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
 			override protected bool ReleaseHandle()
 			{
-				return NativeMethods.CloseHandle(handle);
+				return NativeMethods.CloseHandle(this.handle);
 			}
 		}
 
@@ -128,7 +129,7 @@ namespace Snoop
             [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
             override protected bool ReleaseHandle()
             {
-                return NativeMethods.CloseHandle(handle);
+                return NativeMethods.CloseHandle(this.handle);
             }
         }
 
@@ -144,12 +145,53 @@ namespace Snoop
 			All = 0x0000001F
 		}
 
+        // see https://msdn.microsoft.com/en-us/library/windows/desktop/ms684139%28v=vs.85%29.aspx
+
+        public static bool IsProcess64Bit(Process process)
+        {
+            if (Environment.Is64BitOperatingSystem == false)
+            {
+                return false;
+            }
+
+            // if this method is not available in your version of .NET, use GetNativeSystemInfo via P/Invoke instead
+            using (var processHandle = NativeMethods.OpenProcess(process, NativeMethods.ProcessAccessFlags.QueryLimitedInformation))
+            {
+                if (processHandle.IsInvalid)
+                {
+                    throw new Exception("Could not query process information.");
+                }
+
+                if (NativeMethods.IsWow64Process(processHandle.DangerousGetHandle(), out var isWow64) == false)
+                {
+                    throw new Win32Exception();
+                }
+
+                return isWow64 == false;
+            }
+        }
+
+        public static bool IsProcessElevated(Process process)
+        {
+            using (var processHandle = NativeMethods.OpenProcess(process, NativeMethods.ProcessAccessFlags.QueryInformation))
+            {
+                if (processHandle.IsInvalid)
+                {
+                    var error = Marshal.GetLastWin32Error();
+
+                    return error == NativeMethods.ERROR_ACCESS_DENIED;
+                }
+
+                return false;
+            }
+        }
+
         /// <summary>
         /// Similar to System.Diagnostics.WinProcessManager.GetModuleInfos,
         /// except that we include 32 bit modules when Snoop runs in 64 bit mode.
         /// See http://blogs.msdn.com/b/jasonz/archive/2007/05/11/code-sample-is-your-process-using-the-silverlight-clr.aspx
         /// </summary>
-        public static IEnumerable<NativeMethods.MODULEENTRY32> GetModulesFromWindowHandle(IntPtr windowHandle)
+        public static IEnumerable<MODULEENTRY32> GetModulesFromWindowHandle(IntPtr windowHandle)
         {
             NativeMethods.GetWindowThreadProcessId(windowHandle, out var processId);
 
@@ -161,17 +203,7 @@ namespace Snoop
         /// except that we include 32 bit modules when Snoop runs in 64 bit mode.
         /// See http://blogs.msdn.com/b/jasonz/archive/2007/05/11/code-sample-is-your-process-using-the-silverlight-clr.aspx
         /// </summary>
-        public static IEnumerable<NativeMethods.MODULEENTRY32> GetModulesFromProcessHandle(IntPtr processHandle)
-        {
-            return GetModules(GetProcessId(processHandle));
-        }
-
-        /// <summary>
-        /// Similar to System.Diagnostics.WinProcessManager.GetModuleInfos,
-        /// except that we include 32 bit modules when Snoop runs in 64 bit mode.
-        /// See http://blogs.msdn.com/b/jasonz/archive/2007/05/11/code-sample-is-your-process-using-the-silverlight-clr.aspx
-        /// </summary>
-        public static IEnumerable<NativeMethods.MODULEENTRY32> GetModules(Process process)
+        public static IEnumerable<MODULEENTRY32> GetModules(Process process)
         {
             return GetModules(process.Id);
         }
@@ -181,7 +213,7 @@ namespace Snoop
         /// except that we include 32 bit modules when Snoop runs in 64 bit mode.
         /// See http://blogs.msdn.com/b/jasonz/archive/2007/05/11/code-sample-is-your-process-using-the-silverlight-clr.aspx
         /// </summary>
-        public static IEnumerable<NativeMethods.MODULEENTRY32> GetModules(int processId)
+        public static IEnumerable<MODULEENTRY32> GetModules(int processId)
         {
             var me32 = new NativeMethods.MODULEENTRY32();
             var hModuleSnap = NativeMethods.CreateToolhelp32Snapshot(NativeMethods.SnapshotFlags.Module | NativeMethods.SnapshotFlags.Module32, processId);
@@ -212,7 +244,7 @@ namespace Snoop
 		public static extern int GetWindowThreadProcessId(IntPtr hwnd, out int processId);
 
         [DllImport("Kernel32.dll")]
-        public static extern int GetProcessId(IntPtr processHandle);
+        public static extern int GetProcessId(ProcessHandle processHandle);
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -235,7 +267,7 @@ namespace Snoop
 
 	        return result != 0
 	                   ? className.ToString()
-	                   : string.Empty;
+	                   : String.Empty;
 	    }
 
         [DllImport("user32.dll", SetLastError=true, CharSet=CharSet.Auto)]
@@ -418,16 +450,12 @@ namespace Snoop
         public static extern bool FreeLibrary(IntPtr hModule);
 
         [DllImport("kernel32.dll")]
-        public static extern IntPtr CreateRemoteThread(IntPtr hProcess,
+        public static extern IntPtr CreateRemoteThread(ProcessHandle handle,
                                                 IntPtr lpThreadAttributes, uint dwStackSize, UIntPtr lpStartAddress,
                                                 IntPtr lpParameter, uint dwCreationFlags, out IntPtr lpThreadId);
 
-        // Thread proc, to be used with Create*Thread
-        public delegate int ThreadProc(IntPtr param);
-
         [DllImport("kernel32.dll")]
-        static extern IntPtr CreateRemoteThread(IntPtr hProcess,
-                                                IntPtr lpThreadAttributes, uint dwStackSize, ThreadProc lpStartAddress, IntPtr lpParameter, uint dwCreationFlags, IntPtr lpThreadId);
+        public static extern bool GetExitCodeThread(IntPtr hThread, out IntPtr exitCode);
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern WaitResult WaitForSingleObject(IntPtr handle, uint timeoutInMilliseconds = 0xFFFFFFFF);
