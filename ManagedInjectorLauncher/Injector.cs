@@ -82,7 +82,7 @@ namespace ManagedInjectorLauncher
 
                 if (hLibrary == IntPtr.Zero)
                 {
-                    throw new Win32Exception(Marshal.GetLastWin32Error());
+                    throw new Win32Exception();
                 }
             }
 
@@ -120,8 +120,22 @@ namespace ManagedInjectorLauncher
 
                 // Load dll into the remote process
                 // (via CreateRemoteThread & LoadLibrary)
-                var remoteThread = NativeMethods.CreateRemoteThread(processWrapper.Handle, IntPtr.Zero, 0, NativeMethods.GetProcAddress(hLibrary, "LoadLibraryW"), remoteAddress, 0, out _);
+                var procAddress = NativeMethods.GetProcAddress(hLibrary, "LoadLibraryW");
 
+                if (procAddress == UIntPtr.Zero)
+                {
+                    // todo: error handling
+                }
+
+                var remoteThread = NativeMethods.CreateRemoteThread(processWrapper.Handle,
+                                                                    IntPtr.Zero, 
+                                                                    0, 
+                                                                    procAddress, 
+                                                                    remoteAddress, 
+                                                                    0, 
+                                                                    out _);
+
+                // todo: error handling
                 if (remoteThread != IntPtr.Zero)
                 {
                     NativeMethods.WaitForSingleObject(remoteThread);
@@ -143,7 +157,7 @@ namespace ManagedInjectorLauncher
             }
             else
             {
-                throw new Win32Exception(Marshal.GetLastWin32Error());
+                throw new Win32Exception();
             }
 
             if (moduleHandleInForeignProcess == IntPtr.Zero)
@@ -213,7 +227,7 @@ namespace ManagedInjectorLauncher
 
             if (hLibrary == IntPtr.Zero)
             {
-                throw new Win32Exception(Marshal.GetLastWin32Error());
+                throw new Win32Exception();
             }
 
             var hLibraryInForeignProcess = LoadLibraryInForeignProcess(processWrapper, pathToHookDll);
@@ -260,6 +274,7 @@ namespace ManagedInjectorLauncher
                                                                0,
                                                                out _);
 
+                // todo: error handling
                 if (remoteThread != IntPtr.Zero)
                 {
                     NativeMethods.WaitForSingleObject(remoteThread);
@@ -278,7 +293,7 @@ namespace ManagedInjectorLauncher
             }
             else
             {
-                throw new Win32Exception(Marshal.GetLastWin32Error());
+                throw new Win32Exception();
             }
 
             NativeMethods.FreeLibrary(hLibrary);
