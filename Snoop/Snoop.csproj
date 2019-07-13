@@ -31,7 +31,15 @@
     <None Include="VisualTreeItem.cd" />
   </ItemGroup>
     
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
     <PackageReference Include="microsoft.powershell.3.referenceassemblies" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+    <PackageReference Include="microsoft.powershell.3.referenceassemblies" Version="1.0.0" />
+
+    <!-- <PackageReference Include="Microsoft.PowerShell.SDK" Version="6.2.*" /> 
+    <PackageReference Include="Microsoft.PowerShell.Commands.Diagnostics" Version="6.2.*" />
+    <PackageReference Include="Microsoft.WSMan.Management" Version="6.2.*"/> -->
   </ItemGroup>
 </Project>
