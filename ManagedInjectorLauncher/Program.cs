@@ -13,7 +13,7 @@ namespace ManagedInjectorLauncher
 
     public static class Program
     {
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
             Injector.LogMessage("Starting the injection process...", false);
 
@@ -36,7 +36,15 @@ namespace ManagedInjectorLauncher
                                    SettingsFile = settingsFile
                                };
 
-            Injector.InjectIntoProcess(windowHandle, injectorData);
+            try
+            {
+                Injector.InjectIntoProcess(windowHandle, injectorData);
+            }
+            catch (Exception exception)
+            {
+                Trace.WriteLine(exception.ToString());
+                return 1;
+            }
 
             //check to see that it was injected, and if not, retry with the main window handle.
             var process = GetProcessFromWindowHandle(windowHandle);
@@ -46,8 +54,17 @@ namespace ManagedInjectorLauncher
             {
                 Injector.LogMessage("Could not inject with current handle... retrying with MainWindowHandle", true);
                 Injector.InjectIntoProcess(process.MainWindowHandle, injectorData);
-                CheckInjectedStatus(process);
+                if (CheckInjectedStatus(process) == false)
+                {
+                    return 1;
+                }
             }
+            else
+            {
+                return 1;
+            }
+
+            return 0;
         }
 
         private static Process GetProcessFromWindowHandle(IntPtr windowHandle)
