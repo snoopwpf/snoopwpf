@@ -8,7 +8,6 @@ namespace ManagedInjectorLauncher
     using System;
     using System.Diagnostics;
     using System.Linq;
-    using System.Runtime.InteropServices;
     using Snoop;
 
     public static class Program
