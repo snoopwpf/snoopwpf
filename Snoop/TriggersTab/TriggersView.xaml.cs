@@ -19,7 +19,7 @@ namespace Snoop.TriggersTab
             this.InitializeComponent();
 
             this.TriggerItems = CollectionViewSource.GetDefaultView(this.triggers);
-            this.TriggerItems.GroupDescriptions.Add(new PropertyGroupDescription("TriggerSource"));
+            this.TriggerItems.GroupDescriptions.Add(new PropertyGroupDescription(nameof(TriggerItemBase.TriggerSource)));
 
             this.TriggerItems.CollectionChanged += (s, e) => this.HasTriggerItems = this.TriggerItems.IsEmpty;
 
@@ -27,7 +27,7 @@ namespace Snoop.TriggersTab
             this.Unloaded += this.HandleUnloaded;
         }
 
-        public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register("IsSelected", typeof(bool), typeof(TriggersView), new PropertyMetadata(default(bool), OnIsSelectedChanged));
+        public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(TriggersView), new PropertyMetadata(default(bool), OnIsSelectedChanged));
 
         public bool IsSelected
         {
