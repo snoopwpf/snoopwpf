@@ -11,6 +11,10 @@
     <AssemblyName>$(AssemblyName).$(TargetFramework)</AssemblyName>
   </PropertyGroup>
 
+  <!-- <PropertyGroup>
+    <PublishSingleFile>True</PublishSingleFile>
+  </PropertyGroup> -->
+
   <ItemGroup Condition="'$(TargetFramework)' != 'netcoreapp3.0'">
     <Reference Include="System.Windows.Forms" />
     <Reference Include="WindowsFormsIntegration" />
