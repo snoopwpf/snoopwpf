@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <Compile Include="..\Shared\InjectorData.cs" Link="InjectorData.cs" />
-    <Compile Include="..\Snoop\NativeMethods.cs" Link="NativeMethods.cs" />
+    <Compile Include="..\Snoop.Core\NativeMethods.cs" />
   </ItemGroup>
 
   <Target Name="DllExport" Condition="Exists('$(TargetPath)')" AfterTargets="CopyFilesToOutputDirectory">

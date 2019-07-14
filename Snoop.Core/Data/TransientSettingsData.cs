@@ -16,12 +16,12 @@
             this.SetWindowOwner = true;
         }
 
-        internal TransientSettingsData(Settings settings)
-        {
-            this.MultipleAppDomainMode = settings.MultipleAppDomainMode;
-            this.MultipleDispatcherMode = settings.MultipleDispatcherMode;
-            this.SetWindowOwner = settings.SetOwnerWindow;
-        }
+        //internal TransientSettingsData(Settings settings)
+        //{
+        //    this.MultipleAppDomainMode = settings.MultipleAppDomainMode;
+        //    this.MultipleDispatcherMode = settings.MultipleDispatcherMode;
+        //    this.SetWindowOwner = settings.SetOwnerWindow;
+        //}
 
         public static TransientSettingsData Current { get; private set; }
 

@@ -7,7 +7,9 @@ namespace ManagedInjectorLauncher
 {
     using System;
     using System.Diagnostics;
+    using System.IO;
     using System.Linq;
+    using System.Reflection;
     using Snoop;
 
     public static class Program
@@ -21,15 +23,18 @@ namespace ManagedInjectorLauncher
                 Debugger.Launch();
             }
 
-            var windowHandle = (IntPtr)long.Parse(args[0]);
-            var assemblyName = args[1];
+            var processId = int.Parse(args[0]);
+            
+            var processWrapper = ProcessWrapper.FromProcessId(processId);
+
+            var assemblyNameOrFullPath = args[1];
             var className = args[2];
             var methodName = args[3];
             var settingsFile = args[4];
 
             var injectorData = new InjectorData
                                {
-                                   AssemblyName = assemblyName,
+                                   FullAssemblyPath = GetAssemblyPath(processWrapper, assemblyNameOrFullPath),
                                    ClassName = className,
                                    MethodName = methodName,
                                    SettingsFile = settingsFile
@@ -37,7 +42,7 @@ namespace ManagedInjectorLauncher
 
             try
             {
-                Injector.InjectIntoProcess(windowHandle, injectorData);
+                Injector.InjectIntoProcess(processWrapper, injectorData);
             }
             catch (Exception exception)
             {
@@ -45,30 +50,7 @@ namespace ManagedInjectorLauncher
                 return 1;
             }
 
-            //check to see that it was injected, and if not, retry with the main window handle.
-            var process = GetProcessFromWindowHandle(windowHandle);
-            if (process != null
-                && CheckInjectedStatus(process) == false
-                && process.MainWindowHandle != windowHandle)
-            {
-                Injector.LogMessage("Could not inject with current handle... retrying with MainWindowHandle", true);
-
-                try
-                {
-                    Injector.InjectIntoProcess(process.MainWindowHandle, injectorData);
-                }
-                catch (Exception exception)
-                {
-                    Trace.WriteLine(exception.ToString());
-                    return 1;
-                }
-
-                if (CheckInjectedStatus(process) == false)
-                {
-                    return 1;
-                }
-            }
-            else
+            if (CheckInjectedStatus(processWrapper.Process) == false)
             {
                 return 1;
             }
@@ -76,28 +58,15 @@ namespace ManagedInjectorLauncher
             return 0;
         }
 
-        private static Process GetProcessFromWindowHandle(IntPtr windowHandle)
+        private static string GetAssemblyPath(ProcessWrapper processWrapper, string assemblyNameOrFullPath)
         {
-            NativeMethods.GetWindowThreadProcessId(windowHandle, out var processId);
-
-            if (processId == 0)
+            if (File.Exists(assemblyNameOrFullPath))
             {
-                Injector.LogMessage($"Could not get process for window handle {windowHandle}", true);
-                return null;
+                return assemblyNameOrFullPath;
             }
 
-            try
-            {
-                var process = Process.GetProcessById(processId);
-                return process;
-            }
-            catch (Exception e)
-            {
-                Injector.LogMessage($"Could not get process for PID = {processId}.", true);
-                Injector.LogMessage(e.ToString(), true);
-            }
-
-            return null;
+            var thisAssemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            return Path.Combine(thisAssemblyDirectory, $"{assemblyNameOrFullPath}.{processWrapper.SupportedFrameworkName}.dll");
         }
 
         private static bool CheckInjectedStatus(Process process)

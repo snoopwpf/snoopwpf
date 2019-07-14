@@ -1,11 +1,10 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snoop", "Snoop\Snoop.csproj", "{ACA9A018-ABF3-4C60-995F-99C4777CED71}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagedInjector", "ManagedInjector\ManagedInjector.csproj", "{9ADEEB14-A467-42D8-BF60-C0CD452F048B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagedInjector", "ManagedInjector\ManagedInjector.csproj", "{9ADEEB14-A467-42D8-BF60-C0CD452F048B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagedInjectorLauncher", "ManagedInjectorLauncher\ManagedInjectorLauncher.csproj", "{ACA9A018-ABF3-4C60-995F-99C4777CED75}"
 EndProject
@@ -20,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snoop.Core", "Snoop.Core\Snoop.Core.csproj", "{883A18A9-A386-4342-AC95-9AFC34913FCA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,14 +31,18 @@ Global
 		{ACA9A018-ABF3-4C60-995F-99C4777CED71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ACA9A018-ABF3-4C60-995F-99C4777CED71}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ACA9A018-ABF3-4C60-995F-99C4777CED71}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ACA9A018-ABF3-4C60-995F-99C4777CED75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ACA9A018-ABF3-4C60-995F-99C4777CED75}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ACA9A018-ABF3-4C60-995F-99C4777CED75}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ACA9A018-ABF3-4C60-995F-99C4777CED75}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9ADEEB14-A467-42D8-BF60-C0CD452F048B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9ADEEB14-A467-42D8-BF60-C0CD452F048B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9ADEEB14-A467-42D8-BF60-C0CD452F048B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9ADEEB14-A467-42D8-BF60-C0CD452F048B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACA9A018-ABF3-4C60-995F-99C4777CED75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACA9A018-ABF3-4C60-995F-99C4777CED75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACA9A018-ABF3-4C60-995F-99C4777CED75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACA9A018-ABF3-4C60-995F-99C4777CED75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{883A18A9-A386-4342-AC95-9AFC34913FCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{883A18A9-A386-4342-AC95-9AFC34913FCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{883A18A9-A386-4342-AC95-9AFC34913FCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{883A18A9-A386-4342-AC95-9AFC34913FCA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

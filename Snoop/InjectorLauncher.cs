@@ -23,7 +23,7 @@ namespace Snoop
             return bitness;
         }
 
-		public static void Launch(WindowInfo windowInfo, Assembly assembly, string className, string methodName, string settingsFile)
+		public static void Launch(WindowInfo windowInfo, string assembly, string className, string methodName, string settingsFile)
 		{
             if (File.Exists(settingsFile) == false)
             {
@@ -45,7 +45,7 @@ If you downloaded snoop you should not omit any files contained in the archive y
                     throw new FileNotFoundException(message, file);
                 }
 
-                var startInfo = new ProcessStartInfo(file, $"{windowInfo.HWnd} \"{assembly.Location}\" \"{className}\" \"{methodName}\" \"{settingsFile}\"")
+                var startInfo = new ProcessStartInfo(file, $"{windowInfo.OwningProcess.Id} \"{assembly}\" \"{className}\" \"{methodName}\" \"{settingsFile}\"")
                                 {
                                     Verb = windowInfo.IsOwningProcessElevated
                                                ? "runas"

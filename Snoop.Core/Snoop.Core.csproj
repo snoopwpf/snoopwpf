@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp3.0;net40</TargetFrameworks>
+    <UseWpf>true</UseWpf>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AssemblyName>$(AssemblyName).$(TargetFramework)</AssemblyName>
+  </PropertyGroup>
+
+  <!-- <PropertyGroup>
+    <PublishSingleFile>True</PublishSingleFile>
+  </PropertyGroup> -->
+
+  <ItemGroup Condition="'$(TargetFramework)' != 'netcoreapp3.0'">
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="WindowsFormsIntegration" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="..\Artwork\*.ico" />
+    <Resource Include="Resources\*.png" />
+
+    <EmbeddedResource Include="Resources\*.cur" />
+
+    <Content Include="Scripts\*.psm1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+
+    <None Include="VisualTreeItem.cd" />
+  </ItemGroup>
+  
+  <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
+    <PackageReference Include="microsoft.powershell.3.referenceassemblies" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+    <PackageReference Include="microsoft.powershell.3.referenceassemblies" Version="1.0.0" />
+
+    <!-- <PackageReference Include="Microsoft.PowerShell.SDK" Version="6.2.*" /> 
+    <PackageReference Include="Microsoft.PowerShell.Commands.Diagnostics" Version="6.2.*" />
+    <PackageReference Include="Microsoft.WSMan.Management" Version="6.2.*"/> -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\" />
+  </ItemGroup>
+</Project>

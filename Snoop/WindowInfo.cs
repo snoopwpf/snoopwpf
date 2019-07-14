@@ -169,7 +169,7 @@ namespace Snoop
 
             try
             {
-                InjectorLauncher.Launch(this, typeof(SnoopUI).Assembly, typeof(SnoopUI).FullName, "GoBabyGo", new TransientSettingsData(Settings.Default).WriteToFile());
+                InjectorLauncher.Launch(this, "Snoop.Core", "Snoop.SnoopUI", "GoBabyGo", CreateTransientSettingsData().WriteToFile());
             }
             catch (Exception e)
             {
@@ -187,7 +187,7 @@ namespace Snoop
 
 			try
 			{
-				InjectorLauncher.Launch(this, typeof(Zoomer).Assembly, typeof(Zoomer).FullName, "GoBabyGo", new TransientSettingsData(Settings.Default).WriteToFile());
+				InjectorLauncher.Launch(this, "Snoop.Core", "Snoop.Zoomer", "GoBabyGo", CreateTransientSettingsData().WriteToFile());
 			}
 			catch (Exception e)
 			{
@@ -203,5 +203,17 @@ namespace Snoop
 		{
 		    this.AttachFailed?.Invoke(this, new AttachFailedEventArgs(e, this.Description));
 		}
+
+        private static TransientSettingsData CreateTransientSettingsData()
+        {
+            var settings = Settings.Default;
+
+            return new TransientSettingsData
+                   {
+                       MultipleAppDomainMode = settings.MultipleAppDomainMode,
+                       MultipleDispatcherMode = settings.MultipleDispatcherMode,
+                       SetWindowOwner = settings.SetOwnerWindow,
+                   };
+        }
     }
 }

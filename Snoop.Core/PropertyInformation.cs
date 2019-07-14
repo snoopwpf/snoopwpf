@@ -21,8 +21,6 @@ using System.Linq;
 
 namespace Snoop
 {
-    using Snoop.Converters;
-
     public class PropertyInformation : DependencyObject, IComparable, INotifyPropertyChanged
 	{
 		/// <summary>

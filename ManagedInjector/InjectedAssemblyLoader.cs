@@ -12,13 +12,13 @@
     using JetBrains.Annotations;
 
     /// <summary>
-    /// Class responsible for loading the main snoop assembly after this class got injected into a foreign process.
+    /// Class responsible for loading the main assembly and calling it's startup method after this class got injected into a foreign process.
     /// </summary>
-    public static class SnoopLoader
+    public static class InjectedAssemblyLoader
     {
         [PublicAPI]
         [DllExport]
-        public static void LoadSnoop([MarshalAs(UnmanagedType.LPWStr)] string transportDataString)
+        public static void LoadAssemblyAndCallStartupMethod([MarshalAs(UnmanagedType.LPWStr)] string transportDataString)
         {
             //Debugger.Launch();
 
@@ -37,17 +37,17 @@
                 }
             }
 
-            Trace.WriteLine($"Loading assembly '{injectorData.AssemblyName}'...");
+            Trace.WriteLine($"Loading assembly '{injectorData.FullAssemblyPath}'...");
 
-            var assembly = Assembly.LoadFrom(injectorData.AssemblyName);
+            var assembly = Assembly.LoadFrom(injectorData.FullAssemblyPath);
 
-            Trace.WriteLine($"Assembly '{injectorData.AssemblyName}' loaded.");
+            Trace.WriteLine($"Assembly '{injectorData.FullAssemblyPath}' loaded.");
 
             var type = assembly.GetType(injectorData.ClassName);
 
             if (type == null)
             {
-                Trace.WriteLine($"{injectorData.ClassName} could not be found in {injectorData.AssemblyName}");
+                Trace.WriteLine($"{injectorData.ClassName} could not be found in {injectorData.FullAssemblyPath}");
                 return;
             }
 
@@ -55,7 +55,7 @@
 
             if (method != null)
             {
-                Trace.WriteLine($"Invoking snoop startup method...");
+                Trace.WriteLine($"Invoking startup method...");
 
                 method.Invoke(null, new[]
                                     {

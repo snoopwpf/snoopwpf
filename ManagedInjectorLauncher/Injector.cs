@@ -45,6 +45,11 @@ namespace ManagedInjectorLauncher
 
         public static void InjectIntoProcess(IntPtr windowHandle, InjectorData injectorData)
         {
+            InjectIntoProcess(ProcessWrapper.FromWindowHandle(windowHandle), injectorData);
+        }
+
+        public static void InjectIntoProcess(ProcessWrapper processWrapper, InjectorData injectorData)
+        {
             string transportDataString;
 
             {
@@ -57,19 +62,12 @@ namespace ManagedInjectorLauncher
                 }
             }
 
-            NativeMethods.GetWindowThreadProcessId(windowHandle, out var processId);
-
-            using (var process = Process.GetProcessById(processId))
+            if (processWrapper.SupportedFrameworkName == "netcoreapp3.0")
             {
-                var processWrapper = new ProcessWrapper(process);
-
-                if (processWrapper.SupportedFrameworkName == "netcoreapp3.0")
-                {
-                    InjectIJWHost(processWrapper);
-                }
-
-                InjectSnoop(processWrapper, transportDataString);
+                InjectIJWHost(processWrapper);
             }
+
+            InjectSnoop(processWrapper, transportDataString);
         }
 
         private static void InjectIJWHost(ProcessWrapper processWrapper)
@@ -259,7 +257,7 @@ namespace ManagedInjectorLauncher
 
                 // Load dll into the remote process
                 // (via CreateRemoteThread & LoadLibrary)
-                var procAddress = NativeMethods.GetProcAddress(hLibrary, "LoadSnoop");
+                var procAddress = NativeMethods.GetProcAddress(hLibrary, "LoadAssemblyAndCallStartupMethod");
 
                 if (procAddress == UIntPtr.Zero)
                 {
@@ -297,47 +295,6 @@ namespace ManagedInjectorLauncher
             }
 
             NativeMethods.FreeLibrary(hLibrary);
-        }
-
-        private class ProcessWrapper
-        {
-            public ProcessWrapper(Process process)
-            {
-                this.Process = process;
-                this.Id = process.Id;
-                this.Handle = NativeMethods.OpenProcess(NativeMethods.ProcessAccessFlags.All, false, process.Id);
-
-                this.Bitness = NativeMethods.IsProcess64Bit(this.Process)
-                                   ? "x64"
-                                   : "x86";
-
-                this.SupportedFrameworkName = GetTargetFramework(process);
-            }
-
-            public Process Process { get; }
-
-            public int Id { get; }
-
-            public NativeMethods.ProcessHandle Handle { get; }
-
-            public string Bitness { get; }
-
-            public string SupportedFrameworkName { get; }
-
-            private static string GetTargetFramework(Process process)
-            {
-                var modules = NativeMethods.GetModules(process);
-
-                foreach (var module in modules)
-                {
-                    if (module.szModule.IndexOf("wpfgfx_cor3", StringComparison.OrdinalIgnoreCase) >= 0)
-                    {
-                        return "netcoreapp3.0";
-                    }
-                }
-
-                return "net40";
-            }
         }
     }
 }

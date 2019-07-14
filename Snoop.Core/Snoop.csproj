@@ -15,15 +15,8 @@
     <None Include="app.config" />
 
     <Resource Include="..\Artwork\*.ico" />
-  </ItemGroup>
+    <Resource Include="Resources\*.png" />
 
-  <ItemGroup>
-    <None Update="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="../Snoop.Core/Snoop.Core.csproj" />
+    <None Include="VisualTreeItem.cd" />
   </ItemGroup>
 </Project>

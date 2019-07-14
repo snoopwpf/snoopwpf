@@ -1,6 +1,6 @@
 ﻿public class InjectorData
 {
-    public string AssemblyName { get; set; }
+    public string FullAssemblyPath { get; set; }
 
     public string ClassName { get; set; }
 
