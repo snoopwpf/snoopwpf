@@ -3,8 +3,8 @@
   <PropertyGroup>
     <Company>snoopwpf</Company>
     <Product>Snoop</Product>
-    <Copyright>Copyright © Cory Plotts, Bastian Schmidt 2010-2019</Copyright>
-    <AssemblyVersion>2.11.0.0</AssemblyVersion>
-    <FileVersion>2.11.0.0</FileVersion>
+    <Copyright>Copyright © Cory Plotts, Bastian Schmidt 2010 - $([System.DateTime]::Today.ToString(yyyy))</Copyright>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
   </PropertyGroup>
 </Project>
