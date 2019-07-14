@@ -3,21 +3,19 @@
   <!-- ID="*" will generate a new GUID for product code at time of build. --> 
   <!-- Product code changes AND version number changes (first 3 digits), then a major upgrade will be triggered. --> 
    
-  <Product 
-    Id="*" 
-    Name="Snoop" 
-    Manufacturer="Cory Plotts" 
-    Language="1033" 
-    Version="$(var.ProductVersion)" 
-    UpgradeCode="FBEC01D7-CE1B-46F4-9498-71A96FEA8A15" 
-  > 
-    <Package InstallerVersion="301" Compressed="yes"/> 
+  <Product Id="*" 
+           Name="Snoop" 
+           Manufacturer="Cory Plotts" 
+           Language="1033" 
+           Version="$(var.ProductVersion)" 
+           UpgradeCode="FBEC01D7-CE1B-46F4-9498-71A96FEA8A15"> 
+    <Package InstallerVersion="301" Compressed="yes" /> 
  
     <MajorUpgrade AllowDowngrades="no" DowngradeErrorMessage="Newer version already installed." AllowSameVersionUpgrades="yes" />
      
-    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR"/> 
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" /> 
  
-    <Media Id="1" Cabinet="media1.cab" EmbedCab="yes"/> 
+    <Media Id="1" Cabinet="media1.cab" EmbedCab="yes" CompressionLevel="high" /> 
  
     <Directory Id="TARGETDIR" Name="SourceDir"> 
       <Directory Id="ProgramFilesFolder"> 
@@ -168,12 +166,7 @@
     <UIRef Id="WixUI_InstallDir"/> 
     <WixVariable Id="WixUILicenseRtf" Value="License.rtf"/> 
     <WixVariable Id="WixUIBannerBmp" Value="..\..\Artwork\Banner.bmp"/> 
-    <WixVariable Id="WixUIDialogBmp" Value="..\..\Artwork\Dialog.bmp"/> 
-    <!-- <WixVariable Id="WixUIExclamationIco" Value="Bitmaps\Exclamation.ico"/> 
-    <WixVariable Id="WixUIInfoIco" Value="Bitmaps\Information.ico"/> 
-    <WixVariable Id="WixUINewIco" Value="Bitmaps\New.ico"/> 
-    <WixVariable Id="WixUIUpIco" Value="Bitmaps\Up.ico"/>  -->
- 
+    <WixVariable Id="WixUIDialogBmp" Value="..\..\Artwork\Dialog.bmp"/>  
     <Icon Id="Snoop.exe" SourceFile="Snoop.exe"/>
     <Icon Id="icon.ico" SourceFile="..\..\Artwork\Snoop.ico"/>
     <Property Id="ARPPRODUCTICON" Value="icon.ico" />
