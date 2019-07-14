@@ -60,8 +60,10 @@ if ($Package) {
         Write-Error "Candle failed."
     }
 
-    & $light -out "$msioutput" -b "$buildOutput" "$intermediateOutput/Snoop.wixobj" -ext WixUIExtension -dProductVersion=$version -pdbout "$intermediateOutput/Snoop.wixpdb" -nologo `
-    -sice:ICE61
+    & $light -out "$msioutput" -b "$buildOutput" "$intermediateOutput/Snoop.wixobj" `
+        -ext WixUIExtension -dProductVersion=$version `
+        -pdbout "$intermediateOutput/Snoop.wixpdb" -nologo `
+        -sice:ICE61
 
     if ($LASTEXITCODE -ne 0) {
         Write-Error "Light failed."
