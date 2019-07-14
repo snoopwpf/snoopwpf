@@ -3,6 +3,7 @@
     using System.Diagnostics;
     using System.IO;
     using System.Xml.Serialization;
+    using Snoop.Infrastructure;
     using Snoop.Properties;
 
     public sealed class TransientSettingsData
@@ -16,14 +17,9 @@
             this.SetWindowOwner = true;
         }
 
-        //internal TransientSettingsData(Settings settings)
-        //{
-        //    this.MultipleAppDomainMode = settings.MultipleAppDomainMode;
-        //    this.MultipleDispatcherMode = settings.MultipleDispatcherMode;
-        //    this.SetWindowOwner = settings.SetOwnerWindow;
-        //}
-
         public static TransientSettingsData Current { get; private set; }
+
+        public SnoopStartTarget StartTarget { get; set; } = SnoopStartTarget.SnoopUI;
 
         public MultipleAppDomainMode MultipleAppDomainMode { get; set; }
 
@@ -78,5 +74,11 @@
         Ask,
         AlwaysUse,
         NeverUse
+    }
+
+    public enum SnoopStartTarget
+    {
+        SnoopUI,
+        Zoomer
     }
 }

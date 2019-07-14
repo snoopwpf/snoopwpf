@@ -15,9 +15,6 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using System.Windows.Forms.Integration;
-using System.Threading;
-using Snoop.Data;
 using Snoop.Infrastructure;
 
 namespace Snoop
@@ -104,166 +101,6 @@ namespace Snoop
         }
 
         #endregion
-
-		#region Public Static Methods
-
-		public static bool GoBabyGo(string settingsFile)
-		{
-		    TransientSettingsData.LoadCurrent(settingsFile);
-
-            return new CrossAppDomainSnoop().CrossDomainGoBabyGo(settingsFile);
-        }
-
-	    public static bool GoBabyGoForCurrentAppDomain(string settingsFile)
-		{
-			try
-			{
-				TransientSettingsData.LoadCurrentIfRequired(settingsFile);
-
-				Trace.WriteLine($"Running snoop in app domain \"{AppDomain.CurrentDomain.FriendlyName}\".");
-
-				SnoopApplication();
-				return true;
-			}
-			catch (Exception exception)
-			{
-			    ErrorDialog.ShowDialog(exception, "Error Snooping", "There was an error snooping the application.", exceptionAlreadyHandled: true);
-				return false;
-			}
-		}
-
-		public static void SnoopApplication()
-		{
-			Trace.WriteLine("Snooping application.");
-
-			Dispatcher dispatcher;
-		    if (Application.Current == null)
-		    {
-		        dispatcher = Dispatcher.CurrentDispatcher;
-		    }
-		    else
-		    {
-		        dispatcher = Application.Current.Dispatcher;
-		    }
-
-			if (dispatcher.CheckAccess())
-			{
-				Trace.WriteLine("Starting snoop UI...");
-
-				var snoop = new SnoopUI();
-				var title = TryGetMainWindowTitle();
-
-				if (!string.IsNullOrEmpty(title))
-				{
-					snoop.Title = $"{title} - Snoop";
-				}
-
-				snoop.Inspect();
-
-				CheckForOtherDispatchers(dispatcher);
-			}
-			else
-			{
-				Trace.WriteLine("Current dispatcher runs on a different thread.");
-
-				dispatcher.Invoke((Action)(SnoopApplication));
-            }
-		}
-
-	    private static void CheckForOtherDispatchers(Dispatcher mainDispatcher)
-		{
-		    if (TransientSettingsData.Current.MultipleDispatcherMode == MultipleDispatcherMode.NeverUse)
-		    {
-		        return;
-		    }
-
-		    // check and see if any of the root visuals have a different mainDispatcher
-			// if so, ask the user if they wish to enter multiple mainDispatcher mode.
-			// if they do, launch a snoop ui for every additional mainDispatcher.
-			// see http://snoopwpf.codeplex.com/workitem/6334 for more info.
-
-		    var rootVisuals = new List<Visual>();
-		    var dispatchers = new List<Dispatcher>
-		                      {
-		                          mainDispatcher
-		                      };
-
-		    foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
-			{
-				var presentationSourceRootVisual = presentationSource.RootVisual;
-
-			    if (!(presentationSourceRootVisual is Window))
-			    {
-			        continue;
-			    }
-
-			    var presentationSourceRootVisualDispatcher = presentationSourceRootVisual.Dispatcher;
-
-				if (dispatchers.IndexOf(presentationSourceRootVisualDispatcher) == -1)
-				{
-					rootVisuals.Add(presentationSourceRootVisual);
-					dispatchers.Add(presentationSourceRootVisualDispatcher);
-				}
-			}
-
-		    var useMultipleDispatcherMode = false;
-			if (rootVisuals.Count > 0)
-			{
-                // Should we skip the question and always use multiple dispatcher mode?
-			    if (TransientSettingsData.Current.MultipleDispatcherMode == MultipleDispatcherMode.AlwaysUse)
-			    {
-			        useMultipleDispatcherMode = true;
-			    }
-                else
-                {
-				    var result =
-					    MessageBox.Show
-					    (
-						    "Snoop has noticed windows running in multiple dispatchers!\n\n" +
-						    "Would you like to enter multiple dispatcher mode, and have a separate Snoop window for each dispatcher?\n\n" +
-						    "Without having a separate Snoop window for each dispatcher, you will not be able to Snoop the windows in the dispatcher threads outside of the main dispatcher. " +
-						    "Also, note, that if you bring up additional windows in additional dispatchers (after Snooping), you will need to Snoop again in order to launch Snoop windows for those additional dispatchers.",
-						    "Enter Multiple Dispatcher Mode",
-						    MessageBoxButton.YesNo,
-						    MessageBoxImage.Question
-					    );
-
-				    if (result == MessageBoxResult.Yes)
-				    {
-				        useMultipleDispatcherMode = true;
-				    }
-                }
-
-			    if (useMultipleDispatcherMode)
-			    {
-			        SnoopModes.MultipleDispatcherMode = true;
-			        var thread = new Thread(DispatchOut);
-			        thread.Start(rootVisuals);
-			    }
-			}
-		}
-
-		private static void DispatchOut(object o)
-		{
-			List<Visual> visuals = (List<Visual>)o;
-			foreach (var v in visuals)
-			{
-				// launch a snoop ui on each dispatcher
-				v.Dispatcher.Invoke
-				(
-					(Action)
-					(
-						() =>
-						{
-							var snoopOtherDispatcher = new SnoopUI();
-							snoopOtherDispatcher.Inspect(v);
-						}
-					)
-				);
-			}
-		}
-		private delegate void Action();
-		#endregion
 
 		#region Public Properties
 		#region VisualTreeItems
@@ -445,72 +282,6 @@ namespace Snoop
 
 		#region Public Methods
 
-		public bool Inspect()
-		{
-			var foundRoot = this.FindRoot();
-			if (foundRoot == null)
-			{
-				if (SnoopModes.MultipleDispatcherMode == false
-				    && SnoopModes.MultipleAppDomainMode == false)
-				{
-					//SnoopModes.MultipleDispatcherMode is always false for all scenarios except for cases where we are running multiple dispatchers.
-					//If SnoopModes.MultipleDispatcherMode was set to true, then there definitely was a root visual found in another dispatcher, so
-					//the message below would be wrong.
-					MessageBox.Show
-					(
-						"Can't find a current application or a PresentationSource root visual.",
-						"Can't Snoop",
-						MessageBoxButton.OK,
-						MessageBoxImage.Exclamation
-					);
-                }
-
-                // This path should only be hit if we don't find a root in some dispatcher or app domain.
-                // This is not really critical as not every dispatcher/app domain must meet this requirement.
-                Trace.WriteLine("Can't find a current application or a PresentationSource root visual.");
-
-				return false;
-			}
-
-            this.Inspect(foundRoot);
-
-            return true;
-        }
-
-		public void Inspect(object rootToInspect)
-		{
-			this.Dispatcher.UnhandledException += this.UnhandledExceptionHandler;
-
-		    SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
-
-		    this.Load(rootToInspect);
-
-            this.Owner = SnoopWindowUtils.FindOwnerWindow(this);
-
-			Trace.WriteLine("Showing snoop UI...");
-
-            this.Show();
-		    this.Activate();
-
-			Trace.WriteLine("Shown and activated snoop UI.");
-		}
-
-		private void UnhandledExceptionHandler(object sender, DispatcherUnhandledExceptionEventArgs e)
-        {
-            if (SnoopModes.IgnoreExceptions)
-            {
-                return;
-            }
-
-            if (SnoopModes.SwallowExceptions)
-            {
-                e.Handled = true;
-                return;
-            }
-
-            e.Handled = ErrorDialog.ShowDialog(e.Exception);
-        }
-
         public void ApplyReduceDepthFilter(VisualTreeItem newRoot)
 		{
 			if (m_reducedDepthRoot != newRoot)
@@ -603,6 +374,7 @@ namespace Snoop
 		{
 			this.Load(this);
 		}
+
 		private void HandleRefresh(object sender, ExecutedRoutedEventArgs e)
 		{
 			Cursor saveCursor = Mouse.OverrideCursor;
@@ -757,16 +529,7 @@ namespace Snoop
 			return node;
 		}
 
-		private static string TryGetMainWindowTitle()
-		{
-			if (Application.Current != null && Application.Current.MainWindow != null)
-			{
-				return Application.Current.MainWindow.Title;
-			}
-			return string.Empty;
-		}
-
-		private void HandleTreeSelectedItemChanged(object sender, EventArgs e)
+        private void HandleTreeSelectedItemChanged(object sender, EventArgs e)
 		{
 			VisualTreeItem item = this.Tree.SelectedItem as VisualTreeItem;
 			if (item != null)
@@ -824,67 +587,7 @@ namespace Snoop
 			}
 		}
 
-		private object FindRoot()
-		{
-			object foundRoot = null;
-
-			if (SnoopModes.MultipleDispatcherMode)
-			{
-				foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
-				{
-					if
-					(
-						presentationSource.RootVisual != null &&
-						presentationSource.RootVisual is UIElement &&
-						((UIElement)presentationSource.RootVisual).Dispatcher.CheckAccess()
-					)
-					{
-						foundRoot = presentationSource.RootVisual;
-						break;
-					}
-				}
-			}
-			else if (Application.Current != null)
-			{
-				foundRoot = Application.Current;
-			}
-			else
-			{
-				// if we don't have a current application,
-				// then we must be in an interop scenario (win32 -> wpf or windows forms -> wpf).
-
-
-				// in this case, let's iterate over PresentationSource.CurrentSources,
-				// and use the first non-null, visible RootVisual we find as root to inspect.
-				foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
-				{
-					if
-					(
-						presentationSource.RootVisual != null &&
-						presentationSource.RootVisual is UIElement &&
-						((UIElement)presentationSource.RootVisual).Visibility == Visibility.Visible
-					)
-					{
-						foundRoot = presentationSource.RootVisual;
-						break;
-					}
-				}
-			}
-
-            if (System.Windows.Forms.Application.OpenForms.Count > 0)
-            {
-                // this is windows forms -> wpf interop
-
-                // call ElementHost.EnableModelessKeyboardInterop to allow the Snoop UI window
-                // to receive keyboard messages. if you don't call this method,
-                // you will be unable to edit properties in the property grid for windows forms interop.
-                ElementHost.EnableModelessKeyboardInterop(this);
-            }
-
-            return foundRoot;
-		}
-
-		private void Load(object newRoot)
+		protected override void Load(object newRoot)
 		{
 			this.root = newRoot;
 

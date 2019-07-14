@@ -4,19 +4,13 @@
 // All other rights reserved.
 
 using System;
-using System.Collections;
 using System.ComponentModel;
 using System.Globalization;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Shapes;
 using System.Windows.Threading;
-using System.Runtime.InteropServices;
-using System.Windows.Interop;
-using System.Windows.Forms.Integration;
 using Snoop.Infrastructure;
 
 namespace Snoop
@@ -71,59 +65,12 @@ namespace Snoop
 			this.Viewbox.RenderTransform = this.transform;
 		}
 
-		public static void GoBabyGo(string settingsFile)
-		{
-            TransientSettingsData.LoadCurrentIfRequired(settingsFile);
-
-            Dispatcher dispatcher;
-            if (Application.Current == null)
-            {
-                dispatcher = Dispatcher.CurrentDispatcher;
-            }
-            else
-            {
-                dispatcher = Application.Current.Dispatcher;
-            }
-
-            if (dispatcher.CheckAccess())
-			{
-				var zoomer = new Zoomer();
-				zoomer.Magnify();
-			}
-			else
-			{
-				dispatcher.Invoke((Action)(() => GoBabyGo(settingsFile)));
-			}
-		}
-
-		public void Magnify()
-		{
-			object root = FindRoot();
-			if (root == null)
-			{
-				MessageBox.Show
-				(
-					"Can't find a current application or a PresentationSource root visual.",
-					"Can't Magnify",
-					MessageBoxButton.OK,
-					MessageBoxImage.Exclamation
-				);
-			}
-
-			Magnify(root);
-		}
-
-		public void Magnify(object root)
+        protected override void Load(object root)
 		{
 			this.Target = root;
 
-		    this.Owner = SnoopWindowUtils.FindOwnerWindow(this);
-
 			SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
-
-			this.Show();
-			this.Activate();
-		}
+        }
 
 		public object Target
 		{
@@ -167,7 +114,45 @@ namespace Snoop
 			SnoopPartsRegistry.RemoveSnoopVisualTreeRoot(this);
 		}
 
-		private void HandleReset(object target, ExecutedRoutedEventArgs args)
+        /// <inheritdoc />
+        protected override object FindRoot()
+        {
+            var root = base.FindRoot();
+
+            if (root is Application application)
+            {
+                // try to use the application's main window (if visible) as the root
+                if (application.MainWindow != null && application.MainWindow.Visibility == Visibility.Visible)
+                {
+                    root = application.MainWindow;
+                }
+                else
+                {
+                    // else search for the first visible window in the list of the application's windows
+                    foreach (Window appWindow in application.Windows)
+                    {
+                        if (appWindow.CheckAccess()
+                            && appWindow.Visibility == Visibility.Visible)
+                        {
+                            root = appWindow;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // if the root is a window, let's magnify the window's content.
+            // this is better, as otherwise, you will have window background along with the window's content.
+            if (root is Window window
+                && window.Content != null)
+            {
+                root = window.Content;
+            }
+
+            return root;
+        }
+
+        private void HandleReset(object target, ExecutedRoutedEventArgs args)
 		{
 			this.translation.X = 0;
 			this.translation.Y = 0;
@@ -344,91 +329,7 @@ namespace Snoop
 			this.zoom.ScaleY = this.zoom.ScaleY * zoom;
 		}
 
-		private object FindRoot()
-		{
-			object root = null;
-
-			if (SnoopModes.MultipleDispatcherMode)
-			{
-				foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
-				{
-					if
-					(
-						presentationSource.RootVisual != null &&
-						presentationSource.RootVisual is UIElement &&
-						((UIElement)presentationSource.RootVisual).Dispatcher.CheckAccess()
-					)
-					{
-						root = presentationSource.RootVisual;
-						break;
-					}
-				}
-			}
-			else if (Application.Current != null)
-			{
-				// try to use the application's main window (if visible) as the root
-				if (Application.Current.MainWindow != null && Application.Current.MainWindow.Visibility == Visibility.Visible)
-				{
-					root = Application.Current.MainWindow;
-				}
-				else
-				{
-					// else search for the first visible window in the list of the application's windows
-					foreach (Window window in Application.Current.Windows)
-					{
-						if (window.Visibility == Visibility.Visible)
-						{
-							root = window;
-							break;
-						}
-					}
-				}
-			}
-			else
-			{
-				// if we don't have a current application,
-				// then we must be in an interop scenario (win32 -> wpf or windows forms -> wpf).
-
-				if (System.Windows.Forms.Application.OpenForms.Count > 0)
-				{
-					// this is windows forms -> wpf interop
-
-					// call ElementHost.EnableModelessKeyboardInterop
-					// to allow the Zoomer window to receive keyboard messages.
-					ElementHost.EnableModelessKeyboardInterop(this);
-				}
-			}
-
-			if (root == null)
-			{
-				// if we still don't have a root to magnify
-
-				// let's iterate over PresentationSource.CurrentSources,
-				// and use the first non-null, visible RootVisual we find as root to inspect.
-				foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
-				{
-					if
-					(
-						presentationSource.RootVisual != null &&
-						presentationSource.RootVisual is UIElement &&
-						((UIElement)presentationSource.RootVisual).Visibility == Visibility.Visible
-					)
-					{
-						root = presentationSource.RootVisual;
-						break;
-					}
-				}
-			}
-
-			// if the root is a window, let's magnify the window's content.
-			// this is better, as otherwise, you will have window background along with the window's content.
-			if (root is Window && ((Window)root).Content != null)
-				root = ((Window)root).Content;
-
-			return root;
-		}
-
-		private TranslateTransform translation = new TranslateTransform();
+        private TranslateTransform translation = new TranslateTransform();
 		private ScaleTransform zoom = new ScaleTransform();
 		private TransformGroup transform = new TransformGroup();
 		private Point downPoint;

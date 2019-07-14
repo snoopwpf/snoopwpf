@@ -169,7 +169,7 @@ namespace Snoop
 
             try
             {
-                InjectorLauncher.Launch(this, "Snoop.Core", "Snoop.SnoopUI", "GoBabyGo", CreateTransientSettingsData().WriteToFile());
+                InjectorLauncher.Launch(this, "Snoop.Core", "Snoop.SnoopManager", "StartSnoop", CreateTransientSettingsData(SnoopStartTarget.SnoopUI).WriteToFile());
             }
             catch (Exception e)
             {
@@ -187,7 +187,7 @@ namespace Snoop
 
 			try
 			{
-				InjectorLauncher.Launch(this, "Snoop.Core", "Snoop.Zoomer", "GoBabyGo", CreateTransientSettingsData().WriteToFile());
+				InjectorLauncher.Launch(this, "Snoop.Core", "Snoop.SnoopManager", "StartSnoop", CreateTransientSettingsData(SnoopStartTarget.Zoomer).WriteToFile());
 			}
 			catch (Exception e)
 			{
@@ -204,15 +204,17 @@ namespace Snoop
 		    this.AttachFailed?.Invoke(this, new AttachFailedEventArgs(e, this.Description));
 		}
 
-        private static TransientSettingsData CreateTransientSettingsData()
+        private static TransientSettingsData CreateTransientSettingsData(SnoopStartTarget startTarget)
         {
             var settings = Settings.Default;
 
             return new TransientSettingsData
                    {
+                       StartTarget = startTarget,
+
                        MultipleAppDomainMode = settings.MultipleAppDomainMode,
                        MultipleDispatcherMode = settings.MultipleDispatcherMode,
-                       SetWindowOwner = settings.SetOwnerWindow,
+                       SetWindowOwner = settings.SetOwnerWindow
                    };
         }
     }

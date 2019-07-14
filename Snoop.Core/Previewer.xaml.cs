@@ -127,10 +127,11 @@ namespace Snoop
 			e.CanExecute = (this.Target as Visual) != null;
 			e.Handled = true;
 		}
+
 		private void HandleMagnify(object sender, ExecutedRoutedEventArgs e)
 		{
 			Zoomer zoomer = new Zoomer();
-			zoomer.Magnify(this.Target);
+			zoomer.Inspect(this.Target);
 			e.Handled = true;
 		}
 
