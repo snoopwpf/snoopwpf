@@ -11,34 +11,17 @@ $ErrorActionPreference = "Stop"
 
 $packages = Join-Path $PSScriptRoot "packages"
 
-$vswhere = Join-Path $packages "vswhere/tools/vswhere.exe"
 $nuget = Join-Path $packages "nuget.commandline/tools/nuget.exe"
 $candle = Join-Path $packages "wix/tools/candle.exe"
 $light = Join-Path $packages "wix/tools/light.exe"
 
-"Restoring packages"
-& ./paket.cmd restore
-
-$path = & $vswhere -latest -products * -requires Microsoft.Component.MSBuild -property installationPath
-if ($path) {
-    $msbuild = Join-Path $path 'MSBuild/15.0/Bin/MSBuild.exe'
-}
-
-if ($null -eq $msbuild -or !(Test-Path $msbuild)) {
-    $msbuild = Join-Path $path 'MSBuild/Current/Bin/MSBuild.exe'
-}
-
-if ($null -eq $msbuild -or !(Test-Path $msbuild)) {
-    Write-Error "MSBuild could not be found."
-}
-
-$solutionName = "Snoop.sln"
+&.paket/paket.exe restore
 
 "Restoring solution"
-& $msbuild $solutionName /t:Restore /property:Configuration=$Configuration /v:m /nologo
+&dotnet restore
 
 "Building solution"
-& $msbuild $solutionName /property:Configuration=$Configuration /v:m /nologo
+&dotnet build -c Release
 
 #"Building Test-Harnesses"
 #& $msbuild ".\TestHarnesses\Snoop TestHarnesses.sln" /property:Configuration=$Configuration /v:m /nologo
@@ -48,10 +31,10 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 if ($Package) {
-    $buildOutput = Join-Path $PSScriptRoot "build/$Configuration"
+    $buildOutput = Join-Path $PSScriptRoot "bin/$Configuration"
     $intermediateOutput = Join-Path $PSScriptRoot "Intermediate"
     $version = (Get-Item (Join-Path $buildOutput "snoop.exe")).VersionInfo.FileVersion
-    $outputDirectory = Join-Path $PSScriptRoot "build/publish"
+    $outputDirectory = Join-Path $PSScriptRoot "bin/publish"
 
     # Create chocolatey signal files for shim generation
     Get-ChildItem -Path $buildOutput/*.exe -Exclude "Snoop.exe" | ForEach-Object { New-Item "$_.ignore" -ErrorAction SilentlyContinue | Out-Null }

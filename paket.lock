@@ -3,6 +3,5 @@ SPECIFIC-VERSION: FALSE
 RESTRICTION: == net40
 NUGET
   remote: https://api.nuget.org/v3/index.json
-    nuget.commandline (4.7.1)
-    vswhere (2.5.2)
+    nuget.commandline (5.0.2)
     wix (3.11.1)

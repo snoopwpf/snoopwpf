@@ -5,5 +5,4 @@ specific_version: false
 redirects: off
 
 nuget nuget.commandline
-nuget vswhere
 nuget wix

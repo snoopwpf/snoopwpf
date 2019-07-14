@@ -15,19 +15,32 @@
     A changelog can be found at https://github.com/snoopwpf/snoopwpf/blob/master/Changelog.md.
     </description>
     <tags>snoop spy wpf</tags>
-    <dependencies>
-      <dependency id="vcredist140" version="14.12.25810" />
-    </dependencies>
   </metadata>
   <files>
     <file src="..\License.txt" target="tools\" />
     <file src="tools\*" target="tools\" />
-    <file src="..\build\$Configuration$\Scripts\*" target="tools\Scripts\" />
-    <file src="..\build\$Configuration$\*.config" target="tools\" />
-    <file src="..\build\$Configuration$\*.dll" target="tools\" />    
-    <file src="..\build\$Configuration$\*.exe" target="tools\" />
-    <file src="..\build\$Configuration$\*.pdb" target="tools\" />
-    <file src="..\build\$Configuration$\*.ignore" target="tools\" />
-    <file src="..\build\$Configuration$\*.gui" target="tools\" />
+    <file src="..\bin\$Configuration$\Scripts\*" target="tools\Scripts\" />
+
+    <file src="..\bin\$Configuration$\Snoop.Core.*.config" target="tools\" />
+    <file src="..\bin\$Configuration$\Snoop.Core.*.dll" target="tools\" />
+    <file src="..\bin\$Configuration$\Snoop.Core.*.pdb" target="tools\" />
+    <file src="..\bin\$Configuration$\Snoop.Core.*.json" target="tools\" />
+
+    <file src="..\bin\$Configuration$\Snoop.exe" target="tools\" />
+    <file src="..\bin\$Configuration$\Snoop.exe.config" target="tools\" />
+    <file src="..\bin\$Configuration$\Snoop.pdb" target="tools\" />
+    
+    <file src="..\bin\$Configuration$\ManagedInjector.*.*.dll" target="tools\" />
+    <file src="..\bin\$Configuration$\ManagedInjector.*.*.pdb" target="tools\" />
+    <file src="..\bin\$Configuration$\ManagedInjector.*.*.json" target="tools\" />
+
+    <file src="..\bin\$Configuration$\ManagedInjectorLauncher.*.exe" target="tools\" />
+    <file src="..\bin\$Configuration$\ManagedInjectorLauncher.*.exe.config" target="tools\" />
+    <file src="..\bin\$Configuration$\ManagedInjectorLauncher.*.pdb" target="tools\" />
+
+    <file src="..\bin\$Configuration$\System.Management.Automation.dll" target="tools\" />
+
+    <file src="..\bin\$Configuration$\*.ignore" target="tools\" />
+    <file src="..\bin\$Configuration$\*.gui" target="tools\" />
   </files>
 </package>
