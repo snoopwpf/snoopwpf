@@ -2,10 +2,12 @@ Build/
 Intermediate/
 bin/
 obj/
+output/
 Debug/
 Release/
 packages/
 paket-files/
+.tmp/
 *.vs
 *.user
 *.opensdf

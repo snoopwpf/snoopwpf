@@ -1,71 +1,69 @@
-#Requires -Version 5
-
+[CmdletBinding()]
 Param(
-    [Parameter(Mandatory=$False)]
-    [string]$Configuration = "Release",
-    [Parameter(Mandatory=$False)]
-    [switch]$Package
+    [Parameter(Position=0,Mandatory=$false,ValueFromRemainingArguments=$true)]
+    [string[]]$BuildArguments
 )
 
-$ErrorActionPreference = "Stop"
+Write-Output "Windows PowerShell $($Host.Version)"
 
-$packages = Join-Path $PSScriptRoot "packages"
+Set-StrictMode -Version 2.0; $ErrorActionPreference = "Stop"; $ConfirmPreference = "None"; trap { exit 1 }
+$PSScriptRoot = Split-Path $MyInvocation.MyCommand.Path -Parent
 
-$nuget = Join-Path $packages "nuget.commandline/tools/nuget.exe"
-$candle = Join-Path $packages "wix/tools/candle.exe"
-$light = Join-Path $packages "wix/tools/light.exe"
+###########################################################################
+# CONFIGURATION
+###########################################################################
 
-&.paket/paket.exe restore
+$BuildProjectFile = "$PSScriptRoot\.build\_build.csproj"
+$TempDirectory = "$PSScriptRoot\\.tmp"
 
-"Restoring solution"
-&dotnet restore
+$DotNetGlobalFile = "$PSScriptRoot\\global.json"
+$DotNetInstallUrl = "https://raw.githubusercontent.com/dotnet/cli/master/scripts/obtain/dotnet-install.ps1"
+$DotNetChannel = "Current"
 
-"Building solution"
-&dotnet build -c Release
+$env:DOTNET_SKIP_FIRST_TIME_EXPERIENCE = 1
+$env:DOTNET_CLI_TELEMETRY_OPTOUT = 1
 
-#"Building Test-Harnesses"
-#& $msbuild ".\TestHarnesses\Snoop TestHarnesses.sln" /property:Configuration=$Configuration /v:m /nologo
+###########################################################################
+# EXECUTION
+###########################################################################
 
-if ($LASTEXITCODE -ne 0) {
-    Write-Error "Build failed."
+function ExecSafe([scriptblock] $cmd) {
+    & $cmd
+    if ($LASTEXITCODE) { exit $LASTEXITCODE }
 }
 
-if ($Package) {
-    $buildOutput = Join-Path $PSScriptRoot "bin/$Configuration"
-    $intermediateOutput = Join-Path $PSScriptRoot "Intermediate"
-    $version = (Get-Item (Join-Path $buildOutput "snoop.exe")).VersionInfo.FileVersion
-    $outputDirectory = Join-Path $PSScriptRoot "bin/publish"
-
-    # Create chocolatey signal files for shim generation
-    Get-ChildItem -Path $buildOutput/*.exe -Exclude "Snoop.exe" | ForEach-Object { New-Item "$_.ignore" -ErrorAction SilentlyContinue | Out-Null }
-    New-Item (Join-Path $buildOutput "Snoop.exe.gui") -ErrorAction SilentlyContinue | Out-Null    
-
-    "Creating chocolatey package for version $version"
-    & $nuget pack "$(Join-Path $PSScriptRoot 'chocolatey\snoop.nuspec')" -Version $version -Properties Configuration=$Configuration -OutputDirectory "$outputDirectory" -NoPackageAnalysis
-
-    if ($LASTEXITCODE -ne 0) {
-        Write-Error "Creating chocolatey package failed."
-    }
-
-    "Creating zip for version $version"
-    $zipOutput = (Join-Path $outputDirectory "Snoop.$version.zip")
-    Remove-Item $zipOutput -ErrorAction SilentlyContinue
-    Compress-Archive -Path $buildOutput\Scripts, $buildOutput\*.dll, $buildOutput\*.pdb, $buildOutput\*.exe, $buildOutput\*.config -DestinationPath $zipOutput
-
-    "Creating msi for version $version"
-    $msiOutput = Join-Path $outputDirectory "Snoop.$version.msi"
-    & $candle Snoop.wxs -ext WixUIExtension -o "$intermediateOutput/Snoop.wixobj" -dProductVersion="$version" -nologo
-
-    if ($LASTEXITCODE -ne 0) {
-        Write-Error "Candle failed."
-    }
-
-    & $light -out "$msioutput" -b "$buildOutput" "$intermediateOutput/Snoop.wixobj" `
-        -ext WixUIExtension -dProductVersion=$version `
-        -pdbout "$intermediateOutput/Snoop.wixpdb" -nologo `
-        -sice:ICE61
-
-    if ($LASTEXITCODE -ne 0) {
-        Write-Error "Light failed."
+# If global.json exists, load expected version
+if (Test-Path $DotNetGlobalFile) {
+    $DotNetGlobal = $(Get-Content $DotNetGlobalFile | Out-String | ConvertFrom-Json)
+    if ($DotNetGlobal.PSObject.Properties["sdk"] -and $DotNetGlobal.sdk.PSObject.Properties["version"]) {
+        #$DotNetVersion = $DotNetGlobal.sdk.version
     }
 }
+
+# If dotnet is installed locally, and expected version is not set or installation matches the expected version
+if ((Get-Command "dotnet" -ErrorAction SilentlyContinue) -ne $null -and `
+     (!(Test-Path variable:DotNetVersion) -or $(& dotnet --version) -eq $DotNetVersion)) {
+    $env:DOTNET_EXE = (Get-Command "dotnet").Path
+}
+else {
+    $DotNetDirectory = "$TempDirectory\dotnet-win"
+    $env:DOTNET_EXE = "$DotNetDirectory\dotnet.exe"
+
+    # Download install script
+    $DotNetInstallFile = "$TempDirectory\dotnet-install.ps1"
+    md -force $TempDirectory > $null
+    (New-Object System.Net.WebClient).DownloadFile($DotNetInstallUrl, $DotNetInstallFile)
+
+    # Install by channel or version
+    if (!(Test-Path variable:DotNetVersion)) {
+        ExecSafe { & $DotNetInstallFile -InstallDir $DotNetDirectory -Channel $DotNetChannel -NoPath }
+    } else {
+        ExecSafe { & $DotNetInstallFile -InstallDir $DotNetDirectory -Version $DotNetVersion -NoPath }
+    }
+}
+
+Write-Output "Microsoft (R) .NET Core SDK version $(& $env:DOTNET_EXE --version)"
+
+#ExecSafe { & $env:DOTNET_EXE build $BuildProjectFile /nodeReuse:false }
+#ExecSafe { & $env:DOTNET_EXE run --project $BuildProjectFile --no-build -- $BuildArguments }
+ExecSafe { & $env:DOTNET_EXE run --project $BuildProjectFile -- $BuildArguments }
