@@ -219,7 +219,8 @@ namespace ManagedInjectorLauncher
 
         private static void InjectSnoop(ProcessWrapper processWrapper, string transportDataString)
         {
-            var pathToHookDll = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), $"ManagedInjector.{processWrapper.SupportedFrameworkName}.{processWrapper.Bitness}.dll");
+            var hookDllName = $"ManagedInjector.{processWrapper.SupportedFrameworkName}.{processWrapper.Bitness}.dll";
+            var pathToHookDll = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), hookDllName);
 
             var hLibrary = NativeMethods.LoadLibrary(pathToHookDll);
 
@@ -229,11 +230,6 @@ namespace ManagedInjectorLauncher
             }
 
             var hLibraryInForeignProcess = LoadLibraryInForeignProcess(processWrapper, pathToHookDll);
-
-            if (hLibrary != hLibraryInForeignProcess)
-            {
-                throw new Exception($"Different module handle/offset. Local = {hLibrary}, Remote = {hLibraryInForeignProcess}.\r\nThis case is currently not handled.\r\nPlease create an issue on github including your sample application.");
-            }
 
             var stringForRemoteProcess = transportDataString;
 
@@ -257,28 +253,26 @@ namespace ManagedInjectorLauncher
 
                 // Load dll into the remote process
                 // (via CreateRemoteThread & LoadLibrary)
-                var procAddress = NativeMethods.GetProcAddress(hLibrary, "LoadAssemblyAndCallStartupMethod");
+                var procAddress = hLibrary == hLibraryInForeignProcess
+                                      ? NativeMethods.GetProcAddress(hLibrary, "LoadAssemblyAndCallStartupMethod")
+                                      : NativeMethods.GetRemoteProcAddress(processWrapper.Process, hookDllName, "LoadAssemblyAndCallStartupMethod");
 
-                if (procAddress == UIntPtr.Zero)
+                if (procAddress != UIntPtr.Zero)
                 {
+                    var remoteThread = NativeMethods.CreateRemoteThread(processWrapper.Handle, IntPtr.Zero, 0, procAddress, remoteAddress, 0, out _);
+
                     // todo: error handling
+                    if (remoteThread != IntPtr.Zero)
+                    {
+                        NativeMethods.WaitForSingleObject(remoteThread);
+                    }
+
+                    NativeMethods.CloseHandle(remoteThread);
                 }
-
-                var remoteThread = NativeMethods.CreateRemoteThread(processWrapper.Handle,
-                                                               IntPtr.Zero,
-                                                               0,
-                                                               procAddress,
-                                                               remoteAddress,
-                                                               0,
-                                                               out _);
-
-                // todo: error handling
-                if (remoteThread != IntPtr.Zero)
+                else
                 {
-                    NativeMethods.WaitForSingleObject(remoteThread);
+                    Trace.WriteLine("Could not get proc address for \"LoadAssemblyAndCallStartupMethod\".");
                 }
-
-                NativeMethods.CloseHandle(remoteThread);
 
                 try
                 {

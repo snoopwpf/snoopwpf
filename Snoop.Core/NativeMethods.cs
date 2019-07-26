@@ -316,7 +316,45 @@ namespace Snoop
         public static extern bool IsWow64Process([In] IntPtr process, [Out] out bool wow64Process);
 
 	    [DllImport("kernel32", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
-		internal static extern UIntPtr GetProcAddress(IntPtr hModule, string procName);
+		public static extern UIntPtr GetProcAddress(IntPtr hModule, string procName);
+
+        public static UIntPtr GetRemoteProcAddress(Process targetProcess, string moduleName, string procName)
+        {
+            ulong functionOffsetFromBaseAddress = 0;
+            ulong remoteProcAddress = 0;
+
+            foreach (ProcessModule mod in Process.GetCurrentProcess().Modules)
+            {
+                if (mod.ModuleName.Equals(moduleName, StringComparison.OrdinalIgnoreCase)
+                    || mod.FileName.Equals(moduleName, StringComparison.OrdinalIgnoreCase))
+                {
+                    var func = NativeMethods.GetProcAddress(mod.BaseAddress, procName).ToUInt64();
+
+                    if (func != 0)
+                    {
+                        functionOffsetFromBaseAddress = func - (uint)mod.BaseAddress;
+                    }
+
+                    break;
+                }
+            }
+
+            if (functionOffsetFromBaseAddress != 0)
+            {
+                foreach (ProcessModule mod in targetProcess.Modules)
+                {
+                    if (mod.ModuleName.Equals(moduleName, StringComparison.OrdinalIgnoreCase)
+                        || mod.FileName.Equals(moduleName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        remoteProcAddress = (uint)mod.BaseAddress + functionOffsetFromBaseAddress;
+
+                        break;
+                    }
+                }
+            }
+
+            return new UIntPtr(remoteProcAddress);
+        }
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
         public static extern IntPtr GetModuleHandle(string lpModuleName);
