@@ -18,8 +18,7 @@ namespace Snoop
 			this.InitializeComponent();
 
 			this.Loaded += this.ErrorDialog_Loaded;
-			this.Closed += this.ErrorDialog_Closed;
-		}
+        }
 
 		public Exception Exception { get; private set; }
 
@@ -71,16 +70,9 @@ namespace Snoop
 	    private void ErrorDialog_Loaded(object sender, RoutedEventArgs e)
 		{
 			this._textBlockException.Text = this.GetExceptionMessage();
+        }
 
-			SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
-		}
-
-		private void ErrorDialog_Closed(object sender, EventArgs e)
-		{
-			SnoopPartsRegistry.RemoveSnoopVisualTreeRoot(this);
-		}
-
-		private void _buttonCopyToClipboard_Click(object sender, RoutedEventArgs e)
+        private void _buttonCopyToClipboard_Click(object sender, RoutedEventArgs e)
 		{
 			ClipboardHelper.SetText(this.GetExceptionMessage());
 		}

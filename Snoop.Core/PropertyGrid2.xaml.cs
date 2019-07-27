@@ -197,12 +197,6 @@ namespace Snoop
 			window.Height = 300;
 			window.Title = "Binding Errors for " + propertyInformation.DisplayName;
 			SnoopPartsRegistry.AddSnoopVisualTreeRoot(window);
-			window.Closing +=
-				(s, e) =>
-				{
-					Window w = (Window)s;
-					SnoopPartsRegistry.RemoveSnoopVisualTreeRoot(w);
-				};
 			window.Show();
 		}
 		private void CanShowBindingErrors(object sender, CanExecuteRoutedEventArgs e)

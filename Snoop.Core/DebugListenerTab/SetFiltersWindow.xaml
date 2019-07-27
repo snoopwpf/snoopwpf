@@ -1,13 +1,13 @@
-﻿<Window
+﻿<windows:SnoopBaseWindow
 	x:Class="Snoop.DebugListenerTab.SetFiltersWindow"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:converters="clr-namespace:Snoop.Converters"
+	xmlns:windows="clr-namespace:Snoop.Core.Windows"
 	Title="SetFiltersWindow"
 	Height="300"
 	Width="450"
-    Style="{x:Null}"
-    InheritanceBehavior="SkipToThemeNext">
+    Style="{x:Null}">
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*"/>
@@ -108,4 +108,4 @@
 			<TextBlock Style="{x:Null}" Text="Set Filter"/>
 		</Button>
 	</Grid>
-</Window>
+</windows:SnoopBaseWindow>

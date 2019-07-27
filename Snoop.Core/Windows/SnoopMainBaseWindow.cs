@@ -1,4 +1,4 @@
-﻿namespace Snoop.Core
+﻿namespace Snoop.Core.Windows
 {
     using System.Diagnostics;
     using System.Windows;
@@ -6,7 +6,7 @@
     using System.Windows.Threading;
     using Snoop.Infrastructure;
 
-    public abstract class SnoopBaseWindow : Window
+    public abstract class SnoopMainBaseWindow : SnoopBaseWindow
     {
         public bool Inspect()
         {
@@ -43,8 +43,6 @@
         public void Inspect(object rootToInspect)
         {
             this.Dispatcher.UnhandledException += this.UnhandledExceptionHandler;
-
-            SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
 
             this.Load(rootToInspect);
 

@@ -1,27 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.ComponentModel;
-using System.Collections.ObjectModel;
-using System.Text.RegularExpressions;
-using System.Runtime.Serialization;
 using Snoop.Infrastructure;
 
 namespace Snoop.DebugListenerTab
 {
-	/// <summary>
-	/// Interaction logic for SetFiltersWindow.xaml
-	/// </summary>
-	public partial class SetFiltersWindow : Window
+	public partial class SetFiltersWindow
 	{
 		public SetFiltersWindow(FiltersViewModel viewModel)
 		{
@@ -32,11 +17,9 @@ namespace Snoop.DebugListenerTab
 
 			initialFilters = MakeDeepCopyOfFilters(this.ViewModel.Filters);
 
-			this.Loaded += SetFiltersWindow_Loaded;
 			this.Closed += SetFiltersWindow_Closed;
 		}
 
-	
 		internal FiltersViewModel ViewModel
 		{
 			get
@@ -45,11 +28,6 @@ namespace Snoop.DebugListenerTab
 			}
 		}
 
-
-		private void SetFiltersWindow_Loaded(object sender, RoutedEventArgs e)
-		{
-			SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
-		}
 		private void SetFiltersWindow_Closed(object sender, EventArgs e)
 		{
 			if (_setFilterClicked || !this.ViewModel.IsDirty)
@@ -64,9 +42,7 @@ namespace Snoop.DebugListenerTab
 			}
 
 			this.ViewModel.InitializeFilters(initialFilters);
-
-			SnoopPartsRegistry.RemoveSnoopVisualTreeRoot(this);
-		}
+        }
 
 		private void buttonAddFilter_Click(object sender, RoutedEventArgs e)
 		{

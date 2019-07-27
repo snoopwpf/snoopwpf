@@ -19,7 +19,6 @@ using Snoop.Infrastructure;
 
 namespace Snoop
 {
-    #region SnoopUI
 	public partial class SnoopUI : INotifyPropertyChanged
 	{
 		#region Public Static Routed Commands
@@ -360,9 +359,7 @@ namespace Snoop
 
 			// actually do the persisting
 			Properties.Settings.Default.Save();
-
-			SnoopPartsRegistry.RemoveSnoopVisualTreeRoot(this);
-		}
+        }
 
 		#endregion
 
@@ -641,7 +638,6 @@ namespace Snoop
 		}
 		#endregion
 	}
-	#endregion
 
 	#region NoFocusHyperlink
 	public class NoFocusHyperlink : Hyperlink

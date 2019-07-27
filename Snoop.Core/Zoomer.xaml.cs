@@ -68,8 +68,6 @@ namespace Snoop
         protected override void Load(object root)
 		{
 			this.Target = root;
-
-			SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
         }
 
 		public object Target
@@ -110,9 +108,7 @@ namespace Snoop
 
 		    // persist the window placement details to the user settings.
 		    SnoopWindowUtils.SaveWindowPlacement(this, wp => Properties.Settings.Default.ZoomerWindowPlacement = wp);
-
-			SnoopPartsRegistry.RemoveSnoopVisualTreeRoot(this);
-		}
+        }
 
         /// <inheritdoc />
         protected override object FindRoot()

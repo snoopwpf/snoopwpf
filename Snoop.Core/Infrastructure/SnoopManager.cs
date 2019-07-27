@@ -10,6 +10,7 @@
     using JetBrains.Annotations;
     using Snoop.Core;
     using Snoop.Core.Infrastructure;
+    using Snoop.Core.Windows;
     using Snoop.Data;
     using Snoop.Infrastructure;
 
@@ -130,7 +131,7 @@
             return true;
         }
 
-        private static Func<SnoopBaseWindow> GetInstanceCreator(SnoopStartTarget startTarget)
+        private static Func<SnoopMainBaseWindow> GetInstanceCreator(SnoopStartTarget startTarget)
         {
             switch (startTarget)
             {
@@ -145,7 +146,7 @@
             }
         }
 
-        private static void SnoopApplication(TransientSettingsData settingsData, Func<SnoopBaseWindow> instanceCreator)
+        private static void SnoopApplication(TransientSettingsData settingsData, Func<SnoopMainBaseWindow> instanceCreator)
         {
             Trace.WriteLine("Snooping application.");
 
@@ -194,7 +195,7 @@
             return string.Empty;
         }
 
-        private static void CheckForOtherDispatchers(Dispatcher mainDispatcher, TransientSettingsData settingsData, Func<SnoopBaseWindow> instanceCreator)
+        private static void CheckForOtherDispatchers(Dispatcher mainDispatcher, TransientSettingsData settingsData, Func<SnoopMainBaseWindow> instanceCreator)
         {
             if (settingsData.MultipleDispatcherMode == MultipleDispatcherMode.NeverUse)
             {
@@ -290,7 +291,7 @@
 
         private class DispatchOutParameters
         {
-            public DispatchOutParameters(TransientSettingsData settingsData, Func<SnoopBaseWindow> instanceCreator, List<Visual> visuals)
+            public DispatchOutParameters(TransientSettingsData settingsData, Func<SnoopMainBaseWindow> instanceCreator, List<Visual> visuals)
             {
                 this.SettingsData = settingsData;
                 this.InstanceCreator = instanceCreator;
@@ -299,7 +300,7 @@
 
             public TransientSettingsData SettingsData { get; }
 
-            public Func<SnoopBaseWindow> InstanceCreator { get; }
+            public Func<SnoopMainBaseWindow> InstanceCreator { get; }
 
             public List<Visual> Visuals { get; }
         }
