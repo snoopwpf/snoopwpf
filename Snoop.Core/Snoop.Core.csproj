@@ -2,11 +2,9 @@
 <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.0;net40</TargetFrameworks>
-    <UseWpf>true</UseWpf>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <AssemblyName>$(AssemblyName).$(TargetFramework)</AssemblyName>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <UseWpf>true</UseWpf>
   </PropertyGroup>
 
   <!-- <PropertyGroup>
