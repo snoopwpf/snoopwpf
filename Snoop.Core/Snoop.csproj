@@ -15,7 +15,6 @@
     <None Include="app.config" />
 
     <Resource Include="..\Artwork\*.ico" />
-    <Resource Include="Resources\*.png" />
 
     <None Include="VisualTreeItem.cd" />
   </ItemGroup>

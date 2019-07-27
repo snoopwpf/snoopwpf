@@ -20,9 +20,6 @@
 
   <ItemGroup>
     <Resource Include="..\Artwork\*.ico" />
-    <Resource Include="Resources\*.png" />
-
-    <EmbeddedResource Include="Resources\*.cur" />
 
     <Content Include="Scripts\*.psm1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
