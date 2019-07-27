@@ -41,8 +41,15 @@ class Build : NukeBuild
         Console.WriteLine("MajorMinorPatch Version: {0}", GitVersion.MajorMinorPatch);
         Console.WriteLine("NuGet           Version: {0}", GitVersion.NuGetVersion);
 
-        if (IsLocalBuild == false) {        
-            GitVersionTasks.GitVersion(s => s.SetOutput(GitVersionOutput.buildserver));
+        if (IsLocalBuild == false) 
+        {
+            try
+            {
+                GitVersionTasks.GitVersion(s => s.SetOutput(GitVersionOutput.buildserver));   
+            }
+            catch (Exception e) when (e.GetType().Name == "JsonReaderException")
+            {
+            }
         }
     }
 
