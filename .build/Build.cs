@@ -33,6 +33,17 @@ class Build : NukeBuild
 
         ProcessTasks.DefaultLogInvocation = true;
         ProcessTasks.DefaultLogOutput = true;
+
+        Console.WriteLine("IsLocalBuild           : {0}", IsLocalBuild);
+        Console.WriteLine("Informational   Version: {0}", GitVersion.InformationalVersion);
+        Console.WriteLine("SemVer          Version: {0}", GitVersion.SemVer);
+        Console.WriteLine("AssemblySemVer  Version: {0}", GitVersion.AssemblySemVer);
+        Console.WriteLine("MajorMinorPatch Version: {0}", GitVersion.MajorMinorPatch);
+        Console.WriteLine("NuGet           Version: {0}", GitVersion.NuGetVersion);
+
+        if (IsLocalBuild == false) {        
+            GitVersionTasks.GitVersion(s => s.SetOutput(GitVersionOutput.buildserver));
+        }
     }
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
@@ -57,17 +68,6 @@ class Build : NukeBuild
     AbsolutePath PackagesDirectory => RootDirectory / "packages";
 
     AbsolutePath WixDirectory => PackagesDirectory / "wix/tools";
-
-    Target Versions => _ => _
-        .Before()
-        .Executes(() => 
-        {
-            Console.WriteLine("Informational   Version: {0}", GitVersion.InformationalVersion);
-            Console.WriteLine("SemVer          Version: {0}", GitVersion.SemVer);
-            Console.WriteLine("AssemblySemVer  Version: {0}", GitVersion.AssemblySemVer);
-            Console.WriteLine("MajorMinorPatch Version: {0}", GitVersion.MajorMinorPatch);
-            Console.WriteLine("NuGet           Version: {0}", GitVersion.NuGetVersion);
-        });
 
     Target Clean => _ => _
         .DependsOn(CleanOutput)
