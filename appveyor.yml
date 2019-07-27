@@ -23,7 +23,9 @@
     - ps: .\build.ps1 CI
 
   artifacts:
-    - path: \build\publish\*.*
+    - path: \output\*.msi
+    - path: \output\*.nupkg
+    - path: \output\*.zip
 
   nuget:
     disable_publish_on_pr: true
