@@ -1,59 +1,57 @@
-
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snoop", "Snoop\Snoop.csproj", "{6ADE40E1-7624-475C-80C5-9883AA4712EF}"
-	ProjectSection(ProjectDependencies) = postProject
-		{837EED94-D254-4F58-8949-635015DE371D} = {837EED94-D254-4F58-8949-635015DE371D}
-		{21E131D3-760F-4E93-8BDD-502591BD1F97} = {21E131D3-760F-4E93-8BDD-502591BD1F97}
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snoop", "Snoop\Snoop.csproj", "{ACA9A018-ABF3-4C60-995F-99C4777CED71}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagedInjectorLauncher32-4.0", "ManagedInjectorLauncher\ManagedInjectorLauncher32-4.0.csproj", "{837EED94-D254-4F58-8949-635015DE371D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagedInjector", "ManagedInjector\ManagedInjector.csproj", "{9ADEEB14-A467-42D8-BF60-C0CD452F048B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagedInjectorLauncher64-4.0", "ManagedInjectorLauncher\ManagedInjectorLauncher64-4.0.csproj", "{21E131D3-760F-4E93-8BDD-502591BD1F97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagedInjectorLauncher", "ManagedInjectorLauncher\ManagedInjectorLauncher.csproj", "{ACA9A018-ABF3-4C60-995F-99C4777CED75}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ManagedInjector32-4.0", "ManagedInjector\ManagedInjector32-4.0.vcxproj", "{8072B47B-5611-4BAB-8EF4-CB3125D676A5}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ManagedInjector64-4.0", "ManagedInjector\ManagedInjector64-4.0.vcxproj", "{A27C8B34-2527-4258-8C07-D2720C576B90}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B21F490B-8556-45C6-8BE2-CF41E8A621DF}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7D074176-B8A0-4814-87EB-4C4086C6CE60}"
 	ProjectSection(SolutionItems) = preProject
-		Changelog.md = Changelog.md
+		appveyor.yml = appveyor.yml
+		Directory.build.props = Directory.build.props
+		Directory.build.targets = Directory.build.targets
+		global.json = global.json
+		paket.dependencies = paket.dependencies
+		paket.lock = paket.lock
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snoop.Core", "Snoop.Core\Snoop.Core.csproj", "{883A18A9-A386-4342-AC95-9AFC34913FCA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", ".build\_build.csproj", "{2CB98C17-949D-47AA-880E-13D4DC6DFBFA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Mixed Platforms = Debug|Mixed Platforms
-		Release|Mixed Platforms = Release|Mixed Platforms
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6ADE40E1-7624-475C-80C5-9883AA4712EF}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{6ADE40E1-7624-475C-80C5-9883AA4712EF}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{6ADE40E1-7624-475C-80C5-9883AA4712EF}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{6ADE40E1-7624-475C-80C5-9883AA4712EF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{837EED94-D254-4F58-8949-635015DE371D}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{837EED94-D254-4F58-8949-635015DE371D}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{837EED94-D254-4F58-8949-635015DE371D}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{837EED94-D254-4F58-8949-635015DE371D}.Release|Mixed Platforms.Build.0 = Release|x86
-		{21E131D3-760F-4E93-8BDD-502591BD1F97}.Debug|Mixed Platforms.ActiveCfg = Debug|x64
-		{21E131D3-760F-4E93-8BDD-502591BD1F97}.Debug|Mixed Platforms.Build.0 = Debug|x64
-		{21E131D3-760F-4E93-8BDD-502591BD1F97}.Release|Mixed Platforms.ActiveCfg = Release|x64
-		{21E131D3-760F-4E93-8BDD-502591BD1F97}.Release|Mixed Platforms.Build.0 = Release|x64
-		{8072B47B-5611-4BAB-8EF4-CB3125D676A5}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{8072B47B-5611-4BAB-8EF4-CB3125D676A5}.Debug|Mixed Platforms.Build.0 = Debug|Win32
-		{8072B47B-5611-4BAB-8EF4-CB3125D676A5}.Release|Mixed Platforms.ActiveCfg = Release|Win32
-		{8072B47B-5611-4BAB-8EF4-CB3125D676A5}.Release|Mixed Platforms.Build.0 = Release|Win32
-		{A27C8B34-2527-4258-8C07-D2720C576B90}.Debug|Mixed Platforms.ActiveCfg = Debug|x64
-		{A27C8B34-2527-4258-8C07-D2720C576B90}.Debug|Mixed Platforms.Build.0 = Debug|x64
-		{A27C8B34-2527-4258-8C07-D2720C576B90}.Release|Mixed Platforms.ActiveCfg = Release|x64
-		{A27C8B34-2527-4258-8C07-D2720C576B90}.Release|Mixed Platforms.Build.0 = Release|x64
+		{2CB98C17-949D-47AA-880E-13D4DC6DFBFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CB98C17-949D-47AA-880E-13D4DC6DFBFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACA9A018-ABF3-4C60-995F-99C4777CED71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACA9A018-ABF3-4C60-995F-99C4777CED71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACA9A018-ABF3-4C60-995F-99C4777CED71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACA9A018-ABF3-4C60-995F-99C4777CED71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9ADEEB14-A467-42D8-BF60-C0CD452F048B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9ADEEB14-A467-42D8-BF60-C0CD452F048B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9ADEEB14-A467-42D8-BF60-C0CD452F048B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9ADEEB14-A467-42D8-BF60-C0CD452F048B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACA9A018-ABF3-4C60-995F-99C4777CED75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACA9A018-ABF3-4C60-995F-99C4777CED75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACA9A018-ABF3-4C60-995F-99C4777CED75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACA9A018-ABF3-4C60-995F-99C4777CED75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{883A18A9-A386-4342-AC95-9AFC34913FCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{883A18A9-A386-4342-AC95-9AFC34913FCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{883A18A9-A386-4342-AC95-9AFC34913FCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{883A18A9-A386-4342-AC95-9AFC34913FCA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {B7DD9DEA-9426-4231-8214-D98BFE78A618}
+		SolutionGuid = {F8E09F8F-9250-46F3-B17D-66C71921760D}
 	EndGlobalSection
 EndGlobal

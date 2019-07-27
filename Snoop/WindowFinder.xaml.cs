@@ -75,18 +75,20 @@ namespace Snoop
         {
             base.OnMouseLeftButtonUp(e);
 
+            var windowInfoToUse = this.currentWindowInfo;
+
             this.StopSnoopTargetsSearch();
 
-            if (this.currentWindowInfo != null
-                && this.currentWindowInfo.IsValidProcess)
+            if (windowInfoToUse != null
+                && windowInfoToUse.IsValidProcess)
             {
                 if (this.WindowFinderType == WindowFinderType.Snoop)
                 {
-                    this.AttachSnoop();
+                    AttachSnoop(windowInfoToUse);
                 }
                 else if (this.WindowFinderType == WindowFinderType.Magnify)
                 {
-                    this.AttachMagnify();
+                    AttachMagnify(windowInfoToUse);
                 }
             }
         }
@@ -137,6 +139,8 @@ namespace Snoop
 
             this.ReleaseMouseCapture();
 
+            this.currentWindowInfo = null;
+
             this.snoopCrosshairsImage.Visibility = Visibility.Visible;
 
             // clear out cached process info to make the force refresh do the process check over again.
@@ -167,16 +171,16 @@ namespace Snoop
             this.lastWindowInfoCursor = null;
         }
 
-        private void AttachSnoop()
+        private static void AttachSnoop(WindowInfo windowInfo)
         {
-            new AttachFailedHandler(this.currentWindowInfo);
-            this.currentWindowInfo.Snoop();
+            new AttachFailedHandler(windowInfo);
+            windowInfo.Snoop();
         }
 
-        private void AttachMagnify()
+        private static void AttachMagnify(WindowInfo windowInfo)
         {
-            new AttachFailedHandler(this.currentWindowInfo);
-            this.currentWindowInfo.Magnify();
+            new AttachFailedHandler(windowInfo);
+            windowInfo.Magnify();
         }
 
         // https://stackoverflow.com/a/27077188/122048

@@ -36,38 +36,7 @@ namespace Snoop
 			windowHandleToValidityMap.Clear();
 		}
 
-		public IList<NativeMethods.MODULEENTRY32> Modules => this.modules ?? (this.modules = this.GetModules().ToList());
-
-	    /// <summary>
-		/// Similar to System.Diagnostics.WinProcessManager.GetModuleInfos,
-		/// except that we include 32 bit modules when Snoop runs in 64 bit mode.
-		/// See http://blogs.msdn.com/b/jasonz/archive/2007/05/11/code-sample-is-your-process-using-the-silverlight-clr.aspx
-		/// </summary>
-		private IEnumerable<NativeMethods.MODULEENTRY32> GetModules()
-		{
-		    NativeMethods.GetWindowThreadProcessId(this.HWnd, out var processId);
-
-			var me32 = new NativeMethods.MODULEENTRY32();
-			var hModuleSnap = NativeMethods.CreateToolhelp32Snapshot(NativeMethods.SnapshotFlags.Module | NativeMethods.SnapshotFlags.Module32, processId);
-
-		    if (hModuleSnap.IsInvalid)
-		    {
-		        yield break;
-		    }
-
-		    using (hModuleSnap)
-		    {
-		        me32.dwSize = (uint)Marshal.SizeOf(me32);
-
-		        if (NativeMethods.Module32First(hModuleSnap, ref me32))
-		        {
-		            do
-		            {
-		                yield return me32;
-		            } while (NativeMethods.Module32Next(hModuleSnap, ref me32));
-		        }
-		    }
-		}
+		public IList<NativeMethods.MODULEENTRY32> Modules => this.modules ?? (this.modules = NativeMethods.GetModulesFromWindowHandle(this.HWnd).ToList());
 
 		public bool IsValidProcess
 		{
@@ -155,9 +124,9 @@ namespace Snoop
 
 		public Process OwningProcess => this.owningProcess ?? (this.owningProcess = NativeMethods.GetWindowThreadProcess(this.HWnd));
 
-	    public bool IsOwningProcess64Bit => (this.isOwningProcess64Bit ?? (this.isOwningProcess64Bit = IsProcess64Bit(this.OwningProcess))) == true;
+	    public bool IsOwningProcess64Bit => (this.isOwningProcess64Bit ?? (this.isOwningProcess64Bit = NativeMethods.IsProcess64Bit(this.OwningProcess))) == true;
 
-	    public bool IsOwningProcessElevated => (this.isOwningProcessElevated ?? (this.isOwningProcessElevated = IsProcessElevated(this.OwningProcess))) == true;
+	    public bool IsOwningProcessElevated => (this.isOwningProcessElevated ?? (this.isOwningProcessElevated = NativeMethods.IsProcessElevated(this.OwningProcess))) == true;
 
 	    public IntPtr HWnd { get; }
 
@@ -200,7 +169,7 @@ namespace Snoop
 
             try
             {
-                Injector.Launch(this, typeof(SnoopUI).Assembly, typeof(SnoopUI).FullName, "GoBabyGo", new TransientSettingsData(Settings.Default).WriteToFile());
+                InjectorLauncher.Launch(this, "Snoop.Core", "Snoop.SnoopManager", "StartSnoop", CreateTransientSettingsData(SnoopStartTarget.SnoopUI).WriteToFile());
             }
             catch (Exception e)
             {
@@ -218,7 +187,7 @@ namespace Snoop
 
 			try
 			{
-				Injector.Launch(this, typeof(Zoomer).Assembly, typeof(Zoomer).FullName, "GoBabyGo", new TransientSettingsData(Settings.Default).WriteToFile());
+				InjectorLauncher.Launch(this, "Snoop.Core", "Snoop.SnoopManager", "StartSnoop", CreateTransientSettingsData(SnoopStartTarget.Zoomer).WriteToFile());
 			}
 			catch (Exception e)
 			{
@@ -235,44 +204,18 @@ namespace Snoop
 		    this.AttachFailed?.Invoke(this, new AttachFailedEventArgs(e, this.Description));
 		}
 
-	    // see https://msdn.microsoft.com/en-us/library/windows/desktop/ms684139%28v=vs.85%29.aspx
-	    public static bool IsProcess64Bit(Process process)
-	    {
-            if (Environment.Is64BitOperatingSystem == false)
-            {
-                return false;
-            }
+        private static TransientSettingsData CreateTransientSettingsData(SnoopStartTarget startTarget)
+        {
+            var settings = Settings.Default;
 
-            // if this method is not available in your version of .NET, use GetNativeSystemInfo via P/Invoke instead
-	        using (var processHandle = NativeMethods.OpenProcess(process, NativeMethods.ProcessAccessFlags.QueryLimitedInformation))
-	        {
-	            if (processHandle.IsInvalid)
-	            {
-	                throw new Exception("Could not query process information.");
-	            }
+            return new TransientSettingsData
+                   {
+                       StartTarget = startTarget,
 
-	            if (NativeMethods.IsWow64Process(processHandle.DangerousGetHandle(), out var isWow64) == false)
-	            {
-	                throw new Win32Exception();
-	            }
-
-	            return isWow64 == false;
-	        }
-	    }
-
-	    private static bool IsProcessElevated(Process process)
-	    {
-	        using (var processHandle = NativeMethods.OpenProcess(process, NativeMethods.ProcessAccessFlags.QueryInformation))
-	        {
-	            if (processHandle.IsInvalid)
-	            {
-	                var error = Marshal.GetLastWin32Error();
-
-	                return error == NativeMethods.ERROR_ACCESS_DENIED;
-	            }
-
-	            return false;
-	        }
-	    }
-	}
+                       MultipleAppDomainMode = settings.MultipleAppDomainMode,
+                       MultipleDispatcherMode = settings.MultipleDispatcherMode,
+                       SetWindowOwner = settings.SetOwnerWindow
+                   };
+        }
+    }
 }

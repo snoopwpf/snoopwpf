@@ -7,13 +7,17 @@
       - develop
 
   skip_tags: true
-  image: Visual Studio 2017
+  image: Visual Studio 2019
   configuration: Release
   platform: Mixed Platforms
   test: off
 
   pull_requests:
     do_not_increment_build_number: false
+
+  install:
+    # Install dotnet core 3.0 latest (alpha!!), as this is not provided on AppVeyor yet
+    - cinst dotnetcore-sdk --pre
 
   build_script:
     - ps: .\build.ps1 -Package -Verbose

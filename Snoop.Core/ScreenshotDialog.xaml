@@ -1,0 +1,152 @@
+﻿<!--
+(c) Copyright Cory Plotts.
+This source is subject to the Microsoft Public License (Ms-PL).
+Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
+All other rights reserved.
+-->
+<windows:SnoopBaseWindow
+	x:Class="Snoop.ScreenshotDialog"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:Snoop="clr-namespace:Snoop"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:windows="clr-namespace:Snoop.Core.Windows"
+	mc:Ignorable="d"
+	Title="Save Screenshot"
+	Width="400"
+	Height="400"
+	Padding="10"
+    Style="{x:Null}">
+	<Window.Resources>
+		<Style x:Key="PhotoFrameStyle" TargetType="{x:Type ContentControl}">
+			<Style.Setters>
+				<Setter Property="Template">
+					<Setter.Value>
+						<ControlTemplate TargetType="{x:Type ContentControl}">
+							<Border
+                                Style="{x:Null}"
+								Background="White"
+								VerticalAlignment="Center"
+								HorizontalAlignment="Center"
+								Padding="8"
+								Margin="10"
+								RenderTransformOrigin="0.5, 0.5"
+							>
+								<Border.Effect>
+									<DropShadowEffect BlurRadius="8" ShadowDepth="3" Opacity="0.6"/>
+								</Border.Effect>
+
+								<Border
+                                    Style="{x:Null}"
+									BorderThickness="1,1,0,0"
+									BorderBrush="#55000000"
+								>
+									<Border
+                                        Style="{x:Null}"
+										BorderThickness="1,1,0,0"
+										BorderBrush="White"
+									>
+                                        <Viewbox Style="{x:Null}" Stretch="Uniform">
+											<Border
+                                                Style="{x:Null}"
+												Width="{Binding RenderSize.Width}"
+												Height="{Binding RenderSize.Height}"
+											>
+												<Border.Background>
+													<VisualBrush Visual="{Binding}" Stretch="Uniform"/>
+												</Border.Background>
+											</Border>
+										</Viewbox>
+									</Border>
+								</Border>
+							</Border>
+						</ControlTemplate>
+					</Setter.Value>
+				</Setter>
+			</Style.Setters>
+		</Style>
+	</Window.Resources>
+
+    <Grid Style="{x:Null}">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<ContentControl
+			Style="{StaticResource PhotoFrameStyle}"
+			DataContext="{Binding}"
+		/>
+
+		<Grid
+			Grid.Row="1"
+			Margin="0,15,0,0"
+            Style="{x:Null}"
+		>
+			<StackPanel
+				Orientation="Horizontal"
+				HorizontalAlignment="Left"
+				Margin="5,0,0,5"
+                Style="{x:Null}"
+			>
+				<ComboBox
+					x:Name="dpiBox"
+				    Style="{x:Null}"
+					Grid.Column="1"
+					Width="75"
+					Margin="0,0,5,0"
+					IsEditable="False"
+				>
+                    <ComboBoxItem Style="{x:Null}">
+						<TextBlock Style="{x:Null}" Text="96"/>
+					</ComboBoxItem>
+                    <ComboBoxItem Style="{x:Null}">
+						<TextBlock Style="{x:Null}" Text="150"/>
+					</ComboBoxItem>
+                    <ComboBoxItem Style="{x:Null}" IsSelected="True">
+						<TextBlock Style="{x:Null}" Text="300"/>
+					</ComboBoxItem>
+                    <ComboBoxItem Style="{x:Null}">
+						<TextBlock Style="{x:Null}" Text="600"/>
+					</ComboBoxItem>
+                    <ComboBoxItem Style="{x:Null}">
+                        <TextBlock Style="{x:Null}" Text="1200"/>
+                    </ComboBoxItem>
+                    <ComboBoxItem Style="{x:Null}">
+                        <TextBlock Style="{x:Null}" Text="2400"/>
+                    </ComboBoxItem>
+                    <ComboBoxItem Style="{x:Null}">
+                        <TextBlock Style="{x:Null}" Text="4800"/>
+                    </ComboBoxItem>
+                </ComboBox>
+				<TextBlock Style="{x:Null}" VerticalAlignment="Center" Text="DPI"/>
+			</StackPanel>
+
+			<StackPanel
+				Orientation="Horizontal"
+				HorizontalAlignment="Right"
+                Style="{x:Null}"
+			>
+				<Button
+				    Style="{x:Null}"
+					Width="75"
+					Margin="0,0,5,5"
+					IsDefault="True"
+					Command="{x:Static Snoop:ScreenshotDialog.SaveCommand}"
+				>
+					<TextBlock Style="{x:Null}" Text="Save"/>
+				</Button>
+				<Button
+				    Style="{x:Null}"
+					Width="75"
+					Margin="0,0,5,5"
+					IsCancel="True"
+					Command="{x:Static Snoop:ScreenshotDialog.CancelCommand}"
+				>
+					<TextBlock Style="{x:Null}" Text="Cancel"/>
+				</Button>
+			</StackPanel>
+		</Grid>
+	</Grid>
+</windows:SnoopBaseWindow>
