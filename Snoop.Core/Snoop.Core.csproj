@@ -5,16 +5,13 @@
     <AssemblyName>$(AssemblyName).$(TargetFramework)</AssemblyName>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <UseWpf>true</UseWpf>
+    <UseWindowsForms>true</UseWindowsForms>
+    <DisableImplicitFrameworkReferences>false</DisableImplicitFrameworkReferences>
   </PropertyGroup>
 
   <!-- <PropertyGroup>
     <PublishSingleFile>True</PublishSingleFile>
   </PropertyGroup> -->
-
-  <ItemGroup Condition="'$(TargetFramework)' != 'netcoreapp3.0'">
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="WindowsFormsIntegration" />
-  </ItemGroup>
 
   <ItemGroup>
     <Resource Include="..\Artwork\*.ico" />
