@@ -9,7 +9,7 @@
   skip_tags: true
   image: Visual Studio 2019
   configuration: Release
-  platform: Mixed Platforms
+  platform: Any CPU
   test: off
 
   pull_requests:
