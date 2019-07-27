@@ -20,7 +20,7 @@
     - cinst dotnetcore-sdk --pre
 
   build_script:
-    - ps: .\build.ps1 -Package -Verbose
+    - ps: .\build.ps1 CI
 
   artifacts:
     - path: \build\publish\*.*
