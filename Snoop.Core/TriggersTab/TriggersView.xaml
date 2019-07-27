@@ -35,7 +35,7 @@
                                                       VerticalAlignment="Top" Margin="20,0,0,0" />
                                     <Image x:Name="icon" 
                                            Style="{x:Null}"
-                                           Source="/Snoop;component/Resources/triggeritem.png"
+                                           Source="{DynamicResource triggerItemDrawingImage}"
                                            Margin="4,2,0,0"
                                            VerticalAlignment="Top" HorizontalAlignment="Left" Width="12" Height="12" />
                                     <ContentPresenter Style="{x:Null}" Content="{TemplateBinding Content}" Margin="4,16,4,4" />
@@ -243,7 +243,7 @@
                                         <StackPanel Orientation="Horizontal">
                                             <Image x:Name="image" 
                                                    Style="{x:Null}"
-                                                   Source="/Snoop;component/Resources/inactive.png"
+                                                   Source="{DynamicResource inActiveDrawingImage}"
                                                    Height="16" 
                                                    Width="16" />
                                             <TextBlock x:Name="conditionText"
@@ -260,7 +260,7 @@
                                             <StackPanel Orientation="Horizontal">
                                                 <Image x:Name="warningImage" 
                                                        Style="{x:Null}"
-                                                       Source="/Snoop;component/Resources/Warning.png"
+                                                       Source="{DynamicResource warningDrawingImage}"
                                                        Height="16" 
                                                        Width="16"
                                                        ToolTip="{Binding Error}" />
@@ -275,11 +275,15 @@
 
                                     <DataTemplate.Triggers>
                                         <DataTrigger Binding="{Binding IsActive}" Value="True">
-                                            <Setter Property="Source" Value="/Snoop;component/Resources/active.png"
+                                            <Setter Property="Source" 
+                                                    Value="{DynamicResource activeDrawingImage}"
                                                     TargetName="image" />
-                                            <Setter Property="FontWeight" Value="Bold" TargetName="conditionText" />
+                                            <Setter Property="FontWeight" 
+                                                    Value="Bold" 
+                                                    TargetName="conditionText" />
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding HasError}" Value="True">
+                                        <DataTrigger Binding="{Binding HasError}" 
+                                                     Value="True">
                                             <Setter Property="Visibility"
                                                     Value="Visible"
                                                     TargetName="errorPane" />
@@ -288,10 +292,14 @@
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
-                        <TextBlock Style="{x:Null}" Text="Setters" Margin="4,4,4,0" />
+                        <TextBlock Style="{x:Null}" 
+                                   Text="Setters" 
+                                   Margin="4,4,4,0" />
                         <ListBox Style="{x:Null}"
                                  Template="{StaticResource Snoop.TriggersView.ListBoxControlTemplate}"
-                                 Margin="8,4" ItemsSource="{Binding Setters}" Grid.IsSharedSizeScope="True"
+                                 Margin="8,4" 
+                                 ItemsSource="{Binding Setters}" 
+                                 Grid.IsSharedSizeScope="True"
                                  ScrollViewer.VerticalScrollBarVisibility="Disabled"
                                  Visibility="{Binding Setters.IsEmpty, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}, ConverterParameter=True}"
                                  SelectedItem="{Binding SelectedSetterItem, RelativeSource={RelativeSource AncestorType=triggersTab:TriggersView}, Mode=TwoWay}" />
@@ -300,26 +308,36 @@
                                    Visibility="{Binding Setters.IsEmpty, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}}"
                                    Opacity="0.6" />
 
-                        <TextBlock Style="{x:Null}" Text="EnterActions" Margin="4,4,4,0"
+                        <TextBlock Style="{x:Null}" 
+                                   Text="EnterActions" 
+                                   Margin="4,4,4,0"
                                    Visibility="{Binding EnterActions.IsEmpty, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}, ConverterParameter=True}" />
                         <ListBox Style="{x:Null}"
                                  Template="{StaticResource Snoop.TriggersView.ListBoxControlTemplate}"
-                                 Margin="8,4" ItemsSource="{Binding EnterActions}" Grid.IsSharedSizeScope="True"
+                                 Margin="8,4" 
+                                 ItemsSource="{Binding EnterActions}" 
+                                 Grid.IsSharedSizeScope="True"
                                  ScrollViewer.VerticalScrollBarVisibility="Disabled"
                                  Visibility="{Binding EnterActions.IsEmpty, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}, ConverterParameter=True}" />
                                  
-                        <TextBlock Style="{x:Null}" Text="ExitActions" Margin="4,4,4,0"
+                        <TextBlock Style="{x:Null}" 
+                                   Text="ExitActions" 
+                                   Margin="4,4,4,0"
                                    Visibility="{Binding ExitActions.IsEmpty, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}, ConverterParameter=True}" />
                         <ListBox Style="{x:Null}"
                                  Template="{StaticResource Snoop.TriggersView.ListBoxControlTemplate}"
-                                 Margin="8,4" ItemsSource="{Binding ExitActions}" Grid.IsSharedSizeScope="True"
+                                 Margin="8,4" 
+                                 ItemsSource="{Binding ExitActions}" 
+                                 Grid.IsSharedSizeScope="True"
                                  ScrollViewer.VerticalScrollBarVisibility="Disabled"
                                  Visibility="{Binding ExitActions.IsEmpty, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}, ConverterParameter=True}" />
                     </StackPanel>
                 </HeaderedContentControl>
                 <DataTemplate.Triggers>
-                    <DataTrigger Binding="{Binding IsActive}" Value="True">
-                        <Setter Property="Background" Value="{DynamicResource ActiveTriggerBrush}"
+                    <DataTrigger Binding="{Binding IsActive}" 
+                                 Value="True">
+                        <Setter Property="Background" 
+                                Value="{DynamicResource ActiveTriggerBrush}"
                                 TargetName="triggerControl" />
                     </DataTrigger>
                 </DataTemplate.Triggers>

@@ -272,4 +272,122 @@ All other rights reserved.
 			</DrawingGroup>
 		</DrawingImage.Drawing>
 	</DrawingImage>
+
+    <!-- activeDrawingImage -->
+    <DrawingImage x:Key="activeDrawingImage">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <DrawingGroup.Children>
+                    <GeometryDrawing Geometry="F1 M 59.4654,6.58679C 89.869,6.58679 114.516,31.2338 114.516,61.6374C 114.516,92.041 89.869,116.688 59.4654,116.688C 29.0618,116.688 4.41481,92.041 4.41481,61.6374C 4.41481,31.2338 29.0618,6.58679 59.4654,6.58679 Z ">
+                        <GeometryDrawing.Pen>
+                            <Pen Thickness="6.66667" LineJoin="Round">
+                                <Pen.Brush>
+                                    <!-- Metalic_Gel -->
+                                    <RadialGradientBrush RadiusX="0.704077" RadiusY="0.704077" Center="0.327626,0.333783" GradientOrigin="0.327626,0.333783">
+                                        <RadialGradientBrush.GradientStops>
+                                            <GradientStop Color="#FFF2F2F2" Offset="0.139648"/>
+                                            <GradientStop Color="#FFD6D6D6" Offset="0.759766"/>
+                                        </RadialGradientBrush.GradientStops>
+                                        <RadialGradientBrush.RelativeTransform>
+                                            <TransformGroup>
+                                                <RotateTransform CenterX="0.327626" CenterY="0.333783" Angle="46.1812"/>
+                                            </TransformGroup>
+                                        </RadialGradientBrush.RelativeTransform>
+                                    </RadialGradientBrush>
+                                </Pen.Brush>
+                            </Pen>
+                        </GeometryDrawing.Pen>
+                        <GeometryDrawing.Brush>
+                            <!-- Red_Dark_to_Light -->
+                            <RadialGradientBrush RadiusX="0.704077" RadiusY="0.704077" Center="0.327626,0.333783" GradientOrigin="0.327626,0.333783">
+                                <RadialGradientBrush.GradientStops>
+                                    <GradientStop Color="#86FF3A" Offset="0"/>
+                                    <GradientStop Color="#67C42C" Offset="1"/>
+                                </RadialGradientBrush.GradientStops>
+                                <RadialGradientBrush.RelativeTransform>
+                                    <TransformGroup>
+                                        <RotateTransform CenterX="0.327626" CenterY="0.333783" Angle="46.1812"/>
+                                    </TransformGroup>
+                                </RadialGradientBrush.RelativeTransform>
+                            </RadialGradientBrush>
+                        </GeometryDrawing.Brush>
+                    </GeometryDrawing>
+                </DrawingGroup.Children>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <!-- inActiveDrawingImage -->
+    <DrawingImage x:Key="inActiveDrawingImage">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <DrawingGroup.Children>
+                    <GeometryDrawing Geometry="F1 M 191.745,14.8424C 219.683,14.8424 242.332,37.491 242.332,65.4295C 242.332,93.368 219.683,116.017 191.745,116.017C 163.806,116.017 141.158,93.368 141.158,65.4295C 141.158,37.491 163.806,14.8424 191.745,14.8424 Z ">
+                        <GeometryDrawing.Pen>
+                            <Pen Thickness="14.6667" LineJoin="Round">
+                                <Pen.Brush>
+                                    <!-- Metalic_Gel -->
+                                    <RadialGradientBrush RadiusX="0.833262" RadiusY="0.833262" Center="0.312845,0.384143" GradientOrigin="0.312845,0.384143">
+                                        <RadialGradientBrush.GradientStops>
+                                            <GradientStop Color="#FFF2F2F2" Offset="0.139648"/>
+                                            <GradientStop Color="#FFD6D6D6" Offset="0.759766"/>
+                                        </RadialGradientBrush.GradientStops>
+                                        <RadialGradientBrush.RelativeTransform>
+                                            <TransformGroup>
+                                                <RotateTransform CenterX="0.312845" CenterY="0.384143" Angle="38.3408"/>
+                                            </TransformGroup>
+                                        </RadialGradientBrush.RelativeTransform>
+                                    </RadialGradientBrush>
+                                </Pen.Brush>
+                            </Pen>
+                        </GeometryDrawing.Pen>
+                        <GeometryDrawing.Brush>
+                            <!-- Metalic_Gel -->
+                            <RadialGradientBrush RadiusX="0.833262" RadiusY="0.833262" Center="0.312845,0.384143" GradientOrigin="0.312845,0.384143">
+                                <RadialGradientBrush.GradientStops>
+                                    <GradientStop Color="#FFF2F2F2" Offset="0.139648"/>
+                                    <GradientStop Color="#FFD6D6D6" Offset="0.759766"/>
+                                </RadialGradientBrush.GradientStops>
+                                <RadialGradientBrush.RelativeTransform>
+                                    <TransformGroup>
+                                        <RotateTransform CenterX="0.312845" CenterY="0.384143" Angle="38.3408"/>
+                                    </TransformGroup>
+                                </RadialGradientBrush.RelativeTransform>
+                            </RadialGradientBrush>
+                        </GeometryDrawing.Brush>
+                    </GeometryDrawing>
+                </DrawingGroup.Children>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <!-- warningDrawingImage -->
+    <DrawingImage x:Key="warningDrawingImage">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <DrawingGroup.Children>
+                    <GeometryDrawing Geometry="M0,19 L22,19 11,0 0,19 z" Brush="Orange" />
+                    <GeometryDrawing Brush="Black">
+                        <GeometryDrawing.Geometry>
+                            <GeometryGroup>
+                                <RectangleGeometry Rect="10,8,2,4" />
+                                <RectangleGeometry Rect="10,14,2,2" />
+                            </GeometryGroup>
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup.Children>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <!-- triggerItemDrawingImage -->
+    <DrawingImage x:Key="triggerItemDrawingImage">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <DrawingGroup.Children>
+                    <GeometryDrawing Geometry="M7,2V13H10V22L17,10H13L17,2H7Z" Brush="Orange" />
+                </DrawingGroup.Children>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
 </ResourceDictionary>
