@@ -73,7 +73,7 @@ class Build : NukeBuild
         .DependsOn(CleanOutput)
         .Executes(() =>
         {
-            EnsureCleanDirectory(OutputDirectory);
+            // EnsureCleanDirectory(OutputDirectory);
         });
 
     Target CleanOutput => _ => _
@@ -106,6 +106,7 @@ class Build : NukeBuild
 
     Target Pack => _ => _
         .DependsOn(CleanOutput)
+        .DependsOn(Compile)
         .Executes(() =>
         {
             //   & $nuget pack "$(Join-Path $PSScriptRoot 'chocolatey\snoop.nuspec')" -Version $version -Properties Configuration=$Configuration -OutputDirectory "$outputDirectory" -NoPackageAnalysis
@@ -126,6 +127,8 @@ class Build : NukeBuild
         });
 
     Target Setup => _ => _
+        .DependsOn(CleanOutput)
+        .DependsOn(Compile)
         .Executes(() =>
                   {
                       ProcessTasks.StartProcess(WixDirectory / "candle.exe", 
@@ -138,5 +141,5 @@ class Build : NukeBuild
                   });
 
     Target CI => _ => _
-        .DependsOn(Clean, Compile, Pack, Setup);
+        .DependsOn(Compile, Pack, Setup);
 }
