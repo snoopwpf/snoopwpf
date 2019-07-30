@@ -201,9 +201,9 @@ namespace Snoop
                 var rtb = new RenderTargetBitmap((int)control.DesiredSize.Width, (int)control.DesiredSize.Height, 96, 96, PixelFormats.Pbgra32);
                 rtb.Render(control);
 
-                var png = new PngBitmapEncoder();
-                png.Frames.Add(BitmapFrame.Create(rtb));
-                png.Save(pngStream);
+                var encoder = new PngBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(rtb));
+                encoder.Save(pngStream);
 
                 // write cursor header info
                 using (var cursorStream = new MemoryStream())
