@@ -9,6 +9,7 @@
              mc:Ignorable="d"
              d:DesignHeight="40"
              d:DesignWidth="600"
+             SnapsToDevicePixels="True"
              TextOptions.TextFormattingMode="Display"
              TextOptions.TextHintingMode="Fixed"
              TextOptions.TextRenderingMode="Aliased">
@@ -63,16 +64,17 @@
                       StrokeThickness="1">
                     <Path.Fill>
                         <LinearGradientBrush StartPoint="-0.943,2.158" EndPoint="0.835,-1.356">
-                            <GradientStop Color="#000073E6" Offset="0" />
-                            <GradientStop Color="#91037790" Offset="0.5" />
-                            <GradientStop Color="#03006EB9" Offset="1" />
+                            <GradientStop Color="#FF0073E6" Offset="0" />
+                            <GradientStop Color="#FF037790" Offset="0.5" />
+                            <GradientStop Color="#FF006EB9" Offset="1" />
                         </LinearGradientBrush>
                     </Path.Fill>
                 </Path>
 
                 <Border Grid.Column="2"
                         Background="White"
-                        CornerRadius="4"
+                        BorderBrush="Black"
+                        BorderThickness="1"
                         VerticalAlignment="Center">
                     <TextBlock TextTrimming="CharacterEllipsis"
                                Foreground="Black"
