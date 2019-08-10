@@ -3,15 +3,10 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.0;net40</TargetFrameworks>
     <AssemblyName>$(AssemblyName).$(TargetFramework)</AssemblyName>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+
     <UseWpf>true</UseWpf>
     <UseWindowsForms>true</UseWindowsForms>
-    <DisableImplicitFrameworkReferences>false</DisableImplicitFrameworkReferences>
   </PropertyGroup>
-
-  <!-- <PropertyGroup>
-    <PublishSingleFile>True</PublishSingleFile>
-  </PropertyGroup> -->
 
   <ItemGroup>
     <Resource Include="..\Artwork\*.ico" />
@@ -31,7 +26,7 @@
     <PackageReference Include="microsoft.powershell.3.referenceassemblies" Version="1.0.0" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+  <ItemGroup Condition="'$(TargetFramework)' != 'net40'">
     <!-- <PackageReference Include="microsoft.powershell.3.referenceassemblies" Version="1.0.0" /> -->
 
     <PackageReference Include="Microsoft.PowerShell.SDK" Version="7-*" /> 

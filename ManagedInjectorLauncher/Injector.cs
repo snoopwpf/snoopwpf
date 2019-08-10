@@ -62,7 +62,7 @@ namespace ManagedInjectorLauncher
                 }
             }
 
-            if (processWrapper.SupportedFrameworkName == "netcoreapp3.0")
+            if (processWrapper.RequiresIJWHost)
             {
                 InjectIJWHost(processWrapper);
             }
@@ -92,7 +92,7 @@ namespace ManagedInjectorLauncher
         /// </summary>
         private static IntPtr LoadLibraryInForeignProcess(ProcessWrapper processWrapper, string pathToDll)
         {
-            Trace.WriteLine($"Trying to load '{pathToDll}' in process ");
+            Trace.WriteLine($"Trying to load '{pathToDll}' in process {processWrapper.Id}...");
 
             var moduleHandleInForeignProcess = IntPtr.Zero;
 
@@ -163,6 +163,8 @@ namespace ManagedInjectorLauncher
                 throw new Exception($"Could not load '{pathToDll}' in process '{processWrapper.Id}'.");
             }
 
+            Trace.WriteLine($"Successfully loaded '{pathToDll}' in process {processWrapper.Id}.");
+
             return moduleHandleInForeignProcess;
         }
 
@@ -214,13 +216,31 @@ namespace ManagedInjectorLauncher
                 }
             }
 
+            // if we land here the application we try to inject into is most likely a self contained app (either local distribution or single file)
+            {
+                Trace.WriteLine("Current application is most likely a self contained app (either local distribution or single file).");
+                Trace.WriteLine("Trying to use local ijwhost...");
+
+                var ijwHostDllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), processWrapper.SupportedFrameworkName, ijwhostDllFilename);
+
+                Trace.WriteLine($"Path to '{ijwhostDllFilename}' might be '{ijwHostDllPath}'.");
+
+                if (File.Exists(ijwHostDllPath))
+                {
+                    Trace.WriteLine($"Path to '{ijwhostDllFilename}' is '{ijwHostDllPath}'.");
+                    return ijwHostDllPath;
+                }
+            }
+
             throw new FileNotFoundException($"Could not find path to '{ijwhostDllFilename}'.", ijwhostDllFilename);
         }
 
         private static void InjectSnoop(ProcessWrapper processWrapper, string transportDataString)
         {
             var hookDllName = $"ManagedInjector.{processWrapper.SupportedFrameworkName}.{processWrapper.Bitness}.dll";
-            var pathToHookDll = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), hookDllName);
+            var pathToHookDll = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), processWrapper.SupportedFrameworkName, hookDllName);
+
+            Trace.WriteLine($"Trying to load '{pathToHookDll}'...");
 
             var hLibrary = NativeMethods.LoadLibrary(pathToHookDll);
 
@@ -228,6 +248,8 @@ namespace ManagedInjectorLauncher
             {
                 throw new Win32Exception();
             }
+
+            Trace.WriteLine($"Successfully loaded '{pathToHookDll}'.");
 
             var hLibraryInForeignProcess = LoadLibraryInForeignProcess(processWrapper, pathToHookDll);
 

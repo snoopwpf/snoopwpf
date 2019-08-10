@@ -20,6 +20,9 @@ namespace Snoop
             const string assemblyFramework = "net40";
 #elif NETCOREAPP30
             const string assemblyFramework = "netcoreapp3.0";
+#else
+            // generate invalid code to force a compiler error
+            asdf ölkj
 #endif
 
             this.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri($"pack://application:,,,/Snoop.Core.{assemblyFramework};component/Icons.xaml") });

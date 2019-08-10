@@ -66,7 +66,7 @@ namespace ManagedInjectorLauncher
             }
 
             var thisAssemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            return Path.Combine(thisAssemblyDirectory, $"{assemblyNameOrFullPath}.{processWrapper.SupportedFrameworkName}.dll");
+            return Path.Combine(thisAssemblyDirectory, processWrapper.SupportedFrameworkName, $"{assemblyNameOrFullPath}.{processWrapper.SupportedFrameworkName}.dll");
         }
 
         private static bool CheckInjectedStatus(Process process)

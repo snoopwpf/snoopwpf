@@ -121,7 +121,7 @@ namespace Snoop.Shell
                 var action = new Action<VisualTreeItem>(item => this.Dispatcher.BeginInvoke(new Action(() => this.ProviderLocationChanged(item))));
                 this.SetVariable(ShellConstants.LocationChangedActionKey, action);
 
-                string folder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Scripts");
+                string folder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..", "Scripts");
                 Invoke(string.Format("import-module \"{0}\"", Path.Combine(folder, ShellConstants.SnoopModule)));
 
                 this.outputTextBox.Clear();

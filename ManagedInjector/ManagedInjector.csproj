@@ -2,21 +2,27 @@
 
   <PropertyGroup>
     <TargetFrameworks>net40;netcoreapp3.0</TargetFrameworks>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AssemblyName>$(AssemblyName).$(TargetFramework)</AssemblyName>
+
     <UseWPF>true</UseWPF>
 
     <EnableDynamicLoading>true</EnableDynamicLoading>
     <HasRuntimeOutput>true</HasRuntimeOutput>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <AssemblyName>$(AssemblyName).$(TargetFramework)</AssemblyName>
+    <RollForward>LatestMinor</RollForward>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="..\Shared\InjectorData.cs" Link="InjectorData.cs" />
     <Compile Include="..\Snoop.Core\NativeMethods.cs" />
   </ItemGroup>
+
+  <Target Name="CopyIJWHost" Condition="'$(TargetFramework)' != 'net40' and Exists('$(TargetPath)')" AfterTargets="CopyFilesToOutputDirectory">
+    <Copy SourceFiles="$([System.IO.Path]::GetDirectoryName('$(AppHostSourcePath)'))\ijwhost.dll" DestinationFolder="$(OutputPath)" />
+
+    <ItemGroup>
+      <FileWrites Include="$([System.IO.Path]::GetFullPath('$(OutputPath)'))\ijwhost.dll" />
+    </ItemGroup>
+  </Target>
 
   <Target Name="DllExport" Condition="Exists('$(TargetPath)')" AfterTargets="CopyFilesToOutputDirectory">
     <Message Importance="high" Text="Calling dll export generator for assembly '$(TargetPath)'... $(TargetName).*.dll" />

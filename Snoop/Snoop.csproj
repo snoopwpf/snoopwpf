@@ -2,9 +2,11 @@
 <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <TargetFrameworks>net40</TargetFrameworks>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <OutputType>WinExe</OutputType>
-    <ApplicationIcon>..\Artwork\Snoop.ico</ApplicationIcon>
     <UseWpf>true</UseWpf>
+
+    <ApplicationIcon>..\Artwork\Snoop.ico</ApplicationIcon>
   </PropertyGroup>
 
   <!-- <PropertyGroup>

@@ -30,14 +30,15 @@
     <file src="..\bin\$Configuration$\Snoop.exe.config" target="tools\" />
     <file src="..\bin\$Configuration$\Snoop.pdb" target="tools\" />
     
-    <file src="..\bin\$Configuration$\ManagedInjector.*.*.dll" target="tools\" />
-    <file src="..\bin\$Configuration$\ManagedInjector.*.*.pdb" target="tools\" />
-    <file src="..\bin\$Configuration$\ManagedInjector.*.*.json" target="tools\" />
+    <file src="..\bin\$Configuration$\net*\ManagedInjector.*.*.dll" target="tools\" />
+    <file src="..\bin\$Configuration$\net*\ManagedInjector.*.*.pdb" target="tools\" />
+    <file src="..\bin\$Configuration$\net*\ManagedInjector.*.*.json" target="tools\" />
 
     <file src="..\bin\$Configuration$\ManagedInjectorLauncher.*.exe" target="tools\" />
     <file src="..\bin\$Configuration$\ManagedInjectorLauncher.*.exe.config" target="tools\" />
     <file src="..\bin\$Configuration$\ManagedInjectorLauncher.*.pdb" target="tools\" />
 
+    <file src="..\bin\$Configuration$\net*\System.Management.Automation.dll" target="tools\" />
     <file src="..\bin\$Configuration$\System.Management.Automation.dll" target="tools\" />
 
     <file src="..\bin\$Configuration$\*.ignore" target="tools\" />

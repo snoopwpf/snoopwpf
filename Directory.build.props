@@ -5,7 +5,6 @@
 
   <PropertyGroup>
     <OutputPath>..\bin\$(Configuration)\</OutputPath>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <BaseIntermediateOutputPath>..\bin\obj\$(ConfigurationName)\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)$(Configuration)\$(TargetFramework)\$(Platform)\</IntermediateOutputPath>
   </PropertyGroup>

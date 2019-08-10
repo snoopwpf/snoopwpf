@@ -17,6 +17,7 @@ namespace ManagedInjectorLauncher
                                : "x86";
 
             this.SupportedFrameworkName = GetTargetFramework(process);
+            this.RequiresIJWHost = this.SupportedFrameworkName == "netcoreapp3.0";
         }
 
         public Process Process { get; }
@@ -28,6 +29,8 @@ namespace ManagedInjectorLauncher
         public string Bitness { get; }
 
         public string SupportedFrameworkName { get; }
+
+        public bool RequiresIJWHost { get; }
 
         public static ProcessWrapper FromProcessId(int id)
         {
