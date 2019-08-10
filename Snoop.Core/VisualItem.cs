@@ -18,6 +18,7 @@ namespace Snoop
 {
     using System.Linq;
     using System.Windows.Interop;
+    using Snoop.Infrastructure;
 
     /// <summary>
 	/// Main class that represents a visual in the visual tree
@@ -129,7 +130,9 @@ namespace Snoop
 		    { 
 		        foreach (Window ownedWindow in window.OwnedWindows) 
 		        {
-		            if (ownedWindow.CheckAccess() == false)
+		            if (ownedWindow.IsInitialized == false
+                        || ownedWindow.CheckAccess() == false
+                        || ownedWindow.IsPartOfSnoopVisualTree())
 		            {
                         continue;
 		            }
