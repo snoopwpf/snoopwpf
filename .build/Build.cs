@@ -138,13 +138,14 @@ class Build : NukeBuild
         .DependsOn(Compile)
         .Executes(() =>
                   {
-                      ProcessTasks.StartProcess(WixDirectory / "candle.exe", 
-                                                $"snoop.wxs -ext WixUIExtension -o \"{OutputDirectory / "Snoop.wixobj"}\" -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -nologo")
-                                  .WaitForExit();
+                    var candleProcess = ProcessTasks.StartProcess(WixDirectory / "candle.exe", 
+                                            $"snoop.wxs -ext WixUIExtension -o \"{OutputDirectory / "Snoop.wixobj"}\" -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -nologo");
 
-                      ProcessTasks.StartProcess(WixDirectory / "light.exe", 
-                                                $"-out \"{OutputDirectory / $"Snoop.{GitVersion.NuGetVersion}.msi"}\" -b \"{CurrentBuildOutputDirectory}\" \"{OutputDirectory / "Snoop.wixobj"}\" -ext WixUIExtension -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -pdbout \"{OutputDirectory / "Snoop.wixpdb"}\" -nologo -sice:ICE61")
-                                  .WaitForExit();
+                    candleProcess.AssertZeroExitCode();
+
+                    var lightProcess = ProcessTasks.StartProcess(WixDirectory / "light.exe", 
+                                            $"-out \"{OutputDirectory / $"Snoop.{GitVersion.NuGetVersion}.msi"}\" -b \"{CurrentBuildOutputDirectory}\" \"{OutputDirectory / "Snoop.wixobj"}\" -ext WixUIExtension -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -pdbout \"{OutputDirectory / "Snoop.wixpdb"}\" -nologo -sice:ICE61");
+                    lightProcess.AssertZeroExitCode();
                   });
 
     Target CI => _ => _
