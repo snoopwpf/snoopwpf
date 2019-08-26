@@ -94,6 +94,11 @@ namespace ManagedInjectorLauncher
         {
             Trace.WriteLine($"Trying to load '{pathToDll}' in process {processWrapper.Id}...");
 
+            if (File.Exists(pathToDll) == false)
+            {
+                throw new FileNotFoundException("Could not find file for loading in foreign process.", pathToDll);
+            }
+
             var moduleHandleInForeignProcess = IntPtr.Zero;
 
             var stringForRemoteProcess = pathToDll;
@@ -241,6 +246,11 @@ namespace ManagedInjectorLauncher
             var pathToHookDll = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), processWrapper.SupportedFrameworkName, hookDllName);
 
             Trace.WriteLine($"Trying to load '{pathToHookDll}'...");
+
+            if (File.Exists(pathToHookDll) == false)
+            {
+                throw new FileNotFoundException("Could not find hook dll.", pathToHookDll);
+            }
 
             var hLibrary = NativeMethods.LoadLibrary(pathToHookDll);
 
