@@ -120,10 +120,6 @@
           <Component Id="Snoop.pdb" Guid="{A74F3E32-B62B-43CB-BC54-B429D9093BFF}">
               <File Id="Snoop.pdb" KeyPath="yes" Source="SourceDir\Snoop.pdb" />
           </Component>
-
-          <Component Id="Root.System.Management.Automation.dll" Guid="{D386C880-5C83-4201-9E54-C1ECC1FF3161}">
-              <File Id="Root.System.Management.Automation.dll" KeyPath="yes" Source="SourceDir\System.Management.Automation.dll" />
-          </Component>
  
           <Directory Id="SnoopScriptsFolder" Name="Scripts"> 
             <Component Id="SnoopScriptsComponent" Guid="65AD97C3-5B32-4020-892C-1D0E38656D6D"> 
@@ -174,7 +170,6 @@
       <ComponentRef Id="Snoop.pdb" />
       <ComponentRef Id="Root.Snoop.Core.net40.dll" />
       <ComponentRef Id="Root.Snoop.Core.net40.pdb" />
-      <ComponentRef Id="Root.System.Management.Automation.dll" />
 
       <ComponentRef Id="SnoopScriptsComponent"/> 
       <ComponentRef Id="ProgramMenuDir"/> 

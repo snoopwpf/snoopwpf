@@ -124,7 +124,12 @@ class Build : NukeBuild
                 .SetOutputDirectory(OutputDirectory)
                 .SetNoPackageAnalysis(true));
 
-            var tempDirectory = TemporaryDirectory / "XX";
+            var tempDirectory = TemporaryDirectory / "SnoopBuild";
+
+            if (DirectoryExists(tempDirectory))
+            {
+                DeleteDirectory(tempDirectory);
+            }
 
             var nupkgs = OutputDirectory.GlobFiles("*.nupkg");
 
