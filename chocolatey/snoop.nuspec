@@ -32,11 +32,15 @@
     
     <file src="..\bin\$Configuration$\net40\ManagedInjector.*.*.dll" target="tools\net40\" />
     <file src="..\bin\$Configuration$\net40\ManagedInjector.*.*.pdb" target="tools\net40\" />
+    <file src="..\bin\$Configuration$\net40\Snoop.Core.*.dll" target="tools\net40\" />
+    <file src="..\bin\$Configuration$\net40\Snoop.Core.*.pdb" target="tools\net40\" />
     <file src="..\bin\$Configuration$\net40\System.Management.Automation.dll" target="tools\net40\" />
 
     <file src="..\bin\$Configuration$\netcoreapp3.0\ManagedInjector.*.*.dll" target="tools\netcoreapp3.0\" />
     <file src="..\bin\$Configuration$\netcoreapp3.0\ManagedInjector.*.*.pdb" target="tools\netcoreapp3.0\" />
     <file src="..\bin\$Configuration$\netcoreapp3.0\ManagedInjector.*.*.runtimeconfig.json" target="tools\netcoreapp3.0\" />
+    <file src="..\bin\$Configuration$\netcoreapp3.0\Snoop.Core.*.dll" target="tools\netcoreapp3.0\" />    
+    <file src="..\bin\$Configuration$\netcoreapp3.0\Snoop.Core.*.pdb" target="tools\netcoreapp3.0\" />
 
     <file src="..\bin\$Configuration$\ManagedInjectorLauncher.*.exe" target="tools\" />
     <file src="..\bin\$Configuration$\ManagedInjectorLauncher.*.exe.config" target="tools\" />
