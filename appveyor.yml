@@ -16,8 +16,8 @@
     do_not_increment_build_number: false
 
   install:
-    # Install dotnet core 3.0 latest (alpha!!), as this is not provided on AppVeyor yet
-    - cinst dotnetcore-sdk --pre
+    # Install dotnet core 3.0 latest
+    - cinst dotnetcore-sdk
 
   build_script:
     - ps: .\build.ps1 CI
