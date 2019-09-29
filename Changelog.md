@@ -1,5 +1,12 @@
 ﻿# Changelog for snoop
 
+## 3.0.0 (preview)
+- ### Bug fixes
+  -  [#45](../../issues/45) - Keystrokes go to Visual Studio main window when inspecting Visual Studio (thanks @KirillOsenkov)
+
+- ### Improvements
+
+
 ## 2.11.0
 - ### Bug fixes
   -  [#53](../../issues/53) - Path Data values have wrong format (should use invariant culture) (thanks @jongleur1983)
