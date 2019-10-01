@@ -45,7 +45,7 @@
             </Component>
           </Directory>
 
-          <Directory Id="netcoreapp30" Name="netcoreapp30">
+          <Directory Id="netcoreapp30" Name="netcoreapp3.0">
             <Component Id="ManagedInjector.netcoreapp3.0.x64.dll" Guid="{667D5F5F-3BE7-4B93-A04F-118AE9212A8B}">
                 <File Id="ManagedInjector.netcoreapp3.0.x64.dll" KeyPath="yes" Source="SourceDir\netcoreapp3.0\ManagedInjector.netcoreapp3.0.x64.dll" />
             </Component>
