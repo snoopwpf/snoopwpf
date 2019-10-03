@@ -6,7 +6,7 @@ namespace ManagedInjectorLauncher
     using System.IO;
     using System.Reflection;
     using System.Runtime.InteropServices;
-    using System.Xml.Serialization;
+    using JetBrains.Annotations;
     using Snoop;
 
     /// <summary>
@@ -43,48 +43,16 @@ namespace ManagedInjectorLauncher
             }
         }
 
+        [PublicAPI]
         public static void InjectIntoProcess(IntPtr windowHandle, InjectorData injectorData)
         {
             InjectIntoProcess(ProcessWrapper.FromWindowHandle(windowHandle), injectorData);
         }
 
+        [PublicAPI]
         public static void InjectIntoProcess(ProcessWrapper processWrapper, InjectorData injectorData)
         {
-            string transportDataString;
-
-            {
-                var serializer = new XmlSerializer(typeof(InjectorData));
-
-                using (var stream = new StringWriter())
-                {
-                    serializer.Serialize(stream, injectorData);
-                    transportDataString = stream.ToString();
-                }
-            }
-
-            if (processWrapper.RequiresIJWHost)
-            {
-                InjectIJWHost(processWrapper);
-            }
-
-            InjectSnoop(processWrapper, transportDataString);
-        }
-
-        private static void InjectIJWHost(ProcessWrapper processWrapper)
-        {
-            var ijwHostPath = GetPathToIJWHost(processWrapper);
-
-            // We also have to inject the ijwhost.dll into this process, otherwise a later call to LoadLibrary on that DLL will fail
-            {
-                var hLibrary = NativeMethods.LoadLibrary(ijwHostPath);
-
-                if (hLibrary == IntPtr.Zero)
-                {
-                    throw new Win32Exception();
-                }
-            }
-
-            LoadLibraryInForeignProcess(processWrapper, ijwHostPath);
+            InjectSnoop(processWrapper, injectorData);
         }
 
         /// <summary>
@@ -168,159 +136,126 @@ namespace ManagedInjectorLauncher
                 throw new Exception($"Could not load '{pathToDll}' in process '{processWrapper.Id}'.");
             }
 
-            Trace.WriteLine($"Successfully loaded '{pathToDll}' in process {processWrapper.Id}.");
+            Trace.WriteLine($"Successfully loaded '{pathToDll}' with handle {moduleHandleInForeignProcess} in process {processWrapper.Id}.");
 
             return moduleHandleInForeignProcess;
         }
 
-        private static string GetPathToIJWHost(ProcessWrapper processWrapper)
+        private static void InjectSnoop(ProcessWrapper processWrapper, InjectorData injectorData)
         {
-            const string ijwhostDllFilename = "ijwhost.dll";
-            const string hostfxrDllFilename = "hostfxr.dll";
+            var injectorDllName = $"Snoop.GenericInjector.{processWrapper.Bitness}.dll";
+            var pathToInjectorDll = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), injectorDllName);
 
-            Trace.WriteLine($"Trying to find path to '{ijwhostDllFilename}'...");
+            //var injectorDllName = "CALLMANAGEDCODE2.dll";
+            //var pathToInjectorDll = "C:\\DEV\\OSS_Own\\snoopwpf\\bin\\Debug\\CALLMANAGEDCODE2.dll";
+            Trace.WriteLine($"Trying to load '{pathToInjectorDll}'...");
 
-            //var samplePath = @"C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64\3.0.0-preview6-27804-01\runtimes\win-x64\native\ijwhost.dll";
-            //var hostfxrPath = @"C:\Program Files\dotnet\host\fxr\3.0.0-preview6-27804-01\hostfxr.dll";
-            string hostfxrPath = null;
-
-            Trace.WriteLine($"Trying to find loaded module '{hostfxrDllFilename}'...");
-
-            var modules = NativeMethods.GetModules(processWrapper.Process);
-
-            foreach (var module in modules)
+            if (File.Exists(pathToInjectorDll) == false)
             {
-                if (module.szModule.Equals(hostfxrDllFilename, StringComparison.OrdinalIgnoreCase))
-                {
-                    hostfxrPath = module.szExePath;
-                    Trace.WriteLine($"Found path to '{hostfxrDllFilename}' with value '{hostfxrPath}'.");
-                    break;
-                }
+                throw new FileNotFoundException("Could not find injector dll.", pathToInjectorDll);
             }
 
-            if (string.IsNullOrEmpty(hostfxrPath))
-            {
-                throw new FileNotFoundException($"Could not find path to '{hostfxrDllFilename}'.", hostfxrDllFilename);
-            }
-
-            var hostfxrDirectoryPath = Path.GetDirectoryName(hostfxrPath);
-
-            if (string.IsNullOrEmpty(hostfxrDirectoryPath) == false)
-            {
-                var dotnetPath = Path.GetFullPath(Path.Combine(hostfxrDirectoryPath, @"..\..\.."));
-                var frameworkVersion = new DirectoryInfo(hostfxrDirectoryPath).Name;
-
-                var ijwHostDllPath = $@"{dotnetPath}\packs\Microsoft.NETCore.App.Host.win-{processWrapper.Bitness}\{frameworkVersion}\runtimes\win-{processWrapper.Bitness}\native\{ijwhostDllFilename}";
-
-                Trace.WriteLine($"Path to '{ijwhostDllFilename}' might be '{ijwHostDllPath}'.");
-
-                if (File.Exists(ijwHostDllPath))
-                {
-                    Trace.WriteLine($"Path to '{ijwhostDllFilename}' is '{ijwHostDllPath}'.");
-                    return ijwHostDllPath;
-                }
-            }
-
-            // if we land here the application we try to inject into is most likely a self contained app (either local distribution or single file)
-            {
-                Trace.WriteLine("Current application is most likely a self contained app (either local distribution or single file).");
-                Trace.WriteLine("Trying to use local ijwhost...");
-
-                var ijwHostDllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), processWrapper.SupportedFrameworkName, ijwhostDllFilename);
-
-                Trace.WriteLine($"Path to '{ijwhostDllFilename}' might be '{ijwHostDllPath}'.");
-
-                if (File.Exists(ijwHostDllPath))
-                {
-                    Trace.WriteLine($"Path to '{ijwhostDllFilename}' is '{ijwHostDllPath}'.");
-                    return ijwHostDllPath;
-                }
-            }
-
-            throw new FileNotFoundException($"Could not find path to '{ijwhostDllFilename}'.", ijwhostDllFilename);
-        }
-
-        private static void InjectSnoop(ProcessWrapper processWrapper, string transportDataString)
-        {
-            var hookDllName = $"ManagedInjector.{processWrapper.SupportedFrameworkName}.{processWrapper.Bitness}.dll";
-            var pathToHookDll = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), processWrapper.SupportedFrameworkName, hookDllName);
-
-            Trace.WriteLine($"Trying to load '{pathToHookDll}'...");
-
-            if (File.Exists(pathToHookDll) == false)
-            {
-                throw new FileNotFoundException("Could not find hook dll.", pathToHookDll);
-            }
-
-            var hLibrary = NativeMethods.LoadLibrary(pathToHookDll);
+            var hLibrary = NativeMethods.LoadLibrary(pathToInjectorDll);
 
             if (hLibrary == IntPtr.Zero)
             {
                 throw new Win32Exception();
             }
 
-            Trace.WriteLine($"Successfully loaded '{pathToHookDll}'.");
+            Trace.WriteLine($"Successfully loaded '{pathToInjectorDll}' with handle {hLibrary}.");
 
-            var hLibraryInForeignProcess = LoadLibraryInForeignProcess(processWrapper, pathToHookDll);
+            var hLibraryInForeignProcess = LoadLibraryInForeignProcess(processWrapper, pathToInjectorDll);
 
-            var stringForRemoteProcess = transportDataString;
+            var parameters = new[]
+                             {
+                                 processWrapper.SupportedFrameworkName,
+                                 injectorData.FullAssemblyPath,
+                                 injectorData.ClassName,
+                                 injectorData.MethodName,
+                                 injectorData.SettingsFile
+                             };
+
+            var stringForRemoteProcess =  string.Join("<|>", parameters);
 
             var bufLen = (stringForRemoteProcess.Length + 1) * Marshal.SizeOf(typeof(char));
-            var remoteAddress = NativeMethods.VirtualAllocEx(processWrapper.Handle, IntPtr.Zero, (uint)bufLen,
-                                                               NativeMethods.AllocationType.Commit,
-                                                               NativeMethods.MemoryProtection.ReadWrite);
 
-            if (remoteAddress != IntPtr.Zero)
+            try
             {
-                var address = Marshal.StringToHGlobalUni(stringForRemoteProcess);
-                var size = (uint)(sizeof(char) * stringForRemoteProcess.Length);
+                var remoteAddress = NativeMethods.VirtualAllocEx(processWrapper.Handle, IntPtr.Zero, (uint)bufLen, NativeMethods.AllocationType.Commit, NativeMethods.MemoryProtection.ReadWrite);
 
-                var writeProcessMemoryResult = NativeMethods.WriteProcessMemory(processWrapper.Handle, remoteAddress, address, size, out var bytesWritten);
-
-                if (writeProcessMemoryResult == false
-                    || bytesWritten == 0)
+                if (remoteAddress != IntPtr.Zero)
                 {
-                    throw Marshal.GetExceptionForHR(Marshal.GetLastWin32Error());
-                }
+                    var address = Marshal.StringToHGlobalUni(stringForRemoteProcess);
+                    var size = (uint)(sizeof(char) * stringForRemoteProcess.Length);
 
-                // Load dll into the remote process
-                // (via CreateRemoteThread & LoadLibrary)
-                var procAddress = hLibrary == hLibraryInForeignProcess
-                                      ? NativeMethods.GetProcAddress(hLibrary, "LoadAssemblyAndCallStartupMethod")
-                                      : NativeMethods.GetRemoteProcAddress(processWrapper.Process, hookDllName, "LoadAssemblyAndCallStartupMethod");
+                    var writeProcessMemoryResult = NativeMethods.WriteProcessMemory(processWrapper.Handle, remoteAddress, address, size, out var bytesWritten);
 
-                if (procAddress != UIntPtr.Zero)
-                {
-                    var remoteThread = NativeMethods.CreateRemoteThread(processWrapper.Handle, IntPtr.Zero, 0, procAddress, remoteAddress, 0, out _);
-
-                    // todo: error handling
-                    if (remoteThread != IntPtr.Zero)
+                    if (writeProcessMemoryResult == false
+                        || bytesWritten == 0)
                     {
-                        NativeMethods.WaitForSingleObject(remoteThread);
+                        throw Marshal.GetExceptionForHR(Marshal.GetLastWin32Error());
                     }
 
-                    NativeMethods.CloseHandle(remoteThread);
+                    try
+                    {
+                        // Load dll into the remote process
+                        // (via CreateRemoteThread & LoadLibrary)
+                        var procAddress = hLibrary == hLibraryInForeignProcess
+                                              ? NativeMethods.GetProcAddress(hLibrary, "ExecuteInDefaultAppDomain")
+                                              : NativeMethods.GetRemoteProcAddress(processWrapper.Process, injectorDllName, "ExecuteInDefaultAppDomain");
+
+                        if (procAddress != UIntPtr.Zero)
+                        {
+                            var remoteThread = NativeMethods.CreateRemoteThread(processWrapper.Handle, IntPtr.Zero, 0, procAddress, remoteAddress, 0, out _);
+
+                            try
+                            {
+                                if (remoteThread != IntPtr.Zero)
+                                {
+                                    NativeMethods.WaitForSingleObject(remoteThread);
+
+                                    // Get handle of the loaded module
+                                    NativeMethods.GetExitCodeThread(remoteThread, out var resultFromExecuteInDefaultAppDomain);
+
+                                    Trace.WriteLine($"Received \"{resultFromExecuteInDefaultAppDomain}\" from injector component.");
+
+                                    if (resultFromExecuteInDefaultAppDomain != IntPtr.Zero)
+                                    {
+                                        throw Marshal.GetExceptionForHR((int)resultFromExecuteInDefaultAppDomain.ToInt64());
+                                    }
+                                }
+                            }
+                            finally
+                            {
+                                NativeMethods.CloseHandle(remoteThread);
+                            }
+                        }
+                        else
+                        {
+                            Trace.WriteLine("Could not get proc address for \"ExecuteInDefaultAppDomain\".");
+                        }
+                    }
+                    finally
+                    {
+                        try
+                        {
+                            NativeMethods.VirtualFreeEx(processWrapper.Handle, remoteAddress, bufLen, NativeMethods.AllocationType.Release);
+                        }
+                        catch (Exception e)
+                        {
+                            LogMessage(e.ToString(), true);
+                        }
+                    }
                 }
                 else
                 {
-                    Trace.WriteLine("Could not get proc address for \"LoadAssemblyAndCallStartupMethod\".");
-                }
-
-                try
-                {
-                    NativeMethods.VirtualFreeEx(processWrapper.Handle, remoteAddress, bufLen, NativeMethods.AllocationType.Release);
-                }
-                catch (Exception e)
-                {
-                    LogMessage(e.ToString(), true);
+                    throw new Win32Exception();
                 }
             }
-            else
+            finally
             {
-                throw new Win32Exception();
+                NativeMethods.FreeLibrary(hLibrary);
             }
-
-            NativeMethods.FreeLibrary(hLibrary);
         }
     }
 }

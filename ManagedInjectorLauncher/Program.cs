@@ -76,7 +76,7 @@ namespace ManagedInjectorLauncher
 
             foreach (ProcessModule module in process.Modules)
             {
-                if (module.FileName.Contains("ManagedInjector"))
+                if (module.FileName.Contains("Snoop.Core"))
                 {
                     containsFile = true;
                 }

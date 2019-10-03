@@ -9,7 +9,6 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
 using System.Runtime.ConstrainedExecution;
-using System.Windows;
 
 namespace Snoop
 {
@@ -328,11 +327,14 @@ namespace Snoop
                 if (mod.ModuleName.Equals(moduleName, StringComparison.OrdinalIgnoreCase)
                     || mod.FileName.Equals(moduleName, StringComparison.OrdinalIgnoreCase))
                 {
-                    var func = NativeMethods.GetProcAddress(mod.BaseAddress, procName).ToUInt64();
+                    Trace.WriteLine($"Checking module {moduleName} with base address {mod.BaseAddress} for procaddress of {procName}...");
 
-                    if (func != 0)
+                    var procAddress = NativeMethods.GetProcAddress(mod.BaseAddress, procName).ToUInt64();
+
+                    if (procAddress != 0)
                     {
-                        functionOffsetFromBaseAddress = func - (uint)mod.BaseAddress;
+                        Trace.WriteLine($"Got proc address in foreign process with {procAddress}.");
+                        functionOffsetFromBaseAddress = procAddress - (ulong)mod.BaseAddress;
                     }
 
                     break;
@@ -346,7 +348,7 @@ namespace Snoop
                     if (mod.ModuleName.Equals(moduleName, StringComparison.OrdinalIgnoreCase)
                         || mod.FileName.Equals(moduleName, StringComparison.OrdinalIgnoreCase))
                     {
-                        remoteProcAddress = (uint)mod.BaseAddress + functionOffsetFromBaseAddress;
+                        remoteProcAddress = (ulong)mod.BaseAddress + functionOffsetFromBaseAddress;
 
                         break;
                     }
@@ -387,12 +389,12 @@ namespace Snoop
 			return IntPtr.Zero;
 		}
 
-		public static Rect GetWindowRect(IntPtr hwnd)
-		{
-			RECT rect = new RECT();
-			GetWindowRect(hwnd, out rect);
-			return new Rect(rect.Left, rect.Top, rect.Right - rect.Left, rect.Bottom - rect.Top);
-		}
+		//public static System.Windows.Rect GetWindowRect(IntPtr hwnd)
+		//{
+		//	RECT rect = new RECT();
+		//	GetWindowRect(hwnd, out rect);
+		//	return new System.Windows.Rect(rect.Left, rect.Top, rect.Right - rect.Left, rect.Bottom - rect.Top);
+		//}
 
 		[DllImport("user32.dll")]
 		[return: MarshalAs(UnmanagedType.Bool)]

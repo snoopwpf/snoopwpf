@@ -1,14 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks>net40</TargetFrameworks>
+    <TargetFramework>net40</TargetFramework>
+    <PlatformTarget>x86</PlatformTarget>
     <ApplicationIcon>..\Artwork\Snoop.ico</ApplicationIcon>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
 
-  <!-- <PropertyGroup>
-    <TargetName>$(AssemblyName).$(TargetFramework)</TargetName>
-  </PropertyGroup> -->
+  <PropertyGroup>
+    <TargetName>$(AssemblyName).$(PlatformTarget)</TargetName>
+  </PropertyGroup>
   
   <ItemGroup>
     <Compile Include="..\Shared\InjectorData.cs" Link="InjectorData.cs" />
@@ -16,17 +17,11 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Reference Include="WindowsBase" />
+    <PackageReference Include="JetBrains.Annotations" Version="2019.*" />
   </ItemGroup>
 
-  <Target Name="DllExport" Condition="Exists('$(TargetPath)')" AfterTargets="CopyFilesToOutputDirectory">
-    <Message Importance="high" Text="Calling dll export generator for assembly '$(TargetPath)'... $(TargetName).*.*" />
-
-    <Exec Command="&quot;$(MSBuildThisFileDirectory)\..\tools\exporter.exe&quot; &quot;$(TargetPath)&quot;" WorkingDirectory="$(OutputPath)" />
-
-    <ItemGroup>
-      <FileWrites Include="$([System.IO.Path]::GetFullPath('$(OutputPath)'))\$(TargetName).*.*" />
-      <FileWrites Include="$([System.IO.Path]::GetFullPath('$(OutputPath)'))\$(TargetName).*.pdb" />
-    </ItemGroup>
+  <Target Name="Compilex64" AfterTargets="Build">
+    <Message Text="Building injector launcher for x64..." Importance="High" />
+    <MSBuild Condition="'$(PlatformTarget)' == 'x86'" Projects="$(MSBuildProjectFile)" Targets="Restore;Build" Properties="Configuration=$(Configuration);PlatformTarget=x64;BaseIntermediateOutputPath=$(BaseIntermediateOutputPath)\x64\;GenerateAssemblyInfo=False" RunEachTargetSeparately="true" />
   </Target>
 </Project>

@@ -17,9 +17,10 @@
     public class SnoopManager : MarshalByRefObject
     {
         [PublicAPI]
-        public static void StartSnoop(string settingsFile)
+        public static int StartSnoop(string settingsFile)
         {
             new SnoopManager().StartSnoopInstance(settingsFile);
+            return 0;
         }
 
         private bool StartSnoopInstance(string settingsFile)

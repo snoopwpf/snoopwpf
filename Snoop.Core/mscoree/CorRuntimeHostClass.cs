@@ -8,7 +8,9 @@
     [ComImport]
     [Guid("CB2F6723-AB3A-11D2-9C40-00C04FA30A3E")]
     [TypeLibType(2)]
+    #pragma warning disable CS0618
     [ClassInterface(ClassInterfaceType.AutoDual)]
+    #pragma warning restore CS0618
     public class CorRuntimeHostClass : ICorRuntimeHost, CorRuntimeHost, IGCHost, ICorConfiguration, IValidator, IDebuggerInfo
     {
         [MethodImpl(MethodImplOptions.InternalCall)]
