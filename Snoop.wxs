@@ -21,19 +21,6 @@
       <Directory Id="ProgramFilesFolder"> 
         <Directory Id="INSTALLDIR" Name="Snoop">
           <Directory Id="net40" Name="net40">
-            <Component Id="ManagedInjector.net40.x64.dll" Guid="{DF9AFA72-A1C6-48C5-9BF0-F00C284FA111}">
-                <File Id="ManagedInjector.net40.x64.dll" KeyPath="yes" Source="SourceDir\net40\ManagedInjector.net40.x64.dll" />
-            </Component>
-            <Component Id="ManagedInjector.net40.x64.pdb" Guid="{AD049732-5606-4666-8AD2-A35BCFAA9145}">
-                <File Id="ManagedInjector.net40.x64.pdb" KeyPath="yes" Source="SourceDir\net40\ManagedInjector.net40.x64.pdb" />
-            </Component>
-            <Component Id="ManagedInjector.net40.x86.dll" Guid="{DCCFD1DE-F53E-428C-95F1-4435FA9AC0CD}">
-                <File Id="ManagedInjector.net40.x86.dll" KeyPath="yes" Source="SourceDir\net40\ManagedInjector.net40.x86.dll" />
-            </Component>
-            <Component Id="ManagedInjector.net40.x86.pdb" Guid="{229F53BD-836B-443B-997C-0A4F310D1224}">
-                <File Id="ManagedInjector.net40.x86.pdb" KeyPath="yes" Source="SourceDir\net40\ManagedInjector.net40.x86.pdb" />
-            </Component>
-
             <Component Id="Snoop.Core.net40.dll" Guid="{71FAE20E-805A-4182-9860-7480BBD400BF}">
                 <File Id="Snoop.Core.net40.dll" KeyPath="yes" Source="SourceDir\net40\Snoop.Core.net40.dll" />
             </Component>
@@ -46,25 +33,6 @@
           </Directory>
 
           <Directory Id="netcoreapp30" Name="netcoreapp3.0">
-            <Component Id="ManagedInjector.netcoreapp3.0.x64.dll" Guid="{667D5F5F-3BE7-4B93-A04F-118AE9212A8B}">
-                <File Id="ManagedInjector.netcoreapp3.0.x64.dll" KeyPath="yes" Source="SourceDir\netcoreapp3.0\ManagedInjector.netcoreapp3.0.x64.dll" />
-            </Component>
-            <Component Id="ManagedInjector.netcoreapp3.0.x64.pdb" Guid="{442C2324-7C06-4B57-B9D6-F262FBB3FEFA}">
-                <File Id="ManagedInjector.netcoreapp3.0.x64.pdb" KeyPath="yes" Source="SourceDir\netcoreapp3.0\ManagedInjector.netcoreapp3.0.x64.pdb" />
-            </Component>
-            <Component Id="ManagedInjector.netcoreapp3.0.x64.runtimeconfig.json" Guid="{69666D4A-15B1-4392-9A39-30367FD7C41F}">
-                <File Id="ManagedInjector.netcoreapp3.0.x64.runtimeconfig.json" KeyPath="yes" Source="SourceDir\netcoreapp3.0\ManagedInjector.netcoreapp3.0.x64.runtimeconfig.json" />
-            </Component>
-            <Component Id="ManagedInjector.netcoreapp3.0.x86.dll" Guid="{47B7098F-7CEC-43C3-A2FB-BCFBD6B34889}">
-                <File Id="ManagedInjector.netcoreapp3.0.x86.dll" KeyPath="yes" Source="SourceDir\netcoreapp3.0\ManagedInjector.netcoreapp3.0.x86.dll" />
-            </Component>
-            <Component Id="ManagedInjector.netcoreapp3.0.x86.pdb" Guid="{2CFD6DAA-C08A-4CD5-AB92-ED40A67A7EBF}">
-                <File Id="ManagedInjector.netcoreapp3.0.x86.pdb" KeyPath="yes" Source="SourceDir\netcoreapp3.0\ManagedInjector.netcoreapp3.0.x86.pdb" />
-            </Component>
-            <Component Id="ManagedInjector.netcoreapp3.0.x86.runtimeconfig.json" Guid="{D2E2FDB7-49E7-4228-9EC6-402080CF2A18}">
-                <File Id="ManagedInjector.netcoreapp3.0.x86.runtimeconfig.json" KeyPath="yes" Source="SourceDir\netcoreapp3.0\ManagedInjector.netcoreapp3.0.x86.runtimeconfig.json" />
-            </Component>
-
             <Component Id="Snoop.Core.netcoreapp3.0.deps.json" Guid="{936DC81A-039F-41C3-8F46-23AEBCFF7B22}">
                 <File Id="Snoop.Core.netcoreapp3.0.deps.json" KeyPath="yes" Source="SourceDir\netcoreapp3.0\Snoop.Core.netcoreapp3.0.deps.json" />
             </Component>
@@ -75,6 +43,19 @@
                 <File Id="Snoop.Core.netcoreapp3.0.pdb" KeyPath="yes" Source="SourceDir\netcoreapp3.0\Snoop.Core.netcoreapp3.0.pdb" />
             </Component>
           </Directory>
+
+          <Component Id="Snoop.GenericInjector.x64.dll" Guid="{DF9AFA72-A1C6-48C5-9BF0-F00C284FA111}">
+              <File Id="Snoop.GenericInjector.x64.dll" KeyPath="yes" Source="SourceDir\net40\Snoop.GenericInjector.x64.dll" />
+          </Component>
+          <Component Id="Snoop.GenericInjector.x64.pdb" Guid="{AD049732-5606-4666-8AD2-A35BCFAA9145}">
+              <File Id="Snoop.GenericInjector.x64.pdb" KeyPath="yes" Source="SourceDir\net40\Snoop.GenericInjector.x64.pdb" />
+          </Component>
+          <Component Id="Snoop.GenericInjector.x86.dll" Guid="{DCCFD1DE-F53E-428C-95F1-4435FA9AC0CD}">
+              <File Id="Snoop.GenericInjector.x86.dll" KeyPath="yes" Source="SourceDir\net40\Snoop.GenericInjector.x86.dll" />
+          </Component>
+          <Component Id="Snoop.GenericInjector.x86.pdb" Guid="{229F53BD-836B-443B-997C-0A4F310D1224}">
+              <File Id="Snoop.GenericInjector.x86.pdb" KeyPath="yes" Source="SourceDir\net40\Snoop.GenericInjector.x86.pdb" />
+          </Component>
 
           <Component Id="ManagedInjectorLauncher.x64.exe" Guid="{2B8C5745-FC92-4617-A7C8-3A2AC4AD6DC8}">
               <File Id="ManagedInjectorLauncher.x64.exe" KeyPath="yes" Source="SourceDir\ManagedInjectorLauncher.x64.exe" />
@@ -142,27 +123,23 @@
     </Directory> 
 
     <Feature Id="ProductFeature" Title="Snoop" Description="Snoop, the WPF Spying Utility" Level="1" ConfigurableDirectory="INSTALLDIR"> 
-      <ComponentRef Id="ManagedInjector.net40.x64.dll" />
-      <ComponentRef Id="ManagedInjector.net40.x64.pdb" />
-      <ComponentRef Id="ManagedInjector.net40.x86.dll" />
-      <ComponentRef Id="ManagedInjector.net40.x86.pdb" />
       <ComponentRef Id="Snoop.Core.net40.dll" />
       <ComponentRef Id="Snoop.Core.net40.pdb" />
       <ComponentRef Id="System.Management.Automation.dll" />
 
-      <ComponentRef Id="ManagedInjector.netcoreapp3.0.x64.dll" />
-      <ComponentRef Id="ManagedInjector.netcoreapp3.0.x64.pdb" />
-      <ComponentRef Id="ManagedInjector.netcoreapp3.0.x64.runtimeconfig.json" />
-      <ComponentRef Id="ManagedInjector.netcoreapp3.0.x86.dll" />
-      <ComponentRef Id="ManagedInjector.netcoreapp3.0.x86.pdb" />
-      <ComponentRef Id="ManagedInjector.netcoreapp3.0.x86.runtimeconfig.json" />
       <ComponentRef Id="Snoop.Core.netcoreapp3.0.deps.json" />
       <ComponentRef Id="Snoop.Core.netcoreapp3.0.dll" />
       <ComponentRef Id="Snoop.Core.netcoreapp3.0.pdb" />
 
+      <ComponentRef Id="Snoop.GenericInjector.x64.dll" />
+      <ComponentRef Id="Snoop.GenericInjector.x64.pdb" />
+      <ComponentRef Id="Snoop.GenericInjector.x86.dll" />
+      <ComponentRef Id="Snoop.GenericInjector.x86.pdb" />
+
       <ComponentRef Id="ManagedInjectorLauncher.x64.exe" />
+      <ComponentRef Id="ManagedInjectorLauncher.x64.exe.config" />
       <ComponentRef Id="ManagedInjectorLauncher.x64.pdb" />
-      <ComponentRef Id="ManagedInjectorLauncher.x86.exe" />
+      <ComponentRef Id="ManagedInjectorLauncher.x86.exe.config" />
       <ComponentRef Id="ManagedInjectorLauncher.x86.pdb" />
 
       <ComponentRef Id="Snoop.exe" />
