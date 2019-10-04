@@ -5,6 +5,9 @@
     <PlatformTarget>x86</PlatformTarget>
     <ApplicationIcon>..\Artwork\Snoop.ico</ApplicationIcon>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+
+    <ApplicationIcon>..\Artwork\Snoop.ico</ApplicationIcon>
+    <ApplicationManifest>../Shared/app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -12,6 +15,8 @@
   </PropertyGroup>
   
   <ItemGroup>
+    <ApplicationManifest Include="../Shared/app.manifest" />
+
     <Compile Include="..\Shared\InjectorData.cs" Link="InjectorData.cs" />
     <Compile Include="..\Snoop.Core\NativeMethods.cs" />
   </ItemGroup>
