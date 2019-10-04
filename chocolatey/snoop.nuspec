@@ -30,21 +30,19 @@
     <file src="..\bin\$Configuration$\Snoop.exe.config" target="tools\" />
     <file src="..\bin\$Configuration$\Snoop.pdb" target="tools\" />
     
-    <file src="..\bin\$Configuration$\net40\ManagedInjector.*.*.dll" target="tools\net40\" />
-    <file src="..\bin\$Configuration$\net40\ManagedInjector.*.*.pdb" target="tools\net40\" />
     <file src="..\bin\$Configuration$\net40\Snoop.Core.*.dll" target="tools\net40\" />
     <file src="..\bin\$Configuration$\net40\Snoop.Core.*.pdb" target="tools\net40\" />
     <file src="..\bin\$Configuration$\net40\System.Management.Automation.dll" target="tools\net40\" />
 
-    <file src="..\bin\$Configuration$\netcoreapp3.0\ManagedInjector.*.*.dll" target="tools\netcoreapp3.0\" />
-    <file src="..\bin\$Configuration$\netcoreapp3.0\ManagedInjector.*.*.pdb" target="tools\netcoreapp3.0\" />
-    <file src="..\bin\$Configuration$\netcoreapp3.0\ManagedInjector.*.*.runtimeconfig.json" target="tools\netcoreapp3.0\" />
     <file src="..\bin\$Configuration$\netcoreapp3.0\Snoop.Core.*.dll" target="tools\netcoreapp3.0\" />    
     <file src="..\bin\$Configuration$\netcoreapp3.0\Snoop.Core.*.pdb" target="tools\netcoreapp3.0\" />
 
-    <file src="..\bin\$Configuration$\ManagedInjectorLauncher.*.exe" target="tools\" />
-    <file src="..\bin\$Configuration$\ManagedInjectorLauncher.*.exe.config" target="tools\" />
-    <file src="..\bin\$Configuration$\ManagedInjectorLauncher.*.pdb" target="tools\" />
+    <file src="..\bin\$Configuration$\Snoop.GenericInjector.*.dll" target="tools\" />
+    <file src="..\bin\$Configuration$\Snoop.GenericInjector.*.pdb" target="tools\" />
+
+    <file src="..\bin\$Configuration$\Snoop.InjectorLauncher.*.exe" target="tools\" />
+    <file src="..\bin\$Configuration$\Snoop.InjectorLauncher.*.exe.config" target="tools\" />
+    <file src="..\bin\$Configuration$\Snoop.InjectorLauncher.*.pdb" target="tools\" />
 
     <file src="..\bin\$Configuration$\*.ignore" target="tools\" />
     <file src="..\bin\$Configuration$\*.gui" target="tools\" />

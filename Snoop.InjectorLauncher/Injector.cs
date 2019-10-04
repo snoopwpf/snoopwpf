@@ -1,4 +1,4 @@
-namespace ManagedInjectorLauncher
+namespace Snoop.InjectorLauncher
 {
     using System;
     using System.ComponentModel;
