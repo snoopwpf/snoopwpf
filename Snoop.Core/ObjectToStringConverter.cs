@@ -13,18 +13,30 @@ namespace Snoop
 {
 	public class ObjectToStringConverter : IValueConverter
 	{
-		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public static readonly ObjectToStringConverter Instance = new ObjectToStringConverter();
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return this.Convert(value);
+        }
+
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
+			throw new Exception("The method or operation is not implemented.");
+		}
+
+        public string Convert(object value)
+        {
             switch (value)
             {
                 case null:
                     return "{null}";
 
-                case FrameworkElement item 
+                case FrameworkElement item
                     when string.IsNullOrEmpty(item.Name) == false:
                     return $"{item.Name} {FormattedTypeName(item)}";
 
-                case RoutedCommand item 
+                case RoutedCommand item
                     when string.IsNullOrEmpty(item.Name) == false:
                     return $"{item.Name} {FormattedTypeName(item)}";
 
@@ -32,11 +44,6 @@ namespace Snoop
                     return FormattedTypeName(value);
             }
         }
-
-		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-		{
-			throw new Exception("The method or operation is not implemented.");
-		}
 
         private static string FormattedTypeName(object item)
         {

@@ -102,7 +102,6 @@ All other rights reserved.
 				</Setter>
 			</Style>
 
-			<local:ObjectToStringConverter x:Key="niceNamer"/>
 			<conv:IsPowerShellInstalledToVisibilityConverter  x:Key="isPowerShellInstalled"/>
 
 			<DataTemplate x:Key="stylelessTextBlockDataTemplate">
@@ -401,7 +400,7 @@ All other rights reserved.
 							Command="{x:Static local:SnoopUI.SelectFocusCommand}"
 							CommandParameter="{Binding CurrentFocus}"
 						>
-							<TextBlock Text="{Binding CurrentFocus, Converter={StaticResource niceNamer}}"/>
+							<TextBlock Text="{Binding CurrentFocus, Converter={x:Static local:ObjectToStringConverter.Instance}}"/>
 						</local:NoFocusHyperlink>
 					</TextBlock>
 					<TextBlock Style="{x:Null}" Text="; "/>
@@ -421,7 +420,7 @@ All other rights reserved.
 							Command="{x:Static local:SnoopUI.SelectFocusScopeCommand}"
 							CommandParameter="{Binding CurrentFocusScope}"
 						>
-							<TextBlock Text="{Binding CurrentFocusScope, Converter={StaticResource niceNamer}}"/>
+							<TextBlock Text="{Binding CurrentFocusScope, Converter={x:Static local:ObjectToStringConverter.Instance}}"/>
 						</local:NoFocusHyperlink>
 					</TextBlock>
 					<StackPanel.ToolTip>

@@ -7,7 +7,7 @@ All other rights reserved.
 <Grid
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:my="clr-namespace:Snoop"
+	xmlns:local="clr-namespace:Snoop"
 	xmlns:d="http://schemas.microsoft.com/expression/interactivedesigner/2006"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:i="clr-namespace:Snoop.Infrastructure"
@@ -23,8 +23,6 @@ All other rights reserved.
 				<ResourceDictionary Source="ProperTreeViewResources.xaml"/>
 			</ResourceDictionary.MergedDictionaries>
 
-			<my:ObjectToStringConverter x:Key="NiceNamer"/>
-
 			<DataTemplate x:Key="CategoryTemplate">
 				<TextBlock Style="{x:Null}" Text="{Binding Path=Name}" FontWeight="Bold" Margin="2,5,0,0"/>
 			</DataTemplate>
@@ -35,17 +33,17 @@ All other rights reserved.
 
 			<DataTemplate DataType="{x:Type ExecutedRoutedEventArgs}">
 				<StackPanel Orientation="Horizontal">
-					<TextBlock Style="{x:Null}" Text="{Binding Command, Converter={StaticResource NiceNamer}}"/>
+                    <TextBlock Style="{x:Null}" Text="{Binding Command, Converter={x:Static local:ObjectToStringConverter.Instance}}"/>
 				</StackPanel>
 			</DataTemplate>
 
-			<DataTemplate DataType="{x:Type my:EventTracker}">
+            <DataTemplate DataType="{x:Type local:EventTracker}">
 				<CheckBox Style="{x:Null}" IsChecked="{Binding IsEnabled}">
 					<TextBlock Style="{x:Null}" Text="{Binding RoutedEvent.Name}"/>
 				</CheckBox>
 			</DataTemplate>
 
-			<HierarchicalDataTemplate ItemsSource="{Binding Stack}" DataType="{x:Type my:TrackedEvent}">
+            <HierarchicalDataTemplate ItemsSource="{Binding Stack}" DataType="{x:Type local:TrackedEvent}">
 				<Grid x:Name="Grid" Background="Transparent">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="*"/>
@@ -58,7 +56,7 @@ All other rights reserved.
 					<StackPanel Orientation="Horizontal">
 						<ContentControl Style="{x:Null}" Content="{Binding EventArgs}" Focusable="False"/>
 						<TextBlock Style="{x:Null}" Text=" on "/>
-						<TextBlock Style="{x:Null}" Text="{Binding Originator.Handler, Converter={StaticResource NiceNamer}}" Grid.Column="1"/>
+                        <TextBlock Style="{x:Null}" Text="{Binding Originator.Handler, Converter={x:Static local:ObjectToStringConverter.Instance}}" Grid.Column="1"/>
 					</StackPanel>
 					<ContentControl
 						x:Name="Handler"
@@ -70,7 +68,7 @@ All other rights reserved.
 					>
 						<StackPanel Orientation="Horizontal">
 							<TextBlock Style="{x:Null}" Text="Handled by: "/>
-							<TextBlock Style="{x:Null}" Text="{Binding HandledBy, Converter={StaticResource NiceNamer}}"/>
+                            <TextBlock Style="{x:Null}" Text="{Binding HandledBy, Converter={x:Static local:ObjectToStringConverter.Instance}}"/>
 						</StackPanel>
 					</ContentControl>
 				</Grid>
@@ -81,13 +79,13 @@ All other rights reserved.
 				</HierarchicalDataTemplate.Triggers>
 			</HierarchicalDataTemplate>
 
-			<HierarchicalDataTemplate DataType="{x:Type my:EventEntry}">
+            <HierarchicalDataTemplate DataType="{x:Type local:EventEntry}">
 				<Grid Name="Grid" Background="Transparent">
 					<Grid.ToolTip>
 						<TextBlock Style="{x:Null}" Text="Click to select the element that handled this"/>
 					</Grid.ToolTip>
 					<StackPanel Orientation="Horizontal">
-						<TextBlock Style="{x:Null}" Text="{Binding Handler, Converter={StaticResource NiceNamer}}"/>
+                        <TextBlock Style="{x:Null}" Text="{Binding Handler, Converter={x:Static local:ObjectToStringConverter.Instance}}"/>
 						<TextBlock Style="{x:Null}" Text=" handled: "/>
 						<TextBlock Style="{x:Null}" Text="{Binding Handled}" Grid.Column="1"/>
 					</StackPanel>
@@ -300,12 +298,13 @@ All other rights reserved.
 	</ComboBox>
 
 	<Button
-	    Style="{x:Null}"
+        Grid.Row="0"
+        Style="{x:Null}"
 		Width="18"
 		Height="18"
 		HorizontalAlignment="Right"
 		Padding="3"
-		Command="{x:Static my:EventsView.ClearCommand}"
+		Command="{x:Static local:EventsView.ClearCommand}"
 	>
 		<Grid>
 			<Path
