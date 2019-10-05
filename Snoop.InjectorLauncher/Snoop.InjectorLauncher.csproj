@@ -13,6 +13,11 @@
   <PropertyGroup>
     <TargetName>$(AssemblyName).$(PlatformTarget)</TargetName>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <DefaultItemExcludes Condition="'$(PlatformTarget)' == 'x86'">$(DefaultItemExcludes);obj/x64/**/*</DefaultItemExcludes>
+    <DefaultItemExcludes Condition="'$(PlatformTarget)' == 'x64'">$(DefaultItemExcludes);obj/x86/**/*</DefaultItemExcludes>
+  </PropertyGroup>
   
   <ItemGroup>
     <ApplicationManifest Include="../Shared/app.manifest" />
@@ -27,6 +32,6 @@
 
   <Target Name="Compilex64" AfterTargets="Build">
     <Message Text="Building injector launcher for x64..." Importance="High" />
-    <MSBuild Condition="'$(PlatformTarget)' == 'x86'" Projects="$(MSBuildProjectFile)" Targets="Restore;Build" Properties="Configuration=$(Configuration);PlatformTarget=x64;BaseIntermediateOutputPath=$(BaseIntermediateOutputPath)\x64\;GenerateAssemblyInfo=False" RunEachTargetSeparately="true" />
+    <MSBuild Condition="'$(PlatformTarget)' == 'x86'" Projects="$(MSBuildProjectFile)" Targets="Restore;Build" Properties="Configuration=$(Configuration);PlatformTarget=x64" RunEachTargetSeparately="false" />
   </Target>
 </Project>
