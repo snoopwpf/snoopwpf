@@ -25,6 +25,8 @@
 
         private bool StartSnoopInstance(string settingsFile)
         {
+            Trace.WriteLine("Starting snoop...");
+
             var settingsData = TransientSettingsData.LoadCurrent(settingsFile);
 
             IList<AppDomain> appDomains = null;

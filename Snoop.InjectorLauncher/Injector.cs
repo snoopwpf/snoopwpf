@@ -106,7 +106,6 @@ namespace Snoop.InjectorLauncher
                                                                     0, 
                                                                     out _);
 
-                // todo: error handling
                 if (remoteThread != IntPtr.Zero)
                 {
                     NativeMethods.WaitForSingleObject(remoteThread);
@@ -146,8 +145,6 @@ namespace Snoop.InjectorLauncher
             var injectorDllName = $"Snoop.GenericInjector.{processWrapper.Bitness}.dll";
             var pathToInjectorDll = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), injectorDllName);
 
-            //var injectorDllName = "CALLMANAGEDCODE2.dll";
-            //var pathToInjectorDll = "C:\\DEV\\OSS_Own\\snoopwpf\\bin\\Debug\\CALLMANAGEDCODE2.dll";
             Trace.WriteLine($"Trying to load '{pathToInjectorDll}'...");
 
             if (File.Exists(pathToInjectorDll) == false)

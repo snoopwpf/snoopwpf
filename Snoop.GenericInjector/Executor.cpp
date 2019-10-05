@@ -75,21 +75,21 @@ extern "C" __declspec(dllexport) int STDMETHODVCALLTYPE ExecuteInDefaultAppDomai
 
 	const auto executor = GetExecutor(framework);
 
-	if (executor)
+	if (!executor)
 	{
-		DWORD* retVal = nullptr;
-		const auto hr = executor->Execute(assemblyPath.c_str(), className.c_str(), method.c_str(), parameter.c_str(), retVal);
-			
-		if (FAILED(hr))
-		{
-			const _com_error err(hr);
-			const auto errorMessage = err.ErrorMessage();
-			OutputDebugString(errorMessage);
-		}
-		
-		return hr;
+		OutputDebugString(L"No executor found.");
+		return E_NOTIMPL;
 	}
-
-	OutputDebugString(L"No executor found.");
-	return E_NOTIMPL;
+	
+	DWORD* retVal = nullptr;
+	const auto hr = executor->Execute(assemblyPath.c_str(), className.c_str(), method.c_str(), parameter.c_str(), retVal);
+		
+	if (FAILED(hr))
+	{
+		const _com_error err(hr);
+		const auto errorMessage = err.ErrorMessage();
+		OutputDebugString(errorMessage);
+	}
+	
+	return hr;
 }
