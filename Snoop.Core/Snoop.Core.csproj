@@ -4,6 +4,8 @@
     <TargetFrameworks>net40;netcoreapp3.0</TargetFrameworks>
     <AssemblyName>$(AssemblyName).$(TargetFramework)</AssemblyName>
 
+    <RootNamespace>Snoop</RootNamespace>
+
     <UseWpf>true</UseWpf>
     <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>

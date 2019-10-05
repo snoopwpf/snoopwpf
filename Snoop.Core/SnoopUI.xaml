@@ -17,7 +17,7 @@ All other rights reserved.
 	xmlns:MethodsTabNS="clr-namespace:Snoop.MethodsTab"
     xmlns:DebugListenerNS="clr-namespace:Snoop.DebugListenerTab"
     xmlns:triggersTab="clr-namespace:Snoop.TriggersTab"
-    xmlns:windows="clr-namespace:Snoop.Core.Windows"
+    xmlns:windows="clr-namespace:Snoop.Windows"
     mc:Ignorable="d"
 	Icon="Snoop.ico"
 	Title="Snoop"

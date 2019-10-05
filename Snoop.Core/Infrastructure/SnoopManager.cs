@@ -1,4 +1,4 @@
-﻿namespace Snoop
+namespace Snoop.Infrastructure
 {
     using System;
     using System.Collections.Generic;
@@ -8,11 +8,8 @@
     using System.Windows.Media;
     using System.Windows.Threading;
     using JetBrains.Annotations;
-    using Snoop.Core;
-    using Snoop.Core.Infrastructure;
-    using Snoop.Core.Windows;
     using Snoop.Data;
-    using Snoop.Infrastructure;
+    using Snoop.Windows;
 
     public class SnoopManager : MarshalByRefObject
     {
