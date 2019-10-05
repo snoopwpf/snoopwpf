@@ -4,9 +4,6 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
@@ -18,23 +15,32 @@ namespace Snoop
 	{
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			if (value == null)
-				return "{null}";
+            switch (value)
+            {
+                case null:
+                    return "{null}";
 
-			FrameworkElement fe = value as FrameworkElement;
-			if (fe != null && !String.IsNullOrEmpty(fe.Name))
-				return fe.Name + " (" + value.GetType().Name + ")";
+                case FrameworkElement item 
+                    when string.IsNullOrEmpty(item.Name) == false:
+                    return $"{item.Name} {FormattedTypeName(item)}";
 
-			RoutedCommand command = value as RoutedCommand;
-			if (command != null && !String.IsNullOrEmpty(command.Name))
-				return command.Name + " (" + command.GetType().Name + ")";
+                case RoutedCommand item 
+                    when string.IsNullOrEmpty(item.Name) == false:
+                    return $"{item.Name} {FormattedTypeName(item)}";
 
-			return "(" + value.GetType().Name + ")";
-		}
+                default:
+                    return FormattedTypeName(value);
+            }
+        }
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			throw new Exception("The method or operation is not implemented.");
 		}
-	}
+
+        private static string FormattedTypeName(object item)
+        {
+            return $"({item.GetType().Name})";
+        }
+    }
 }
