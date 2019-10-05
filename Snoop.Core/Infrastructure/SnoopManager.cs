@@ -1,4 +1,4 @@
-namespace Snoop.Infrastructure
+﻿namespace Snoop.Infrastructure
 {
     using System;
     using System.Collections.Generic;
@@ -18,8 +18,9 @@ namespace Snoop.Infrastructure
         {
             try
             {
-                new SnoopManager().StartSnoopInstance(settingsFile);
-                return 0;
+                return new SnoopManager().StartSnoopInstance(settingsFile)
+                    ? 0 
+                    : 2;
             }
             catch (Exception exception)
             {
@@ -168,6 +169,12 @@ namespace Snoop.Infrastructure
                 dispatcher = Application.Current.Dispatcher;
             }
 
+            if (dispatcher == null)
+            {
+                Trace.WriteLine("Could not find any dispatcher.");
+                return;
+            }
+
             if (dispatcher.CheckAccess())
             {
                 Trace.WriteLine("Starting snoop UI...");
@@ -280,17 +287,23 @@ namespace Snoop.Infrastructure
         {
             var dispatchOutParameters = (DispatchOutParameters)o;
 
-            foreach (var v in dispatchOutParameters.Visuals)
+            foreach (var visual in dispatchOutParameters.Visuals)
             {
+                if (visual.Dispatcher == null)
+                {
+                    Trace.WriteLine($"\"{ObjectToStringConverter.Instance.Convert(visual)}\" has no dispatcher.");
+                    continue;
+                }
+
                 // launch a snoop ui on each dispatcher
-                v.Dispatcher.Invoke
+                visual.Dispatcher.Invoke
                 (
                     (Action)
                     (
                         () =>
                         {
                             var snoopOtherDispatcher = dispatchOutParameters.InstanceCreator();
-                            snoopOtherDispatcher.Inspect(v);
+                            snoopOtherDispatcher.Inspect(visual);
                         }
                     )
                 );
