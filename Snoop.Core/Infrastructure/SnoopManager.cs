@@ -37,8 +37,7 @@
 
             IList<AppDomain> appDomains = null;
 
-            if (settingsData.MultipleAppDomainMode == MultipleAppDomainMode.AlwaysUse
-                || settingsData.MultipleAppDomainMode == MultipleAppDomainMode.Ask)
+            if (settingsData.MultipleAppDomainMode != MultipleAppDomainMode.NeverUse)
             {
                 appDomains = new AppDomainHelper().GetAppDomains();
             }
@@ -62,7 +61,8 @@
             {
                 Trace.WriteLine($"Found {numberOfAppDomains} app domains. Running in multiple app domain mode.");
 
-                var shouldUseMultipleAppDomainMode = true;
+                var shouldUseMultipleAppDomainMode = settingsData.MultipleAppDomainMode == MultipleAppDomainMode.Ask
+                                                     || settingsData.MultipleAppDomainMode == MultipleAppDomainMode.AlwaysUse;
                 if (settingsData.MultipleAppDomainMode == MultipleAppDomainMode.Ask)
                 {
 				    var result =
