@@ -19,8 +19,16 @@
         [PublicAPI]
         public static int StartSnoop(string settingsFile)
         {
-            new SnoopManager().StartSnoopInstance(settingsFile);
-            return 0;
+            try
+            {
+                new SnoopManager().StartSnoopInstance(settingsFile);
+                return 0;
+            }
+            catch (Exception exception)
+            {
+                Trace.WriteLine(exception);
+                return 1;
+            }
         }
 
         private bool StartSnoopInstance(string settingsFile)
