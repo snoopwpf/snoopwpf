@@ -1,4 +1,4 @@
-﻿namespace Snoop.Data
+namespace Snoop.Data
 {
     using System.Diagnostics;
     using System.IO;
@@ -64,21 +64,21 @@
 
     public enum MultipleAppDomainMode
     {
-        Ask,
-        AlwaysUse,
-        NeverUse
+        Ask = 0,
+        AlwaysUse = 1,
+        NeverUse = 2
     }
 
     public enum MultipleDispatcherMode
     {
-        Ask,
-        AlwaysUse,
-        NeverUse
+        Ask = 0,
+        AlwaysUse = 1,
+        NeverUse = 2
     }
 
     public enum SnoopStartTarget
     {
-        SnoopUI,
-        Zoomer
+        SnoopUI = 0,
+        Zoomer = 1
     }
 }
