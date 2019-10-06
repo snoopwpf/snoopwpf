@@ -19,6 +19,16 @@ It allows you to spy/browse the visual tree of a running application (without th
 - Please note that you need at least .NET Framework 4.0 and the Microsoft Visual C++ Redistributable(s) 2017 to run Snoop
 
 # Versions
+## [3.0.0](../../tree/develop) (preview)
+You can read the [changelog](Changelog.md) for details on what changed in this version.
+Please note that this version is not yet finished.
+
+Highlights:
+- Support for .NET Core 3.0 (including self contained and single file applications)
+
+Known issues:
+- Trying to snoop a trimmed single file application might not work as trimming might have removed things snoop relies on
+
 ## [2.11.0](../../releases/tag/2.11.0)
 You can read the [changelog](Changelog.md) for details on what changed in this version.
 
