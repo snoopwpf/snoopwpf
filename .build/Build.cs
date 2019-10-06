@@ -110,6 +110,10 @@ class Build : NukeBuild
                 .SetAssemblyVersion(GitVersion.AssemblySemVer)
                 .SetFileVersion(GitVersion.AssemblySemVer)
                 .SetInformationalVersion(GitVersion.InformationalVersion)
+                
+                .SetNodeReuse(false)
+                .SetMaxCpuCount(1)
+                .SetRestoreDisableParallel(true)
                 .SetVerbosity(MSBuildVerbosity.Minimal));
         });
 
