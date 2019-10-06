@@ -7,10 +7,10 @@
     <Product>Snoop</Product>
     <Copyright>Copyright © Cory Plotts, Bastian Schmidt 2010 - $([System.DateTime]::Today.ToString(yyyy))</Copyright>
 
-    <Version Condition="'$(Version)' == ''">3.0.0.0</Version>
-    <AssemblyVersion Condition="'$(AssemblyVersion)' == ''">$(Version)</AssemblyVersion>
-    <FileVersion Condition="'$(FileVersion)' == ''">$(Version)</FileVersion>
-    <InformationalVersion Condition="'$(InformationalVersion)' == ''">SRC</InformationalVersion>
+    <Version>3.0.0.0</Version>
+    <AssemblyVersion>$(Version)</AssemblyVersion>
+    <FileVersion>$(Version)</FileVersion>
+    <InformationalVersion>SRC</InformationalVersion>
   </PropertyGroup>
 
   <!-- SourceLink -->
