@@ -67,14 +67,14 @@
               <File Id="Snoop.exe" KeyPath="yes" Source="SourceDir\Snoop.exe">
                 <Shortcut Id="desktopSnoopShortcut" 
                           Directory="DesktopFolder" 
-                          Name="Snoop $(var.ProductVersion)" 
+                          Name="Snoop" 
                           WorkingDirectory="INSTALLDIR" 
                           Icon="Snoop.exe" 
                           IconIndex="0" 
                           Advertise="yes" /> 
                 <Shortcut Id="startMenuSnoopShortcut" 
                           Directory="ProgramMenuDir" 
-                          Name="Snoop $(var.ProductVersion)" 
+                          Name="Snoop" 
                           WorkingDirectory="INSTALLDIR" 
                           Icon="Snoop.exe" 
                           IconIndex="0" 
