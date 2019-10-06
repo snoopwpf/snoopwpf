@@ -46,14 +46,12 @@ namespace Snoop.InjectorLauncher
             }
             catch (Exception exception)
             {
-                Trace.WriteLine(exception.ToString());
+                Injector.LogMessage($"Failed to inject Snoop into process {process.ProcessName} (PID = {process.Id})", true);
+                Injector.LogMessage(exception.ToString(), true);
                 return 1;
             }
 
-            if (CheckInjectedStatus(processWrapper.Process) == false)
-            {
-                return 1;
-            }
+            Injector.LogMessage($"Successfully injected Snoop into process {process.ProcessName} (PID = {process.Id})", true);
 
             return 0;
         }
@@ -67,31 +65,6 @@ namespace Snoop.InjectorLauncher
 
             var thisAssemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             return Path.Combine(thisAssemblyDirectory, processWrapper.SupportedFrameworkName, $"{assemblyNameOrFullPath}.{processWrapper.SupportedFrameworkName}.dll");
-        }
-
-        private static bool CheckInjectedStatus(Process process)
-        {
-            var containsFile = false;
-            process.Refresh();
-
-            foreach (ProcessModule module in process.Modules)
-            {
-                if (module.FileName.Contains("Snoop.Core"))
-                {
-                    containsFile = true;
-                }
-            }
-
-            if (containsFile)
-            {
-                Injector.LogMessage($"Successfully injected Snoop for process {process.ProcessName} (PID = {process.Id})", true);
-            }
-            else
-            {
-                Injector.LogMessage($"Failed to inject for process {process.ProcessName} (PID = {process.Id})", true);
-            }
-
-            return containsFile;
         }
     }
 }
