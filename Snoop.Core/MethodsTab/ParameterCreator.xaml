@@ -12,7 +12,7 @@ All other rights reserved.
       mc:Ignorable="d" 
       xmlns:local="clr-namespace:Snoop.MethodsTab"
       xmlns:snoopNS="clr-namespace:Snoop"
-      xmlns:windows="clr-namespace:Snoop.Core.Windows"
+      xmlns:windows="clr-namespace:Snoop.Windows"
       Width="700" 
       Height="350"
       Title="ParameterCreator"

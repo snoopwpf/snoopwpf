@@ -3,7 +3,7 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace ManagedInjectorLauncher
+namespace Snoop.InjectorLauncher
 {
     using System;
     using System.Diagnostics;
@@ -76,7 +76,7 @@ namespace ManagedInjectorLauncher
 
             foreach (ProcessModule module in process.Modules)
             {
-                if (module.FileName.Contains("ManagedInjector"))
+                if (module.FileName.Contains("Snoop.Core"))
                 {
                     containsFile = true;
                 }

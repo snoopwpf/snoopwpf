@@ -34,7 +34,7 @@ namespace Snoop
             {
                 var location = Assembly.GetExecutingAssembly().Location;
                 var directory = Path.GetDirectoryName(location) ?? string.Empty;
-                var file = Path.Combine(directory, $"ManagedInjectorLauncher.{GetSuffix(windowInfo)}.exe");
+                var file = Path.Combine(directory, $"Snoop.InjectorLauncher.{GetSuffix(windowInfo)}.exe");
 
                 if (File.Exists(file) == false)
                 {

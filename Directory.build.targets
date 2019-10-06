@@ -1,10 +1,37 @@
 ﻿<Project>
   <!-- Assembly info -->
   <PropertyGroup>
-    <Company>snoopwpf</Company>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+
+    <Company>https://github.com/snoopwpf/snoopwpf</Company>
     <Product>Snoop</Product>
     <Copyright>Copyright © Cory Plotts, Bastian Schmidt 2010 - $([System.DateTime]::Today.ToString(yyyy))</Copyright>
-    <AssemblyVersion>3.0.0.0</AssemblyVersion>
-    <FileVersion>3.0.0.0</FileVersion>
+
+    <Version Condition="'$(Version)' == ''">3.0.0.0</Version>
+    <AssemblyVersion Condition="'$(AssemblyVersion)' == ''">$(Version)</AssemblyVersion>
+    <FileVersion Condition="'$(FileVersion)' == ''">$(Version)</FileVersion>
+    <InformationalVersion Condition="'$(InformationalVersion)' == ''">SRC</InformationalVersion>
   </PropertyGroup>
+
+  <!-- SourceLink -->
+  <PropertyGroup>
+    <!-- Optional: Declare that the Repository URL can be published to NuSpec -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <!-- Optional: Embed source files that are not tracked by the source control manager to the PDB -->
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <!-- Optional: Include PDB in the built .nupkg -->
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    <!-- By using EmbedAllSources we don't need SourceLink itself -->
+    <!-- https://github.com/dotnet/sourcelink/blob/master/docs/README.md#embedallsources -->
+    <EmbedAllSources>True</EmbedAllSources>
+  </PropertyGroup>
+
+  <!-- PDB-Options -->
+  <PropertyGroup>
+    <!-- We should switch "DebugType" to "portable" in the future -->
+    <!-- "Full" and "pdbonly" are the same according to https://github.com/dotnet/roslyn/blob/master/docs/compilers/CSharp/CommandLine.md -->
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+
+  <Target Name="ForceRestore" BeforeTargets="ResolvePackageAssets" DependsOnTargets="Restore" />
 </Project>

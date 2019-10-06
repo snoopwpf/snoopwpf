@@ -5,8 +5,11 @@
 
   <PropertyGroup>
     <OutputPath>..\bin\$(Configuration)\</OutputPath>
-    <BaseIntermediateOutputPath>..\bin\obj\$(ConfigurationName)\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)$(Configuration)\$(TargetFramework)\$(Platform)\</IntermediateOutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <LangVersion>preview</LangVersion>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -16,12 +19,4 @@
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
-
-  <PropertyGroup>
-    <DebugType>full</DebugType>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2019.1.3" />
-  </ItemGroup>
 </Project>

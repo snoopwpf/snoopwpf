@@ -1,4 +1,4 @@
-﻿namespace Snoop
+﻿namespace Snoop.Infrastructure
 {
     using System;
     using System.Collections.Generic;
@@ -8,28 +8,36 @@
     using System.Windows.Media;
     using System.Windows.Threading;
     using JetBrains.Annotations;
-    using Snoop.Core;
-    using Snoop.Core.Infrastructure;
-    using Snoop.Core.Windows;
     using Snoop.Data;
-    using Snoop.Infrastructure;
+    using Snoop.Windows;
 
     public class SnoopManager : MarshalByRefObject
     {
         [PublicAPI]
-        public static void StartSnoop(string settingsFile)
+        public static int StartSnoop(string settingsFile)
         {
-            new SnoopManager().StartSnoopInstance(settingsFile);
+            try
+            {
+                return new SnoopManager().StartSnoopInstance(settingsFile)
+                    ? 0 
+                    : 2;
+            }
+            catch (Exception exception)
+            {
+                Trace.WriteLine(exception);
+                return 1;
+            }
         }
 
         private bool StartSnoopInstance(string settingsFile)
         {
+            Trace.WriteLine("Starting snoop...");
+
             var settingsData = TransientSettingsData.LoadCurrent(settingsFile);
 
             IList<AppDomain> appDomains = null;
 
-            if (settingsData.MultipleAppDomainMode == MultipleAppDomainMode.AlwaysUse
-                || settingsData.MultipleAppDomainMode == MultipleAppDomainMode.Ask)
+            if (settingsData.MultipleAppDomainMode != MultipleAppDomainMode.NeverUse)
             {
                 appDomains = new AppDomainHelper().GetAppDomains();
             }
@@ -53,7 +61,8 @@
             {
                 Trace.WriteLine($"Found {numberOfAppDomains} app domains. Running in multiple app domain mode.");
 
-                var shouldUseMultipleAppDomainMode = true;
+                var shouldUseMultipleAppDomainMode = settingsData.MultipleAppDomainMode == MultipleAppDomainMode.Ask
+                                                     || settingsData.MultipleAppDomainMode == MultipleAppDomainMode.AlwaysUse;
                 if (settingsData.MultipleAppDomainMode == MultipleAppDomainMode.Ask)
                 {
 				    var result =
@@ -158,6 +167,12 @@
             else
             {
                 dispatcher = Application.Current.Dispatcher;
+            }
+
+            if (dispatcher == null)
+            {
+                Trace.WriteLine("Could not find any dispatcher.");
+                return;
             }
 
             if (dispatcher.CheckAccess())
@@ -272,17 +287,23 @@
         {
             var dispatchOutParameters = (DispatchOutParameters)o;
 
-            foreach (var v in dispatchOutParameters.Visuals)
+            foreach (var visual in dispatchOutParameters.Visuals)
             {
+                if (visual.Dispatcher == null)
+                {
+                    Trace.WriteLine($"\"{ObjectToStringConverter.Instance.Convert(visual)}\" has no dispatcher.");
+                    continue;
+                }
+
                 // launch a snoop ui on each dispatcher
-                v.Dispatcher.Invoke
+                visual.Dispatcher.Invoke
                 (
                     (Action)
                     (
                         () =>
                         {
                             var snoopOtherDispatcher = dispatchOutParameters.InstanceCreator();
-                            snoopOtherDispatcher.Inspect(v);
+                            snoopOtherDispatcher.Inspect(visual);
                         }
                     )
                 );

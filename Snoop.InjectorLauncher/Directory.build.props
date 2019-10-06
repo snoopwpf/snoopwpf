@@ -1,0 +1,9 @@
+﻿<Project>
+  <!-- Import parent Directory.build.props -->
+  <Import Project="../Directory.Build.props" />
+
+  <PropertyGroup>
+    <PlatformTarget Condition="'$(PlatformTarget)' == ''">x86</PlatformTarget>
+    <BaseIntermediateOutputPath>obj/$(PlatformTarget)/</BaseIntermediateOutputPath>
+  </PropertyGroup>
+</Project>

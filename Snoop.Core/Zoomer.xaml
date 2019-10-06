@@ -8,7 +8,7 @@ All other rights reserved.
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:xv="clr-namespace:Snoop"
-	xmlns:windows="clr-namespace:Snoop.Core.Windows"
+	xmlns:windows="clr-namespace:Snoop.Windows"
 	x:Class="Snoop.Zoomer"
 	Icon="Snoop.ico"
 	Title="Zoomer"
