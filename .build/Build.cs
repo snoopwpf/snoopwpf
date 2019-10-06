@@ -122,7 +122,12 @@ class Build : NukeBuild
         .DependsOn(Compile)
         .Executes(() =>
         {
-            //   & $nuget pack "$(Join-Path $PSScriptRoot 'chocolatey\snoop.nuspec')" -Version $version -Properties Configuration=$Configuration -OutputDirectory "$outputDirectory" -NoPackageAnalysis
+            // Generate ingore files to prevent chocolatey from generating shims for them
+            foreach (var launcher in CurrentBuildOutputDirectory.GlobFiles("Snoop.InjectorLauncher.*.exe"))
+            {
+                using (System.IO.File.Create(launcher + ".ignore")) { };
+            }
+
             NuGetTasks.NuGetPack(s => s
                 .SetTargetPath(ChocolateyDirectory / "snoop.nuspec")
                 .SetVersion(GitVersion.NuGetVersion)

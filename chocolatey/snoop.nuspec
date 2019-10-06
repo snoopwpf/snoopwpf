@@ -44,6 +44,7 @@
     <file src="..\bin\$Configuration$\Snoop.InjectorLauncher.*.exe" target="tools\" />
     <file src="..\bin\$Configuration$\Snoop.InjectorLauncher.*.exe.config" target="tools\" />
     <file src="..\bin\$Configuration$\Snoop.InjectorLauncher.*.pdb" target="tools\" />
+    <file src="..\bin\$Configuration$\Snoop.InjectorLauncher.*.exe.ignore" target="tools\" />
 
     <file src="..\bin\$Configuration$\*.ignore" target="tools\" />
     <file src="..\bin\$Configuration$\*.gui" target="tools\" />
