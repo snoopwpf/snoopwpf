@@ -12,7 +12,8 @@
     <iconUrl>https://github.com/snoopwpf/snoopwpf/raw/master/Artwork/Snoop.ico</iconUrl>
     <description>
     Snoop allows you to spy/browse the visual tree of a running WPF application (without the need for a debugger) ... and change properties ... amongst other things.
-    A changelog can be found at https://github.com/snoopwpf/snoopwpf/blob/master/Changelog.md.
+    The changelog for release versions can be found at https://github.com/snoopwpf/snoopwpf/blob/master/Changelog.md.
+    The changelog for preview versions can be found at https://github.com/snoopwpf/snoopwpf/blob/develop/Changelog.md.
     </description>
     <tags>snoop spy wpf</tags>
   </metadata>
