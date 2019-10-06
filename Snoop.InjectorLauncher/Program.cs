@@ -46,12 +46,12 @@ namespace Snoop.InjectorLauncher
             }
             catch (Exception exception)
             {
-                Injector.LogMessage($"Failed to inject Snoop into process {process.ProcessName} (PID = {process.Id})", true);
+                Injector.LogMessage($"Failed to inject Snoop into process {processWrapper.Process.ProcessName} (PID = {processWrapper.Process.Id})", true);
                 Injector.LogMessage(exception.ToString(), true);
                 return 1;
             }
 
-            Injector.LogMessage($"Successfully injected Snoop into process {process.ProcessName} (PID = {process.Id})", true);
+            Injector.LogMessage($"Successfully injected Snoop into process {processWrapper.Process.ProcessName} (PID = {processWrapper.Process.Id})", true);
 
             return 0;
         }
