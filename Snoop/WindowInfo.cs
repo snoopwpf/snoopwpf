@@ -9,6 +9,7 @@ namespace Snoop
     using System.Text.RegularExpressions;
     using System.Windows.Input;
     using Snoop.Data;
+    using Snoop.Infrastructure;
     using Snoop.Properties;
 
     public class WindowInfo
@@ -169,7 +170,7 @@ namespace Snoop
 
             try
             {
-                InjectorLauncher.Launch(this, "Snoop.Core", "Snoop.SnoopManager", "StartSnoop", CreateTransientSettingsData(SnoopStartTarget.SnoopUI).WriteToFile());
+                InjectorLauncher.Launch(this, "Snoop.Core", typeof(SnoopManager).FullName, nameof(SnoopManager.StartSnoop), CreateTransientSettingsData(SnoopStartTarget.SnoopUI).WriteToFile());
             }
             catch (Exception e)
             {
@@ -187,7 +188,7 @@ namespace Snoop
 
 			try
 			{
-				InjectorLauncher.Launch(this, "Snoop.Core", "Snoop.SnoopManager", "StartSnoop", CreateTransientSettingsData(SnoopStartTarget.Zoomer).WriteToFile());
+				InjectorLauncher.Launch(this, "Snoop.Core", typeof(SnoopManager).FullName, nameof(SnoopManager.StartSnoop), CreateTransientSettingsData(SnoopStartTarget.Zoomer).WriteToFile());
 			}
 			catch (Exception e)
 			{
