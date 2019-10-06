@@ -5,7 +5,7 @@
   -  [#45](../../issues/45) - Keystrokes go to Visual Studio main window when inspecting Visual Studio (thanks @KirillOsenkov)
 
 - ### Improvements
-
+  -  [#98](../../issues/98) - .NETCore 3.0 support
 
 ## 2.11.0
 - ### Bug fixes
