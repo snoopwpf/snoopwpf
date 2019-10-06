@@ -66,12 +66,8 @@
             {
                 foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
                 {
-                    if
-                    (
-                        presentationSource.RootVisual != null &&
-                        presentationSource.RootVisual is UIElement &&
-                        ((UIElement)presentationSource.RootVisual).Dispatcher.CheckAccess()
-                    )
+                    if (presentationSource.RootVisual is UIElement element 
+                        && element.Dispatcher.CheckAccess())
                     {
                         foundRoot = presentationSource.RootVisual;
                         break;
@@ -87,17 +83,12 @@
                 // if we don't have a current application,
                 // then we must be in an interop scenario (win32 -> wpf or windows forms -> wpf).
 
-
                 // in this case, let's iterate over PresentationSource.CurrentSources,
                 // and use the first non-null, visible RootVisual we find as root to inspect.
                 foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
                 {
-                    if
-                    (
-                        presentationSource.RootVisual != null &&
-                        presentationSource.RootVisual is UIElement &&
-                        ((UIElement)presentationSource.RootVisual).Visibility == Visibility.Visible
-                    )
+                    if (presentationSource.RootVisual is UIElement element 
+                        && element.Visibility == Visibility.Visible)
                     {
                         foundRoot = presentationSource.RootVisual;
                         break;

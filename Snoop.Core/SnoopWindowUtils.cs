@@ -29,8 +29,7 @@ namespace Snoop
 			{
 				foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
 				{
-				    var window = presentationSource.RootVisual as Window;
-				    if (window != null 
+				    if (presentationSource.RootVisual is Window window
 						&& window.Dispatcher.CheckAccess() 
 						&& window.Visibility == Visibility.Visible)
 					{
@@ -68,9 +67,8 @@ namespace Snoop
 				// third: try and find a visible window in the list of current presentation sources
 				foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
 				{
-				    var window = presentationSource.RootVisual as Window;
-				    if (window != null 
-						&& window.CheckAccess()
+				    if (presentationSource.RootVisual is Window window
+						&& window.Dispatcher.CheckAccess() 
 						&& window.Visibility == Visibility.Visible)
 					{
 						ownerWindow = window;

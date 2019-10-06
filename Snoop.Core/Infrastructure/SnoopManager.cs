@@ -262,7 +262,7 @@
                             "Snoop has noticed windows running in multiple dispatchers!\n\n" +
                             "Would you like to enter multiple dispatcher mode, and have a separate Snoop window for each dispatcher?\n\n" +
                             "Without having a separate Snoop window for each dispatcher, you will not be able to Snoop the windows in the dispatcher threads outside of the main dispatcher. " +
-                            "Also, note, that if you bring up additional windows in additional dispatchers (after Snooping), you will need to Snoop again in order to launch Snoop windows for those additional dispatchers.",
+                            "Also, note, that if you bring up additional windows in additional dispatchers (after snooping), you will need to Snoop again in order to launch Snoop windows for those additional dispatchers.",
                             "Enter Multiple Dispatcher Mode",
                             MessageBoxButton.YesNo,
                             MessageBoxImage.Question
