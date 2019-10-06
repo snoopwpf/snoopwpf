@@ -6,6 +6,7 @@
 
 - ### Improvements
   -  [#98](../../issues/98) - .NETCore 3.0 support
+  - You no longer have to have installed any Microsoft Visual C++ Redistributable(s)
 
 ## 2.11.0
 - ### Bug fixes

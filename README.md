@@ -16,7 +16,7 @@ It allows you to spy/browse the visual tree of a running application (without th
 - [chocolatey](https://chocolatey.org/packages/snoop)
 - [github releases](https://github.com/snoopwpf/snoopwpf/releases)
 - [appveyor](https://ci.appveyor.com/project/batzen/snoopwpf) for the latest preview versions (built on every code change)
-- Please note that you need at least .NET Framework 4.0 and the Microsoft Visual C++ Redistributable(s) 2017 to run Snoop
+- Please note that you need at least .NET Framework 4.0 to run Snoop
 
 # Versions
 ## [3.0.0](../../tree/develop) (preview)
@@ -25,9 +25,10 @@ Please note that this version is not yet finished.
 
 Highlights:
 - Support for .NET Core 3.0 (including self contained and single file applications)
+- You no longer have to have installed any Microsoft Visual C++ Redistributable(s)
 
 Known issues:
-- Trying to snoop a trimmed single file application might not work as trimming might have removed things snoop relies on
+- Trying to snoop a trimmed single file application might not work as trimming might have removed things Snoop relies on
 
 ## [2.11.0](../../releases/tag/2.11.0)
 You can read the [changelog](Changelog.md) for details on what changed in this version.
@@ -49,7 +50,7 @@ Was released on July 27th, 2018.
 The big addition in this version was the inclusion of the triggers tab which was a useful feature of another WPF spying utility called WPF Inspector (written by [Christan Moser](https://github.com/ChristianMoser)). 
 It was ported to Snoop by Bastian Schmidt.
 
-## Documentation on how to Use Snoop
+## Documentation on how to use Snoop
 Unfortunately there isn't any exhaustive documentation on how to use Snoop and there are plenty of hidden features. If someone is willing to work on this, please let me know. On the bright side, it is a pretty easy utility to use and learn. I have made three videos which should get most people quick started.
 
 Here are the links to the current Snoop Tips & Tricks: 
@@ -57,15 +58,13 @@ Here are the links to the current Snoop Tips & Tricks:
 - http://www.cplotts.com/2011/02/14/snoop-tips-tricks-2-snooping-transient-visuals
 - http://www.cplotts.com/2012/05/31/snoop-tips-tricks-3-the-crosshairs
 
-## Why Can't I Snoop WPF 3.5 Applications?
+## Why can't I snoop WPF 3.5 applications?
 Well, you can! You will just need to use Snoop 2.9.0 and earlier, in order to do so.
 As part of the process of moving to Visual Studio 2017, we have dropped support for WPF 3.5 applications.
 
 ## How do i build Snoop?
-Just open `Snoop.sln` with Visual Studio 2017 (or later) and build it.
-Please note that you need the Visual Studio 2017 C++ payload and in case you are using a later version you also need the VC++ 141 payload.
-
-Note that if you are going to run Snoop somewhere where you haven't built it you are likely going to need the Microsoft Visual C++ Redistributable(s) for Visual Studio 2017 for both x86 and x64 installed on that machine. See [here](https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads) for some download links to the redists.
+Just open `Snoop.sln` with Visual Studio 2019 (16.3 or later) and build it.
+Please note that you need the Visual Studio 2019 C++ payload and in case you are using a later version you also need the VC++ 142 payload.
 
 ## Contributors
 Over time contributions have been added by several people, most notably: 
