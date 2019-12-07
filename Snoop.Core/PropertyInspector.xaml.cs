@@ -6,21 +6,15 @@
 using System.Linq;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
-using System.Collections;
-using System.Reflection;
 using Snoop.Infrastructure;
 using System.Text;
 using System.Windows.Markup;
 using System.Windows.Media;
-using System.IO;
 
 namespace Snoop
 {
@@ -35,23 +29,23 @@ namespace Snoop
 
         public PropertyInspector()
         {
-            propertyFilter.SelectedFilterSet = AllFilterSets[0];
+            this.propertyFilter.SelectedFilterSet = this.AllFilterSets[0];
 
             this.InitializeComponent();
 
             this.inspector = this.PropertyGrid;
             this.inspector.Filter = this.propertyFilter;
 
-            this.CommandBindings.Add(new CommandBinding(PropertyInspector.SnipXamlCommand, this.HandleSnipXaml, this.CanSnipXaml));
-            this.CommandBindings.Add(new CommandBinding(PropertyInspector.PopTargetCommand, this.HandlePopTarget, this.CanPopTarget));
-            this.CommandBindings.Add(new CommandBinding(PropertyInspector.DelveCommand, this.HandleDelve, this.CanDelve));
-            this.CommandBindings.Add(new CommandBinding(PropertyInspector.DelveBindingCommand, this.HandleDelveBinding, this.CanDelveBinding));
-            this.CommandBindings.Add(new CommandBinding(PropertyInspector.DelveBindingExpressionCommand, this.HandleDelveBindingExpression, this.CanDelveBindingExpression));
-            this.CommandBindings.Add(new CommandBinding(PropertyInspector.NavigateToAssemblyInExplorerCommand, this.HandleNavigateToAssemblyInExplorer, this.CanNavigateToAssemblyInExplorer));
+            this.CommandBindings.Add(new CommandBinding(SnipXamlCommand, this.HandleSnipXaml, this.CanSnipXaml));
+            this.CommandBindings.Add(new CommandBinding(PopTargetCommand, this.HandlePopTarget, this.CanPopTarget));
+            this.CommandBindings.Add(new CommandBinding(DelveCommand, this.HandleDelve, this.CanDelve));
+            this.CommandBindings.Add(new CommandBinding(DelveBindingCommand, this.HandleDelveBinding, this.CanDelveBinding));
+            this.CommandBindings.Add(new CommandBinding(DelveBindingExpressionCommand, this.HandleDelveBindingExpression, this.CanDelveBindingExpression));
+            this.CommandBindings.Add(new CommandBinding(NavigateToAssemblyInExplorerCommand, this.HandleNavigateToAssemblyInExplorer, this.CanNavigateToAssemblyInExplorer));
 
             // watch for mouse "back" button
-            this.MouseDown += new MouseButtonEventHandler(MouseDownHandler);
-            this.KeyDown += new KeyEventHandler(PropertyInspector_KeyDown);
+            this.MouseDown += new MouseButtonEventHandler(this.MouseDownHandler);
+            this.KeyDown += new KeyEventHandler(this.PropertyInspector_KeyDown);
 
             this.checkBoxClearAfterDelve.Checked += (s, e) => Properties.Settings.Default.ClearAfterDelve = this.checkBoxClearAfterDelve.IsChecked.HasValue && this.checkBoxClearAfterDelve.IsChecked.Value;
             this.checkBoxClearAfterDelve.Unchecked += (s, e) => Properties.Settings.Default.ClearAfterDelve = this.checkBoxClearAfterDelve.IsChecked.HasValue && this.checkBoxClearAfterDelve.IsChecked.Value;
@@ -63,7 +57,7 @@ namespace Snoop
         {
             get
             {
-                return _nameValueOnly;
+                return this._nameValueOnly;
             }
             set
             {
@@ -95,8 +89,8 @@ namespace Snoop
 
         public object RootTarget
         {
-            get { return this.GetValue(PropertyInspector.RootTargetProperty); }
-            set { this.SetValue(PropertyInspector.RootTargetProperty, value); }
+            get { return this.GetValue(RootTargetProperty); }
+            set { this.SetValue(RootTargetProperty, value); }
         }
 
         public static readonly DependencyProperty RootTargetProperty =
@@ -105,7 +99,7 @@ namespace Snoop
                 nameof(RootTarget),
                 typeof(object),
                 typeof(PropertyInspector),
-                new PropertyMetadata(PropertyInspector.HandleRootTargetChanged)
+                new PropertyMetadata(HandleRootTargetChanged)
             );
 
         private static void HandleRootTargetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -124,8 +118,8 @@ namespace Snoop
 
         public object Target
         {
-            get { return this.GetValue(PropertyInspector.TargetProperty); }
-            set { this.SetValue(PropertyInspector.TargetProperty, value); }
+            get { return this.GetValue(TargetProperty); }
+            set { this.SetValue(TargetProperty, value); }
         }
 
         public static readonly DependencyProperty TargetProperty =
@@ -134,7 +128,7 @@ namespace Snoop
                 nameof(Target),
                 typeof(object),
                 typeof(PropertyInspector),
-                new PropertyMetadata(PropertyInspector.HandleTargetChanged)
+                new PropertyMetadata(HandleTargetChanged)
             );
         
         private static void HandleTargetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -159,7 +153,7 @@ namespace Snoop
         {
             var delvePath = new StringBuilder(rootTargetType.Name);
 
-            foreach (var propInfo in _delvePathList)
+            foreach (var propInfo in this._delvePathList)
             {
                 int collectionIndex;
                 if ((collectionIndex = propInfo.CollectionIndex()) >= 0)
@@ -177,9 +171,9 @@ namespace Snoop
 
         private Type GetCurrentDelveType(Type rootTargetType)
         {
-            if (_delvePathList.Count > 0)
+            if (this._delvePathList.Count > 0)
             {
-                var lastDelveEntry = _delvePathList.Last();
+                var lastDelveEntry = this._delvePathList.Last();
 
                 if (lastDelveEntry.Value is ISkipDelve skipDelve
                     && skipDelve.NextValue != null
@@ -196,7 +190,7 @@ namespace Snoop
                     return lastDelveEntry.PropertyType;
                 }
             }
-            else if (_delvePathList.Count == 0)
+            else if (this._delvePathList.Count == 0)
             {
                 return rootTargetType;
             }
@@ -217,7 +211,7 @@ namespace Snoop
                 }
 
                 Type rootTargetType = this.RootTarget.GetType();
-                string delvePath = GetCurrentDelvePath(rootTargetType);
+                string delvePath = this.GetCurrentDelvePath(rootTargetType);
 
                 return delvePath;
             }
@@ -262,7 +256,7 @@ namespace Snoop
 
         private void HandlePopTarget(object sender, ExecutedRoutedEventArgs e)
         {
-            PopTarget();
+            this.PopTarget();
         }
 
         private void PopTarget()
@@ -302,7 +296,7 @@ namespace Snoop
 
         private void HandleDelve(object sender, ExecutedRoutedEventArgs e)
         {
-            var realTarget = GetRealTarget(((PropertyInformation)e.Parameter).Value);
+            var realTarget = this.GetRealTarget(((PropertyInformation)e.Parameter).Value);
 
             if (realTarget != this.Target)
             {
@@ -387,7 +381,7 @@ namespace Snoop
 
         public PropertyFilter PropertyFilter
         {
-            get { return propertyFilter; }
+            get { return this.propertyFilter; }
         }
         private PropertyFilter propertyFilter = new PropertyFilter(string.Empty, true);
 
@@ -425,14 +419,14 @@ namespace Snoop
         {
             if (e.ChangedButton == MouseButton.XButton1)
             {
-                PopTarget();
+                this.PopTarget();
             }
         }
         private void PropertyInspector_KeyDown(object sender, KeyEventArgs e)
         {
             if (Keyboard.Modifiers == ModifierKeys.Alt && e.SystemKey == Key.Left)
             {
-                PopTarget();
+                this.PopTarget();
             }
         }
 
@@ -442,34 +436,34 @@ namespace Snoop
         /// </summary>
         public PropertyFilterSet SelectedFilterSet
         {
-            get { return propertyFilter.SelectedFilterSet; }
+            get { return this.propertyFilter.SelectedFilterSet; }
             set
             {
-                propertyFilter.SelectedFilterSet = value;
-                OnPropertyChanged("SelectedFilterSet");
+                this.propertyFilter.SelectedFilterSet = value;
+                this.OnPropertyChanged("SelectedFilterSet");
 
                 if (value == null)
                     return;
 
                 if (value.IsEditCommand)
                 {
-                    var dlg = new EditUserFilters { UserFilters = CopyFilterSets(UserFilterSets) };
+                    var dlg = new EditUserFilters { UserFilters = this.CopyFilterSets(this.UserFilterSets) };
 
                     var res = dlg.ShowDialogEx(this);
                     if (res.GetValueOrDefault())
                     {
                         // take the adjusted values from the dialog, setter will SAVE them to user properties
-                        UserFilterSets = CleansFilterPropertyNames(dlg.ItemsSource);
+                        this.UserFilterSets = this.CleansFilterPropertyNames(dlg.ItemsSource);
                         // trigger the UI to re-bind to the collection, so user sees changes they just made
-                        OnPropertyChanged("AllFilterSets");
+                        this.OnPropertyChanged("AllFilterSets");
                     }
 
                     // now that we're out of the dialog, set current selection back to "(default)"
-                    Dispatcher.BeginInvoke(DispatcherPriority.Background, (DispatcherOperationCallback)delegate
+                    this.Dispatcher.BeginInvoke(DispatcherPriority.Background, (DispatcherOperationCallback)delegate
                     {
                         // couldnt get it working by setting SelectedFilterSet directly
                         // using the Index to get us back to the first item in the list
-                        FilterSetCombo.SelectedIndex = 0;
+                        this.FilterSetCombo.SelectedIndex = 0;
                         //SelectedFilterSet = AllFilterSets[0];
                         return null;
                     }, null);
@@ -477,7 +471,7 @@ namespace Snoop
                 else
                 {
                     this.inspector.Filter = this.propertyFilter;
-                    OnPropertyChanged("SelectedFilterSet");
+                    this.OnPropertyChanged("SelectedFilterSet");
                 }
             }
         }
@@ -490,30 +484,30 @@ namespace Snoop
         {
             get
             {
-                if (_filterSets == null)
+                if (this._filterSets == null)
                 {
                     var ret = new List<PropertyFilterSet>();
 
                     try
                     {
                         var userFilters = Properties.Settings.Default.PropertyFilterSets;
-                        ret.AddRange(userFilters ?? _defaultFilterSets);
+                        ret.AddRange(userFilters ?? this._defaultFilterSets);
                     }
                     catch (Exception exception)
                     {
                         ErrorDialog.ShowDialog(exception, "Error reading user filters from settings. Using default filters.", exceptionAlreadyHandled: true);
                         ret.Clear();
-                        ret.AddRange(_defaultFilterSets);
+                        ret.AddRange(this._defaultFilterSets);
                     }
 
-                    _filterSets = ret.ToArray();
+                    this._filterSets = ret.ToArray();
                 }
-                return _filterSets;
+                return this._filterSets;
             }
             set
             {
-                _filterSets = value;
-                Properties.Settings.Default.PropertyFilterSets = _filterSets;
+                this._filterSets = value;
+                Properties.Settings.Default.PropertyFilterSets = this._filterSets;
                 Properties.Settings.Default.Save();
             }
         }
@@ -527,7 +521,7 @@ namespace Snoop
         {
             get
             {
-                var ret = new List<PropertyFilterSet>(UserFilterSets);
+                var ret = new List<PropertyFilterSet>(this.UserFilterSets);
 
                 // now add the "(Default)" and "Edit Filters..." filters for the ComboBox
                 ret.Insert
