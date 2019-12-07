@@ -3,15 +3,15 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Windows;
-using System.Windows.Media;
-
 namespace Snoop
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Windows;
+    using System.Windows.Media;
+
 	/// <summary>
 	/// Class that shows all the routed events occurring on a visual.
 	/// VERY dangerous (cannot unregister for the events) and doesn't work all that great.
@@ -19,79 +19,68 @@ namespace Snoop
 	/// </summary>
 	public class EventsListener
 	{
+        private static EventsListener current;
+        private readonly Visual visual;
+
+        private static readonly Dictionary<Type, Type> registeredTypes = new Dictionary<Type, Type>();
+
 		public EventsListener(Visual visual)
 		{
-			EventsListener.current = this;
+			current = this;
 			this.visual = visual;
 
-			Type type = visual.GetType();
+			var type = visual.GetType();
 
 			// Cannot unregister for events once we've registered, so keep the registration simple and only do it once.
-			for (Type baseType = type; baseType != null; baseType = baseType.BaseType)
+			for (var baseType = type; baseType != null; baseType = baseType.BaseType)
 			{
-				if (!registeredTypes.ContainsKey(baseType))
-				{
-					registeredTypes[baseType] = baseType;
-
-					RoutedEvent[] routedEvents = EventManager.GetRoutedEventsForOwner(baseType);
-					if (routedEvents != null)
-					{
-						foreach (RoutedEvent routedEvent in routedEvents)
-                        {
-                            EventManager.RegisterClassHandler(baseType, routedEvent, new RoutedEventHandler(EventsListener.HandleEvent), true);
-                        }
-                    }
-				}
-			}
-		}
-
-		public ObservableCollection<EventInformation> Events
-		{
-			get { return this.events; }
-		}
-		private ObservableCollection<EventInformation> events = new ObservableCollection<EventInformation>();
-
-		public static string Filter
-		{
-			get { return EventsListener.filter; }
-			set
-			{
-				EventsListener.filter = value;
-				if (EventsListener.filter != null)
+                if (registeredTypes.ContainsKey(baseType))
                 {
-                    EventsListener.filter = EventsListener.filter.ToLower();
+                    continue;
+                }
+
+                registeredTypes[baseType] = baseType;
+
+                var routedEvents = EventManager.GetRoutedEventsForOwner(baseType);
+                if (routedEvents != null)
+                {
+                    foreach (var routedEvent in routedEvents)
+                    {
+                        EventManager.RegisterClassHandler(baseType, routedEvent, new RoutedEventHandler(HandleEvent), true);
+                    }
                 }
             }
 		}
 
-		public static void Stop()
-		{
-			EventsListener.current = null;
-		}
+		public ObservableCollection<EventInformation> Events { get; } = new ObservableCollection<EventInformation>();
 
+        public static string Filter { get; set; }
+
+        public static void Stop()
+		{
+			current = null;
+		}
 
 		private static void HandleEvent(object sender, RoutedEventArgs e)
-		{
-			if (EventsListener.current != null && sender == EventsListener.current.visual)
-			{
-				if (string.IsNullOrEmpty(EventsListener.Filter) || e.RoutedEvent.Name.ContainsIgnoreCase(EventsListener.Filter))
-				{
-					EventsListener.current.events.Add(new EventInformation(e));
+        {
+            if (current == null 
+                || ReferenceEquals(sender, current.visual) == false)
+            {
+                return;
+            }
 
-					while (EventsListener.current.events.Count > 100)
-                    {
-                        EventsListener.current.events.RemoveAt(0);
-                    }
+            if (string.IsNullOrEmpty(Filter) 
+                || e.RoutedEvent.Name.ContainsIgnoreCase(Filter))
+            {
+                current.Events.Add(new EventInformation(e));
+
+                while (current.Events.Count > 100)
+                {
+                    current.Events.RemoveAt(0);
                 }
-			}
-		}
-
-		private static EventsListener current = null;
-		private Visual visual;
-
-		private static Dictionary<Type, Type> registeredTypes = new Dictionary<Type, Type>();
-		public static string filter = null;
-	}
+            }
+        }
+    }
 
 	public class EventInformation
 	{
@@ -100,16 +89,13 @@ namespace Snoop
 			this.evt = evt;
 		}
 
-		public IEnumerable Properties
+		public IEnumerable Properties => PropertyInformation.GetProperties(this.evt);
+
+        public override string ToString()
 		{
-			get { return PropertyInformation.GetProperties(this.evt); }
+			return $"{this.evt.RoutedEvent.Name} Handled: {this.evt.Handled} OriginalSource: {this.evt.OriginalSource}";
 		}
 
-		public override string ToString()
-		{
-			return string.Format("{0} Handled: {1} OriginalSource: {2}", evt.RoutedEvent.Name, evt.Handled, evt.OriginalSource);
-		}
-
-		private RoutedEventArgs evt;
+		private readonly RoutedEventArgs evt;
 	}
 }
