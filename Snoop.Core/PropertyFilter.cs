@@ -3,30 +3,30 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-using System;
-using System.Windows;
-using System.Text.RegularExpressions;
-
 namespace Snoop
 {
+    using System;
+    using System.Windows;
+    using System.Text.RegularExpressions;
+
 	public class PropertyFilter
 	{
 		private string filterString;
 		private Regex filterRegex;
-		private bool showDefaults;
 
-		public PropertyFilter(string filterString, bool showDefaults)
+        public PropertyFilter(string filterString, bool showDefaults)
 		{
 			this.filterString = filterString.ToLower();
-			this.showDefaults = showDefaults;
+			this.ShowDefaults = showDefaults;
 		}
 
 		public string FilterString
 		{
-			get { return this.filterString; }
-			set
+			get => this.filterString;
+            set
 			{
 				this.filterString = value.ToLower();
+
 				try
 				{
 					this.filterRegex = new Regex(this.filterString, RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
@@ -38,35 +38,24 @@ namespace Snoop
 			}
 		}
 
-		public bool ShowDefaults
-		{
-			get { return this.showDefaults; }
-			set { this.showDefaults = value; }
-		}
+		public bool ShowDefaults { get; set; }
 
-		public PropertyFilterSet SelectedFilterSet { get; set; }
+        public PropertyFilterSet SelectedFilterSet { get; set; }
 
-		public bool IsPropertyFilterSet
-		{
-			get
-			{
-				return (SelectedFilterSet != null && SelectedFilterSet.Properties != null);
-			}
-		}
+		public bool IsPropertyFilterSet => this.SelectedFilterSet?.Properties != null;
 
-		public bool Show(PropertyInformation property)
+        public bool Show(PropertyInformation property)
 		{
 			// use a regular expression if we have one and we also have a filter string.
-			if (this.filterRegex != null && !string.IsNullOrEmpty(this.FilterString))
+			if (this.filterRegex != null 
+                && string.IsNullOrEmpty(this.FilterString) == false)
 			{
-				return
-				(
-					this.filterRegex.IsMatch(property.DisplayName) ||
-					property.Property != null && this.filterRegex.IsMatch(property.Property.PropertyType.Name)
-				);
+				return this.filterRegex.IsMatch(property.DisplayName) 
+                       || (property.Property != null 
+                            && this.filterRegex.IsMatch(property.Property.PropertyType.Name));
 			}
 			// else just check for containment if we don't have a regular expression but we do have a filter string.
-			else if (!string.IsNullOrEmpty(this.FilterString))
+			else if (string.IsNullOrEmpty(this.FilterString) == false)
 			{
 				if (property.DisplayName.ToLower().Contains(this.FilterString))
                 {
@@ -81,9 +70,9 @@ namespace Snoop
                 return false;
 			}
 			// else use the filter set if we have one of those.
-			else if (IsPropertyFilterSet)
+			else if (this.IsPropertyFilterSet)
 			{
-				if (SelectedFilterSet.IsPropertyInFilter(property.DisplayName))
+				if (this.SelectedFilterSet.IsPropertyInFilter(property.DisplayName))
                 {
                     return true;
                 }
@@ -97,7 +86,8 @@ namespace Snoop
 			// and this property is actually set to its default value
 			else
 			{
-				if (!this.ShowDefaults && property.ValueSource.BaseValueSource == BaseValueSource.Default)
+				if (this.ShowDefaults == false 
+                    && property.ValueSource.BaseValueSource == BaseValueSource.Default)
                 {
                     return false;
                 }
@@ -112,40 +102,24 @@ namespace Snoop
 	[Serializable]
 	public class PropertyFilterSet
 	{
-		public string DisplayName
-		{
-			get;
-			set;
-		}
+        public string DisplayName { get; set; }
 
-		public bool IsDefault
-		{
-			get;
-			set;
-		}
+        public bool IsDefault { get; set; }
 
-		public bool IsEditCommand
-		{
-			get;
-			set;
-		}
+        public bool IsEditCommand { get; set; }
 
-		public string[] Properties
-		{
-			get;
-			set;
-		}
+        public string[] Properties { get; set; }
 
 		public bool IsPropertyInFilter(string property)
 		{
-			string lowerProperty = property.ToLower();
-			foreach (var filterProp in Properties)
+			foreach (var filterProp in this.Properties)
 			{
-				if (lowerProperty.StartsWith(filterProp))
+				if (property.StartsWith(filterProp, StringComparison.OrdinalIgnoreCase))
 				{
 					return true;
 				}
 			}
+
 			return false;
 		}
 	}
