@@ -35,11 +35,11 @@ namespace Snoop
 		#region Static Constructor
 		static SnoopUI()
 		{
-			SnoopUI.IntrospectCommand.InputGestures.Add(new KeyGesture(Key.I, ModifierKeys.Control));
-			SnoopUI.RefreshCommand.InputGestures.Add(new KeyGesture(Key.F5));
-			SnoopUI.HelpCommand.InputGestures.Add(new KeyGesture(Key.F1));
-			SnoopUI.ClearSearchFilterCommand.InputGestures.Add(new KeyGesture(Key.Escape));
-			SnoopUI.CopyPropertyChangesCommand.InputGestures.Add(new KeyGesture(Key.C, ModifierKeys.Control | ModifierKeys.Shift));
+			IntrospectCommand.InputGestures.Add(new KeyGesture(Key.I, ModifierKeys.Control));
+			RefreshCommand.InputGestures.Add(new KeyGesture(Key.F5));
+			HelpCommand.InputGestures.Add(new KeyGesture(Key.F1));
+			ClearSearchFilterCommand.InputGestures.Add(new KeyGesture(Key.Escape));
+			CopyPropertyChangesCommand.InputGestures.Add(new KeyGesture(Key.C, ModifierKeys.Control | ModifierKeys.Shift));
 		}
 		#endregion
 
@@ -66,20 +66,20 @@ namespace Snoop
 				// swallow this exception since you can Snoop just fine anyways.
 			}
 
-			this.CommandBindings.Add(new CommandBinding(SnoopUI.IntrospectCommand, this.HandleIntrospection));
-			this.CommandBindings.Add(new CommandBinding(SnoopUI.RefreshCommand, this.HandleRefresh));
-			this.CommandBindings.Add(new CommandBinding(SnoopUI.HelpCommand, this.HandleHelp));
+			this.CommandBindings.Add(new CommandBinding(IntrospectCommand, this.HandleIntrospection));
+			this.CommandBindings.Add(new CommandBinding(RefreshCommand, this.HandleRefresh));
+			this.CommandBindings.Add(new CommandBinding(HelpCommand, this.HandleHelp));
 
-			this.CommandBindings.Add(new CommandBinding(SnoopUI.InspectCommand, this.HandleInspect));
+			this.CommandBindings.Add(new CommandBinding(InspectCommand, this.HandleInspect));
 
-			this.CommandBindings.Add(new CommandBinding(SnoopUI.SelectFocusCommand, this.HandleSelectFocus));
-			this.CommandBindings.Add(new CommandBinding(SnoopUI.SelectFocusScopeCommand, this.HandleSelectFocusScope));
+			this.CommandBindings.Add(new CommandBinding(SelectFocusCommand, this.HandleSelectFocus));
+			this.CommandBindings.Add(new CommandBinding(SelectFocusScopeCommand, this.HandleSelectFocusScope));
 
 			//NOTE: this is up here in the outer UI layer so ESC will clear any typed filter regardless of where the focus is
 			// (i.e. focus on a selected item in the tree, not in the property list where the search box is hosted)
-			this.CommandBindings.Add(new CommandBinding(SnoopUI.ClearSearchFilterCommand, this.ClearSearchFilterHandler));
+			this.CommandBindings.Add(new CommandBinding(ClearSearchFilterCommand, this.ClearSearchFilterHandler));
 
-			this.CommandBindings.Add(new CommandBinding(SnoopUI.CopyPropertyChangesCommand, this.CopyPropertyChangesHandler));
+			this.CommandBindings.Add(new CommandBinding(CopyPropertyChangesCommand, this.CopyPropertyChangesHandler));
 
 			InputManager.Current.PreProcessInput += this.HandlePreProcessInput;
 			this.Tree.SelectedItemChanged += this.HandleTreeSelectedItemChanged;
@@ -123,7 +123,7 @@ namespace Snoop
             private set
             {
                 this.rootVisualTreeItem = value;
-                this.OnPropertyChanged("Root");
+                this.OnPropertyChanged(nameof(this.Root));
             }
 	    }
 
@@ -150,7 +150,7 @@ namespace Snoop
 				{
 					if (this.currentSelection != null)
 					{
-						SaveEditedProperties(currentSelection);
+                        this.SaveEditedProperties(this.currentSelection);
 						this.currentSelection.IsSelected = false;
 					}
 
@@ -159,17 +159,17 @@ namespace Snoop
 					if (this.currentSelection != null)
 					{
 						this.currentSelection.IsSelected = true;
-						_lastNonNullSelection = currentSelection;
+                        this._lastNonNullSelection = this.currentSelection;
 					}
 
-					this.OnPropertyChanged("CurrentSelection");
-					this.OnPropertyChanged("CurrentFocusScope");
+					this.OnPropertyChanged(nameof(this.CurrentSelection));
+					this.OnPropertyChanged(nameof(this.CurrentFocusScope));
 
 					if (this.visualTreeItems.Count > 1 || this.visualTreeItems.Count == 1 && this.visualTreeItems[0] != this.rootVisualTreeItem)
 					{
 						// Check whether the selected item is filtered out by the filter,
 						// in which case reset the filter.
-						VisualTreeItem tmp = this.currentSelection;
+						var tmp = this.currentSelection;
 						while (tmp != null && !this.visualTreeItems.Contains(tmp))
 						{
 							tmp = tmp.Parent;
@@ -201,30 +201,30 @@ namespace Snoop
 			{
 				this.filter = value;
 
-				if (!fromTextBox)
+				if (!this.fromTextBox)
 				{
-					EnqueueAfterSettingFilter();
+                    this.EnqueueAfterSettingFilter();
 				}
 				else
 				{
-					filterTimer.Stop();
-					filterTimer.Start();
+                    this.filterTimer.Stop();
+                    this.filterTimer.Start();
 				}
 			}
 		}
 
 		private void SetFilter(string value)
 		{
-			fromTextBox = false;
+            this.fromTextBox = false;
 			this.Filter = value;
-			fromTextBox = true;
+            this.fromTextBox = true;
 		}
 
 		private void EnqueueAfterSettingFilter()
 		{
 			this.filterCall.Enqueue();
 
-			this.OnPropertyChanged("Filter");
+			this.OnPropertyChanged(nameof(this.Filter));
 		}
 
 		private string filter = string.Empty;
@@ -265,12 +265,12 @@ namespace Snoop
 		{
 			get
 			{
-				if (CurrentSelection == null)
+				if (this.CurrentSelection == null)
                 {
                     return null;
                 }
 
-                var selectedItem = CurrentSelection.Target as DependencyObject;
+                var selectedItem = this.CurrentSelection.Target as DependencyObject;
 				if (selectedItem != null)
 				{
 					return FocusManager.GetFocusScope(selectedItem);
@@ -285,23 +285,24 @@ namespace Snoop
 
         public void ApplyReduceDepthFilter(VisualTreeItem newRoot)
 		{
-			if (m_reducedDepthRoot != newRoot)
+			if (this.m_reducedDepthRoot != newRoot)
 			{
-				if (m_reducedDepthRoot == null)
+				if (this.m_reducedDepthRoot == null)
 				{
-					Dispatcher.BeginInvoke
+                    this.Dispatcher.BeginInvoke
 					(
 						DispatcherPriority.Background,
 						(function)
 						delegate
 						{
 							this.visualTreeItems.Clear();
-							this.visualTreeItems.Add(m_reducedDepthRoot);
-							m_reducedDepthRoot = null;
+							this.visualTreeItems.Add(this.m_reducedDepthRoot);
+                            this.m_reducedDepthRoot = null;
 						}
 					);
 				}
-				m_reducedDepthRoot = newRoot;
+
+                this.m_reducedDepthRoot = newRoot;
 			}
 		}
 
@@ -312,11 +313,11 @@ namespace Snoop
 		/// <param name="owningObject">currently selected object that owns the properties in the grid (before changing selection to the new object)</param>
 		private void SaveEditedProperties( VisualTreeItem owningObject )
 		{
-            foreach (PropertyInformation property in PropertyGrid.PropertyGrid.Properties)
+            foreach (var property in this.PropertyGrid.PropertyGrid.Properties)
             {
                 if (property.IsValueChangedByUser)
                 {
-                    EditedPropertiesHelper.AddEditedProperty( Dispatcher, owningObject, property );
+                    EditedPropertiesHelper.AddEditedProperty(this.Dispatcher, owningObject, property );
                 }
             }
 		}
@@ -376,11 +377,11 @@ namespace Snoop
 
 		private void HandleRefresh(object sender, ExecutedRoutedEventArgs e)
 		{
-			Cursor saveCursor = Mouse.OverrideCursor;
+			var saveCursor = Mouse.OverrideCursor;
 			Mouse.OverrideCursor = Cursors.Wait;
 			try
 			{
-				object currentTarget = this.CurrentSelection != null ? this.CurrentSelection.Target : null;
+				var currentTarget = this.CurrentSelection != null ? this.CurrentSelection.Target : null;
 
 				this.visualTreeItems.Clear();
 
@@ -388,7 +389,7 @@ namespace Snoop
 
 				if (currentTarget != null)
 				{
-					VisualTreeItem visualItem = this.FindItem(currentTarget);
+					var visualItem = this.FindItem(currentTarget);
 					if (visualItem != null)
                     {
                         this.CurrentSelection = visualItem;
@@ -409,10 +410,10 @@ namespace Snoop
 		}
 		private void HandleInspect(object sender, ExecutedRoutedEventArgs e)
 		{
-			Visual visual = e.Parameter as Visual;
+			var visual = e.Parameter as Visual;
 			if (visual != null)
 			{
-				VisualTreeItem node = this.FindItem(visual);
+				var node = this.FindItem(visual);
 				if (node != null)
                 {
                     this.CurrentSelection = node;
@@ -427,19 +428,19 @@ namespace Snoop
 		{
 			// We know we've stolen focus here. Let's use previously focused element.
 			this.returnPreviousFocus = true;
-			SelectItem(CurrentFocus as DependencyObject);
+            this.SelectItem(this.CurrentFocus as DependencyObject);
 			this.returnPreviousFocus = false;
-			OnPropertyChanged("CurrentFocus");
+            this.OnPropertyChanged(nameof(this.CurrentFocus));
 		}
 
 		private void HandleSelectFocusScope(object sender, ExecutedRoutedEventArgs e)
 		{
-			SelectItem(e.Parameter as DependencyObject);
+            this.SelectItem(e.Parameter as DependencyObject);
 		}
 
 		private void ClearSearchFilterHandler(object sender, ExecutedRoutedEventArgs e)
 		{
-			PropertyGrid.StringFilter = string.Empty;
+            this.PropertyGrid.StringFilter = string.Empty;
 		}
 
 		private void CopyPropertyChangesHandler(object sender, ExecutedRoutedEventArgs e)
@@ -456,7 +457,7 @@ namespace Snoop
 		{
 			if (item != null)
 			{
-				VisualTreeItem node = this.FindItem(item);
+				var node = this.FindItem(item);
 				if (node != null)
                 {
                     this.CurrentSelection = node;
@@ -466,32 +467,36 @@ namespace Snoop
 		#endregion
 
 		#region Private Event Handlers
+
 		private void HandlePreProcessInput(object sender, PreProcessInputEventArgs e)
 		{
-			this.OnPropertyChanged("CurrentFocus");
+			this.OnPropertyChanged(nameof(this.CurrentFocus));
 
-			ModifierKeys currentModifiers = InputManager.Current.PrimaryKeyboardDevice.Modifiers;
+			var currentModifiers = InputManager.Current.PrimaryKeyboardDevice.Modifiers;
 			if (!((currentModifiers & ModifierKeys.Control) != 0 && (currentModifiers & ModifierKeys.Shift) != 0))
             {
                 return;
             }
 
-            Visual directlyOver = Mouse.PrimaryDevice.DirectlyOver as Visual;
-			if ((directlyOver == null) || directlyOver.IsDescendantOf(this))
+            var directlyOver = Mouse.PrimaryDevice.DirectlyOver as Visual;
+			if (directlyOver == null 
+                || directlyOver.IsDescendantOf(this))
             {
                 return;
             }
 
-            VisualTreeItem node = this.FindItem(directlyOver);
+            var node = this.FindItem(directlyOver);
 			if (node != null)
             {
                 this.CurrentSelection = node;
             }
         }
+
 		private void SnoopUI_MouseWheel(object sender, MouseWheelEventArgs e)
 		{
 			this.PreviewArea.Zoomer.DoMouseWheel(sender, e);
 		}
+
 		#endregion
 
 		#region Private Methods
@@ -507,11 +512,11 @@ namespace Snoop
 		        return null;
 		    }
 
-		    VisualTreeItem node = this.rootVisualTreeItem.FindNode(target);
-			Visual rootVisual = this.rootVisualTreeItem.MainVisual;
+		    var node = this.rootVisualTreeItem.FindNode(target);
+			var rootVisual = this.rootVisualTreeItem.MainVisual;
 			if (node == null)
 			{
-				Visual visual = target as Visual;
+				var visual = target as Visual;
 				if (visual != null && rootVisual != null)
 				{
 					// If target is a part of the SnoopUI, let's get out of here.
@@ -544,7 +549,7 @@ namespace Snoop
 
         private void HandleTreeSelectedItemChanged(object sender, EventArgs e)
 		{
-			VisualTreeItem item = this.Tree.SelectedItem as VisualTreeItem;
+			var item = this.Tree.SelectedItem as VisualTreeItem;
 			if (item != null)
             {
                 this.CurrentSelection = item;
@@ -555,7 +560,7 @@ namespace Snoop
 		{
 			if (SnoopModes.MultipleDispatcherMode && !this.Dispatcher.CheckAccess())
 			{
-				Action action = () => ProcessFilter();
+				Action action = () => this.ProcessFilter();
 				this.Dispatcher.BeginInvoke(action);
 				return;
 			}
@@ -583,7 +588,7 @@ namespace Snoop
 
 		private void FilterTree(VisualTreeItem node, string filter)
 		{
-			foreach (VisualTreeItem child in node.Children)
+			foreach (var child in node.Children)
 			{
 				if (child.Filter(filter))
                 {
@@ -597,7 +602,7 @@ namespace Snoop
 		}
 		private void FilterBindings(VisualTreeItem node)
 		{
-			foreach (VisualTreeItem child in node.Children)
+			foreach (var child in node.Children)
 			{
 				if (child.HasBindingError)
                 {
@@ -655,15 +660,14 @@ namespace Snoop
 		#endregion
 
 		#region INotifyPropertyChanged Members
+
 		public event PropertyChangedEventHandler PropertyChanged;
 		protected void OnPropertyChanged(string propertyName)
 		{
 			Debug.Assert(this.GetType().GetProperty(propertyName) != null);
-			if (this.PropertyChanged != null)
-            {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
 		#endregion
 	}
 
@@ -746,19 +750,19 @@ namespace Snoop
 				Environment.NewLine
 			);
 
-			int dispatcherCount = 1;
+			var dispatcherCount = 1;
 
-			foreach (KeyValuePair<Dispatcher, Dictionary<VisualTreeItem, List<PropertyValueInfo>>> dispatcherKVP in _itemsWithEditedProperties)
+			foreach (var dispatcherKVP in _itemsWithEditedProperties)
 			{
 				if ( _itemsWithEditedProperties.Count > 1 )
 				{
 					sb.AppendFormat( "-- Dispatcher #{0} -- {1}", dispatcherCount++, Environment.NewLine );
 				}
 
-				foreach (KeyValuePair<VisualTreeItem, List<PropertyValueInfo>> objectPropertiesKVP in dispatcherKVP.Value )
+				foreach (var objectPropertiesKVP in dispatcherKVP.Value )
 				{
 					sb.AppendFormat("Object: {0}{1}", objectPropertiesKVP.Key, Environment.NewLine); 
-					foreach (PropertyValueInfo propInfo in objectPropertiesKVP.Value)
+					foreach (var propInfo in objectPropertiesKVP.Value)
 					{
 						sb.AppendFormat
 						(
