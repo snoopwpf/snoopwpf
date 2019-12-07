@@ -64,7 +64,7 @@ namespace Snoop.InjectorLauncher
             }
 
             var thisAssemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            return Path.Combine(thisAssemblyDirectory, processWrapper.SupportedFrameworkName, $"{assemblyNameOrFullPath}.{processWrapper.SupportedFrameworkName}.dll");
+            return Path.Combine(thisAssemblyDirectory, processWrapper.SupportedFrameworkName, $"{assemblyNameOrFullPath}.dll");
         }
     }
 }
