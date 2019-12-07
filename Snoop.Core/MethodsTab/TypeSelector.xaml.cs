@@ -56,7 +56,9 @@ namespace Snoop.MethodsTab
         {
 
             if (DerivedTypes == null)
-                DerivedTypes = GetDerivedTypes(BaseType);
+            {
+                this.DerivedTypes = GetDerivedTypes(this.BaseType);
+            }
 
             this.comboBoxTypes.ItemsSource = DerivedTypes;
         }

@@ -92,21 +92,27 @@ namespace Snoop.DebugListenerTab
             foreach (string line in allLines)
             {
                 if (filtersViewModel.FilterMatches(line))
+                {
                     this.textBoxDebugContent.AppendText(line + Environment.NewLine);
+                }
             }
 		}
 
 		private void comboBoxPresentationTraceLevel_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			if (this.comboBoxPresentationTraceLevel == null || this.comboBoxPresentationTraceLevel.Items == null || this.comboBoxPresentationTraceLevel.Items.Count <= this.comboBoxPresentationTraceLevel.SelectedIndex || this.comboBoxPresentationTraceLevel.SelectedIndex < 0)
-				return;
+            {
+                return;
+            }
 
-			var selectedComboBoxItem = this.comboBoxPresentationTraceLevel.Items[this.comboBoxPresentationTraceLevel.SelectedIndex] as ComboBoxItem;
+            var selectedComboBoxItem = this.comboBoxPresentationTraceLevel.Items[this.comboBoxPresentationTraceLevel.SelectedIndex] as ComboBoxItem;
 			if (selectedComboBoxItem == null || selectedComboBoxItem.Tag == null)
-				return;
+            {
+                return;
+            }
 
 
-			var sourceLevel = (SourceLevels)Enum.Parse(typeof(SourceLevels), selectedComboBoxItem.Tag.ToString());
+            var sourceLevel = (SourceLevels)Enum.Parse(typeof(SourceLevels), selectedComboBoxItem.Tag.ToString());
 			PresentationTraceSources.DataBindingSource.Switch.Level = sourceLevel;
 		}
 	}

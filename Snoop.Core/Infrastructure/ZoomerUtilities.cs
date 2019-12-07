@@ -19,7 +19,9 @@ namespace Snoop.Infrastructure
         public static UIElement CreateIfPossible(object item)
         {
             if (item is Window && VisualTreeHelper.GetChildrenCount((Visual)item) == 1)
+            {
                 item = VisualTreeHelper.GetChild((Visual)item, 0);
+            }
 
             if (item is FrameworkElement)
             {
@@ -39,7 +41,9 @@ namespace Snoop.Infrastructure
                 {
                     UIElement element = CreateIfPossible(value);
                     if (element != null)
+                    {
                         stackPanel.Children.Add(element);
+                    }
                 }
                 return stackPanel;
             }
@@ -76,7 +80,9 @@ namespace Snoop.Infrastructure
         {
             VisualBrush brush = VisualCaptureUtil.CreateVisualBrushSafe(uiElement);
             if (brush == null)
+            {
                 return null;
+            }
 
             brush.Stretch = Stretch.Uniform;
             Rectangle rect = new Rectangle();

@@ -127,8 +127,11 @@ namespace Snoop
 			get
 			{
 				if (this.target != null)
-					return this.target.GetType();
-				return null;
+                {
+                    return this.target.GetType();
+                }
+
+                return null;
 			}
 		}
 
@@ -175,14 +178,20 @@ namespace Snoop
 
 				// checking whether a property is visible ... actually runs the property filtering code
 				if (property.IsVisible)
-					property.Index = this.visiblePropertyCount++;
-			}
+                {
+                    property.Index = this.visiblePropertyCount++;
+                }
+            }
 
 			if (i == numberToAdd)
-				this.processIncrementalCall.Enqueue();
-			else
-				this.propertiesToAdd = null;
-		}
+            {
+                this.processIncrementalCall.Enqueue();
+            }
+            else
+            {
+                this.propertiesToAdd = null;
+            }
+        }
 
 		private void HandleShowBindingErrors(object sender, ExecutedRoutedEventArgs eventArgs)
 		{
@@ -202,15 +211,21 @@ namespace Snoop
 		private void CanShowBindingErrors(object sender, CanExecuteRoutedEventArgs e)
 		{
 			if (e.Parameter != null && !string.IsNullOrEmpty(((PropertyInformation)e.Parameter).BindingError))
-				e.CanExecute = true;
-			e.Handled = true;
+            {
+                e.CanExecute = true;
+            }
+
+            e.Handled = true;
 		}
 
 		private void CanClear(object sender, CanExecuteRoutedEventArgs e)
 		{
 			if (e.Parameter != null && ((PropertyInformation)e.Parameter).IsLocallySet)
-				e.CanExecute = true;
-			e.Handled = true;
+            {
+                e.CanExecute = true;
+            }
+
+            e.Handled = true;
 		}
 		private void HandleClear(object sender, ExecutedRoutedEventArgs e)
 		{
@@ -220,9 +235,11 @@ namespace Snoop
 		private ListSortDirection GetNewSortDirection(GridViewColumnHeader columnHeader)
 		{
 			if (!(columnHeader.Tag is ListSortDirection))
-				return (ListSortDirection)(columnHeader.Tag = ListSortDirection.Descending);
+            {
+                return (ListSortDirection)(columnHeader.Tag = ListSortDirection.Descending);
+            }
 
-			ListSortDirection direction = (ListSortDirection)columnHeader.Tag;
+            ListSortDirection direction = (ListSortDirection)columnHeader.Tag;
 			return (ListSortDirection)(columnHeader.Tag = (ListSortDirection)(((int)direction + 1) % 2));
 		}
 
@@ -233,11 +250,15 @@ namespace Snoop
 
 			direction = GetNewSortDirection(headerClicked);
             if (headerClicked.Column == null)
+            {
                 return;
+            }
 
             var columnHeader = headerClicked.Column.Header as TextBlock;
             if (columnHeader == null)
+            {
                 return;
+            }
 
             switch (columnHeader.Text)
 			{
@@ -333,9 +354,11 @@ namespace Snoop
 		private void HandleUnloaded(object sender, EventArgs e)
 		{
 			foreach (PropertyInformation property in this.properties)
-				property.Teardown();
+            {
+                property.Teardown();
+            }
 
-			unloaded = true;
+            unloaded = true;
 		}
 
 		private void HandleNameClick(object sender, MouseButtonEventArgs e)
@@ -347,13 +370,19 @@ namespace Snoop
 				object newTarget = null;
 
 				if (Keyboard.Modifiers == ModifierKeys.Shift)
-					newTarget = property.Binding;
-				else if (Keyboard.Modifiers == ModifierKeys.Control)
-					newTarget = property.BindingExpression;
-				else if (Keyboard.Modifiers == ModifierKeys.None)
-					newTarget = property.Value;
+                {
+                    newTarget = property.Binding;
+                }
+                else if (Keyboard.Modifiers == ModifierKeys.Control)
+                {
+                    newTarget = property.BindingExpression;
+                }
+                else if (Keyboard.Modifiers == ModifierKeys.None)
+                {
+                    newTarget = property.Value;
+                }
 
-				if (newTarget != null)
+                if (newTarget != null)
 				{
 					PropertyInspector.DelveCommand.Execute(property, this);
 				}
@@ -372,12 +401,16 @@ namespace Snoop
 			sorter.Sort(comparator);
 
 			if (direction == ListSortDirection.Descending)
-				sorter.Reverse();
+            {
+                sorter.Reverse();
+            }
 
-			propertiesToSort.Clear();
+            propertiesToSort.Clear();
 			foreach (PropertyInformation property in sorter)
-				propertiesToSort.Add(property);
-		}
+            {
+                propertiesToSort.Add(property);
+            }
+        }
 
 		private void RefreshPropertyGrid()
 		{
@@ -424,8 +457,10 @@ namespace Snoop
 		{
 			Debug.Assert(this.GetType().GetProperty(propertyName) != null);
 			if (this.PropertyChanged != null)
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
 		#endregion
 	}
 }

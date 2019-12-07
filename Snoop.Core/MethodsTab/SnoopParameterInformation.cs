@@ -119,7 +119,9 @@ namespace Snoop.MethodsTab
         {
             _parameterInfo = parameterInfo;
             if (parameterInfo == null)
+            {
                 return;
+            }
 
             this.DeclaringType = declaringType;
             this.ParameterName = parameterInfo.Name;

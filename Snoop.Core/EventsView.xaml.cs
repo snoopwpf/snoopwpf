@@ -37,14 +37,18 @@ namespace Snoop
 				sorter.Add(tracker);
 
 				if (EventsView.defaultEvents.Contains(routedEvent))
-					tracker.IsEnabled = true;
-			}
+                {
+                    tracker.IsEnabled = true;
+                }
+            }
 
 			sorter.Sort();
 			foreach (EventTracker tracker in sorter)
-				this.trackers.Add(tracker);
+            {
+                this.trackers.Add(tracker);
+            }
 
-			this.CommandBindings.Add(new CommandBinding(EventsView.ClearCommand, this.HandleClear));
+            this.CommandBindings.Add(new CommandBinding(EventsView.ClearCommand, this.HandleClear));
 		}
 
 
@@ -86,12 +90,16 @@ namespace Snoop
 						this.interestingEvents.Add(trackedEvent);
 
 						while (this.interestingEvents.Count > 100)
-							this.interestingEvents.RemoveAt(0);
+                        {
+                            this.interestingEvents.RemoveAt(0);
+                        }
 
-						TreeViewItem tvi = (TreeViewItem)this.EventTree.ItemContainerGenerator.ContainerFromItem(trackedEvent);
+                        TreeViewItem tvi = (TreeViewItem)this.EventTree.ItemContainerGenerator.ContainerFromItem(trackedEvent);
 						if (tvi != null)
-							tvi.BringIntoView();
-					};
+                        {
+                            tvi.BringIntoView();
+                        }
+                    };
 
 				if (!this.Dispatcher.CheckAccess())
 				{
@@ -113,10 +121,14 @@ namespace Snoop
 			if (e.NewValue != null)
 			{
 				if (e.NewValue is EventEntry)
-					SnoopUI.InspectCommand.Execute(((EventEntry)e.NewValue).Handler, this);
-				else if (e.NewValue is TrackedEvent)
-					SnoopUI.InspectCommand.Execute(((TrackedEvent)e.NewValue).EventArgs, this);
-			}
+                {
+                    SnoopUI.InspectCommand.Execute(((EventEntry)e.NewValue).Handler, this);
+                }
+                else if (e.NewValue is TrackedEvent)
+                {
+                    SnoopUI.InspectCommand.Execute(((TrackedEvent)e.NewValue).EventArgs, this);
+                }
+            }
 		}
 
 
@@ -145,8 +157,10 @@ namespace Snoop
 		{
 			Debug.Assert(this.GetType().GetProperty(propertyName) != null);
 			if (this.PropertyChanged != null)
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
 		#endregion
 	}
 

@@ -46,16 +46,24 @@ namespace Snoop
 			PropertyInformation property = (PropertyInformation)item;
 
 			if (property.PropertyType.IsEnum)
-				return this.EnumTemplate;
-			else if (property.PropertyType.Equals(typeof(bool)))
-				return this.BoolTemplate;
-			else if ( property.PropertyType.IsGenericType 
+            {
+                return this.EnumTemplate;
+            }
+            else if (property.PropertyType.Equals(typeof(bool)))
+            {
+                return this.BoolTemplate;
+            }
+            else if ( property.PropertyType.IsGenericType 
 				&& Nullable.GetUnderlyingType( property.PropertyType ) == typeof(bool) )
-				return this.BoolTemplate;
-			else if (typeof(Brush).IsAssignableFrom(property.PropertyType))
-				return this.brushTemplate;
+            {
+                return this.BoolTemplate;
+            }
+            else if (typeof(Brush).IsAssignableFrom(property.PropertyType))
+            {
+                return this.brushTemplate;
+            }
 
-			return this.StandardTemplate;
+            return this.StandardTemplate;
 		}
 	}
 }

@@ -22,9 +22,11 @@ namespace Snoop.Converters
 			// return	string		CSV version of the string array
 
 			if (value == null)
-				return String.Empty;
+            {
+                return String.Empty;
+            }
 
-			var val = (String[])value;
+            var val = (String[])value;
 			return String.Join(",", val);
 		}
 		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
@@ -33,9 +35,11 @@ namespace Snoop.Converters
 			// return (string[])	array of strings split by ","
 
 			if (value == null)
-				return new String[0];
+            {
+                return new String[0];
+            }
 
-			var val = value.ToString().Trim();
+            var val = value.ToString().Trim();
 			return val.Split(',');
 		}
 		#endregion

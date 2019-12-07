@@ -100,11 +100,16 @@ namespace Snoop
 		{
 			EventTracker otherTracker = obj as EventTracker;
 			if (otherTracker == null)
-				return 1;
+            {
+                return 1;
+            }
 
-			if (this.Category == otherTracker.Category)
-				return this.RoutedEvent.Name.CompareTo(otherTracker.RoutedEvent.Name);
-			return this.Category.CompareTo(otherTracker.Category);
+            if (this.Category == otherTracker.Category)
+            {
+                return this.RoutedEvent.Name.CompareTo(otherTracker.RoutedEvent.Name);
+            }
+
+            return this.Category.CompareTo(otherTracker.Category);
 		}
 		#endregion
 
@@ -114,8 +119,10 @@ namespace Snoop
 		{
 			Debug.Assert(this.GetType().GetProperty(propertyName) != null);
 			if (this.PropertyChanged != null)
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
 		#endregion
 	}
 
@@ -187,8 +194,10 @@ namespace Snoop
 		{
 			Debug.Assert(this.GetType().GetProperty(propertyName) != null);
 			if (this.PropertyChanged != null)
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
 		#endregion
 	}
 

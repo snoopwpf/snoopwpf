@@ -21,13 +21,17 @@ namespace Snoop
 		public bool Filter(PropertyDescriptor property)
 		{
 			if (this.element == null)
-				return true;
+            {
+                return true;
+            }
 
-			// Filter the 20 stylistic set properties that I've never seen used.
+            // Filter the 20 stylistic set properties that I've never seen used.
 			if (property.Name.Contains("Typography.StylisticSet"))
-				return false;
+            {
+                return false;
+            }
 
-			AttachedPropertyBrowsableForChildrenAttribute attachedPropertyForChildren = (AttachedPropertyBrowsableForChildrenAttribute)property.Attributes[typeof(AttachedPropertyBrowsableForChildrenAttribute)];
+            AttachedPropertyBrowsableForChildrenAttribute attachedPropertyForChildren = (AttachedPropertyBrowsableForChildrenAttribute)property.Attributes[typeof(AttachedPropertyBrowsableForChildrenAttribute)];
 			AttachedPropertyBrowsableForTypeAttribute attachedPropertyForType = (AttachedPropertyBrowsableForTypeAttribute)property.Attributes[typeof(AttachedPropertyBrowsableForTypeAttribute)];
 			AttachedPropertyBrowsableWhenAttributePresentAttribute attachedPropertyForAttribute = (AttachedPropertyBrowsableWhenAttributePresentAttribute)property.Attributes[typeof(AttachedPropertyBrowsableWhenAttributePresentAttribute)];
 
@@ -35,15 +39,19 @@ namespace Snoop
 			{
 				DependencyPropertyDescriptor dpd = DependencyPropertyDescriptor.FromProperty(property);
 				if (dpd == null)
-					return false;
+                {
+                    return false;
+                }
 
-				FrameworkElement element = this.element;
+                FrameworkElement element = this.element;
 				do
 				{
 					element = element.Parent as FrameworkElement;
 					if (element != null && dpd.DependencyProperty.OwnerType.IsInstanceOfType(element))
-						return true;
-				}
+                    {
+                        return true;
+                    }
+                }
 				while (attachedPropertyForChildren.IncludeDescendants && element != null);
 				return false;
 			}
@@ -56,8 +64,10 @@ namespace Snoop
 				{
 					DependencyObjectType doType = DependencyObjectType.FromSystemType(attachedPropertyForType.TargetType);
 					if (doType != null && doType.IsInstanceOfType(this.element))
-						return true;
-				}
+                    {
+                        return true;
+                    }
+                }
 
 				return false;
 			}
@@ -65,8 +75,11 @@ namespace Snoop
 			{
 				Attribute dependentAttribute = TypeDescriptor.GetAttributes(this.target)[attachedPropertyForAttribute.AttributeType];
 				if (dependentAttribute != null)
-					return !dependentAttribute.IsDefaultAttribute();
-				return false;
+                {
+                    return !dependentAttribute.IsDefaultAttribute();
+                }
+
+                return false;
 			}
 
 			return true;

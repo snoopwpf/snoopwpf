@@ -97,9 +97,11 @@ namespace Snoop
 		{
 			int index = filterSetList.SelectedIndex;
 			if (index <= 0)
-				return;
+            {
+                return;
+            }
 
-			var item = ItemsSource[index];
+            var item = ItemsSource[index];
 			ItemsSource.RemoveAt(index);
 			ItemsSource.Insert(index - 1, item);
 
@@ -111,9 +113,11 @@ namespace Snoop
 		{
 			int index = filterSetList.SelectedIndex;
 			if (index >= ItemsSource.Count - 1)
-				return;
+            {
+                return;
+            }
 
-			var item = ItemsSource[index];
+            var item = ItemsSource[index];
 			ItemsSource.RemoveAt(index);
 			ItemsSource.Insert(index + 1, item);
 
@@ -141,18 +145,24 @@ namespace Snoop
 			}
 
 			if (index > 0)
-				MoveUp.IsEnabled = true;
+            {
+                this.MoveUp.IsEnabled = true;
+            }
 
-			if (index == filterSetList.Items.Count - 1)
-				MoveDown.IsEnabled = false;
-		}
+            if (index == filterSetList.Items.Count - 1)
+            {
+                this.MoveDown.IsEnabled = false;
+            }
+        }
 
 
 		public event PropertyChangedEventHandler PropertyChanged;
 		protected void NotifyPropertyChanged(string propertyName)
 		{
 			if (PropertyChanged != null)
-				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
 	}
 }

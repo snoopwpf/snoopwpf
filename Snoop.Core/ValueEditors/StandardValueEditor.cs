@@ -39,9 +39,11 @@ namespace Snoop
 		protected virtual void OnStringPropertyChanged(string newValue)
 		{
 			if (this.isUpdatingValue)
-				return;
+            {
+                return;
+            }
 
-			if (PropertyInfo != null)
+            if (PropertyInfo != null)
 			{
 				PropertyInfo.IsValueChangedByUser = true;
 			}
@@ -102,14 +104,18 @@ namespace Snoop
 		    }
 				
 			else
-				this.StringValue = string.Empty;
+            {
+                this.StringValue = string.Empty;
+            }
 
-			this.isUpdatingValue = false;
+            this.isUpdatingValue = false;
 
 			BindingExpression binding = BindingOperations.GetBindingExpression(this, StandardValueEditor.StringValueProperty);
 			if (binding != null)
-				binding.UpdateSource();
-		}
+            {
+                binding.UpdateSource();
+            }
+        }
 
 
 		private bool isUpdatingValue = false;

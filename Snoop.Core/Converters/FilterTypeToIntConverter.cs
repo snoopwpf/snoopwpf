@@ -15,7 +15,9 @@ namespace Snoop.Converters
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             if (!(value is FilterType))
+            {
                 return value;
+            }
 
             FilterType filterType = (FilterType)value;
             return (int)filterType;
@@ -24,7 +26,9 @@ namespace Snoop.Converters
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             if (!(value is int))
+            {
                 return value;
+            }
 
             int intValue = (int)value;
             return (FilterType)intValue;

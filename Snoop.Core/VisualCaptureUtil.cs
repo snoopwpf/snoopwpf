@@ -22,9 +22,11 @@ namespace Snoop
 			// http://blogs.msdn.com/b/jaimer/archive/2009/07/03/rendertargetbitmap-tips.aspx
 
 			if (visual == null || !IsSafeToVisualize(visual))
-				return;
+            {
+                return;
+            }
 
-			Rect bounds;
+            Rect bounds;
 			UIElement uiElement = visual as UIElement;
 			if (uiElement != null)
 			{
@@ -80,8 +82,10 @@ namespace Snoop
 			pngBitmapEncoder.Frames.Add(System.Windows.Media.Imaging.BitmapFrame.Create(bitmap));
 
 			using (var fileStream = System.IO.File.Create(filename))
-				pngBitmapEncoder.Save(fileStream);
-		}
+            {
+                pngBitmapEncoder.Save(fileStream);
+            }
+        }
 
 		private const double BaseDpi = 96;
 	}

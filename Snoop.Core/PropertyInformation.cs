@@ -197,8 +197,11 @@ namespace Snoop
 			{
 				object value = this.Value;
 				if (value != null)
-					return value.ToString();
-				return string.Empty;
+                {
+                    return value.ToString();
+                }
+
+                return string.Empty;
 			}
 			set
 			{
@@ -512,8 +515,11 @@ namespace Snoop
 				DependencyProperty dp = this.DependencyProperty;
 				DependencyObject d = this.Target as DependencyObject;
 				if (dp != null && d != null)
-					return BindingOperations.GetBindingBase(d, dp);
-				return null;
+                {
+                    return BindingOperations.GetBindingBase(d, dp);
+                }
+
+                return null;
 			}
 		}
 
@@ -524,8 +530,11 @@ namespace Snoop
 				DependencyProperty dp = this.DependencyProperty;
 				DependencyObject d = this.Target as DependencyObject;
 				if (dp != null && d != null)
-					return BindingOperations.GetBindingExpressionBase(d, dp);
-				return null;
+                {
+                    return BindingOperations.GetBindingExpressionBase(d, dp);
+                }
+
+                return null;
 			}
 		}
 
@@ -579,8 +588,10 @@ namespace Snoop
 			DependencyProperty dp = this.DependencyProperty;
 			DependencyObject d = this.Target as DependencyObject;
 			if (dp != null && d != null)
-				((DependencyObject)this.Target).ClearValue(dp);
-		}
+            {
+                ((DependencyObject)this.Target).ClearValue(dp);
+            }
+        }
 
 		/// <summary>
 		/// Returns the DependencyProperty identifier for the property that this PropertyInformation wraps.
@@ -597,8 +608,10 @@ namespace Snoop
 
 					DependencyPropertyDescriptor dpd = DependencyPropertyDescriptor.FromProperty(this.property);
 					if (dpd != null)
-						return dpd.DependencyProperty;
-				}
+                    {
+                        return dpd.DependencyProperty;
+                    }
+                }
 
 				return null;
 			}
@@ -607,9 +620,11 @@ namespace Snoop
 		private void Update()
 		{
 			if (ignoreUpdate)
-				return;
+            {
+                return;
+            }
 
-			this.isLocallySet = false;
+            this.isLocallySet = false;
 			this.isInvalidBinding = false;
 			this.isDatabound = false;
 
@@ -617,14 +632,18 @@ namespace Snoop
 			DependencyObject d = this.Target as DependencyObject;
 
 			if (SnoopModes.MultipleDispatcherMode && d != null && d.Dispatcher != this.Dispatcher)
-				return;
+            {
+                return;
+            }
 
-			if (dp != null && d != null)
+            if (dp != null && d != null)
 			{
 				if (d.ReadLocalValue(dp) != DependencyProperty.UnsetValue)
-					this.isLocallySet = true;
+                {
+                    this.isLocallySet = true;
+                }
 
-				BindingExpressionBase expression = BindingOperations.GetBindingExpressionBase(d, dp);
+                BindingExpressionBase expression = BindingOperations.GetBindingExpressionBase(d, dp);
 				if (expression != null)
 				{
 					this.isDatabound = true;
@@ -812,7 +831,9 @@ namespace Snoop
             foreach (var constructor in constructors)
             {
                 if (constructor.GetParameters().Length == 0)
+                {
                     return true;
+                }
             }
             return false;
 
@@ -823,7 +844,9 @@ namespace Snoop
             var t = type.BaseType;
 
             while (!HasDefaultConstructor(t))
+            {
                 t = t.BaseType;
+            }
 
             return t;
         }
@@ -834,11 +857,15 @@ namespace Snoop
 			{
 				PropertyDescriptor newPropertyDescriptor = newProperty as PropertyDescriptor;
 				if (newPropertyDescriptor == null)
-					continue;
+                {
+                    continue;
+                }
 
-				if (!allProperties.Contains(newPropertyDescriptor))
-					allProperties.Add(newPropertyDescriptor);
-			}
+                if (!allProperties.Contains(newPropertyDescriptor))
+                {
+                    allProperties.Add(newPropertyDescriptor);
+                }
+            }
 		}
 
 		private bool isRunning = false;
@@ -878,8 +905,10 @@ namespace Snoop
 		{
 			Debug.Assert(this.GetType().GetProperty(propertyName) != null);
 			if (this.PropertyChanged != null)
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
 		#endregion
 
 	}

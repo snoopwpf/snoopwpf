@@ -19,9 +19,11 @@ namespace Snoop.Infrastructure
 		{
 			string key;
 			if (Keys.TryGetValue(element, out key))
-				return key;
+            {
+                return key;
+            }
 
-			return null;
+            return null;
 		}
 
 		public static void Cache(object element, string key)

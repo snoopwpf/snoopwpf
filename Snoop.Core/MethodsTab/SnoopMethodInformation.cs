@@ -51,7 +51,9 @@ namespace Snoop.MethodsTab
         public IList<SnoopParameterInformation> GetParameters(Type declaringType)
         {
             if (_methodInfo == null)
+            {
                 return new List<SnoopParameterInformation>();
+            }
 
             var parameterInfos = _methodInfo.GetParameters();
 
@@ -72,19 +74,27 @@ namespace Snoop.MethodsTab
         public bool Equals(SnoopMethodInformation other)
         {
             if (other == null)
+            {
                 return false;
+            }
 
             if (other.MethodName != this.MethodName)
+            {
                 return false;
+            }
 
             if (!(other.MethodInfo.ReturnType.Equals(this.MethodInfo.ReturnType)))
+            {
                 return false;
+            }
 
             var thisParameterInfos = this.MethodInfo.GetParameters();
             var otherParameterInfos = other.MethodInfo.GetParameters();
 
             if (thisParameterInfos.Length != otherParameterInfos.Length)
+            {
                 return false;
+            }
 
             for (int i = 0; i < thisParameterInfos.Length; i++)
             {
@@ -93,7 +103,9 @@ namespace Snoop.MethodsTab
 
                 //if (!thisParameterInfo.Equals(otherParameterInfo))
                 if (!ParameterInfosEqual(thisParameterInfo, otherParameterInfo))
+                {
                     return false;
+                }
             }
 
             return true;
@@ -102,10 +114,14 @@ namespace Snoop.MethodsTab
         private bool ParameterInfosEqual(ParameterInfo parm1, ParameterInfo parm2)
         {
             if (!(parm1.Name.Equals(parm2.Name)))
+            {
                 return false;
+            }
 
             if (!(parm1.ParameterType.Equals(parm2.ParameterType)))
+            {
                 return false;
+            }
 
             return parm1.Position == parm2.Position;
         }

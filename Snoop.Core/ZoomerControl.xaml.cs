@@ -78,14 +78,18 @@ namespace Snoop
 			ResetZoomAndTranslation();
 
 			if (_pooSniffer == null)
-				_pooSniffer = this.TryFindResource("poo_sniffer_xpr") as Brush;
+            {
+                this._pooSniffer = this.TryFindResource("poo_sniffer_xpr") as Brush;
+            }
 
-			Cursor = (Target == _pooSniffer) ? null : Cursors.SizeAll;
+            Cursor = (Target == _pooSniffer) ? null : Cursors.SizeAll;
 
 			UIElement element = this.CreateIfPossible(Target);
 			if (element != null)
-				this.Viewbox.Child = element;
-		}
+            {
+                this.Viewbox.Child = element;
+            }
+        }
 		#endregion
 
 

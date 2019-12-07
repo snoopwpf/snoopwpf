@@ -15,8 +15,10 @@ namespace Snoop.DebugListenerTab
 			foreach (var filter in _singleFilters)
 			{
 				if (!filter.FilterMatches(debugLine))
-					return false;
-			}
+                {
+                    return false;
+                }
+            }
 			return true;
 		}
 
@@ -33,9 +35,11 @@ namespace Snoop.DebugListenerTab
 			get
 			{
 				if (_singleFilters.Count == 0)
-					return string.Empty;
+                {
+                    return string.Empty;
+                }
 
-				return _singleFilters[0].GroupId;
+                return _singleFilters[0].GroupId;
 			}
 			set
 			{
@@ -54,8 +58,11 @@ namespace Snoop.DebugListenerTab
 		public void AddFilter(SnoopFilter singleFilter)
 		{
 			if (!singleFilter.SupportsGrouping)
-				throw new NotSupportedException("The filter is not grouped");
-			_singleFilters.Add(singleFilter);
+            {
+                throw new NotSupportedException("The filter is not grouped");
+            }
+
+            _singleFilters.Add(singleFilter);
 		}
 
 		public void RemoveFilter(SnoopFilter singleFilter)
@@ -69,9 +76,11 @@ namespace Snoop.DebugListenerTab
 			foreach (var filter in filters)
 			{
 				if (!filter.SupportsGrouping)
-					throw new NotSupportedException("The filter is not grouped");
+                {
+                    throw new NotSupportedException("The filter is not grouped");
+                }
 
-				filter.IsGrouped = true;
+                filter.IsGrouped = true;
 				filter.GroupId = groupID;
 			}
 			_singleFilters.AddRange(filters);
@@ -80,8 +89,11 @@ namespace Snoop.DebugListenerTab
 		public void ClearFilters()
 		{
 			foreach (var filter in _singleFilters)
-				filter.IsGrouped = false;
-			_singleFilters.Clear();
+            {
+                filter.IsGrouped = false;
+            }
+
+            _singleFilters.Clear();
 		}
 
 		public bool ContainsFilter(SnoopSingleFilter filter)

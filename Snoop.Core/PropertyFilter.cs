@@ -69,29 +69,43 @@ namespace Snoop
 			else if (!string.IsNullOrEmpty(this.FilterString))
 			{
 				if (property.DisplayName.ToLower().Contains(this.FilterString))
-					return true;
-				if (property.Property != null && property.Property.PropertyType.Name.ToLower().Contains(this.FilterString))
-					return true;
-				return false;
+                {
+                    return true;
+                }
+
+                if (property.Property != null && property.Property.PropertyType.Name.ToLower().Contains(this.FilterString))
+                {
+                    return true;
+                }
+
+                return false;
 			}
 			// else use the filter set if we have one of those.
 			else if (IsPropertyFilterSet)
 			{
 				if (SelectedFilterSet.IsPropertyInFilter(property.DisplayName))
-					return true;
-				else
-					return false;
-			}
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
 			// finally, if none of the above applies
 			// just check to see if we're not showing properties at their default values
 			// and this property is actually set to its default value
 			else
 			{
 				if (!this.ShowDefaults && property.ValueSource.BaseValueSource == BaseValueSource.Default)
-					return false;
-				else
-					return true;
-			}
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
 		}
 	}
 

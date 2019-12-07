@@ -30,15 +30,21 @@ namespace Snoop
 		protected override Visual GetVisualChild(int index)
 		{
 			if (index == 0 && this.child != null)
-				return this.child;
-			return base.GetVisualChild(index);
+            {
+                return this.child;
+            }
+
+            return base.GetVisualChild(index);
 		}
 
 		protected override Size ArrangeOverride(Size finalSize)
 		{
 			if (this.child != null)
-				this.child.Arrange(new Rect(finalSize));
-			return finalSize;
+            {
+                this.child.Arrange(new Rect(finalSize));
+            }
+
+            return finalSize;
 		}
 
 		public UIElement Child

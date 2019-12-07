@@ -37,8 +37,10 @@ namespace Snoop
 					if (routedEvents != null)
 					{
 						foreach (RoutedEvent routedEvent in routedEvents)
-							EventManager.RegisterClassHandler(baseType, routedEvent, new RoutedEventHandler(EventsListener.HandleEvent), true);
-					}
+                        {
+                            EventManager.RegisterClassHandler(baseType, routedEvent, new RoutedEventHandler(EventsListener.HandleEvent), true);
+                        }
+                    }
 				}
 			}
 		}
@@ -56,8 +58,10 @@ namespace Snoop
 			{
 				EventsListener.filter = value;
 				if (EventsListener.filter != null)
-					EventsListener.filter = EventsListener.filter.ToLower();
-			}
+                {
+                    EventsListener.filter = EventsListener.filter.ToLower();
+                }
+            }
 		}
 
 		public static void Stop()
@@ -75,8 +79,10 @@ namespace Snoop
 					EventsListener.current.events.Add(new EventInformation(e));
 
 					while (EventsListener.current.events.Count > 100)
-						EventsListener.current.events.RemoveAt(0);
-				}
+                    {
+                        EventsListener.current.events.RemoveAt(0);
+                    }
+                }
 			}
 		}
 

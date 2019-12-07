@@ -18,7 +18,9 @@ namespace Snoop.MethodsTab
         {
             FrameworkElement element = container as FrameworkElement;
             if (element == null)
+            {
                 return null;
+            }
 
             SnoopParameterInformation snoopParameterInfo = item as SnoopParameterInformation;
             //if (snoopParameterInfo.TypeConverter.GetType() == typeof(TypeConverter))

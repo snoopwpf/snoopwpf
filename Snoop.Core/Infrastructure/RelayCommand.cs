@@ -31,7 +31,9 @@ namespace Snoop.Infrastructure
         public RelayCommand(Action<object> execute, Predicate<object> canExecute)
         {
             if (execute == null)
+            {
                 throw new ArgumentNullException("execute");
+            }
 
             _execute = execute;
             _canExecute = canExecute;

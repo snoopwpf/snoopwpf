@@ -36,8 +36,10 @@ namespace Snoop
 					}
 				}
 				if (!foundItem)
-					this.Children.Add(VisualTreeItem.Construct(resources, this));
-			}
+                {
+                    this.Children.Add(VisualTreeItem.Construct(resources, this));
+                }
+            }
 		}
 	}
 }

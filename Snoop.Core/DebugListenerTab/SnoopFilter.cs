@@ -97,7 +97,9 @@ namespace Snoop.DebugListenerTab
 			_isDirty = true;
 			var handler = this.PropertyChanged;
 			if (handler != null)
-				handler(this, new PropertyChangedEventArgs(propertyName));
-		}
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
 	}
 }

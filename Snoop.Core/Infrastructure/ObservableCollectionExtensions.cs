@@ -17,7 +17,9 @@ namespace Snoop.Infrastructure
             where T : IComparable
         {
             if (collection.Count == 0)
+            {
                 return -1;
+            }
 
 
             return BinarySearch(collection, item, 0, collection.Count - 1);
@@ -26,7 +28,9 @@ namespace Snoop.Infrastructure
         public static int BinarySearch<T>(this ObservableCollection<T> collection, T item, Comparison<T> comparer)
         {
             if (collection.Count == 0)
+            {
                 return -1;
+            }
 
 
             return BinarySearch(collection, item, 0, collection.Count - 1, comparer);

@@ -60,8 +60,10 @@ namespace Snoop
 				}
 
 				if (!foundItem)
-					this.Children.Add(new ResourceItem(target, key, this));
-			}
+                {
+                    this.Children.Add(new ResourceItem(target, key, this));
+                }
+            }
 		}
 
 		private ResourceDictionary dictionary;

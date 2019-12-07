@@ -31,9 +31,11 @@ namespace Snoop.DebugListenerTab
 		private void SetFiltersWindow_Closed(object sender, EventArgs e)
 		{
 			if (_setFilterClicked || !this.ViewModel.IsDirty)
-				return;
+            {
+                return;
+            }
 
-			var saveChanges = MessageBox.Show("Save changes?", "Changes", MessageBoxButton.YesNo) == MessageBoxResult.Yes;
+            var saveChanges = MessageBox.Show("Save changes?", "Changes", MessageBoxButton.YesNo) == MessageBoxResult.Yes;
 			if (saveChanges)
 			{
 				this.ViewModel.SetIsSet();
@@ -55,13 +57,17 @@ namespace Snoop.DebugListenerTab
 		{
 			FrameworkElement frameworkElement = sender as FrameworkElement;
 			if (frameworkElement == null)
-				return;
+            {
+                return;
+            }
 
-			SnoopFilter filter = frameworkElement.DataContext as SnoopFilter;
+            SnoopFilter filter = frameworkElement.DataContext as SnoopFilter;
 			if (filter == null)
-				return;
+            {
+                return;
+            }
 
-			ViewModel.RemoveFilter(filter);
+            ViewModel.RemoveFilter(filter);
 		}
 		private void buttonSetFilter_Click(object sender, RoutedEventArgs e)
 		{
@@ -91,11 +97,15 @@ namespace Snoop.DebugListenerTab
 			{
 				var filter = item as SnoopFilter;
 				if (filter == null)
-					continue;
+                {
+                    continue;
+                }
 
-				if (filter.SupportsGrouping)
-					filtersToGroup.Add(filter);
-			}
+                if (filter.SupportsGrouping)
+                {
+                    filtersToGroup.Add(filter);
+                }
+            }
 			this.ViewModel.GroupFilters(filtersToGroup);
 		}
 		private void menuItemClearFilterGroups_Click(object sender, RoutedEventArgs e)
@@ -107,9 +117,11 @@ namespace Snoop.DebugListenerTab
 			foreach (SnoopFilter filter in this.listBoxFilters.SelectedItems)
 			{
 				if (filter == null)
-					continue;
+                {
+                    continue;
+                }
 
-				filter.IsInverse = !filter.IsInverse;
+                filter.IsInverse = !filter.IsInverse;
 			}
 		}
 
@@ -120,8 +132,10 @@ namespace Snoop.DebugListenerTab
 			foreach (var filter in this.ViewModel.Filters)
 			{
 				if (filter is SnoopSingleFilter)
-					singleFilters.Add((SnoopSingleFilter)filter);
-			}
+                {
+                    singleFilters.Add((SnoopSingleFilter)filter);
+                }
+            }
 
 			Properties.Settings.Default.SnoopDebugFilters = singleFilters.ToArray();
 		}
@@ -134,9 +148,11 @@ namespace Snoop.DebugListenerTab
 			{
 				var singleFilter = filter as SnoopSingleFilter;
 				if (singleFilter == null)
-					continue;
+                {
+                    continue;
+                }
 
-				var newFilter = (SnoopSingleFilter)singleFilter.Clone();
+                var newFilter = (SnoopSingleFilter)singleFilter.Clone();
 
 				snoopSingleFilters.Add(newFilter);
 			}

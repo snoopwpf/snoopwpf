@@ -51,7 +51,9 @@ namespace Snoop.MethodsTab
         private void ProcessCheckedProperty()
         {
             if (!this.IsSelected || !this._checkBoxUseDataContext.IsChecked.HasValue || !(this.RootTarget is FrameworkElement))
+            {
                 return;
+            }
 
             SetTargetToRootTarget();
         }
@@ -141,7 +143,9 @@ namespace Snoop.MethodsTab
         private void EnableOrDisableDataContextCheckbox()
         {
             if (this._checkBoxUseDataContext.IsChecked.HasValue && this._checkBoxUseDataContext.IsChecked.Value)
+            {
                 return;
+            }
 
             if (!(this.Target is FrameworkElement) || ((FrameworkElement)this.Target).DataContext == null)
             {
@@ -158,7 +162,9 @@ namespace Snoop.MethodsTab
         {
             var selectedMethod = this.comboBoxMethods.SelectedValue as SnoopMethodInformation;
             if (selectedMethod == null || this.Target == null)
-                return;            
+            {
+                return;
+            }
 
             var parameters = selectedMethod.GetParameters(this.Target.GetType());
             this.itemsControlParameters.ItemsSource = parameters;
@@ -183,12 +189,16 @@ namespace Snoop.MethodsTab
         {
             var selectedMethod = this.comboBoxMethods.SelectedValue as SnoopMethodInformation;
             if (selectedMethod == null)
+            {
                 return;
+            }
 
             object[] parameters = new object[this.itemsControlParameters.Items.Count];
 
             if (!TryToCreateParameters(parameters))
+            {
                 return;
+            }
 
             TryToInvokeMethod(selectedMethod, parameters);
         }
@@ -201,7 +211,9 @@ namespace Snoop.MethodsTab
                 {
                     var paramInfo = this.itemsControlParameters.Items[index] as SnoopParameterInformation;
                     if (paramInfo == null)
+                    {
                         return false;
+                    }
 
                     if (paramInfo.ParameterType.Equals(typeof(DependencyProperty)))
                     {
@@ -285,7 +297,9 @@ namespace Snoop.MethodsTab
         private static IList<SnoopMethodInformation> GetMethodInfos(object o)
         {
             if (o == null)
+            {
                 return new ObservableCollection<SnoopMethodInformation>();
+            }
 
             Type t = o.GetType();
             var methods = t.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.InvokeMethod);
@@ -295,7 +309,9 @@ namespace Snoop.MethodsTab
             foreach (var method in methods)
             {
                 if (method.IsSpecialName)
+                {
                     continue;
+                }
 
                 var info = new SnoopMethodInformation(method);
                 info.MethodName = method.Name;
@@ -310,7 +326,9 @@ namespace Snoop.MethodsTab
         private void ChangeTarget_Click(object sender, RoutedEventArgs e)
         {
             if (this.RootTarget == null)
+            {
                 return;
+            }
 
             var paramCreator = new ParameterCreator();
             paramCreator.TextBlockDescription.Text = "Delve into the new desired target by double-clicking on the property. Clicking OK will select the currently delved property to be the new target.";

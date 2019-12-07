@@ -35,8 +35,10 @@ namespace Snoop.Converters
 			foreach (string excludeTypeName in ExcludeTypeNames)
 			{
 				if (value.GetType().Name == excludeTypeName)
-					return false;
-			}
+                {
+                    return false;
+                }
+            }
 
 			return true;
 		}

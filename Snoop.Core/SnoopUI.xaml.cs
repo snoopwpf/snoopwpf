@@ -266,9 +266,11 @@ namespace Snoop
 			get
 			{
 				if (CurrentSelection == null)
-					return null;
+                {
+                    return null;
+                }
 
-				var selectedItem = CurrentSelection.Target as DependencyObject;
+                var selectedItem = CurrentSelection.Target as DependencyObject;
 				if (selectedItem != null)
 				{
 					return FocusManager.GetFocusScope(selectedItem);
@@ -388,8 +390,10 @@ namespace Snoop
 				{
 					VisualTreeItem visualItem = this.FindItem(currentTarget);
 					if (visualItem != null)
-						this.CurrentSelection = visualItem;
-				}
+                    {
+                        this.CurrentSelection = visualItem;
+                    }
+                }
 
 				this.SetFilter(this.filter);
 			}
@@ -410,8 +414,10 @@ namespace Snoop
 			{
 				VisualTreeItem node = this.FindItem(visual);
 				if (node != null)
-					this.CurrentSelection = node;
-			}
+                {
+                    this.CurrentSelection = node;
+                }
+            }
 			else if (e.Parameter != null)
 			{
 				this.PropertyGrid.SetTarget(e.Parameter);
@@ -439,9 +445,11 @@ namespace Snoop
 		private void CopyPropertyChangesHandler(object sender, ExecutedRoutedEventArgs e)
 		{
 			if (this.currentSelection != null)
-				SaveEditedProperties(this.currentSelection);
+            {
+                this.SaveEditedProperties(this.currentSelection);
+            }
 
-			EditedPropertiesHelper.DumpObjectsWithEditedProperties();
+            EditedPropertiesHelper.DumpObjectsWithEditedProperties();
 		}
 
 		private void SelectItem(DependencyObject item)
@@ -450,8 +458,10 @@ namespace Snoop
 			{
 				VisualTreeItem node = this.FindItem(item);
 				if (node != null)
-					this.CurrentSelection = node;
-			}
+                {
+                    this.CurrentSelection = node;
+                }
+            }
 		}
 		#endregion
 
@@ -462,16 +472,22 @@ namespace Snoop
 
 			ModifierKeys currentModifiers = InputManager.Current.PrimaryKeyboardDevice.Modifiers;
 			if (!((currentModifiers & ModifierKeys.Control) != 0 && (currentModifiers & ModifierKeys.Shift) != 0))
-				return;
+            {
+                return;
+            }
 
-			Visual directlyOver = Mouse.PrimaryDevice.DirectlyOver as Visual;
+            Visual directlyOver = Mouse.PrimaryDevice.DirectlyOver as Visual;
 			if ((directlyOver == null) || directlyOver.IsDescendantOf(this))
-				return;
+            {
+                return;
+            }
 
-			VisualTreeItem node = this.FindItem(directlyOver);
+            VisualTreeItem node = this.FindItem(directlyOver);
 			if (node != null)
-				this.CurrentSelection = node;
-		}
+            {
+                this.CurrentSelection = node;
+            }
+        }
 		private void SnoopUI_MouseWheel(object sender, MouseWheelEventArgs e)
 		{
 			this.PreviewArea.Zoomer.DoMouseWheel(sender, e);
@@ -530,8 +546,10 @@ namespace Snoop
 		{
 			VisualTreeItem item = this.Tree.SelectedItem as VisualTreeItem;
 			if (item != null)
-				this.CurrentSelection = item;
-		}
+            {
+                this.CurrentSelection = item;
+            }
+        }
 
 		private void ProcessFilter()
 		{
@@ -568,20 +586,28 @@ namespace Snoop
 			foreach (VisualTreeItem child in node.Children)
 			{
 				if (child.Filter(filter))
-					this.visualTreeItems.Add(child);
-				else
-					FilterTree(child, filter);
-			}
+                {
+                    this.visualTreeItems.Add(child);
+                }
+                else
+                {
+                    this.FilterTree(child, filter);
+                }
+            }
 		}
 		private void FilterBindings(VisualTreeItem node)
 		{
 			foreach (VisualTreeItem child in node.Children)
 			{
 				if (child.HasBindingError)
-					this.visualTreeItems.Add(child);
-				else
-					FilterBindings(child);
-			}
+                {
+                    this.visualTreeItems.Add(child);
+                }
+                else
+                {
+                    this.FilterBindings(child);
+                }
+            }
 		}
 
 		protected override void Load(object newRoot)
@@ -634,8 +660,10 @@ namespace Snoop
 		{
 			Debug.Assert(this.GetType().GetProperty(propertyName) != null);
 			if (this.PropertyChanged != null)
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
 		#endregion
 	}
 

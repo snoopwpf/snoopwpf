@@ -35,8 +35,10 @@ namespace Snoop.DebugListenerTab
 		private void SendDataToListeners(string str)
 		{
 			foreach (var listener in _listeners)
-				listener.Write(str);
-		}
+            {
+                listener.Write(str);
+            }
+        }
 
 		public override void Write(string message, string category)
 		{

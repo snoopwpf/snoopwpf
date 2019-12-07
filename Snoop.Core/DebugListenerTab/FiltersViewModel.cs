@@ -37,13 +37,17 @@ namespace Snoop.DebugListenerTab
 			get
 			{
 				if (isDirty)
-					return true;
+                {
+                    return true;
+                }
 
-				foreach (var filter in this.filters)
+                foreach (var filter in this.filters)
 				{
 					if (filter.IsDirty)
-						return true;
-				}
+                    {
+                        return true;
+                    }
+                }
 				return false;
 			}
 		}
@@ -71,17 +75,21 @@ namespace Snoop.DebugListenerTab
 			}
 
 			foreach (var filter in singleFilters)
-				this.filters.Add(filter);
+            {
+                this.filters.Add(filter);
+            }
 
-			var groupings = (from x in singleFilters where x.IsGrouped select x).GroupBy(x => x.GroupId);
+            var groupings = (from x in singleFilters where x.IsGrouped select x).GroupBy(x => x.GroupId);
 			foreach (var grouping in groupings)
 			{
 				var multipleFilter = new SnoopMultipleFilter();
 				var groupedFilters = grouping.ToArray();
 				if (groupedFilters.Length == 0)
-					continue;
+                {
+                    continue;
+                }
 
-				multipleFilter.AddRange(groupedFilters, groupedFilters[0].GroupId);
+                multipleFilter.AddRange(groupedFilters, groupedFilters[0].GroupId);
 				this.multipleFilters.Add(multipleFilter);
 			}
 
@@ -91,13 +99,19 @@ namespace Snoop.DebugListenerTab
 		internal void SetIsSet()
 		{
 			if (filters == null)
-				this.IsSet = false;
+            {
+                this.IsSet = false;
+            }
 
-			if (filters.Count == 1 && filters[0] is SnoopSingleFilter && string.IsNullOrEmpty(((SnoopSingleFilter)filters[0]).Text))
-				this.IsSet = false;
-			else
-				this.IsSet = true;
-		}
+            if (filters.Count == 1 && filters[0] is SnoopSingleFilter && string.IsNullOrEmpty(((SnoopSingleFilter)filters[0]).Text))
+            {
+                this.IsSet = false;
+            }
+            else
+            {
+                this.IsSet = true;
+            }
+        }
 
 		public void ClearFilters()
 		{
@@ -112,17 +126,23 @@ namespace Snoop.DebugListenerTab
 			foreach (var filter in Filters)
 			{
 				if (filter.IsGrouped)
-					continue;
+                {
+                    continue;
+                }
 
-				if (filter.FilterMatches(str))
-					return true;
-			}
+                if (filter.FilterMatches(str))
+                {
+                    return true;
+                }
+            }
 
 			foreach (var multipleFilter in this.multipleFilters)
 			{
 				if (multipleFilter.FilterMatches(str))
-					return true;
-			}
+                {
+                    return true;
+                }
+            }
 
 			return false;
 		}
@@ -133,9 +153,11 @@ namespace Snoop.DebugListenerTab
 			while (true)
 			{
 				if (!GroupIdTaken(index.ToString()))
-					return index.ToString();
+                {
+                    return index.ToString();
+                }
 
-				index++;
+                index++;
 			}
 		}
 
@@ -144,8 +166,10 @@ namespace Snoop.DebugListenerTab
 			foreach (var filter in multipleFilters)
 			{
 				if (groupID.Equals(filter.GroupId))
-					return true;
-			}
+                {
+                    return true;
+                }
+            }
 			return false;
 		}
 
@@ -175,13 +199,19 @@ namespace Snoop.DebugListenerTab
 				{
 					var multipeFilter = this.multipleFilters[index];
 					if (multipeFilter.ContainsFilter(singleFilter))
-						multipeFilter.RemoveFilter(singleFilter);
+                    {
+                        multipeFilter.RemoveFilter(singleFilter);
+                    }
 
-					if (!multipeFilter.IsValidMultipleFilter)
-						this.multipleFilters.RemoveAt(index);
-					else
-						index++;
-				}
+                    if (!multipeFilter.IsValidMultipleFilter)
+                    {
+                        this.multipleFilters.RemoveAt(index);
+                    }
+                    else
+                    {
+                        index++;
+                    }
+                }
 			}
 			this.filters.Remove(filter);
 		}
@@ -239,7 +269,9 @@ namespace Snoop.DebugListenerTab
 		{
 			var handler = this.PropertyChanged;
 			if (handler != null)
-				handler(this, new PropertyChangedEventArgs(propertyName));
-		}
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
 	}
 }

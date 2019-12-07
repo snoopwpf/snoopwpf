@@ -42,8 +42,10 @@ namespace Snoop
 					this.values.Add(value);
 
 					if (this.Value != null && this.Value.Equals(value))
-						this.valuesView.MoveCurrentTo(value);
-				}
+                    {
+                        this.valuesView.MoveCurrentTo(value);
+                    }
+                }
 			}
 
 			this.isValid = true;
@@ -69,8 +71,10 @@ namespace Snoop
 			if (this.isValid && this.Value != null)
 			{
 				if (!this.Value.Equals(this.valuesView.CurrentItem))
-					this.Value = this.valuesView.CurrentItem;
-			}
+                {
+                    this.Value = this.valuesView.CurrentItem;
+                }
+            }
 		}
 
 

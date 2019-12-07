@@ -60,7 +60,9 @@ namespace Snoop.MethodsTab
             foreach (var type in types)
             {
                 if (!type.IsPublic || type.IsAbstract)
+                {
                     continue;
+                }
 
                 var pair = new TypeNamePair();
                 pair.Name = type.Name;

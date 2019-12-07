@@ -27,7 +27,9 @@ namespace Snoop.Converters
         {
             SnoopParameterInformation paramInfo = value as SnoopParameterInformation;
             if (paramInfo == null)
+            {
                 return value;
+            }
 
             var converter = TypeDescriptor.GetConverter(paramInfo.ParameterType);
 
@@ -65,7 +67,9 @@ namespace Snoop.Converters
             foreach (var field in fields)
             {
                 if (dpType.IsAssignableFrom(field.FieldType))
+                {
                     dependencyProperties.Add(new DependencyPropertyNameValuePair() { DependencyPropertyName = field.Name, DependencyProperty = (DependencyProperty)field.GetValue(null) });
+                }
             }
 
             dependencyProperties.Sort();

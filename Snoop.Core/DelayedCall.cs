@@ -27,11 +27,15 @@ namespace Snoop
 
 				Dispatcher dispatcher = null;
 				if (Application.Current == null || SnoopModes.MultipleDispatcherMode)
-					dispatcher = Dispatcher.CurrentDispatcher;
-				else
-					dispatcher = Application.Current.Dispatcher;
+                {
+                    dispatcher = Dispatcher.CurrentDispatcher;
+                }
+                else
+                {
+                    dispatcher = Application.Current.Dispatcher;
+                }
 
-				dispatcher.BeginInvoke(this.priority, new DispatcherOperationCallback(this.Process), null);
+                dispatcher.BeginInvoke(this.priority, new DispatcherOperationCallback(this.Process), null);
 			}
 		}
 

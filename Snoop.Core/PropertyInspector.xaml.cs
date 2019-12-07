@@ -83,7 +83,10 @@ namespace Snoop
         private void CanSnipXaml(object sender, CanExecuteRoutedEventArgs e)
         {
             if (e.Parameter != null && ((PropertyInformation)e.Parameter).Value is Brush)
+            {
                 e.CanExecute = true;
+            }
+
             e.Handled = true;
         }
 
@@ -137,13 +140,14 @@ namespace Snoop
             inspector.OnPropertyChanged(nameof(Type));
 
             if (e.NewValue != null)
+            {
                 inspector.inspectStack.Add(e.NewValue);
+            }
 
             if (inspector.lastRootTarget == inspector.RootTarget && e.OldValue != null && e.NewValue != null && inspector.checkBoxClearAfterDelve.IsChecked.HasValue && inspector.checkBoxClearAfterDelve.IsChecked.Value)
             {
                 inspector.targetToFilter[e.OldValue.GetType()] = inspector.PropertiesFilter.Text;
-                var text = string.Empty;
-                inspector.targetToFilter.TryGetValue(e.NewValue.GetType(), out text);
+                inspector.targetToFilter.TryGetValue(e.NewValue.GetType(), out var text);
                 inspector.PropertiesFilter.Text = text ?? string.Empty;
             }
             inspector.lastRootTarget = inspector.RootTarget;
@@ -329,19 +333,28 @@ namespace Snoop
         private void CanDelve(object sender, CanExecuteRoutedEventArgs e)
         {
             if (e.Parameter != null && ((PropertyInformation)e.Parameter).Value != null)
+            {
                 e.CanExecute = true;
+            }
+
             e.Handled = true;
         }
         private void CanDelveBinding(object sender, CanExecuteRoutedEventArgs e)
         {
             if (e.Parameter != null && ((PropertyInformation)e.Parameter).Binding != null)
+            {
                 e.CanExecute = true;
+            }
+
             e.Handled = true;
         }
         private void CanDelveBindingExpression(object sender, CanExecuteRoutedEventArgs e)
         {
             if (e.Parameter != null && ((PropertyInformation)e.Parameter).BindingExpression != null)
+            {
                 e.CanExecute = true;
+            }
+
             e.Handled = true;
         }
 
@@ -394,7 +407,7 @@ namespace Snoop
 
                 this.inspector.Filter = this.propertyFilter;
 
-                this.OnPropertyChanged("StringFilter");
+                this.OnPropertyChanged(nameof(this.StringFilter));
             }
         }
 
@@ -407,7 +420,7 @@ namespace Snoop
 
                 this.inspector.Filter = this.propertyFilter;
 
-                this.OnPropertyChanged("ShowDefaults");
+                this.OnPropertyChanged(nameof(this.ShowDefaults));
             }
         }
 
@@ -440,10 +453,12 @@ namespace Snoop
             set
             {
                 this.propertyFilter.SelectedFilterSet = value;
-                this.OnPropertyChanged("SelectedFilterSet");
+                this.OnPropertyChanged(nameof(this.SelectedFilterSet));
 
                 if (value == null)
+                {
                     return;
+                }
 
                 if (value.IsEditCommand)
                 {
@@ -455,7 +470,7 @@ namespace Snoop
                         // take the adjusted values from the dialog, setter will SAVE them to user properties
                         this.UserFilterSets = this.CleansFilterPropertyNames(dlg.ItemsSource);
                         // trigger the UI to re-bind to the collection, so user sees changes they just made
-                        this.OnPropertyChanged("AllFilterSets");
+                        this.OnPropertyChanged(nameof(this.AllFilterSets));
                     }
 
                     // now that we're out of the dialog, set current selection back to "(default)"
@@ -471,7 +486,7 @@ namespace Snoop
                 else
                 {
                     this.inspector.Filter = this.propertyFilter;
-                    this.OnPropertyChanged("SelectedFilterSet");
+                    this.OnPropertyChanged(nameof(this.SelectedFilterSet));
                 }
             }
         }

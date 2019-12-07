@@ -78,8 +78,10 @@ namespace Snoop
 				this.target = value;
 				UIElement element = this.CreateIfPossible(value);
 				if (element != null)
-					this.Viewbox.Child = element;
-			}
+                {
+                    this.Viewbox.Child = element;
+                }
+            }
 		}
 
 		public static readonly RoutedCommand ResetCommand;

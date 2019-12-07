@@ -51,8 +51,10 @@ namespace Snoop
 					{
 						BindingExpressionBase expression = BindingOperations.GetBindingExpressionBase(this.Visual, dpd.DependencyProperty);
 						if (expression != null && (expression.HasError || expression.Status != BindingStatus.Active))
-							return true;
-					}
+                        {
+                            return true;
+                        }
+                    }
 				}
 				return false;
 			}
@@ -81,8 +83,11 @@ namespace Snoop
 			{
 				FrameworkElement element = this.Visual as FrameworkElement;
 				if (element != null)
-					return element.Resources;
-				return null;
+                {
+                    return element.Resources;
+                }
+
+                return null;
 			}
 		}
 
@@ -168,18 +173,25 @@ namespace Snoop
 						}
 					}
 					if (!foundItem)
-						this.Children.Add(VisualTreeItem.Construct(child, this));
-				}
+                    {
+                        this.Children.Add(VisualTreeItem.Construct(child, this));
+                    }
+                }
 			}
 
 			Grid grid = this.Visual as Grid;
 			if (grid != null)
 			{
 				foreach (RowDefinition row in grid.RowDefinitions)
-					this.Children.Add(VisualTreeItem.Construct(row, this));
-				foreach (ColumnDefinition column in grid.ColumnDefinitions)
-					this.Children.Add(VisualTreeItem.Construct(column, this));
-			}
+                {
+                    this.Children.Add(VisualTreeItem.Construct(row, this));
+                }
+
+                foreach (ColumnDefinition column in grid.ColumnDefinitions)
+                {
+                    this.Children.Add(VisualTreeItem.Construct(column, this));
+                }
+            }
 		}
 
 
