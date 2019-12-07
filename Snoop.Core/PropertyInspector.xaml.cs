@@ -3,18 +3,18 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-using System.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Threading;
-using Snoop.Infrastructure;
-using System.Text;
 using System.Windows.Markup;
 using System.Windows.Media;
+using System.Windows.Threading;
+using Snoop.Infrastructure;
 
 namespace Snoop
 {
@@ -130,7 +130,7 @@ namespace Snoop
                 typeof(PropertyInspector),
                 new PropertyMetadata(HandleTargetChanged)
             );
-        
+
         private static void HandleTargetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             PropertyInspector inspector = (PropertyInspector)d;
@@ -147,7 +147,7 @@ namespace Snoop
                 inspector.PropertiesFilter.Text = text ?? string.Empty;
             }
             inspector.lastRootTarget = inspector.RootTarget;
-        }    
+        }
 
         private string GetCurrentDelvePath(Type rootTargetType)
         {
@@ -312,7 +312,7 @@ namespace Snoop
             }
 
             if (this.checkBoxClearAfterDelve.IsChecked.HasValue && this.checkBoxClearAfterDelve.IsChecked.Value)
-            { 
+            {
                 this.PropertiesFilter.Focus();
             }
             this.PushTarget(realTarget);
@@ -594,48 +594,48 @@ namespace Snoop
         private readonly Dictionary<object, string> targetToFilter = new Dictionary<object, string>();
 
         private readonly PropertyFilterSet[] _defaultFilterSets = new PropertyFilterSet[]
-		{
-			new PropertyFilterSet
-			{
-				DisplayName = "Layout",
-				IsDefault = false,
-				IsEditCommand = false,
-				Properties = new string[]
-				{
-					"width", "height", "actualwidth", "actualheight", "margin", "padding", "left", "top"
-				}
-			},
-			new PropertyFilterSet
-			{
-				DisplayName = "Grid/Dock",
-				IsDefault = false,
-				IsEditCommand = false,
-				Properties = new string[]
-				{
-					"grid", "dock"
-				}
-			},
-			new PropertyFilterSet
-			{
-				DisplayName = "Color",
-				IsDefault = false,
-				IsEditCommand = false,
-				Properties = new string[]
-				{
-					"color", "background", "foreground", "borderbrush", "fill", "stroke"
-				}
-			},
-			new PropertyFilterSet
-			{
-				DisplayName = "ItemsControl",
-				IsDefault = false,
-				IsEditCommand = false,
-				Properties = new string[]
-				{
-					"items", "selected"
-				}
-			}
-		};
+        {
+            new PropertyFilterSet
+            {
+                DisplayName = "Layout",
+                IsDefault = false,
+                IsEditCommand = false,
+                Properties = new string[]
+                {
+                    "width", "height", "actualwidth", "actualheight", "margin", "padding", "left", "top"
+                }
+            },
+            new PropertyFilterSet
+            {
+                DisplayName = "Grid/Dock",
+                IsDefault = false,
+                IsEditCommand = false,
+                Properties = new string[]
+                {
+                    "grid", "dock"
+                }
+            },
+            new PropertyFilterSet
+            {
+                DisplayName = "Color",
+                IsDefault = false,
+                IsEditCommand = false,
+                Properties = new string[]
+                {
+                    "color", "background", "foreground", "borderbrush", "fill", "stroke"
+                }
+            },
+            new PropertyFilterSet
+            {
+                DisplayName = "ItemsControl",
+                IsDefault = false,
+                IsEditCommand = false,
+                Properties = new string[]
+                {
+                    "items", "selected"
+                }
+            }
+        };
 
         #region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;
