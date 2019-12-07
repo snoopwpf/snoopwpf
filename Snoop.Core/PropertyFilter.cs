@@ -12,11 +12,12 @@ namespace Snoop
 	public class PropertyFilter
 	{
 		private string filterString;
+        private bool hasFilterString;
 		private Regex filterRegex;
 
         public PropertyFilter(string filterString, bool showDefaults)
 		{
-			this.filterString = filterString.ToLower();
+			this.FilterString = filterString;
 			this.ShowDefaults = showDefaults;
 		}
 
@@ -25,7 +26,8 @@ namespace Snoop
 			get => this.filterString;
             set
 			{
-				this.filterString = value.ToLower();
+				this.filterString = value;
+                this.hasFilterString = string.IsNullOrEmpty(this.filterString) == false;
 
 				try
 				{
@@ -48,21 +50,22 @@ namespace Snoop
 		{
 			// use a regular expression if we have one and we also have a filter string.
 			if (this.filterRegex != null 
-                && string.IsNullOrEmpty(this.FilterString) == false)
+                && this.hasFilterString)
 			{
 				return this.filterRegex.IsMatch(property.DisplayName) 
                        || (property.Property != null 
                             && this.filterRegex.IsMatch(property.Property.PropertyType.Name));
 			}
 			// else just check for containment if we don't have a regular expression but we do have a filter string.
-			else if (string.IsNullOrEmpty(this.FilterString) == false)
+			else if (this.hasFilterString)
 			{
-				if (property.DisplayName.ToLower().Contains(this.FilterString))
+				if (property.DisplayName.ContainsIgnoreCase(this.FilterString))
                 {
                     return true;
                 }
 
-                if (property.Property != null && property.Property.PropertyType.Name.ToLower().Contains(this.FilterString))
+                if (property.Property != null 
+                    && property.Property.PropertyType.Name.ContainsIgnoreCase(this.FilterString))
                 {
                     return true;
                 }

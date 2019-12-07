@@ -74,7 +74,7 @@ namespace Snoop
 		{
 			if (EventsListener.current != null && sender == EventsListener.current.visual)
 			{
-				if (string.IsNullOrEmpty(EventsListener.Filter) || e.RoutedEvent.Name.ToLower().Contains(EventsListener.Filter))
+				if (string.IsNullOrEmpty(EventsListener.Filter) || e.RoutedEvent.Name.ContainsIgnoreCase(EventsListener.Filter))
 				{
 					EventsListener.current.events.Add(new EventInformation(e));
 
