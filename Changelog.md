@@ -1,4 +1,4 @@
-﻿# Changelog for snoop
+﻿# Changelog for Snoop
 
 ## 3.0.0 (preview)
 
