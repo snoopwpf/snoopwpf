@@ -1,8 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.0;net40</TargetFrameworks>
-    <AssemblyName>$(AssemblyName).$(TargetFramework)</AssemblyName>
 
     <RootNamespace>Snoop</RootNamespace>
 

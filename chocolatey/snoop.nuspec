@@ -22,21 +22,24 @@
     <file src="tools\*" target="tools\" />
     <file src="..\bin\$Configuration$\Scripts\*" target="tools\Scripts\" />
 
-    <file src="..\bin\$Configuration$\Snoop.Core.*.config" target="tools\" />
-    <file src="..\bin\$Configuration$\Snoop.Core.*.dll" target="tools\" />
-    <file src="..\bin\$Configuration$\Snoop.Core.*.pdb" target="tools\" />
-    <file src="..\bin\$Configuration$\Snoop.Core.*.json" target="tools\" />
+    <file src="..\bin\$Configuration$\Snoop.Core*.config" target="tools\" />
+    <file src="..\bin\$Configuration$\Snoop.Core*.dll" target="tools\" />
+    <file src="..\bin\$Configuration$\Snoop.Core*.pdb" target="tools\" />
+    <file src="..\bin\$Configuration$\Snoop.Core*.json" target="tools\" />
 
     <file src="..\bin\$Configuration$\Snoop.exe" target="tools\" />
     <file src="..\bin\$Configuration$\Snoop.exe.config" target="tools\" />
     <file src="..\bin\$Configuration$\Snoop.pdb" target="tools\" />
     
-    <file src="..\bin\$Configuration$\net40\Snoop.Core.*.dll" target="tools\net40\" />
-    <file src="..\bin\$Configuration$\net40\Snoop.Core.*.pdb" target="tools\net40\" />
+    <file src="..\bin\$Configuration$\net40\Snoop.Core*.config" target="tools\net40\" />
+    <file src="..\bin\$Configuration$\net40\Snoop.Core*.dll" target="tools\net40\" />
+    <file src="..\bin\$Configuration$\net40\Snoop.Core*.pdb" target="tools\net40\" />
     <file src="..\bin\$Configuration$\net40\System.Management.Automation.dll" target="tools\net40\" />
 
-    <file src="..\bin\$Configuration$\netcoreapp3.0\Snoop.Core.*.dll" target="tools\netcoreapp3.0\" />    
-    <file src="..\bin\$Configuration$\netcoreapp3.0\Snoop.Core.*.pdb" target="tools\netcoreapp3.0\" />
+    <file src="..\bin\$Configuration$\netcoreapp3.0\Snoop.Core*.config" target="tools\netcoreapp3.0\" />
+    <file src="..\bin\$Configuration$\netcoreapp3.0\Snoop.Core*.dll" target="tools\netcoreapp3.0\" />
+    <file src="..\bin\$Configuration$\netcoreapp3.0\Snoop.Core*.pdb" target="tools\netcoreapp3.0\" />
+    <file src="..\bin\$Configuration$\netcoreapp3.0\Snoop.Core*.json" target="tools\netcoreapp3.0\" />
 
     <file src="..\bin\$Configuration$\Snoop.GenericInjector.*.dll" target="tools\" />
     <file src="..\bin\$Configuration$\Snoop.GenericInjector.*.pdb" target="tools\" />

@@ -16,17 +16,8 @@ namespace Snoop
         {
             base.OnStartup(e);
 
-#if NET40
-            const string assemblyFramework = "net40";
-#elif NETCOREAPP30
-            const string assemblyFramework = "netcoreapp3.0";
-#else
-            // generate invalid code to force a compiler error
-            asdf ölkj
-#endif
-
-            this.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri($"pack://application:,,,/Snoop.Core.{assemblyFramework};component/Icons.xaml") });
-            this.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri($"pack://application:,,,/Snoop.Core.{assemblyFramework};component/ValueEditors/EditorTemplates.xaml") });
+            this.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri($"pack://application:,,,/Snoop.Core;component/Icons.xaml") });
+            this.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri($"pack://application:,,,/Snoop.Core;component/ValueEditors/EditorTemplates.xaml") });
         }
 
         private void Application_Exit(object sender, ExitEventArgs e)

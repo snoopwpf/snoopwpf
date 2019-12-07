@@ -22,8 +22,8 @@
         <Directory Id="INSTALLDIR" Name="Snoop">
           <Directory Id="net40" Name="net40">
             <Component Id="Snoop.Core.net40.dll" Guid="{71FAE20E-805A-4182-9860-7480BBD400BF}">
-                <File Id="Snoop.Core.net40.dll" KeyPath="yes" Source="SourceDir\net40\Snoop.Core.net40.dll" />
-                <File Id="Snoop.Core.net40.pdb" Source="SourceDir\net40\Snoop.Core.net40.pdb" />
+                <File Id="Snoop.Core.net40.dll" KeyPath="yes" Source="SourceDir\net40\Snoop.Core.dll" />
+                <File Id="Snoop.Core.net40.pdb" Source="SourceDir\net40\Snoop.Core.pdb" />
             </Component>
             <Component Id="System.Management.Automation.dll" Guid="{77A47D45-F96D-41CF-BAAC-8CDE0B10350C}">
                 <File Id="System.Management.Automation.dll" KeyPath="yes" Source="SourceDir\net40\System.Management.Automation.dll" />
@@ -32,9 +32,9 @@
 
           <Directory Id="netcoreapp30" Name="netcoreapp3.0">
             <Component Id="Snoop.Core.netcoreapp3.0.dll" Guid="{936DC81A-039F-41C3-8F46-23AEBCFF7B22}">
-                <File Id="Snoop.Core.netcoreapp3.0.dll" KeyPath="yes" Source="SourceDir\netcoreapp3.0\Snoop.Core.netcoreapp3.0.dll" />
-                <File Id="Snoop.Core.netcoreapp3.0.deps.json" Source="SourceDir\netcoreapp3.0\Snoop.Core.netcoreapp3.0.deps.json" />
-                <File Id="Snoop.Core.netcoreapp3.0.pdb" Source="SourceDir\netcoreapp3.0\Snoop.Core.netcoreapp3.0.pdb" />
+                <File Id="Snoop.Core.netcoreapp3.0.dll" KeyPath="yes" Source="SourceDir\netcoreapp3.0\Snoop.Core.dll" />
+                <File Id="Snoop.Core.netcoreapp3.0.deps.json" Source="SourceDir\netcoreapp3.0\Snoop.Core.deps.json" />
+                <File Id="Snoop.Core.netcoreapp3.0.pdb" Source="SourceDir\netcoreapp3.0\Snoop.Core.pdb" />
             </Component>
           </Directory>
 
@@ -59,8 +59,8 @@
           </Component>
 
           <Component Id="Root.Snoop.Core.net40.dll" Guid="{3DAA043B-7FFB-4CB6-A3C3-D67DF9D0B3D2}">
-              <File Id="Root.Snoop.Core.net40.dll" KeyPath="yes" Source="SourceDir\Snoop.Core.net40.dll" />
-              <File Id="Root.Snoop.Core.net40.pdb" Source="SourceDir\Snoop.Core.net40.pdb" />
+              <File Id="Root.Snoop.Core.dll" KeyPath="yes" Source="SourceDir\Snoop.Core.dll" />
+              <File Id="Root.Snoop.Core.pdb" Source="SourceDir\Snoop.Core.pdb" />
           </Component>
 
           <Component Id="Snoop.exe" Guid="{82953F7E-F81D-44E9-8274-D80815109361}">
