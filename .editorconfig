@@ -1,26 +1,40 @@
+root=true
 ; Top-most http://editorconfig.org/ file
-root = true
 
 [*]
-end_of_line = CRLF
+end_of_line=crlf
 
 [*.{cs,xaml,xml}]
-indent_style = tabs
+indent_style=tabs
 
 [*.{md,yml}]
-indent_style = space
-indent_size = 2
+indent_style=space
+indent_size=2
 
 [*.{cs,vb}]
+# Microsoft .NET properties
+csharp_prefer_braces=true:suggestion
+csharp_using_directive_placement=inside_namespace:suggestion
+
 # Organize usings
-dotnet_sort_system_directives_first = true
+dotnet_sort_system_directives_first=true
 
 # this. preferences
-dotnet_style_qualification_for_field = true:suggestion
-dotnet_style_qualification_for_property = true:suggestion
-dotnet_style_qualification_for_method = true:suggestion
-dotnet_style_qualification_for_event = true:suggestion
+dotnet_style_qualification_for_field=true:suggestion
+dotnet_style_qualification_for_property=true:suggestion
+dotnet_style_qualification_for_method=true:suggestion
+dotnet_style_qualification_for_event=true:suggestion
 
 # Language keywords vs BCL types preferences
-dotnet_style_predefined_type_for_locals_parameters_members = true:suggestion
-dotnet_style_predefined_type_for_member_access = true:suggestion
+dotnet_style_predefined_type_for_locals_parameters_members=true:suggestion
+dotnet_style_predefined_type_for_member_access=true:suggestion
+
+# ReSharper inspection severities
+resharper_enforce_do_while_statement_braces_highlighting=warning
+resharper_enforce_fixed_statement_braces_highlighting=warning
+resharper_enforce_foreach_statement_braces_highlighting=warning
+resharper_enforce_for_statement_braces_highlighting=warning
+resharper_enforce_if_statement_braces_highlighting=warning
+resharper_enforce_lock_statement_braces_highlighting=warning
+resharper_enforce_using_statement_braces_highlighting=warning
+resharper_enforce_while_statement_braces_highlighting=warning
