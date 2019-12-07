@@ -8,9 +8,10 @@
 
 - ### Improvements
 
-  - [#98](../../issues/98) - .NETCore 3.0 support
   - You no longer have to have installed any Microsoft Visual C++ Redistributable(s)
   - Added a lot more tracing to the injection process. This tracing can be viewed with [DbgView](https://docs.microsoft.com/en-us/sysinternals/downloads/debugview).
+  - [#98](../../issues/98) - .NETCore 3.0 support
+  - [#108](../../issues/108) - SnoopWPF on "Disabled" control state?
   - [#144](../../issues/144) - Add support for showing behaviors (added by @dezsiszabi in [#149](../../pull/149))
 
 ## 2.11.0

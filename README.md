@@ -33,6 +33,7 @@ Highlights:
 - Support for .NET Core 3.0 and 3.1 (including self contained and single file applications)
 - Rewritten injector code
 - You no longer have to have installed any Microsoft Visual C++ Redistributable(s)
+- Snooping disabled controls when holding CTRL + SHIFT works now
 
 Known issues:
 
