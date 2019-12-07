@@ -593,16 +593,21 @@ namespace Snoop
         private object lastRootTarget = null;
         private readonly Dictionary<object, string> targetToFilter = new Dictionary<object, string>();
 
-        private readonly PropertyFilterSet[] _defaultFilterSets = new PropertyFilterSet[]
+        private readonly PropertyFilterSet[] _defaultFilterSets = 
         {
             new PropertyFilterSet
             {
                 DisplayName = "Layout",
                 IsDefault = false,
                 IsEditCommand = false,
-                Properties = new string[]
+                Properties = new[]
                 {
-                    "width", "height", "actualwidth", "actualheight", "margin", "padding", "left", "top"
+                    "width", "height", "actualwidth", "actualheight", 
+                    "desiredsize",
+                    "margin", "padding", 
+                    "left", "top",
+                    "horizontalalignment", "verticalalignment",
+                    "horizontalcontentalignment", "verticalcontentalignment",
                 }
             },
             new PropertyFilterSet
@@ -610,7 +615,7 @@ namespace Snoop
                 DisplayName = "Grid/Dock",
                 IsDefault = false,
                 IsEditCommand = false,
-                Properties = new string[]
+                Properties = new[]
                 {
                     "grid", "dock"
                 }
@@ -620,7 +625,7 @@ namespace Snoop
                 DisplayName = "Color",
                 IsDefault = false,
                 IsEditCommand = false,
-                Properties = new string[]
+                Properties = new[]
                 {
                     "color", "background", "foreground", "borderbrush", "fill", "stroke"
                 }
@@ -630,9 +635,9 @@ namespace Snoop
                 DisplayName = "ItemsControl",
                 IsDefault = false,
                 IsEditCommand = false,
-                Properties = new string[]
+                Properties = new[]
                 {
-                    "items", "selected"
+                    "items", "itemssource", "selected"
                 }
             }
         };
