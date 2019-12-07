@@ -19,7 +19,7 @@
             this.Unloaded += this.HandleUnloaded;
         }
 
-        public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register("IsSelected", typeof(bool), typeof(BehaviorsView), new PropertyMetadata(default(bool), OnIsSelectedChanged));
+        public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(BehaviorsView), new PropertyMetadata(default(bool), OnIsSelectedChanged));
 
         public bool IsSelected
         {
@@ -33,7 +33,7 @@
             view.Update();
         }
 
-        public static readonly DependencyProperty RootTargetProperty = DependencyProperty.Register("RootTarget", typeof(object), typeof(BehaviorsView), new PropertyMetadata(default(object), OnRootTargetChanged));
+        public static readonly DependencyProperty RootTargetProperty = DependencyProperty.Register(nameof(RootTarget), typeof(object), typeof(BehaviorsView), new PropertyMetadata(default(object), OnRootTargetChanged));
 
         public object RootTarget
         {
@@ -47,7 +47,7 @@
             view.Update();
         }
 
-        private static readonly DependencyProperty BehaviorsProperty = DependencyProperty.Register("Behaviors", typeof(ObservableCollection<object>), typeof(BehaviorsView), new PropertyMetadata(default(ObservableCollection<object>)));
+        private static readonly DependencyProperty BehaviorsProperty = DependencyProperty.Register(nameof(Behaviors), typeof(ObservableCollection<object>), typeof(BehaviorsView), new PropertyMetadata(default(ObservableCollection<object>)));
 
         public ObservableCollection<object> Behaviors
         {
@@ -55,7 +55,7 @@
             set { this.SetValue(BehaviorsProperty, value); }
         }
 
-        private static readonly DependencyProperty SelectedBehaviorProperty = DependencyProperty.Register("SelectedBehavior", typeof(object), typeof(BehaviorsView), new PropertyMetadata(default(object)));
+        private static readonly DependencyProperty SelectedBehaviorProperty = DependencyProperty.Register(nameof(SelectedBehavior), typeof(object), typeof(BehaviorsView), new PropertyMetadata(default(object)));
 
         public object SelectedBehavior
         {
@@ -63,7 +63,7 @@
             set { this.SetValue(SelectedBehaviorProperty, value); }
         }
 
-        private static readonly DependencyPropertyKey HasBehaviorsPropertyKey = DependencyProperty.RegisterReadOnly("HasBehaviors", typeof(bool), typeof(BehaviorsView), new FrameworkPropertyMetadata(default(bool)));
+        private static readonly DependencyPropertyKey HasBehaviorsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(HasBehaviors), typeof(bool), typeof(BehaviorsView), new FrameworkPropertyMetadata(default(bool)));
         
         public static readonly DependencyProperty HasBehaviorsProperty = HasBehaviorsPropertyKey.DependencyProperty;
 
@@ -101,13 +101,7 @@
 
         private void UpdateBehaviorList(object target)
         {
-            if (target == null)
-            {
-                return;
-            }
-
-            var depObj = target as DependencyObject;
-            if (depObj != null)
+            if (target is DependencyObject depObj)
             {
                 this.AddBehaviorsFromType(depObj, "System.Windows.Interactivity.Interaction, System.Windows.Interactivity");
                 this.AddBehaviorsFromType(depObj, "Microsoft.Xaml.Behaviors.Interaction, Microsoft.Xaml.Behaviors");
@@ -118,20 +112,28 @@
         {
             var interactivityType = Type.GetType(assemblyQualifiedName, false);
 
-            if (interactivityType != null)
+            if (interactivityType == null)
             {
-                var getBehaviorsMethod = interactivityType.GetMethod("GetBehaviors", BindingFlags.Static | BindingFlags.Public);
+                return;
+            }
 
-                if (getBehaviorsMethod == null) return;
+            var getBehaviorsMethod = interactivityType.GetMethod("GetBehaviors", BindingFlags.Static | BindingFlags.Public);
 
-                var behaviorsToAdd = getBehaviorsMethod.Invoke(null, new object[] { dependencyObject }) as IEnumerable;
+            if (getBehaviorsMethod == null)
+            {
+                return;
+            }
 
-                if (behaviorsToAdd == null) return;
+            var behaviorsToAdd = getBehaviorsMethod.Invoke(null, new object[] { dependencyObject }) as IEnumerable;
 
-                foreach (object behavior in behaviorsToAdd)
-                {
-                    this.Behaviors.Add(behavior);
-                }
+            if (behaviorsToAdd == null)
+            {
+                return;
+            }
+
+            foreach (var behavior in behaviorsToAdd)
+            {
+                this.Behaviors.Add(behavior);
             }
         }
     }
