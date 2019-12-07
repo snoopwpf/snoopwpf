@@ -17,6 +17,7 @@ All other rights reserved.
 	xmlns:MethodsTabNS="clr-namespace:Snoop.MethodsTab"
     xmlns:DebugListenerNS="clr-namespace:Snoop.DebugListenerTab"
     xmlns:triggersTab="clr-namespace:Snoop.TriggersTab"
+    xmlns:behaviorsTab="clr-namespace:Snoop.BehaviorsTab"
     xmlns:windows="clr-namespace:Snoop.Windows"
     mc:Ignorable="d"
 	Icon="Snoop.ico"
@@ -306,6 +307,24 @@ All other rights reserved.
 		        <triggersTab:TriggersView RootTarget="{Binding CurrentSelection.Target}"
 		                                  IsSelected="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}" />
 		    </TabItem>
+			<TabItem Style="{x:Null}">
+				<TabItem.Header>
+					<TextBlock Style="{x:Null}" Text="Behaviors">
+						<TextBlock.ToolTip>
+							<StackPanel MaxWidth="300">
+								<TextBlock Style="{x:Null}" Text="Behaviors View"/>
+								<TextBlock
+									Style="{x:Null}"
+									Text="Lists all behaviors on currently selected object."
+									TextWrapping="Wrap"
+								/>
+							</StackPanel>
+						</TextBlock.ToolTip>
+					</TextBlock>
+				</TabItem.Header>
+				<behaviorsTab:BehaviorsView RootTarget="{Binding CurrentSelection.Target}"
+											IsSelected="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}" />
+			</TabItem>
 
 			<TabItem Style="{x:Null}">
 				<TabItem.Header>
