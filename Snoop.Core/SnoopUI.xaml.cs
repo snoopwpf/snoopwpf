@@ -357,7 +357,7 @@ namespace Snoop
 			Properties.Settings.Default.ShowDefaults = this.PropertyGrid.ShowDefaults;
 
 			// persist whether the previewer is shown by default
-			Properties.Settings.Default.ShowPreviewer = this.PreviewArea.IsActive;
+			Properties.Settings.Default.ShowPreviewer = this.PreviewArea?.IsActive == true;
 
 			// actually do the persisting
 			Properties.Settings.Default.Save();
