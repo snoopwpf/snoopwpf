@@ -57,14 +57,14 @@ namespace Snoop
         {
             get
             {
-                return this._nameValueOnly;
+                return this.nameValueOnly;
             }
             set
             {
                 this.PropertyGrid.NameValueOnly = value;
             }
         }
-        private bool _nameValueOnly = false;
+        private readonly bool nameValueOnly = false;
 
         private void HandleSnipXaml(object sender, ExecutedRoutedEventArgs e)
         {
@@ -104,12 +104,12 @@ namespace Snoop
 
         private static void HandleRootTargetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            PropertyInspector inspector = (PropertyInspector)d;
+            var inspector = (PropertyInspector)d;
 
             inspector.inspectStack.Clear();
             inspector.Target = e.NewValue;
 
-            inspector._delvePathList.Clear();
+            inspector.delvePathList.Clear();
             inspector.OnPropertyChanged(nameof(DelvePath));
             inspector.OnPropertyChanged(nameof(DelveType));
 
@@ -133,7 +133,7 @@ namespace Snoop
 
         private static void HandleTargetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            PropertyInspector inspector = (PropertyInspector)d;
+            var inspector = (PropertyInspector)d;
             inspector.OnPropertyChanged(nameof(Type));
 
             if (e.NewValue != null)
@@ -142,7 +142,7 @@ namespace Snoop
             if (inspector.lastRootTarget == inspector.RootTarget && e.OldValue != null && e.NewValue != null && inspector.checkBoxClearAfterDelve.IsChecked.HasValue && inspector.checkBoxClearAfterDelve.IsChecked.Value)
             {
                 inspector.targetToFilter[e.OldValue.GetType()] = inspector.PropertiesFilter.Text;
-                string text = string.Empty;
+                var text = string.Empty;
                 inspector.targetToFilter.TryGetValue(e.NewValue.GetType(), out text);
                 inspector.PropertiesFilter.Text = text ?? string.Empty;
             }
@@ -153,7 +153,7 @@ namespace Snoop
         {
             var delvePath = new StringBuilder(rootTargetType.Name);
 
-            foreach (var propInfo in this._delvePathList)
+            foreach (var propInfo in this.delvePathList)
             {
                 int collectionIndex;
                 if ((collectionIndex = propInfo.CollectionIndex()) >= 0)
@@ -171,9 +171,9 @@ namespace Snoop
 
         private Type GetCurrentDelveType(Type rootTargetType)
         {
-            if (this._delvePathList.Count > 0)
+            if (this.delvePathList.Count > 0)
             {
-                var lastDelveEntry = this._delvePathList.Last();
+                var lastDelveEntry = this.delvePathList.Last();
 
                 if (lastDelveEntry.Value is ISkipDelve skipDelve
                     && skipDelve.NextValue != null
@@ -190,7 +190,7 @@ namespace Snoop
                     return lastDelveEntry.PropertyType;
                 }
             }
-            else if (this._delvePathList.Count == 0)
+            else if (this.delvePathList.Count == 0)
             {
                 return rootTargetType;
             }
@@ -210,8 +210,8 @@ namespace Snoop
                     return "object is NULL";
                 }
 
-                Type rootTargetType = this.RootTarget.GetType();
-                string delvePath = this.GetCurrentDelvePath(rootTargetType);
+                var rootTargetType = this.RootTarget.GetType();
+                var delvePath = this.GetCurrentDelvePath(rootTargetType);
 
                 return delvePath;
             }
@@ -267,9 +267,9 @@ namespace Snoop
                 this.inspectStack.RemoveAt(this.inspectStack.Count - 2);
                 this.inspectStack.RemoveAt(this.inspectStack.Count - 2);
 
-                if (this._delvePathList.Count > 0)
+                if (this.delvePathList.Count > 0)
                 {
-                    this._delvePathList.RemoveAt(this._delvePathList.Count - 1);
+                    this.delvePathList.RemoveAt(this.delvePathList.Count - 1);
                     this.OnPropertyChanged(nameof(this.DelvePath));
                     this.OnPropertyChanged(nameof(this.DelveType));
                 }
@@ -286,7 +286,7 @@ namespace Snoop
 
         private object GetRealTarget(object target)
         {
-            ISkipDelve skipDelve = target as ISkipDelve;
+            var skipDelve = target as ISkipDelve;
             if (skipDelve != null)
             {
                 return skipDelve.NextValue;
@@ -306,7 +306,7 @@ namespace Snoop
                 // and if it's equal to the current (original) target, we won't raise the property-changed event,
                 // and therefore, we don't add to our delveStack (the real one).
 
-                this._delvePathList.Add((PropertyInformation)e.Parameter);
+                this.delvePathList.Add((PropertyInformation)e.Parameter);
                 this.OnPropertyChanged(nameof(this.DelvePath));
                 this.OnPropertyChanged(nameof(this.DelveType));
             }
@@ -383,7 +383,7 @@ namespace Snoop
         {
             get { return this.propertyFilter; }
         }
-        private PropertyFilter propertyFilter = new PropertyFilter(string.Empty, true);
+        private readonly PropertyFilter propertyFilter = new PropertyFilter(string.Empty, true);
 
         public string StringFilter
         {
@@ -484,30 +484,30 @@ namespace Snoop
         {
             get
             {
-                if (this._filterSets == null)
+                if (this.filterSets == null)
                 {
                     var ret = new List<PropertyFilterSet>();
 
                     try
                     {
                         var userFilters = Properties.Settings.Default.PropertyFilterSets;
-                        ret.AddRange(userFilters ?? this._defaultFilterSets);
+                        ret.AddRange(userFilters ?? this.defaultFilterSets);
                     }
                     catch (Exception exception)
                     {
                         ErrorDialog.ShowDialog(exception, "Error reading user filters from settings. Using default filters.", exceptionAlreadyHandled: true);
                         ret.Clear();
-                        ret.AddRange(this._defaultFilterSets);
+                        ret.AddRange(this.defaultFilterSets);
                     }
 
-                    this._filterSets = ret.ToArray();
+                    this.filterSets = ret.ToArray();
                 }
-                return this._filterSets;
+                return this.filterSets;
             }
             set
             {
-                this._filterSets = value;
-                Properties.Settings.Default.PropertyFilterSets = this._filterSets;
+                this.filterSets = value;
+                Properties.Settings.Default.PropertyFilterSets = this.filterSets;
                 Properties.Settings.Default.Save();
             }
         }
@@ -555,7 +555,7 @@ namespace Snoop
         public PropertyFilterSet[] CopyFilterSets(PropertyFilterSet[] source)
         {
             var ret = new List<PropertyFilterSet>();
-            foreach (PropertyFilterSet src in source)
+            foreach (var src in source)
             {
                 ret.Add
                 (
@@ -578,22 +578,22 @@ namespace Snoop
         /// </summary>
         private PropertyFilterSet[] CleansFilterPropertyNames(IEnumerable<PropertyFilterSet> collection)
         {
-            foreach (PropertyFilterSet filterItem in collection)
+            foreach (var filterItem in collection)
             {
                 filterItem.Properties = filterItem.Properties.Select(s => s.ToLower().Trim()).ToArray();
             }
             return collection.ToArray();
         }
 
-        private List<object> inspectStack = new List<object>();
-        private PropertyFilterSet[] _filterSets;
-        private List<PropertyInformation> _delvePathList = new List<PropertyInformation>();
+        private readonly List<object> inspectStack = new List<object>();
+        private PropertyFilterSet[] filterSets;
+        private readonly List<PropertyInformation> delvePathList = new List<PropertyInformation>();
 
-        private Inspector inspector;
-        private object lastRootTarget = null;
+        private readonly Inspector inspector;
+        private object lastRootTarget;
         private readonly Dictionary<object, string> targetToFilter = new Dictionary<object, string>();
 
-        private readonly PropertyFilterSet[] _defaultFilterSets = 
+        private readonly PropertyFilterSet[] defaultFilterSets = 
         {
             new PropertyFilterSet
             {
