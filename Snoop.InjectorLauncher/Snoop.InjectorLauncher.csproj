@@ -26,10 +26,6 @@
     <Compile Include="..\Snoop.Core\NativeMethods.cs" />
   </ItemGroup>
   
-  <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2019.*" />
-  </ItemGroup>
-
   <Target Name="Compilex64" AfterTargets="Build">
     <Message Text="Building injector launcher for x64..." Importance="High" />
     <MSBuild Condition="'$(PlatformTarget)' == 'x86'" Projects="$(MSBuildProjectFile)" Targets="Restore;Build" Properties="Configuration=$(Configuration);PlatformTarget=x64" RunEachTargetSeparately="false" />

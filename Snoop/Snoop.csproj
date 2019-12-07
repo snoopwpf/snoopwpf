@@ -28,10 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2019.*" />
-  </ItemGroup>
-
-  <ItemGroup>
      <ProjectReference Include="../Snoop.Core/Snoop.Core.csproj" /> 
   </ItemGroup>
 </Project>
