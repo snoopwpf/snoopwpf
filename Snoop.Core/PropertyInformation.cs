@@ -718,6 +718,11 @@ namespace Snoop
 		{
 			var properties = new List<PropertyInformation>();
 
+            if (obj is null)
+            {
+                return properties;
+            }
+
 			// get the properties
 			var propertyDescriptors = GetAllProperties(obj, getAllPropertiesAttributeFilter);
 
@@ -764,7 +769,8 @@ namespace Snoop
         /// <returns></returns>
 		private static IList<PropertyInformation> GetExtendedProperties(object obj)
 		{
-            if (ResourceKeyCache.Contains(obj) == false)
+            if (obj is null
+                || ResourceKeyCache.Contains(obj) == false)
             {
                 return null;
             }
