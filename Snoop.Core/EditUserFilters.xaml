@@ -4,15 +4,16 @@ This source is subject to the Microsoft Public License (Ms-PL).
 Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 All other rights reserved.
 -->
-<Window
+<windows:SnoopBaseWindow
 	x:Class="Snoop.EditUserFilters"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:converters="clr-namespace:Snoop.Converters"
+	xmlns:windows="clr-namespace:Snoop.Windows"
 	Title="Edit Filter Sets"
 	Width="500"
 	Height="300"
->
+    x:Name="editUserFilters">
 	<Window.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
@@ -47,6 +48,7 @@ All other rights reserved.
 			Grid.Column="1"
 		    Style="{x:Null}"
 			VerticalAlignment="Center"
+            IsReadOnly="{Binding Path=SelectedItem.IsReadOnly, ElementName=filterSetList}"
 			Text="{Binding Path=SelectedItem.DisplayName, ElementName=filterSetList}"
 		/>
 		<TextBlock
@@ -63,6 +65,7 @@ All other rights reserved.
 			Style="{x:Null}"
 			VerticalAlignment="Center"
 			Margin="0,4,0,0"
+            IsReadOnly="{Binding Path=SelectedItem.IsReadOnly, ElementName=filterSetList}"
 			Text="{Binding Path=SelectedItem.Properties, ElementName=filterSetList, Converter={x:Static converters:CsvStringToArrayConverter.Default}}"
 		/>
 
@@ -71,7 +74,7 @@ All other rights reserved.
 		    Style="{x:Null}"
 			Grid.Row="0"
 			Grid.ColumnSpan="2"
-			ItemsSource="{Binding ItemsSource}"
+			ItemsSource="{Binding ItemsSource, ElementName=editUserFilters}"
 			SelectionChanged="SelectionChangedHandler"
 			Margin="0,0,0,10"
 		>
@@ -144,7 +147,7 @@ All other rights reserved.
 				Margin="0,10,0,0"
 				Click="AddHandler"
 			>
-				<TextBlock Style="{x:Null}" Text="Add"/>
+				<TextBlock Style="{x:Null}" Text="Add new"/>
 			</Button>
 			<Button
 				x:Name="DeleteItem"
@@ -157,4 +160,4 @@ All other rights reserved.
 			</Button>
 		</StackPanel>
 	</Grid>
-</Window>
+</windows:SnoopBaseWindow>

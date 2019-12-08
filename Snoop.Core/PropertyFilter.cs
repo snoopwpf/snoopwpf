@@ -6,6 +6,8 @@
 namespace Snoop
 {
     using System;
+    using System.Diagnostics;
+    using System.Runtime.Serialization;
     using System.Windows;
     using System.Text.RegularExpressions;
 
@@ -102,6 +104,7 @@ namespace Snoop
 		}
 	}
 
+	[DebuggerDisplay("{" + nameof(PropertyFilterSet.DisplayName) + "}")]
 	[Serializable]
 	public class PropertyFilterSet
 	{
@@ -110,6 +113,9 @@ namespace Snoop
         public bool IsDefault { get; set; }
 
         public bool IsEditCommand { get; set; }
+
+		[IgnoreDataMember]
+        public bool IsReadOnly { get; set; }
 
         public string[] Properties { get; set; }
 
@@ -125,5 +131,18 @@ namespace Snoop
 
 			return false;
 		}
-	}
+
+        public PropertyFilterSet Clone()
+        {
+            var src = this;
+            return new PropertyFilterSet
+            {
+                DisplayName = src.DisplayName,
+                IsDefault = src.IsDefault,
+                IsEditCommand = src.IsEditCommand,
+				IsReadOnly = src.IsReadOnly,
+                Properties = (string[])src.Properties.Clone()
+            };
+        }
+    }
 }

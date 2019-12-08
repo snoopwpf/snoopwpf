@@ -29,8 +29,6 @@ namespace Snoop
 
         public PropertyInspector()
         {
-            this.propertyFilter.SelectedFilterSet = this.AllFilterSets[0];
-
             this.InitializeComponent();
 
             this.inspector = this.PropertyGrid;
@@ -449,7 +447,7 @@ namespace Snoop
         /// </summary>
         public PropertyFilterSet SelectedFilterSet
         {
-            get { return this.propertyFilter.SelectedFilterSet; }
+            get { return this.propertyFilter.SelectedFilterSet ?? this.AllFilterSets[0]; }
             set
             {
                 this.propertyFilter.SelectedFilterSet = value;
@@ -462,32 +460,31 @@ namespace Snoop
 
                 if (value.IsEditCommand)
                 {
-                    var dlg = new EditUserFilters { UserFilters = this.CopyFilterSets(this.UserFilterSets) };
+                    var dlg = new EditUserFilters { UserFilters = this.CopyFilterSets(this.defaultFilterSets.ToList().Concat(this.UserFilterSets)) };
 
                     var res = dlg.ShowDialogEx(this);
+
                     if (res.GetValueOrDefault())
                     {
-                        // take the adjusted values from the dialog, setter will SAVE them to user properties
-                        this.UserFilterSets = this.CleansFilterPropertyNames(dlg.ItemsSource);
+                        // take the adjusted values from the dialog
+                        this.UserFilterSets = CleanFiltersForUserFilters(dlg.ItemsSource);
+
+                        Properties.Settings.Default.UserDefinedPropertyFilterSets = this.userFilterSets;
+                        Properties.Settings.Default.Save();
+
+                        this.SelectedFilterSet = null;
+                        this.allFilterSets = null;
+
                         // trigger the UI to re-bind to the collection, so user sees changes they just made
                         this.OnPropertyChanged(nameof(this.AllFilterSets));
                     }
-
-                    // now that we're out of the dialog, set current selection back to "(default)"
-                    this.Dispatcher.BeginInvoke(DispatcherPriority.Background, (DispatcherOperationCallback)delegate
-                    {
-                        // couldnt get it working by setting SelectedFilterSet directly
-                        // using the Index to get us back to the first item in the list
-                        this.FilterSetCombo.SelectedIndex = 0;
-                        //SelectedFilterSet = AllFilterSets[0];
-                        return null;
-                    }, null);
                 }
                 else
                 {
                     this.inspector.Filter = this.propertyFilter;
-                    this.OnPropertyChanged(nameof(this.SelectedFilterSet));
                 }
+
+                this.OnPropertyChanged(nameof(this.SelectedFilterSet));
             }
         }
 
@@ -499,31 +496,33 @@ namespace Snoop
         {
             get
             {
-                if (this.filterSets == null)
+                if (this.userFilterSets == null)
                 {
                     var ret = new List<PropertyFilterSet>();
 
                     try
                     {
-                        var userFilters = Properties.Settings.Default.PropertyFilterSets;
-                        ret.AddRange(userFilters ?? this.defaultFilterSets);
+                        var userFilters = Properties.Settings.Default.UserDefinedPropertyFilterSets;
+
+                        if (userFilters != null)
+                        {
+                            ret.AddRange(userFilters);
+                        }
                     }
                     catch (Exception exception)
                     {
                         ErrorDialog.ShowDialog(exception, "Error reading user filters from settings. Using default filters.", exceptionAlreadyHandled: true);
                         ret.Clear();
-                        ret.AddRange(this.defaultFilterSets);
                     }
 
-                    this.filterSets = ret.ToArray();
+                    this.userFilterSets = ret.ToArray();
                 }
-                return this.filterSets;
+                return this.userFilterSets;
             }
+
             set
             {
-                this.filterSets = value;
-                Properties.Settings.Default.PropertyFilterSets = this.filterSets;
-                Properties.Settings.Default.Save();
+                this.userFilterSets = value;
             }
         }
 
@@ -536,7 +535,13 @@ namespace Snoop
         {
             get
             {
-                var ret = new List<PropertyFilterSet>(this.UserFilterSets);
+                if (this.allFilterSets != null)
+                {
+                    return this.allFilterSets;
+                }
+
+                var ret = new List<PropertyFilterSet>(this.defaultFilterSets);
+                ret.AddRange(this.UserFilterSets);
 
                 // now add the "(Default)" and "Edit Filters..." filters for the ComboBox
                 ret.Insert
@@ -558,7 +563,10 @@ namespace Snoop
                         IsEditCommand = true,
                     }
                 );
-                return ret.ToArray();
+
+                this.allFilterSets = ret.ToArray();
+
+                return this.allFilterSets;
             }
         }
 
@@ -567,54 +575,40 @@ namespace Snoop
         /// This is used when heading into the Edit dialog, so the user is editing a copy of the
         /// filters, in case they cancel the dialog - we dont want to alter their live collection.
         /// </summary>
-        public PropertyFilterSet[] CopyFilterSets(PropertyFilterSet[] source)
+        public PropertyFilterSet[] CopyFilterSets(IEnumerable<PropertyFilterSet> source)
         {
-            var ret = new List<PropertyFilterSet>();
-            foreach (var src in source)
-            {
-                ret.Add
-                (
-                    new PropertyFilterSet
-                    {
-                        DisplayName = src.DisplayName,
-                        IsDefault = src.IsDefault,
-                        IsEditCommand = src.IsEditCommand,
-                        Properties = (string[])src.Properties.Clone()
-                    }
-                );
-            }
-
-            return ret.ToArray();
+            return source.Select(x => x.Clone()).ToArray();
         }
 
         /// <summary>
         /// Cleanse the property names in each filter in the collection.
         /// This includes removing spaces from each one, and making them all lower case
         /// </summary>
-        private PropertyFilterSet[] CleansFilterPropertyNames(IEnumerable<PropertyFilterSet> collection)
+        private static PropertyFilterSet[] CleanFiltersForUserFilters(ICollection<PropertyFilterSet> collection)
         {
             foreach (var filterItem in collection)
             {
                 filterItem.Properties = filterItem.Properties.Select(s => s.ToLower().Trim()).ToArray();
             }
-            return collection.ToArray();
+            return collection.Where(x => x.IsReadOnly == false).ToArray();
         }
 
         private readonly List<object> inspectStack = new List<object>();
-        private PropertyFilterSet[] filterSets;
+        private PropertyFilterSet[] userFilterSets;
         private readonly List<PropertyInformation> delvePathList = new List<PropertyInformation>();
 
         private readonly Inspector inspector;
         private object lastRootTarget;
         private readonly Dictionary<object, string> targetToFilter = new Dictionary<object, string>();
 
+        private PropertyFilterSet[] allFilterSets;
+
         private readonly PropertyFilterSet[] defaultFilterSets = 
         {
             new PropertyFilterSet
             {
                 DisplayName = "Layout",
-                IsDefault = false,
-                IsEditCommand = false,
+                IsReadOnly = true,
                 Properties = new[]
                 {
                     "width", "height", "actualwidth", "actualheight", 
@@ -628,8 +622,7 @@ namespace Snoop
             new PropertyFilterSet
             {
                 DisplayName = "Grid/Dock",
-                IsDefault = false,
-                IsEditCommand = false,
+                IsReadOnly = true,
                 Properties = new[]
                 {
                     "grid", "dock"
@@ -638,8 +631,7 @@ namespace Snoop
             new PropertyFilterSet
             {
                 DisplayName = "Color",
-                IsDefault = false,
-                IsEditCommand = false,
+                IsReadOnly = true,
                 Properties = new[]
                 {
                     "color", "background", "foreground", "borderbrush", "fill", "stroke"
@@ -648,8 +640,7 @@ namespace Snoop
             new PropertyFilterSet
             {
                 DisplayName = "ItemsControl",
-                IsDefault = false,
-                IsEditCommand = false,
+                IsReadOnly = true,
                 Properties = new[]
                 {
                     "items", "itemssource", "selected"
