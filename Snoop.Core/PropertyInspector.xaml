@@ -24,7 +24,7 @@ All other rights reserved.
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
             <DataTemplate x:Key="stylelessTextBlockDataTemplate">
-                <TextBlock Style="{x:Null}" Text="{Binding DisplayName}"/>
+                <TextBlock Style="{x:Null}" Margin="0" Padding="0" Text="{Binding DisplayName}"/>
             </DataTemplate>
         </ResourceDictionary>
     </Grid.Resources>
@@ -117,7 +117,7 @@ All other rights reserved.
 			Width="100"
 			HorizontalAlignment="Right"
 			Margin="0,0,40,2"
-			FontSize="10.667"
+            Padding="4 1 4 1"
 			ItemsSource="{Binding Path=AllFilterSets, ElementName=propertyInspector}"  
 			SelectedItem="{Binding Path=SelectedFilterSet, ElementName=propertyInspector, Mode=TwoWay}"
 			ItemTemplate="{StaticResource stylelessTextBlockDataTemplate}"
