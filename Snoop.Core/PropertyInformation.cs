@@ -699,7 +699,7 @@ namespace Snoop
 				this.valueSource = DependencyPropertyHelper.GetValueSource(d, dp);
 			}
 
-			this.OnPropertyChanged("IsLocallySet");
+            this.OnPropertyChanged("IsLocallySet");
 			this.OnPropertyChanged("IsInvalidBinding");
 			this.OnPropertyChanged("StringValue");
 			this.OnPropertyChanged("DescriptiveValue"); 
@@ -711,53 +711,50 @@ namespace Snoop
 
 		public static List<PropertyInformation> GetProperties(object obj)
 		{
-			return PropertyInformation.GetProperties(obj, new PertinentPropertyFilter(obj).Filter);
+			return PropertyInformation.GetProperties(obj, PertinentPropertyFilter.Filter);
 		}
 
-		public static List<PropertyInformation> GetProperties(object obj, Predicate<PropertyDescriptor> filter)
+		public static List<PropertyInformation> GetProperties(object obj, Func<object, PropertyDescriptor, bool> filter)
 		{
-			List<PropertyInformation> props = new List<PropertyInformation>();
-
+			var properties = new List<PropertyInformation>();
 
 			// get the properties
-			List<PropertyDescriptor> propertyDescriptors = GetAllProperties(obj, new Attribute[] { new PropertyFilterAttribute(PropertyFilterOptions.All) });
-
+			var propertyDescriptors = GetAllProperties(obj, getAllPropertiesAttributeFilter);
 
 			// filter the properties
-			foreach (PropertyDescriptor property in propertyDescriptors)
+			foreach (var property in propertyDescriptors)
 			{
-				if (filter(property))
+				if (filter(obj, property))
 				{
-					PropertyInformation prop = new PropertyInformation(obj, property, property.Name, property.DisplayName);
-					props.Add(prop);
+					var prop = new PropertyInformation(obj, property, property.Name, property.DisplayName);
+					properties.Add(prop);
 				}
 			}
 
             //delve path. also, issue 4919
             var extendedProps = GetExtendedProperties(obj);
-            props.AddRange(extendedProps);
+            if (extendedProps != null)
+            {
+                properties.AddRange(extendedProps);
+            }
 
-
-			// if the object is a collection, add the items in the collection as properties
-			ICollection collection = obj as ICollection;
-			int index = 0;
-			if (collection != null)
+            // if the object is a collection, add the items in the collection as properties
+            if (obj is ICollection collection)
 			{
-				foreach (object item in collection)
+                var index = 0;
+				foreach (var item in collection)
 				{
-					PropertyInformation info = new PropertyInformation(item, collection, "this[" + index + "]");
+					var info = new PropertyInformation(item, collection, "this[" + index + "]");
 					index++;
 					info.Value = item;
-					props.Add(info);
+					properties.Add(info);
 				}
 			}
 
-
 			// sort the properties
-			props.Sort();
+			properties.Sort();
 
-
-			return props;
+            return properties;
 		}
 
         /// <summary>
@@ -767,18 +764,23 @@ namespace Snoop
         /// <returns></returns>
 		private static IList<PropertyInformation> GetExtendedProperties(object obj)
 		{
-			List<PropertyInformation> props = new List<PropertyInformation>();
+            if (obj is null 
+                || ResourceKeyCache.Contains(obj) == false)
+            {
+                return null;
+            }
 
-			if (obj != null && ResourceKeyCache.Contains(obj))
-			{
-				string key = ResourceKeyCache.GetKey(obj);
-				PropertyInformation prop = new PropertyInformation(key, new object(), "x:Key", true);
-				prop.Value = key;
-				props.Add(prop);
-			}
+            var key = ResourceKeyCache.GetKey(obj);
+            var prop = new PropertyInformation(key, new object(), "x:Key", true)
+            {
+                Value = key
+            };
+            return new List<PropertyInformation>
+            {
+                prop
+            };
 
-			return props;
-		}
+        }
 
 		private static List<PropertyDescriptor> GetAllProperties(object obj, Attribute[] attributes)
 		{
@@ -870,6 +872,7 @@ namespace Snoop
 
 		private bool isRunning = false;
 		private bool ignoreUpdate = false;
+        private static readonly Attribute[] getAllPropertiesAttributeFilter = { new PropertyFilterAttribute(PropertyFilterOptions.All) };
 
         public bool IsCollection()
         {

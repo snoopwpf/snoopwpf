@@ -3,90 +3,86 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-using System;
-using System.ComponentModel;
-using System.Windows;
-
 namespace Snoop
 {
-	public class PertinentPropertyFilter
-	{
-		public PertinentPropertyFilter(object target)
-		{
-			this.target = target;
-			this.element = this.target as FrameworkElement;
-		}
+    using System.ComponentModel;
+    using System.Windows;
 
+    public static class PertinentPropertyFilter
+    {
+        public static bool Filter(object target, PropertyDescriptor property)
+        {
+            var frameworkElement = target as FrameworkElement;
 
-		public bool Filter(PropertyDescriptor property)
-		{
-			if (this.element == null)
+            if (frameworkElement == null)
             {
                 return true;
             }
 
             // Filter the 20 stylistic set properties that I've never seen used.
-			if (property.Name.Contains("Typography.StylisticSet"))
+            if (property.Name.StartsWith("Typography.StylisticSet"))
             {
                 return false;
             }
 
-            AttachedPropertyBrowsableForChildrenAttribute attachedPropertyForChildren = (AttachedPropertyBrowsableForChildrenAttribute)property.Attributes[typeof(AttachedPropertyBrowsableForChildrenAttribute)];
-			AttachedPropertyBrowsableForTypeAttribute attachedPropertyForType = (AttachedPropertyBrowsableForTypeAttribute)property.Attributes[typeof(AttachedPropertyBrowsableForTypeAttribute)];
-			AttachedPropertyBrowsableWhenAttributePresentAttribute attachedPropertyForAttribute = (AttachedPropertyBrowsableWhenAttributePresentAttribute)property.Attributes[typeof(AttachedPropertyBrowsableWhenAttributePresentAttribute)];
-
-			if (attachedPropertyForChildren != null)
-			{
-				DependencyPropertyDescriptor dpd = DependencyPropertyDescriptor.FromProperty(property);
-				if (dpd == null)
+            var attachedPropertyForChildren = (AttachedPropertyBrowsableForChildrenAttribute)property.Attributes[typeof(AttachedPropertyBrowsableForChildrenAttribute)];
+            
+            if (attachedPropertyForChildren != null)
+            {
+                var dpd = DependencyPropertyDescriptor.FromProperty(property);
+                if (dpd == null)
                 {
                     return false;
                 }
 
-                FrameworkElement element = this.element;
-				do
-				{
-					element = element.Parent as FrameworkElement;
-					if (element != null && dpd.DependencyProperty.OwnerType.IsInstanceOfType(element))
+                var currentElement = frameworkElement;
+                do
+                {
+                    currentElement = currentElement.Parent as FrameworkElement;
+                    if (currentElement != null
+                        && dpd.DependencyProperty.OwnerType.IsInstanceOfType(currentElement))
+                    {
+                        return true;
+                    }
+                } while (attachedPropertyForChildren.IncludeDescendants && currentElement != null);
+
+                return false;
+            }
+
+            var attachedPropertyForType = (AttachedPropertyBrowsableForTypeAttribute)property.Attributes[typeof(AttachedPropertyBrowsableForTypeAttribute)];
+
+            if (attachedPropertyForType != null)
+            {
+                // when using [AttachedPropertyBrowsableForType(typeof(IMyInterface))] and IMyInterface is not a DependencyObject, Snoop crashes.
+                // see http://snoopwpf.codeplex.com/workitem/6712
+
+                if (typeof(DependencyObject).IsAssignableFrom(attachedPropertyForType.TargetType))
+                {
+                    var doType = DependencyObjectType.FromSystemType(attachedPropertyForType.TargetType);
+                    if (doType != null
+                        && doType.IsInstanceOfType(frameworkElement))
                     {
                         return true;
                     }
                 }
-				while (attachedPropertyForChildren.IncludeDescendants && element != null);
-				return false;
-			}
-			else if (attachedPropertyForType != null)
-			{
-				// when using [AttachedPropertyBrowsableForType(typeof(IMyInterface))] and IMyInterface is not a DependencyObject, Snoop crashes.
-				// see http://snoopwpf.codeplex.com/workitem/6712
 
-				if (attachedPropertyForType.TargetType.IsSubclassOf(typeof(DependencyObject)))
-				{
-					DependencyObjectType doType = DependencyObjectType.FromSystemType(attachedPropertyForType.TargetType);
-					if (doType != null && doType.IsInstanceOfType(this.element))
-                    {
-                        return true;
-                    }
-                }
+                return false;
+            }
 
-				return false;
-			}
-			else if (attachedPropertyForAttribute != null)
-			{
-				Attribute dependentAttribute = TypeDescriptor.GetAttributes(this.target)[attachedPropertyForAttribute.AttributeType];
-				if (dependentAttribute != null)
+            var attachedPropertyForAttribute = (AttachedPropertyBrowsableWhenAttributePresentAttribute)property.Attributes[typeof(AttachedPropertyBrowsableWhenAttributePresentAttribute)];
+
+            if (attachedPropertyForAttribute != null)
+            {
+                var dependentAttribute = TypeDescriptor.GetAttributes(target)[attachedPropertyForAttribute.AttributeType];
+                if (dependentAttribute != null)
                 {
                     return !dependentAttribute.IsDefaultAttribute();
                 }
 
                 return false;
-			}
+            }
 
-			return true;
-		}
-
-
-		private object target;
-		private FrameworkElement element;
-	}
+            return true;
+        }
+    }
 }
