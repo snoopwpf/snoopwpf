@@ -56,7 +56,6 @@
 				</ComboBox>
 			</StackPanel>
 
-
 			<StackPanel Orientation="Horizontal" Margin="10,0,10,10" Grid.Row="1" Grid.ColumnSpan="2">
 				<Button Name="buttonClear" Style="{x:Null}" Width="75" Height="25" HorizontalAlignment="Left" Click="buttonClear_Click">
 					<TextBlock Style="{x:Null}" Text="Clear Text"/>
@@ -71,6 +70,6 @@
 			</StackPanel>
 
 		</Grid>
-		<TextBox Name="textBoxDebugContent" Style="{x:Null}" IsReadOnly="True" Grid.Row="1" Margin="10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
+		<TextBox Name="textBoxDebugContent" Style="{x:Null}" IsReadOnly="True" IsReadOnlyCaretVisible="True" Grid.Row="1" Margin="10" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" />
 	</Grid>
 </UserControl>

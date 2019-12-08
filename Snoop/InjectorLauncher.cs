@@ -29,7 +29,7 @@ namespace Snoop
             {
                 throw new FileNotFoundException("The generated temporary settings file could not be found.", settingsFile);
             }
-            
+
             try
             {
                 var location = Assembly.GetExecutingAssembly().Location;

@@ -58,13 +58,19 @@ namespace Snoop.DebugListenerTab
 		}
 
 		private void DoWrite(string str)
-		{
+        {
+            var shouldScrollToEnd = this.textBoxDebugContent.SelectionLength == 0
+                                    && this.textBoxDebugContent.SelectionStart == this.textBoxDebugContent.Text.Length;
 			this.textBoxDebugContent.AppendText(str + Environment.NewLine);
-			this.textBoxDebugContent.ScrollToEnd();
-		}
 
+            if (shouldScrollToEnd)
+            {
+                this.textBoxDebugContent.ScrollToEnd();
+                this.textBoxDebugContent.SelectionStart = this.textBoxDebugContent.Text.Length;
+            }
+        }
 
-		private void buttonClear_Click(object sender, RoutedEventArgs e)
+        private void buttonClear_Click(object sender, RoutedEventArgs e)
 		{
 			this.textBoxDebugContent.Clear();
             allText = new StringBuilder();
