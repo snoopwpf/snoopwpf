@@ -764,8 +764,7 @@ namespace Snoop
         /// <returns></returns>
 		private static IList<PropertyInformation> GetExtendedProperties(object obj)
 		{
-            if (obj is null 
-                || ResourceKeyCache.Contains(obj) == false)
+            if (ResourceKeyCache.Contains(obj) == false)
             {
                 return null;
             }
