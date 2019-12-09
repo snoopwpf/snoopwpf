@@ -279,7 +279,7 @@ All other rights reserved.
 					</GridViewColumn.CellTemplate>
 				</GridViewColumn>
 
-				<GridViewColumn Width="175" CellTemplateSelector="{StaticResource EditorSelector}">
+				<GridViewColumn Width="250" CellTemplateSelector="{StaticResource EditorSelector}">
 					<GridViewColumn.Header>
 						<TextBlock Style="{x:Null}" Text="Value">
 							<TextBlock.ToolTip>
