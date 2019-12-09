@@ -6,12 +6,21 @@
 namespace Snoop
 {
     using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.Runtime.Serialization;
     using System.Windows;
     using System.Text.RegularExpressions;
+    using System.Windows.Controls;
+    using System.Windows.Documents;
+    using System.Windows.Input;
+    using System.Windows.Markup;
+    using System.Windows.Media;
+    using System.Windows.Navigation;
 
-	public class PropertyFilter
+    public class PropertyFilter
 	{
 		private string filterString;
         private bool hasFilterString;
@@ -44,15 +53,23 @@ namespace Snoop
 
 		public bool ShowDefaults { get; set; }
 
+        public bool ShowPropertiesFromUncommonTypes { get; set; }
+
         public PropertyFilterSet SelectedFilterSet { get; set; }
 
 		public bool IsPropertyFilterSet => this.SelectedFilterSet?.Properties != null;
 
         public bool Show(PropertyInformation property)
 		{
+            if (this.ShowPropertiesFromUncommonTypes == false
+                && IsUncommonProperty(property))
+            {
+                return false;
+            }
+
 			// use a regular expression if we have one and we also have a filter string.
-			if (this.filterRegex != null 
-                && this.hasFilterString)
+			if (this.hasFilterString
+                && this.filterRegex != null)
 			{
 				return this.filterRegex.IsMatch(property.DisplayName) 
                        || (property.Property != null 
@@ -102,7 +119,47 @@ namespace Snoop
                 }
             }
 		}
-	}
+
+        private static bool IsUncommonProperty(PropertyInformation property)
+        {
+            if (property.Property is null)
+            {
+                return false;
+            }
+
+            if (uncommonPropertyNames.Contains(property.Property.Name))
+            {
+                return true;
+            }
+
+            if (property.DependencyProperty is null)
+            {
+                return false;
+            }
+
+            return uncommonTypes.Contains(property.DependencyProperty.OwnerType);
+        }
+
+        private static readonly List<Type> uncommonTypes = new List<Type>
+        {
+            typeof(Block),
+            typeof(ContextMenuService),
+            typeof(DesignerProperties),
+            typeof(InputLanguageManager),
+            typeof(InputMethod),
+            typeof(NameScope),
+            typeof(NavigationService),
+            typeof(NumberSubstitution),
+            typeof(ToolTipService),
+            typeof(Typography),
+            typeof(XmlAttributeProperties)
+        };
+
+        private static readonly List<string> uncommonPropertyNames = new List<string>
+        {
+            "Binding.XmlNamespaceManager"
+        };
+    }
 
 	[DebuggerDisplay("{" + nameof(PropertyFilterSet.DisplayName) + "}")]
 	[Serializable]

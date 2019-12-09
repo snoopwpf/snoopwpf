@@ -21,9 +21,7 @@ All other rights reserved.
                 <ResourceDictionary Source="ValueEditors\EditorTemplates.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
-            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-
-            <DataTemplate x:Key="stylelessTextBlockDataTemplate">
+            <DataTemplate x:Key="stylelessTextBlockDataTemplate" DataType="my:PropertyFilterSet">
                 <TextBlock Style="{x:Null}" Margin="0" Padding="0" Text="{Binding DisplayName}"/>
             </DataTemplate>
         </ResourceDictionary>
@@ -53,46 +51,33 @@ All other rights reserved.
         </TextBlock.ToolTip>
     </TextBlock>
 
-    <Grid Grid.Row="2">
+    <StackPanel Grid.Row="2"
+                Orientation="Horizontal"
+                Margin="0,0,0,2">
         <TextBox
 			x:Name="PropertiesFilter"
             Style="{x:Null}"
 			Text="{Binding ElementName=propertyInspector, Path=StringFilter, UpdateSourceTrigger=PropertyChanged}"
-			Margin="0,0,260,2"
-			MinHeight="0"
-			MinWidth="0"
+			Margin="0,0,2,0"
+			Width="400"
+            MaxWidth="400"
 		>
             <TextBox.ToolTip>
                 <TextBlock Style="{x:Null}" Text="Type in this text box to filter properties"/>
             </TextBox.ToolTip>
         </TextBox>
-        <CheckBox Name="checkBoxClearAfterDelve" Content="Clear after delve" HorizontalAlignment="Right" Margin="0,3,150,0" />
-        <ToggleButton
-            Style="{x:Null}"
-			IsChecked="{Binding ElementName=propertyInspector, Path=ShowDefaults}"
-			Width="18"
-			Height="18"
-			HorizontalAlignment="Right"
-			Margin="0,1,0,2"
-		>
-            <Path Width="8.84375" Height="8.00122" Canvas.Left="1" Canvas.Top="1" Stretch="Fill" Fill="#FF000000" Data="F1 M 8.21126,1.8226C 8.69925,2.14267 9.09334,2.56876 9.39351,3.10086C 9.69367,3.63293 9.84375,4.2843 9.84375,5.05496C 9.84375,5.73141 9.70968,6.32056 9.44152,6.82242C 9.17336,7.32434 8.81763,7.73474 8.37432,8.05362C 7.92498,8.37369 7.41403,8.61166 6.84148,8.76749C 6.26893,8.92331 5.6698,9.00122 5.0441,9.00122L 1.01268,9.00122L 1.01268,8.56094C 1.13347,8.55734 1.28446,8.54614 1.46565,8.52744C 1.64684,8.5087 1.76763,8.48605 1.82802,8.45947C 1.96331,8.40393 2.05753,8.32813 2.11068,8.23209C 2.16382,8.13608 2.1904,8.02039 2.1904,7.8851L 2.1904,2.21213C 2.1904,2.08411 2.16564,1.96841 2.11611,1.86514C 2.06659,1.76187 1.97056,1.67822 1.82802,1.61423C 1.68428,1.5502 1.53209,1.50699 1.37143,1.48465C 1.21078,1.46231 1.08697,1.44751 1,1.44028L 1,1L 5.2579,1C 5.71208,1 6.19796,1.05826 6.71556,1.17484C 7.23315,1.29138 7.73171,1.50732 8.21126,1.8226 Z M 7.00274,7.59338C 7.18392,7.28903 7.31619,6.92603 7.39954,6.50449C 7.48288,6.08289 7.52455,5.5979 7.52455,5.04953C 7.52455,4.51199 7.46899,4.02219 7.35786,3.58008C 7.24673,3.13797 7.08367,2.76053 6.86866,2.44766C 6.65365,2.1348 6.38579,1.89261 6.06509,1.7211C 5.74439,1.54959 5.3805,1.46384 4.97344,1.46384C 4.84419,1.46384 4.69682,1.46655 4.53134,1.47195C 4.36586,1.47742 4.24265,1.48254 4.16172,1.4874L 4.16172,7.64597C 4.16172,7.78244 4.17923,7.90323 4.21426,8.0083C 4.24929,8.1134 4.30969,8.20581 4.39545,8.28552C 4.48,8.36523 4.58449,8.42715 4.70891,8.47122C 4.83332,8.51535 4.99579,8.53738 5.1963,8.53738C 5.61424,8.53738 5.97329,8.45737 6.27346,8.29733C 6.57363,8.13724 6.81672,7.90262 7.00274,7.59338 Z "/>
-            <ToggleButton.ToolTip>
-                <StackPanel>
-                    <TextBlock Style="{x:Null}" Text="Toggle this button ON to show properties"/>
-                    <TextBlock Style="{x:Null}" Text="that are unchanged from their default values."/>
-                </StackPanel>
-            </ToggleButton.ToolTip>
-        </ToggleButton>
+        <CheckBox Name="checkBoxClearAfterDelve" 
+                  Content="Clear after delve" 
+                  Margin="0,2,2,0" />
         <Button
-			Command="{x:Static my:PropertyInspector.PopTargetCommand}"
-			Margin="0,1,20,2"
-			Width="18"
-			Height="18"
-			MinWidth="0"
-			MinHeight="0"
-			HorizontalAlignment="Right"
-			ToolTipService.ShowOnDisabled="True"
-		>
+            Command="{x:Static my:PropertyInspector.PopTargetCommand}"
+            Margin="0,0,2,0"
+            Width="18"
+            Height="18"
+            MinWidth="0"
+            MinHeight="0"
+            ToolTipService.ShowOnDisabled="True"
+        >
             <Button.Style>
                 <Style>
                     <Style.Triggers>
@@ -112,16 +97,15 @@ All other rights reserved.
         </Button>
         <ComboBox
             Style="{x:Null}"
-			x:Name="FilterSetCombo"
-			i:ComboBoxSettings.IsSnoopPart="True"
-			Width="100"
-			HorizontalAlignment="Right"
-			Margin="0,0,40,2"
+            x:Name="FilterSetCombo"
+            i:ComboBoxSettings.IsSnoopPart="True"
+            Width="100"
+            Margin="0,0,2,0"
             Padding="4 1 4 1"
-			ItemsSource="{Binding Path=AllFilterSets, ElementName=propertyInspector}"  
-			SelectedItem="{Binding Path=SelectedFilterSet, ElementName=propertyInspector, Mode=TwoWay}"
-			ItemTemplate="{StaticResource stylelessTextBlockDataTemplate}"
-		>
+            ItemsSource="{Binding Path=AllFilterSets, ElementName=propertyInspector}"  
+            SelectedItem="{Binding Path=SelectedFilterSet, ElementName=propertyInspector, Mode=TwoWay}"
+            ItemTemplate="{StaticResource stylelessTextBlockDataTemplate}"
+        >
             <ComboBox.ToolTip>
                 <StackPanel>
                     <TextBlock Style="{x:Null}" Text="With this combo box, you can select"/>
@@ -129,7 +113,39 @@ All other rights reserved.
                 </StackPanel>
             </ComboBox.ToolTip>
         </ComboBox>
-    </Grid>
+        <ToggleButton
+            Style="{x:Null}"
+			IsChecked="{Binding ElementName=propertyInspector, Path=ShowDefaults}"
+			Width="18"
+			Height="18"
+            Padding="0"
+            Margin="0,0,2,0"
+		>
+            <TextBlock Style="{x:Null}" FontWeight="Bold">D</TextBlock>
+            <ToggleButton.ToolTip>
+                <StackPanel>
+                    <TextBlock Style="{x:Null}" Text="Toggle this button ON to show properties"/>
+                    <TextBlock Style="{x:Null}" Text="that are unchanged from their default values."/>
+                </StackPanel>
+            </ToggleButton.ToolTip>
+        </ToggleButton>
+        <ToggleButton
+            Style="{x:Null}"
+			IsChecked="{Binding ElementName=propertyInspector, Path=ShowPropertiesFromUncommonTypes}"
+			Width="18"
+			Height="18"
+            Padding="0"
+            Margin="0,0,2,0"
+		>
+            <TextBlock Style="{x:Null}" FontWeight="Bold">U</TextBlock>
+            <ToggleButton.ToolTip>
+                <StackPanel>
+                    <TextBlock Style="{x:Null}" Text="Toggle this button ON to show properties"/>
+                    <TextBlock Style="{x:Null}" Text="that are not commonly used in WPF applications."/>
+                </StackPanel>
+            </ToggleButton.ToolTip>
+        </ToggleButton>
+    </StackPanel>
 
     <my:PropertyGrid2
 		x:Name="PropertyGrid"

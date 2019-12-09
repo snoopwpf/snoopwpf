@@ -422,6 +422,19 @@ namespace Snoop
             }
         }
 
+        public bool ShowPropertiesFromUncommonTypes
+        {
+            get { return this.propertyFilter.ShowPropertiesFromUncommonTypes; }
+            set
+            {
+                this.propertyFilter.ShowPropertiesFromUncommonTypes = value;
+
+                this.inspector.Filter = this.propertyFilter;
+
+                this.OnPropertyChanged(nameof(this.ShowPropertiesFromUncommonTypes));
+            }
+        }
+
         /// <summary>
         /// Looking for "browse back" mouse button.
         /// Pop properties context when clicked.

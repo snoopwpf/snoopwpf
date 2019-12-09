@@ -597,7 +597,7 @@ namespace Snoop
 		/// Returns the DependencyProperty identifier for the property that this PropertyInformation wraps.
 		/// If the wrapped property is not a DependencyProperty, null is returned.
 		/// </summary>
-		private DependencyProperty DependencyProperty
+		public DependencyProperty DependencyProperty
 		{
 			get
 			{
