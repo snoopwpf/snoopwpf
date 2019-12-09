@@ -19,12 +19,6 @@ namespace Snoop
                 return true;
             }
 
-            // Filter the 20 stylistic set properties that I've never seen used.
-            if (property.Name.StartsWith("Typography.StylisticSet"))
-            {
-                return false;
-            }
-
             var attachedPropertyForChildren = (AttachedPropertyBrowsableForChildrenAttribute)property.Attributes[typeof(AttachedPropertyBrowsableForChildrenAttribute)];
             
             if (attachedPropertyForChildren != null)
