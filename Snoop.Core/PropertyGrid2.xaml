@@ -19,32 +19,32 @@ All other rights reserved.
 			<ContextMenu x:Key="PropertyMenu" Style="{x:Null}">
 				<MenuItem Style="{x:Null}" Command="{x:Static snoop:PropertyInspector.DelveCommand}" CommandParameter="{Binding}">
 					<MenuItem.Header>
-						<TextBlock Style="{x:Null}" Text="Delve"/>
+                        <Label Style="{x:Null}" Margin="0" Padding="0" Content="Delve" />
 					</MenuItem.Header>
 				</MenuItem>
 				<MenuItem Style="{x:Null}" Command="{x:Static snoop:PropertyInspector.DelveBindingCommand}" CommandParameter="{Binding}">
 					<MenuItem.Header>
-						<TextBlock Style="{x:Null}" Text="Delve Binding"/>
+                        <Label Style="{x:Null}" Margin="0" Padding="0" Content="Delve Binding" />
 					</MenuItem.Header>
 				</MenuItem>
 				<MenuItem Style="{x:Null}" Command="{x:Static snoop:PropertyInspector.DelveBindingExpressionCommand}" CommandParameter="{Binding}">
 					<MenuItem.Header>
-						<TextBlock Style="{x:Null}" Text="Delve BindingExpression"/>
+                        <Label Style="{x:Null}" Margin="0" Padding="0" Content="Delve BindingExpression" />
 					</MenuItem.Header>
 				</MenuItem>
 				<MenuItem Style="{x:Null}" Command="{x:Static snoop:PropertyGrid2.ShowBindingErrorsCommand}" CommandParameter="{Binding}">
 					<MenuItem.Header>
-						<TextBlock Style="{x:Null}" Text="Display Binding Errors"/>
+                        <Label Style="{x:Null}" Margin="0" Padding="0" Content="Display Binding Errors" />
 					</MenuItem.Header>
 				</MenuItem>
 				<MenuItem Style="{x:Null}" Command="{x:Static snoop:PropertyGrid2.ClearCommand}" CommandParameter="{Binding}">
 					<MenuItem.Header>
-						<TextBlock Style="{x:Null}" Text="Clear/Reset"/>
+                        <Label Style="{x:Null}" Margin="0" Padding="0" Content="Clear/Reset" />
 					</MenuItem.Header>
 				</MenuItem>
 				<MenuItem Style="{x:Null}" Command="{x:Static snoop:PropertyInspector.SnipXamlCommand}" CommandParameter="{Binding}">
 					<MenuItem.Header>
-						<TextBlock Style="{x:Null}" Text="Copy this brush"/>
+                        <Label Style="{x:Null}" Margin="0" Padding="0" Content="Copy this brush" />
 					</MenuItem.Header>
 				</MenuItem>
 			</ContextMenu>
