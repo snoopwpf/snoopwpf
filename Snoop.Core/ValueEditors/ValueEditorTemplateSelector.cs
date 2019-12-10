@@ -3,67 +3,54 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-using System;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-
 namespace Snoop
 {
-	public class ValueEditorTemplateSelector : DataTemplateSelector
-	{
-		public DataTemplate StandardTemplate
-		{
-			get { return this.standardTemplate; }
-			set { this.standardTemplate = value; }
-		}
-		private DataTemplate standardTemplate;
+    using System;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Media;
 
-		public DataTemplate EnumTemplate
-		{
-			get { return this.enumTemplate; }
-			set { this.enumTemplate = value; }
-		}
-		private DataTemplate enumTemplate;
+    public class ValueEditorTemplateSelector : DataTemplateSelector
+    {
+        public DataTemplate StandardTemplate { get; set; }
 
-		public DataTemplate BoolTemplate
-		{
-			get { return this.boolTemplate; }
-			set { this.boolTemplate = value; }
-		}
-		private DataTemplate boolTemplate;
+        public DataTemplate EnumTemplate { get; set; }
 
-		public DataTemplate BrushTemplate
-		{
-			get { return this.brushTemplate; }
-			set { this.brushTemplate = value; }
-		}
-		private DataTemplate brushTemplate;
+        public DataTemplate BoolTemplate { get; set; }
 
+        public DataTemplate BrushTemplate { get; set; }
 
-		public override DataTemplate SelectTemplate(object item, DependencyObject container)
-		{
-			PropertyInformation property = (PropertyInformation)item;
+        public override DataTemplate SelectTemplate(object item, DependencyObject container)
+        {
+            var property = (PropertyInformation)item;
 
-			if (property.PropertyType.IsEnum)
+            if (property == null)
+            {
+                return null;
+            }
+
+            if (property.PropertyType.IsEnum)
             {
                 return this.EnumTemplate;
             }
-            else if (property.PropertyType.Equals(typeof(bool)))
+
+            if (property.PropertyType == typeof(bool))
             {
                 return this.BoolTemplate;
             }
-            else if ( property.PropertyType.IsGenericType 
-				&& Nullable.GetUnderlyingType( property.PropertyType ) == typeof(bool) )
+
+            if (property.PropertyType.IsGenericType
+                && Nullable.GetUnderlyingType(property.PropertyType) == typeof(bool))
             {
                 return this.BoolTemplate;
             }
-            else if (typeof(Brush).IsAssignableFrom(property.PropertyType))
+
+            if (typeof(Brush).IsAssignableFrom(property.PropertyType))
             {
-                return this.brushTemplate;
+                return this.BrushTemplate;
             }
 
             return this.StandardTemplate;
-		}
-	}
+        }
+    }
 }

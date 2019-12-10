@@ -3,116 +3,126 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-using System;
-using System.Diagnostics;
-using System.Windows;
-using System.Windows.Controls;
-
 namespace Snoop
 {
-	public class ValueEditor : ContentControl
-	{
-		public bool IsSelected
-		{
-			get { return (bool)this.GetValue(ValueEditor.IsSelectedProperty); }
-			set { this.SetValue(ValueEditor.IsSelectedProperty, value); }
-		}
-		public static DependencyProperty IsSelectedProperty =
-			DependencyProperty.Register
-			(
-				"IsSelected",
-				typeof(bool),
-				typeof(ValueEditor)
-			);
+    using System;
+    using System.Windows;
+    using System.Windows.Controls;
 
-		public object Value
-		{
-			get { return this.GetValue(ValueEditor.ValueProperty); }
-			set { this.SetValue(ValueEditor.ValueProperty, value); }
-		}
-		public static DependencyProperty ValueProperty =
-			DependencyProperty.Register
-			(
-				"Value",
-				typeof(object),
-				typeof(ValueEditor),
-				new PropertyMetadata(ValueEditor.HandleValueChanged)
-			);
-		private static void HandleValueChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-		{
-			((ValueEditor)sender).OnValueChanged(e.NewValue);
-		}
-		protected virtual void OnValueChanged(object newValue)
-		{
-		}
+    public class ValueEditor : ContentControl
+    {
+        public static DependencyProperty IsSelectedProperty =
+            DependencyProperty.Register
+            (
+                nameof(IsSelected),
+                typeof(bool),
+                typeof(ValueEditor)
+            );
 
-		public object DescriptiveValue
-		{
-			get { return (bool)this.GetValue(ValueEditor.DescriptiveValueProperty); }
-			set { this.SetValue(ValueEditor.DescriptiveValueProperty, value); }
-		}
-		public static DependencyProperty DescriptiveValueProperty =
-			DependencyProperty.Register
-			(
-				"DescriptiveValue",
-				typeof(object),
-				typeof(ValueEditor)
-			);
+        public static DependencyProperty ValueProperty =
+            DependencyProperty.Register
+            (
+                nameof(Value),
+                typeof(object),
+                typeof(ValueEditor),
+                new PropertyMetadata(HandleValueChanged)
+            );
 
-		public Type PropertyType
-		{
-			get { return (Type)this.GetValue(ValueEditor.PropertyTypeProperty); }
-			set { this.SetValue(ValueEditor.PropertyTypeProperty, value); }
-		}
-		public static DependencyProperty PropertyTypeProperty =
-			DependencyProperty.Register
-			(
-				"PropertyType",
-				typeof(object),
-				typeof(ValueEditor),
-				new PropertyMetadata(ValueEditor.HandleTypeChanged)
-			);
-		private static void HandleTypeChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-		{
-			((ValueEditor)sender).OnTypeChanged();
-		}
-		protected virtual void OnTypeChanged()
-		{
-		}
+        public static DependencyProperty DescriptiveValueProperty =
+            DependencyProperty.Register
+            (
+                nameof(DescriptiveValue),
+                typeof(object),
+                typeof(ValueEditor)
+            );
 
-		public bool IsEditable
-		{
-			get { return (bool)this.GetValue(ValueEditor.IsEditableProperty); }
-			set { this.SetValue(ValueEditor.IsEditableProperty, value); }
-		}
-		public static DependencyProperty IsEditableProperty =
-			DependencyProperty.Register
-			(
-				"IsEditable",
-				typeof(bool),
-				typeof(ValueEditor)
-			);
+        public static DependencyProperty PropertyTypeProperty =
+            DependencyProperty.Register
+            (
+                nameof(PropertyType),
+                typeof(object),
+                typeof(ValueEditor),
+                new PropertyMetadata(HandleTypeChanged)
+            );
 
-		public PropertyInformation PropertyInfo
-		{
-			[DebuggerStepThrough]
-			get { return (PropertyInformation)GetValue(PropertyInfoProperty); }
-			set { SetValue(PropertyInfoProperty, value); }
-		}
-		public static readonly DependencyProperty PropertyInfoProperty =
-			DependencyProperty.Register
-			(
-				"PropertyInfo",
-				typeof(PropertyInformation),
-				typeof(ValueEditor),
-				new UIPropertyMetadata(null, new PropertyChangedCallback(OnPropertyInfoChanged))
-			);
-		private static void OnPropertyInfoChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-		{
-			((ValueEditor)d).OnPropertyInfoChanged(e);
-		}
-		private void OnPropertyInfoChanged(DependencyPropertyChangedEventArgs e)
-		{
-		}
-	}
+        public static DependencyProperty IsEditableProperty =
+            DependencyProperty.Register
+            (
+                nameof(IsEditable),
+                typeof(bool),
+                typeof(ValueEditor)
+            );
+
+        public static readonly DependencyProperty PropertyInfoProperty =
+            DependencyProperty.Register
+            (
+                nameof(PropertyInfo),
+                typeof(PropertyInformation),
+                typeof(ValueEditor),
+                new UIPropertyMetadata(null, OnPropertyInfoChanged)
+            );
+
+        public bool IsSelected
+        {
+            get => (bool)this.GetValue(IsSelectedProperty);
+            set => this.SetValue(IsSelectedProperty, value);
+        }
+
+        public object Value
+        {
+            get => this.GetValue(ValueProperty);
+            set => this.SetValue(ValueProperty, value);
+        }
+
+        public object DescriptiveValue
+        {
+            get => (bool)this.GetValue(DescriptiveValueProperty);
+            set => this.SetValue(DescriptiveValueProperty, value);
+        }
+
+        public Type PropertyType
+        {
+            get => (Type)this.GetValue(PropertyTypeProperty);
+            set => this.SetValue(PropertyTypeProperty, value);
+        }
+
+        public bool IsEditable
+        {
+            get => (bool)this.GetValue(IsEditableProperty);
+            set => this.SetValue(IsEditableProperty, value);
+        }
+
+        public PropertyInformation PropertyInfo
+        {
+            get => (PropertyInformation)this.GetValue(PropertyInfoProperty);
+            set => this.SetValue(PropertyInfoProperty, value);
+        }
+
+        private static void HandleValueChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            ((ValueEditor)sender).OnValueChanged(e.NewValue);
+        }
+
+        protected virtual void OnValueChanged(object newValue)
+        {
+        }
+
+        private static void HandleTypeChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            ((ValueEditor)sender).OnTypeChanged();
+        }
+
+        protected virtual void OnTypeChanged()
+        {
+        }
+
+        private static void OnPropertyInfoChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((ValueEditor)d).OnPropertyInfoChanged(e);
+        }
+
+        protected virtual void OnPropertyInfoChanged(DependencyPropertyChangedEventArgs e)
+        {
+        }
+    }
 }
