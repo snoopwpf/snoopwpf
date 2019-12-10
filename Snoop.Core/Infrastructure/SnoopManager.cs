@@ -185,7 +185,7 @@
             {
                 Trace.WriteLine("Current dispatcher runs on a different thread.");
 
-                dispatcher.Invoke(() => SnoopApplication(settingsData, instanceCreator));
+                dispatcher.Invoke((Action)(() => SnoopApplication(settingsData, instanceCreator)));
             }
         }
 
