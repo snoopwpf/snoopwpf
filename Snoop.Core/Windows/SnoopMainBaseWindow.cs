@@ -42,7 +42,7 @@
 
         public void Inspect(object rootToInspect)
         {
-            ExceptionHandler.AddExceptionHandlerForDispatcher(this.Dispatcher);
+            ExceptionHandler.AddExceptionHandler(this.Dispatcher);
 
             this.Load(rootToInspect);
 
