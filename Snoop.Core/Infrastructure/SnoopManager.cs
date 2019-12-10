@@ -159,32 +159,22 @@
         {
             Trace.WriteLine("Snooping application.");
 
-            Dispatcher dispatcher;
-            if (Application.Current == null)
-            {
-                dispatcher = Dispatcher.CurrentDispatcher;
-            }
-            else
-            {
-                dispatcher = Application.Current.Dispatcher;
-            }
-
-            if (dispatcher == null)
-            {
-                Trace.WriteLine("Could not find any dispatcher.");
-                return;
-            }
+            var dispatcher = Application.Current?.Dispatcher ?? Dispatcher.CurrentDispatcher;
 
             if (dispatcher.CheckAccess())
             {
                 Trace.WriteLine("Starting snoop UI...");
 
                 var snoop = instanceCreator();
-                var title = TryGetMainWindowTitle();
+                snoop.Title = TryGetMainWindowTitle();
 
-                if (!string.IsNullOrEmpty(title))
+                if (string.IsNullOrEmpty(snoop.Title))
                 {
-                    snoop.Title = $"{title} - Snoop";
+                    snoop.Title = "Snoop";
+                }
+                else
+                {
+                    snoop.Title += " - Snoop";
                 }
 
                 snoop.Inspect();
@@ -195,7 +185,7 @@
             {
                 Trace.WriteLine("Current dispatcher runs on a different thread.");
 
-                dispatcher.Invoke((Action)(() => SnoopApplication(settingsData, instanceCreator)));
+                dispatcher.Invoke(() => SnoopApplication(settingsData, instanceCreator));
             }
         }
 
