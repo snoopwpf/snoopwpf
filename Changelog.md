@@ -14,7 +14,7 @@
   - Added a lot more tracing to the injection process. This tracing can be viewed with [DbgView](https://docs.microsoft.com/en-us/sysinternals/downloads/debugview).
   - Because of [#151](../../issues/151) there are now a lot more properties being shown.  
     As a way to reduce the noise a new option to filter uncommom properties was added. The default value for that is `true`.  
-    If you want to show uncommon properties from types like `Typography` or `NumberSubstitution` etc. just disable the new switch right beside 
+    If you want to show uncommon properties from types like `Typography` or `NumberSubstitution` etc. just disable the new switch right beside the default value switch.
   - [#98](../../issues/98) - .NETCore 3.0 support
   - [#108](../../issues/108) - SnoopWPF on "Disabled" control state?
   - [#144](../../issues/144) - Add support for showing behaviors (added by @dezsiszabi in [#149](../../pull/149))
