@@ -42,7 +42,7 @@
 
         public void Inspect(object rootToInspect)
         {
-            this.Dispatcher.UnhandledException += this.UnhandledExceptionHandler;
+            ExceptionHandler.AddExceptionHandlerForDispatcher(this.Dispatcher);
 
             this.Load(rootToInspect);
 
@@ -107,22 +107,6 @@
             }
 
             return foundRoot;
-        }
-
-        private void UnhandledExceptionHandler(object sender, DispatcherUnhandledExceptionEventArgs e)
-        {
-            if (SnoopModes.IgnoreExceptions)
-            {
-                return;
-            }
-
-            if (SnoopModes.SwallowExceptions)
-            {
-                e.Handled = true;
-                return;
-            }
-
-            e.Handled = ErrorDialog.ShowDialog(e.Exception);
         }
     }
 }
