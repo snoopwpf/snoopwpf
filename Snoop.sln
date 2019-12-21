@@ -10,6 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7D074176-B8A0-4814-87EB-4C4086C6CE60}"
 	ProjectSection(SolutionItems) = preProject
 		appveyor.yml = appveyor.yml
+		Changelog.md = Changelog.md
 		Directory.build.props = Directory.build.props
 		Directory.build.targets = Directory.build.targets
 		global.json = global.json

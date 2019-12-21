@@ -7,6 +7,7 @@
   - [#45](../../issues/45) - Keystrokes go to Visual Studio main window when inspecting Visual Studio (thanks @KirillOsenkov)
   - [#150](../../issues/150) - Format and parse property values with the same format provider
   - [#151](../../issues/151) - Dependency properties are filtered wrong and less properties are shown than should be
+  - [#156](../../issues/156) - Delve BindingExpression throws exception
 
 - ### Improvements
 

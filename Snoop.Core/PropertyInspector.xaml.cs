@@ -3,21 +3,21 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Input;
-using System.Windows.Markup;
-using System.Windows.Media;
-using System.Windows.Threading;
-using Snoop.Infrastructure;
-
 namespace Snoop
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Text;
+    using System.Windows;
+    using System.Windows.Input;
+    using System.Windows.Markup;
+    using System.Windows.Media;
+    using Snoop.Infrastructure;
+    using JetBrains.Annotations;
+
     public partial class PropertyInspector : INotifyPropertyChanged
     {
         public static readonly RoutedCommand SnipXamlCommand = new RoutedCommand("SnipXaml", typeof(PropertyInspector));
@@ -26,6 +26,8 @@ namespace Snoop
         public static readonly RoutedCommand DelveBindingCommand = new RoutedCommand();
         public static readonly RoutedCommand DelveBindingExpressionCommand = new RoutedCommand();
         public static readonly RoutedCommand NavigateToAssemblyInExplorerCommand = new RoutedCommand("NavigateToAssemblyInExplorer", typeof(PropertyInspector));
+
+        private object target;
 
         public PropertyInspector()
         {
@@ -36,9 +38,9 @@ namespace Snoop
 
             this.CommandBindings.Add(new CommandBinding(SnipXamlCommand, this.HandleSnipXaml, this.CanSnipXaml));
             this.CommandBindings.Add(new CommandBinding(PopTargetCommand, this.HandlePopTarget, this.CanPopTarget));
-            this.CommandBindings.Add(new CommandBinding(DelveCommand, this.HandleDelve, this.CanDelve));
-            this.CommandBindings.Add(new CommandBinding(DelveBindingCommand, this.HandleDelveBinding, this.CanDelveBinding));
-            this.CommandBindings.Add(new CommandBinding(DelveBindingExpressionCommand, this.HandleDelveBindingExpression, this.CanDelveBindingExpression));
+            this.CommandBindings.Add(new CommandBinding(DelveCommand, this.HandleDelve, CanDelve));
+            this.CommandBindings.Add(new CommandBinding(DelveBindingCommand, this.HandleDelveBinding, CanDelveBinding));
+            this.CommandBindings.Add(new CommandBinding(DelveBindingExpressionCommand, this.HandleDelveBindingExpression, CanDelveBindingExpression));
             this.CommandBindings.Add(new CommandBinding(NavigateToAssemblyInExplorerCommand, this.HandleNavigateToAssemblyInExplorer, this.CanNavigateToAssemblyInExplorer));
 
             // watch for mouse "back" button
@@ -119,35 +121,41 @@ namespace Snoop
 
         public object Target
         {
-            get { return this.GetValue(TargetProperty); }
-            set { this.SetValue(TargetProperty, value); }
+            get => this.target;
+            set
+            {
+                if (Equals(value, this.target))
+                {
+                    return;
+                }
+
+                var oldValue = this.target;
+                this.target = value;
+
+                this.OnPropertyChanged(nameof(this.Target));
+                this.OnPropertyChanged(nameof(this.Type));
+
+                HandleTargetChanged(this, oldValue, value);
+            }
         }
 
-        public static readonly DependencyProperty TargetProperty =
-            DependencyProperty.Register
-            (
-                nameof(Target),
-                typeof(object),
-                typeof(PropertyInspector),
-                new PropertyMetadata(HandleTargetChanged)
-            );
-
-        private static void HandleTargetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void HandleTargetChanged(PropertyInspector inspector, object oldValue, object newValue)
         {
-            var inspector = (PropertyInspector)d;
-            inspector.OnPropertyChanged(nameof(Type));
-
-            if (e.NewValue != null)
+            if (newValue != null)
             {
-                inspector.inspectStack.Add(e.NewValue);
+                inspector.inspectStack.Add(newValue);
             }
 
-            if (inspector.lastRootTarget == inspector.RootTarget && e.OldValue != null && e.NewValue != null && inspector.checkBoxClearAfterDelve.IsChecked.HasValue && inspector.checkBoxClearAfterDelve.IsChecked.Value)
+            if (ReferenceEquals(inspector.lastRootTarget, inspector.RootTarget) 
+                && oldValue != null 
+                && newValue != null 
+                && inspector.checkBoxClearAfterDelve.IsChecked.GetValueOrDefault(false))
             {
-                inspector.targetToFilter[e.OldValue.GetType()] = inspector.PropertiesFilter.Text;
-                inspector.targetToFilter.TryGetValue(e.NewValue.GetType(), out var text);
+                inspector.targetToFilter[oldValue.GetType()] = inspector.PropertiesFilter.Text;
+                inspector.targetToFilter.TryGetValue(newValue.GetType(), out var text);
                 inspector.PropertiesFilter.Text = text ?? string.Empty;
             }
+
             inspector.lastRootTarget = inspector.RootTarget;
         }
 
@@ -250,6 +258,7 @@ namespace Snoop
         {
             this.Target = target;
         }
+
         public void SetTarget(object target)
         {
             this.inspectStack.Clear();
@@ -317,38 +326,46 @@ namespace Snoop
             {
                 this.PropertiesFilter.Focus();
             }
+
             this.PushTarget(realTarget);
         }
+
         private void HandleDelveBinding(object sender, ExecutedRoutedEventArgs e)
         {
             this.PushTarget(((PropertyInformation)e.Parameter).Binding);
         }
+
         private void HandleDelveBindingExpression(object sender, ExecutedRoutedEventArgs e)
         {
             this.PushTarget(((PropertyInformation)e.Parameter).BindingExpression);
         }
 
-        private void CanDelve(object sender, CanExecuteRoutedEventArgs e)
+        private static void CanDelve(object sender, CanExecuteRoutedEventArgs e)
         {
-            if (e.Parameter != null && ((PropertyInformation)e.Parameter).Value != null)
+            if (e.Parameter is PropertyInformation propertyInformation
+                && propertyInformation.Value != null)
             {
                 e.CanExecute = true;
             }
 
             e.Handled = true;
         }
-        private void CanDelveBinding(object sender, CanExecuteRoutedEventArgs e)
+
+        private static void CanDelveBinding(object sender, CanExecuteRoutedEventArgs e)
         {
-            if (e.Parameter != null && ((PropertyInformation)e.Parameter).Binding != null)
+            if (e.Parameter is PropertyInformation propertyInformation
+                && propertyInformation.Binding != null)
             {
                 e.CanExecute = true;
             }
 
             e.Handled = true;
         }
-        private void CanDelveBindingExpression(object sender, CanExecuteRoutedEventArgs e)
+
+        private static void CanDelveBindingExpression(object sender, CanExecuteRoutedEventArgs e)
         {
-            if (e.Parameter != null && ((PropertyInformation)e.Parameter).BindingExpression != null)
+            if (e.Parameter is PropertyInformation propertyInformation
+                && propertyInformation.BindingExpression != null)
             {
                 e.CanExecute = true;
             }
@@ -663,6 +680,8 @@ namespace Snoop
 
         #region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
         protected void OnPropertyChanged(string propertyName)
         {
             Debug.Assert(this.GetType().GetProperty(propertyName) != null);
