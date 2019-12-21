@@ -142,6 +142,7 @@ namespace Snoop
 
         private static readonly List<Type> uncommonTypes = new List<Type>
         {
+            typeof(BaseUriHelper),
             typeof(Block),
             typeof(ContextMenuService),
             typeof(DesignerProperties),
