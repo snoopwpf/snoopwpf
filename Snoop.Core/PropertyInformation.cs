@@ -212,26 +212,16 @@ namespace Snoop
 					return;
 				}
 
-				Type targetType = this.property.PropertyType;
-				if (targetType.IsAssignableFrom(typeof(string)))
-				{
-					this.property.SetValue(this.Target, value);
-				}
-				else
-				{
-					TypeConverter converter = TypeDescriptor.GetConverter(targetType);
-					if (converter != null)
-					{
-						try
-						{
-							this.property.SetValue(this.Target, converter.ConvertFrom(value));
-						}
-						catch (Exception)
-						{
-						}
-					}
-				}
-			}
+				var targetType = this.property.PropertyType;
+
+                try
+                {
+                    this.property.SetValue(this.Target, StringValueConverter.ConvertFromString(targetType, value));
+                }
+                catch
+                {
+                }
+            }
 		}
 
 		public string DescriptiveValue

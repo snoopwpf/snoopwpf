@@ -5,8 +5,6 @@
 
 namespace Snoop
 {
-    using System;
-    using System.ComponentModel;
     using System.Windows;
     using System.Windows.Data;
     using Snoop.Infrastructure;
@@ -49,49 +47,7 @@ namespace Snoop
 
             var targetType = this.PropertyType;
 
-            if (targetType.IsAssignableFrom(typeof(string)))
-            {
-                this.Value = newValue;
-            }
-            else
-            {
-                var converter = TypeDescriptor.GetConverter(targetType);
-                if (converter != null)
-                {
-                    try
-                    {
-                        using (new InvariantThreadCultureScope())
-                        {
-                            this.SetValueFromConverter(newValue, targetType, converter);
-                        }
-                    }
-                    catch
-                    {
-                        // If we land here the problem might have been related to the threads culture.
-                        // If the user entered data that was culture specific, we try setting it again using the original culture and not an invariant.
-                        try
-                        {
-                            this.SetValueFromConverter(newValue, targetType, converter);
-                        }
-                        catch
-                        {
-                            // todo: How should we notify the user about failures?
-                        }
-                    }
-                }
-            }
-        }
-
-        private void SetValueFromConverter(string newValue, Type targetType, TypeConverter converter)
-        {
-            if (!converter.CanConvertFrom(targetType) && string.IsNullOrEmpty(newValue))
-            {
-                this.Value = null;
-            }
-            else
-            {
-                this.Value = converter.ConvertFrom(newValue);
-            }
+            this.Value = StringValueConverter.ConvertFromString(targetType, newValue);
         }
 
         protected override void OnValueChanged(object newValue)
