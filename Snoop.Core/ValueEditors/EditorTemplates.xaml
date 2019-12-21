@@ -11,32 +11,63 @@ All other rights reserved.
 	xmlns:converters="clr-namespace:Snoop.Converters">
 	<Style TargetType="{x:Type snoop:StandardValueEditor}">
 		<Style.Resources>
-			<DataTemplate x:Key="UnselectedValueTemplate" DataType="snoop:ValueEditor">
+            <DataTemplate x:Key="EmptyValueTemplate" DataType="snoop:ValueEditor">
+                <TextBlock Style="{x:Null}" Text="{Binding DescriptiveValue}"/>
+            </DataTemplate>
+
+            <DataTemplate x:Key="UnselectedValueTemplate" DataType="snoop:ValueEditor">
 				<TextBlock Style="{x:Null}" Text="{Binding DescriptiveValue}"/>
 			</DataTemplate>
 
 			<DataTemplate x:Key="SelectedValueTemplate" DataType="snoop:StandardValueEditor">
 				<snoop:EditTextBox Height="Auto" Text="{Binding StringValue}" HorizontalAlignment="Stretch" Padding="1" BorderThickness="0" Background="White" VerticalContentAlignment="Center"/>
 			</DataTemplate>
-		</Style.Resources>
+        </Style.Resources>
 		
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type snoop:StandardValueEditor}">
-					<ContentPresenter Name="ValueHolder" Style="{x:Null}" ContentTemplate="{StaticResource UnselectedValueTemplate}" Content="{Binding RelativeSource={RelativeSource TemplatedParent}}">
-						<ContentPresenter.ToolTip>
-							<TextBlock Style="{x:Null}" Text="{TemplateBinding DescriptiveValue}"/>
-						</ContentPresenter.ToolTip>
-					</ContentPresenter>
+					<StackPanel Orientation="Horizontal">
+						<Button Style="{x:Null}" 
+								x:Name="OpenDetailsEditor"
+								DockPanel.Dock="Left"
+                                Visibility="Collapsed"
+								Command="{x:Static snoop:ValueEditor.OpenDetailsEditorCommand}"
+                                Content=" ... ">
+                            <Button.ToolTip>
+                                <TextBlock Style="{x:Null}">
+                                    Opens an editor window where you can see and edit the full value.
+                                    <LineBreak Style="{x:Null}" /> 
+                                    Editing is only possible if the property is not read only.
+                                </TextBlock> 
+                            </Button.ToolTip>
+                        </Button>
+
+                        <ContentPresenter Name="ValueHolder" Style="{x:Null}" ContentTemplate="{DynamicResource UnselectedValueTemplate}" Content="{Binding RelativeSource={RelativeSource TemplatedParent}}">
+					        <ContentPresenter.ToolTip>
+						        <TextBlock Style="{x:Null}" Text="{TemplateBinding DescriptiveValue}"/>
+					        </ContentPresenter.ToolTip>
+				        </ContentPresenter>
+					</StackPanel>
 
 					<ControlTemplate.Triggers>
-						<MultiTrigger>
+                        <DataTrigger Binding="{Binding Value}" Value="{x:Null}">
+                            <Setter TargetName="ValueHolder" Property="ContentTemplate" Value="{DynamicResource EmptyValueTemplate}"/>
+                        </DataTrigger>
+                        <MultiTrigger>
 							<MultiTrigger.Conditions>
 								<Condition Property="IsSelected" Value="True"/>
 								<Condition Property="IsEditable" Value="True"/>
 							</MultiTrigger.Conditions>
-							<Setter TargetName="ValueHolder" Property="ContentTemplate" Value="{StaticResource SelectedValueTemplate}"/>
+							<Setter TargetName="ValueHolder" Property="ContentTemplate" Value="{DynamicResource SelectedValueTemplate}"/>
 						</MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsSelected" Value="True"/>
+                                <Condition Property="SupportsDetailsEditor" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="OpenDetailsEditor" Property="Visibility" Value="Visible"/>
+                        </MultiTrigger>
 					</ControlTemplate.Triggers>
 
 				</ControlTemplate>
@@ -45,11 +76,7 @@ All other rights reserved.
 	</Style>
 	
 	<Style TargetType="{x:Type snoop:BoolValueEditor}">
-		<Style.Resources>
-			<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-		</Style.Resources>
-		
-		<Setter Property="Template">
+        <Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type snoop:BoolValueEditor}">
 					<StackPanel Orientation="Horizontal">
@@ -63,7 +90,7 @@ All other rights reserved.
 						<TextBlock Style="{x:Null}" 
 						           Margin="3,0" 
 											 Text="{Binding Path=DescriptiveValue}"
-											 Visibility="{Binding Path=IsExpression, Converter={StaticResource BooleanToVisibilityConverter}}"
+											 Visibility="{Binding Path=IsExpression, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}}"
 											 VerticalAlignment="Center"
 											 />
 					</StackPanel>
@@ -71,8 +98,29 @@ All other rights reserved.
 			</Setter.Value>
 		</Setter>
 	</Style>
+
+    <Style TargetType="{x:Type snoop:StringValueEditor}"
+           BasedOn="{StaticResource {x:Type snoop:StandardValueEditor}}">
+		<Style.Setters>
+			<Setter Property="DetailsEditorTemplate">
+				<Setter.Value>
+                    <DataTemplate DataType="snoop:StringValueEditor">
+                        <TextBox Style="{x:Null}"
+                                 IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}"
+                                 IsReadOnlyCaretVisible="True"
+                                 AcceptsReturn="True"
+                                 TextWrapping="Wrap"
+                                 VerticalScrollBarVisibility="Visible"
+                                 HorizontalScrollBarVisibility="Disabled"
+                                 Text="{Binding StringValueForDetailsEditor}" />
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
 	
-	<Style TargetType="{x:Type snoop:BrushValueEditor}">
+	<Style TargetType="{x:Type snoop:BrushValueEditor}"
+           BasedOn="{StaticResource {x:Type snoop:StandardValueEditor}}">
 		<Style.Resources>
 			<DrawingBrush Stretch="Fill" TileMode="Tile" x:Key="CheckerboardBrush" Viewport="0,0,16,16" ViewportUnits="Absolute">
 				<DrawingBrush.Drawing>
@@ -139,29 +187,7 @@ All other rights reserved.
 
 			<DataTemplate x:Key="EmptyValueTemplate"/>
 		</Style.Resources>
-		
-		<Setter Property="Template">
-			<Setter.Value>
-				<ControlTemplate TargetType="{x:Type snoop:BrushValueEditor}">
-					<ContentPresenter Name="ValueHolder" Style="{x:Null}" ContentTemplate="{StaticResource UnselectedValueTemplate}" Content="{Binding RelativeSource={RelativeSource TemplatedParent}}"/>
-
-					<ControlTemplate.Triggers>
-						<DataTrigger Binding="{Binding Value}" Value="{x:Null}">
-							<Setter TargetName="ValueHolder" Property="ContentTemplate" Value="{StaticResource EmptyValueTemplate}"/>
-						</DataTrigger>
-						<MultiTrigger>
-							<MultiTrigger.Conditions>
-								<Condition Property="IsSelected" Value="True"/>
-								<Condition Property="IsEditable" Value="True"/>
-							</MultiTrigger.Conditions>
-							<Setter TargetName="ValueHolder" Property="ContentTemplate" Value="{StaticResource SelectedValueTemplate}"/>
-						</MultiTrigger>
-					</ControlTemplate.Triggers>
-
-				</ControlTemplate>
-			</Setter.Value>
-		</Setter>
-	</Style>
+    </Style>
 	
 	<Style TargetType="{x:Type snoop:EnumValueEditor}">
 		<Style.Resources>
@@ -177,7 +203,7 @@ All other rights reserved.
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type snoop:EnumValueEditor}">
-					<ContentPresenter Name="ValueHolder" Style="{x:Null}" ContentTemplate="{StaticResource UnselectedValueTemplate}" Content="{Binding RelativeSource={RelativeSource TemplatedParent}}"/>
+					<ContentPresenter Name="ValueHolder" Style="{x:Null}" ContentTemplate="{DynamicResource UnselectedValueTemplate}" Content="{Binding RelativeSource={RelativeSource TemplatedParent}}"/>
 
 					<ControlTemplate.Triggers>
 						<MultiTrigger>
@@ -185,7 +211,7 @@ All other rights reserved.
 								<Condition Property="IsSelected" Value="True"/>
 								<Condition Property="IsEditable" Value="True"/>
 							</MultiTrigger.Conditions>
-							<Setter TargetName="ValueHolder" Property="ContentTemplate" Value="{StaticResource SelectedValueTemplate}"/>
+							<Setter TargetName="ValueHolder" Property="ContentTemplate" Value="{DynamicResource SelectedValueTemplate}"/>
 						</MultiTrigger>
 					</ControlTemplate.Triggers>
 

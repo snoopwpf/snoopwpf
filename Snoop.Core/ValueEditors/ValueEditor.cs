@@ -8,9 +8,13 @@ namespace Snoop
     using System;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Windows.Input;
+    using Snoop.ValueEditors.Details;
 
-    public class ValueEditor : ContentControl
+    public abstract class ValueEditor : ContentControl
     {
+        public static readonly RoutedCommand OpenDetailsEditorCommand = new RoutedCommand();
+
         public static DependencyProperty IsSelectedProperty =
             DependencyProperty.Register
             (
@@ -62,6 +66,35 @@ namespace Snoop
                 new UIPropertyMetadata(null, OnPropertyInfoChanged)
             );
 
+        public static readonly DependencyProperty SupportsDetailsEditorProperty =
+            DependencyProperty.Register
+            (
+                nameof(SupportsDetailsEditor),
+                typeof(bool),
+                typeof(ValueEditor),
+                new PropertyMetadata(default(bool))
+            );
+
+        public static readonly DependencyProperty DetailsEditorTemplateProperty = 
+            DependencyProperty.Register
+            (
+                nameof(DetailsEditorTemplate), 
+                typeof(DataTemplate), 
+                typeof(ValueEditor), 
+                new PropertyMetadata(default(DataTemplate))
+            );
+
+        public ValueEditor()
+        {
+            this.CommandBindings.Add(new CommandBinding(OpenDetailsEditorCommand, this.HandleOpenDetailsEdtiorCommand, this.HandleCanOpenDetailsEditorCommand));
+        }
+
+        public DataTemplate DetailsEditorTemplate
+        {
+            get => (DataTemplate)this.GetValue(DetailsEditorTemplateProperty);
+            set => this.SetValue(DetailsEditorTemplateProperty, value);
+        }
+
         public bool IsSelected
         {
             get => (bool)this.GetValue(IsSelectedProperty);
@@ -98,6 +131,12 @@ namespace Snoop
             set => this.SetValue(PropertyInfoProperty, value);
         }
 
+        public bool SupportsDetailsEditor
+        {
+            get => (bool)this.GetValue(SupportsDetailsEditorProperty);
+            set => this.SetValue(SupportsDetailsEditorProperty, value);
+        }
+
         private static void HandleValueChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
             ((ValueEditor)sender).OnValueChanged(e.NewValue);
@@ -123,6 +162,28 @@ namespace Snoop
 
         protected virtual void OnPropertyInfoChanged(DependencyPropertyChangedEventArgs e)
         {
+        }
+
+        private void HandleCanOpenDetailsEditorCommand(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = this.SupportsDetailsEditor;
+        }
+
+        private void HandleOpenDetailsEdtiorCommand(object sender, ExecutedRoutedEventArgs e)
+        {
+            ValueEditorDetailsWindow.ShowDialog(this);
+        }
+
+        public virtual void PrepareForDetailsEditor()
+        {
+        }
+
+        public virtual void AcceptValueFromDetailsEditor()
+        {
+            if (this.PropertyInfo != null)
+            {
+                this.PropertyInfo.IsValueChangedByUser = true;
+            }
         }
     }
 }

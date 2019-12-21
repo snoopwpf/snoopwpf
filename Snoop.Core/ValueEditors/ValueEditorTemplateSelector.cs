@@ -18,6 +18,8 @@ namespace Snoop
 
         public DataTemplate BoolTemplate { get; set; }
 
+        public DataTemplate StringTemplate { get; set; }
+
         public DataTemplate BrushTemplate { get; set; }
 
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
@@ -37,6 +39,11 @@ namespace Snoop
             if (property.PropertyType == typeof(bool))
             {
                 return this.BoolTemplate;
+            }
+
+            if (property.PropertyType == typeof(string))
+            {
+                return this.StringTemplate;
             }
 
             if (property.PropertyType.IsGenericType

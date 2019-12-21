@@ -13,8 +13,6 @@ namespace Snoop
 
     public class StandardValueEditor : ValueEditor
     {
-        private bool isUpdatingValue;
-
         public static readonly DependencyProperty StringValueProperty =
             DependencyProperty.Register
             (
@@ -24,15 +22,17 @@ namespace Snoop
                 new PropertyMetadata(HandleStringPropertyChanged)
             );
 
+        private bool isUpdatingValue;
+
         public string StringValue
         {
-            get => (string) this.GetValue(StringValueProperty);
+            get => (string)this.GetValue(StringValueProperty);
             set => this.SetValue(StringValueProperty, value);
         }
 
         private static void HandleStringPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            ((StandardValueEditor) sender).OnStringPropertyChanged((string) e.NewValue);
+            ((StandardValueEditor)sender).OnStringPropertyChanged((string)e.NewValue);
         }
 
         protected virtual void OnStringPropertyChanged(string newValue)
@@ -60,8 +60,10 @@ namespace Snoop
                 {
                     try
                     {
-                        using var _ = new InvariantThreadCultureScope();
-                        this.SetValueFromConverter(newValue, targetType, converter);
+                        using (new InvariantThreadCultureScope())
+                        {
+                            this.SetValueFromConverter(newValue, targetType, converter);
+                        }
                     }
                     catch
                     {
@@ -99,9 +101,10 @@ namespace Snoop
             var value = this.Value;
             if (value != null)
             {
-                using var _ = new InvariantThreadCultureScope();
-
-                this.StringValue = value.ToString();
+                using (new InvariantThreadCultureScope())
+                {
+                    this.StringValue = value.ToString();
+                }
             }
             else
             {
