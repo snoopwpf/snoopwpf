@@ -3,6 +3,7 @@
     using System;
     using System.Windows;
     using System.Windows.Input;
+    using System.Windows.Media.Imaging;
     using Snoop.Infrastructure;
 
     public class SnoopBaseWindow : Window
@@ -10,6 +11,8 @@
         public SnoopBaseWindow()
         {
             this.InheritanceBehavior = InheritanceBehavior.SkipToThemeNext;
+            this.SnapsToDevicePixels = true;
+            this.Icon = new BitmapImage(new Uri("pack://application:,,,/Snoop.Core;component/Snoop.ico"));
 
             SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
         }

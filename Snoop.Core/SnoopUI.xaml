@@ -20,7 +20,6 @@ All other rights reserved.
     xmlns:behaviorsTab="clr-namespace:Snoop.BehaviorsTab"
     xmlns:windows="clr-namespace:Snoop.Windows"
     mc:Ignorable="d"
-	Icon="Snoop.ico"
 	Title="Snoop"
     MinWidth="480"
     MinHeight="320"
