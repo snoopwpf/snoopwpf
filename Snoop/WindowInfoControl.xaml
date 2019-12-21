@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:Snoop"
              xmlns:infrastructure="clr-namespace:Snoop.Infrastructure"
              xmlns:converters="clr-namespace:Snoop.Converters"
+             xmlns:snoop="urn:snoopwpf"
              mc:Ignorable="d"
              d:DesignHeight="40"
              d:DesignWidth="600"
@@ -39,7 +40,7 @@
                         Width="32"
                         Height="32"
                         Margin="0 0 2 0"
-                        Visibility="{Binding IsOwningProcessElevated, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        Visibility="{Binding IsOwningProcessElevated, Converter={x:Static snoop:BoolToVisibilityConverter.DefaultInstance}}">
                     <Image Style="{x:Null}"
                            Source="{Binding Source={x:Static infrastructure:SystemIcon.Shield}, Converter={x:Static converters:SystemIconToImageSourceConverter.Instance}, ConverterParameter=32}" />
                 </Border>

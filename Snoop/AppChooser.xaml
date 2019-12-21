@@ -14,6 +14,7 @@ All other rights reserved.
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:infrastructure="clr-namespace:Snoop.Infrastructure"
 	xmlns:converters="clr-namespace:Snoop.Converters"
+	xmlns:snoop="urn:snoopwpf"
 	x:Class="Snoop.AppChooser"
 	Icon="Snoop.ico"
 	Title="Snoop"
@@ -257,7 +258,7 @@ All other rights reserved.
                                 Width="16"
                                 Height="16">
                             <Image Style="{x:Null}"
-                                   Visibility="{Binding IsOwningProcessElevated, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                   Visibility="{Binding IsOwningProcessElevated, Converter={x:Static snoop:BoolToVisibilityConverter.DefaultInstance}}"
                                    Source="{Binding Source={x:Static infrastructure:SystemIcon.Shield}, Converter={x:Static converters:SystemIconToImageSourceConverter.Instance}, ConverterParameter=16}" />
                         </Border>
 
