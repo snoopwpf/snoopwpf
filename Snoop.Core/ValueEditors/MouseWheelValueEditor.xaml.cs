@@ -3,265 +3,253 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Globalization;
-
 namespace Snoop.ValueEditors
 {
-	/// <summary>
-	/// Interaction logic for MouseWheelValueEditor.xaml
-	/// </summary>
-	public partial class MouseWheelValueEditor : UserControl
-	{
-		public MouseWheelValueEditor()
-		{
-			InitializeComponent();
+    using System;
+    using System.Globalization;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Input;
 
-			MouseWheel += new MouseWheelEventHandler(MouseWheelHandler);
-		}
+    /// <summary>
+    ///     Interaction logic for MouseWheelValueEditor.xaml
+    /// </summary>
+    public partial class MouseWheelValueEditor
+    {
+        public MouseWheelValueEditor()
+        {
+            this.InitializeComponent();
 
+            this.MouseWheel += this.MouseWheelHandler;
+        }
+        
+        private PropertyInformation PropertyInfo => this.DataContext as PropertyInformation;
 
-		private void MouseWheelHandler(object sender, MouseWheelEventArgs e)
-		{
-			FrameworkElement fe = e.OriginalSource as FrameworkElement;
-			if (fe == null)
-			{
-				return;
-			}
+        private void MouseWheelHandler(object sender, MouseWheelEventArgs e)
+        {
+            var fe = e.OriginalSource as FrameworkElement;
+            if (fe == null)
+            {
+                return;
+            }
 
-			bool increment = true;
-			bool largeIncrement = false;
-			bool tinyIncrement = false;
+            var increment = true;
+            var largeIncrement = false;
+            var tinyIncrement = false;
 
-			if (e.Delta > 0)
-			{
-				increment = false;
-			}
+            if (e.Delta > 0)
+            {
+                increment = false;
+            }
 
-			if (((Keyboard.GetKeyStates(Key.LeftShift) & KeyStates.Down) > 0)
-					|| (Keyboard.GetKeyStates(Key.RightShift) & KeyStates.Down) > 0)
-			{
-				largeIncrement = true;
-			}
+            if ((Keyboard.GetKeyStates(Key.LeftShift) & KeyStates.Down) > 0
+                || (Keyboard.GetKeyStates(Key.RightShift) & KeyStates.Down) > 0)
+            {
+                largeIncrement = true;
+            }
 
-			if (((Keyboard.GetKeyStates(Key.LeftCtrl) & KeyStates.Down) > 0)
-					|| (Keyboard.GetKeyStates(Key.RightCtrl) & KeyStates.Down) > 0)
-			{
-				tinyIncrement = true;
-			}
+            if ((Keyboard.GetKeyStates(Key.LeftCtrl) & KeyStates.Down) > 0
+                || (Keyboard.GetKeyStates(Key.RightCtrl) & KeyStates.Down) > 0)
+            {
+                tinyIncrement = true;
+            }
 
-			var tb = fe as TextBlock;
-			if (tb != null)
-			{
-				int fieldNum = Int32.Parse(tb.Tag.ToString());
+            var tb = fe as TextBlock;
+            if (tb != null)
+            {
+                var fieldNum = int.Parse(tb.Tag.ToString());
 
-				switch (PropertyInfo.Property.PropertyType.Name)
-				{
-					case "Double":
-						PropertyInfo.StringValue = ChangeDoubleValue(tb.Text, increment, largeIncrement, tinyIncrement);
-						break;
+                switch (this.PropertyInfo.Property.PropertyType.Name)
+                {
+                    case "Double":
+                        this.PropertyInfo.StringValue = ChangeDoubleValue(tb.Text, increment, largeIncrement, tinyIncrement);
+                        break;
 
-					case "Int32":
-					case "Int16":
-						PropertyInfo.StringValue = ChangeIntValue(tb.Text, increment, largeIncrement);
-						break;
+                    case "Int32":
+                    case "Int16":
+                        this.PropertyInfo.StringValue = ChangeIntValue(tb.Text, increment, largeIncrement);
+                        break;
 
-					case "Boolean":
-						PropertyInfo.StringValue = ChangeBooleanValue(tb.Text);
-						break;
+                    case "Boolean":
+                        this.PropertyInfo.StringValue = ChangeBooleanValue(tb.Text);
+                        break;
 
-					case "Visibility":
-						PropertyInfo.StringValue = ChangeEnumValue<Visibility>(tb.Text, increment);
-						break;
+                    case "Visibility":
+                        this.PropertyInfo.StringValue = ChangeEnumValue<Visibility>(tb.Text, increment);
+                        break;
 
-					case "HorizontalAlignment":
-						PropertyInfo.StringValue = ChangeEnumValue<HorizontalAlignment>(tb.Text, increment);
-						break;
-					case "VerticalAlignment":
-						PropertyInfo.StringValue = ChangeEnumValue<VerticalAlignment>(tb.Text, increment);
-						break;
+                    case "HorizontalAlignment":
+                        this.PropertyInfo.StringValue = ChangeEnumValue<HorizontalAlignment>(tb.Text, increment);
+                        break;
 
-					case "Thickness":
-						ChangeThicknessValuePart(fieldNum, tb.Text, increment, largeIncrement);
-						break;
+                    case "VerticalAlignment":
+                        this.PropertyInfo.StringValue = ChangeEnumValue<VerticalAlignment>(tb.Text, increment);
+                        break;
 
-					case "Brush":
-						ChangeBrushValuePart(fieldNum, tb.Text, increment, largeIncrement);
-						break;
+                    case "Thickness":
+                        this.ChangeThicknessValuePart(fieldNum, tb.Text, increment, largeIncrement);
+                        break;
 
-					case "Color":
-						ChangeBrushValuePart(fieldNum, tb.Text, increment, largeIncrement);
-						break;
-				}
+                    case "Brush":
+                        this.ChangeBrushValuePart(fieldNum, tb.Text, increment, largeIncrement);
+                        break;
 
-				PropertyInfo.IsValueChangedByUser = true;
-			}
+                    case "Color":
+                        this.ChangeBrushValuePart(fieldNum, tb.Text, increment, largeIncrement);
+                        break;
+                }
 
-			e.Handled = true;
-		}
+                this.PropertyInfo.IsValueChangedByUser = true;
+            }
 
+            e.Handled = true;
+        }
 
-		private string ChangeIntValue(string current, bool increase, bool largeIncrement)
-		{
-			int change = 1;
-			if (!increase)
-			{
-				change *= -1;
-			}
-			if (largeIncrement)
-			{
-				change *= 10;
-			}
+        private static string ChangeIntValue(string current, bool increase, bool largeIncrement)
+        {
+            var change = 1;
+            if (!increase)
+            {
+                change *= -1;
+            }
 
-			int ret = Int32.Parse(current);
-			ret = ret + change;
+            if (largeIncrement)
+            {
+                change *= 10;
+            }
 
-			return ret.ToString();
-		}
+            var ret = int.Parse(current);
+            ret += change;
 
-		private string ChangeDoubleValue(string current, bool increase, bool largeIncrement, bool tinyIncrement)
-		{
-			double change = 1;
-			if (!increase)
-			{
-				change *= -1;
-			}
-			if (largeIncrement)
-			{
-				change *= 10;
-			}
-			if (tinyIncrement)
-			{
-				change /= 10;
-			}
+            return ret.ToString();
+        }
 
-			double ret = Double.Parse(current);
-			ret = ret + change;
+        private static string ChangeDoubleValue(string current, bool increase, bool largeIncrement, bool tinyIncrement)
+        {
+            double change = 1;
+            if (!increase)
+            {
+                change *= -1;
+            }
 
-			return ret.ToString();
-		}
+            if (largeIncrement)
+            {
+                change *= 10;
+            }
 
-		private string ChangeBooleanValue(string current)
-		{
-			bool ret = Boolean.Parse(current);
-			ret = !ret;
+            if (tinyIncrement)
+            {
+                change /= 10;
+            }
 
-			return ret.ToString();
-		}
+            var ret = double.Parse(current);
+            ret += change;
 
-		private string ChangeEnumValue<T>(string current, bool increase)
-		{
-			T ret = (T)Enum.Parse(typeof(T), current);
+            return ret.ToString();
+        }
 
-			// make numeric, so we can add or subtract one
-			int value = Convert.ToInt32(ret);
-			if (increase)
-			{
-				value += 1;
-			}
-			else
-			{
-				value -= 1;
-			}
+        private static string ChangeBooleanValue(string current)
+        {
+            var ret = bool.Parse(current);
+            ret = !ret;
 
-			value = Math.Min(Enum.GetValues(typeof(T)).Length - 1, Math.Max(0, value));
-			// long way around to get the enum typed value from the integer
-			ret = (T)(Enum.GetValues(typeof(T)).GetValue(value));
+            return ret.ToString();
+        }
 
-			return ret.ToString();
-		}
+        private static string ChangeEnumValue<T>(string current, bool increase)
+        {
+            var ret = (T)Enum.Parse(typeof(T), current);
 
-		/// <summary>
-		/// Increments or decrements the field part in the Thickness value.
-		/// Replaces that field in the underlying VALUE 
-		/// </summary>
-		private void ChangeThicknessValuePart(int fieldNum, string current, bool increase, bool largeIncrement)
-		{
-			int change = 1;
-			if (!increase)
-			{
-				change *= -1;
-			}
-			if (largeIncrement)
-			{
-				change *= 20;
-			}
+            // make numeric, so we can add or subtract one
+            var value = Convert.ToInt32(ret);
+            if (increase)
+            {
+                value += 1;
+            }
+            else
+            {
+                value -= 1;
+            }
 
-			int newVal = Int32.Parse(current);
-			newVal = newVal + change;
+            value = Math.Min(Enum.GetValues(typeof(T)).Length - 1, Math.Max(0, value));
+            // long way around to get the enum typed value from the integer
+            ret = (T)Enum.GetValues(typeof(T)).GetValue(value);
 
-			string partValue = newVal.ToString();
-			string currentValue = PropertyInfo.StringValue;
+            return ret.ToString();
+        }
 
-			// chop the current value up into its parts
-			string[] fields = currentValue.Split(',');
+        /// <summary>
+        ///     Increments or decrements the field part in the Thickness value.
+        ///     Replaces that field in the underlying VALUE
+        /// </summary>
+        private void ChangeThicknessValuePart(int fieldNum, string current, bool increase, bool largeIncrement)
+        {
+            var change = 1;
+            if (!increase)
+            {
+                change *= -1;
+            }
 
-			// replace the appropriate field
-			fields[fieldNum - 1] = partValue;
+            if (largeIncrement)
+            {
+                change *= 20;
+            }
 
-			// re-assemble back to Brush value
-			string newValue = String.Format(@"{0},{1},{2},{3}", fields[0], fields[1], fields[2], fields[3]);
+            var newVal = int.Parse(current);
+            newVal += change;
 
-			PropertyInfo.StringValue = newValue;
-		}
+            var partValue = newVal.ToString();
+            var currentValue = this.PropertyInfo.StringValue;
 
-		/// <summary>
-		/// Increments or decrements the field part in the Brush value.
-		/// Replaces that field in the underlying VALUE 
-		/// </summary>
-		private void ChangeBrushValuePart(int fieldNum, string current, bool increase, bool largeIncrement)
-		{
-			int change = 1;
-			if (!increase)
-			{
-				change *= -1;
-			}
-			if (largeIncrement)
-			{
-				change *= 16;
-			}
+            // chop the current value up into its parts
+            var fields = currentValue.Split(',');
 
-			int ret = Int32.Parse(current, NumberStyles.HexNumber);
-			ret = Math.Min(255, Math.Max(0, ret + change));
+            // replace the appropriate field
+            fields[fieldNum - 1] = partValue;
 
-			string partValue = ret.ToString("X2");
-			string currentValue = PropertyInfo.StringValue;
+            // re-assemble back to Brush value
+            var newValue = string.Format(@"{0},{1},{2},{3}", fields[0], fields[1], fields[2], fields[3]);
 
-			// chop the current value up into its parts
-			string[] fields = new string[4];
-			fields[0] = currentValue.Substring(1, 2);	// start at 1 to skip the leading # sign
-			fields[1] = currentValue.Substring(3, 2);
-			fields[2] = currentValue.Substring(5, 2);
-			fields[3] = currentValue.Substring(7, 2);
+            this.PropertyInfo.StringValue = newValue;
+        }
 
-			// replace the appropriate field
-			fields[fieldNum - 1] = partValue;
+        /// <summary>
+        ///     Increments or decrements the field part in the Brush value.
+        ///     Replaces that field in the underlying VALUE
+        /// </summary>
+        private void ChangeBrushValuePart(int fieldNum, string current, bool increase, bool largeIncrement)
+        {
+            var change = 1;
+            if (!increase)
+            {
+                change *= -1;
+            }
 
-			// re-assemble back to Brush value
-			string newValue = String.Format(@"#{0}{1}{2}{3}", fields[0], fields[1], fields[2], fields[3]);
+            if (largeIncrement)
+            {
+                change *= 16;
+            }
 
-			PropertyInfo.StringValue = newValue;
-		}
+            var ret = int.Parse(current, NumberStyles.HexNumber);
+            ret = Math.Min(255, Math.Max(0, ret + change));
 
+            var partValue = ret.ToString("X2");
+            var currentValue = this.PropertyInfo.StringValue;
 
-		private PropertyInformation PropertyInfo
-		{
-			get
-			{
-				return DataContext as PropertyInformation;
-			}
-		}
-	}
+            // chop the current value up into its parts
+            var fields = new string[4];
+            fields[0] = currentValue.Substring(1, 2); // start at 1 to skip the leading # sign
+            fields[1] = currentValue.Substring(3, 2);
+            fields[2] = currentValue.Substring(5, 2);
+            fields[3] = currentValue.Substring(7, 2);
+
+            // replace the appropriate field
+            fields[fieldNum - 1] = partValue;
+
+            // re-assemble back to Brush value
+            var newValue = string.Format(@"#{0}{1}{2}{3}", fields[0], fields[1], fields[2], fields[3]);
+
+            this.PropertyInfo.StringValue = newValue;
+        }
+    }
 }
