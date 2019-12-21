@@ -156,7 +156,6 @@ class Build : NukeBuild
                   {
                     var candleProcess = ProcessTasks.StartProcess(WixDirectory / "candle.exe", 
                                             $"snoop.wxs -ext WixUIExtension -o \"{OutputDirectory / "Snoop.wixobj"}\" -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -nologo");
-
                     candleProcess.AssertZeroExitCode();
 
                     var lightProcess = ProcessTasks.StartProcess(WixDirectory / "light.exe", 
