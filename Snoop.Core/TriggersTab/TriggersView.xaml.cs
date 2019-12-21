@@ -128,9 +128,16 @@ namespace Snoop.TriggersTab
             var fe = target as FrameworkElement;
             if (fe != null)
             {
-                if (fe.Style != null)
+                var style = fe.Style;
+                // If the target does not have an explicit style, try to find the default style
+                if (style == null)
                 {
-                    this.AddTriggers(fe, fe.Style.Triggers, TriggerSource.Style);
+                    style = fe.TryFindResource(fe.GetType()) as Style;
+                }
+                
+                if (style != null)
+                {
+                    this.AddTriggers(fe, style, TriggerSource.Style);
                 }
 
                 this.AddTriggers(fe, fe.Triggers, TriggerSource.Element);
@@ -152,6 +159,18 @@ namespace Snoop.TriggersTab
             if (contentPresenter != null && contentPresenter.ContentTemplate != null)
             {
                 this.AddTriggers(contentPresenter, contentPresenter.ContentTemplate.Triggers, TriggerSource.DataTemplate);
+            }
+        }
+
+        private void AddTriggers(FrameworkElement instance, Style style, TriggerSource source)
+        {
+            var currentStyle = style;
+
+            while (currentStyle != null)
+            {
+                this.AddTriggers(instance, currentStyle.Triggers, source);
+
+                currentStyle = currentStyle.BasedOn;
             }
         }
 
