@@ -87,7 +87,7 @@
             }
             else
             {
-                var binding = new Binding("Value")
+                var binding = new Binding(nameof(System.Windows.Setter.Value))
                               {
                                   Source = setter,
                                   Mode = property.IsReadOnly
@@ -95,7 +95,6 @@
                                              : BindingMode.TwoWay,
                                   Converter = new DynamicResourceToValueConverter(target)
                               };
-
 
                 return binding;
             }            
