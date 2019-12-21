@@ -18,6 +18,8 @@
     If you want to show uncommon properties from types like `Typography` or `NumberSubstitution` etc. just disable the new switch right beside the default value switch.
   - [#98](../../issues/98) - .NETCore 3.0 support
   - [#108](../../issues/108) - SnoopWPF on "Disabled" control state?
+  - [#139](../../issues/139) - Value Input did not support NewLine (\r\n)  
+    This is achieved by a new detail value editor.
   - [#144](../../issues/144) - Add support for showing behaviors (added by @dezsiszabi in [#149](../../pull/149))
 
 ## 2.11.0
