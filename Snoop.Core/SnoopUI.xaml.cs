@@ -480,7 +480,8 @@ namespace Snoop
 
             var directlyOver = Mouse.PrimaryDevice.GetRawDirectlyOver() as Visual;
 			if (directlyOver == null 
-                || directlyOver.IsDescendantOf(this))
+                || directlyOver.IsDescendantOf(this)
+                || directlyOver.IsPartOfSnoopVisualTree())
             {
                 return;
             }
