@@ -20,12 +20,12 @@
             {
                 if (parameter is FrameworkElement fe)
                 {
-                    return fe.TryFindResource(fe.GetType());
+                    return fe.TryFindResource(fe.GetType()) as Style;
                 }
 
                 if (parameter is FrameworkContentElement fec)
                 {
-                    return fec.TryFindResource(fec.GetType());
+                    return fec.TryFindResource(fec.GetType()) as Style;
                 }
             }
 

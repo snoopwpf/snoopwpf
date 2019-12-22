@@ -22,7 +22,7 @@
 
         public virtual void Initialize()
         {
-            var xaml = XamlWriterHelper.GetXamlAsXElement(this.TriggerAction);
+            var xaml = XamlWriterHelper.GetXamlAsXElement(this.TriggerAction).RemoveNamespaces();
 
             this.DescriptiveValue = xaml.ToString(SaveOptions.DisableFormatting);
             this.ToolTip = xaml.ToString(SaveOptions.None);

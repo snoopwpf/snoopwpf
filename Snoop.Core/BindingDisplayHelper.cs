@@ -21,7 +21,7 @@
         {
             var propertyValues = new List<string>(propertyNames.Length);
 
-            var xaml = XamlWriterHelper.GetXamlAsXElement(binding);
+            var xaml = XamlWriterHelper.GetXamlAsXElement(binding).RemoveNamespaces();
 
             foreach (var propertyName in propertyNames)
             {
@@ -29,7 +29,7 @@
 
                 if (attribute != null)
                 {
-                    propertyValues.Add(string.Format("{0}={1}", propertyName, attribute.Value));
+                    propertyValues.Add($"{propertyName}={attribute.Value}");
                 }
             }
 
