@@ -18,6 +18,7 @@
   - Because of [#151](../../issues/151) there are now a lot more properties being shown.  
     As a way to reduce the noise a new option to filter uncommom properties was added. The default value for that is `true`, so uncommon properties are hidden by default.  
     If you want to show uncommon properties from types like `Typography` or `NumberSubstitution` etc. just disable the new switch right beside the default value switch.
+  - Added "Copy XAML" to the context menu of the property grid. Please note that this feature is not finished and the generated XAML is not very good. I hope to improve this in the future.
   - [#82](../../issues/82) - Missing possibility of copying value of the specific node
   - [#98](../../issues/98) - .NETCore 3.0 support
   - [#108](../../issues/108) - SnoopWPF on "Disabled" control state?
