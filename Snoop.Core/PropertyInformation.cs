@@ -21,6 +21,8 @@ using System.Linq;
 
 namespace Snoop
 {
+    using JetBrains.Annotations;
+
     public class PropertyInformation : DependencyObject, IComparable, INotifyPropertyChanged
 	{
 		/// <summary>
@@ -224,6 +226,21 @@ namespace Snoop
             }
 		}
 
+        public string ResourceKey
+        {
+            get => this.resourceKey;
+            private set
+            {
+                if (value == this.resourceKey)
+                {
+                    return;
+                }
+
+                this.resourceKey = value;
+                this.OnPropertyChanged(nameof(this.ResourceKey));
+            }
+        }
+
         public string DescriptiveValue
         {
             get
@@ -271,44 +288,45 @@ namespace Snoop
                 if (this.Target is DependencyObject dependencyObject)
                 {
                     // Cache the resource key for this item if not cached already. This could be done for more types, but would need to optimize perf.
-                    string resourceKey = null;
+                    this.ResourceKey = null;
+
                     if (this.property != null
                         && (this.property.PropertyType == typeof(Style) || this.property.PropertyType == typeof(Brush)))
                     {
                         var resourceItem = value;
-                        resourceKey = ResourceKeyCache.GetKey(resourceItem);
+                        this.ResourceKey = ResourceKeyCache.GetKey(resourceItem);
 
-                        if (string.IsNullOrEmpty(resourceKey))
+                        if (string.IsNullOrEmpty(this.ResourceKey))
                         {
-                            resourceKey = ResourceDictionaryKeyHelpers.GetKeyOfResourceItem(dependencyObject, resourceItem);
-                            ResourceKeyCache.Cache(resourceItem, resourceKey);
+                            this.ResourceKey = ResourceDictionaryKeyHelpers.GetKeyOfResourceItem(dependencyObject, resourceItem);
+                            ResourceKeyCache.Cache(resourceItem, this.ResourceKey);
                         }
 
-                        Debug.Assert(resourceKey != null);
+                        Debug.Assert(this.ResourceKey != null);
                     }
 
                     // Display both the value and the resource key, if there's a key for this property.
-                    if (string.IsNullOrEmpty(resourceKey) == false)
+                    if (string.IsNullOrEmpty(this.ResourceKey) == false)
                     {
-                        return string.Format("{0} {1}", resourceKey, stringValue);
+                        return string.Format("{0} {1}", this.ResourceKey, stringValue);
                     }
 
                     // if the value comes from a Binding, show the path in [] brackets
-                    if (IsExpression && Binding is Binding)
+                    if (this.IsExpression 
+                        && this.Binding is Binding)
                     {
-                        stringValue = string.Format("{0} {1}", stringValue, BuildBindingDescriptiveString((Binding)Binding, true));
+                        stringValue = string.Format("{0} {1}", stringValue, this.BuildBindingDescriptiveString((Binding)this.Binding, true));
                     }
-
                     // if the value comes from a MultiBinding, show the binding paths separated by , in [] brackets
-                    else if (IsExpression && Binding is MultiBinding)
+                    else if (this.IsExpression 
+						&& this.Binding is MultiBinding)
                     {
-                        stringValue = stringValue + BuildMultiBindingDescriptiveString(((MultiBinding)this.Binding).Bindings.OfType<Binding>().ToArray());
+                        stringValue += this.BuildMultiBindingDescriptiveString(((MultiBinding)this.Binding).Bindings.OfType<Binding>().ToArray());
                     }
-
                     // if the value comes from a PriorityBinding, show the binding paths separated by , in [] brackets
-                    else if (IsExpression && Binding is PriorityBinding)
+                    else if (this.IsExpression && this.Binding is PriorityBinding)
                     {
-                        stringValue = stringValue + BuildMultiBindingDescriptiveString(((PriorityBinding)this.Binding).Bindings.OfType<Binding>().ToArray());
+                        stringValue += this.BuildMultiBindingDescriptiveString(((PriorityBinding)this.Binding).Bindings.OfType<Binding>().ToArray());
                     }
                 }
 
@@ -867,6 +885,7 @@ namespace Snoop
 
 		private bool isRunning = false;
 		private bool ignoreUpdate = false;
+        private string resourceKey;
         private static readonly Attribute[] getAllPropertiesAttributeFilter = { new PropertyFilterAttribute(PropertyFilterOptions.All) };
 
         public bool IsCollection()
@@ -899,13 +918,13 @@ namespace Snoop
 
 		#region INotifyPropertyChanged Members
 		public event PropertyChangedEventHandler PropertyChanged;
+
+		[NotifyPropertyChangedInvocator]
 		protected void OnPropertyChanged(string propertyName)
 		{
 			Debug.Assert(this.GetType().GetProperty(propertyName) != null);
-			if (this.PropertyChanged != null)
-            {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 		#endregion
 

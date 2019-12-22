@@ -42,9 +42,14 @@ All other rights reserved.
                         <Label Style="{x:Null}" Margin="0" Padding="0" Content="Clear/Reset" />
 					</MenuItem.Header>
 				</MenuItem>
-				<MenuItem Style="{x:Null}" Command="{x:Static snoop:PropertyInspector.SnipXamlCommand}" CommandParameter="{Binding}">
+                <MenuItem Style="{x:Null}" Command="{x:Static snoop:PropertyInspector.CopyResourceNameCommand}" CommandParameter="{Binding}">
+                    <MenuItem.Header>
+                        <Label Style="{x:Null}" Margin="0" Padding="0" Content="Copy Resource Name" />
+                    </MenuItem.Header>
+                </MenuItem>
+				<MenuItem Style="{x:Null}" Command="{x:Static snoop:PropertyInspector.CopyXamlCommand}" CommandParameter="{Binding}">
 					<MenuItem.Header>
-                        <Label Style="{x:Null}" Margin="0" Padding="0" Content="Copy this brush" />
+                        <Label Style="{x:Null}" Margin="0" Padding="0" Content="Copy XAML" />
 					</MenuItem.Header>
 				</MenuItem>
 			</ContextMenu>

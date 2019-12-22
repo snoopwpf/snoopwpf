@@ -17,14 +17,18 @@ namespace Snoop
     using System.Windows.Media;
     using Snoop.Infrastructure;
     using JetBrains.Annotations;
+    using Snoop.Infrastructure.Helpers;
 
     public partial class PropertyInspector : INotifyPropertyChanged
     {
-        public static readonly RoutedCommand SnipXamlCommand = new RoutedCommand("SnipXaml", typeof(PropertyInspector));
         public static readonly RoutedCommand PopTargetCommand = new RoutedCommand("PopTarget", typeof(PropertyInspector));
+
         public static readonly RoutedCommand DelveCommand = new RoutedCommand();
         public static readonly RoutedCommand DelveBindingCommand = new RoutedCommand();
         public static readonly RoutedCommand DelveBindingExpressionCommand = new RoutedCommand();
+        public static readonly RoutedCommand CopyResourceNameCommand = new RoutedCommand("CopyResourceName", typeof(PropertyInspector));
+        public static readonly RoutedCommand CopyXamlCommand = new RoutedCommand("CopyXaml", typeof(PropertyInspector));
+
         public static readonly RoutedCommand NavigateToAssemblyInExplorerCommand = new RoutedCommand("NavigateToAssemblyInExplorer", typeof(PropertyInspector));
 
         private object target;
@@ -36,11 +40,14 @@ namespace Snoop
             this.inspector = this.PropertyGrid;
             this.inspector.Filter = this.propertyFilter;
 
-            this.CommandBindings.Add(new CommandBinding(SnipXamlCommand, this.HandleSnipXaml, this.CanSnipXaml));
             this.CommandBindings.Add(new CommandBinding(PopTargetCommand, this.HandlePopTarget, this.CanPopTarget));
+
             this.CommandBindings.Add(new CommandBinding(DelveCommand, this.HandleDelve, CanDelve));
             this.CommandBindings.Add(new CommandBinding(DelveBindingCommand, this.HandleDelveBinding, CanDelveBinding));
             this.CommandBindings.Add(new CommandBinding(DelveBindingExpressionCommand, this.HandleDelveBindingExpression, CanDelveBindingExpression));
+            this.CommandBindings.Add(new CommandBinding(CopyResourceNameCommand, this.HandleCopyResourceName, this.CanCopyResourceName));
+            this.CommandBindings.Add(new CommandBinding(CopyXamlCommand, this.HandleCopyXaml, this.CanCopyXaml));
+
             this.CommandBindings.Add(new CommandBinding(NavigateToAssemblyInExplorerCommand, this.HandleNavigateToAssemblyInExplorer, this.CanNavigateToAssemblyInExplorer));
 
             // watch for mouse "back" button
@@ -66,13 +73,11 @@ namespace Snoop
         }
         private readonly bool nameValueOnly = false;
 
-        private void HandleSnipXaml(object sender, ExecutedRoutedEventArgs e)
+        private void HandleCopyResourceName(object sender, ExecutedRoutedEventArgs e)
         {
             try
             {
-                var xaml = XamlWriter.Save(((PropertyInformation)e.Parameter).Value);
-                ClipboardHelper.SetText(xaml);
-                MessageBox.Show("Brush has been copied to the clipboard. You can paste it into your project.", "Brush copied", MessageBoxButton.OK, MessageBoxImage.Information);
+                ClipboardHelper.SetText(((PropertyInformation)e.Parameter).ResourceKey);
             }
             catch (Exception exception)
             {
@@ -80,9 +85,32 @@ namespace Snoop
             }
         }
 
-        private void CanSnipXaml(object sender, CanExecuteRoutedEventArgs e)
+        private void CanCopyResourceName(object sender, CanExecuteRoutedEventArgs e)
         {
-            if (e.Parameter != null && ((PropertyInformation)e.Parameter).Value is Brush)
+            if (e.Parameter is PropertyInformation propertyInformation)
+            {
+                e.CanExecute = string.IsNullOrEmpty(propertyInformation.ResourceKey) == false;
+            }
+
+            e.Handled = true;
+        }
+
+        private void HandleCopyXaml(object sender, ExecutedRoutedEventArgs e)
+        {
+            try
+            {
+                var xaml = XamlWriterHelper.GetXamlAsString(((PropertyInformation)e.Parameter).Value);
+                ClipboardHelper.SetText(xaml);
+            }
+            catch (Exception exception)
+            {
+                ErrorDialog.ShowExceptionMessageBox(exception);
+            }
+        }
+
+        private void CanCopyXaml(object sender, CanExecuteRoutedEventArgs e)
+        {
+            if (e.Parameter != null)
             {
                 e.CanExecute = true;
             }

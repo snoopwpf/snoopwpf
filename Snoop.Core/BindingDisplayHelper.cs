@@ -1,10 +1,8 @@
 ﻿namespace Snoop
 {
     using System.Collections.Generic;
-    using System.Linq;
     using System.Windows.Data;
-    using System.Windows.Markup;
-    using System.Xml.Linq;
+    using Snoop.Infrastructure.Helpers;
 
     public static class BindingDisplayHelper
     {
@@ -23,13 +21,11 @@
         {
             var propertyValues = new List<string>(propertyNames.Length);
 
-            var savedXaml = XamlWriter.Save(binding);
-
-            var xamlWithoutNamespaces = RemoveNamespacesFromXml(savedXaml);
+            var xaml = XamlWriterHelper.GetXamlAsXElement(binding);
 
             foreach (var propertyName in propertyNames)
             {
-                var attribute = xamlWithoutNamespaces.Attribute(propertyName);
+                var attribute = xaml.Attribute(propertyName);
 
                 if (attribute != null)
                 {
@@ -38,20 +34,6 @@
             }
 
             return string.Join(",", propertyValues.ToArray());
-        }
-
-        public static XElement RemoveNamespacesFromXml(string input)
-        {
-            var xml = XElement.Parse(input);
-            foreach (var xe in xml.DescendantsAndSelf())
-            {
-                // Stripping the namespace by setting the name of the element to it's localname only
-                xe.Name = xe.Name.LocalName;
-                // replacing all attributes with attributes that are not namespaces and their names are set to only the localname
-                xe.ReplaceAttributes(from xattrib in xe.Attributes().Where(xa => !xa.IsNamespaceDeclaration) select new XAttribute(xattrib.Name.LocalName, xattrib.Value));
-            }
-
-            return xml;
         }
     }
 }

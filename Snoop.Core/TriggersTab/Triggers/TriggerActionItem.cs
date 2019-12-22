@@ -1,8 +1,8 @@
 ﻿namespace Snoop.TriggersTab.Triggers
 {
     using System.Windows;
-    using System.Windows.Markup;
     using System.Xml.Linq;
+    using Snoop.Infrastructure.Helpers;
 
     public class TriggerActionItem
     {
@@ -12,9 +12,9 @@
             this.TriggerAction = triggerAction;
         }
 
-        public DependencyObject Source { get; private set; }
+        public DependencyObject Source { get; }
 
-        public TriggerAction TriggerAction { get; private set; }
+        public TriggerAction TriggerAction { get; }
 
         public string DescriptiveValue { get; protected set; }
 
@@ -22,7 +22,7 @@
 
         public virtual void Initialize()
         {
-            var xaml = BindingDisplayHelper.RemoveNamespacesFromXml(XamlWriter.Save(this.TriggerAction));
+            var xaml = XamlWriterHelper.GetXamlAsXElement(this.TriggerAction);
 
             this.DescriptiveValue = xaml.ToString(SaveOptions.DisableFormatting);
             this.ToolTip = xaml.ToString(SaveOptions.None);
