@@ -22,6 +22,7 @@ using System.Linq;
 namespace Snoop
 {
     using JetBrains.Annotations;
+    using Snoop.Converters;
 
     public class PropertyInformation : DependencyObject, IComparable, INotifyPropertyChanged
 	{
@@ -48,6 +49,13 @@ namespace Snoop
 				{
 					binding = new Binding();
 					binding.Path = new PropertyPath("(0)", new object[] { dp });
+
+                    if (dp == FrameworkElement.StyleProperty
+                        || dp == FrameworkContentElement.StyleProperty)
+                    {
+                        binding.Converter = NullStyleConverter.DefaultInstance;
+                        binding.ConverterParameter = target;
+                    }
 				}
 				else
 				{
