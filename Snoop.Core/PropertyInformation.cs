@@ -224,97 +224,97 @@ namespace Snoop
             }
 		}
 
-		public string DescriptiveValue
-		{
-			get
-			{
-				object value = this.Value;
-				if (value == null)
-				{
-					return string.Empty;
-				}
+        public string DescriptiveValue
+        {
+            get
+            {
+                var value = this.Value;
+                if (value == null)
+                {
+                    return string.Empty;
+                }
 
-				string stringValue = value.ToString();
+                var stringValue = value.ToString();
 
-				if (stringValue.Equals(value.GetType().ToString()))
-				{
-					// Add brackets around types to distinguish them from values.
-					// Replace long type names with short type names for some specific types, for easier readability.
-					// FUTURE: This could be extended to other types.
-				    if (value is BindingBase)
-				    {
-				        stringValue = string.Format("[{0}]", "Binding");
-				    }
-				    else if (value is DynamicResourceExtension)
-				    {
-				        stringValue = string.Format("[{0}]", "DynamicResource");
-				    }
-					else if (this.property != null &&
-						(this.property.PropertyType == typeof(Brush) || this.property.PropertyType == typeof(Style)))
-					{
-						stringValue = string.Format("[{0}]", value.GetType().Name);
-					}
-					else
-					{
-						stringValue = string.Format("[{0}]", stringValue);
-					}
-				}
+                if (stringValue.Equals(value.GetType().ToString()))
+                {
+                    // Add brackets around types to distinguish them from values.
+                    // Replace long type names with short type names for some specific types, for easier readability.
+                    // FUTURE: This could be extended to other types.
+                    if (value is BindingBase)
+                    {
+                        stringValue = string.Format("[{0}]", "Binding");
+                    }
+                    else if (value is DynamicResourceExtension)
+                    {
+                        stringValue = string.Format("[{0}]", "DynamicResource");
+                    }
+                    else if (this.property != null &&
+                             (this.property.PropertyType == typeof(Brush) || this.property.PropertyType == typeof(Style)))
+                    {
+                        stringValue = string.Format("[{0}]", value.GetType().Name);
+                    }
+                    else
+                    {
+                        stringValue = string.Format("[{0}]", stringValue);
+                    }
+                }
 
-				// Display #00FFFFFF as Transparent for easier readability
-				if (this.property != null &&
-					this.property.PropertyType == typeof(Brush) &&
-					stringValue.Equals("#00FFFFFF"))
-				{
-					stringValue = "Transparent";
-				}
+                // Display #00FFFFFF as Transparent for easier readability
+                if (this.property != null &&
+                    this.property.PropertyType == typeof(Brush) &&
+                    stringValue.Equals("#00FFFFFF"))
+                {
+                    stringValue = "Transparent";
+                }
 
-			    if (this.Target is DependencyObject dependencyObject)
-				{
-					// Cache the resource key for this item if not cached already. This could be done for more types, but would need to optimize perf.
-					string resourceKey = null;
-					if (this.property != null 
-					    && (this.property.PropertyType == typeof(Style) || this.property.PropertyType == typeof(Brush)))
-					{
-						var resourceItem = value;
-						resourceKey = ResourceKeyCache.GetKey(resourceItem);
+                if (this.Target is DependencyObject dependencyObject)
+                {
+                    // Cache the resource key for this item if not cached already. This could be done for more types, but would need to optimize perf.
+                    string resourceKey = null;
+                    if (this.property != null
+                        && (this.property.PropertyType == typeof(Style) || this.property.PropertyType == typeof(Brush)))
+                    {
+                        var resourceItem = value;
+                        resourceKey = ResourceKeyCache.GetKey(resourceItem);
 
-						if (string.IsNullOrEmpty(resourceKey))
-						{
-							resourceKey = ResourceDictionaryKeyHelpers.GetKeyOfResourceItem(dependencyObject, resourceItem);
-							ResourceKeyCache.Cache(resourceItem, resourceKey);
-						}
+                        if (string.IsNullOrEmpty(resourceKey))
+                        {
+                            resourceKey = ResourceDictionaryKeyHelpers.GetKeyOfResourceItem(dependencyObject, resourceItem);
+                            ResourceKeyCache.Cache(resourceItem, resourceKey);
+                        }
 
-						Debug.Assert(resourceKey != null);
-					}
+                        Debug.Assert(resourceKey != null);
+                    }
 
-					// Display both the value and the resource key, if there's a key for this property.
-					if (string.IsNullOrEmpty(resourceKey) == false)
-					{
-						return string.Format("{0} {1}", resourceKey, stringValue);
-					}
+                    // Display both the value and the resource key, if there's a key for this property.
+                    if (string.IsNullOrEmpty(resourceKey) == false)
+                    {
+                        return string.Format("{0} {1}", resourceKey, stringValue);
+                    }
 
-					// if the value comes from a Binding, show the path in [] brackets
-					if ( IsExpression && Binding is Binding )
-					{
-						stringValue = string.Format( "{0} {1}", stringValue, BuildBindingDescriptiveString( (Binding)Binding, true ) );
-					}
+                    // if the value comes from a Binding, show the path in [] brackets
+                    if (IsExpression && Binding is Binding)
+                    {
+                        stringValue = string.Format("{0} {1}", stringValue, BuildBindingDescriptiveString((Binding)Binding, true));
+                    }
 
-					// if the value comes from a MultiBinding, show the binding paths separated by , in [] brackets
-					else if ( IsExpression && Binding is MultiBinding )
-					{
-						stringValue = stringValue + BuildMultiBindingDescriptiveString( ((MultiBinding)this.Binding).Bindings.OfType<Binding>().ToArray() );
-					}
+                    // if the value comes from a MultiBinding, show the binding paths separated by , in [] brackets
+                    else if (IsExpression && Binding is MultiBinding)
+                    {
+                        stringValue = stringValue + BuildMultiBindingDescriptiveString(((MultiBinding)this.Binding).Bindings.OfType<Binding>().ToArray());
+                    }
 
-					// if the value comes from a PriorityBinding, show the binding paths separated by , in [] brackets
-					else if ( IsExpression && Binding is PriorityBinding )
-					{
-						stringValue = stringValue + BuildMultiBindingDescriptiveString( ((PriorityBinding)this.Binding).Bindings.OfType<Binding>().ToArray() );
-					}
-				}
+                    // if the value comes from a PriorityBinding, show the binding paths separated by , in [] brackets
+                    else if (IsExpression && Binding is PriorityBinding)
+                    {
+                        stringValue = stringValue + BuildMultiBindingDescriptiveString(((PriorityBinding)this.Binding).Bindings.OfType<Binding>().ToArray());
+                    }
+                }
 
-				return stringValue;
-			}
-		}
+                return stringValue;
+            }
+        }
 
 		/// <summary>
 		/// Build up a string of Paths for a MultiBinding separated by ;
