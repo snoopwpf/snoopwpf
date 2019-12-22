@@ -107,9 +107,9 @@ namespace Snoop
             set => this.SetValue(ValueProperty, value);
         }
 
-        public object DescriptiveValue
+        public string DescriptiveValue
         {
-            get => (bool)this.GetValue(DescriptiveValueProperty);
+            get => (string)this.GetValue(DescriptiveValueProperty);
             set => this.SetValue(DescriptiveValueProperty, value);
         }
 
