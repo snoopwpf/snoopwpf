@@ -110,7 +110,8 @@ namespace Snoop
 
         private void CanCopyXaml(object sender, CanExecuteRoutedEventArgs e)
         {
-            if (e.Parameter != null)
+            if (e.Parameter is PropertyInformation propertyInformation
+                && propertyInformation.Value != null)
             {
                 e.CanExecute = true;
             }
