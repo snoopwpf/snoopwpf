@@ -176,7 +176,7 @@ namespace Snoop.TriggersTab
             }
         }
 
-        private void AddTriggers(FrameworkContentElement instance, Style style, TriggerSource source)
+        private void AddTriggers(DependencyObject instance, Style style, TriggerSource source)
         {
             var currentStyle = style;
 
@@ -188,19 +188,7 @@ namespace Snoop.TriggersTab
             }
         }
 
-        private void AddTriggers(FrameworkElement instance, Style style, TriggerSource source)
-        {
-            var currentStyle = style;
-
-            while (currentStyle != null)
-            {
-                this.AddTriggers(instance, currentStyle.Triggers, source);
-
-                currentStyle = currentStyle.BasedOn;
-            }
-        }
-
-        private void AddTriggers(FrameworkElement instance, IEnumerable<TriggerBase> triggersToAdd, TriggerSource source)
+        private void AddTriggers(DependencyObject instance, IEnumerable<TriggerBase> triggersToAdd, TriggerSource source)
         {
             foreach (var trigger in triggersToAdd)
             {
@@ -211,17 +199,5 @@ namespace Snoop.TriggersTab
                 }
             }
         }
-
-        private void AddTriggers(FrameworkContentElement instance, IEnumerable<TriggerBase> triggersToAdd, TriggerSource source)
-        {
-            foreach (var trigger in triggersToAdd)
-            {
-                var triggerItem = TriggerItemFactory.GetTriggerItem(trigger, instance, source);
-                if (triggerItem != null)
-                {
-                    this.triggers.Add(triggerItem);
-                }
-            }
-        }  
     }
 }

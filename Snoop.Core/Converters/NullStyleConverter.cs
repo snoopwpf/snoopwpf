@@ -16,14 +16,17 @@
                 return value;
             }
 
-            if (parameter is FrameworkElement fe)
+            // If the target does not have an explicit style, try to find the default style
             {
-                return fe.TryFindResource(fe.GetType());
-            }
+                if (parameter is FrameworkElement fe)
+                {
+                    return fe.TryFindResource(fe.GetType());
+                }
 
-            if (parameter is FrameworkContentElement fec)
-            {
-                return fec.TryFindResource(fec.GetType());
+                if (parameter is FrameworkContentElement fec)
+                {
+                    return fec.TryFindResource(fec.GetType());
+                }
             }
 
             return null;
