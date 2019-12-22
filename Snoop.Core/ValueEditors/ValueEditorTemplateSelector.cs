@@ -36,7 +36,9 @@ namespace Snoop
                 return this.EnumTemplate;
             }
 
-            if (property.PropertyType == typeof(bool))
+            if (property.PropertyType == typeof(bool)
+                || (property.PropertyType.IsGenericType
+                    && Nullable.GetUnderlyingType(property.PropertyType) == typeof(bool)))
             {
                 return this.BoolTemplate;
             }
@@ -44,12 +46,6 @@ namespace Snoop
             if (property.PropertyType == typeof(string))
             {
                 return this.StringTemplate;
-            }
-
-            if (property.PropertyType.IsGenericType
-                && Nullable.GetUnderlyingType(property.PropertyType) == typeof(bool))
-            {
-                return this.BoolTemplate;
             }
 
             if (typeof(Brush).IsAssignableFrom(property.PropertyType))
