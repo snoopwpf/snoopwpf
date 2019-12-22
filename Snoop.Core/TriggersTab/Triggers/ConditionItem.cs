@@ -157,7 +157,7 @@ namespace Snoop.TriggersTab.Triggers
         {
             get
             {
-                return $"{this.DisplayName} == {this.TargetValue} TargetValue: {this.StringValue}";
+                return $"{this.DisplayName} == {this.TargetValue} [Current value: {this.StringValue}]";
             }
         }
 
