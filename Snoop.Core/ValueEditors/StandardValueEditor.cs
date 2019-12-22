@@ -17,7 +17,7 @@ namespace Snoop
                 nameof(StringValue),
                 typeof(string),
                 typeof(StandardValueEditor),
-                new PropertyMetadata(HandleStringPropertyChanged)
+                new PropertyMetadata(HandleStringValuePropertyChanged)
             );
 
         private bool isUpdatingValue;
@@ -28,12 +28,12 @@ namespace Snoop
             set => this.SetValue(StringValueProperty, value);
         }
 
-        private static void HandleStringPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        private static void HandleStringValuePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            ((StandardValueEditor)sender).OnStringPropertyChanged((string)e.NewValue);
+            ((StandardValueEditor)sender).OnStringValuePropertyChanged((string)e.NewValue);
         }
 
-        protected virtual void OnStringPropertyChanged(string newValue)
+        protected virtual void OnStringValuePropertyChanged(string newValue)
         {
             if (this.isUpdatingValue)
             {
