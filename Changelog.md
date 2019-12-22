@@ -24,6 +24,7 @@
   - [#108](../../issues/108) - SnoopWPF on "Disabled" control state?
   - [#139](../../issues/139) - Value Input did not support NewLine (\r\n)  
     This is achieved by a new detail value editor.
+  - [#140](../../issues/140) - CTRL_SHIFT stops working
   - [#144](../../issues/144) - Add support for showing behaviors (added by @dezsiszabi in [#149](../../pull/149))
 
 ## 2.11.0
