@@ -19,6 +19,7 @@ namespace Snoop
     using System.Windows.Markup;
     using System.Windows.Media;
     using System.Windows.Navigation;
+    using Snoop.Infrastructure;
 
     public class PropertyFilter
 	{
@@ -153,7 +154,11 @@ namespace Snoop
             typeof(NumberSubstitution),
             typeof(ToolTipService),
             typeof(Typography),
-            typeof(XmlAttributeProperties)
+            typeof(XmlAttributeProperties),
+
+            // Snoops own attached properties
+            typeof(BringIntoViewBehavior),
+            typeof(AttachedPropertyManager)
         };
 
         private static readonly List<string> uncommonPropertyNames = new List<string>

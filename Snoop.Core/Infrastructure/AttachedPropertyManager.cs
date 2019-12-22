@@ -32,10 +32,9 @@
 
         private static DependencyProperty GetAttachedPropertyFromIndex(int index)
         {
-            DependencyProperty attachedProperty;
-            if (attachedDependencyProperties.TryGetValue(index, out attachedProperty) == false)
+            if (attachedDependencyProperties.TryGetValue(index, out var attachedProperty) == false)
             {
-                attachedProperty = DependencyProperty.RegisterAttached("Snoop_Runtime_AttachedProperty_" + index, typeof(object), typeof(FrameworkElement), new FrameworkPropertyMetadata(null));
+                attachedProperty = DependencyProperty.RegisterAttached("Snoop_Runtime_AttachedProperty_" + index, typeof(object), typeof(AttachedPropertyManager), new FrameworkPropertyMetadata(null));
                 attachedDependencyProperties.Add(index, attachedProperty);
             }
 
@@ -56,11 +55,11 @@
             BindingOperations.SetBinding(this.Target, this.DependencyProperty, binding);
         }
 
-        public DependencyObject Target { get; private set; }
+        public DependencyObject Target { get; }
 
-        public DependencyProperty DependencyProperty { get; private set; }
+        public DependencyProperty DependencyProperty { get; }
 
-        public BindingBase Binding { get; private set; }
+        public BindingBase Binding { get; }
 
         /// <inheritdoc />
         public void Dispose()
