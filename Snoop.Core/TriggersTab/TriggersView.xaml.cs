@@ -125,8 +125,7 @@ namespace Snoop.TriggersTab
                 return;
             }
 
-            var fe = target as FrameworkElement;
-            if (fe != null)
+            if (target is FrameworkElement fe)
             {
                 var style = fe.Style;
                 // If the target does not have an explicit style, try to find the default style
@@ -141,6 +140,21 @@ namespace Snoop.TriggersTab
                 }
 
                 this.AddTriggers(fe, fe.Triggers, TriggerSource.Element);
+            }
+
+            if (target is FrameworkContentElement fec)
+            {
+                var style = fec.Style;
+                // If the target does not have an explicit style, try to find the default style
+                if (style == null)
+                {
+                    style = fec.TryFindResource(fec.GetType()) as Style;
+                }
+                
+                if (style != null)
+                {
+                    this.AddTriggers(fec, style, TriggerSource.Style);
+                }
             }
 
             var control = target as Control;
@@ -159,6 +173,18 @@ namespace Snoop.TriggersTab
             if (contentPresenter != null && contentPresenter.ContentTemplate != null)
             {
                 this.AddTriggers(contentPresenter, contentPresenter.ContentTemplate.Triggers, TriggerSource.DataTemplate);
+            }
+        }
+
+        private void AddTriggers(FrameworkContentElement instance, Style style, TriggerSource source)
+        {
+            var currentStyle = style;
+
+            while (currentStyle != null)
+            {
+                this.AddTriggers(instance, currentStyle.Triggers, source);
+
+                currentStyle = currentStyle.BasedOn;
             }
         }
 
@@ -184,6 +210,18 @@ namespace Snoop.TriggersTab
                     this.triggers.Add(triggerItem);
                 }
             }
-        }       
+        }
+
+        private void AddTriggers(FrameworkContentElement instance, IEnumerable<TriggerBase> triggersToAdd, TriggerSource source)
+        {
+            foreach (var trigger in triggersToAdd)
+            {
+                var triggerItem = TriggerItemFactory.GetTriggerItem(trigger, instance, source);
+                if (triggerItem != null)
+                {
+                    this.triggers.Add(triggerItem);
+                }
+            }
+        }  
     }
 }

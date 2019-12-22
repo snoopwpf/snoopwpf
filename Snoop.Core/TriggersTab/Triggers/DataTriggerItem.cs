@@ -7,12 +7,12 @@
     public class DataTriggerItem : TriggerItemBase
     {
         private readonly DataTrigger dataTrigger;
-        private readonly FrameworkElement source;
+        private readonly DependencyObject source;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="DataTriggerItem" /> class.
         /// </summary>
-        public DataTriggerItem(DataTrigger trigger, FrameworkElement source, TriggerSource triggerSource)
+        public DataTriggerItem(DataTrigger trigger, DependencyObject source, TriggerSource triggerSource)
             : base(trigger, source, TriggerType.DataTrigger, triggerSource)
         {
             this.dataTrigger = trigger;

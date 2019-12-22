@@ -5,21 +5,30 @@
 
     public class TemplateHelper
     {
-        public static object GetChildFromTemplateIfNeeded(FrameworkElement element, string templatePartName)
+        public static object GetChildFromTemplateIfNeeded(DependencyObject element, string templatePartName)
         {
             if (string.IsNullOrEmpty(templatePartName))
             {
                 return element;
             }
 
-            var control = element as Control;
-            if (control != null
+            if (element is Control control
                 && control.Template != null)
             {
                 return control.Template.FindName(templatePartName, control);
             }
 
-            return element.FindName(templatePartName);
+            if (element is FrameworkElement fe)
+            {
+                return fe.FindName(templatePartName);
+            }
+
+            if (element is FrameworkContentElement fec)
+            {
+                return fec.FindName(templatePartName);
+            }
+
+            return null;
         }
     }
 }

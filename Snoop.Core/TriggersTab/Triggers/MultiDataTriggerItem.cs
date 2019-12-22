@@ -6,10 +6,10 @@
 
     public class MultiDataTriggerItem : TriggerItemBase
     {
-        private readonly FrameworkElement source;
+        private readonly DependencyObject source;
         private readonly MultiDataTrigger trigger;
 
-        public MultiDataTriggerItem(MultiDataTrigger trigger, FrameworkElement source, TriggerSource triggerSource)
+        public MultiDataTriggerItem(MultiDataTrigger trigger, DependencyObject source, TriggerSource triggerSource)
             : base(trigger, source, TriggerType.MultiDataTrigger, triggerSource)
         {
             this.trigger = trigger;

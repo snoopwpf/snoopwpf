@@ -18,7 +18,7 @@
         /// <summary>
         ///     Initializes a new instance of the <see cref="SetterItem" /> class.
         /// </summary>
-        public SetterItem(SetterBase setterBase, FrameworkElement element)
+        public SetterItem(SetterBase setterBase, DependencyObject element)
         {
             this.Property = "Unknown";
 

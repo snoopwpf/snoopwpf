@@ -7,10 +7,10 @@
 
     public class TriggerItem : TriggerItemBase
     {
-        private readonly FrameworkElement source;
+        private readonly DependencyObject source;
         private readonly Trigger trigger;
 
-        public TriggerItem(Trigger trigger, FrameworkElement source, TriggerSource triggerSource)
+        public TriggerItem(Trigger trigger, DependencyObject source, TriggerSource triggerSource)
             : base(trigger, source, TriggerType.Trigger, triggerSource)
         {
             this.trigger = trigger;

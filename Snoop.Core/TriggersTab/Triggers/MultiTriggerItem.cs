@@ -9,12 +9,12 @@
     public class MultiTriggerItem : TriggerItemBase
     {
         private readonly MultiTrigger trigger;
-        private readonly FrameworkElement source;
+        private readonly DependencyObject source;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="MultiTriggerItem" /> class.
         /// </summary>
-        public MultiTriggerItem(MultiTrigger trigger, FrameworkElement source, TriggerSource triggerSource)
+        public MultiTriggerItem(MultiTrigger trigger, DependencyObject source, TriggerSource triggerSource)
             : base(trigger, source, TriggerType.MultiTrigger, triggerSource)
         {
             this.trigger = trigger;

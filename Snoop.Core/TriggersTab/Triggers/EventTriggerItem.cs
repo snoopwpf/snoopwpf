@@ -9,7 +9,7 @@
     {
         private readonly EventTrigger eventTrigger;
 
-        public EventTriggerItem(EventTrigger eventTrigger, FrameworkElement source, TriggerSource triggerSource)
+        public EventTriggerItem(EventTrigger eventTrigger, DependencyObject source, TriggerSource triggerSource)
             : base(eventTrigger, source, TriggerType.EventTrigger, triggerSource)
         {
             this.eventTrigger = eventTrigger;
