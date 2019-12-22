@@ -11,8 +11,9 @@ using System.Windows;
 namespace Snoop
 {
 	using System.Windows.Interop;
+    using JetBrains.Annotations;
 
-	class VisualCaptureUtil
+    class VisualCaptureUtil
 	{
 		public static void SaveVisual(Visual visual, int dpi, string filename)
 		{
@@ -61,6 +62,7 @@ namespace Snoop
             SaveRTBAsPNG(rtb, filename);
 		}
 
+		[CanBeNull]
 		public static VisualBrush CreateVisualBrushSafe(Visual visual)
 		{
 			return IsSafeToVisualize(visual) ? new VisualBrush(visual) : null;
@@ -68,7 +70,7 @@ namespace Snoop
 
 		public static bool IsSafeToVisualize(Visual visual)
 		{
-			if (visual is Window window) {
+			if (visual is Window) {
 				var source = PresentationSource.FromVisual(visual) as HwndSource;
 				return source?.CompositionTarget != null;
 			}

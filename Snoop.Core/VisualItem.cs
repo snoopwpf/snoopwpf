@@ -59,21 +59,28 @@ namespace Snoop
 				return false;
 			}
 		}
+
 		public override Visual MainVisual
 		{
 			get { return this.Visual; }
 		}
+
 		public override Brush TreeBackgroundBrush
 		{
 			get { return Brushes.Transparent; }
 		}
+
 		public override Brush VisualBrush
 		{
 			get
 			{
 				VisualBrush brush = VisualCaptureUtil.CreateVisualBrushSafe(this.Visual);
-				brush.Stretch = Stretch.Uniform;
-				return brush;
+                if (brush != null)
+                {
+                    brush.Stretch = Stretch.Uniform;
+                }
+
+                return brush;
 			}
 		}
 
@@ -90,7 +97,6 @@ namespace Snoop
                 return null;
 			}
 		}
-
 
 		protected override void OnSelectionChanged()
 		{
