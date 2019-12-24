@@ -241,10 +241,11 @@ All other rights reserved.
 			Style="{DynamicResource SimpleComboBox}"
 			Foreground="#FFFFFFFF"
 			BorderThickness="0,0,0,0"
-			ItemsSource="{Binding Windows}"
+			ItemsSource="{Binding WindowInfos}"
 			IsSynchronizedWithCurrentItem="True"
 			FontSize="10.667"
 			FocusVisualStyle="{DynamicResource simpleComboBoxFocusStyle}"
+			DropDownOpened="HandleWindowsComboBox_OnDropDownOpened"
 			ToolTip="This combo box shows the list of applications that can be Snoop(ed).">
             <ComboBox.ItemTemplate>
                 <DataTemplate DataType="my:WindowInfo">
