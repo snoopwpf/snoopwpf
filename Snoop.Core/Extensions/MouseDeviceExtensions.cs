@@ -1,12 +1,11 @@
 ﻿// ReSharper disable once CheckNamespace
 namespace Snoop
 {
-    using System.Linq;
     using System.Reflection;
     using System.Windows;
     using System.Windows.Input;
-    using System.Windows.Interop;
     using System.Windows.Media;
+    using Snoop.Infrastructure.Helpers;
 
     public static class MouseDeviceExtensions
     {
@@ -22,13 +21,13 @@ namespace Snoop
         private static FrameworkElement GetElementAtMousePos()
         {
             var windowHandleUnderMouse = NativeMethods.GetWindowUnderMouse();
-            var activeWindow = Application.Current.Windows.Cast<Window>().FirstOrDefault(window => new WindowInteropHelper(window).Handle == windowHandleUnderMouse);
+            var windowUnderMouse = WindowHelper.GetVisibleWindow(windowHandleUnderMouse);
 
             FrameworkElement directlyOverElement = null;
 
-            if (activeWindow != null)
+            if (windowUnderMouse != null)
             {
-                VisualTreeHelper.HitTest(activeWindow, FilterCallback, r => ResultCallback(r, ref directlyOverElement), new PointHitTestParameters(Mouse.GetPosition(activeWindow)));
+                VisualTreeHelper.HitTest(windowUnderMouse, FilterCallback, r => ResultCallback(r, ref directlyOverElement), new PointHitTestParameters(Mouse.GetPosition(windowUnderMouse)));
             }
 
             return directlyOverElement;
