@@ -3,43 +3,45 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-using System.Windows;
-using System.Collections.Generic;
-
 namespace Snoop
 {
-	public abstract class ResourceContainerItem : VisualTreeItem
-	{
-		public ResourceContainerItem(object target, VisualTreeItem parent): base(target, parent)
-		{
-		}
+    using System.Collections.Generic;
+    using System.Windows;
 
-		protected abstract ResourceDictionary ResourceDictionary { get; }
+    public abstract class ResourceContainerItem : VisualTreeItem
+    {
+        protected ResourceContainerItem(object target, VisualTreeItem parent) 
+            : base(target, parent)
+        {
+        }
 
-		protected override void Reload(List<VisualTreeItem> toBeRemoved)
-		{
-			base.Reload(toBeRemoved);
+        protected abstract ResourceDictionary ResourceDictionary { get; }
 
-			ResourceDictionary resources = this.ResourceDictionary;
+        protected override void Reload(List<VisualTreeItem> toBeRemoved)
+        {
+            base.Reload(toBeRemoved);
 
-			if (resources != null && resources.Count != 0)
-			{
-				bool foundItem = false;
-				foreach (VisualTreeItem item in toBeRemoved)
-				{
-					if (item.Target == resources)
-					{
-						toBeRemoved.Remove(item);
-						item.Reload();
-						foundItem = true;
-						break;
-					}
-				}
-				if (!foundItem)
+            var resources = this.ResourceDictionary;
+
+            if (resources != null && resources.Count != 0)
+            {
+                var foundItem = false;
+                foreach (var item in toBeRemoved)
                 {
-                    this.Children.Add(VisualTreeItem.Construct(resources, this));
+                    if (item.Target == resources)
+                    {
+                        toBeRemoved.Remove(item);
+                        item.Reload();
+                        foundItem = true;
+                        break;
+                    }
+                }
+
+                if (foundItem == false)
+                {
+                    this.Children.Add(Construct(resources, this));
                 }
             }
-		}
-	}
+        }
+    }
 }

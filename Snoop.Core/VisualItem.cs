@@ -3,204 +3,192 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Windows;
-using System.Windows.Media;
-using System.Windows.Documents;
-using System.Windows.Controls;
-using System.Windows.Data;
-
 namespace Snoop
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Linq;
-    using System.Windows.Interop;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Data;
+    using System.Windows.Documents;
+    using System.Windows.Media;
     using Snoop.Infrastructure;
 
     /// <summary>
-	/// Main class that represents a visual in the visual tree
-	/// </summary>
-	public class VisualItem : ResourceContainerItem
-	{
-		public VisualItem(Visual visual, VisualTreeItem parent): base(visual, parent)
-		{
-			this.visual = visual;
-		}
+    /// Main class that represents a visual in the visual tree
+    /// </summary>
+    public class VisualItem : ResourceContainerItem
+    {
+        private AdornerContainer adornerContainer;
 
+        public VisualItem(Visual visual, VisualTreeItem parent) 
+            : base(visual, parent)
+        {
+            this.Visual = visual;
+        }
 
-		public Visual Visual
-		{
-			get { return this.visual; }
-		}
-		private Visual visual;
+        public Visual Visual { get; }
 
-
-		public override bool HasBindingError
-		{
-			get
-			{
-				PropertyDescriptorCollection propertyDescriptors =
-					TypeDescriptor.GetProperties(this.Visual, new Attribute[] { new PropertyFilterAttribute(PropertyFilterOptions.All) });
-				foreach (PropertyDescriptor property in propertyDescriptors)
-				{
-					DependencyPropertyDescriptor dpd = DependencyPropertyDescriptor.FromProperty(property);
-					if (dpd != null)
-					{
-						BindingExpressionBase expression = BindingOperations.GetBindingExpressionBase(this.Visual, dpd.DependencyProperty);
-						if (expression != null && (expression.HasError || expression.Status != BindingStatus.Active))
+        public override bool HasBindingError
+        {
+            get
+            {
+                var propertyDescriptors =  TypeDescriptor.GetProperties(this.Visual, new Attribute[] { new PropertyFilterAttribute(PropertyFilterOptions.All) });
+                foreach (PropertyDescriptor property in propertyDescriptors)
+                {
+                    var dpd = DependencyPropertyDescriptor.FromProperty(property);
+                    if (dpd != null)
+                    {
+                        var expression = BindingOperations.GetBindingExpressionBase(this.Visual, dpd.DependencyProperty);
+                        if (expression != null && (expression.HasError || expression.Status != BindingStatus.Active))
                         {
                             return true;
                         }
                     }
-				}
-				return false;
-			}
-		}
+                }
 
-		public override Visual MainVisual
-		{
-			get { return this.Visual; }
-		}
+                return false;
+            }
+        }
 
-		public override Brush TreeBackgroundBrush
-		{
-			get { return Brushes.Transparent; }
-		}
+        public override Visual MainVisual => this.Visual;
 
-		public override Brush VisualBrush
-		{
-			get
-			{
-				VisualBrush brush = VisualCaptureUtil.CreateVisualBrushSafe(this.Visual);
+        public override Brush TreeBackgroundBrush => Brushes.Transparent;
+
+        public override Brush VisualBrush
+        {
+            get
+            {
+                var brush = VisualCaptureUtil.CreateVisualBrushSafe(this.Visual);
                 if (brush != null)
                 {
                     brush.Stretch = Stretch.Uniform;
                 }
 
                 return brush;
-			}
-		}
+            }
+        }
 
-		protected override ResourceDictionary ResourceDictionary
-		{
-			get
-			{
-				FrameworkElement element = this.Visual as FrameworkElement;
-				if (element != null)
+        protected override ResourceDictionary ResourceDictionary
+        {
+            get
+            {
+                if (this.Visual is FrameworkElement frameworkElement)
                 {
-                    return element.Resources;
+                    return frameworkElement.Resources;
                 }
 
                 return null;
-			}
-		}
+            }
+        }
 
-		protected override void OnSelectionChanged()
-		{
-			// Add adorners for the visual this is representing.
-			AdornerLayer adorners = AdornerLayer.GetAdornerLayer(this.Visual);
-			UIElement visualElement = this.Visual as UIElement;
+        protected override void OnSelectionChanged()
+        {
+            // Add adorners for the visual this is representing.
+            var adornerLayer = AdornerLayer.GetAdornerLayer(this.Visual);
 
-			if (adorners != null && visualElement != null)
-			{
-				if (this.IsSelected && this.adorner == null)
-				{
-					Border border = new Border();
-					border.BorderThickness = new Thickness(4);
-
-					Color borderColor = new Color();
-					borderColor.ScA = .3f;
-					borderColor.ScR = 1;
-					border.BorderBrush = new SolidColorBrush(borderColor);
-
-					border.IsHitTestVisible = false;
-					this.adorner = new AdornerContainer(visualElement);
-					adorner.Child = border;
-					adorners.Add(adorner);
-				}
-				else if (this.adorner != null)
-				{
-					adorners.Remove(this.adorner);
-					this.adorner.Child = null;
-					this.adorner = null;
-				}
-			}
-		}
-		protected override void Reload(List<VisualTreeItem> toBeRemoved)
-		{
-			// having the call to base.Reload here ... puts the application resources at the very top of the tree view.
-			// this used to be at the bottom. putting it here makes it consistent (and easier to use) with ApplicationTreeItem
-			base.Reload(toBeRemoved);
-
-		    var window = this.Visual as Window;
- 
-		    if (window != null) 
-		    { 
-		        foreach (Window ownedWindow in window.OwnedWindows) 
-		        {
-		            if (ownedWindow.IsInitialized == false
-                        || ownedWindow.CheckAccess() == false
-                        || ownedWindow.IsPartOfSnoopVisualTree())
-		            {
-                        continue;
-		            }
-
-		            // don't recreate existing items but reload them instead
-		            var existingItem = toBeRemoved.FirstOrDefault(x => ReferenceEquals(x.Target, ownedWindow));
-		            if (existingItem != null)
-		            {
-		                toBeRemoved.Remove(existingItem);
-		                existingItem.Reload();
-		                continue;
-		            }
-
-		            this.Children.Add(VisualTreeItem.Construct(ownedWindow, this)); 
-		        } 
-		    } 
-
-			// remove items that are no longer in tree, add new ones.
-			for (int i = 0; i < VisualTreeHelper.GetChildrenCount(this.Visual); i++)
-			{
-				DependencyObject child = VisualTreeHelper.GetChild(this.Visual, i);
-				if (child != null)
-				{
-					bool foundItem = false;
-					foreach (VisualTreeItem item in toBeRemoved)
-					{
-						if (item.Target == child)
-						{
-							toBeRemoved.Remove(item);
-							item.Reload();
-							foundItem = true;
-							break;
-						}
-					}
-					if (!foundItem)
+            if (adornerLayer != null 
+                && this.Visual is UIElement visualElement)
+            {
+                if (this.IsSelected && this.adornerContainer == null)
+                {
+                    var border = new Border
                     {
-                        this.Children.Add(VisualTreeItem.Construct(child, this));
-                    }
-                }
-			}
+                        BorderThickness = new Thickness(4),
+                        IsHitTestVisible = false
+                    };
 
-			Grid grid = this.Visual as Grid;
-			if (grid != null)
-			{
-				foreach (RowDefinition row in grid.RowDefinitions)
-                {
-                    this.Children.Add(VisualTreeItem.Construct(row, this));
-                }
+                    var borderColor = new Color
+                    {
+                        ScA = .3f,
+                        ScR = 1
+                    };
+                    border.BorderBrush = new SolidColorBrush(borderColor);
 
-                foreach (ColumnDefinition column in grid.ColumnDefinitions)
+                    this.adornerContainer = new AdornerContainer(visualElement)
+                    {
+                        Child = border
+                    };
+                    adornerLayer.Add(this.adornerContainer);
+                }
+                else if (this.adornerContainer != null)
                 {
-                    this.Children.Add(VisualTreeItem.Construct(column, this));
+                    adornerLayer.Remove(this.adornerContainer);
+                    this.adornerContainer.Child = null;
+                    this.adornerContainer = null;
                 }
             }
-		}
+        }
 
+        protected override void Reload(List<VisualTreeItem> toBeRemoved)
+        {
+            // having the call to base.Reload here ... puts the application resources at the very top of the tree view.
+            // this used to be at the bottom. putting it here makes it consistent (and easier to use) with ApplicationTreeItem
+            base.Reload(toBeRemoved);
 
-		private AdornerContainer adorner;
-	}
+            if (this.Visual is Window window)
+            {
+                foreach (Window ownedWindow in window.OwnedWindows)
+                {
+                    if (ownedWindow.IsInitialized == false
+                        || ownedWindow.CheckAccess() == false
+                        || ownedWindow.IsPartOfSnoopVisualTree())
+                    {
+                        continue;
+                    }
+
+                    // don't recreate existing items but reload them instead
+                    var existingItem = toBeRemoved.FirstOrDefault(x => ReferenceEquals(x.Target, ownedWindow));
+                    if (existingItem != null)
+                    {
+                        toBeRemoved.Remove(existingItem);
+                        existingItem.Reload();
+                        continue;
+                    }
+
+                    this.Children.Add(Construct(ownedWindow, this));
+                }
+            }
+
+            // remove items that are no longer in tree, add new ones.
+            for (var i = 0; i < VisualTreeHelper.GetChildrenCount(this.Visual); i++)
+            {
+                var child = VisualTreeHelper.GetChild(this.Visual, i);
+                if (child != null)
+                {
+                    var foundItem = false;
+                    foreach (var item in toBeRemoved)
+                    {
+                        if (ReferenceEquals(item.Target, child))
+                        {
+                            toBeRemoved.Remove(item);
+                            item.Reload();
+                            foundItem = true;
+                            break;
+                        }
+                    }
+
+                    if (foundItem == false)
+                    {
+                        this.Children.Add(Construct(child, this));
+                    }
+                }
+            }
+
+            if (this.Visual is Grid grid)
+            {
+                foreach (var row in grid.RowDefinitions)
+                {
+                    this.Children.Add(Construct(row, this));
+                }
+
+                foreach (var column in grid.ColumnDefinitions)
+                {
+                    this.Children.Add(Construct(column, this));
+                }
+            }
+        }
+    }
 }

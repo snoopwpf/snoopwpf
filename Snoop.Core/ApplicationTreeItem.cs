@@ -56,7 +56,7 @@ namespace Snoop
                     continue;
 		        }
 
-		        this.Children.Add(VisualTreeItem.Construct(window, this)); 
+		        this.Children.Add(Construct(window, this)); 
 		    }
 		}		
 	}
