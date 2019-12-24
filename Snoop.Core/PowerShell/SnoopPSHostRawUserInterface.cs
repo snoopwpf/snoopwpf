@@ -3,11 +3,11 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-using System;
-using System.Management.Automation.Host;
-
-namespace Snoop.Shell
+namespace Snoop.PowerShell
 {
+    using System;
+    using System.Management.Automation.Host;
+
     internal class SnoopPSHostRawUserInterface : PSHostRawUserInterface
     {
         public override KeyInfo ReadKey(ReadKeyOptions options)

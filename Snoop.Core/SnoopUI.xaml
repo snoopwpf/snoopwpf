@@ -11,14 +11,14 @@ All other rights reserved.
 	xmlns:local="clr-namespace:Snoop"
 	xmlns:i="clr-namespace:Snoop.Infrastructure"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:d="http://schemas.microsoft.com/expression/interactivedesigner/2006" 
-	xmlns:shell="clr-namespace:Snoop.Shell" 
-	xmlns:conv="clr-namespace:Snoop.Converters"
+	xmlns:d="http://schemas.microsoft.com/expression/interactivedesigner/2006"
+    xmlns:conv="clr-namespace:Snoop.Converters"
 	xmlns:MethodsTabNS="clr-namespace:Snoop.MethodsTab"
     xmlns:DebugListenerNS="clr-namespace:Snoop.DebugListenerTab"
     xmlns:triggersTab="clr-namespace:Snoop.TriggersTab"
     xmlns:behaviorsTab="clr-namespace:Snoop.BehaviorsTab"
     xmlns:windows="clr-namespace:Snoop.Windows"
+    xmlns:powerShell="clr-namespace:Snoop.PowerShell"
     mc:Ignorable="d"
 	Title="Snoop"
     MinWidth="480"
@@ -364,7 +364,7 @@ All other rights reserved.
 					</TextBlock>
 				</TabItem.Header>
 
-                <shell:EmbeddedShellView IsSelected="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}" />
+                <powerShell:EmbeddedShellView IsSelected="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}" />
 			</TabItem>
 
 			<TabItem Style="{x:Null}">

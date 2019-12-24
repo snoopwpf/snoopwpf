@@ -3,14 +3,14 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-using System;
-using System.Globalization;
-using System.Windows;
-using System.Windows.Data;
-using Snoop.Shell;
-
 namespace Snoop.Converters
 {
+    using System;
+    using System.Globalization;
+    using System.Windows;
+    using System.Windows.Data;
+    using Snoop.PowerShell;
+
     public class IsPowerShellInstalledToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

@@ -3,11 +3,11 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-using System;
-using Microsoft.Win32;
-
-namespace Snoop.Shell
+namespace Snoop.PowerShell
 {
+    using System;
+    using Microsoft.Win32;
+
     internal static class ShellConstants
     {
         /// <summary>

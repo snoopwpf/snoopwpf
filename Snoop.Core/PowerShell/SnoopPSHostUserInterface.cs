@@ -3,15 +3,15 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Management.Automation;
-using System.Management.Automation.Host;
-using System.Security;
-
-namespace Snoop.Shell
+namespace Snoop.PowerShell
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Management.Automation;
+    using System.Management.Automation.Host;
+    using System.Security;
+
     internal class SnoopPSHostUserInterface : PSHostUserInterface
     {
         private readonly PSHostRawUserInterface rawUI = new SnoopPSHostRawUserInterface();
@@ -34,42 +34,42 @@ namespace Snoop.Shell
 
         public override void Write(string value)
         {
-            OnWrite(value);
+            this.OnWrite(value);
         }
 
         public override void Write(ConsoleColor foregroundColor, ConsoleColor backgroundColor, string value)
         {
-            OnWrite(value);
+            this.OnWrite(value);
         }
 
         public override void WriteLine(string value)
         {
-            OnWrite(value + Environment.NewLine);
+            this.OnWrite(value + Environment.NewLine);
         }
 
         public override void WriteErrorLine(string value)
         {
-            OnError(value + Environment.NewLine);
+            this.OnError(value + Environment.NewLine);
         }
 
         public override void WriteDebugLine(string message)
         {
-            OnDebug(message + Environment.NewLine);
+            this.OnDebug(message + Environment.NewLine);
         }
 
         public override void WriteProgress(long sourceId, ProgressRecord record)
         {
-            OnWrite(record.ToString());
+            this.OnWrite(record.ToString());
         }
 
         public override void WriteVerboseLine(string message)
         {
-            OnVerbose(message + Environment.NewLine);
+            this.OnVerbose(message + Environment.NewLine);
         }
 
         public override void WriteWarningLine(string message)
         {
-            OnWarning(message + Environment.NewLine);
+            this.OnWarning(message + Environment.NewLine);
         }
 
         public override Dictionary<string, PSObject> Prompt(string caption, string message, Collection<FieldDescription> descriptions)

@@ -3,18 +3,17 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-using System;
-using System.IO;
-using System.Management.Automation;
-using System.Management.Automation.Runspaces;
-using System.Reflection;
-using System.Threading;
-using System.Windows.Controls;
-using System.Windows.Input;
-
-namespace Snoop.Shell
+namespace Snoop.PowerShell
 {
+    using System;
+    using System.IO;
+    using System.Management.Automation;
+    using System.Management.Automation.Runspaces;
+    using System.Reflection;
+    using System.Threading;
     using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Input;
     using Snoop.Infrastructure;
 
     /// <summary>
@@ -32,9 +31,9 @@ namespace Snoop.Shell
 
         public EmbeddedShellView()
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
-            this.commandTextBox.PreviewKeyDown += OnCommandTextBoxPreviewKeyDown;
+            this.commandTextBox.PreviewKeyDown += this.OnCommandTextBoxPreviewKeyDown;
         }
 
         public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(EmbeddedShellView), new PropertyMetadata(default(bool), OnIsSelectedChanged));
@@ -53,6 +52,8 @@ namespace Snoop.Shell
             {
                 return;
             }
+
+            System.Diagnostics.Debugger.Launch();
 
             view.WhenLoaded(x => ((EmbeddedShellView)x).Start(VisualTreeHelper2.GetAncestor<SnoopUI>(view)));
         }
@@ -95,7 +96,7 @@ namespace Snoop.Shell
             }
 
             {
-                Invoke(string.Format("new-psdrive {0} {0} -root /", ShellConstants.DriveName));
+                this.Invoke(string.Format("new-psdrive {0} {0} -root /", ShellConstants.DriveName));
 
                 // synchronize selected and root tree elements
                 snoopUi.PropertyChanged += (sender, e) =>
@@ -103,33 +104,33 @@ namespace Snoop.Shell
                                           switch (e.PropertyName)
                                           {
                                               case nameof(SnoopUI.CurrentSelection):
-                                                  SetVariable(ShellConstants.Selected, snoopUi.CurrentSelection);
+                                                  this.SetVariable(ShellConstants.Selected, snoopUi.CurrentSelection);
                                                   break;
                                               case nameof(SnoopUI.Root):
-                                                  SetVariable(ShellConstants.Root, snoopUi.Root);
+                                                  this.SetVariable(ShellConstants.Root, snoopUi.Root);
                                                   break;
                                           }
                                       };
 
                 // allow scripting of the host controls
-                SetVariable("snoopui", snoopUi);
-                SetVariable("ui", this);
-                SetVariable(ShellConstants.Root, snoopUi.Root);
-                SetVariable(ShellConstants.Selected, snoopUi.CurrentSelection);
+                this.SetVariable("snoopui", snoopUi);
+                this.SetVariable("ui", this);
+                this.SetVariable(ShellConstants.Root, snoopUi.Root);
+                this.SetVariable(ShellConstants.Selected, snoopUi.CurrentSelection);
 
                 // marshall back to the UI thread when the provider notifiers of a location change
                 var action = new Action<VisualTreeItem>(item => this.Dispatcher.BeginInvoke(new Action(() => this.ProviderLocationChanged(item))));
                 this.SetVariable(ShellConstants.LocationChangedActionKey, action);
 
                 string folder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..", "Scripts");
-                Invoke(string.Format("import-module \"{0}\"", Path.Combine(folder, ShellConstants.SnoopModule)));
+                this.Invoke(string.Format("import-module \"{0}\"", Path.Combine(folder, ShellConstants.SnoopModule)));
 
                 this.outputTextBox.Clear();
-                Invoke("write-host 'Welcome to the Snoop PowerShell console!'");
-                Invoke("write-host '----------------------------------------'");
-                Invoke(string.Format("write-host 'To get started, try using the ${0} and ${1} variables.'", ShellConstants.Root, ShellConstants.Selected));
+                this.Invoke("write-host 'Welcome to the Snoop PowerShell console!'");
+                this.Invoke("write-host '----------------------------------------'");
+                this.Invoke(string.Format("write-host 'To get started, try using the ${0} and ${1} variables.'", ShellConstants.Root, ShellConstants.Selected));
 
-                FindAndLoadProfile(folder);
+                this.FindAndLoadProfile(folder);
 
                 this.NotifySelected(snoopUi.CurrentSelection);
             }
@@ -161,7 +162,7 @@ namespace Snoop.Shell
             this.host[name] = instance;
 
             // expose to the current runspace
-            Invoke(string.Format("${0} = $host.PrivateData['{0}']", name));
+            this.Invoke(string.Format("${0} = $host.PrivateData['{0}']", name));
         }
 
         public void NotifySelected(VisualTreeItem item)
@@ -176,26 +177,26 @@ namespace Snoop.Shell
 
         private void FindAndLoadProfile(string scriptFolder)
         {
-            if (LoadProfile(Path.Combine(Environment.GetEnvironmentVariable("USERPROFILE"), ShellConstants.SnoopProfile)))
+            if (this.LoadProfile(Path.Combine(Environment.GetEnvironmentVariable("USERPROFILE"), ShellConstants.SnoopProfile)))
             {
                 return;
             }
 
-            if (LoadProfile(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\WindowsPowerShell", ShellConstants.SnoopProfile)))
+            if (this.LoadProfile(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\WindowsPowerShell", ShellConstants.SnoopProfile)))
             {
                 return;
             }
 
-            LoadProfile(Path.Combine(scriptFolder, ShellConstants.SnoopProfile));
+            this.LoadProfile(Path.Combine(scriptFolder, ShellConstants.SnoopProfile));
         }
 
         private bool LoadProfile(string scriptPath)
         {
             if (File.Exists(scriptPath))
             {
-                Invoke("write-host ''");
-                Invoke(string.Format("${0} = '{1}'; . ${0}", ShellConstants.Profile, scriptPath));
-                Invoke(string.Format("write-host \"Loaded `$profile: ${0}\"", ShellConstants.Profile));
+                this.Invoke("write-host ''");
+                this.Invoke(string.Format("${0} = '{1}'; . ${0}", ShellConstants.Profile, scriptPath));
+                this.Invoke(string.Format("write-host \"Loaded `$profile: ${0}\"", ShellConstants.Profile));
 
                 return true;
             }
@@ -208,7 +209,7 @@ namespace Snoop.Shell
             switch (e.Key)
             {
                 case Key.Up:
-                    SetCommandTextToHistory(++this.historyIndex);
+                    this.SetCommandTextToHistory(++this.historyIndex);
                     break;
                 case Key.Down:
                     if (this.historyIndex - 1 <= 0)
@@ -217,7 +218,7 @@ namespace Snoop.Shell
                     }
                     else
                     {
-                        SetCommandTextToHistory(--this.historyIndex);
+                        this.SetCommandTextToHistory(--this.historyIndex);
                     }
                     break;
                 case Key.Return:
@@ -225,7 +226,7 @@ namespace Snoop.Shell
                     this.outputTextBox.AppendText(this.commandTextBox.Text);
                     this.outputTextBox.AppendText(Environment.NewLine);
 
-                    Invoke(this.commandTextBox.Text, true);
+                    this.Invoke(this.commandTextBox.Text, true);
                     this.commandTextBox.Clear();
                     break;
             }
@@ -276,7 +277,7 @@ namespace Snoop.Shell
 
         private void SetCommandTextToHistory(int history)
         {
-            var cmd = GetHistoryCommand(history);
+            var cmd = this.GetHistoryCommand(history);
             if (cmd != null)
             {
                 this.commandTextBox.Text = cmd;
@@ -305,7 +306,7 @@ namespace Snoop.Shell
             switch (e.Key)
             {
                 case Key.F5:
-                    Invoke(string.Format("if (${0}) {{ . ${0} }}", ShellConstants.Profile));
+                    this.Invoke(string.Format("if (${0}) {{ . ${0} }}", ShellConstants.Profile));
                     break;
                 case Key.F12:
                     this.outputTextBox.Clear();

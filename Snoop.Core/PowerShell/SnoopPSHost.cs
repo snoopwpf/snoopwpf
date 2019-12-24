@@ -3,16 +3,16 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-using System;
-using System.Collections;
-using System.Globalization;
-using System.Management.Automation;
-using System.Management.Automation.Host;
-using System.Reflection;
-using System.Threading;
-
-namespace Snoop.Shell
+namespace Snoop.PowerShell
 {
+    using System;
+    using System.Collections;
+    using System.Globalization;
+    using System.Management.Automation;
+    using System.Management.Automation.Host;
+    using System.Reflection;
+    using System.Threading;
+
     internal class SnoopPSHost : PSHost
     {
         private readonly Guid id = Guid.NewGuid();

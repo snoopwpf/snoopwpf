@@ -3,18 +3,18 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Management.Automation;
-using System.Management.Automation.Provider;
-using System.Threading;
-
-namespace Snoop.Shell
+namespace Snoop.PowerShell
 {
-    [CmdletProvider("VisualTreeProvider", ProviderCapabilities.Filter)]
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Management.Automation;
+    using System.Management.Automation.Provider;
+    using System.Threading;
+
+    [CmdletProvider(nameof(VisualTreeProvider), ProviderCapabilities.Filter)]
     public class VisualTreeProvider : NavigationCmdletProvider, IDisposable
     {
         internal const int LocationChangeNotifyDelay = 250;
@@ -23,7 +23,7 @@ namespace Snoop.Shell
         {
             get
             {
-                var data = (Hashtable)Host.PrivateData.BaseObject;
+                var data = (Hashtable)this.Host.PrivateData.BaseObject;
                 return (VisualTreeItem)data[ShellConstants.Root];
             }
         }
@@ -33,7 +33,7 @@ namespace Snoop.Shell
 
         public VisualTreeProvider()
         {
-            selectedTimer = new Timer(OnSyncSelectedItem, null, Timeout.Infinite, Timeout.Infinite);
+            this.selectedTimer = new Timer(this.OnSyncSelectedItem, null, Timeout.Infinite, Timeout.Infinite);
         }
 
         private void OnSyncSelectedItem(object _)
@@ -42,11 +42,11 @@ namespace Snoop.Shell
             // so unfortunately we have to poll :(
             if (this.PSDriveInfo.CurrentLocation != this.lastLocation)
             {
-                var item = GetTreeItem(this.PSDriveInfo.CurrentLocation);
+                var item = this.GetTreeItem(this.PSDriveInfo.CurrentLocation);
 
                 if (item != null)
                 {
-                    var data = (Hashtable)Host.PrivateData.BaseObject;
+                    var data = (Hashtable)this.Host.PrivateData.BaseObject;
                     var action = (Action<VisualTreeItem>)data[ShellConstants.LocationChangedActionKey];
                     action(item);
                 }
@@ -78,11 +78,11 @@ namespace Snoop.Shell
             if (path.Equals("\\"))
             {
                 this.selectedTimer.Change(LocationChangeNotifyDelay, Timeout.Infinite);
-                return Root;
+                return this.Root;
             }
 
             var parts = path.Split(new[] { '\\' }, StringSplitOptions.RemoveEmptyEntries);
-            var current = Root;
+            var current = this.Root;
             var count = 0;
             foreach (var part in parts)
             {
@@ -109,30 +109,30 @@ namespace Snoop.Shell
 
         protected override void GetChildItems(string path, bool recurse)
         {
-            var item = GetTreeItem(path);
+            var item = this.GetTreeItem(path);
             if (item != null)
             {
                 foreach (var c in item.Children)
                 {
                     var p = c.NodePath();
-                    GetItem(p);
+                    this.GetItem(p);
                 }
             }
             else
             {
-                WriteWarning(path + " was not found.");
+                this.WriteWarning(path + " was not found.");
             }
         }
 
         protected override void GetItem(string path)
         {
-            var item = GetTreeItem(path);
-            WriteItemObject(item, path, true);
+            var item = this.GetTreeItem(path);
+            this.WriteItemObject(item, path, true);
         }
 
         protected override bool HasChildItems(string path)
         {
-            var item = GetTreeItem(path);
+            var item = this.GetTreeItem(path);
             return item != null && item.Children.Count > 0;
         }
 
@@ -163,7 +163,7 @@ namespace Snoop.Shell
 
         protected override bool ItemExists(string path)
         {
-            return GetTreeItem(path) != null;
+            return this.GetTreeItem(path) != null;
         }
 
         protected override string GetChildName(string path)
@@ -173,14 +173,14 @@ namespace Snoop.Shell
 
         protected override void GetChildNames(string path, ReturnContainers returnContainers)
         {
-            var item = GetTreeItem(path);
+            var item = this.GetTreeItem(path);
             if (item != null)
             {
                 foreach (var child in item.Children)
                 {
                     var name = child.NodeName();
                     var nodePath = child.NodePath();
-                    WriteItemObject(name, nodePath, true);
+                    this.WriteItemObject(name, nodePath, true);
                 }
             }
         }
@@ -219,7 +219,7 @@ namespace Snoop.Shell
                 var similarChildren = parent.Children.Where(c => GetName(c).Equals(name)).ToList();
                 if (similarChildren.Count > 1)
                 {
-                    name += (similarChildren.IndexOf(item) + 1);
+                    name += similarChildren.IndexOf(item) + 1;
                 }
             }
 
