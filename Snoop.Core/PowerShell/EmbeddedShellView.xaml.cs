@@ -53,8 +53,6 @@ namespace Snoop.PowerShell
                 return;
             }
 
-            System.Diagnostics.Debugger.Launch();
-
             view.WhenLoaded(x => ((EmbeddedShellView)x).Start(VisualTreeHelper2.GetAncestor<SnoopUI>(view)));
         }
 

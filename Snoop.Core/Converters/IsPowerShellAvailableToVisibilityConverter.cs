@@ -11,11 +11,20 @@ namespace Snoop.Converters
     using System.Windows.Data;
     using Snoop.PowerShell;
 
-    public class IsPowerShellInstalledToVisibilityConverter : IValueConverter
+    public class IsPowerShellAvailableToVisibilityConverter : IValueConverter
     {
+        public static IsPowerShellAvailableToVisibilityConverter DefaultInstance = new IsPowerShellAvailableToVisibilityConverter();
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return ShellConstants.IsPowerShellInstalled ? Visibility.Visible : Visibility.Collapsed;
+            #if NETCOREAPP
+            // PowerShell support is not currently available on .net core because loading it just fails with "Could not load file or assembly 'System.Management.Automation..."
+            return Visibility.Collapsed;
+            #else
+            return ShellConstants.IsPowerShellInstalled
+                ? Visibility.Visible 
+                : Visibility.Collapsed;
+            #endif
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

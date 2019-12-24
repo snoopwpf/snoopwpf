@@ -102,8 +102,6 @@ All other rights reserved.
 				</Setter>
 			</Style>
 
-			<conv:IsPowerShellInstalledToVisibilityConverter  x:Key="isPowerShellInstalled"/>
-
 			<DataTemplate x:Key="stylelessTextBlockDataTemplate">
 				<TextBlock Style="{x:Null}" Text="{Binding}"/>
 			</DataTemplate>
@@ -348,7 +346,7 @@ All other rights reserved.
 			</TabItem>
 
 			<TabItem Style="{x:Null}"
-				     Visibility="{Binding Converter={StaticResource isPowerShellInstalled}}">
+				     Visibility="{Binding Converter={x:Static conv:IsPowerShellAvailableToVisibilityConverter.DefaultInstance}}">
 				<TabItem.Header>
 					<TextBlock Style="{x:Null}" Text="PowerShell">
 						<TextBlock.ToolTip>

@@ -55,7 +55,7 @@ namespace Snoop.PowerShell
                 var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\PowerShell\1\PowerShellEngine");
                 if (key != null)
                 {
-                    object keyValue = key.GetValue("PowerShellVersion");
+                    var keyValue = key.GetValue("PowerShellVersion");
                     if ("2.0".Equals(keyValue))
                     {
                         return true;
