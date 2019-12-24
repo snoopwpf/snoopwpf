@@ -99,10 +99,10 @@
                 return this;
             }
 
-            private void Register<TObject, TCconverter>()
+            private void Register<TObject, TConverter>()
             {
                 var attr = new Attribute[1];
-                var vConv = new TypeConverterAttribute(typeof(TCconverter));
+                var vConv = new TypeConverterAttribute(typeof(TConverter));
                 attr[0] = vConv;
 
                 var typeDescriptionProvider = TypeDescriptor.AddAttributes(typeof(TObject), attr);
