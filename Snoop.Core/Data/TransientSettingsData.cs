@@ -1,10 +1,12 @@
 namespace Snoop.Data
 {
+    using System;
     using System.Diagnostics;
     using System.IO;
+    using System.Windows;
+    using System.Windows.Interop;
     using System.Xml.Serialization;
-    using Snoop.Infrastructure;
-    using Snoop.Properties;
+    using Snoop.Infrastructure.Helpers;
 
     public sealed class TransientSettingsData
     {
@@ -26,6 +28,8 @@ namespace Snoop.Data
         public MultipleDispatcherMode MultipleDispatcherMode { get; set; }
 
         public bool SetWindowOwner { get; set; }
+
+        public long TargetWindowHandle { get; set; }
 
         public string WriteToFile()
         {

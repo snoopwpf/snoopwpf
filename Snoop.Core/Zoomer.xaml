@@ -12,8 +12,8 @@ All other rights reserved.
 	x:Class="Snoop.Zoomer"
 	Icon="Snoop.ico"
 	Title="Zoomer"
-	Width="400"
-	Height="400"
+	Width="640"
+	Height="480"
 	FocusManager.FocusedElement="{Binding ElementName=DocumentRoot}"
     Style="{x:Null}">
 	<Grid

@@ -9,6 +9,7 @@
     using System.Windows.Threading;
     using JetBrains.Annotations;
     using Snoop.Data;
+    using Snoop.Infrastructure.Helpers;
     using Snoop.Windows;
 
     public class SnoopManager : MarshalByRefObject
@@ -165,8 +166,11 @@
             {
                 Trace.WriteLine("Starting snoop UI...");
 
+                var targetWindow = WindowHelper.GetVisibleWindow(settingsData.TargetWindowHandle, dispatcher);
+
                 var snoop = instanceCreator();
-                snoop.Title = TryGetMainWindowTitle();
+
+                snoop.Title = TryGetWindowOrMainWindowTitle(targetWindow);
 
                 if (string.IsNullOrEmpty(snoop.Title))
                 {
@@ -179,6 +183,11 @@
 
                 snoop.Inspect();
 
+                if (targetWindow != null)
+                {
+                    snoop.Target = targetWindow;
+                }
+
                 CheckForOtherDispatchers(dispatcher, settingsData, instanceCreator);
             }
             else
@@ -189,8 +198,13 @@
             }
         }
 
-        private static string TryGetMainWindowTitle()
+        private static string TryGetWindowOrMainWindowTitle(Window targetWindow)
         {
+            if (targetWindow != null)
+            {
+                return targetWindow.Title;
+            }
+
             if (Application.Current != null 
                 && Application.Current.MainWindow != null)
             {

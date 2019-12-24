@@ -170,7 +170,7 @@ namespace Snoop
 
             try
             {
-                InjectorLauncher.Launch(this, "Snoop.Core", typeof(SnoopManager).FullName, nameof(SnoopManager.StartSnoop), CreateTransientSettingsData(SnoopStartTarget.SnoopUI).WriteToFile());
+                InjectorLauncher.Launch(this, typeof(SnoopManager).GetMethod(nameof(SnoopManager.StartSnoop)), CreateTransientSettingsData(SnoopStartTarget.SnoopUI, this.HWnd));
             }
             catch (Exception e)
             {
@@ -188,7 +188,7 @@ namespace Snoop
 
 			try
 			{
-				InjectorLauncher.Launch(this, "Snoop.Core", typeof(SnoopManager).FullName, nameof(SnoopManager.StartSnoop), CreateTransientSettingsData(SnoopStartTarget.Zoomer).WriteToFile());
+                InjectorLauncher.Launch(this, typeof(SnoopManager).GetMethod(nameof(SnoopManager.StartSnoop)), CreateTransientSettingsData(SnoopStartTarget.Zoomer, this.HWnd));
 			}
 			catch (Exception e)
 			{
@@ -205,13 +205,14 @@ namespace Snoop
 		    this.AttachFailed?.Invoke(this, new AttachFailedEventArgs(e, this.Description));
 		}
 
-        private static TransientSettingsData CreateTransientSettingsData(SnoopStartTarget startTarget)
+        private static TransientSettingsData CreateTransientSettingsData(SnoopStartTarget startTarget, IntPtr targetWindowHandle)
         {
             var settings = Settings.Default;
 
             return new TransientSettingsData
                    {
                        StartTarget = startTarget,
+					   TargetWindowHandle = targetWindowHandle.ToInt64(),
 
                        MultipleAppDomainMode = settings.MultipleAppDomainMode,
                        MultipleDispatcherMode = settings.MultipleDispatcherMode,

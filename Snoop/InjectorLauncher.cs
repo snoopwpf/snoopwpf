@@ -8,6 +8,7 @@ namespace Snoop
     using System.Diagnostics;
     using System.Reflection;
     using System.IO;
+    using Snoop.Data;
 
     /// <summary>
     /// Class responsible for launching a new injector process.
@@ -23,43 +24,47 @@ namespace Snoop
             return bitness;
         }
 
-		public static void Launch(WindowInfo windowInfo, string assembly, string className, string methodName, string settingsFile)
+        public static void Launch(WindowInfo windowInfo, MethodInfo methodInfo, TransientSettingsData transientSettingsData)
+        {
+            Launch(windowInfo, methodInfo.DeclaringType.Assembly.GetName().Name, methodInfo.DeclaringType.FullName, methodInfo.Name, transientSettingsData.WriteToFile());
+        }
+
+        public static void Launch(WindowInfo windowInfo, string assembly, string className, string methodName, string transientSettingsFile)
 		{
-            if (File.Exists(settingsFile) == false)
+            if (File.Exists(transientSettingsFile) == false)
             {
-                throw new FileNotFoundException("The generated temporary settings file could not be found.", settingsFile);
+                throw new FileNotFoundException("The generated temporary settings file could not be found.", transientSettingsFile);
             }
 
             try
             {
                 var location = Assembly.GetExecutingAssembly().Location;
                 var directory = Path.GetDirectoryName(location) ?? string.Empty;
-                var file = Path.Combine(directory, $"Snoop.InjectorLauncher.{GetSuffix(windowInfo)}.exe");
+                var injectorLauncherExe = Path.Combine(directory, $"Snoop.InjectorLauncher.{GetSuffix(windowInfo)}.exe");
 
-                if (File.Exists(file) == false)
+                if (File.Exists(injectorLauncherExe) == false)
                 {
-                    const string message = @"Could not find the injector launcher.
-Snoop requires this component, which is part of the snoop project, to do it's job.
-If you compiled snoop you should compile all required components.
-If you downloaded snoop you should not omit any files contained in the archive you downloaded.";
-                    throw new FileNotFoundException(message, file);
+                    var message = @$"Could not find the injector launcher ""{injectorLauncherExe}"".
+Snoop requires this component, which is part of the Snoop project, to do it's job.
+- If you compiled snoop yourself, you should compile all required components.
+- If you downloaded snoop you should not omit any files contained in the archive you downloaded and make sure that no anti virus deleted the file.";
+                    throw new FileNotFoundException(message, injectorLauncherExe);
                 }
 
-                var startInfo = new ProcessStartInfo(file, $"{windowInfo.OwningProcess.Id} \"{assembly}\" \"{className}\" \"{methodName}\" \"{settingsFile}\"")
+                var startInfo = new ProcessStartInfo(injectorLauncherExe, $"{windowInfo.OwningProcess.Id}:{windowInfo.HWnd} \"{assembly}\" \"{className}\" \"{methodName}\" \"{transientSettingsFile}\"")
                                 {
+                                    UseShellExecute = false,
                                     Verb = windowInfo.IsOwningProcessElevated
                                                ? "runas"
                                                : null
-                                };           
-		    
-                using (var process = Process.Start(startInfo))
-                {
-                    process?.WaitForExit();
-                }
+                                };
+
+                using var process = Process.Start(startInfo);
+                process?.WaitForExit();
             }
             finally
             {
-                File.Delete(settingsFile);
+                File.Delete(transientSettingsFile);
             }
         }
 	}

@@ -3,11 +3,12 @@
     using System.Diagnostics;
     using System.Windows;
     using System.Windows.Forms.Integration;
-    using System.Windows.Threading;
     using Snoop.Infrastructure;
 
     public abstract class SnoopMainBaseWindow : SnoopBaseWindow
     {
+        public abstract object Target { get; set; }
+
         public bool Inspect()
         {
             var foundRoot = this.FindRoot();

@@ -3,15 +3,15 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-using System;
-using System.Windows;
-using Snoop.Infrastructure;
-
 namespace Snoop
 {
+    using System;
     using System.Runtime.InteropServices;
+    using System.Windows;
     using System.Windows.Interop;
     using Snoop.Data;
+    using Snoop.Infrastructure;
+    using Snoop.Infrastructure.Helpers;
     using Rectangle = System.Drawing.Rectangle;
 
     public static class SnoopWindowUtils
@@ -23,9 +23,10 @@ namespace Snoop
 		        return null;
 		    }
 
-		    Window ownerWindow = null;
+            var ownerWindow = WindowHelper.GetVisibleWindow(TransientSettingsData.Current.TargetWindowHandle, ownedWindow.Dispatcher);
 
-			if (SnoopModes.MultipleDispatcherMode)
+			if (ownerWindow == null
+                && SnoopModes.MultipleDispatcherMode)
 			{
 				foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
 				{
@@ -38,7 +39,8 @@ namespace Snoop
 					}
 				}
 			}
-			else if (Application.Current != null)
+			else if (ownerWindow == null
+                     && Application.Current != null)
 			{
 				if (Application.Current.MainWindow != null 
 				    && Application.Current.MainWindow.CheckAccess()

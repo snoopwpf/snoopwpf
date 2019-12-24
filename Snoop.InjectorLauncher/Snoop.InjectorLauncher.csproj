@@ -23,7 +23,10 @@
     <ApplicationManifest Include="../Shared/app.manifest" />
 
     <Compile Include="..\Shared\InjectorData.cs" Link="InjectorData.cs" />
-    <Compile Include="..\Snoop.Core\NativeMethods.cs" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Snoop.Core\Snoop.Core.csproj" />
   </ItemGroup>
   
   <Target Name="Compilex64" AfterTargets="Build">

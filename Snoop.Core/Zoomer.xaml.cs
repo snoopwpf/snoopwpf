@@ -10,14 +10,14 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Threading;
 using Snoop.Infrastructure;
 
 namespace Snoop
 {
-    using Snoop.Data;
+    using System.Diagnostics;
+    using System.Windows.Threading;
 
-    public partial class Zoomer
+    public sealed partial class Zoomer
 	{
 		static Zoomer()
 		{
@@ -70,17 +70,14 @@ namespace Snoop
 			this.Target = root;
         }
 
-		public object Target
+		public override object Target
 		{
 			get { return this.target; }
 			set
 			{
 				this.target = value;
-				UIElement element = this.CreateIfPossible(value);
-				if (element != null)
-                {
-                    this.Viewbox.Child = element;
-                }
+				var element = this.CreateIfPossible(value);
+                this.Viewbox.Child = element;
             }
 		}
 
@@ -120,7 +117,8 @@ namespace Snoop
             if (root is Application application)
             {
                 // try to use the application's main window (if visible) as the root
-                if (application.MainWindow != null && application.MainWindow.Visibility == Visibility.Visible)
+                if (application.MainWindow != null 
+                    && application.MainWindow.Visibility == Visibility.Visible)
                 {
                     root = application.MainWindow;
                 }
@@ -137,14 +135,6 @@ namespace Snoop
                         }
                     }
                 }
-            }
-
-            // if the root is a window, let's magnify the window's content.
-            // this is better, as otherwise, you will have window background along with the window's content.
-            if (root is Window window
-                && window.Content != null)
-            {
-                root = window.Content;
             }
 
             return root;

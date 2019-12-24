@@ -6,11 +6,12 @@ namespace Snoop.InjectorLauncher
 
     public class ProcessWrapper
     {
-        public ProcessWrapper(Process process)
+        public ProcessWrapper(Process process, IntPtr windowHandle)
         {
             this.Process = process;
             this.Id = process.Id;
             this.Handle = NativeMethods.OpenProcess(NativeMethods.ProcessAccessFlags.All, false, process.Id);
+            this.WindowHandle = windowHandle;
 
             this.Bitness = NativeMethods.IsProcess64Bit(this.Process)
                                ? "x64"
@@ -26,20 +27,32 @@ namespace Snoop.InjectorLauncher
 
         public NativeMethods.ProcessHandle Handle { get; }
 
+        public IntPtr WindowHandle { get; set; }
+
         public string Bitness { get; }
 
         public string SupportedFrameworkName { get; }
 
         public bool RequiresIJWHost { get; }
 
-        public static ProcessWrapper FromProcessId(int id)
+        public static ProcessWrapper From(string processIdAndOptionalWindowHandle)
         {
-            return new ProcessWrapper(Process.GetProcessById(id));
+            var splitted = processIdAndOptionalWindowHandle.Split(':');
+            var processId = int.Parse(splitted[0]);
+            var windowHandle = splitted.Length > 1 ? new IntPtr(int.Parse(splitted[1])) : IntPtr.Zero;
+
+
+            return new ProcessWrapper(Process.GetProcessById(processId), windowHandle);
+        }
+
+        public static ProcessWrapper FromProcessId(int processId, IntPtr windowHandle)
+        {
+            return new ProcessWrapper(Process.GetProcessById(processId), windowHandle);
         }
 
         public static ProcessWrapper FromWindowHandle(IntPtr handle)
         {
-            return new ProcessWrapper(GetProcessFromWindowHandle(handle));
+            return new ProcessWrapper(GetProcessFromWindowHandle(handle), handle);
         }
 
         private static Process GetProcessFromWindowHandle(IntPtr windowHandle)

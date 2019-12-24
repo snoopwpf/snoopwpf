@@ -19,7 +19,9 @@ using Snoop.Infrastructure;
 
 namespace Snoop
 {
-	public partial class SnoopUI : INotifyPropertyChanged
+    using JetBrains.Annotations;
+
+    public sealed partial class SnoopUI : INotifyPropertyChanged
 	{
 		#region Public Static Routed Commands
 		public static readonly RoutedCommand IntrospectCommand = new RoutedCommand("Introspect", typeof(SnoopUI));
@@ -138,10 +140,17 @@ namespace Snoop
 		#endregion
 
 		#region CurrentSelection
-		/// <summary>
-		/// Currently selected item in the tree view.
-		/// </summary>
-		public VisualTreeItem CurrentSelection
+
+        public override object Target
+        {
+            get => this.currentSelection?.Target;
+            set => this.currentSelection = this.FindItem(value);
+        }
+
+        /// <summary>
+        /// Currently selected item in the tree view.
+        /// </summary>
+        public VisualTreeItem CurrentSelection
 		{
 			get { return this.currentSelection; }
 			set
@@ -654,7 +663,7 @@ namespace Snoop
 		/// </summary>
 		private bool returnPreviousFocus;
 
-		#endregion
+        #endregion
 
 		#region Private Delegates
 		private delegate void function();
@@ -663,7 +672,9 @@ namespace Snoop
 		#region INotifyPropertyChanged Members
 
 		public event PropertyChangedEventHandler PropertyChanged;
-		protected void OnPropertyChanged(string propertyName)
+
+		[NotifyPropertyChangedInvocator]
+		private void OnPropertyChanged(string propertyName)
 		{
 			Debug.Assert(this.GetType().GetProperty(propertyName) != null);
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

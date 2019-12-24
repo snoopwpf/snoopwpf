@@ -10,7 +10,7 @@ namespace Snoop.InjectorLauncher
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using Snoop;
+    using Snoop.Data;
 
     public static class Program
     {
@@ -23,14 +23,18 @@ namespace Snoop.InjectorLauncher
                 Debugger.Launch();
             }
 
-            var processId = int.Parse(args[0]);
-            
-            var processWrapper = ProcessWrapper.FromProcessId(processId);
+            var processWrapper = ProcessWrapper.From(args[0]);
 
             var assemblyNameOrFullPath = args[1];
             var className = args[2];
             var methodName = args[3];
-            var settingsFile = args[4];
+            var settingsFile = args.Length >= 3 
+                ? args[4] 
+                : new TransientSettingsData
+                {
+                    StartTarget = SnoopStartTarget.SnoopUI,
+                    TargetWindowHandle = processWrapper.WindowHandle.ToInt64()
+                }.WriteToFile();
 
             var injectorData = new InjectorData
                                {
