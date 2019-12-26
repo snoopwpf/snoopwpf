@@ -67,15 +67,13 @@
                 if (settingsData.MultipleAppDomainMode == MultipleAppDomainMode.Ask)
                 {
                     var result =
-                        MessageBox.Show
-                        (
+                        MessageBox.Show(
                             "Snoop has noticed multiple app domains.\n\n" +
                             "Would you like to enter multiple app domain mode, and have a separate Snoop window for each app domain?\n\n" +
                             "Without having a separate Snoop window for each app domain, you will not be able to Snoop the windows in the app domains outside of the main app domain. ",
                             "Enter Multiple AppDomain Mode",
                             MessageBoxButton.YesNo,
-                            MessageBoxImage.Question
-                        );
+                            MessageBoxImage.Question);
 
                     if (result != MessageBoxResult.Yes)
                     {
@@ -107,13 +105,11 @@
 
             if (succeeded == false)
             {
-                MessageBox.Show
-                    (
+                MessageBox.Show(
                         "Can't find a current application or a PresentationSource root visual.",
                         "Can't Snoop",
                         MessageBoxButton.OK,
-                        MessageBoxImage.Exclamation
-                    );
+                        MessageBoxImage.Exclamation);
             }
 
             return succeeded;
@@ -261,16 +257,14 @@
                 else
                 {
                     var result =
-                        MessageBox.Show
-                        (
+                        MessageBox.Show(
                             "Snoop has noticed windows running in multiple dispatchers!\n\n" +
                             "Would you like to enter multiple dispatcher mode, and have a separate Snoop window for each dispatcher?\n\n" +
                             "Without having a separate Snoop window for each dispatcher, you will not be able to Snoop the windows in the dispatcher threads outside of the main dispatcher. " +
                             "Also, note, that if you bring up additional windows in additional dispatchers (after snooping), you will need to Snoop again in order to launch Snoop windows for those additional dispatchers.",
                             "Enter Multiple Dispatcher Mode",
                             MessageBoxButton.YesNo,
-                            MessageBoxImage.Question
-                        );
+                            MessageBoxImage.Question);
 
                     if (result == MessageBoxResult.Yes)
                     {
@@ -300,17 +294,12 @@
                 }
 
                 // launch a snoop ui on each dispatcher
-                visual.Dispatcher.Invoke
-                (
-                    (Action)
-                    (
-                        () =>
-                        {
-                            var snoopOtherDispatcher = dispatchOutParameters.InstanceCreator();
-                            snoopOtherDispatcher.Inspect(visual);
-                        }
-                    )
-                );
+                visual.Dispatcher.Invoke(
+                    (Action)(() =>
+                    {
+                        var snoopOtherDispatcher = dispatchOutParameters.InstanceCreator();
+                        snoopOtherDispatcher.Inspect(visual);
+                    }));
             }
         }
 

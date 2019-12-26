@@ -13,8 +13,8 @@ namespace Snoop.Infrastructure
     {
         #region Fields
 
-        readonly Action<object> _execute;
-        readonly Predicate<object> _canExecute;
+        private readonly Action<object> execute;
+        private readonly Predicate<object> canExecute;
 
         #endregion // Fields
 
@@ -29,11 +29,11 @@ namespace Snoop.Infrastructure
         {
             if (execute == null)
             {
-                throw new ArgumentNullException("execute");
+                throw new ArgumentNullException(nameof(execute));
             }
 
-            _execute = execute;
-            _canExecute = canExecute;
+            this.execute = execute;
+            this.canExecute = canExecute;
         }
         #endregion // Constructors
 
@@ -42,7 +42,7 @@ namespace Snoop.Infrastructure
         [DebuggerStepThrough]
         public bool CanExecute(object parameter)
         {
-            return _canExecute == null ? true : _canExecute(parameter);
+            return this.canExecute == null ? true : this.canExecute(parameter);
         }
 
         public event EventHandler CanExecuteChanged
@@ -53,7 +53,7 @@ namespace Snoop.Infrastructure
 
         public void Execute(object parameter)
         {
-            _execute(parameter);
+            this.execute(parameter);
         }
 
         #endregion // ICommand Members

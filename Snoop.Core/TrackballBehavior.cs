@@ -17,16 +17,16 @@ namespace Snoop
         {
             if (viewport == null)
             {
-                throw new ArgumentNullException("viewport");
+                throw new ArgumentNullException(nameof(viewport));
             }
 
             this.viewport = viewport;
             this.lookAtPoint = lookAtPoint;
 
-            ProjectionCamera projectionCamera = this.viewport.Camera as ProjectionCamera;
+            var projectionCamera = this.viewport.Camera as ProjectionCamera;
             if (projectionCamera != null)
             {
-                Vector3D offset = projectionCamera.Position - this.lookAtPoint;
+                var offset = projectionCamera.Position - this.lookAtPoint;
                 this.distance = offset.Length;
             }
 
@@ -46,7 +46,7 @@ namespace Snoop
         private void Viewport_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             e.MouseDevice.Capture(this.viewport);
-            Point point = e.MouseDevice.GetPosition(this.viewport);
+            var point = e.MouseDevice.GetPosition(this.viewport);
             this.mouseDirection = GetDirectionFromPoint(point, this.viewport.RenderSize);
             this.isRotating = true;
             e.Handled = true;
@@ -56,9 +56,9 @@ namespace Snoop
         {
             if (this.isRotating)
             {
-                Point point = e.MouseDevice.GetPosition(this.viewport);
-                Vector3D newMouseDirection = GetDirectionFromPoint(point, this.viewport.RenderSize);
-                Quaternion q = GetRotationFromStartAndEnd(newMouseDirection, this.mouseDirection, 2);
+                var point = e.MouseDevice.GetPosition(this.viewport);
+                var newMouseDirection = GetDirectionFromPoint(point, this.viewport.RenderSize);
+                var q = GetRotationFromStartAndEnd(newMouseDirection, this.mouseDirection, 2);
                 this.orientation *= q;
                 this.mouseDirection = newMouseDirection;
 
@@ -77,32 +77,32 @@ namespace Snoop
         private void Viewport_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             // Zoom in or out exponentially.
-            this.zoom *= Math.Pow(TrackballBehavior.ZoomFactor, e.Delta / 120.0);
+            this.zoom *= Math.Pow(ZoomFactor, e.Delta / 120.0);
             this.UpdateCamera();
             e.Handled = true;
         }
 
         private void UpdateCamera()
         {
-            ProjectionCamera projectionCamera = this.viewport.Camera as ProjectionCamera;
+            var projectionCamera = this.viewport.Camera as ProjectionCamera;
             if (projectionCamera != null)
             {
-                Matrix3D matrix = Matrix3D.Identity;
+                var matrix = Matrix3D.Identity;
                 matrix.Rotate(this.orientation);
                 projectionCamera.LookDirection = new Vector3D(0, 0, 1) * matrix;
                 projectionCamera.UpDirection = new Vector3D(0, -1, 0) * matrix;
-                projectionCamera.Position = this.lookAtPoint - this.distance / this.zoom * projectionCamera.LookDirection;
+                projectionCamera.Position = this.lookAtPoint - (this.distance / this.zoom * projectionCamera.LookDirection);
             }
         }
 
         private static Vector3D GetDirectionFromPoint(Point point, Size size)
         {
-            double rx = size.Width / 2;
-            double ry = size.Height / 2;
-            double r = Math.Min(rx, ry);
-            double dx = (point.X - rx) / r;
-            double dy = (point.Y - ry) / r;
-            double rSquared = dx * dx + dy * dy;
+            var rx = size.Width / 2;
+            var ry = size.Height / 2;
+            var r = Math.Min(rx, ry);
+            var dx = (point.X - rx) / r;
+            var dy = (point.Y - ry) / r;
+            var rSquared = (dx * dx) + (dy * dy);
             if (rSquared <= 1)
             {
                 return new Vector3D(dx, dy, -Math.Sqrt(2 - rSquared));
@@ -115,7 +115,7 @@ namespace Snoop
 
         private static Quaternion GetRotationFromStartAndEnd(Vector3D start, Vector3D end, double angleMultiplier)
         {
-            double factor = start.Length * end.Length;
+            var factor = start.Length * end.Length;
 
             if (factor < 1e-6)
             {
@@ -125,9 +125,9 @@ namespace Snoop
             else
             {
                 // Both input directions have nonzero length.
-                Vector3D axis = Vector3D.CrossProduct(start, end);
-                double dotProduct = Vector3D.DotProduct(start, end) / factor;
-                double angle = Math.Acos(dotProduct < -1 ? -1 : dotProduct > 1 ? 1 : dotProduct);
+                var axis = Vector3D.CrossProduct(start, end);
+                var dotProduct = Vector3D.DotProduct(start, end) / factor;
+                var angle = Math.Acos(dotProduct < -1 ? -1 : dotProduct > 1 ? 1 : dotProduct);
 
                 if (axis.LengthSquared < 1e-12)
                 {
@@ -144,7 +144,6 @@ namespace Snoop
                         //
                         // The following construction will guarantee that
                         // dot(axis, start) == 0.
-                        //
                         axis = Vector3D.CrossProduct(start, new Vector3D(1, 0, 0));
                         if (axis.LengthSquared < 1e-12)
                         {
@@ -157,9 +156,9 @@ namespace Snoop
             }
         }
 
-        private Viewport3D viewport;
-        private Point3D lookAtPoint;
-        private double distance = 1;
+        private readonly Viewport3D viewport;
+        private readonly Point3D lookAtPoint;
+        private readonly double distance = 1;
         private double zoom = 1;
         private bool isRotating;
         private Vector3D mouseDirection;

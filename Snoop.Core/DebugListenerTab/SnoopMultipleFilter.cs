@@ -6,11 +6,11 @@
     [Serializable]
     public class SnoopMultipleFilter : SnoopFilter
     {
-        private List<SnoopFilter> _singleFilters = new List<SnoopFilter>();
+        private readonly List<SnoopFilter> singleFilters = new List<SnoopFilter>();
 
         public override bool FilterMatches(string debugLine)
         {
-            foreach (var filter in _singleFilters)
+            foreach (var filter in this.singleFilters)
             {
                 if (!filter.FilterMatches(debugLine))
                 {
@@ -33,12 +33,12 @@
         {
             get
             {
-                if (_singleFilters.Count == 0)
+                if (this.singleFilters.Count == 0)
                 {
                     return string.Empty;
                 }
 
-                return _singleFilters[0].GroupId;
+                return this.singleFilters[0].GroupId;
             }
 
             set
@@ -51,7 +51,7 @@
         {
             get
             {
-                return _singleFilters.Count > 0;
+                return this.singleFilters.Count > 0;
             }
         }
 
@@ -62,13 +62,13 @@
                 throw new NotSupportedException("The filter is not grouped");
             }
 
-            _singleFilters.Add(singleFilter);
+            this.singleFilters.Add(singleFilter);
         }
 
         public void RemoveFilter(SnoopFilter singleFilter)
         {
             singleFilter.IsGrouped = false;
-            _singleFilters.Remove(singleFilter);
+            this.singleFilters.Remove(singleFilter);
         }
 
         public void AddRange(IEnumerable<SnoopFilter> filters, string groupID)
@@ -84,22 +84,22 @@
                 filter.GroupId = groupID;
             }
 
-            _singleFilters.AddRange(filters);
+            this.singleFilters.AddRange(filters);
         }
 
         public void ClearFilters()
         {
-            foreach (var filter in _singleFilters)
+            foreach (var filter in this.singleFilters)
             {
                 filter.IsGrouped = false;
             }
 
-            _singleFilters.Clear();
+            this.singleFilters.Clear();
         }
 
         public bool ContainsFilter(SnoopSingleFilter filter)
         {
-            return _singleFilters.Contains(filter);
+            return this.singleFilters.Contains(filter);
         }
     }
 }

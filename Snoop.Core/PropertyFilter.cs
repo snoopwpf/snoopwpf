@@ -72,8 +72,7 @@ namespace Snoop
                 && this.filterRegex != null)
             {
                 return this.filterRegex.IsMatch(property.DisplayName)
-                       || (property.Property != null
-                            && this.filterRegex.IsMatch(property.Property.PropertyType.Name));
+                       || (property.Property != null && this.filterRegex.IsMatch(property.Property.PropertyType.Name));
             }
 
             // else just check for containment if we don't have a regular expression but we do have a filter string.
@@ -169,7 +168,7 @@ namespace Snoop
         };
     }
 
-    [DebuggerDisplay("{" + nameof(PropertyFilterSet.DisplayName) + "}")]
+    [DebuggerDisplay("{" + nameof(DisplayName) + "}")]
     [Serializable]
     public class PropertyFilterSet
     {

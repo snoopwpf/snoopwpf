@@ -41,7 +41,6 @@ namespace Snoop.InjectorLauncher
             var processId = int.Parse(splitted[0]);
             var windowHandle = splitted.Length > 1 ? new IntPtr(int.Parse(splitted[1])) : IntPtr.Zero;
 
-
             return new ProcessWrapper(Process.GetProcessById(processId), windowHandle);
         }
 

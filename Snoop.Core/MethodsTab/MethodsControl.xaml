@@ -183,7 +183,7 @@ All other rights reserved.
 		</StackPanel>
 
 		<CheckBox
-			x:Name="_checkBoxUseDataContext"
+			x:Name="checkBoxUseDataContext"
 		    Style="{x:Null}"
 			Grid.Row="1"
 		>

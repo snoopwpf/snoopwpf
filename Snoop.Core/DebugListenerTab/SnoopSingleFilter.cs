@@ -6,7 +6,7 @@
     [Serializable]
     public class SnoopSingleFilter : SnoopFilter, ICloneable
     {
-        private string _text;
+        private string text;
 
         public SnoopSingleFilter()
         {
@@ -15,27 +15,26 @@
 
         public FilterType FilterType { get; set; }
 
-
         public string Text
         {
             get
             {
-                return _text;
+                return this.text;
             }
 
             set
             {
-                _text = value;
-                this.RaisePropertyChanged("Text");
+                this.text = value;
+                this.RaisePropertyChanged(nameof(this.Text));
             }
         }
 
         public override bool FilterMatches(string debugLine)
         {
             debugLine = debugLine.ToLower();
-            var text = Text.ToLower();
-            bool filterMatches = false;
-            switch (FilterType)
+            var text = this.Text.ToLower();
+            var filterMatches = false;
+            switch (this.FilterType)
             {
                 case FilterType.Contains:
                     filterMatches = debugLine.Contains(text);
@@ -51,7 +50,7 @@
                     break;
             }
 
-            if (IsInverse)
+            if (this.IsInverse)
             {
                 filterMatches = !filterMatches;
             }
@@ -73,12 +72,14 @@
 
         public object Clone()
         {
-            SnoopSingleFilter newFilter = new SnoopSingleFilter();
-            newFilter._groupId = this._groupId;
-            newFilter._isGrouped = this._isGrouped;
-            newFilter._text = this._text;
-            newFilter.FilterType = this.FilterType;
-            newFilter._isInverse = this._isInverse;
+            var newFilter = new SnoopSingleFilter
+            {
+                IsGrouped = this.IsGrouped,
+                GroupId = this.GroupId,
+                text = this.text,
+                FilterType = this.FilterType,
+                IsInverse = this.IsInverse
+            };
             return newFilter;
         }
     }

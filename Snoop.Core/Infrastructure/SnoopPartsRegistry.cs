@@ -40,7 +40,7 @@ namespace Snoop.Infrastructure
                 var snoopVisual = (Visual)registeredSnoopVisual.Target;
 
                 if (visual == snoopVisual
-                    || visual.Dispatcher == snoopVisual.Dispatcher && visual.IsDescendantOf(snoopVisual))
+                    || (visual.Dispatcher == snoopVisual.Dispatcher && visual.IsDescendantOf(snoopVisual)))
                 {
                     return true;
                 }

@@ -39,7 +39,6 @@ namespace Snoop
             }
         }
 
-
         private object Process(object arg)
         {
             this.queued = false;
@@ -49,8 +48,8 @@ namespace Snoop
             return null;
         }
 
-        private DelayedHandler handler;
-        private DispatcherPriority priority;
+        private readonly DelayedHandler handler;
+        private readonly DispatcherPriority priority;
 
         private bool queued;
     }

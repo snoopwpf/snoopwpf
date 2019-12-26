@@ -9,6 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snoop.InjectorLauncher", "S
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7D074176-B8A0-4814-87EB-4C4086C6CE60}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		appveyor.yml = appveyor.yml
 		Changelog.md = Changelog.md
 		Directory.build.props = Directory.build.props
@@ -17,6 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		paket.dependencies = paket.dependencies
 		paket.lock = paket.lock
 		README.md = README.md
+		Snoop.ruleset = Snoop.ruleset
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snoop.Core", "Snoop.Core\Snoop.Core.csproj", "{883A18A9-A386-4342-AC95-9AFC34913FCA}"

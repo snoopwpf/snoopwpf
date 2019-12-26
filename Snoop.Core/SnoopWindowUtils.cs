@@ -96,7 +96,7 @@ namespace Snoop
         public static void LoadWindowPlacement(Window window, WINDOWPLACEMENT? windowPlacement)
         {
             if (windowPlacement.HasValue == false
-                || IsVisibleOnAnyScreen(windowPlacement.Value.normalPosition) == false)
+                || IsVisibleOnAnyScreen(windowPlacement.Value.NormalPosition) == false)
             {
                 return;
             }
@@ -105,9 +105,9 @@ namespace Snoop
             {
                 // load the window placement details from the user settings.
                 var wp = windowPlacement.Value;
-                wp.length = Marshal.SizeOf(typeof(WINDOWPLACEMENT));
-                wp.flags = 0;
-                wp.showCmd = (wp.showCmd == NativeMethods.SW_SHOWMINIMIZED ? NativeMethods.SW_SHOWNORMAL : wp.showCmd);
+                wp.Length = Marshal.SizeOf(typeof(WINDOWPLACEMENT));
+                wp.Flags = 0;
+                wp.ShowCmd = wp.ShowCmd == NativeMethods.SW_SHOWMINIMIZED ? NativeMethods.SW_SHOWNORMAL : wp.ShowCmd;
                 var hwnd = new WindowInteropHelper(window).Handle;
                 NativeMethods.SetWindowPlacement(hwnd, ref wp);
             }

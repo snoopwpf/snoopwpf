@@ -24,13 +24,11 @@ namespace Snoop
         }
 
         public static readonly DependencyProperty IsActiveProperty =
-            DependencyProperty.RegisterAttached
-            (
+            DependencyProperty.RegisterAttached(
                 "IsActive",
                 typeof(bool),
                 typeof(BringIntoViewBehavior),
-                new UIPropertyMetadata(false, OnIsActiveChanged)
-            );
+                new UIPropertyMetadata(false, OnIsActiveChanged));
 
         private static void OnIsActiveChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -43,16 +41,14 @@ namespace Snoop
             if ((bool)e.NewValue)
             {
                 // Can Bring into view only when element is loaded.
-                fe.WhenLoaded
-                (
+                fe.WhenLoaded(
                     element =>
                     {
                         if (GetIsActive(element))
                         {
                             element.BringIntoView();
                         }
-                    }
-                );
+                    });
             }
         }
     }

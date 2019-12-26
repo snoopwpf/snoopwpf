@@ -38,7 +38,8 @@ namespace Snoop
                     {
                         return true;
                     }
-                } while (attachedPropertyForChildren.IncludeDescendants && currentElement != null);
+                } 
+                while (attachedPropertyForChildren.IncludeDescendants && currentElement != null);
 
                 return false;
             }

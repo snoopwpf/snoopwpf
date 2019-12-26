@@ -14,28 +14,25 @@ namespace Snoop.MethodsTab
 
     public class SnoopParameterInformation : DependencyObject
     {
-
-        private ParameterInfo _parameterInfo = null;
-        private ICommand _createCustomParameterCommand = null;
-        private ICommand _nullOutParameter = null;
+        private ParameterInfo parameterInfo;
+        private ICommand createCustomParameterCommand;
+        private ICommand nullOutParameter;
 
         public TypeConverter TypeConverter
         {
             get;
-            private set;
         }
 
         public Type DeclaringType
         {
             get;
-            private set;
         }
 
         public bool IsCustom
         {
             get
             {
-                return !this.IsEnum && (TypeConverter.GetType() == typeof(TypeConverter));
+                return !this.IsEnum && this.TypeConverter.GetType() == typeof(TypeConverter);
             }
         }
 
@@ -51,7 +48,7 @@ namespace Snoop.MethodsTab
         {
             get
             {
-                return _createCustomParameterCommand ?? (_createCustomParameterCommand = new RelayCommand(x => CreateCustomParameter()));
+                return this.createCustomParameterCommand ??= new RelayCommand(x => this.CreateCustomParameter());
             }
         }
 
@@ -59,14 +56,14 @@ namespace Snoop.MethodsTab
         {
             get
             {
-                return _nullOutParameter ?? (_nullOutParameter = new RelayCommand(x => this.ParameterValue = null));
+                return this.nullOutParameter ??= new RelayCommand(x => this.ParameterValue = null);
             }
         }
 
         private static ITypeSelector GetTypeSelector(Type parameterType)
         {
-            ITypeSelector typeSelector = null;
-            if (parameterType.Equals(typeof(object)))
+            ITypeSelector typeSelector;
+            if (parameterType == typeof(object))
             {
                 typeSelector = new FullTypeSelector();
             }
@@ -89,7 +86,7 @@ namespace Snoop.MethodsTab
 
             if (this.ParameterValue == null)
             {
-                var typeSelector = GetTypeSelector(ParameterType);
+                var typeSelector = GetTypeSelector(this.ParameterType);
                 typeSelector.ShowDialog();
 
                 if (!typeSelector.DialogResult.Value)
@@ -108,14 +105,14 @@ namespace Snoop.MethodsTab
 
             if (paramCreator.DialogResult.HasValue && paramCreator.DialogResult.Value)
             {
-                ParameterValue = null;//To force a property changed
-                ParameterValue = paramCreator.RootTarget;
+                this.ParameterValue = null; //To force a property changed
+                this.ParameterValue = paramCreator.RootTarget;
             }
         }
 
         public SnoopParameterInformation(ParameterInfo parameterInfo, Type declaringType)
         {
-            _parameterInfo = parameterInfo;
+            this.parameterInfo = parameterInfo;
             if (parameterInfo == null)
             {
                 return;
@@ -124,12 +121,13 @@ namespace Snoop.MethodsTab
             this.DeclaringType = declaringType;
             this.ParameterName = parameterInfo.Name;
             this.ParameterType = parameterInfo.ParameterType;
+
             if (this.ParameterType.IsValueType)
             {
                 this.ParameterValue = Activator.CreateInstance(this.ParameterType);
             }
 
-            TypeConverter = TypeDescriptor.GetConverter(this.ParameterType);
+            this.TypeConverter = TypeDescriptor.GetConverter(this.ParameterType);
         }
 
         public string ParameterName { get; set; }
@@ -138,14 +136,12 @@ namespace Snoop.MethodsTab
 
         public object ParameterValue
         {
-            get { return (object)GetValue(ParameterValueProperty); }
-            set { SetValue(ParameterValueProperty, value); }
+            get { return (object)this.GetValue(ParameterValueProperty); }
+            set { this.SetValue(ParameterValueProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for ParameterValue.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ParameterValueProperty =
             DependencyProperty.Register("ParameterValue", typeof(object), typeof(SnoopParameterInformation), new UIPropertyMetadata(null));
-
-
     }
 }

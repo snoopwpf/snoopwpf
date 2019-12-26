@@ -42,13 +42,11 @@ namespace Snoop.Infrastructure
         /// Identifies the <see cref="IsSnoopPart"/> attached property.
         /// </summary>
         public static readonly DependencyProperty IsSnoopPartProperty =
-            DependencyProperty.RegisterAttached
-            (
+            DependencyProperty.RegisterAttached(
                 "IsSnoopPart",
                 typeof(bool),
                 typeof(ComboBox),
-                new PropertyMetadata(false, OnIsSnoopPartChanged)
-            );
+                new PropertyMetadata(false, OnIsSnoopPartChanged));
 
         private static void OnIsSnoopPartChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
         {
@@ -58,7 +56,6 @@ namespace Snoop.Infrastructure
                 cb.WhenLoaded(fe => UpdateSnoopPartSettings(cb, (bool)e.NewValue));
             }
         }
-
 
         private static void UpdateSnoopPartSettings(ComboBox comboBox, bool isSnoopPart)
         {

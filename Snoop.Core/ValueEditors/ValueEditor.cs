@@ -15,74 +15,58 @@ namespace Snoop
     {
         public static readonly RoutedCommand OpenDetailsEditorCommand = new RoutedCommand();
 
-        public static DependencyProperty IsSelectedProperty =
-            DependencyProperty.Register
-            (
+        public static readonly DependencyProperty IsSelectedProperty =
+            DependencyProperty.Register(
                 nameof(IsSelected),
                 typeof(bool),
-                typeof(ValueEditor)
-            );
+                typeof(ValueEditor));
 
-        public static DependencyProperty ValueProperty =
-            DependencyProperty.Register
-            (
+        public static readonly DependencyProperty ValueProperty =
+            DependencyProperty.Register(
                 nameof(Value),
                 typeof(object),
                 typeof(ValueEditor),
-                new PropertyMetadata(HandleValueChanged)
-            );
+                new PropertyMetadata(HandleValueChanged));
 
-        public static DependencyProperty DescriptiveValueProperty =
-            DependencyProperty.Register
-            (
+        public static readonly DependencyProperty DescriptiveValueProperty =
+            DependencyProperty.Register(
                 nameof(DescriptiveValue),
                 typeof(object),
-                typeof(ValueEditor)
-            );
+                typeof(ValueEditor));
 
-        public static DependencyProperty PropertyTypeProperty =
-            DependencyProperty.Register
-            (
+        public static readonly DependencyProperty PropertyTypeProperty =
+            DependencyProperty.Register(
                 nameof(PropertyType),
                 typeof(object),
                 typeof(ValueEditor),
-                new PropertyMetadata(HandleTypeChanged)
-            );
+                new PropertyMetadata(HandleTypeChanged));
 
-        public static DependencyProperty IsEditableProperty =
-            DependencyProperty.Register
-            (
+        public static readonly DependencyProperty IsEditableProperty =
+            DependencyProperty.Register(
                 nameof(IsEditable),
                 typeof(bool),
-                typeof(ValueEditor)
-            );
+                typeof(ValueEditor));
 
         public static readonly DependencyProperty PropertyInfoProperty =
-            DependencyProperty.Register
-            (
+            DependencyProperty.Register(
                 nameof(PropertyInfo),
                 typeof(PropertyInformation),
                 typeof(ValueEditor),
-                new UIPropertyMetadata(null, OnPropertyInfoChanged)
-            );
+                new UIPropertyMetadata(null, OnPropertyInfoChanged));
 
         public static readonly DependencyProperty SupportsDetailsEditorProperty =
-            DependencyProperty.Register
-            (
+            DependencyProperty.Register(
                 nameof(SupportsDetailsEditor),
                 typeof(bool),
                 typeof(ValueEditor),
-                new PropertyMetadata(default(bool))
-            );
+                new PropertyMetadata(default(bool)));
 
         public static readonly DependencyProperty DetailsEditorTemplateProperty =
-            DependencyProperty.Register
-            (
+            DependencyProperty.Register(
                 nameof(DetailsEditorTemplate),
                 typeof(DataTemplate),
                 typeof(ValueEditor),
-                new PropertyMetadata(default(DataTemplate))
-            );
+                new PropertyMetadata(default(DataTemplate)));
 
         public ValueEditor()
         {

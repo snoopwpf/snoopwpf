@@ -24,7 +24,7 @@ namespace Snoop
     {
         private static readonly Point cursorHotSpot = new Point(16, 20);
         private readonly Cursor crosshairsCursor;
-        private Point _startPoint;
+        private Point startPoint;
         private WindowInfo currentWindowInfo;
         private readonly LowLevelMouseHook lowLevelMouseHook;
 
@@ -48,7 +48,7 @@ namespace Snoop
         /// <inheritdoc />
         protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
         {
-            this._startPoint = e.GetPosition(null);
+            this.startPoint = e.GetPosition(null);
             this.StartSnoopTargetsSearch();
             e.Handled = true;
 
@@ -61,7 +61,7 @@ namespace Snoop
             base.OnMouseMove(e);
 
             var currentPosition = e.GetPosition(null);
-            var diff = this._startPoint - currentPosition;
+            var diff = this.startPoint - currentPosition;
 
             if (e.LeftButton == MouseButtonState.Pressed
                 && (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance || Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance))
@@ -184,7 +184,7 @@ namespace Snoop
         }
 
         // https://stackoverflow.com/a/27077188/122048
-        private static Cursor ConvertToCursor(UIElement control, Point hotSpot = default(Point))
+        private static Cursor ConvertToCursor(UIElement control, Point hotSpot = default)
         {
             // convert FrameworkElement to PNG stream
             using (var pngStream = new MemoryStream())

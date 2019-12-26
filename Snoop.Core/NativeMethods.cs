@@ -23,11 +23,11 @@ namespace Snoop
         {
             get
             {
-                List<IntPtr> windowList = new List<IntPtr>();
-                GCHandle handle = GCHandle.Alloc(windowList);
+                var windowList = new List<IntPtr>();
+                var handle = GCHandle.Alloc(windowList);
                 try
                 {
-                    NativeMethods.EnumWindows(NativeMethods.EnumWindowsCallback, (IntPtr)handle);
+                    EnumWindows(EnumWindowsCallback, (IntPtr)handle);
                 }
                 finally
                 {
@@ -53,7 +53,7 @@ namespace Snoop
 
             foreach (var hWnd in rootWindows)
             {
-                NativeMethods.GetWindowThreadProcessId(hWnd, out var processId);
+                GetWindowThreadProcessId(hWnd, out var processId);
                 if (processId == pid)
                 {
                     dsProcRootWindows.Add(hWnd);
@@ -66,7 +66,7 @@ namespace Snoop
         public static Process GetWindowThreadProcess(IntPtr hwnd)
         {
             int processID;
-            NativeMethods.GetWindowThreadProcessId(hwnd, out processID);
+            GetWindowThreadProcessId(hwnd, out processID);
 
             try
             {
@@ -86,7 +86,7 @@ namespace Snoop
             return true;
         }
 
-        [DebuggerDisplay("{" + nameof(MODULEENTRY32.szModule) + "}")]
+        [DebuggerDisplay("{" + nameof(szModule) + "}")]
         [StructLayout(LayoutKind.Sequential)]
         public struct MODULEENTRY32
         {
@@ -95,15 +95,14 @@ namespace Snoop
             public uint th32ProcessID;
             public uint GlblcntUsage;
             public uint ProccntUsage;
-            IntPtr modBaseAddr;
+            public readonly IntPtr modBaseAddr;
             public uint modBaseSize;
-            IntPtr hModule;
+            public readonly IntPtr hModule;
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
             public string szModule;
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
             public string szExePath;
         }
-;
 
         public class ToolHelpHandle : SafeHandleZeroOrMinusOneIsInvalid
         {
@@ -113,9 +112,9 @@ namespace Snoop
             }
 
             [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
-            override protected bool ReleaseHandle()
+            protected override bool ReleaseHandle()
             {
-                return NativeMethods.CloseHandle(this.handle);
+                return CloseHandle(this.handle);
             }
         }
 
@@ -127,9 +126,9 @@ namespace Snoop
             }
 
             [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
-            override protected bool ReleaseHandle()
+            protected override bool ReleaseHandle()
             {
-                return NativeMethods.CloseHandle(this.handle);
+                return CloseHandle(this.handle);
             }
         }
 
@@ -155,14 +154,14 @@ namespace Snoop
             }
 
             // if this method is not available in your version of .NET, use GetNativeSystemInfo via P/Invoke instead
-            using (var processHandle = NativeMethods.OpenProcess(process, NativeMethods.ProcessAccessFlags.QueryLimitedInformation))
+            using (var processHandle = OpenProcess(process, ProcessAccessFlags.QueryLimitedInformation))
             {
                 if (processHandle.IsInvalid)
                 {
                     throw new Exception("Could not query process information.");
                 }
 
-                if (NativeMethods.IsWow64Process(processHandle.DangerousGetHandle(), out var isWow64) == false)
+                if (IsWow64Process(processHandle.DangerousGetHandle(), out var isWow64) == false)
                 {
                     throw new Win32Exception();
                 }
@@ -173,13 +172,13 @@ namespace Snoop
 
         public static bool IsProcessElevated(Process process)
         {
-            using (var processHandle = NativeMethods.OpenProcess(process, NativeMethods.ProcessAccessFlags.QueryInformation))
+            using (var processHandle = OpenProcess(process, ProcessAccessFlags.QueryInformation))
             {
                 if (processHandle.IsInvalid)
                 {
                     var error = Marshal.GetLastWin32Error();
 
-                    return error == NativeMethods.ERROR_ACCESS_DENIED;
+                    return error == ERROR_ACCESS_DENIED;
                 }
 
                 return false;
@@ -193,7 +192,7 @@ namespace Snoop
         /// </summary>
         public static IEnumerable<MODULEENTRY32> GetModulesFromWindowHandle(IntPtr windowHandle)
         {
-            NativeMethods.GetWindowThreadProcessId(windowHandle, out var processId);
+            GetWindowThreadProcessId(windowHandle, out var processId);
 
             return GetModules(processId);
         }
@@ -215,8 +214,8 @@ namespace Snoop
         /// </summary>
         public static IEnumerable<MODULEENTRY32> GetModules(int processId)
         {
-            var me32 = new NativeMethods.MODULEENTRY32();
-            var hModuleSnap = NativeMethods.CreateToolhelp32Snapshot(NativeMethods.SnapshotFlags.Module | NativeMethods.SnapshotFlags.Module32, processId);
+            var me32 = default(MODULEENTRY32);
+            var hModuleSnap = CreateToolhelp32Snapshot(SnapshotFlags.Module | SnapshotFlags.Module32, processId);
 
             if (hModuleSnap.IsInvalid)
             {
@@ -227,12 +226,13 @@ namespace Snoop
             {
                 me32.dwSize = (uint)Marshal.SizeOf(me32);
 
-                if (NativeMethods.Module32First(hModuleSnap, ref me32))
+                if (Module32First(hModuleSnap, ref me32))
                 {
                     do
                     {
                         yield return me32;
-                    } while (NativeMethods.Module32Next(hModuleSnap, ref me32));
+                    } 
+                    while (Module32Next(hModuleSnap, ref me32));
                 }
             }
         }
@@ -267,7 +267,7 @@ namespace Snoop
 
             return result != 0
                        ? className.ToString()
-                       : String.Empty;
+                       : string.Empty;
         }
 
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
@@ -303,7 +303,8 @@ namespace Snoop
             Synchronize = 0x00100000
         }
 
-        [DllImport("kernel32.dll", SetLastError = true), SuppressUnmanagedCodeSecurity]
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [SuppressUnmanagedCodeSecurity]
         public static extern ProcessHandle OpenProcess(ProcessAccessFlags processAccess, bool bInheritHandle, int processId);
 
         public static ProcessHandle OpenProcess(Process proc, ProcessAccessFlags flags)
@@ -330,7 +331,7 @@ namespace Snoop
                 {
                     Trace.WriteLine($"Checking module {moduleName} with base address {mod.BaseAddress} for procaddress of {procName}...");
 
-                    var procAddress = NativeMethods.GetProcAddress(mod.BaseAddress, procName).ToUInt64();
+                    var procAddress = GetProcAddress(mod.BaseAddress, procName).ToUInt64();
 
                     if (procAddress != 0)
                     {
@@ -363,26 +364,26 @@ namespace Snoop
         public static extern IntPtr GetModuleHandle(string lpModuleName);
 
         [DllImport("kernel32")]
-        public extern static IntPtr LoadLibrary(string librayName);
+        public static extern IntPtr LoadLibrary(string librayName);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        static public extern ToolHelpHandle CreateToolhelp32Snapshot(SnapshotFlags dwFlags, int th32ProcessID);
+        public static extern ToolHelpHandle CreateToolhelp32Snapshot(SnapshotFlags dwFlags, int th32ProcessID);
 
         [DllImport("kernel32.dll")]
-        static public extern bool Module32First(ToolHelpHandle hSnapshot, ref MODULEENTRY32 lpme);
+        public static extern bool Module32First(ToolHelpHandle hSnapshot, ref MODULEENTRY32 lpme);
 
         [DllImport("kernel32.dll")]
-        static public extern bool Module32Next(ToolHelpHandle hSnapshot, ref MODULEENTRY32 lpme);
+        public static extern bool Module32Next(ToolHelpHandle hSnapshot, ref MODULEENTRY32 lpme);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        static public extern bool CloseHandle(IntPtr hHandle);
+        public static extern bool CloseHandle(IntPtr hHandle);
 
         [DllImport("user32.dll")]
         public static extern IntPtr LoadImage(IntPtr hinst, string lpszName, uint uType, int cxDesired, int cyDesired, uint fuLoad);
 
         public static IntPtr GetWindowUnderMouse()
         {
-            POINT pt = new POINT();
+            var pt = default(POINT);
             if (GetCursorPos(ref pt))
             {
                 return WindowFromPoint(pt);
@@ -407,7 +408,7 @@ namespace Snoop
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+        private static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
 
         [DllImport("user32.dll")]
         public static extern bool SetWindowPlacement(IntPtr hWnd, [In] ref WINDOWPLACEMENT lpwndpl);
@@ -490,7 +491,7 @@ namespace Snoop
         public static extern bool UnhookWindowsHookEx(IntPtr hhk);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
+        public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool FreeLibrary(IntPtr hModule);
@@ -550,12 +551,12 @@ namespace Snoop
     [StructLayout(LayoutKind.Sequential)]
     public struct WINDOWPLACEMENT
     {
-        public int length;
-        public int flags;
-        public int showCmd;
-        public POINT minPosition;
-        public POINT maxPosition;
-        public RECT normalPosition;
+        public int Length;
+        public int Flags;
+        public int ShowCmd;
+        public POINT MinPosition;
+        public POINT MaxPosition;
+        public RECT NormalPosition;
     }
 
     public enum Wait

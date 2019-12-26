@@ -12,15 +12,15 @@ namespace Snoop.MethodsTab
     {
         public TypeSelector()
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
-            this.Loaded += new System.Windows.RoutedEventHandler(TypeSelector_Loaded);
+            this.Loaded += this.TypeSelector_Loaded;
         }
 
         //TODO: MOVE SOMEWHERE ELSE. MACIEK
         public static List<Type> GetDerivedTypes(Type baseType)
         {
-            List<Type> typesAssignable = new List<Type>();
+            var typesAssignable = new List<Type>();
 
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
@@ -43,21 +43,16 @@ namespace Snoop.MethodsTab
             return typesAssignable;
         }
 
-        public List<Type> DerivedTypes
-        {
-            get;
-            set;
-        }
+        public List<Type> DerivedTypes { get;  set; }
 
         private void TypeSelector_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-
-            if (DerivedTypes == null)
+            if (this.DerivedTypes == null)
             {
                 this.DerivedTypes = GetDerivedTypes(this.BaseType);
             }
 
-            this.comboBoxTypes.ItemsSource = DerivedTypes;
+            this.comboBoxTypes.ItemsSource = this.DerivedTypes;
         }
 
         public Type BaseType { get; set; }
@@ -68,19 +63,17 @@ namespace Snoop.MethodsTab
             private set;
         }
 
-        private void buttonCreateInstance_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void ButtonCreateInstance_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             this.DialogResult = true;
             this.Instance = Activator.CreateInstance((Type)this.comboBoxTypes.SelectedItem);
             this.Close();
         }
 
-        private void buttonCancel_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void ButtonCancel_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             this.DialogResult = false;
             this.Close();
         }
     }
-
-
 }

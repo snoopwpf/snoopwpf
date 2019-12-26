@@ -21,7 +21,7 @@ namespace Snoop.Converters
 
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            SnoopParameterInformation paramInfo = value as SnoopParameterInformation;
+            var paramInfo = value as SnoopParameterInformation;
             if (paramInfo == null)
             {
                 return value;
@@ -50,15 +50,15 @@ namespace Snoop.Converters
 
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            SnoopParameterInformation paramInfo = (SnoopParameterInformation)value;
-            Type t = paramInfo.DeclaringType;
+            var paramInfo = (SnoopParameterInformation)value;
+            var t = paramInfo.DeclaringType;
 
             //var fields = t.GetFields(System.Reflection.BindingFlags.FlattenHierarchy);
             var fields = t.GetFields(BindingFlags.FlattenHierarchy | BindingFlags.Public | BindingFlags.Static);
 
             var dpType = typeof(DependencyProperty);
 
-            List<DependencyPropertyNameValuePair> dependencyProperties = new List<DependencyPropertyNameValuePair>();
+            var dependencyProperties = new List<DependencyPropertyNameValuePair>();
 
             foreach (var field in fields)
             {
@@ -89,14 +89,14 @@ namespace Snoop.Converters
 
         public override string ToString()
         {
-            return DependencyPropertyName;
+            return this.DependencyPropertyName;
         }
 
         #region IComparable Members
 
         public int CompareTo(object obj)
         {
-            DependencyPropertyNameValuePair toCompareTo = (DependencyPropertyNameValuePair)obj;
+            var toCompareTo = (DependencyPropertyNameValuePair)obj;
 
             return this.DependencyPropertyName.CompareTo(toCompareTo.DependencyPropertyName);
         }

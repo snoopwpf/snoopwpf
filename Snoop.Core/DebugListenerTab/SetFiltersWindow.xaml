@@ -22,17 +22,17 @@
 			<ListBox Name="listBoxFilters" Style="{x:Null}" ItemsSource="{Binding Path=Filters}" SelectionMode="Extended"  AlternationCount="2">
 				<ListBox.ContextMenu>
 					<ContextMenu Style="{x:Null}">
-						<MenuItem Name="menuItemGroupFilters" Style="{x:Null}" Click="menuItemGroupFilters_Click">
+						<MenuItem Name="menuItemGroupFilters" Style="{x:Null}" Click="MenuItemGroupFilters_Click">
 							<MenuItem.Header>
 								<TextBlock Style="{x:Null}" Text="Group Filters"/>
 							</MenuItem.Header>
 						</MenuItem>
-						<MenuItem Name="menuItemClearFilterGroups" Style="{x:Null}" Click="menuItemClearFilterGroups_Click">
+						<MenuItem Name="menuItemClearFilterGroups" Style="{x:Null}" Click="MenuItemClearFilterGroups_Click">
 							<MenuItem.Header>
 								<TextBlock Style="{x:Null}" Text="Clear Filter Groups"/>
 							</MenuItem.Header>
 						</MenuItem>
-						<MenuItem Name="menuItemSetInverse" Style="{x:Null}" Click="menuItemSetInverse_Click">
+						<MenuItem Name="menuItemSetInverse" Style="{x:Null}" Click="MenuItemSetInverse_Click">
 							<MenuItem.Header>
 								<TextBlock Style="{x:Null}" Text="Set Inverse"/>
 							</MenuItem.Header>
@@ -78,8 +78,8 @@
 									<TextBlock Style="{x:Null}" Text="Regular Expression"/>
 								</ComboBoxItem>
 							</ComboBox>
-							<TextBox Name="textBlockFilter" Style="{x:Null}" Loaded="textBlockFilter_Loaded" Width="150" Height="23" Margin="10,0,0,0" Text="{Binding Path=Text, Mode=TwoWay}"/>
-							<Button Name="buttonRemoveFilter" Style="{x:Null}" Margin="10,0,0,0" Width="14" Height="14"  Click="buttonRemoveFilter_Click">
+							<TextBox Name="textBlockFilter" Style="{x:Null}" Loaded="TextBlockFilter_Loaded" Width="150" Height="23" Margin="10,0,0,0" Text="{Binding Path=Text, Mode=TwoWay}"/>
+							<Button Name="buttonRemoveFilter" Style="{x:Null}" Margin="10,0,0,0" Width="14" Height="14"  Click="ButtonRemoveFilter_Click">
 								<Grid>
 									<Path
 										Stretch="Fill"
@@ -100,11 +100,11 @@
 					</DataTemplate>
 				</ListBox.ItemTemplate>
 			</ListBox>
-			<Button Style="{x:Null}" Margin="0,10,0,0" Grid.Row="1" VerticalAlignment="Bottom" Name="buttonAddFilter" Click="buttonAddFilter_Click" Width="110" Height="25" HorizontalAlignment="Left">
+			<Button Style="{x:Null}" Margin="0,10,0,0" Grid.Row="1" VerticalAlignment="Bottom" Name="buttonAddFilter" Click="ButtonAddFilter_Click" Width="110" Height="25" HorizontalAlignment="Left">
 				<TextBlock Style="{x:Null}" Text="Add Another Filter"/>
 			</Button>
 		</Grid>
-		<Button Name="buttonSetFilter" Style="{x:Null}" Margin="10,0,0,0" Grid.Row="1" HorizontalAlignment="Left" Height="25" Width="110" Click="buttonSetFilter_Click">
+		<Button Name="buttonSetFilter" Style="{x:Null}" Margin="10,0,0,0" Grid.Row="1" HorizontalAlignment="Left" Height="25" Width="110" Click="ButtonSetFilter_Click">
 			<TextBlock Style="{x:Null}" Text="Set Filter"/>
 		</Button>
 	</Grid>

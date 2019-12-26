@@ -12,11 +12,11 @@
             this.DataContext = viewModel;
             viewModel.ResetDirtyFlag();
 
-            InitializeComponent();
+            this.InitializeComponent();
 
-            initialFilters = MakeDeepCopyOfFilters(this.ViewModel.Filters);
+            this.initialFilters = this.MakeDeepCopyOfFilters(this.ViewModel.Filters);
 
-            this.Closed += SetFiltersWindow_Closed;
+            this.Closed += this.SetFiltersWindow_Closed;
         }
 
         internal FiltersViewModel ViewModel
@@ -29,7 +29,7 @@
 
         private void SetFiltersWindow_Closed(object sender, EventArgs e)
         {
-            if (_setFilterClicked || !this.ViewModel.IsDirty)
+            if (this.setFilterClicked || !this.ViewModel.IsDirty)
             {
                 return;
             }
@@ -38,62 +38,53 @@
             if (saveChanges)
             {
                 this.ViewModel.SetIsSet();
-                SaveFiltersToSettings();
+                this.SaveFiltersToSettings();
                 return;
             }
 
-            this.ViewModel.InitializeFilters(initialFilters);
+            this.ViewModel.InitializeFilters(this.initialFilters);
         }
 
-        private void buttonAddFilter_Click(object sender, RoutedEventArgs e)
+        private void ButtonAddFilter_Click(object sender, RoutedEventArgs e)
         {
             //ViewModel.Filters.Add(new SnoopSingleFilter());
-            ViewModel.AddFilter(new SnoopSingleFilter());
+            this.ViewModel.AddFilter(new SnoopSingleFilter());
             //this.listBoxFilters.ScrollIntoView(this.listBoxFilters.ItemContainerGenerator.ContainerFromIndex(this.listBoxFilters.Items.Count - 1));
-
         }
 
-        private void buttonRemoveFilter_Click(object sender, RoutedEventArgs e)
+        private void ButtonRemoveFilter_Click(object sender, RoutedEventArgs e)
         {
-            FrameworkElement frameworkElement = sender as FrameworkElement;
-            if (frameworkElement == null)
+            if (sender is FrameworkElement frameworkElement)
             {
-                return;
+                if (frameworkElement.DataContext is SnoopFilter filter)
+                {
+                    this.ViewModel.RemoveFilter(filter);
+                }
             }
-
-            SnoopFilter filter = frameworkElement.DataContext as SnoopFilter;
-            if (filter == null)
-            {
-                return;
-            }
-
-            ViewModel.RemoveFilter(filter);
         }
 
-        private void buttonSetFilter_Click(object sender, RoutedEventArgs e)
+        private void ButtonSetFilter_Click(object sender, RoutedEventArgs e)
         {
-            SaveFiltersToSettings();
+            this.SaveFiltersToSettings();
 
             //this.ViewModel.IsSet = true;
             this.ViewModel.SetIsSet();
-            _setFilterClicked = true;
+            this.setFilterClicked = true;
             this.Close();
         }
 
-        private void textBlockFilter_Loaded(object sender, RoutedEventArgs e)
+        private void TextBlockFilter_Loaded(object sender, RoutedEventArgs e)
         {
-            var textBox = sender as TextBox;
-            if (textBox != null)
+            if (sender is TextBox textBox)
             {
                 textBox.Focus();
                 this.listBoxFilters.ScrollIntoView(textBox);
             }
         }
 
-        private void menuItemGroupFilters_Click(object sender, RoutedEventArgs e)
+        private void MenuItemGroupFilters_Click(object sender, RoutedEventArgs e)
         {
-
-            List<SnoopFilter> filtersToGroup = new List<SnoopFilter>();
+            var filtersToGroup = new List<SnoopFilter>();
             foreach (var item in this.listBoxFilters.SelectedItems)
             {
                 var filter = item as SnoopFilter;
@@ -111,12 +102,12 @@
             this.ViewModel.GroupFilters(filtersToGroup);
         }
 
-        private void menuItemClearFilterGroups_Click(object sender, RoutedEventArgs e)
+        private void MenuItemClearFilterGroups_Click(object sender, RoutedEventArgs e)
         {
             this.ViewModel.ClearFilterGroups();
         }
 
-        private void menuItemSetInverse_Click(object sender, RoutedEventArgs e)
+        private void MenuItemSetInverse_Click(object sender, RoutedEventArgs e)
         {
             foreach (SnoopFilter filter in this.listBoxFilters.SelectedItems)
             {
@@ -129,10 +120,9 @@
             }
         }
 
-
         private void SaveFiltersToSettings()
         {
-            List<SnoopSingleFilter> singleFilters = new List<SnoopSingleFilter>();
+            var singleFilters = new List<SnoopSingleFilter>();
             foreach (var filter in this.ViewModel.Filters)
             {
                 if (filter is SnoopSingleFilter)
@@ -146,7 +136,7 @@
 
         private List<SnoopSingleFilter> MakeDeepCopyOfFilters(IEnumerable<SnoopFilter> filters)
         {
-            List<SnoopSingleFilter> snoopSingleFilters = new List<SnoopSingleFilter>();
+            var snoopSingleFilters = new List<SnoopSingleFilter>();
 
             foreach (var filter in filters)
             {
@@ -181,9 +171,7 @@
         //	}
         //}
 
-
-        private List<SnoopSingleFilter> initialFilters;
-        private bool _setFilterClicked = false;
+        private readonly List<SnoopSingleFilter> initialFilters;
+        private bool setFilterClicked;
     }
 }
-

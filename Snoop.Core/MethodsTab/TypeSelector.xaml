@@ -19,8 +19,8 @@ All other rights reserved.
         <ComboBox Style="{x:Null}" Height="30" HorizontalAlignment="Left" Margin="29,32,0,0" Name="comboBoxTypes"
                   VerticalAlignment="Top" Width="439" />
         <Button Style="{x:Null}" Content="Create Instance" Height="30" HorizontalAlignment="Left" Margin="29,88,0,0"
-                Name="buttonCreateInstance" Click="buttonCreateInstance_Click" VerticalAlignment="Top" Width="136" />
+                Name="buttonCreateInstance" Click="ButtonCreateInstance_Click" VerticalAlignment="Top" Width="136" />
         <Button Style="{x:Null}" Content="Cancel" Height="30" HorizontalAlignment="Left" Margin="188,88,0,0"
-                Name="buttonCancel" Click="buttonCancel_Click" VerticalAlignment="Top" Width="130" />
+                Name="buttonCancel" Click="ButtonCancel_Click" VerticalAlignment="Top" Width="130" />
     </Grid>
 </windows:SnoopBaseWindow>

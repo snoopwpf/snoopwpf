@@ -17,71 +17,71 @@ namespace Snoop
     {
         public bool ApplyReduceDepthFilterIfNeeded(ProperTreeViewItem curNode)
         {
-            if (_pendingRoot != null)
+            if (this.pendingRoot != null)
             {
-                OnRootLoaded();
+                this.OnRootLoaded();
             }
 
-            if (_maxDepth == 0)
+            if (this.maxDepth == 0)
             {
                 return false;
             }
 
-            VisualTreeItem rootItem = (VisualTreeItem)_rootItem.Target;
+            var rootItem = (VisualTreeItem)this.rootItem.Target;
             if (rootItem == null)
             {
                 return false;
             }
 
-            if (_snoopUI == null)
+            if (this.snoopUI == null)
             {
-                _snoopUI = VisualTreeHelper2.GetAncestor<SnoopUI>(this);
-                if (_snoopUI == null)
+                this.snoopUI = VisualTreeHelper2.GetAncestor<SnoopUI>(this);
+                if (this.snoopUI == null)
                 {
                     return false;
                 }
             }
 
-            VisualTreeItem item = (VisualTreeItem)curNode.DataContext;
-            VisualTreeItem selectedItem = _snoopUI.CurrentSelection;
+            var item = (VisualTreeItem)curNode.DataContext;
+            var selectedItem = this.snoopUI.CurrentSelection;
             if (selectedItem != null && item.Depth < selectedItem.Depth)
             {
                 item = selectedItem;
             }
 
-            if ((item.Depth - rootItem.Depth) <= _maxDepth)
+            if (item.Depth - rootItem.Depth <= this.maxDepth)
             {
                 return false;
             }
 
-            for (int i = 0; i < _maxDepth; ++i)
+            for (var i = 0; i < this.maxDepth; ++i)
             {
                 item = item.Parent;
             }
 
-            _snoopUI.ApplyReduceDepthFilter(item);
+            this.snoopUI.ApplyReduceDepthFilter(item);
             return true;
         }
 
         protected override DependencyObject GetContainerForItemOverride()
         {
-            if (_pendingRoot != null)
+            if (this.pendingRoot != null)
             {
-                _pendingRoot.Loaded -= OnRootLoaded;
-                _pendingRoot = null;
+                this.pendingRoot.Loaded -= this.OnRootLoaded;
+                this.pendingRoot = null;
             }
 
-            _pendingRoot = new ProperTreeViewItem(new WeakReference(this));
-            _pendingRoot.Loaded += OnRootLoaded;
-            _maxDepth = 0;
-            _rootItem.Target = null;
-            return _pendingRoot;
+            this.pendingRoot = new ProperTreeViewItem(new WeakReference(this));
+            this.pendingRoot.Loaded += this.OnRootLoaded;
+            this.maxDepth = 0;
+            this.rootItem.Target = null;
+            return this.pendingRoot;
         }
 
         private void OnRootLoaded(object sender, RoutedEventArgs e)
         {
-            Debug.Assert(_pendingRoot == sender, "_pendingRoot == sender");
-            OnRootLoaded();
+            Debug.Assert(this.pendingRoot == sender, "pendingRoot == sender");
+            this.OnRootLoaded();
         }
 
         private void OnRootLoaded()
@@ -89,14 +89,14 @@ namespace Snoop
             // The following assumptions are made:
             // 1. The visual structure of each TreeViewItem is the same regardless of its location.
             // 2. The control template of a TreeViewItem contains ItemsPresenter.
-            ProperTreeViewItem root = _pendingRoot;
+            var root = this.pendingRoot;
 
-            _pendingRoot = null;
-            root.Loaded -= OnRootLoaded;
+            this.pendingRoot = null;
+            root.Loaded -= this.OnRootLoaded;
 
             ItemsPresenter itemsPresenter = null;
             VisualTreeHelper2.EnumerateTree(root, null,
-                delegate (Visual visual, object misc)
+                (visual, misc) =>
                 {
                     itemsPresenter = visual as ItemsPresenter;
                     if (itemsPresenter != null && itemsPresenter.TemplatedParent == root)
@@ -113,7 +113,7 @@ namespace Snoop
 
             if (itemsPresenter != null)
             {
-                int levelLayoutDepth = 2;
+                var levelLayoutDepth = 2;
                 DependencyObject tmp = itemsPresenter;
                 while (tmp != root)
                 {
@@ -121,56 +121,54 @@ namespace Snoop
                     tmp = VisualTreeHelper.GetParent(tmp);
                 }
 
-                int rootLayoutDepth = 0;
+                var rootLayoutDepth = 0;
                 while (tmp != null)
                 {
                     ++rootLayoutDepth;
                     tmp = VisualTreeHelper.GetParent(tmp);
                 }
 
-                _maxDepth = (240 - rootLayoutDepth) / levelLayoutDepth;
-                _rootItem = new WeakReference((VisualTreeItem)root.DataContext);
+                this.maxDepth = (240 - rootLayoutDepth) / levelLayoutDepth;
+                this.rootItem = new WeakReference((VisualTreeItem)root.DataContext);
             }
         }
 
-        private int _maxDepth;
-        private SnoopUI _snoopUI;
-        private ProperTreeViewItem _pendingRoot;
-        private WeakReference _rootItem = new WeakReference(null);
+        private int maxDepth;
+        private SnoopUI snoopUI;
+        private ProperTreeViewItem pendingRoot;
+        private WeakReference rootItem = new WeakReference(null);
     }
 
     public class ProperTreeViewItem : TreeViewItem
     {
         public ProperTreeViewItem(WeakReference treeView)
         {
-            _treeView = treeView;
+            this.treeView = treeView;
         }
 
         public double Indent
         {
-            get { return (double)this.GetValue(ProperTreeViewItem.IndentProperty); }
-            set { this.SetValue(ProperTreeViewItem.IndentProperty, value); }
+            get { return (double)this.GetValue(IndentProperty); }
+            set { this.SetValue(IndentProperty, value); }
         }
 
         public static readonly DependencyProperty IndentProperty =
-            DependencyProperty.Register
-            (
+            DependencyProperty.Register(
                 "Indent",
                 typeof(double),
-                typeof(ProperTreeViewItem)
-            );
+                typeof(ProperTreeViewItem));
 
         protected override void OnSelected(RoutedEventArgs e)
         {
             // scroll the selection into view
-            BringIntoView();
+            this.BringIntoView();
 
             base.OnSelected(e);
         }
 
         protected override DependencyObject GetContainerForItemOverride()
         {
-            ProperTreeViewItem treeViewItem = new ProperTreeViewItem(_treeView);
+            var treeViewItem = new ProperTreeViewItem(this.treeView);
             treeViewItem.Indent = this.Indent + 12;
             return treeViewItem;
         }
@@ -180,7 +178,7 @@ namespace Snoop
             // Check whether the tree is too deep.
             try
             {
-                ProperTreeView treeView = (ProperTreeView)_treeView.Target;
+                var treeView = (ProperTreeView)this.treeView.Target;
                 if (treeView == null || !treeView.ApplyReduceDepthFilterIfNeeded(this))
                 {
                     return base.MeasureOverride(constraint);
@@ -198,7 +196,7 @@ namespace Snoop
             // Check whether the tree is too deep.
             try
             {
-                ProperTreeView treeView = (ProperTreeView)_treeView.Target;
+                var treeView = (ProperTreeView)this.treeView.Target;
                 if (treeView == null || !treeView.ApplyReduceDepthFilterIfNeeded(this))
                 {
                     return base.ArrangeOverride(arrangeBounds);
@@ -211,7 +209,7 @@ namespace Snoop
             return new Size(0, 0);
         }
 
-        private WeakReference _treeView;
+        private readonly WeakReference treeView;
     }
 
     public class IndentToMarginConverter : IValueConverter

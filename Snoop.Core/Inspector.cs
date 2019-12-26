@@ -22,7 +22,8 @@ namespace Snoop
 
         private PropertyFilter filter;
 
-
-        protected virtual void OnFilterChanged() { }
+        protected virtual void OnFilterChanged()
+        {
+        }
     }
 }

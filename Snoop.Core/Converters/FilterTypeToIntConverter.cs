@@ -1,8 +1,8 @@
 ﻿namespace Snoop.Converters
 {
     using System;
-    using Snoop.DebugListenerTab;
     using System.Windows.Data;
+    using Snoop.DebugListenerTab;
 
     public class FilterTypeToIntConverter : IValueConverter
     {
@@ -15,7 +15,7 @@
                 return value;
             }
 
-            FilterType filterType = (FilterType)value;
+            var filterType = (FilterType)value;
             return (int)filterType;
         }
 
@@ -26,7 +26,7 @@
                 return value;
             }
 
-            int intValue = (int)value;
+            var intValue = (int)value;
             return (FilterType)intValue;
         }
     }

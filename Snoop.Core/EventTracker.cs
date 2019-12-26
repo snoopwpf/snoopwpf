@@ -10,9 +10,9 @@ namespace Snoop
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Windows;
+    using JetBrains.Annotations;
 
     public delegate void EventTrackerHandler(TrackedEvent newEvent);
-
 
     /// <summary>
     /// Random class that tries to determine what element handled a specific event.
@@ -27,9 +27,7 @@ namespace Snoop
             this.routedEvent = routedEvent;
         }
 
-
         public event EventTrackerHandler EventHandled;
-
 
         public bool IsEnabled
         {
@@ -43,10 +41,10 @@ namespace Snoop
                     if (this.isEnabled && !this.everEnabled)
                     {
                         this.everEnabled = true;
-                        EventManager.RegisterClassHandler(this.targetType, routedEvent, new RoutedEventHandler(this.HandleEvent), true);
+                        EventManager.RegisterClassHandler(this.targetType, this.routedEvent, new RoutedEventHandler(this.HandleEvent), true);
                     }
 
-                    this.OnPropertyChanged("IsEnabled");
+                    this.OnPropertyChanged(nameof(this.IsEnabled));
                 }
             }
         }
@@ -58,7 +56,7 @@ namespace Snoop
             get { return this.routedEvent; }
         }
 
-        private RoutedEvent routedEvent;
+        private readonly RoutedEvent routedEvent;
 
         public string Category
         {
@@ -70,13 +68,12 @@ namespace Snoop
             get { return this.routedEvent.Name; }
         }
 
-
         private void HandleEvent(object sender, RoutedEventArgs e)
         {
             // Try to figure out what element handled the event. Not precise.
             if (this.isEnabled)
             {
-                EventEntry entry = new EventEntry(sender, e.Handled);
+                var entry = new EventEntry(sender, e.Handled);
                 if (this.currentEvent != null && this.currentEvent.EventArgs == e)
                 {
                     this.currentEvent.AddEventEntry(entry);
@@ -89,17 +86,14 @@ namespace Snoop
             }
         }
 
-
-
-        private TrackedEvent currentEvent = null;
+        private TrackedEvent currentEvent;
         private bool everEnabled;
-        private Type targetType;
-
+        private readonly Type targetType;
 
         #region IComparable Members
         public int CompareTo(object obj)
         {
-            EventTracker otherTracker = obj as EventTracker;
+            var otherTracker = obj as EventTracker;
             if (otherTracker == null)
             {
                 return 1;
@@ -117,19 +111,15 @@ namespace Snoop
         #region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;
 
+        [NotifyPropertyChangedInvocator]
         protected void OnPropertyChanged(string propertyName)
         {
-            Debug.Assert(this.GetType().GetProperty(propertyName) != null);
-            if (this.PropertyChanged != null)
-            {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
     }
 
-
-    [DebuggerDisplay("TrackedEvent: {EventArgs}")]
+    [DebuggerDisplay("TrackedEvent: {" + nameof(EventArgs) + "}")]
     public class TrackedEvent : INotifyPropertyChanged
     {
         public TrackedEvent(RoutedEventArgs routedEventArgs, EventEntry originator)
@@ -138,13 +128,12 @@ namespace Snoop
             this.AddEventEntry(originator);
         }
 
-
         public RoutedEventArgs EventArgs
         {
             get { return this.routedEventArgs; }
         }
 
-        private RoutedEventArgs routedEventArgs;
+        private readonly RoutedEventArgs routedEventArgs;
 
         public EventEntry Originator
         {
@@ -158,11 +147,11 @@ namespace Snoop
             set
             {
                 this.handled = value;
-                this.OnPropertyChanged("Handled");
+                this.OnPropertyChanged(nameof(this.Handled));
             }
         }
 
-        private bool handled = false;
+        private bool handled;
 
         public object HandledBy
         {
@@ -171,19 +160,18 @@ namespace Snoop
             set
             {
                 this.handledBy = value;
-                this.OnPropertyChanged("HandledBy");
+                this.OnPropertyChanged(nameof(this.HandledBy));
             }
         }
 
-        private object handledBy = null;
+        private object handledBy;
 
         public ObservableCollection<EventEntry> Stack
         {
             get { return this.stack; }
         }
 
-        private ObservableCollection<EventEntry> stack = new ObservableCollection<EventEntry>();
-
+        private readonly ObservableCollection<EventEntry> stack = new ObservableCollection<EventEntry>();
 
         public void AddEventEntry(EventEntry eventEntry)
         {
@@ -195,21 +183,16 @@ namespace Snoop
             }
         }
 
-
         #region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;
 
+        [NotifyPropertyChangedInvocator]
         protected void OnPropertyChanged(string propertyName)
         {
-            Debug.Assert(this.GetType().GetProperty(propertyName) != null);
-            if (this.PropertyChanged != null)
-            {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
     }
-
 
     public class EventEntry
     {
@@ -224,13 +207,13 @@ namespace Snoop
             get { return this.handled; }
         }
 
-        private bool handled;
+        private readonly bool handled;
 
         public object Handler
         {
             get { return this.handler; }
         }
 
-        private object handler;
+        private readonly object handler;
     }
 }

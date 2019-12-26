@@ -21,7 +21,7 @@ namespace Snoop.Infrastructure
             this.target = target;
             this.loadedAction = loadedAction;
 
-            DoAction();
+            this.DoAction();
         }
 
         private void DoAction()
@@ -32,13 +32,13 @@ namespace Snoop.Infrastructure
             }
             else
             {
-                this.target.Loaded += TargetLoaded;
+                this.target.Loaded += this.TargetLoaded;
             }
         }
 
         private void TargetLoaded(object sender, RoutedEventArgs e)
         {
-            this.target.Loaded -= TargetLoaded;
+            this.target.Loaded -= this.TargetLoaded;
             this.loadedAction(this.target);
         }
 

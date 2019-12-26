@@ -22,13 +22,13 @@
 				<ColumnDefinition Width="Auto"/>
 			</Grid.ColumnDefinitions>
 
-			<CheckBox Name="checkBoxStartListening" Style="{x:Null}" Margin="10" Checked="checkBoxStartListening_Checked" Unchecked="checkBoxStartListening_Unchecked">
+			<CheckBox Name="checkBoxStartListening" Style="{x:Null}" Margin="10" Checked="CheckBoxStartListening_Checked" Unchecked="CheckBoxStartListening_Unchecked">
 				<TextBlock Style="{x:Null}" Text="Start Listening"/>
 			</CheckBox>
 
 			<StackPanel Orientation="Horizontal" Grid.Column="1">
 				<TextBlock Style="{x:Null}" Text="WPF Trace Level: " VerticalAlignment="Center" Margin="0,0,10,0"/>
-				<ComboBox Name="comboBoxPresentationTraceLevel" Style="{x:Null}" Width="100" Height="25" SelectedIndex="2" SelectionChanged="comboBoxPresentationTraceLevel_SelectionChanged">
+				<ComboBox Name="comboBoxPresentationTraceLevel" Style="{x:Null}" Width="100" Height="25" SelectedIndex="2" SelectionChanged="ComboBoxPresentationTraceLevel_SelectionChanged">
 					<ComboBoxItem Style="{x:Null}" Tag="Off">
 						<TextBlock Style="{x:Null}" Text="Off"/>
 					</ComboBoxItem>
@@ -57,13 +57,13 @@
 			</StackPanel>
 
 			<StackPanel Orientation="Horizontal" Margin="10,0,10,10" Grid.Row="1" Grid.ColumnSpan="2">
-				<Button Name="buttonClear" Style="{x:Null}" Width="75" Height="25" HorizontalAlignment="Left" Click="buttonClear_Click">
+				<Button Name="buttonClear" Style="{x:Null}" Width="75" Height="25" HorizontalAlignment="Left" Click="ButtonClear_Click">
 					<TextBlock Style="{x:Null}" Text="Clear Text"/>
 				</Button>
-				<Button Name="buttonClearFilters" Style="{x:Null}" Margin="10,0,0,0" Width="75" Height="25" HorizontalAlignment="Left" Click="buttonClearFilters_Click">
+				<Button Name="buttonClearFilters" Style="{x:Null}" Margin="10,0,0,0" Width="75" Height="25" HorizontalAlignment="Left" Click="ButtonClearFilters_Click">
 					<TextBlock Style="{x:Null}" Text="Clear Filters"/>
 				</Button>
-				<Button Name="buttonSetFilters" Style="{x:Null}" Margin="10,0,0,0" Width="75" Height="25" HorizontalAlignment="Left" Click="buttonSetFilters_Click">
+				<Button Name="buttonSetFilters" Style="{x:Null}" Margin="10,0,0,0" Width="75" Height="25" HorizontalAlignment="Left" Click="ButtonSetFilters_Click">
 					<TextBlock Style="{x:Null}" Text="Edit Filter"/>
 				</Button>
 				<TextBlock Name="textBlockStatus" Style="{x:Null}" Margin="10,0,0,0" Text="{Binding Path=FilterStatus}"/>

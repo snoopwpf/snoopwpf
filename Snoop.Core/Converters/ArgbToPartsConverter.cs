@@ -25,15 +25,15 @@ namespace Snoop.Converters
                 return Binding.DoNothing;
             }
 
-            string val = value.ToString();
+            var val = value.ToString();
             if (val.Length < 9)
             {
                 return new ArgumentException("Expected converter parameter to be a string in the form of #FF102030");
             }
 
-            int part = Int32.Parse(parameter.ToString());
+            var part = int.Parse(parameter.ToString());
 
-            string ret = val.Substring((part * 2) + 1, 2);
+            var ret = val.Substring((part * 2) + 1, 2);
             return ret;
         }
 

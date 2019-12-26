@@ -22,33 +22,31 @@ namespace Snoop
 
         public ScreenshotDialog()
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
-            CommandBindings.Add(new CommandBinding(SaveCommand, this.HandleSave, this.HandleCanSave));
-            CommandBindings.Add(new CommandBinding(CancelCommand, this.HandleCancel, (x, y) => y.CanExecute = true));
+            this.CommandBindings.Add(new CommandBinding(SaveCommand, this.HandleSave, this.HandleCanSave));
+            this.CommandBindings.Add(new CommandBinding(CancelCommand, this.HandleCancel, (x, y) => y.CanExecute = true));
         }
 
         #region FilePath Dependency Property
         public string FilePath
         {
-            get { return (string)GetValue(FilePathProperty); }
-            set { SetValue(FilePathProperty, value); }
+            get { return (string)this.GetValue(FilePathProperty); }
+            set { this.SetValue(FilePathProperty, value); }
         }
 
         public static readonly DependencyProperty FilePathProperty =
-            DependencyProperty.Register
-            (
+            DependencyProperty.Register(
                 "FilePath",
                 typeof(string),
                 typeof(ScreenshotDialog),
-                new UIPropertyMetadata(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\SnoopScreenshot.png")
-            );
+                new UIPropertyMetadata(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\SnoopScreenshot.png"));
 
         #endregion
 
         private void HandleCanSave(object sender, CanExecuteRoutedEventArgs e)
         {
-            if (DataContext == null || !(DataContext is Visual))
+            if (this.DataContext == null || !(this.DataContext is Visual))
             {
                 e.CanExecute = false;
                 return;
@@ -59,32 +57,26 @@ namespace Snoop
 
         private void HandleSave(object sender, ExecutedRoutedEventArgs e)
         {
-            SaveFileDialog fileDialog = new SaveFileDialog();
+            var fileDialog = new SaveFileDialog();
             fileDialog.AddExtension = true;
             fileDialog.CheckPathExists = true;
             fileDialog.DefaultExt = "png";
-            fileDialog.FileName = FilePath;
+            fileDialog.FileName = this.FilePath;
 
             if (fileDialog.ShowDialog(this).Value)
             {
-                FilePath = fileDialog.FileName;
-                VisualCaptureUtil.SaveVisual
-                (
-                    DataContext as Visual,
-                    int.Parse
-                    (
-                        ((TextBlock)((ComboBoxItem)dpiBox.SelectedItem).Content).Text
-                    ),
-                    FilePath
-                );
+                this.FilePath = fileDialog.FileName;
+                VisualCaptureUtil.SaveVisual(this.DataContext as Visual,
+                    int.Parse(
+                        ((TextBlock)((ComboBoxItem)this.dpiBox.SelectedItem).Content).Text), this.FilePath);
 
-                Close();
+                this.Close();
             }
         }
 
         private void HandleCancel(object sender, ExecutedRoutedEventArgs e)
         {
-            Close();
+            this.Close();
         }
     }
 }

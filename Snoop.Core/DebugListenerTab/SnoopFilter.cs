@@ -2,27 +2,30 @@
 {
     using System;
     using System.ComponentModel;
+    using JetBrains.Annotations;
 
     [Serializable]
     public abstract class SnoopFilter : INotifyPropertyChanged
     {
-        protected bool _isGrouped = false;
-        protected string _groupId = string.Empty;
-        protected bool _isDirty = false;
-        protected bool _isInverse;
+        private bool isGrouped;
+        private string groupId = string.Empty;
+        private bool isDirty;
+        private bool isInverse;
         //protected string _isInverseText = string.Empty;
 
         public void ResetDirtyFlag()
         {
-            _isDirty = false;
+            this.isDirty = false;
         }
 
         public bool IsDirty
         {
             get
             {
-                return _isDirty;
+                return this.isDirty;
             }
+
+            protected set { this.isDirty = value; }
         }
 
         public abstract bool FilterMatches(string debugLine);
@@ -39,16 +42,16 @@
         {
             get
             {
-                return _isInverse;
+                return this.isInverse;
             }
 
             set
             {
-                if (value != _isInverse)
+                if (value != this.isInverse)
                 {
-                    _isInverse = value;
-                    RaisePropertyChanged("IsInverse");
-                    RaisePropertyChanged("IsInverseText");
+                    this.isInverse = value;
+                    this.RaisePropertyChanged(nameof(this.IsInverse));
+                    this.RaisePropertyChanged(nameof(this.IsInverseText));
                 }
             }
         }
@@ -57,7 +60,7 @@
         {
             get
             {
-                return _isInverse ? "NOT" : string.Empty;
+                return this.isInverse ? "NOT" : string.Empty;
             }
         }
 
@@ -65,14 +68,14 @@
         {
             get
             {
-                return _isGrouped;
+                return this.isGrouped;
             }
 
             set
             {
-                _isGrouped = value;
-                this.RaisePropertyChanged("IsGrouped");
-                GroupId = string.Empty;
+                this.isGrouped = value;
+                this.RaisePropertyChanged(nameof(this.IsGrouped));
+                this.groupId = string.Empty;
             }
         }
 
@@ -80,26 +83,23 @@
         {
             get
             {
-                return _groupId;
+                return this.groupId;
             }
 
             set
             {
-                _groupId = value;
-                this.RaisePropertyChanged("GroupId");
+                this.groupId = value;
+                this.RaisePropertyChanged(nameof(this.GroupId));
             }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        [NotifyPropertyChangedInvocator]
         protected void RaisePropertyChanged(string propertyName)
         {
-            _isDirty = true;
-            var handler = this.PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
+            this.isDirty = true;
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

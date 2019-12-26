@@ -42,7 +42,7 @@ namespace Snoop.TriggersTab
             view.Update();
         }
 
-        public static readonly DependencyProperty RootTargetProperty = DependencyProperty.Register("RootTarget", typeof(object), typeof(TriggersView), new PropertyMetadata(default(object), OnRootTargetChanged));
+        public static readonly DependencyProperty RootTargetProperty = DependencyProperty.Register("RootTarget", typeof(object), typeof(TriggersView), new PropertyMetadata(default, OnRootTargetChanged));
 
         public object RootTarget
         {

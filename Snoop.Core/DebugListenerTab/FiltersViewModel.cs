@@ -5,16 +5,17 @@
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Linq;
+    using JetBrains.Annotations;
 
     [Serializable]
     public class FiltersViewModel : INotifyPropertyChanged
     {
         private List<SnoopMultipleFilter> multipleFilters = new List<SnoopMultipleFilter>();
-        private bool isDirty = false;
+        private bool isDirty;
 
         public void ResetDirtyFlag()
         {
-            isDirty = false;
+            this.isDirty = false;
             foreach (var filter in this.filters)
             {
                 filter.ResetDirtyFlag();
@@ -25,7 +26,7 @@
         {
             get
             {
-                if (isDirty)
+                if (this.isDirty)
                 {
                     return true;
                 }
@@ -44,13 +45,13 @@
 
         public FiltersViewModel()
         {
-            filters.Add(new SnoopSingleFilter());
-            FilterStatus = _isSet ? "Filter is ON" : "Filter is OFF";
+            this.filters.Add(new SnoopSingleFilter());
+            this.FilterStatus = this.isSet ? "Filter is ON" : "Filter is OFF";
         }
 
         public FiltersViewModel(IList<SnoopSingleFilter> singleFilters)
         {
-            InitializeFilters(singleFilters);
+            this.InitializeFilters(singleFilters);
         }
 
         public void InitializeFilters(IList<SnoopSingleFilter> singleFilters)
@@ -59,7 +60,7 @@
 
             if (singleFilters == null)
             {
-                filters.Add(new SnoopSingleFilter());
+                this.filters.Add(new SnoopSingleFilter());
                 this.IsSet = false;
                 return;
             }
@@ -83,17 +84,17 @@
                 this.multipleFilters.Add(multipleFilter);
             }
 
-            SetIsSet();
+            this.SetIsSet();
         }
 
         internal void SetIsSet()
         {
-            if (filters == null)
+            if (this.filters == null)
             {
                 this.IsSet = false;
             }
 
-            if (filters.Count == 1 && filters[0] is SnoopSingleFilter && string.IsNullOrEmpty(((SnoopSingleFilter)filters[0]).Text))
+            if (this.filters.Count == 1 && this.filters[0] is SnoopSingleFilter && string.IsNullOrEmpty(((SnoopSingleFilter)this.filters[0]).Text))
             {
                 this.IsSet = false;
             }
@@ -113,7 +114,7 @@
 
         public bool FilterMatches(string str)
         {
-            foreach (var filter in Filters)
+            foreach (var filter in this.Filters)
             {
                 if (filter.IsGrouped)
                 {
@@ -139,10 +140,10 @@
 
         private string GetFirstNonUsedGroupId()
         {
-            int index = 1;
+            var index = 1;
             while (true)
             {
-                if (!GroupIdTaken(index.ToString()))
+                if (!this.GroupIdTaken(index.ToString()))
                 {
                     return index.ToString();
                 }
@@ -153,7 +154,7 @@
 
         private bool GroupIdTaken(string groupID)
         {
-            foreach (var filter in multipleFilters)
+            foreach (var filter in this.multipleFilters)
             {
                 if (groupID.Equals(filter.GroupId))
                 {
@@ -166,26 +167,26 @@
 
         public void GroupFilters(IEnumerable<SnoopFilter> filtersToGroup)
         {
-            SnoopMultipleFilter multipleFilter = new SnoopMultipleFilter();
-            multipleFilter.AddRange(filtersToGroup, (multipleFilters.Count + 1).ToString());
+            var multipleFilter = new SnoopMultipleFilter();
+            multipleFilter.AddRange(filtersToGroup, (this.multipleFilters.Count + 1).ToString());
 
-            multipleFilters.Add(multipleFilter);
+            this.multipleFilters.Add(multipleFilter);
         }
 
         public void AddFilter(SnoopFilter filter)
         {
-            isDirty = true;
+            this.isDirty = true;
             this.filters.Add(filter);
         }
 
         public void RemoveFilter(SnoopFilter filter)
         {
-            isDirty = true;
+            this.isDirty = true;
             var singleFilter = filter as SnoopSingleFilter;
             if (singleFilter != null)
             {
                 //foreach (var multipeFilter in this.multipleFilters)
-                int index = 0;
+                var index = 0;
                 while (index < this.multipleFilters.Count)
                 {
                     var multipeFilter = this.multipleFilters[index];
@@ -218,21 +219,21 @@
             this.multipleFilters.Clear();
         }
 
-        private bool _isSet;
-        private string _filterStatus;
+        private bool isSet;
+        private string filterStatus;
 
         public bool IsSet
         {
             get
             {
-                return _isSet;
+                return this.isSet;
             }
 
             set
             {
-                _isSet = value;
-                RaisePropertyChanged("IsSet");
-                FilterStatus = _isSet ? "Filter is ON" : "Filter is OFF";
+                this.isSet = value;
+                this.RaisePropertyChanged(nameof(this.IsSet));
+                this.FilterStatus = this.isSet ? "Filter is ON" : "Filter is OFF";
             }
         }
 
@@ -240,35 +241,26 @@
         {
             get
             {
-                return _filterStatus;
+                return this.filterStatus;
             }
 
             set
             {
-                _filterStatus = value;
-                RaisePropertyChanged("FilterStatus");
+                this.filterStatus = value;
+                this.RaisePropertyChanged(nameof(this.FilterStatus));
             }
         }
 
-        private ObservableCollection<SnoopFilter> filters = new ObservableCollection<SnoopFilter>();
+        private readonly ObservableCollection<SnoopFilter> filters = new ObservableCollection<SnoopFilter>();
 
-        public IEnumerable<SnoopFilter> Filters
-        {
-            get
-            {
-                return filters;
-            }
-        }
+        public IEnumerable<SnoopFilter> Filters => this.filters;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        [NotifyPropertyChangedInvocator]
         protected void RaisePropertyChanged(string propertyName)
         {
-            var handler = this.PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

@@ -52,10 +52,9 @@ namespace Snoop
         {
             this.windowInfos.Clear();
 
-            this.Dispatcher.BeginInvoke
-            (
+            this.Dispatcher.BeginInvoke(
                 DispatcherPriority.Loaded,
-                (DispatcherOperationCallback)delegate
+                (DispatcherOperationCallback)(x =>
                 {
                     try
                     {
@@ -83,9 +82,8 @@ namespace Snoop
                     }
 
                     return null;
-                },
-                null
-            );
+                }),
+                null);
         }
 
         protected override void OnSourceInitialized(EventArgs e)

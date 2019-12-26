@@ -11,7 +11,7 @@ namespace Snoop
     using System.Windows.Media.Imaging;
     using JetBrains.Annotations;
 
-    class VisualCaptureUtil
+    public class VisualCaptureUtil
     {
         public static void SaveVisual(Visual visual, int dpi, string filename)
         {
@@ -26,7 +26,7 @@ namespace Snoop
             }
 
             Rect bounds;
-            UIElement uiElement = visual as UIElement;
+            var uiElement = visual as UIElement;
             if (uiElement != null)
             {
                 bounds = new Rect(new Size((int)uiElement.RenderSize.Width, (int)uiElement.RenderSize.Height));
@@ -39,21 +39,19 @@ namespace Snoop
             var scale = dpi / BaseDpi;
             var finalImageSize = new Size((int)(bounds.Width * scale), (int)(bounds.Height * scale));
 
-            RenderTargetBitmap rtb =
-                new RenderTargetBitmap
-                (
+            var rtb =
+                new RenderTargetBitmap(
                     (int)finalImageSize.Width,
                     (int)finalImageSize.Height,
                     dpi,
                     dpi,
-                    PixelFormats.Pbgra32
-                );
+                    PixelFormats.Pbgra32);
 
-            DrawingVisual dv = new DrawingVisual();
-            using (DrawingContext ctx = dv.RenderOpen())
+            var dv = new DrawingVisual();
+            using (var ctx = dv.RenderOpen())
             {
-                VisualBrush vb = new VisualBrush(visual);
-                ctx.DrawRectangle(vb, null, new Rect(new Point(), bounds.Size));
+                var vb = new VisualBrush(visual);
+                ctx.DrawRectangle(vb, null, new Rect(default, bounds.Size));
             }
 
             rtb.Render(dv);
@@ -80,8 +78,8 @@ namespace Snoop
 
         private static void SaveRTBAsPNG(RenderTargetBitmap bitmap, string filename)
         {
-            var pngBitmapEncoder = new System.Windows.Media.Imaging.PngBitmapEncoder();
-            pngBitmapEncoder.Frames.Add(System.Windows.Media.Imaging.BitmapFrame.Create(bitmap));
+            var pngBitmapEncoder = new PngBitmapEncoder();
+            pngBitmapEncoder.Frames.Add(BitmapFrame.Create(bitmap));
 
             using (var fileStream = System.IO.File.Create(filename))
             {

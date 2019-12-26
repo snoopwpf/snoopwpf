@@ -11,6 +11,7 @@ namespace Snoop
     using System.Diagnostics;
     using System.Windows;
     using System.Windows.Controls;
+    using JetBrains.Annotations;
 
     public partial class EditUserFilters : INotifyPropertyChanged
     {
@@ -160,6 +161,7 @@ namespace Snoop
             }
         }
 
+        [NotifyPropertyChangedInvocator]
         protected void OnPropertyChanged(string propertyName)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

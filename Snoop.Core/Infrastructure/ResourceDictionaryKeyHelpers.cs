@@ -21,10 +21,10 @@ namespace Snoop.Infrastructure
             // Walk up the visual tree, looking for the resourceItem in each frameworkElement's resource dictionary.
             while (dependencyObject != null)
             {
-                FrameworkElement frameworkElement = dependencyObject as FrameworkElement;
+                var frameworkElement = dependencyObject as FrameworkElement;
                 if (frameworkElement != null)
                 {
-                    string resourceKey = GetKeyInResourceDictionary(frameworkElement.Resources, resourceItem);
+                    var resourceKey = GetKeyInResourceDictionary(frameworkElement.Resources, resourceItem);
                     if (resourceKey != null)
                     {
                         return resourceKey;
@@ -41,7 +41,7 @@ namespace Snoop.Infrastructure
             // check the application resources
             if (Application.Current != null)
             {
-                string resourceKey = GetKeyInResourceDictionary(Application.Current.Resources, resourceItem);
+                var resourceKey = GetKeyInResourceDictionary(Application.Current.Resources, resourceItem);
                 if (resourceKey != null)
                 {
                     return resourceKey;
@@ -53,7 +53,7 @@ namespace Snoop.Infrastructure
 
         public static string GetKeyInResourceDictionary(ResourceDictionary dictionary, object resourceItem)
         {
-            foreach (object key in dictionary.Keys)
+            foreach (var key in dictionary.Keys)
             {
                 if (dictionary[key] == resourceItem)
                 {
@@ -65,7 +65,7 @@ namespace Snoop.Infrastructure
             {
                 foreach (var dic in dictionary.MergedDictionaries)
                 {
-                    string name = GetKeyInResourceDictionary(dic, resourceItem);
+                    var name = GetKeyInResourceDictionary(dic, resourceItem);
                     if (!string.IsNullOrEmpty(name))
                     {
                         return name;

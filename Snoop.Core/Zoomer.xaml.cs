@@ -18,41 +18,41 @@ namespace Snoop
     {
         static Zoomer()
         {
-            Zoomer.ResetCommand = new RoutedCommand("Reset", typeof(Zoomer));
-            Zoomer.ZoomInCommand = new RoutedCommand("ZoomIn", typeof(Zoomer));
-            Zoomer.ZoomOutCommand = new RoutedCommand("ZoomOut", typeof(Zoomer));
-            Zoomer.PanLeftCommand = new RoutedCommand("PanLeft", typeof(Zoomer));
-            Zoomer.PanRightCommand = new RoutedCommand("PanRight", typeof(Zoomer));
-            Zoomer.PanUpCommand = new RoutedCommand("PanUp", typeof(Zoomer));
-            Zoomer.PanDownCommand = new RoutedCommand("PanDown", typeof(Zoomer));
-            Zoomer.SwitchTo2DCommand = new RoutedCommand("SwitchTo2D", typeof(Zoomer));
-            Zoomer.SwitchTo3DCommand = new RoutedCommand("SwitchTo3D", typeof(Zoomer));
+            ResetCommand = new RoutedCommand("Reset", typeof(Zoomer));
+            ZoomInCommand = new RoutedCommand("ZoomIn", typeof(Zoomer));
+            ZoomOutCommand = new RoutedCommand("ZoomOut", typeof(Zoomer));
+            PanLeftCommand = new RoutedCommand("PanLeft", typeof(Zoomer));
+            PanRightCommand = new RoutedCommand("PanRight", typeof(Zoomer));
+            PanUpCommand = new RoutedCommand("PanUp", typeof(Zoomer));
+            PanDownCommand = new RoutedCommand("PanDown", typeof(Zoomer));
+            SwitchTo2DCommand = new RoutedCommand("SwitchTo2D", typeof(Zoomer));
+            SwitchTo3DCommand = new RoutedCommand("SwitchTo3D", typeof(Zoomer));
 
-            Zoomer.ResetCommand.InputGestures.Add(new MouseGesture(MouseAction.LeftDoubleClick));
-            Zoomer.ResetCommand.InputGestures.Add(new KeyGesture(Key.F5));
-            Zoomer.ZoomInCommand.InputGestures.Add(new KeyGesture(Key.OemPlus));
-            Zoomer.ZoomInCommand.InputGestures.Add(new KeyGesture(Key.Up, ModifierKeys.Control));
-            Zoomer.ZoomOutCommand.InputGestures.Add(new KeyGesture(Key.OemMinus));
-            Zoomer.ZoomOutCommand.InputGestures.Add(new KeyGesture(Key.Down, ModifierKeys.Control));
-            Zoomer.PanLeftCommand.InputGestures.Add(new KeyGesture(Key.Left));
-            Zoomer.PanRightCommand.InputGestures.Add(new KeyGesture(Key.Right));
-            Zoomer.PanUpCommand.InputGestures.Add(new KeyGesture(Key.Up));
-            Zoomer.PanDownCommand.InputGestures.Add(new KeyGesture(Key.Down));
-            Zoomer.SwitchTo2DCommand.InputGestures.Add(new KeyGesture(Key.F2));
-            Zoomer.SwitchTo3DCommand.InputGestures.Add(new KeyGesture(Key.F3));
+            ResetCommand.InputGestures.Add(new MouseGesture(MouseAction.LeftDoubleClick));
+            ResetCommand.InputGestures.Add(new KeyGesture(Key.F5));
+            ZoomInCommand.InputGestures.Add(new KeyGesture(Key.OemPlus));
+            ZoomInCommand.InputGestures.Add(new KeyGesture(Key.Up, ModifierKeys.Control));
+            ZoomOutCommand.InputGestures.Add(new KeyGesture(Key.OemMinus));
+            ZoomOutCommand.InputGestures.Add(new KeyGesture(Key.Down, ModifierKeys.Control));
+            PanLeftCommand.InputGestures.Add(new KeyGesture(Key.Left));
+            PanRightCommand.InputGestures.Add(new KeyGesture(Key.Right));
+            PanUpCommand.InputGestures.Add(new KeyGesture(Key.Up));
+            PanDownCommand.InputGestures.Add(new KeyGesture(Key.Down));
+            SwitchTo2DCommand.InputGestures.Add(new KeyGesture(Key.F2));
+            SwitchTo3DCommand.InputGestures.Add(new KeyGesture(Key.F3));
         }
 
         public Zoomer()
         {
-            this.CommandBindings.Add(new CommandBinding(Zoomer.ResetCommand, this.HandleReset, this.CanReset));
-            this.CommandBindings.Add(new CommandBinding(Zoomer.ZoomInCommand, this.HandleZoomIn));
-            this.CommandBindings.Add(new CommandBinding(Zoomer.ZoomOutCommand, this.HandleZoomOut));
-            this.CommandBindings.Add(new CommandBinding(Zoomer.PanLeftCommand, this.HandlePanLeft));
-            this.CommandBindings.Add(new CommandBinding(Zoomer.PanRightCommand, this.HandlePanRight));
-            this.CommandBindings.Add(new CommandBinding(Zoomer.PanUpCommand, this.HandlePanUp));
-            this.CommandBindings.Add(new CommandBinding(Zoomer.PanDownCommand, this.HandlePanDown));
-            this.CommandBindings.Add(new CommandBinding(Zoomer.SwitchTo2DCommand, this.HandleSwitchTo2D));
-            this.CommandBindings.Add(new CommandBinding(Zoomer.SwitchTo3DCommand, this.HandleSwitchTo3D, this.CanSwitchTo3D));
+            this.CommandBindings.Add(new CommandBinding(ResetCommand, this.HandleReset, this.CanReset));
+            this.CommandBindings.Add(new CommandBinding(ZoomInCommand, this.HandleZoomIn));
+            this.CommandBindings.Add(new CommandBinding(ZoomOutCommand, this.HandleZoomOut));
+            this.CommandBindings.Add(new CommandBinding(PanLeftCommand, this.HandlePanLeft));
+            this.CommandBindings.Add(new CommandBinding(PanRightCommand, this.HandlePanRight));
+            this.CommandBindings.Add(new CommandBinding(PanUpCommand, this.HandlePanUp));
+            this.CommandBindings.Add(new CommandBinding(PanDownCommand, this.HandlePanDown));
+            this.CommandBindings.Add(new CommandBinding(SwitchTo2DCommand, this.HandleSwitchTo2D));
+            this.CommandBindings.Add(new CommandBinding(SwitchTo3DCommand, this.HandleSwitchTo3D, this.CanSwitchTo3D));
 
             this.InitializeComponent();
 
@@ -162,14 +162,14 @@ namespace Snoop
 
         private void HandleZoomIn(object target, ExecutedRoutedEventArgs args)
         {
-            Point offset = Mouse.GetPosition(this.Viewbox);
-            this.Zoom(Zoomer.ZoomFactor, offset);
+            var offset = Mouse.GetPosition(this.Viewbox);
+            this.Zoom(ZoomFactor, offset);
         }
 
         private void HandleZoomOut(object target, ExecutedRoutedEventArgs args)
         {
-            Point offset = Mouse.GetPosition(this.Viewbox);
-            this.Zoom(1 / Zoomer.ZoomFactor, offset);
+            var offset = Mouse.GetPosition(this.Viewbox);
+            this.Zoom(1 / ZoomFactor, offset);
         }
 
         private void HandlePanLeft(object target, ExecutedRoutedEventArgs args)
@@ -204,8 +204,8 @@ namespace Snoop
 
         private void HandleSwitchTo3D(object target, ExecutedRoutedEventArgs args)
         {
-            Visual visual = this.target as Visual;
-            if (this.visualTree3DView == null && visual != null)
+            if (this.visualTree3DView == null 
+                && this.target is Visual visual)
             {
                 try
                 {
@@ -224,7 +224,7 @@ namespace Snoop
 
         private void CanSwitchTo3D(object target, CanExecuteRoutedEventArgs args)
         {
-            args.CanExecute = (this.target is Visual);
+            args.CanExecute = this.target is Visual;
             args.Handled = true;
         }
 
@@ -238,7 +238,7 @@ namespace Snoop
         {
             if (this.DocumentRoot.IsMouseCaptured)
             {
-                Vector delta = e.GetPosition(this.DocumentRoot) - this.downPoint;
+                var delta = e.GetPosition(this.DocumentRoot) - this.downPoint;
                 this.translation.X += delta.X;
                 this.translation.Y += delta.Y;
 
@@ -253,8 +253,8 @@ namespace Snoop
 
         private void Content_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            double zoom = Math.Pow(Zoomer.ZoomFactor, e.Delta / 120.0);
-            Point offset = e.GetPosition(this.Viewbox);
+            var zoom = Math.Pow(ZoomFactor, e.Delta / 120.0);
+            var offset = e.GetPosition(this.Viewbox);
             this.Zoom(zoom, offset);
         }
 
@@ -319,19 +319,19 @@ namespace Snoop
 
         private void Zoom(double zoom, Point offset)
         {
-            Vector v = new Vector((1 - zoom) * offset.X, (1 - zoom) * offset.Y);
+            var v = new Vector((1 - zoom) * offset.X, (1 - zoom) * offset.Y);
 
-            Vector translationVector = v * this.transform.Value;
+            var translationVector = v * this.transform.Value;
             this.translation.X += translationVector.X;
             this.translation.Y += translationVector.Y;
 
-            this.zoom.ScaleX = this.zoom.ScaleX * zoom;
-            this.zoom.ScaleY = this.zoom.ScaleY * zoom;
+            this.zoom.ScaleX *= zoom;
+            this.zoom.ScaleY *= zoom;
         }
 
-        private TranslateTransform translation = new TranslateTransform();
-        private ScaleTransform zoom = new ScaleTransform();
-        private TransformGroup transform = new TransformGroup();
+        private readonly TranslateTransform translation = new TranslateTransform();
+        private readonly ScaleTransform zoom = new ScaleTransform();
+        private readonly TransformGroup transform = new TransformGroup();
         private Point downPoint;
         private object target;
         private VisualTree3DView visualTree3DView;
@@ -345,12 +345,14 @@ namespace Snoop
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            float val = (float)(double)value;
-            Color c = new Color();
-            c.ScR = val;
-            c.ScG = val;
-            c.ScB = val;
-            c.ScA = 1;
+            var val = (float)(double)value;
+            var c = new Color
+            {
+                ScR = val,
+                ScG = val,
+                ScB = val,
+                ScA = 1
+            };
 
             return new SolidColorBrush(c);
         }

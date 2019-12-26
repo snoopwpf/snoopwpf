@@ -72,7 +72,7 @@ namespace Snoop
             this._textBlockException.Text = this.GetExceptionMessage();
         }
 
-        private void _buttonCopyToClipboard_Click(object sender, RoutedEventArgs e)
+        private void ButtonCopyToClipboard_Click(object sender, RoutedEventArgs e)
         {
             ClipboardHelper.SetText(this.GetExceptionMessage());
         }

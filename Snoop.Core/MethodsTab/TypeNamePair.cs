@@ -15,14 +15,14 @@ namespace Snoop.MethodsTab
 
         public override string ToString()
         {
-            return Name;
+            return this.Name;
         }
 
         #region IComparable Members
 
         public int CompareTo(object obj)
         {
-            return Name.CompareTo(((TypeNamePair)obj).Name);
+            return this.Name.CompareTo(((TypeNamePair)obj).Name);
         }
 
         #endregion

@@ -19,7 +19,6 @@ namespace Snoop.Properties
             // this.SettingChanging += this.SettingChangingEventHandler;
             //
             // this.SettingsSaving += this.SettingsSavingEventHandler;
-            //
         }
 
         private void SettingChangingEventHandler(object sender, System.Configuration.SettingChangingEventArgs e)

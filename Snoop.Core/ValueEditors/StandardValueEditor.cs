@@ -12,13 +12,11 @@ namespace Snoop
     public class StandardValueEditor : ValueEditor
     {
         public static readonly DependencyProperty StringValueProperty =
-            DependencyProperty.Register
-            (
+            DependencyProperty.Register(
                 nameof(StringValue),
                 typeof(string),
                 typeof(StandardValueEditor),
-                new PropertyMetadata(HandleStringValuePropertyChanged)
-            );
+                new PropertyMetadata(HandleStringValuePropertyChanged));
 
         private bool isUpdatingValue;
 

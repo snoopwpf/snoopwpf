@@ -19,13 +19,13 @@ namespace Snoop
 
         public static bool IsFrameworkElementName(Visual visual, object name)
         {
-            FrameworkElement element = visual as FrameworkElement;
+            var element = visual as FrameworkElement;
             return element != null && string.CompareOrdinal(element.Name, (string)name) == 0;
         }
 
         public static bool IsFrameworkElementTemplatedChild(Visual visual, object templatedParent)
         {
-            FrameworkElement element = visual as FrameworkElement;
+            var element = visual as FrameworkElement;
             return element != null && element.TemplatedParent == (DependencyObject)templatedParent;
         }
 
@@ -33,7 +33,7 @@ namespace Snoop
         {
             if (reference == null)
             {
-                throw new ArgumentNullException("reference");
+                throw new ArgumentNullException(nameof(reference));
             }
             else
             {
@@ -44,7 +44,7 @@ namespace Snoop
         public static T GetAncestor<T>(Visual cur, Visual root, Func<Visual, object, bool> predicate, object param)
             where T : Visual
         {
-            T result = cur as T;
+            var result = cur as T;
             while (cur != null && cur != root && (result == null || (predicate != null && !predicate(result, param))))
             {
                 cur = (Visual)VisualTreeHelper.GetParent(cur);
@@ -54,35 +54,38 @@ namespace Snoop
             return result;
         }
 
-        public static T GetAncestor<T>(Visual cur, Visual root, Func<Visual, object, bool> predicate) where T : Visual
+        public static T GetAncestor<T>(Visual cur, Visual root, Func<Visual, object, bool> predicate)
+            where T : Visual
         {
             return GetAncestor<T>(cur, root, predicate, null);
         }
 
-        public static T GetAncestor<T>(Visual cur, Visual root) where T : Visual
+        public static T GetAncestor<T>(Visual cur, Visual root)
+            where T : Visual
         {
             return GetAncestor<T>(cur, root, null, null);
         }
 
-        public static T GetAncestor<T>(Visual cur) where T : Visual
+        public static T GetAncestor<T>(Visual cur)
+            where T : Visual
         {
             return GetAncestor<T>(cur, null, null, null);
         }
 
         private static bool DoEnumerateTree(Visual reference, EnumerateTreeFilterCallback filterCallback, EnumerateTreeResultCallback enumeratorCallback, object misc)
         {
-            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(reference); ++i)
+            for (var i = 0; i < VisualTreeHelper.GetChildrenCount(reference); ++i)
             {
-                Visual child = (Visual)VisualTreeHelper.GetChild(reference, i);
+                var child = (Visual)VisualTreeHelper.GetChild(reference, i);
 
-                HitTestFilterBehavior filterResult = HitTestFilterBehavior.Continue;
+                var filterResult = HitTestFilterBehavior.Continue;
                 if (filterCallback != null)
                 {
                     filterResult = filterCallback(child, misc);
                 }
 
-                bool enumerateSelf = true;
-                bool enumerateChildren = true;
+                var enumerateSelf = true;
+                var enumerateChildren = true;
 
                 switch (filterResult)
                 {
@@ -102,11 +105,8 @@ namespace Snoop
                         return false;
                 }
 
-                if
-                (
-                    (enumerateSelf && enumeratorCallback != null && enumeratorCallback(child, misc) == HitTestResultBehavior.Stop) ||
-                    (enumerateChildren && !DoEnumerateTree(child, filterCallback, enumeratorCallback, misc))
-                )
+                if ((enumerateSelf && enumeratorCallback != null && enumeratorCallback(child, misc) == HitTestResultBehavior.Stop)
+                    || (enumerateChildren && !DoEnumerateTree(child, filterCallback, enumeratorCallback, misc)))
                 {
                     return false;
                 }

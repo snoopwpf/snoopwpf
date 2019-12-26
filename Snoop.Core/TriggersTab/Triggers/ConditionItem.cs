@@ -5,6 +5,7 @@ namespace Snoop.TriggersTab.Triggers
     using System.Diagnostics;
     using System.Windows;
     using System.Windows.Data;
+    using JetBrains.Annotations;
     using Snoop.Infrastructure;
 
     public class ConditionItem : DependencyObject, IDisposable, INotifyPropertyChanged
@@ -70,8 +71,8 @@ namespace Snoop.TriggersTab.Triggers
 
         public object CurrentValue
         {
-            get { return this.GetValue(ConditionItem.CurrentValueProperty); }
-            set { this.SetValue(ConditionItem.CurrentValueProperty, value); }
+            get { return this.GetValue(CurrentValueProperty); }
+            set { this.SetValue(CurrentValueProperty, value); }
         }
 
         public static readonly DependencyProperty CurrentValueProperty =
@@ -197,7 +198,7 @@ namespace Snoop.TriggersTab.Triggers
 
             try
             {
-                BindingOperations.SetBinding(this, ConditionItem.CurrentValueProperty, bindingForCurrentValue);
+                BindingOperations.SetBinding(this, CurrentValueProperty, bindingForCurrentValue);
             }
             catch (Exception)
             {
@@ -222,12 +223,10 @@ namespace Snoop.TriggersTab.Triggers
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        [NotifyPropertyChangedInvocator]
         protected void OnPropertyChanged(string propertyName)
         {
-            Debug.Assert(this.GetType().GetProperty(propertyName) != null);
-
-            var handler = this.PropertyChanged;
-            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         #endregion

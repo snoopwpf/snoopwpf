@@ -14,15 +14,13 @@ namespace Snoop.MethodsTab
     {
         public ParameterCreator()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
-
-
 
         public object RootTarget
         {
-            get { return (object)GetValue(RootTargetProperty); }
-            set { SetValue(RootTargetProperty, value); }
+            get { return (object)this.GetValue(RootTargetProperty); }
+            set { this.SetValue(RootTargetProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for Target.  This enables animation, styling, binding, etc...
@@ -41,8 +39,6 @@ namespace Snoop.MethodsTab
             this.SelectedTarget = this.propertyInspector.Target;
             this.Close();
         }
-
-
 
         private void CancelClick(object sender, RoutedEventArgs e)
         {

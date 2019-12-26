@@ -12,6 +12,7 @@ namespace Snoop.MethodsTab
     using System.Reflection;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Windows.Controls.Primitives;
     using Snoop.Converters;
     using Snoop.Infrastructure;
 
@@ -19,40 +20,43 @@ namespace Snoop.MethodsTab
     {
         public MethodsControl()
         {
-            InitializeComponent();
-            DependencyPropertyDescriptor.FromProperty(RootTargetProperty, typeof(MethodsControl)).AddValueChanged(this, RootTargetChanged);
+            this.InitializeComponent();
+            DependencyPropertyDescriptor.FromProperty(RootTargetProperty, typeof(MethodsControl)).AddValueChanged(this, this.RootTargetChanged);
 
             //DependencyPropertyDescriptor.FromProperty(TargetProperty, typeof(MethodsControl)).AddValueChanged(this, TargetChanged);
-            DependencyPropertyDescriptor.FromProperty(ComboBox.SelectedValueProperty, typeof(ComboBox)).AddValueChanged(this.comboBoxMethods, comboBoxMethodChanged);
-            DependencyPropertyDescriptor.FromProperty(MethodsControl.IsSelectedProperty, typeof(MethodsControl)).AddValueChanged(this, IsSelectedChanged);
+            DependencyPropertyDescriptor.FromProperty(Selector.SelectedValueProperty, typeof(ComboBox)).AddValueChanged(this.comboBoxMethods, this.ComboBoxMethodChanged);
+            DependencyPropertyDescriptor.FromProperty(IsSelectedProperty, typeof(MethodsControl)).AddValueChanged(this, this.IsSelectedChanged);
 
-            this._checkBoxUseDataContext.Checked += _checkBoxUseDataContext_Checked;
-            this._checkBoxUseDataContext.Unchecked += new RoutedEventHandler(_checkBoxUseDataContext_Unchecked);
+            this.checkBoxUseDataContext.Checked += this.CheckBoxUseDataContext_Checked;
+            this.checkBoxUseDataContext.Unchecked += this.CheckBoxUseDataContext_Unchecked;
         }
 
-        void _checkBoxUseDataContext_Unchecked(object sender, RoutedEventArgs e)
+        private void CheckBoxUseDataContext_Unchecked(object sender, RoutedEventArgs e)
         {
-            ProcessCheckedProperty();
+            this.ProcessCheckedProperty();
         }
 
-        private void _checkBoxUseDataContext_Checked(object sender, RoutedEventArgs e)
+        private void CheckBoxUseDataContext_Checked(object sender, RoutedEventArgs e)
         {
-            ProcessCheckedProperty();
+            this.ProcessCheckedProperty();
         }
 
         private void ProcessCheckedProperty()
         {
-            if (!this.IsSelected || !this._checkBoxUseDataContext.IsChecked.HasValue || !(this.RootTarget is FrameworkElement))
+            if (!this.IsSelected 
+                || !this.checkBoxUseDataContext.IsChecked.HasValue 
+                || !(this.RootTarget is FrameworkElement))
             {
                 return;
             }
 
-            SetTargetToRootTarget();
+            this.SetTargetToRootTarget();
         }
 
         private void SetTargetToRootTarget()
         {
-            if (this._checkBoxUseDataContext.IsChecked.Value && this.RootTarget is FrameworkElement && ((FrameworkElement)this.RootTarget).DataContext != null)
+            if (this.checkBoxUseDataContext.IsChecked == true
+                && (this.RootTarget as FrameworkElement)?.DataContext != null)
             {
                 this.Target = ((FrameworkElement)this.RootTarget).DataContext;
             }
@@ -67,42 +71,38 @@ namespace Snoop.MethodsTab
             if (this.IsSelected)
             {
                 //this.Target = this.RootTarget;
-                SetTargetToRootTarget();
+                this.SetTargetToRootTarget();
             }
         }
 
         public object RootTarget
         {
-            get { return (object)GetValue(RootTargetProperty); }
-            set { SetValue(RootTargetProperty, value); }
+            get { return (object)this.GetValue(RootTargetProperty); }
+            set { this.SetValue(RootTargetProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for RootTarget.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty RootTargetProperty =
-            DependencyProperty.Register("RootTarget", typeof(object), typeof(MethodsControl), new UIPropertyMetadata(null));
+            DependencyProperty.Register(nameof(RootTarget), typeof(object), typeof(MethodsControl), new UIPropertyMetadata(null));
 
         private void RootTargetChanged(object sender, EventArgs e)
         {
             if (this.IsSelected)
             {
-                this._checkBoxUseDataContext.IsEnabled = (this.RootTarget is FrameworkElement) && ((FrameworkElement)this.RootTarget).DataContext != null;
+                this.checkBoxUseDataContext.IsEnabled = (this.RootTarget as FrameworkElement)?.DataContext != null;
                 this.SetTargetToRootTarget();
             }
         }
 
-
-
         public bool IsSelected
         {
-            get { return (bool)GetValue(IsSelectedProperty); }
-            set { SetValue(IsSelectedProperty, value); }
+            get { return (bool)this.GetValue(IsSelectedProperty); }
+            set { this.SetValue(IsSelectedProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for IsSelected.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IsSelectedProperty =
             DependencyProperty.Register("IsSelected", typeof(bool), typeof(MethodsControl), new UIPropertyMetadata(false));
-
-
 
         private static void TargetChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
@@ -120,10 +120,10 @@ namespace Snoop.MethodsTab
                 methodsControl.parametersContainer.Visibility = Visibility.Collapsed;
 
                 //if this target has the previous method info, set it
-                for (int i = 0; i < methodInfos.Count && methodsControl._previousMethodInformation != null; i++)
+                for (var i = 0; i < methodInfos.Count && methodsControl.previousMethodInformation != null; i++)
                 {
                     var methodInfo = methodInfos[i];
-                    if (methodInfo.Equals(methodsControl._previousMethodInformation))
+                    if (methodInfo.Equals(methodsControl.previousMethodInformation))
                     {
                         methodsControl.comboBoxMethods.SelectedIndex = i;
                         break;
@@ -134,24 +134,24 @@ namespace Snoop.MethodsTab
 
         private void EnableOrDisableDataContextCheckbox()
         {
-            if (this._checkBoxUseDataContext.IsChecked.HasValue && this._checkBoxUseDataContext.IsChecked.Value)
+            if (this.checkBoxUseDataContext.IsChecked.HasValue && this.checkBoxUseDataContext.IsChecked.Value)
             {
                 return;
             }
 
-            if (!(this.Target is FrameworkElement) || ((FrameworkElement)this.Target).DataContext == null)
+            if ((this.Target as FrameworkElement)?.DataContext == null)
             {
-                this._checkBoxUseDataContext.IsEnabled = false;
+                this.checkBoxUseDataContext.IsEnabled = false;
             }
             else
             {
-                this._checkBoxUseDataContext.IsEnabled = true;
+                this.checkBoxUseDataContext.IsEnabled = true;
             }
         }
 
-        private SnoopMethodInformation _previousMethodInformation = null;
+        private SnoopMethodInformation previousMethodInformation;
 
-        private void comboBoxMethodChanged(object sender, EventArgs e)
+        private void ComboBoxMethodChanged(object sender, EventArgs e)
         {
             var selectedMethod = this.comboBoxMethods.SelectedValue as SnoopMethodInformation;
             if (selectedMethod == null || this.Target == null)
@@ -165,18 +165,18 @@ namespace Snoop.MethodsTab
             this.parametersContainer.Visibility = parameters.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
             this.resultProperties.Visibility = this.resultStringContainer.Visibility = Visibility.Collapsed;
 
-            _previousMethodInformation = selectedMethod;
+            this.previousMethodInformation = selectedMethod;
         }
 
         public object Target
         {
-            get { return (object)GetValue(TargetProperty); }
-            set { SetValue(TargetProperty, value); }
+            get { return (object)this.GetValue(TargetProperty); }
+            set { this.SetValue(TargetProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for Target.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TargetProperty =
-            DependencyProperty.Register("Target", typeof(object), typeof(MethodsControl), new UIPropertyMetadata(new PropertyChangedCallback(TargetChanged)));
+            DependencyProperty.Register(nameof(Target), typeof(object), typeof(MethodsControl), new UIPropertyMetadata(TargetChanged));
 
         public void InvokeMethodClick(object sender, RoutedEventArgs e)
         {
@@ -186,21 +186,21 @@ namespace Snoop.MethodsTab
                 return;
             }
 
-            object[] parameters = new object[this.itemsControlParameters.Items.Count];
+            var parameters = new object[this.itemsControlParameters.Items.Count];
 
-            if (!TryToCreateParameters(parameters))
+            if (!this.TryToCreateParameters(parameters))
             {
                 return;
             }
 
-            TryToInvokeMethod(selectedMethod, parameters);
+            this.TryToInvokeMethod(selectedMethod, parameters);
         }
 
         private bool TryToCreateParameters(object[] parameters)
         {
             try
             {
-                for (int index = 0; index < this.itemsControlParameters.Items.Count; index++)
+                for (var index = 0; index < this.itemsControlParameters.Items.Count; index++)
                 {
                     var paramInfo = this.itemsControlParameters.Items[index] as SnoopParameterInformation;
                     if (paramInfo == null)
@@ -208,14 +208,15 @@ namespace Snoop.MethodsTab
                         return false;
                     }
 
-                    if (paramInfo.ParameterType.Equals(typeof(DependencyProperty)))
+                    if (paramInfo.ParameterType == typeof(DependencyProperty))
                     {
-                        DependencyPropertyNameValuePair valuePair = paramInfo.ParameterValue as DependencyPropertyNameValuePair;
+                        var valuePair = paramInfo.ParameterValue as DependencyPropertyNameValuePair;
                         parameters[index] = valuePair.DependencyProperty;
                     }
 
                     //else if (paramInfo.IsCustom || paramInfo.IsEnum)
-                    else if (paramInfo.ParameterValue == null || paramInfo.ParameterType.IsAssignableFrom(paramInfo.ParameterValue.GetType()))
+                    else if (paramInfo.ParameterValue == null 
+                             || paramInfo.ParameterType.IsInstanceOfType(paramInfo.ParameterValue))
                     {
                         parameters[index] = paramInfo.ParameterValue;
                     }
@@ -243,12 +244,12 @@ namespace Snoop.MethodsTab
 
                 if (returnValue == null)
                 {
-                    SetNullReturnType(selectedMethod);
+                    this.SetNullReturnType(selectedMethod);
                     return;
                 }
                 else
                 {
-                    this.resultStringContainer.Visibility = this.textBlockResult.Visibility = this.textBlockResultLabel.Visibility = System.Windows.Visibility.Visible;
+                    this.resultStringContainer.Visibility = this.textBlockResult.Visibility = this.textBlockResultLabel.Visibility = Visibility.Visible;
                 }
 
                 this.textBlockResultLabel.Text = "Result as string: ";
@@ -259,11 +260,11 @@ namespace Snoop.MethodsTab
 
                 if (properties.Length == 0)
                 {
-                    this.resultProperties.Visibility = System.Windows.Visibility.Collapsed;
+                    this.resultProperties.Visibility = Visibility.Collapsed;
                 }
                 else
                 {
-                    this.resultProperties.Visibility = System.Windows.Visibility.Visible;
+                    this.resultProperties.Visibility = Visibility.Visible;
                     this.propertyInspector.RootTarget = returnValue;
                 }
             }
@@ -277,15 +278,15 @@ namespace Snoop.MethodsTab
         {
             if (selectedMethod.MethodInfo.ReturnType == typeof(void))
             {
-                this.resultStringContainer.Visibility = this.resultProperties.Visibility = System.Windows.Visibility.Collapsed;
+                this.resultStringContainer.Visibility = this.resultProperties.Visibility = Visibility.Collapsed;
             }
             else
             {
-                this.resultProperties.Visibility = System.Windows.Visibility.Collapsed;
-                this.resultStringContainer.Visibility = System.Windows.Visibility.Visible;
+                this.resultProperties.Visibility = Visibility.Collapsed;
+                this.resultStringContainer.Visibility = Visibility.Visible;
                 this.textBlockResult.Text = string.Empty;
                 this.textBlockResultLabel.Text = "Method evaluated to null";
-                this.textBlockResult.Visibility = System.Windows.Visibility.Collapsed;
+                this.textBlockResult.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -296,7 +297,7 @@ namespace Snoop.MethodsTab
                 return new ObservableCollection<SnoopMethodInformation>();
             }
 
-            Type t = o.GetType();
+            var t = o.GetType();
             var methods = t.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.InvokeMethod);
 
             var methodsToReturn = new List<SnoopMethodInformation>();
@@ -338,7 +339,5 @@ namespace Snoop.MethodsTab
                 this.Target = paramCreator.SelectedTarget;
             }
         }
-
     }
-
 }

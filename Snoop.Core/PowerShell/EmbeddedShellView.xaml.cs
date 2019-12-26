@@ -17,7 +17,7 @@ namespace Snoop.PowerShell
 
     public partial class EmbeddedShellView
     {
-        public event Action<VisualTreeItem> ProviderLocationChanged = delegate { };
+        public event Action<VisualTreeItem> ProviderLocationChanged;
 
         private Runspace runspace;
         private SnoopPSHost host;
@@ -100,7 +100,7 @@ namespace Snoop.PowerShell
                 this.SetVariable(ShellConstants.Selected, snoopUi.CurrentSelection);
 
                 // marshall back to the UI thread when the provider notifiers of a location change
-                var action = new Action<VisualTreeItem>(item => this.Dispatcher.BeginInvoke(new Action(() => this.ProviderLocationChanged(item))));
+                var action = new Action<VisualTreeItem>(item => this.Dispatcher.BeginInvoke(new Action(() => this.ProviderLocationChanged?.Invoke(item))));
                 this.SetVariable(ShellConstants.LocationChangedActionKey, action);
 
                 var folder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..", "Scripts");
@@ -118,7 +118,6 @@ namespace Snoop.PowerShell
             }
 
             {
-
                 // sync the current location
                 snoopUi.Tree.SelectedItemChanged += this.OnSnoopUiSelectedItemChanged;
                 this.ProviderLocationChanged += this.OnProviderLocationChanged;

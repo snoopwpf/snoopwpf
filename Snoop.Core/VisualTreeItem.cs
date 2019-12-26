@@ -269,8 +269,6 @@ namespace Snoop
         [NotifyPropertyChangedInvocator]
         protected void OnPropertyChanged(string propertyName)
         {
-            Debug.Assert(this.GetType().GetProperty(propertyName) != null);
-
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }

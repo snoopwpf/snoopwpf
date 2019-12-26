@@ -18,11 +18,11 @@ namespace Snoop.MethodsTab
     {
         public FullTypeSelector()
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-            List<AssemblyNamePair> listAssemblies = new List<AssemblyNamePair>();
+            var listAssemblies = new List<AssemblyNamePair>();
             foreach (var assembly in assemblies)
             {
                 var namePair = new AssemblyNamePair();
@@ -35,17 +35,15 @@ namespace Snoop.MethodsTab
             listAssemblies.Sort();
 
             this.comboBoxAssemblies.ItemsSource = listAssemblies;
-
-
         }
 
-        private void comboBoxAssemblies_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ComboBoxAssemblies_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var assembly = ((AssemblyNamePair)this.comboBoxAssemblies.SelectedItem).Assembly;
 
             var types = assembly.GetTypes();
 
-            List<TypeNamePair> typePairs = new List<TypeNamePair>();
+            var typePairs = new List<TypeNamePair>();
 
             foreach (var type in types)
             {
@@ -66,7 +64,7 @@ namespace Snoop.MethodsTab
             this.comboBoxTypes.ItemsSource = typePairs;
         }
 
-        private void buttonCreateInstance_Click(object sender, RoutedEventArgs e)
+        private void ButtonCreateInstance_Click(object sender, RoutedEventArgs e)
         {
             var selectedType = ((TypeNamePair)this.comboBoxTypes.SelectedItem).Type;
 
@@ -91,14 +89,12 @@ namespace Snoop.MethodsTab
             private set;
         }
 
-        private void buttonCancel_Click(object sender, RoutedEventArgs e)
+        private void ButtonCancel_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;
 
             this.Close();
         }
-
-
     }
 
     //public class TypeNamePair : IComparable

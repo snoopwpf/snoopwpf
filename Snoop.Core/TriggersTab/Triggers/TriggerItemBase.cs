@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Windows;
     using System.Windows.Data;
+    using JetBrains.Annotations;
 
     public enum TriggerType
     {
@@ -68,12 +69,12 @@
         /// <summary>
         ///     Gets the source of the trigger.
         /// </summary>
-        public TriggerSource TriggerSource { get; private set; }
+        public TriggerSource TriggerSource { get; }
 
         /// <summary>
         ///     Gets the type of the trigger.
         /// </summary>
-        public TriggerType TriggerType { get; private set; }
+        public TriggerType TriggerType { get; }
 
         /// <summary>
         ///     Gets if the trigger is currently active
@@ -85,15 +86,11 @@
             set
             {
                 this.isActive = value;
-                var handler = this.PropertyChanged;
-                if (handler != null)
-                {
-                    handler.Invoke(this, new PropertyChangedEventArgs("IsActive"));
-                }
+                this.RaisePropertyChanged(nameof(this.IsActive));
             }
         }
 
-        protected DependencyObject Instance { get; private set; }
+        protected DependencyObject Instance { get; }
 
         #region IDisposable Members
 
@@ -116,6 +113,12 @@
         #region INotifyPropertyChanged Members
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected void RaisePropertyChanged(string propertyName)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         #endregion
 

@@ -15,16 +15,16 @@
             this.ColorText = this.Color.ToString();
         }
 
-        public Color Color { get; private set; }
+        public Color Color { get; }
 
-        public double Offset { get; private set; }
+        public double Offset { get; }
 
-        public string ColorText { get; private set; }
+        public string ColorText { get; }
     }
 
     public class BrushStopsConverter : IValueConverter
     {
-        public static BrushStopsConverter DefaultInstance = new BrushStopsConverter();
+        public static readonly BrushStopsConverter DefaultInstance = new BrushStopsConverter();
 
         /// <inheritdoc />
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -42,14 +42,11 @@
         {
             var stops = new List<BrushStop>();
 
-            var solidColorBrush = brush as SolidColorBrush;
-            if (solidColorBrush != null)
+            if (brush is SolidColorBrush solidColorBrush)
             {
                 stops.Add(new BrushStop(solidColorBrush.Color, 0));
             }
-
-            var gradientBrush = brush as GradientBrush;
-            if (gradientBrush != null)
+            else if (brush is GradientBrush gradientBrush)
             {
                 foreach (var gradientStop in gradientBrush.GradientStops)
                 {

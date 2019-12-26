@@ -20,13 +20,11 @@
                     //SnoopModes.MultipleDispatcherMode is always false for all scenarios except for cases where we are running multiple dispatchers.
                     //If SnoopModes.MultipleDispatcherMode was set to true, then there definitely was a root visual found in another dispatcher, so
                     //the message below would be wrong.
-                    MessageBox.Show
-                        (
+                    MessageBox.Show(
                          "Can't find a current application or a PresentationSource root visual.",
                          "Can't Snoop",
                          MessageBoxButton.OK,
-                         MessageBoxImage.Exclamation
-                        );
+                         MessageBoxImage.Exclamation);
                 }
 
                 // This path should only be hit if we don't find a root in some dispatcher or app domain.

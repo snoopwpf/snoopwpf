@@ -15,15 +15,13 @@ namespace Snoop
         public static readonly RoutedCommand MagnifyCommand = new RoutedCommand("Magnify", typeof(SnoopUI));
         public static readonly RoutedCommand ScreenshotCommand = new RoutedCommand("Screenshot", typeof(SnoopUI));
 
-
         public Previewer()
         {
             this.InitializeComponent();
 
-            this.CommandBindings.Add(new CommandBinding(Previewer.MagnifyCommand, this.HandleMagnify, this.HandleCanMagnify));
-            this.CommandBindings.Add(new CommandBinding(Previewer.ScreenshotCommand, this.HandleScreenshot, this.HandleCanScreenshot));
+            this.CommandBindings.Add(new CommandBinding(MagnifyCommand, this.HandleMagnify, this.HandleCanMagnify));
+            this.CommandBindings.Add(new CommandBinding(ScreenshotCommand, this.HandleScreenshot, this.HandleCanScreenshot));
         }
-
 
         #region Target
         /// <summary>
@@ -31,25 +29,22 @@ namespace Snoop
         /// </summary>
         public object Target
         {
-            get { return (object)GetValue(TargetProperty); }
-            set { SetValue(TargetProperty, value); }
+            get { return (object)this.GetValue(TargetProperty); }
+            set { this.SetValue(TargetProperty, value); }
         }
 
         /// <summary>
         /// Target Dependency Property
         /// </summary>
         public static readonly DependencyProperty TargetProperty =
-            DependencyProperty.Register
-            (
+            DependencyProperty.Register(
                 "Target",
                 typeof(object),
                 typeof(Previewer),
-                new FrameworkPropertyMetadata
-                (
+                new FrameworkPropertyMetadata(
                     (object)null,
-                    new PropertyChangedCallback(OnTargetChanged)
-                )
-            );
+                    OnTargetChanged));
+
         /// <summary>
         /// Handles changes to the Target property.
         /// </summary>
@@ -63,35 +58,33 @@ namespace Snoop
         /// </summary>
         protected virtual void OnTargetChanged(DependencyPropertyChangedEventArgs e)
         {
-            HandleTargetOrIsActiveChanged();
+            this.HandleTargetOrIsActiveChanged();
         }
         #endregion
 
         #region IsActive
+
         /// <summary>
         /// Gets or sets the IsActive property.
         /// </summary>
         public bool IsActive
         {
-            get { return (bool)GetValue(IsActiveProperty); }
-            set { SetValue(IsActiveProperty, value); }
+            get { return (bool)this.GetValue(IsActiveProperty); }
+            set { this.SetValue(IsActiveProperty, value); }
         }
 
         /// <summary>
         /// IsActive Dependency Property
         /// </summary>
         public static readonly DependencyProperty IsActiveProperty =
-            DependencyProperty.Register
-            (
+            DependencyProperty.Register(
                 "IsActive",
                 typeof(bool),
                 typeof(Previewer),
-                new FrameworkPropertyMetadata
-                (
+                new FrameworkPropertyMetadata(
                     (bool)true,
-                    new PropertyChangedCallback(OnIsActiveChanged)
-                )
-            );
+                    OnIsActiveChanged));
+    
         /// <summary>
         /// Handles changes to the IsActive property.
         /// </summary>
@@ -105,42 +98,41 @@ namespace Snoop
         /// </summary>
         protected virtual void OnIsActiveChanged(DependencyPropertyChangedEventArgs e)
         {
-            HandleTargetOrIsActiveChanged();
+            this.HandleTargetOrIsActiveChanged();
         }
-        #endregion
 
+        #endregion
 
         private void HandleTargetOrIsActiveChanged()
         {
             if (this.IsActive && this.Target is Visual)
             {
-                Visual visual = (Visual)this.Target;
+                var visual = (Visual)this.Target;
                 this.Zoomer.Target = visual;
             }
             else
             {
-                Brush pooSniffer = (Brush)this.FindResource("previewerSnoopDogDrawingBrush");
+                var pooSniffer = (Brush)this.FindResource("previewerSnoopDogDrawingBrush");
                 this.Zoomer.Target = pooSniffer;
             }
         }
 
-
         private void HandleCanMagnify(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = (this.Target as Visual) != null;
+            e.CanExecute = this.Target as Visual != null;
             e.Handled = true;
         }
 
         private void HandleMagnify(object sender, ExecutedRoutedEventArgs e)
         {
-            Zoomer zoomer = new Zoomer();
+            var zoomer = new Zoomer();
             zoomer.Inspect(this.Target);
             e.Handled = true;
         }
 
         private void HandleCanScreenshot(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = (this.Target as Visual) != null;
+            e.CanExecute = this.Target as Visual != null;
             e.Handled = true;
         }
 

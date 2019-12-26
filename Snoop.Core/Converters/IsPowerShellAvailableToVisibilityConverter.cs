@@ -12,7 +12,7 @@ namespace Snoop.Converters
 
     public class IsPowerShellAvailableToVisibilityConverter : IValueConverter
     {
-        public static IsPowerShellAvailableToVisibilityConverter DefaultInstance = new IsPowerShellAvailableToVisibilityConverter();
+        public static readonly IsPowerShellAvailableToVisibilityConverter DefaultInstance = new IsPowerShellAvailableToVisibilityConverter();
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

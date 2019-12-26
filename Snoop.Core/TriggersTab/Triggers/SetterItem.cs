@@ -38,7 +38,7 @@
             this.Value = propertyInformation;
         }
 
-        public Setter Setter { get; private set; }
+        public Setter Setter { get; }
 
         /// <summary>
         ///     Gets if the value is overridden by a descending style or template
@@ -48,12 +48,12 @@
         /// <summary>
         ///     Gets the name of the property.
         /// </summary>
-        public string Property { get; private set; }
+        public string Property { get; }
 
         /// <summary>
         ///     Gets the value.
         /// </summary>
-        public PropertyInformation Value { get; private set; }
+        public PropertyInformation Value { get; }
 
         private static string GetDisplayName(Setter setter)
         {

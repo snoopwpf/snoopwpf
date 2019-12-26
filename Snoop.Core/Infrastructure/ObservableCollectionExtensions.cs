@@ -18,7 +18,6 @@ namespace Snoop.Infrastructure
                 return -1;
             }
 
-
             return BinarySearch(collection, item, 0, collection.Count - 1);
         }
 
@@ -28,7 +27,6 @@ namespace Snoop.Infrastructure
             {
                 return -1;
             }
-
 
             return BinarySearch(collection, item, 0, collection.Count - 1, comparer);
         }
@@ -53,7 +51,7 @@ namespace Snoop.Infrastructure
                 }
             }
 
-            int middle = (startIndex + endIndex) / 2;
+            var middle = (startIndex + endIndex) / 2;
 
             //if (collection[middle].CompareTo(item) == 0)
             if (comparer.Invoke(collection[middle], item) == 0)
@@ -92,7 +90,7 @@ namespace Snoop.Infrastructure
                 }
             }
 
-            int middle = (startIndex + endIndex) / 2;
+            var middle = (startIndex + endIndex) / 2;
 
             if (collection[middle].CompareTo(item) == 0)
             {
@@ -137,7 +135,7 @@ namespace Snoop.Infrastructure
                 return;
             }
 
-            int middle = (startIndex + endIndex) / 2;
+            var middle = (startIndex + endIndex) / 2;
 
             //if (collection[middle].CompareTo(item) >= 0)//middle >= item
             if (comparison.Invoke(collection[middle], item) >= 0)
@@ -166,21 +164,21 @@ namespace Snoop.Infrastructure
         private static void Insert<T>(ObservableCollection<T> collection, T item, int startIndex, int endIndex)
             where T : IComparable
         {
-            if (collection[startIndex].CompareTo(item) >= 0)//collection[0] >= item
+            if (collection[startIndex].CompareTo(item) >= 0) //collection[0] >= item
             {
                 collection.Insert(startIndex, item);
                 return;
             }
 
-            if (collection[endIndex].CompareTo(item) <= 0)//lastItem >= item.
+            if (collection[endIndex].CompareTo(item) <= 0) //lastItem >= item.
             {
                 collection.Add(item);
                 return;
             }
 
-            int middle = (startIndex + endIndex) / 2;
+            var middle = (startIndex + endIndex) / 2;
 
-            if (collection[middle].CompareTo(item) >= 0)//middle >= item
+            if (collection[middle].CompareTo(item) >= 0) //middle >= item
             {
                 Insert(collection, item, startIndex, middle);
             }

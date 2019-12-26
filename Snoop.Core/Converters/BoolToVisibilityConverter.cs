@@ -12,7 +12,7 @@
 
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            bool invert = false;
+            var invert = false;
 
             if (parameter is string)
             {
@@ -21,7 +21,7 @@
 
             if (value is bool)
             {
-                return ((bool)value) ^ invert ? Visibility.Visible : Visibility.Collapsed;
+                return (bool)value ^ invert ? Visibility.Visible : Visibility.Collapsed;
             }
 
             return value;

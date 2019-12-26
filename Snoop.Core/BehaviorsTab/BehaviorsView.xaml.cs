@@ -33,7 +33,7 @@
             view.Update();
         }
 
-        public static readonly DependencyProperty RootTargetProperty = DependencyProperty.Register(nameof(RootTarget), typeof(object), typeof(BehaviorsView), new PropertyMetadata(default(object), OnRootTargetChanged));
+        public static readonly DependencyProperty RootTargetProperty = DependencyProperty.Register(nameof(RootTarget), typeof(object), typeof(BehaviorsView), new PropertyMetadata(default, OnRootTargetChanged));
 
         public object RootTarget
         {

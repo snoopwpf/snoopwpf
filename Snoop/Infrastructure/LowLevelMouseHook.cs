@@ -6,9 +6,11 @@
 
     public class LowLevelMouseHook
     {
+        #pragma warning disable SA1310
         private const int WH_MOUSE_LL = 14;
+        #pragma warning restore SA1310
 
-        internal IntPtr hookID = IntPtr.Zero;
+        private IntPtr hookId = IntPtr.Zero;
 
         // We need to place this on a field/member.
         // Otherwise the delegate will be garbage collected and our hook crashes.
@@ -31,27 +33,27 @@
 
         public event EventHandler<LowLevelMouseMoveEventArgs> LowLevelMouseMove;
 
-        public bool IsRunning => this.hookID != IntPtr.Zero;
+        public bool IsRunning => this.hookId != IntPtr.Zero;
 
         public void Start()
         {
-            if (this.hookID != IntPtr.Zero)
+            if (this.hookId != IntPtr.Zero)
             {
                 return;
             }
 
-            this.hookID = CreateHook(this.cachedProc);
+            this.hookId = CreateHook(this.cachedProc);
         }
 
         public void Stop()
         {
-            if (this.hookID == IntPtr.Zero)
+            if (this.hookId == IntPtr.Zero)
             {
                 return;
             }
 
-            UnhookWindowsHookEx(this.hookID);
-            this.hookID = IntPtr.Zero;
+            UnhookWindowsHookEx(this.hookId);
+            this.hookId = IntPtr.Zero;
         }
 
         private static IntPtr CreateHook(LowLevelMouseProc proc)
@@ -74,15 +76,15 @@
                 return CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
             }
 
-            if (MouseMessages.WM_LBUTTONUP == (MouseMessages)wParam)
+            if ((MouseMessages)wParam == MouseMessages.WM_LBUTTONUP)
             {
             }
 
-            var xx = (MSLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(MSLLHOOKSTRUCT));
+            var hookStruct = (MSLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(MSLLHOOKSTRUCT));
 
-            this.LowLevelMouseMove?.Invoke(this, new LowLevelMouseMoveEventArgs(xx.pt));
+            this.LowLevelMouseMove?.Invoke(this, new LowLevelMouseMoveEventArgs(hookStruct.Point));
 
-            return CallNextHookEx(this.hookID, nCode, wParam, lParam);
+            return CallNextHookEx(this.hookId, nCode, wParam, lParam);
         }
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
@@ -113,11 +115,15 @@
         [StructLayout(LayoutKind.Sequential)]
         private struct MSLLHOOKSTRUCT
         {
-            public readonly POINT pt;
-            public readonly int mouseData;
-            public readonly int flags;
-            public readonly int time;
-            public readonly IntPtr dwExtraInfo;
+            public readonly POINT Point;
+
+            public readonly int MouseData;
+
+            public readonly int Flags;
+
+            public readonly int Time;
+
+            public readonly IntPtr ExtraInfo;
         }
     }
 }

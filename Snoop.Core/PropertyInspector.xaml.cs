@@ -49,8 +49,8 @@ namespace Snoop
             this.CommandBindings.Add(new CommandBinding(NavigateToAssemblyInExplorerCommand, this.HandleNavigateToAssemblyInExplorer, this.CanNavigateToAssemblyInExplorer));
 
             // watch for mouse "back" button
-            this.MouseDown += new MouseButtonEventHandler(this.MouseDownHandler);
-            this.KeyDown += new KeyEventHandler(this.PropertyInspector_KeyDown);
+            this.MouseDown += this.MouseDownHandler;
+            this.KeyDown += this.PropertyInspector_KeyDown;
 
             this.checkBoxClearAfterDelve.Checked += (s, e) => Properties.Settings.Default.ClearAfterDelve = this.checkBoxClearAfterDelve.IsChecked.HasValue && this.checkBoxClearAfterDelve.IsChecked.Value;
             this.checkBoxClearAfterDelve.Unchecked += (s, e) => Properties.Settings.Default.ClearAfterDelve = this.checkBoxClearAfterDelve.IsChecked.HasValue && this.checkBoxClearAfterDelve.IsChecked.Value;
@@ -126,13 +126,11 @@ namespace Snoop
         }
 
         public static readonly DependencyProperty RootTargetProperty =
-            DependencyProperty.Register
-            (
+            DependencyProperty.Register(
                 nameof(RootTarget),
                 typeof(object),
                 typeof(PropertyInspector),
-                new PropertyMetadata(HandleRootTargetChanged)
-            );
+                new PropertyMetadata(HandleRootTargetChanged));
 
         private static void HandleRootTargetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -612,25 +610,21 @@ namespace Snoop
                 ret.AddRange(this.UserFilterSets);
 
                 // now add the "(Default)" and "Edit Filters..." filters for the ComboBox
-                ret.Insert
-                (
+                ret.Insert(
                     0,
                     new PropertyFilterSet
                     {
                         DisplayName = "(Default)",
                         IsDefault = true,
                         IsEditCommand = false,
-                    }
-                );
-                ret.Add
-                (
+                    });
+                ret.Add(
                     new PropertyFilterSet
                     {
                         DisplayName = "Edit Filters...",
                         IsDefault = false,
                         IsEditCommand = true,
-                    }
-                );
+                    });
 
                 this.allFilterSets = ret.ToArray();
 
@@ -723,7 +717,6 @@ namespace Snoop
         [NotifyPropertyChangedInvocator]
         protected void OnPropertyChanged(string propertyName)
         {
-            Debug.Assert(this.GetType().GetProperty(propertyName) != null);
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
