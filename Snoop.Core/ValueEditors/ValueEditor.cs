@@ -75,12 +75,12 @@ namespace Snoop
                 new PropertyMetadata(default(bool))
             );
 
-        public static readonly DependencyProperty DetailsEditorTemplateProperty = 
+        public static readonly DependencyProperty DetailsEditorTemplateProperty =
             DependencyProperty.Register
             (
-                nameof(DetailsEditorTemplate), 
-                typeof(DataTemplate), 
-                typeof(ValueEditor), 
+                nameof(DetailsEditorTemplate),
+                typeof(DataTemplate),
+                typeof(ValueEditor),
                 new PropertyMetadata(default(DataTemplate))
             );
 

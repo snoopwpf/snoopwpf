@@ -1,102 +1,103 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows;
-using System.Windows.Controls;
-using Snoop.Infrastructure;
-
-namespace Snoop.DebugListenerTab
+﻿namespace Snoop.DebugListenerTab
 {
-	public partial class SetFiltersWindow
-	{
-		public SetFiltersWindow(FiltersViewModel viewModel)
-		{
-			this.DataContext = viewModel;
-			viewModel.ResetDirtyFlag();
+    using System;
+    using System.Collections.Generic;
+    using System.Windows;
+    using System.Windows.Controls;
 
-			InitializeComponent();
+    public partial class SetFiltersWindow
+    {
+        public SetFiltersWindow(FiltersViewModel viewModel)
+        {
+            this.DataContext = viewModel;
+            viewModel.ResetDirtyFlag();
 
-			initialFilters = MakeDeepCopyOfFilters(this.ViewModel.Filters);
+            InitializeComponent();
 
-			this.Closed += SetFiltersWindow_Closed;
-		}
+            initialFilters = MakeDeepCopyOfFilters(this.ViewModel.Filters);
 
-		internal FiltersViewModel ViewModel
-		{
-			get
-			{
-				return this.DataContext as FiltersViewModel;
-			}
-		}
+            this.Closed += SetFiltersWindow_Closed;
+        }
 
-		private void SetFiltersWindow_Closed(object sender, EventArgs e)
-		{
-			if (_setFilterClicked || !this.ViewModel.IsDirty)
+        internal FiltersViewModel ViewModel
+        {
+            get
+            {
+                return this.DataContext as FiltersViewModel;
+            }
+        }
+
+        private void SetFiltersWindow_Closed(object sender, EventArgs e)
+        {
+            if (_setFilterClicked || !this.ViewModel.IsDirty)
             {
                 return;
             }
 
             var saveChanges = MessageBox.Show("Save changes?", "Changes", MessageBoxButton.YesNo) == MessageBoxResult.Yes;
-			if (saveChanges)
-			{
-				this.ViewModel.SetIsSet();
-				SaveFiltersToSettings();
-				return;
-			}
+            if (saveChanges)
+            {
+                this.ViewModel.SetIsSet();
+                SaveFiltersToSettings();
+                return;
+            }
 
-			this.ViewModel.InitializeFilters(initialFilters);
+            this.ViewModel.InitializeFilters(initialFilters);
         }
 
-		private void buttonAddFilter_Click(object sender, RoutedEventArgs e)
-		{
-			//ViewModel.Filters.Add(new SnoopSingleFilter());
-			ViewModel.AddFilter(new SnoopSingleFilter());
-			//this.listBoxFilters.ScrollIntoView(this.listBoxFilters.ItemContainerGenerator.ContainerFromIndex(this.listBoxFilters.Items.Count - 1));
+        private void buttonAddFilter_Click(object sender, RoutedEventArgs e)
+        {
+            //ViewModel.Filters.Add(new SnoopSingleFilter());
+            ViewModel.AddFilter(new SnoopSingleFilter());
+            //this.listBoxFilters.ScrollIntoView(this.listBoxFilters.ItemContainerGenerator.ContainerFromIndex(this.listBoxFilters.Items.Count - 1));
 
-		}
-		private void buttonRemoveFilter_Click(object sender, RoutedEventArgs e)
-		{
-			FrameworkElement frameworkElement = sender as FrameworkElement;
-			if (frameworkElement == null)
+        }
+
+        private void buttonRemoveFilter_Click(object sender, RoutedEventArgs e)
+        {
+            FrameworkElement frameworkElement = sender as FrameworkElement;
+            if (frameworkElement == null)
             {
                 return;
             }
 
             SnoopFilter filter = frameworkElement.DataContext as SnoopFilter;
-			if (filter == null)
+            if (filter == null)
             {
                 return;
             }
 
             ViewModel.RemoveFilter(filter);
-		}
-		private void buttonSetFilter_Click(object sender, RoutedEventArgs e)
-		{
-			SaveFiltersToSettings();
+        }
 
-			//this.ViewModel.IsSet = true;
-			this.ViewModel.SetIsSet();
-			_setFilterClicked = true;
-			this.Close();
-		}
+        private void buttonSetFilter_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFiltersToSettings();
 
-		private void textBlockFilter_Loaded(object sender, RoutedEventArgs e)
-		{
-			var textBox = sender as TextBox;
-			if (textBox != null)
-			{
-				textBox.Focus();
-				this.listBoxFilters.ScrollIntoView(textBox);
-			}
-		}
+            //this.ViewModel.IsSet = true;
+            this.ViewModel.SetIsSet();
+            _setFilterClicked = true;
+            this.Close();
+        }
 
-		private void menuItemGroupFilters_Click(object sender, RoutedEventArgs e)
-		{
+        private void textBlockFilter_Loaded(object sender, RoutedEventArgs e)
+        {
+            var textBox = sender as TextBox;
+            if (textBox != null)
+            {
+                textBox.Focus();
+                this.listBoxFilters.ScrollIntoView(textBox);
+            }
+        }
 
-			List<SnoopFilter> filtersToGroup = new List<SnoopFilter>();
-			foreach (var item in this.listBoxFilters.SelectedItems)
-			{
-				var filter = item as SnoopFilter;
-				if (filter == null)
+        private void menuItemGroupFilters_Click(object sender, RoutedEventArgs e)
+        {
+
+            List<SnoopFilter> filtersToGroup = new List<SnoopFilter>();
+            foreach (var item in this.listBoxFilters.SelectedItems)
+            {
+                var filter = item as SnoopFilter;
+                if (filter == null)
                 {
                     continue;
                 }
@@ -106,80 +107,83 @@ namespace Snoop.DebugListenerTab
                     filtersToGroup.Add(filter);
                 }
             }
-			this.ViewModel.GroupFilters(filtersToGroup);
-		}
-		private void menuItemClearFilterGroups_Click(object sender, RoutedEventArgs e)
-		{
-			this.ViewModel.ClearFilterGroups();
-		}
-		private void menuItemSetInverse_Click(object sender, RoutedEventArgs e)
-		{
-			foreach (SnoopFilter filter in this.listBoxFilters.SelectedItems)
-			{
-				if (filter == null)
+
+            this.ViewModel.GroupFilters(filtersToGroup);
+        }
+
+        private void menuItemClearFilterGroups_Click(object sender, RoutedEventArgs e)
+        {
+            this.ViewModel.ClearFilterGroups();
+        }
+
+        private void menuItemSetInverse_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (SnoopFilter filter in this.listBoxFilters.SelectedItems)
+            {
+                if (filter == null)
                 {
                     continue;
                 }
 
                 filter.IsInverse = !filter.IsInverse;
-			}
-		}
+            }
+        }
 
 
-		private void SaveFiltersToSettings()
-		{
-			List<SnoopSingleFilter> singleFilters = new List<SnoopSingleFilter>();
-			foreach (var filter in this.ViewModel.Filters)
-			{
-				if (filter is SnoopSingleFilter)
+        private void SaveFiltersToSettings()
+        {
+            List<SnoopSingleFilter> singleFilters = new List<SnoopSingleFilter>();
+            foreach (var filter in this.ViewModel.Filters)
+            {
+                if (filter is SnoopSingleFilter)
                 {
                     singleFilters.Add((SnoopSingleFilter)filter);
                 }
             }
 
-			Properties.Settings.Default.SnoopDebugFilters = singleFilters.ToArray();
-		}
+            Properties.Settings.Default.SnoopDebugFilters = singleFilters.ToArray();
+        }
 
-		private List<SnoopSingleFilter> MakeDeepCopyOfFilters(IEnumerable<SnoopFilter> filters)
-		{
-			List<SnoopSingleFilter> snoopSingleFilters = new List<SnoopSingleFilter>();
+        private List<SnoopSingleFilter> MakeDeepCopyOfFilters(IEnumerable<SnoopFilter> filters)
+        {
+            List<SnoopSingleFilter> snoopSingleFilters = new List<SnoopSingleFilter>();
 
-			foreach (var filter in filters)
-			{
-				var singleFilter = filter as SnoopSingleFilter;
-				if (singleFilter == null)
+            foreach (var filter in filters)
+            {
+                var singleFilter = filter as SnoopSingleFilter;
+                if (singleFilter == null)
                 {
                     continue;
                 }
 
                 var newFilter = (SnoopSingleFilter)singleFilter.Clone();
 
-				snoopSingleFilters.Add(newFilter);
-			}
+                snoopSingleFilters.Add(newFilter);
+            }
 
-			return snoopSingleFilters;
-		}
+            return snoopSingleFilters;
+        }
 
-		//private SnoopSingleFilter MakeDeepCopyOfFilter(SnoopSingleFilter filter)
-		//{
-		//	try
-		//	{
-		//		BinaryFormatter formatter = new BinaryFormatter();
-		//		var ms = new System.IO.MemoryStream();
-		//		formatter.Serialize(ms, filter);
-		//		SnoopSingleFilter deepCopy = (SnoopSingleFilter)formatter.Deserialize(ms);
-		//		ms.Close();
-		//		return deepCopy;
-		//	}
-		//	catch (Exception)
-		//	{
-		//		return null;
-		//	}
-		//}
+        //private SnoopSingleFilter MakeDeepCopyOfFilter(SnoopSingleFilter filter)
+        //{
+        //	try
+        //	{
+        //		BinaryFormatter formatter = new BinaryFormatter();
+        //		var ms = new System.IO.MemoryStream();
+        //		formatter.Serialize(ms, filter);
+        //		SnoopSingleFilter deepCopy = (SnoopSingleFilter)formatter.Deserialize(ms);
+        //		ms.Close();
+        //		return deepCopy;
+        //	}
+        //	catch (Exception)
+        //	{
+        //		return null;
+        //	}
+        //}
 
 
-		private List<SnoopSingleFilter> initialFilters;
-		private bool _setFilterClicked = false;
-	}
+        private List<SnoopSingleFilter> initialFilters;
+        private bool _setFilterClicked = false;
+    }
 }
 

@@ -214,7 +214,7 @@ namespace Snoop.PowerShell
         protected override bool HasChildItems(string path)
         {
             var item = this.GetTreeItem(path);
-            return item != null 
+            return item != null
                    && item.Children.Any();
         }
 
@@ -273,7 +273,7 @@ namespace Snoop.PowerShell
         public static string NodePath(this VisualTreeItem item)
         {
             var parts = new List<string>();
-            
+
             var current = item;
             while (current.Parent != null)
             {

@@ -3,18 +3,15 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Reflection;
-using System.Windows.Input;
-using System.ComponentModel;
-using Snoop.Infrastructure;
-
 namespace Snoop.MethodsTab
 {
+    using System;
+    using System.ComponentModel;
+    using System.Reflection;
+    using System.Windows;
+    using System.Windows.Input;
+    using Snoop.Infrastructure;
+
     public class SnoopParameterInformation : DependencyObject
     {
 
@@ -53,7 +50,7 @@ namespace Snoop.MethodsTab
         public ICommand CreateCustomParameterCommand
         {
             get
-            {                
+            {
                 return _createCustomParameterCommand ?? (_createCustomParameterCommand = new RelayCommand(x => CreateCustomParameter()));
             }
         }
@@ -99,6 +96,7 @@ namespace Snoop.MethodsTab
                 {
                     return;
                 }
+
                 paramCreator.RootTarget = typeSelector.Instance;
             }
             else
@@ -130,6 +128,7 @@ namespace Snoop.MethodsTab
             {
                 this.ParameterValue = Activator.CreateInstance(this.ParameterType);
             }
+
             TypeConverter = TypeDescriptor.GetConverter(this.ParameterType);
         }
 

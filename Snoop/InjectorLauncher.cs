@@ -6,19 +6,19 @@
 namespace Snoop
 {
     using System.Diagnostics;
-    using System.Reflection;
     using System.IO;
+    using System.Reflection;
     using Snoop.Data;
 
     /// <summary>
     /// Class responsible for launching a new injector process.
     /// </summary>
     public static class InjectorLauncher
-	{
-	    private static string GetSuffix(WindowInfo windowInfo)
-	    {
-	        var bitness = windowInfo.IsOwningProcess64Bit 
-                ? "x64" 
+    {
+        private static string GetSuffix(WindowInfo windowInfo)
+        {
+            var bitness = windowInfo.IsOwningProcess64Bit
+                ? "x64"
                 : "x86";
 
             return bitness;
@@ -30,7 +30,7 @@ namespace Snoop
         }
 
         public static void Launch(WindowInfo windowInfo, string assembly, string className, string methodName, string transientSettingsFile)
-		{
+        {
             if (File.Exists(transientSettingsFile) == false)
             {
                 throw new FileNotFoundException("The generated temporary settings file could not be found.", transientSettingsFile);
@@ -52,12 +52,12 @@ Snoop requires this component, which is part of the Snoop project, to do it's jo
                 }
 
                 var startInfo = new ProcessStartInfo(injectorLauncherExe, $"{windowInfo.OwningProcess.Id}:{windowInfo.HWnd} \"{assembly}\" \"{className}\" \"{methodName}\" \"{transientSettingsFile}\"")
-                                {
-                                    UseShellExecute = false,
-                                    Verb = windowInfo.IsOwningProcessElevated
+                {
+                    UseShellExecute = false,
+                    Verb = windowInfo.IsOwningProcessElevated
                                                ? "runas"
                                                : null
-                                };
+                };
 
                 using var process = Process.Start(startInfo);
                 process?.WaitForExit();
@@ -67,5 +67,5 @@ Snoop requires this component, which is part of the Snoop project, to do it's jo
                 File.Delete(transientSettingsFile);
             }
         }
-	}
+    }
 }

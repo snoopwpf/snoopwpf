@@ -3,17 +3,13 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Media;
-using System.Windows.Shapes;
-using System.Windows.Controls;
-
 namespace Snoop.Infrastructure
 {
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Media;
+    using System.Windows.Shapes;
+
     public static class ZoomerUtilities
     {
         public static UIElement CreateIfPossible(object item)
@@ -45,6 +41,7 @@ namespace Snoop.Infrastructure
                         stackPanel.Children.Add(element);
                     }
                 }
+
                 return stackPanel;
             }
             else if (item is Brush)
@@ -61,6 +58,7 @@ namespace Snoop.Infrastructure
                 image.Source = (ImageSource)item;
                 return image;
             }
+
             return null;
         }
 
@@ -97,6 +95,7 @@ namespace Snoop.Infrastructure
                 rect.Width = uiElement.ActualWidth;
                 rect.Height = uiElement.ActualHeight;
             }
+
             return rect;
         }
     }

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Snoop.Infrastructure
+﻿namespace Snoop.Infrastructure
 {
+    using System;
     using System.ComponentModel;
 
     public class StringValueConverter

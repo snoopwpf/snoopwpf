@@ -3,14 +3,11 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Collections.ObjectModel;
-
 namespace Snoop.Infrastructure
 {
+    using System;
+    using System.Collections.ObjectModel;
+
     public static class ObservableCollectionExtensions
     {
         public static int BinarySearch<T>(this ObservableCollection<T> collection, T item)

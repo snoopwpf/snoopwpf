@@ -13,8 +13,8 @@ namespace Snoop
 
         public static IInputElement GetDirectlyOver(this MouseDevice mouseDevice)
         {
-            return GetElementAtMousePos() 
-                   ?? rawDirectlyOverPropertyInfo?.GetValue(mouseDevice, null) as IInputElement 
+            return GetElementAtMousePos()
+                   ?? rawDirectlyOverPropertyInfo?.GetValue(mouseDevice, null) as IInputElement
                    ?? Mouse.PrimaryDevice.DirectlyOver;
         }
 
@@ -40,7 +40,7 @@ namespace Snoop
 
         private static HitTestResultBehavior ResultCallback(HitTestResult result, ref FrameworkElement directlyOverElement)
         {
-            if (result != null 
+            if (result != null
                 && result.VisualHit is FrameworkElement frameworkElement
                 && frameworkElement.IsVisible)
             {

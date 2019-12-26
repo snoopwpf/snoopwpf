@@ -28,8 +28,8 @@ namespace Snoop.InjectorLauncher
             var assemblyNameOrFullPath = args[1];
             var className = args[2];
             var methodName = args[3];
-            var settingsFile = args.Length >= 3 
-                ? args[4] 
+            var settingsFile = args.Length >= 3
+                ? args[4]
                 : new TransientSettingsData
                 {
                     StartTarget = SnoopStartTarget.SnoopUI,
@@ -37,12 +37,12 @@ namespace Snoop.InjectorLauncher
                 }.WriteToFile();
 
             var injectorData = new InjectorData
-                               {
-                                   FullAssemblyPath = GetAssemblyPath(processWrapper, assemblyNameOrFullPath),
-                                   ClassName = className,
-                                   MethodName = methodName,
-                                   SettingsFile = settingsFile
-                               };
+            {
+                FullAssemblyPath = GetAssemblyPath(processWrapper, assemblyNameOrFullPath),
+                ClassName = className,
+                MethodName = methodName,
+                SettingsFile = settingsFile
+            };
 
             try
             {

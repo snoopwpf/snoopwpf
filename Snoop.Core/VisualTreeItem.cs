@@ -251,7 +251,7 @@ namespace Snoop
                 return true;
             }
 
-            if (int.TryParse(value, out var n) 
+            if (int.TryParse(value, out var n)
                 && n == this.Depth)
             {
                 return true;

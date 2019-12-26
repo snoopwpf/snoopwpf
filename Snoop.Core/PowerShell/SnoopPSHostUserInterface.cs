@@ -25,9 +25,13 @@ namespace Snoop.PowerShell
         }
 
         public event Action<string> OnVerbose = delegate { };
+
         public event Action<string> OnDebug = delegate { };
+
         public event Action<string> OnWarning = delegate { };
+
         public event Action<string> OnError = delegate { };
+
         public event Action<string> OnWrite = delegate { };
 
         public override string ReadLine()

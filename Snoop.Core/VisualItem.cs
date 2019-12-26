@@ -23,7 +23,7 @@ namespace Snoop
     {
         private AdornerContainer adornerContainer;
 
-        public VisualItem(Visual visual, VisualTreeItem parent) 
+        public VisualItem(Visual visual, VisualTreeItem parent)
             : base(visual, parent)
         {
             this.Visual = visual;
@@ -35,7 +35,7 @@ namespace Snoop
         {
             get
             {
-                var propertyDescriptors =  TypeDescriptor.GetProperties(this.Visual, new Attribute[] { new PropertyFilterAttribute(PropertyFilterOptions.All) });
+                var propertyDescriptors = TypeDescriptor.GetProperties(this.Visual, new Attribute[] { new PropertyFilterAttribute(PropertyFilterOptions.All) });
                 foreach (PropertyDescriptor property in propertyDescriptors)
                 {
                     var dpd = DependencyPropertyDescriptor.FromProperty(property);
@@ -89,7 +89,7 @@ namespace Snoop
             // Add adorners for the visual this is representing.
             var adornerLayer = AdornerLayer.GetAdornerLayer(this.Visual);
 
-            if (adornerLayer != null 
+            if (adornerLayer != null
                 && this.Visual is UIElement visualElement)
             {
                 if (this.IsSelected && this.adornerContainer == null)

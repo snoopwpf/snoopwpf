@@ -42,7 +42,7 @@ namespace Snoop.TriggersTab
             view.Update();
         }
 
-        public static readonly DependencyProperty RootTargetProperty = DependencyProperty.Register("RootTarget", typeof(object), typeof(TriggersView), new PropertyMetadata(default(object), OnRootTargetChanged));        
+        public static readonly DependencyProperty RootTargetProperty = DependencyProperty.Register("RootTarget", typeof(object), typeof(TriggersView), new PropertyMetadata(default(object), OnRootTargetChanged));
 
         public object RootTarget
         {
@@ -108,7 +108,7 @@ namespace Snoop.TriggersTab
         }
 
         private void Update()
-        {            
+        {
             // Always cleanup first
             this.Cleanup();
 
@@ -133,7 +133,7 @@ namespace Snoop.TriggersTab
                 {
                     style = fe.TryFindResource(fe.GetType()) as Style;
                 }
-                
+
                 if (style != null)
                 {
                     this.AddTriggers(fe, style, TriggerSource.Style);
@@ -150,7 +150,7 @@ namespace Snoop.TriggersTab
                 {
                     style = fec.TryFindResource(fec.GetType()) as Style;
                 }
-                
+
                 if (style != null)
                 {
                     this.AddTriggers(fec, style, TriggerSource.Style);

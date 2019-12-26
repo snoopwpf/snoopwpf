@@ -3,13 +3,10 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace Snoop.MethodsTab
 {
+    using System;
+
     public class TypeNamePair : IComparable
     {
         public string Name { get; set; }

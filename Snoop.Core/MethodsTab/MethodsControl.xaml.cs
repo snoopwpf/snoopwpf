@@ -3,26 +3,18 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Globalization;
-using System.Windows;
-using System.Windows.Data;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Controls;
-using Snoop.Infrastructure;
-using System.Reflection;
-using System.Linq;
-
-using Snoop.Converters;
-
 namespace Snoop.MethodsTab
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Reflection;
+    using System.Windows;
+    using System.Windows.Controls;
+    using Snoop.Converters;
+    using Snoop.Infrastructure;
+
     public partial class MethodsControl
     {
         public MethodsControl()
@@ -158,6 +150,7 @@ namespace Snoop.MethodsTab
         }
 
         private SnoopMethodInformation _previousMethodInformation = null;
+
         private void comboBoxMethodChanged(object sender, EventArgs e)
         {
             var selectedMethod = this.comboBoxMethods.SelectedValue as SnoopMethodInformation;
@@ -220,6 +213,7 @@ namespace Snoop.MethodsTab
                         DependencyPropertyNameValuePair valuePair = paramInfo.ParameterValue as DependencyPropertyNameValuePair;
                         parameters[index] = valuePair.DependencyProperty;
                     }
+
                     //else if (paramInfo.IsCustom || paramInfo.IsEnum)
                     else if (paramInfo.ParameterValue == null || paramInfo.ParameterType.IsAssignableFrom(paramInfo.ParameterValue.GetType()))
                     {
@@ -231,6 +225,7 @@ namespace Snoop.MethodsTab
                         parameters[index] = converter.ConvertFrom(paramInfo.ParameterValue);
                     }
                 }
+
                 return true;
             }
             catch (Exception exception)
@@ -253,7 +248,7 @@ namespace Snoop.MethodsTab
                 }
                 else
                 {
-                    this.resultStringContainer.Visibility = this.textBlockResult.Visibility = this.textBlockResultLabel.Visibility = System.Windows.Visibility.Visible;                    
+                    this.resultStringContainer.Visibility = this.textBlockResult.Visibility = this.textBlockResultLabel.Visibility = System.Windows.Visibility.Visible;
                 }
 
                 this.textBlockResultLabel.Text = "Result as string: ";
@@ -315,10 +310,11 @@ namespace Snoop.MethodsTab
 
                 var info = new SnoopMethodInformation(method);
                 info.MethodName = method.Name;
-                
+
                 methodsToReturn.Add(info);
             }
-            methodsToReturn.Sort();            
+
+            methodsToReturn.Sort();
 
             return methodsToReturn;
         }
@@ -334,7 +330,7 @@ namespace Snoop.MethodsTab
             paramCreator.TextBlockDescription.Text = "Delve into the new desired target by double-clicking on the property. Clicking OK will select the currently delved property to be the new target.";
             paramCreator.Title = "Change Target";
             paramCreator.RootTarget = this.RootTarget;
-            
+
             paramCreator.ShowDialogEx(this);
 
             if (paramCreator.DialogResult.HasValue && paramCreator.DialogResult.Value)
@@ -344,5 +340,5 @@ namespace Snoop.MethodsTab
         }
 
     }
-       
+
 }

@@ -19,10 +19,11 @@
                 bool.TryParse((string)parameter, out invert);
             }
 
-            if( value is bool)
+            if (value is bool)
             {
                 return ((bool)value) ^ invert ? Visibility.Visible : Visibility.Collapsed;
             }
+
             return value;
         }
 

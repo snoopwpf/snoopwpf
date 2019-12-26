@@ -23,13 +23,13 @@
 
         public bool IsSelected
         {
-            get { return (bool) this.GetValue(IsSelectedProperty); }
+            get { return (bool)this.GetValue(IsSelectedProperty); }
             set { this.SetValue(IsSelectedProperty, value); }
         }
 
         private static void OnIsSelectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var view = (BehaviorsView) d;
+            var view = (BehaviorsView)d;
             view.Update();
         }
 
@@ -43,7 +43,7 @@
 
         private static void OnRootTargetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var view = (BehaviorsView) d;
+            var view = (BehaviorsView)d;
             view.Update();
         }
 
@@ -51,7 +51,7 @@
 
         public ObservableCollection<object> Behaviors
         {
-            get { return (ObservableCollection<object>) this.GetValue(BehaviorsProperty); }
+            get { return (ObservableCollection<object>)this.GetValue(BehaviorsProperty); }
             set { this.SetValue(BehaviorsProperty, value); }
         }
 
@@ -64,12 +64,12 @@
         }
 
         private static readonly DependencyPropertyKey HasBehaviorsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(HasBehaviors), typeof(bool), typeof(BehaviorsView), new FrameworkPropertyMetadata(default(bool)));
-        
+
         public static readonly DependencyProperty HasBehaviorsProperty = HasBehaviorsPropertyKey.DependencyProperty;
 
         public bool HasBehaviors
         {
-            get { return (bool) this.GetValue(HasBehaviorsProperty); }
+            get { return (bool)this.GetValue(HasBehaviorsProperty); }
             protected set { this.SetValue(HasBehaviorsPropertyKey, value); }
         }
 

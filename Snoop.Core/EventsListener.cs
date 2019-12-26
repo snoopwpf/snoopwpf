@@ -12,28 +12,28 @@ namespace Snoop
     using System.Windows;
     using System.Windows.Media;
 
-	/// <summary>
-	/// Class that shows all the routed events occurring on a visual.
-	/// VERY dangerous (cannot unregister for the events) and doesn't work all that great.
-	/// Stay far away from this code :)
-	/// </summary>
-	public class EventsListener
-	{
+    /// <summary>
+    /// Class that shows all the routed events occurring on a visual.
+    /// VERY dangerous (cannot unregister for the events) and doesn't work all that great.
+    /// Stay far away from this code :)
+    /// </summary>
+    public class EventsListener
+    {
         private static EventsListener current;
         private readonly Visual visual;
 
         private static readonly Dictionary<Type, Type> registeredTypes = new Dictionary<Type, Type>();
 
-		public EventsListener(Visual visual)
-		{
-			current = this;
-			this.visual = visual;
+        public EventsListener(Visual visual)
+        {
+            current = this;
+            this.visual = visual;
 
-			var type = visual.GetType();
+            var type = visual.GetType();
 
-			// Cannot unregister for events once we've registered, so keep the registration simple and only do it once.
-			for (var baseType = type; baseType != null; baseType = baseType.BaseType)
-			{
+            // Cannot unregister for events once we've registered, so keep the registration simple and only do it once.
+            for (var baseType = type; baseType != null; baseType = baseType.BaseType)
+            {
                 if (registeredTypes.ContainsKey(baseType))
                 {
                     continue;
@@ -50,26 +50,26 @@ namespace Snoop
                     }
                 }
             }
-		}
+        }
 
-		public ObservableCollection<EventInformation> Events { get; } = new ObservableCollection<EventInformation>();
+        public ObservableCollection<EventInformation> Events { get; } = new ObservableCollection<EventInformation>();
 
         public static string Filter { get; set; }
 
         public static void Stop()
-		{
-			current = null;
-		}
-
-		private static void HandleEvent(object sender, RoutedEventArgs e)
         {
-            if (current == null 
+            current = null;
+        }
+
+        private static void HandleEvent(object sender, RoutedEventArgs e)
+        {
+            if (current == null
                 || ReferenceEquals(sender, current.visual) == false)
             {
                 return;
             }
 
-            if (string.IsNullOrEmpty(Filter) 
+            if (string.IsNullOrEmpty(Filter)
                 || e.RoutedEvent.Name.ContainsIgnoreCase(Filter))
             {
                 current.Events.Add(new EventInformation(e));
@@ -82,20 +82,20 @@ namespace Snoop
         }
     }
 
-	public class EventInformation
-	{
-		public EventInformation(RoutedEventArgs evt)
-		{
-			this.evt = evt;
-		}
+    public class EventInformation
+    {
+        public EventInformation(RoutedEventArgs evt)
+        {
+            this.evt = evt;
+        }
 
-		public IEnumerable Properties => PropertyInformation.GetProperties(this.evt);
+        public IEnumerable Properties => PropertyInformation.GetProperties(this.evt);
 
         public override string ToString()
-		{
-			return $"{this.evt.RoutedEvent.Name} Handled: {this.evt.Handled} OriginalSource: {this.evt.OriginalSource}";
-		}
+        {
+            return $"{this.evt.RoutedEvent.Name} Handled: {this.evt.Handled} OriginalSource: {this.evt.OriginalSource}";
+        }
 
-		private readonly RoutedEventArgs evt;
-	}
+        private readonly RoutedEventArgs evt;
+    }
 }

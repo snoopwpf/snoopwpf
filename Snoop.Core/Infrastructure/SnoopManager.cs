@@ -20,7 +20,7 @@
             try
             {
                 return new SnoopManager().StartSnoopInstance(settingsFile)
-                    ? 0 
+                    ? 0
                     : 2;
             }
             catch (Exception exception)
@@ -66,19 +66,19 @@
                                                      || settingsData.MultipleAppDomainMode == MultipleAppDomainMode.AlwaysUse;
                 if (settingsData.MultipleAppDomainMode == MultipleAppDomainMode.Ask)
                 {
-				    var result =
-					    MessageBox.Show
-					    (
-						    "Snoop has noticed multiple app domains.\n\n" +
-						    "Would you like to enter multiple app domain mode, and have a separate Snoop window for each app domain?\n\n" +
-						    "Without having a separate Snoop window for each app domain, you will not be able to Snoop the windows in the app domains outside of the main app domain. ",
-						    "Enter Multiple AppDomain Mode",
-						    MessageBoxButton.YesNo,
-						    MessageBoxImage.Question
-					    );
+                    var result =
+                        MessageBox.Show
+                        (
+                            "Snoop has noticed multiple app domains.\n\n" +
+                            "Would you like to enter multiple app domain mode, and have a separate Snoop window for each app domain?\n\n" +
+                            "Without having a separate Snoop window for each app domain, you will not be able to Snoop the windows in the app domains outside of the main app domain. ",
+                            "Enter Multiple AppDomain Mode",
+                            MessageBoxButton.YesNo,
+                            MessageBoxImage.Question
+                        );
 
-				    if (result != MessageBoxResult.Yes)
-				    {
+                    if (result != MessageBoxResult.Yes)
+                    {
                         shouldUseMultipleAppDomainMode = false;
                     }
                 }
@@ -205,7 +205,7 @@
                 return targetWindow.Title;
             }
 
-            if (Application.Current != null 
+            if (Application.Current != null
                 && Application.Current.MainWindow != null)
             {
                 return Application.Current.MainWindow.Title;

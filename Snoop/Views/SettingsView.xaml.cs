@@ -1,6 +1,5 @@
 ﻿namespace Snoop.Views
 {
-    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
@@ -22,7 +21,7 @@
         public SettingsView()
         {
             this.InitializeComponent();
-            
+
             this.Properties = new ObservableCollection<PropertyInformation>(TypeDescriptor.GetProperties(Settings.Default)
                                                                                           .OfType<PropertyDescriptor>()
                                                                                           .Where(x => realSettingsProperties.Contains(x.Name))

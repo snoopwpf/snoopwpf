@@ -17,7 +17,7 @@ namespace Snoop.PowerShell
 
     public partial class EmbeddedShellView
     {
-        public event Action<VisualTreeItem> ProviderLocationChanged = delegate { }; 
+        public event Action<VisualTreeItem> ProviderLocationChanged = delegate { };
 
         private Runspace runspace;
         private SnoopPSHost host;
@@ -83,9 +83,9 @@ namespace Snoop.PowerShell
                 this.runspace = RunspaceFactory.CreateRunspace(this.host, iis);
                 this.runspace.ThreadOptions = PSThreadOptions.UseCurrentThread;
 
-                #if NET40
+#if NET40
                 this.runspace.ApartmentState = System.Threading.ApartmentState.STA;
-                #endif
+#endif
 
                 this.runspace.Open();
             }
@@ -135,7 +135,7 @@ namespace Snoop.PowerShell
             this.ProviderLocationChanged -= this.OnProviderLocationChanged;
 
             this.host = null;
-            
+
             this.runspace?.Dispose();
             this.runspace = null;
 
@@ -254,6 +254,7 @@ namespace Snoop.PowerShell
                     {
                         this.SetCommandTextToHistory(--this.historyIndex);
                     }
+
                     break;
                 case Key.Return:
                     // Only append text if there was a command
@@ -349,6 +350,7 @@ namespace Snoop.PowerShell
                     var item = results[0];
                     return (string)item.Properties["CommandLine"].Value;
                 }
+
                 return null;
             }
         }

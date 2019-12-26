@@ -22,7 +22,7 @@ namespace Snoop.ValueEditors
 
             this.MouseWheel += this.MouseWheelHandler;
         }
-        
+
         private PropertyInformation PropertyInfo => this.DataContext as PropertyInformation;
 
         private void MouseWheelHandler(object sender, MouseWheelEventArgs e)

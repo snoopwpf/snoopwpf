@@ -5,8 +5,8 @@
 
 namespace Snoop.Infrastructure
 {
-	public static class SnoopModes
-	{
+    public static class SnoopModes
+    {
         /// <summary>
         /// Whether Snoop is Snooping in a situation where there are multiple app domains.
         /// The main Snoop UI is needed for each app domain.
@@ -22,5 +22,5 @@ namespace Snoop.Infrastructure
         public static bool SwallowExceptions { get; set; }
 
         public static bool IgnoreExceptions { get; set; }
-	}
+    }
 }

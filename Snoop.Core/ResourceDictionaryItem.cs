@@ -13,7 +13,8 @@ namespace Snoop
     {
         private readonly ResourceDictionary dictionary;
 
-        public ResourceDictionaryItem(ResourceDictionary dictionary, VisualTreeItem parent) : base(dictionary, parent)
+        public ResourceDictionaryItem(ResourceDictionary dictionary, VisualTreeItem parent)
+            : base(dictionary, parent)
         {
             this.dictionary = dictionary;
         }

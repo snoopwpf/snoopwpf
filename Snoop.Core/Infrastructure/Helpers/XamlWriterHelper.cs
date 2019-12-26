@@ -7,7 +7,6 @@
     using System.Text;
     using System.Windows;
     using System.Windows.Data;
-    using System.Windows.Documents;
     using System.Windows.Markup;
     using System.Xml;
     using System.Xml.Linq;
@@ -25,7 +24,7 @@
         {
             var writerSettings = new XmlWriterSettings
             {
-                Indent = true, 
+                Indent = true,
                 OmitXmlDeclaration = true,
                 NamespaceHandling = NamespaceHandling.OmitDuplicates,
                 Encoding = Encoding.UTF8
@@ -39,9 +38,9 @@
 
             using (new XamlSerializationHelper().ApplyHelpers())
             {
-                XamlWriter.Save(obj, xamlDesignerSerializationManager);    
+                XamlWriter.Save(obj, xamlDesignerSerializationManager);
             }
-            
+
             return xamlString.ToString();
         }
 

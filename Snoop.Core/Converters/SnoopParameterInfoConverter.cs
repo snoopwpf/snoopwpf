@@ -3,20 +3,16 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Data;
-using Snoop;
-using System.ComponentModel;
-using System.Windows;
-using System.Reflection;
-
-using Snoop.MethodsTab;
-
 namespace Snoop.Converters
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Reflection;
+    using System.Windows;
+    using System.Windows.Data;
+    using Snoop.MethodsTab;
+
     public class SnoopParameterInfoConverter : IValueConverter
     {
         public static readonly SnoopParameterInfoConverter Default = new SnoopParameterInfoConverter();

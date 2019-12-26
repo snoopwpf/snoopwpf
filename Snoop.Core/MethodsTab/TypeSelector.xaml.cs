@@ -3,21 +3,18 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Controls;
-
 namespace Snoop.MethodsTab
 {
+    using System;
+    using System.Collections.Generic;
+
     public partial class TypeSelector : ITypeSelector
     {
         public TypeSelector()
         {
             InitializeComponent();
 
-            this.Loaded += new System.Windows.RoutedEventHandler(TypeSelector_Loaded);            
+            this.Loaded += new System.Windows.RoutedEventHandler(TypeSelector_Loaded);
         }
 
         //TODO: MOVE SOMEWHERE ELSE. MACIEK

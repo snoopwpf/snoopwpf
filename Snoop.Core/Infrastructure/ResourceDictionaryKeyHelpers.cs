@@ -3,77 +3,77 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-using System.Windows;
-using System.Windows.Media;
-
 namespace Snoop.Infrastructure
 {
-	public static class ResourceDictionaryKeyHelpers
-	{
-		public static string GetKeyOfResourceItem(DependencyObject dependencyObject, object resourceItem)
-		{
-			if (dependencyObject is null
-			    || resourceItem is null)
-			{
-				return string.Empty;
-			}
+    using System.Windows;
+    using System.Windows.Media;
 
-		    // Walk up the visual tree, looking for the resourceItem in each frameworkElement's resource dictionary.
-		    while (dependencyObject != null)
-		    {
-		        FrameworkElement frameworkElement = dependencyObject as FrameworkElement;
-		        if (frameworkElement != null)
-		        {
-		            string resourceKey = GetKeyInResourceDictionary(frameworkElement.Resources, resourceItem);
-		            if (resourceKey != null)
-		            {
-		                return resourceKey;
-		            }
-		        }
-		        else
-		        {
-		            break;
-		        }
+    public static class ResourceDictionaryKeyHelpers
+    {
+        public static string GetKeyOfResourceItem(DependencyObject dependencyObject, object resourceItem)
+        {
+            if (dependencyObject is null
+                || resourceItem is null)
+            {
+                return string.Empty;
+            }
 
-		        dependencyObject = VisualTreeHelper.GetParent(dependencyObject);
-		    }
+            // Walk up the visual tree, looking for the resourceItem in each frameworkElement's resource dictionary.
+            while (dependencyObject != null)
+            {
+                FrameworkElement frameworkElement = dependencyObject as FrameworkElement;
+                if (frameworkElement != null)
+                {
+                    string resourceKey = GetKeyInResourceDictionary(frameworkElement.Resources, resourceItem);
+                    if (resourceKey != null)
+                    {
+                        return resourceKey;
+                    }
+                }
+                else
+                {
+                    break;
+                }
 
-		    // check the application resources
-		    if (Application.Current != null)
-		    {
-		        string resourceKey = GetKeyInResourceDictionary(Application.Current.Resources, resourceItem);
-		        if (resourceKey != null)
+                dependencyObject = VisualTreeHelper.GetParent(dependencyObject);
+            }
+
+            // check the application resources
+            if (Application.Current != null)
+            {
+                string resourceKey = GetKeyInResourceDictionary(Application.Current.Resources, resourceItem);
+                if (resourceKey != null)
                 {
                     return resourceKey;
                 }
             }
 
-		    return string.Empty;
-		}
+            return string.Empty;
+        }
 
-		public static string GetKeyInResourceDictionary(ResourceDictionary dictionary, object resourceItem)
-		{
-			foreach (object key in dictionary.Keys)
-			{
-				if (dictionary[key] == resourceItem)
-				{
-					return key.ToString();
-				}
-			}
+        public static string GetKeyInResourceDictionary(ResourceDictionary dictionary, object resourceItem)
+        {
+            foreach (object key in dictionary.Keys)
+            {
+                if (dictionary[key] == resourceItem)
+                {
+                    return key.ToString();
+                }
+            }
 
-			if (dictionary.MergedDictionaries != null)
-			{
-				foreach (var dic in dictionary.MergedDictionaries)
-				{
-					string name = GetKeyInResourceDictionary(dic, resourceItem);
-					if (!string.IsNullOrEmpty(name))
-					{
-						return name;
-					}
-				}
-			}
+            if (dictionary.MergedDictionaries != null)
+            {
+                foreach (var dic in dictionary.MergedDictionaries)
+                {
+                    string name = GetKeyInResourceDictionary(dic, resourceItem);
+                    if (!string.IsNullOrEmpty(name))
+                    {
+                        return name;
+                    }
+                }
+            }
 
-			return null;
-		}
-	}
+            return null;
+        }
+    }
 }

@@ -192,9 +192,9 @@ namespace Snoop
                 control.InvalidateMeasure();
                 control.InvalidateArrange();
                 control.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-                
+
                 var rect = new Rect(0, 0, control.DesiredSize.Width, control.DesiredSize.Height);
-                
+
                 control.Arrange(rect);
                 control.UpdateLayout();
 

@@ -99,11 +99,11 @@ namespace Snoop.InjectorLauncher
                 }
 
                 var remoteThread = NativeMethods.CreateRemoteThread(processWrapper.Handle,
-                                                                    IntPtr.Zero, 
-                                                                    0, 
-                                                                    procAddress, 
-                                                                    remoteAddress, 
-                                                                    0, 
+                                                                    IntPtr.Zero,
+                                                                    0,
+                                                                    procAddress,
+                                                                    remoteAddress,
+                                                                    0,
                                                                     out _);
 
                 if (remoteThread != IntPtr.Zero)
@@ -172,7 +172,7 @@ namespace Snoop.InjectorLauncher
                                  injectorData.SettingsFile
                              };
 
-            var stringForRemoteProcess =  string.Join("<|>", parameters);
+            var stringForRemoteProcess = string.Join("<|>", parameters);
 
             var bufLen = (stringForRemoteProcess.Length + 1) * Marshal.SizeOf(typeof(char));
 

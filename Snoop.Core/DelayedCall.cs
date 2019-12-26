@@ -3,30 +3,30 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-using System.Windows;
-using System.Windows.Threading;
-using Snoop.Infrastructure;
-
 namespace Snoop
 {
-	public delegate void DelayedHandler();
+    using System.Windows;
+    using System.Windows.Threading;
+    using Snoop.Infrastructure;
 
-	public class DelayedCall
-	{
-		public DelayedCall(DelayedHandler handler, DispatcherPriority priority)
-		{
-			this.handler = handler;
-			this.priority = priority;
-		}
+    public delegate void DelayedHandler();
 
-		public void Enqueue()
-		{
-			if (!this.queued)
-			{
-				this.queued = true;
+    public class DelayedCall
+    {
+        public DelayedCall(DelayedHandler handler, DispatcherPriority priority)
+        {
+            this.handler = handler;
+            this.priority = priority;
+        }
 
-				Dispatcher dispatcher = null;
-				if (Application.Current == null || SnoopModes.MultipleDispatcherMode)
+        public void Enqueue()
+        {
+            if (!this.queued)
+            {
+                this.queued = true;
+
+                Dispatcher dispatcher = null;
+                if (Application.Current == null || SnoopModes.MultipleDispatcherMode)
                 {
                     dispatcher = Dispatcher.CurrentDispatcher;
                 }
@@ -36,22 +36,22 @@ namespace Snoop
                 }
 
                 dispatcher.BeginInvoke(this.priority, new DispatcherOperationCallback(this.Process), null);
-			}
-		}
+            }
+        }
 
 
-		private object Process(object arg)
-		{
-			this.queued = false;
+        private object Process(object arg)
+        {
+            this.queued = false;
 
-			this.handler();
+            this.handler();
 
-			return null;
-		}
+            return null;
+        }
 
-		private DelayedHandler handler;
-		private DispatcherPriority priority;
+        private DelayedHandler handler;
+        private DispatcherPriority priority;
 
-		private bool queued;
-	}
+        private bool queued;
+    }
 }

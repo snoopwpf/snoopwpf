@@ -6,13 +6,12 @@
 namespace Snoop
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Runtime.Serialization;
-    using System.Windows;
     using System.Text.RegularExpressions;
+    using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Documents;
     using System.Windows.Input;
@@ -22,80 +21,82 @@ namespace Snoop
     using Snoop.Infrastructure;
 
     public class PropertyFilter
-	{
-		private string filterString;
+    {
+        private string filterString;
         private bool hasFilterString;
-		private Regex filterRegex;
+        private Regex filterRegex;
 
         public PropertyFilter(string filterString, bool showDefaults)
-		{
-			this.FilterString = filterString;
-			this.ShowDefaults = showDefaults;
-		}
+        {
+            this.FilterString = filterString;
+            this.ShowDefaults = showDefaults;
+        }
 
-		public string FilterString
-		{
-			get => this.filterString;
+        public string FilterString
+        {
+            get => this.filterString;
             set
-			{
-				this.filterString = value;
+            {
+                this.filterString = value;
                 this.hasFilterString = string.IsNullOrEmpty(this.filterString) == false;
 
-				try
-				{
-					this.filterRegex = new Regex(this.filterString, RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
-				}
-				catch
-				{
-					this.filterRegex = null;
-				}
-			}
-		}
+                try
+                {
+                    this.filterRegex = new Regex(this.filterString, RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
+                }
+                catch
+                {
+                    this.filterRegex = null;
+                }
+            }
+        }
 
-		public bool ShowDefaults { get; set; }
+        public bool ShowDefaults { get; set; }
 
         public bool ShowPropertiesFromUncommonTypes { get; set; }
 
         public PropertyFilterSet SelectedFilterSet { get; set; }
 
-		public bool IsPropertyFilterSet => this.SelectedFilterSet?.Properties != null;
+        public bool IsPropertyFilterSet => this.SelectedFilterSet?.Properties != null;
 
         public bool Show(PropertyInformation property)
-		{
+        {
             if (this.ShowPropertiesFromUncommonTypes == false
                 && IsUncommonProperty(property))
             {
                 return false;
             }
 
-			// use a regular expression if we have one and we also have a filter string.
-			if (this.hasFilterString
+            // use a regular expression if we have one and we also have a filter string.
+            if (this.hasFilterString
                 && this.filterRegex != null)
-			{
-				return this.filterRegex.IsMatch(property.DisplayName) 
-                       || (property.Property != null 
+            {
+                return this.filterRegex.IsMatch(property.DisplayName)
+                       || (property.Property != null
                             && this.filterRegex.IsMatch(property.Property.PropertyType.Name));
-			}
-			// else just check for containment if we don't have a regular expression but we do have a filter string.
-			else if (this.hasFilterString)
-			{
-				if (property.DisplayName.ContainsIgnoreCase(this.FilterString))
+            }
+
+            // else just check for containment if we don't have a regular expression but we do have a filter string.
+            else if (this.hasFilterString)
+            {
+                if (property.DisplayName.ContainsIgnoreCase(this.FilterString))
                 {
                     return true;
                 }
 
-                if (property.Property != null 
+                if (property.Property != null
                     && property.Property.PropertyType.Name.ContainsIgnoreCase(this.FilterString))
                 {
                     return true;
                 }
 
                 return false;
-			}
-			// else use the filter set if we have one of those.
-			else if (this.IsPropertyFilterSet)
-			{
-				if (this.SelectedFilterSet.IsPropertyInFilter(property.DisplayName))
+            }
+
+            // else use the filter set if we have one of those.
+            else if (this.IsPropertyFilterSet)
+            {
+                if (this.SelectedFilterSet.IsPropertyInFilter(property.DisplayName))
                 {
                     return true;
                 }
@@ -104,12 +105,13 @@ namespace Snoop
                     return false;
                 }
             }
-			// finally, if none of the above applies
-			// just check to see if we're not showing properties at their default values
-			// and this property is actually set to its default value
-			else
-			{
-				if (this.ShowDefaults == false 
+
+            // finally, if none of the above applies
+            // just check to see if we're not showing properties at their default values
+            // and this property is actually set to its default value
+            else
+            {
+                if (this.ShowDefaults == false
                     && property.ValueSource.BaseValueSource == BaseValueSource.Default)
                 {
                     return false;
@@ -119,7 +121,7 @@ namespace Snoop
                     return true;
                 }
             }
-		}
+        }
 
         private static bool IsUncommonProperty(PropertyInformation property)
         {
@@ -167,33 +169,33 @@ namespace Snoop
         };
     }
 
-	[DebuggerDisplay("{" + nameof(PropertyFilterSet.DisplayName) + "}")]
-	[Serializable]
-	public class PropertyFilterSet
-	{
+    [DebuggerDisplay("{" + nameof(PropertyFilterSet.DisplayName) + "}")]
+    [Serializable]
+    public class PropertyFilterSet
+    {
         public string DisplayName { get; set; }
 
         public bool IsDefault { get; set; }
 
         public bool IsEditCommand { get; set; }
 
-		[IgnoreDataMember]
+        [IgnoreDataMember]
         public bool IsReadOnly { get; set; }
 
         public string[] Properties { get; set; }
 
-		public bool IsPropertyInFilter(string property)
-		{
-			foreach (var filterProp in this.Properties)
-			{
-				if (property.StartsWith(filterProp, StringComparison.OrdinalIgnoreCase))
-				{
-					return true;
-				}
-			}
+        public bool IsPropertyInFilter(string property)
+        {
+            foreach (var filterProp in this.Properties)
+            {
+                if (property.StartsWith(filterProp, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
 
-			return false;
-		}
+            return false;
+        }
 
         public PropertyFilterSet Clone()
         {
@@ -203,7 +205,7 @@ namespace Snoop
                 DisplayName = src.DisplayName,
                 IsDefault = src.IsDefault,
                 IsEditCommand = src.IsEditCommand,
-				IsReadOnly = src.IsReadOnly,
+                IsReadOnly = src.IsReadOnly,
                 Properties = (string[])src.Properties.Clone()
             };
         }

@@ -3,16 +3,16 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-using System;
-using System.Globalization;
-using System.Windows;
-using System.Windows.Data;
-using System.Windows.Input;
-
 namespace Snoop
 {
-	public class ObjectToStringConverter : IValueConverter
-	{
+    using System;
+    using System.Globalization;
+    using System.Windows;
+    using System.Windows.Data;
+    using System.Windows.Input;
+
+    public class ObjectToStringConverter : IValueConverter
+    {
         public static readonly ObjectToStringConverter Instance = new ObjectToStringConverter();
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -20,10 +20,10 @@ namespace Snoop
             return this.Convert(value);
         }
 
-		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-		{
-			throw new Exception("The method or operation is not implemented.");
-		}
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
 
         public string Convert(object value)
         {

@@ -32,7 +32,7 @@
         private readonly List<SetterItem> setters = new List<SetterItem>();
         private readonly List<TriggerActionItem> enterActions = new List<TriggerActionItem>();
         private readonly List<TriggerActionItem> exitActions = new List<TriggerActionItem>();
-        private bool isActive;        
+        private bool isActive;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="TriggerItemBase" /> class.
@@ -81,6 +81,7 @@
         public bool IsActive
         {
             get { return this.isActive; }
+
             set
             {
                 this.isActive = value;
@@ -153,7 +154,7 @@
             return this.trigger.EnterActions.Select(x => TriggerActionItemFactory.GetTriggerActionItem(x, this.Instance, this.TriggerSource));
         }
 
-        protected virtual  IEnumerable<TriggerActionItem> GetExitActions()
+        protected virtual IEnumerable<TriggerActionItem> GetExitActions()
         {
             return this.trigger.ExitActions.Select(x => TriggerActionItemFactory.GetTriggerActionItem(x, this.Instance, this.TriggerSource));
         }

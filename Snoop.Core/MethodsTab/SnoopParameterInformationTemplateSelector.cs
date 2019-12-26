@@ -3,15 +3,11 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Controls;
-using System.Windows;
-
 namespace Snoop.MethodsTab
 {
+    using System.Windows;
+    using System.Windows.Controls;
+
     public class SnoopParameterInformationTemplateSelector : DataTemplateSelector
     {
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
@@ -28,10 +24,12 @@ namespace Snoop.MethodsTab
             {
                 return element.FindResource("EnumParameterTemplate") as DataTemplate;
             }
+
             if (snoopParameterInfo.ParameterType.Equals(typeof(DependencyProperty)))
             {
                 return element.FindResource("DependencyPropertyTemplate") as DataTemplate;
             }
+
             if (snoopParameterInfo.IsCustom)
             {
                 return element.FindResource("UnknownParameterTemplate") as DataTemplate;

@@ -3,14 +3,12 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection;
-
 namespace Snoop.MethodsTab
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Reflection;
+
     public class SnoopMethodInformation : IComparable, IEquatable<SnoopMethodInformation>
     {
         private MethodInfo _methodInfo;
@@ -99,7 +97,7 @@ namespace Snoop.MethodsTab
             for (int i = 0; i < thisParameterInfos.Length; i++)
             {
                 var thisParameterInfo = thisParameterInfos[i];
-                var otherParameterInfo = otherParameterInfos[i];             
+                var otherParameterInfo = otherParameterInfos[i];
 
                 //if (!thisParameterInfo.Equals(otherParameterInfo))
                 if (!ParameterInfosEqual(thisParameterInfo, otherParameterInfo))

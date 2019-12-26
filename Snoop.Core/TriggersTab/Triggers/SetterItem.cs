@@ -77,27 +77,27 @@
                 this.attachedPropertySlot = AttachedPropertyManager.GetAndBindAttachedPropertySlot((DependencyObject)target, (BindingBase)setter.Value);
 
                 var binding = new Binding
-                              {
-                                  Path = new PropertyPath("(0)", this.attachedPropertySlot.DependencyProperty),
-                                  Source = target,
-                                  Mode = BindingMode.OneWay
-                              };
+                {
+                    Path = new PropertyPath("(0)", this.attachedPropertySlot.DependencyProperty),
+                    Source = target,
+                    Mode = BindingMode.OneWay
+                };
 
                 return binding;
             }
             else
             {
                 var binding = new Binding(nameof(System.Windows.Setter.Value))
-                              {
-                                  Source = setter,
-                                  Mode = property.IsReadOnly
+                {
+                    Source = setter,
+                    Mode = property.IsReadOnly
                                              ? BindingMode.OneWay
                                              : BindingMode.TwoWay,
-                                  Converter = new DynamicResourceToValueConverter(target)
-                              };
+                    Converter = new DynamicResourceToValueConverter(target)
+                };
 
                 return binding;
-            }            
+            }
         }
 
         /// <inheritdoc />

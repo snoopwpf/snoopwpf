@@ -1,12 +1,8 @@
 namespace Snoop.Data
 {
-    using System;
     using System.Diagnostics;
     using System.IO;
-    using System.Windows;
-    using System.Windows.Interop;
     using System.Xml.Serialization;
-    using Snoop.Infrastructure.Helpers;
 
     public sealed class TransientSettingsData
     {

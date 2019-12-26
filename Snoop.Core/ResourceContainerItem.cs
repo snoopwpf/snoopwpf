@@ -10,7 +10,7 @@ namespace Snoop
 
     public abstract class ResourceContainerItem : VisualTreeItem
     {
-        protected ResourceContainerItem(object target, VisualTreeItem parent) 
+        protected ResourceContainerItem(object target, VisualTreeItem parent)
             : base(target, parent)
         {
         }

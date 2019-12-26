@@ -20,7 +20,7 @@ namespace Snoop
             }
 
             var attachedPropertyForChildren = (AttachedPropertyBrowsableForChildrenAttribute)property.Attributes[typeof(AttachedPropertyBrowsableForChildrenAttribute)];
-            
+
             if (attachedPropertyForChildren != null)
             {
                 var dpd = DependencyPropertyDescriptor.FromProperty(property);

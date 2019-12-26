@@ -3,26 +3,14 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-
 namespace Snoop.MethodsTab
 {
+    using System.Windows;
+
     /// <summary>
     /// Interaction logic for ParameterCreator.xaml
     /// </summary>
-    public partial class ParameterCreator 
+    public partial class ParameterCreator
     {
         public ParameterCreator()
         {
@@ -48,10 +36,10 @@ namespace Snoop.MethodsTab
         }
 
         private void OKClick(object sender, RoutedEventArgs e)
-        {            
+        {
             this.DialogResult = true;
             this.SelectedTarget = this.propertyInspector.Target;
-            this.Close();            
+            this.Close();
         }
 
 

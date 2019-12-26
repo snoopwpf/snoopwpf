@@ -13,10 +13,8 @@ namespace Snoop
     using System.Text;
     using System.Windows;
     using System.Windows.Input;
-    using System.Windows.Markup;
-    using System.Windows.Media;
-    using Snoop.Infrastructure;
     using JetBrains.Annotations;
+    using Snoop.Infrastructure;
     using Snoop.Infrastructure.Helpers;
 
     public partial class PropertyInspector : INotifyPropertyChanged
@@ -66,11 +64,13 @@ namespace Snoop
             {
                 return this.nameValueOnly;
             }
+
             set
             {
                 this.PropertyGrid.NameValueOnly = value;
             }
         }
+
         private readonly bool nameValueOnly = false;
 
         private void HandleCopyResourceName(object sender, ExecutedRoutedEventArgs e)
@@ -175,9 +175,9 @@ namespace Snoop
                 inspector.inspectStack.Add(newValue);
             }
 
-            if (ReferenceEquals(inspector.lastRootTarget, inspector.RootTarget) 
-                && oldValue != null 
-                && newValue != null 
+            if (ReferenceEquals(inspector.lastRootTarget, inspector.RootTarget)
+                && oldValue != null
+                && newValue != null
                 && inspector.checkBoxClearAfterDelve.IsChecked.GetValueOrDefault(false))
             {
                 inspector.targetToFilter[oldValue.GetType()] = inspector.PropertiesFilter.Text;
@@ -315,6 +315,7 @@ namespace Snoop
                 }
             }
         }
+
         private void CanPopTarget(object sender, CanExecuteRoutedEventArgs e)
         {
             if (this.inspectStack.Count > 1)
@@ -331,6 +332,7 @@ namespace Snoop
             {
                 return skipDelve.NextValue;
             }
+
             return target;
         }
 
@@ -440,11 +442,13 @@ namespace Snoop
         {
             get { return this.propertyFilter; }
         }
+
         private readonly PropertyFilter propertyFilter = new PropertyFilter(string.Empty, true);
 
         public string StringFilter
         {
             get { return this.propertyFilter.FilterString; }
+
             set
             {
                 this.propertyFilter.FilterString = value;
@@ -458,6 +462,7 @@ namespace Snoop
         public bool ShowDefaults
         {
             get { return this.propertyFilter.ShowDefaults; }
+
             set
             {
                 this.propertyFilter.ShowDefaults = value;
@@ -471,6 +476,7 @@ namespace Snoop
         public bool ShowPropertiesFromUncommonTypes
         {
             get { return this.propertyFilter.ShowPropertiesFromUncommonTypes; }
+
             set
             {
                 this.propertyFilter.ShowPropertiesFromUncommonTypes = value;
@@ -492,6 +498,7 @@ namespace Snoop
                 this.PopTarget();
             }
         }
+
         private void PropertyInspector_KeyDown(object sender, KeyEventArgs e)
         {
             if (Keyboard.Modifiers == ModifierKeys.Alt && e.SystemKey == Key.Left)
@@ -507,6 +514,7 @@ namespace Snoop
         public PropertyFilterSet SelectedFilterSet
         {
             get { return this.propertyFilter.SelectedFilterSet ?? this.AllFilterSets[0]; }
+
             set
             {
                 this.propertyFilter.SelectedFilterSet = value;
@@ -576,6 +584,7 @@ namespace Snoop
 
                     this.userFilterSets = ret.ToArray();
                 }
+
                 return this.userFilterSets;
             }
 
@@ -649,6 +658,7 @@ namespace Snoop
             {
                 filterItem.Properties = filterItem.Properties.Select(s => s.ToLower().Trim()).ToArray();
             }
+
             return collection.Where(x => x.IsReadOnly == false).ToArray();
         }
 
@@ -662,7 +672,7 @@ namespace Snoop
 
         private PropertyFilterSet[] allFilterSets;
 
-        private readonly PropertyFilterSet[] defaultFilterSets = 
+        private readonly PropertyFilterSet[] defaultFilterSets =
         {
             new PropertyFilterSet
             {
@@ -670,9 +680,9 @@ namespace Snoop
                 IsReadOnly = true,
                 Properties = new[]
                 {
-                    "width", "height", "actualwidth", "actualheight", 
+                    "width", "height", "actualwidth", "actualheight",
                     "desiredsize",
-                    "margin", "padding", 
+                    "margin", "padding",
                     "left", "top",
                     "horizontalalignment", "verticalalignment",
                     "horizontalcontentalignment", "verticalcontentalignment",

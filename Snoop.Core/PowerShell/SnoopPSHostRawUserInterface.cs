@@ -54,11 +54,17 @@ namespace Snoop.PowerShell
         }
 
         public override ConsoleColor ForegroundColor { get; set; }
+
         public override ConsoleColor BackgroundColor { get; set; }
+
         public override Coordinates CursorPosition { get; set; }
+
         public override Coordinates WindowPosition { get; set; }
+
         public override int CursorSize { get; set; }
+
         public override Size BufferSize { get; set; }
+
         public override Size WindowSize { get; set; }
 
         public override Size MaxWindowSize

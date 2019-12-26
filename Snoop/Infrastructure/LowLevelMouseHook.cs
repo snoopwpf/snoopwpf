@@ -79,7 +79,7 @@
             }
 
             var xx = (MSLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(MSLLHOOKSTRUCT));
-            
+
             this.LowLevelMouseMove?.Invoke(this, new LowLevelMouseMoveEventArgs(xx.pt));
 
             return CallNextHookEx(this.hookID, nCode, wParam, lParam);

@@ -1,87 +1,85 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-
-namespace Snoop.DebugListenerTab
+﻿namespace Snoop.DebugListenerTab
 {
-	[Serializable]
-	public class SnoopSingleFilter : SnoopFilter, ICloneable
-	{
-		private string _text;
+    using System;
+    using System.Text.RegularExpressions;
 
-		public SnoopSingleFilter()
-		{
-			this.Text = string.Empty;
-		}
+    [Serializable]
+    public class SnoopSingleFilter : SnoopFilter, ICloneable
+    {
+        private string _text;
 
-		public FilterType FilterType { get; set; }
+        public SnoopSingleFilter()
+        {
+            this.Text = string.Empty;
+        }
+
+        public FilterType FilterType { get; set; }
 
 
-		public string Text
-		{
-			get
-			{
-				return _text;
-			}
-			set
-			{
-				_text = value;
-				this.RaisePropertyChanged("Text");
-			}
-		}
+        public string Text
+        {
+            get
+            {
+                return _text;
+            }
 
-		public override bool FilterMatches(string debugLine)
-		{
-			debugLine = debugLine.ToLower();
-			var text = Text.ToLower();
-			bool filterMatches = false;
-			switch (FilterType)
-			{
-				case FilterType.Contains:
-					filterMatches = debugLine.Contains(text);
-					break;
-				case FilterType.StartsWith:
-					filterMatches = debugLine.StartsWith(text);
-					break;
-				case FilterType.EndsWith:
-					filterMatches = debugLine.EndsWith(text);
-					break;
-				case FilterType.RegularExpression:
-					filterMatches = TryMatch(debugLine, text);
-					break;
-			}
+            set
+            {
+                _text = value;
+                this.RaisePropertyChanged("Text");
+            }
+        }
 
-			if (IsInverse)
-			{
-				filterMatches = !filterMatches;
-			}
+        public override bool FilterMatches(string debugLine)
+        {
+            debugLine = debugLine.ToLower();
+            var text = Text.ToLower();
+            bool filterMatches = false;
+            switch (FilterType)
+            {
+                case FilterType.Contains:
+                    filterMatches = debugLine.Contains(text);
+                    break;
+                case FilterType.StartsWith:
+                    filterMatches = debugLine.StartsWith(text);
+                    break;
+                case FilterType.EndsWith:
+                    filterMatches = debugLine.EndsWith(text);
+                    break;
+                case FilterType.RegularExpression:
+                    filterMatches = TryMatch(debugLine, text);
+                    break;
+            }
 
-			return filterMatches;
-		}
+            if (IsInverse)
+            {
+                filterMatches = !filterMatches;
+            }
 
-		private static bool TryMatch(string input, string pattern)
-		{
-			try
-			{
-				return Regex.IsMatch(input, pattern);
-			}
-			catch (Exception)
-			{
-				return false;
-			}
-		}
+            return filterMatches;
+        }
 
-		public object Clone()
-		{
-			SnoopSingleFilter newFilter = new SnoopSingleFilter();
-			newFilter._groupId = this._groupId;
-			newFilter._isGrouped = this._isGrouped;
-			newFilter._text = this._text;
-			newFilter.FilterType = this.FilterType;
-			newFilter._isInverse = this._isInverse;
-			return newFilter;
-		}
-	}
+        private static bool TryMatch(string input, string pattern)
+        {
+            try
+            {
+                return Regex.IsMatch(input, pattern);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public object Clone()
+        {
+            SnoopSingleFilter newFilter = new SnoopSingleFilter();
+            newFilter._groupId = this._groupId;
+            newFilter._isGrouped = this._isGrouped;
+            newFilter._text = this._text;
+            newFilter.FilterType = this.FilterType;
+            newFilter._isInverse = this._isInverse;
+            return newFilter;
+        }
+    }
 }

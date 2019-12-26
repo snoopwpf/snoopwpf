@@ -8,9 +8,9 @@
     [ComImport]
     [Guid("CB2F6723-AB3A-11D2-9C40-00C04FA30A3E")]
     [TypeLibType(2)]
-    #pragma warning disable CS0618
+#pragma warning disable CS0618
     [ClassInterface(ClassInterfaceType.AutoDual)]
-    #pragma warning restore CS0618
+#pragma warning restore CS0618
     public class CorRuntimeHostClass : ICorRuntimeHost, CorRuntimeHost, IGCHost, ICorConfiguration, IValidator, IDebuggerInfo
     {
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -75,7 +75,7 @@
         public virtual extern void CurrentDomain([MarshalAs(UnmanagedType.IUnknown)] out object pAppDomain);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public virtual extern void SetGCStartupLimits([In] uint SegmentSize, [In] uint MaxGen0Size);       
+        public virtual extern void SetGCStartupLimits([In] uint SegmentSize, [In] uint MaxGen0Size);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public virtual extern void Collect([In] int Generation);
@@ -104,7 +104,7 @@
                                                             IDebuggerThreadControl pDebuggerThreadControl);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public virtual extern void AddDebuggerSpecialThread([In] uint dwSpecialThreadId);      
+        public virtual extern void AddDebuggerSpecialThread([In] uint dwSpecialThreadId);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public virtual extern void Validate([In] [MarshalAs(UnmanagedType.Interface)]

@@ -26,7 +26,8 @@ namespace Snoop
 
         public IEnumerable<PropertyFilterSet> UserFilters
         {
-            [DebuggerStepThrough] get => this.userFilters;
+            [DebuggerStepThrough]
+            get => this.userFilters;
             set
             {
                 if (value != this.userFilters)
@@ -40,7 +41,8 @@ namespace Snoop
 
         public ObservableCollection<PropertyFilterSet> ItemsSource
         {
-            [DebuggerStepThrough] get => this.itemsSource;
+            [DebuggerStepThrough]
+            get => this.itemsSource;
             private set
             {
                 if (value != this.itemsSource)
@@ -71,7 +73,7 @@ namespace Snoop
                 new PropertyFilterSet
                 {
                     DisplayName = "New Filter",
-                    Properties = new[] {"prop1,prop2"}
+                    Properties = new[] { "prop1,prop2" }
                 };
             this.ItemsSource.Add(newSet);
 

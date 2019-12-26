@@ -17,7 +17,7 @@ namespace Snoop.TriggersTab.Triggers
         private readonly AttachedPropertySlot attachedPropertySlot;
 
         private readonly DependencyPropertyDescriptor dependencyPropertyDescriptor;
-        
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="ConditionItem" /> class.
         /// </summary>
@@ -51,8 +51,8 @@ namespace Snoop.TriggersTab.Triggers
         {
             this.conditionBinding = conditionBinding;
 
-            this.attachedPropertySlot = AttachedPropertyManager.GetAndBindAttachedPropertySlot(this.conditionContainer, this.conditionBinding);            
-            
+            this.attachedPropertySlot = AttachedPropertyManager.GetAndBindAttachedPropertySlot(this.conditionContainer, this.conditionBinding);
+
             this.BindCurrentValue(conditionContainer, this.attachedPropertySlot.DependencyProperty);
         }
 
@@ -75,7 +75,7 @@ namespace Snoop.TriggersTab.Triggers
         }
 
         public static readonly DependencyProperty CurrentValueProperty =
-            DependencyProperty.Register(nameof(CurrentValue), typeof(object), typeof(ConditionItem), new PropertyMetadata(HandleCurrentValueChanged));        
+            DependencyProperty.Register(nameof(CurrentValue), typeof(object), typeof(ConditionItem), new PropertyMetadata(HandleCurrentValueChanged));
 
         private static void HandleCurrentValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -189,11 +189,11 @@ namespace Snoop.TriggersTab.Triggers
             // create a data binding between the actual property value on the target object
             // and the Value dependency property on this PropertyInformation object
             var bindingForCurrentValue = new Binding
-                          {
-                              Path = new PropertyPath("(0)", dependencyProperty),
-                              Source = instance,
-                              Mode = BindingMode.OneWay
-                          };
+            {
+                Path = new PropertyPath("(0)", dependencyProperty),
+                Source = instance,
+                Mode = BindingMode.OneWay
+            };
 
             try
             {
@@ -221,6 +221,7 @@ namespace Snoop.TriggersTab.Triggers
         #region INotifyPropertyChanged Members
 
         public event PropertyChangedEventHandler PropertyChanged;
+
         protected void OnPropertyChanged(string propertyName)
         {
             Debug.Assert(this.GetType().GetProperty(propertyName) != null);
