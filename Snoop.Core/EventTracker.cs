@@ -24,7 +24,7 @@ namespace Snoop
         public EventTracker(Type targetType, RoutedEvent routedEvent)
         {
             this.targetType = targetType;
-            this.routedEvent = routedEvent;
+            this.RoutedEvent = routedEvent;
         }
 
         public event EventTrackerHandler EventHandled;
@@ -41,7 +41,7 @@ namespace Snoop
                     if (this.isEnabled && !this.everEnabled)
                     {
                         this.everEnabled = true;
-                        EventManager.RegisterClassHandler(this.targetType, this.routedEvent, new RoutedEventHandler(this.HandleEvent), true);
+                        EventManager.RegisterClassHandler(this.targetType, this.RoutedEvent, new RoutedEventHandler(this.HandleEvent), true);
                     }
 
                     this.OnPropertyChanged(nameof(this.IsEnabled));
@@ -51,21 +51,18 @@ namespace Snoop
 
         private bool isEnabled;
 
-        public RoutedEvent RoutedEvent
-        {
-            get { return this.routedEvent; }
-        }
-
-        private readonly RoutedEvent routedEvent;
+#pragma warning disable WPF0107 // Backing member for a RoutedEvent should be static and readonly.
+        public RoutedEvent RoutedEvent { get; }
+#pragma warning restore WPF0107 // Backing member for a RoutedEvent should be static and readonly.
 
         public string Category
         {
-            get { return this.routedEvent.OwnerType.Name; }
+            get { return this.RoutedEvent.OwnerType.Name; }
         }
 
         public string Name
         {
-            get { return this.routedEvent.Name; }
+            get { return this.RoutedEvent.Name; }
         }
 
         private void HandleEvent(object sender, RoutedEventArgs e)

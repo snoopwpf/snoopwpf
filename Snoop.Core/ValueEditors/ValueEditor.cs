@@ -13,7 +13,7 @@ namespace Snoop
 
     public abstract class ValueEditor : ContentControl
     {
-        public static readonly RoutedCommand OpenDetailsEditorCommand = new RoutedCommand();
+        public static readonly RoutedCommand OpenDetailsEditorCommand = new RoutedCommand(nameof(OpenDetailsEditorCommand), typeof(ValueEditor));
 
         public static readonly DependencyProperty IsSelectedProperty =
             DependencyProperty.Register(
@@ -26,20 +26,20 @@ namespace Snoop
                 nameof(Value),
                 typeof(object),
                 typeof(ValueEditor),
-                new PropertyMetadata(HandleValueChanged));
+                new PropertyMetadata(OnValueChanged));
 
         public static readonly DependencyProperty DescriptiveValueProperty =
             DependencyProperty.Register(
                 nameof(DescriptiveValue),
-                typeof(object),
+                typeof(string),
                 typeof(ValueEditor));
 
         public static readonly DependencyProperty PropertyTypeProperty =
             DependencyProperty.Register(
                 nameof(PropertyType),
-                typeof(object),
+                typeof(Type),
                 typeof(ValueEditor),
-                new PropertyMetadata(HandleTypeChanged));
+                new PropertyMetadata(OnPropertyTypeChanged));
 
         public static readonly DependencyProperty IsEditableProperty =
             DependencyProperty.Register(
@@ -121,7 +121,7 @@ namespace Snoop
             set => this.SetValue(SupportsDetailsEditorProperty, value);
         }
 
-        private static void HandleValueChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        private static void OnValueChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
             ((ValueEditor)sender).OnValueChanged(e.NewValue);
         }
@@ -130,12 +130,12 @@ namespace Snoop
         {
         }
 
-        private static void HandleTypeChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        private static void OnPropertyTypeChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            ((ValueEditor)sender).OnTypeChanged();
+            ((ValueEditor)sender).OnPropertyTypeChanged();
         }
 
-        protected virtual void OnTypeChanged()
+        protected virtual void OnPropertyTypeChanged()
         {
         }
 

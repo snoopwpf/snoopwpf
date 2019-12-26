@@ -23,14 +23,16 @@ namespace Snoop
     public sealed partial class SnoopUI : INotifyPropertyChanged
     {
         #region Public Static Routed Commands
-        public static readonly RoutedCommand IntrospectCommand = new RoutedCommand("Introspect", typeof(SnoopUI));
-        public static readonly RoutedCommand RefreshCommand = new RoutedCommand("Refresh", typeof(SnoopUI));
-        public static readonly RoutedCommand HelpCommand = new RoutedCommand("Help", typeof(SnoopUI));
-        public static readonly RoutedCommand InspectCommand = new RoutedCommand("Inspect", typeof(SnoopUI));
-        public static readonly RoutedCommand SelectFocusCommand = new RoutedCommand("SelectFocus", typeof(SnoopUI));
-        public static readonly RoutedCommand SelectFocusScopeCommand = new RoutedCommand("SelectFocusScope", typeof(SnoopUI));
-        public static readonly RoutedCommand ClearSearchFilterCommand = new RoutedCommand("ClearSearchFilter", typeof(SnoopUI));
-        public static readonly RoutedCommand CopyPropertyChangesCommand = new RoutedCommand("CopyPropertyChanges", typeof(SnoopUI));
+
+        public static readonly RoutedCommand IntrospectCommand = new RoutedCommand(nameof(IntrospectCommand), typeof(SnoopUI));
+        public static readonly RoutedCommand RefreshCommand = new RoutedCommand(nameof(RefreshCommand), typeof(SnoopUI));
+        public static readonly RoutedCommand HelpCommand = new RoutedCommand(nameof(HelpCommand), typeof(SnoopUI));
+        public static readonly RoutedCommand InspectCommand = new RoutedCommand(nameof(InspectCommand), typeof(SnoopUI));
+        public static readonly RoutedCommand SelectFocusCommand = new RoutedCommand(nameof(SelectFocusCommand), typeof(SnoopUI));
+        public static readonly RoutedCommand SelectFocusScopeCommand = new RoutedCommand(nameof(SelectFocusScopeCommand), typeof(SnoopUI));
+        public static readonly RoutedCommand ClearSearchFilterCommand = new RoutedCommand(nameof(ClearSearchFilterCommand), typeof(SnoopUI));
+        public static readonly RoutedCommand CopyPropertyChangesCommand = new RoutedCommand(nameof(CopyPropertyChangesCommand), typeof(SnoopUI));
+
         #endregion
 
         #region Static Constructor

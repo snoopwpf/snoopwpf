@@ -45,7 +45,7 @@ namespace Snoop.Infrastructure
             DependencyProperty.RegisterAttached(
                 "IsSnoopPart",
                 typeof(bool),
-                typeof(ComboBox),
+                typeof(ComboBoxSettings),
                 new PropertyMetadata(false, OnIsSnoopPartChanged));
 
         private static void OnIsSnoopPartChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)

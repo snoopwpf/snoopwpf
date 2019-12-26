@@ -76,9 +76,9 @@ namespace Snoop.TriggersTab.Triggers
         }
 
         public static readonly DependencyProperty CurrentValueProperty =
-            DependencyProperty.Register(nameof(CurrentValue), typeof(object), typeof(ConditionItem), new PropertyMetadata(HandleCurrentValueChanged));
+            DependencyProperty.Register(nameof(CurrentValue), typeof(object), typeof(ConditionItem), new PropertyMetadata(OnCurrentValueChanged));
 
-        private static void HandleCurrentValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnCurrentValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((ConditionItem)d).OnCurrentValueChanged();
         }

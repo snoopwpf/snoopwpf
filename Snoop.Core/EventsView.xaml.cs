@@ -21,7 +21,7 @@ namespace Snoop
 
     public partial class EventsView : INotifyPropertyChanged
     {
-        public static readonly RoutedCommand ClearCommand = new RoutedCommand();
+        public static readonly RoutedCommand ClearCommand = new RoutedCommand(nameof(ClearCommand), typeof(EventsView));
 
         public EventsView()
         {

@@ -19,9 +19,9 @@ namespace Snoop
 
     public partial class PropertyGrid2 : INotifyPropertyChanged
     {
-        public static readonly RoutedCommand ShowBindingErrorsCommand = new RoutedCommand();
-        public static readonly RoutedCommand ClearCommand = new RoutedCommand();
-        public static readonly RoutedCommand SortCommand = new RoutedCommand();
+        public static readonly RoutedCommand ShowBindingErrorsCommand = new RoutedCommand(nameof(ShowBindingErrorsCommand), typeof(PropertyGrid2));
+        public static readonly RoutedCommand ClearCommand = new RoutedCommand(nameof(ClearCommand), typeof(PropertyGrid2));
+        public static readonly RoutedCommand SortCommand = new RoutedCommand(nameof(SortCommand), typeof(PropertyGrid2));
 
         public PropertyGrid2()
         {
@@ -85,9 +85,9 @@ namespace Snoop
                 nameof(Target),
                 typeof(object),
                 typeof(PropertyGrid2),
-                new PropertyMetadata(HandleTargetChanged));
+                new PropertyMetadata(OnTargetChanged));
 
-        private static void HandleTargetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnTargetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var propertyGrid = (PropertyGrid2)d;
             propertyGrid.ChangeTarget(e.NewValue);

@@ -29,6 +29,6 @@
     <!--<PackageReference Include="ReflectionAnalyzers" version="0.1-dev" privateAssets="all" includeAssets="build;analyzers" />-->
 
     <PackageReference Include="StyleCop.Analyzers" version="1.*" privateAssets="all" includeAssets="build;analyzers" />
-    <!--<PackageReference Include="WpfAnalyzers" version="2.*" privateAssets="all" includeAssets="build;analyzers" />-->
+    <PackageReference Include="WpfAnalyzers" version="2.*" privateAssets="all" includeAssets="build;analyzers" />
   </ItemGroup>
 </Project>

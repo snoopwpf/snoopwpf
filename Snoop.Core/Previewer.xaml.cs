@@ -12,8 +12,8 @@ namespace Snoop
 
     public partial class Previewer
     {
-        public static readonly RoutedCommand MagnifyCommand = new RoutedCommand("Magnify", typeof(SnoopUI));
-        public static readonly RoutedCommand ScreenshotCommand = new RoutedCommand("Screenshot", typeof(SnoopUI));
+        public static readonly RoutedCommand MagnifyCommand = new RoutedCommand(nameof(MagnifyCommand), typeof(Previewer));
+        public static readonly RoutedCommand ScreenshotCommand = new RoutedCommand(nameof(ScreenshotCommand), typeof(Previewer));
 
         public Previewer()
         {
@@ -24,6 +24,7 @@ namespace Snoop
         }
 
         #region Target
+
         /// <summary>
         /// Gets or sets the Target property.
         /// </summary>

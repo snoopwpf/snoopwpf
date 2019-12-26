@@ -145,9 +145,9 @@ namespace Snoop
                 nameof(Value),
                 typeof(object),
                 typeof(PropertyInformation),
-                new PropertyMetadata(HandleValueChanged));
+                new PropertyMetadata(OnValueChanged));
 
-        private static void HandleValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((PropertyInformation)d).OnValueChanged(e);
         }
@@ -212,12 +212,14 @@ namespace Snoop
 
             set
             {
+#pragma warning disable WPF0036 // Avoid side effects in CLR accessors.
                 if (this.property == null)
                 {
                     // if this is a PropertyInformation object constructed for an item in a collection
                     // then just return, since setting the value via a string doesn't make sense.
                     return;
                 }
+#pragma warning restore WPF0036 // Avoid side effects in CLR accessors.
 
                 var targetType = this.property.PropertyType;
 

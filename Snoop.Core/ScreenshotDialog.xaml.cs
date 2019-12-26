@@ -17,8 +17,8 @@ namespace Snoop
     /// </summary>
     public partial class ScreenshotDialog
     {
-        public static readonly RoutedCommand SaveCommand = new RoutedCommand("Save", typeof(ScreenshotDialog));
-        public static readonly RoutedCommand CancelCommand = new RoutedCommand("Cancel", typeof(ScreenshotDialog));
+        public static readonly RoutedCommand SaveCommand = new RoutedCommand(nameof(SaveCommand), typeof(ScreenshotDialog));
+        public static readonly RoutedCommand CancelCommand = new RoutedCommand(nameof(CancelCommand), typeof(ScreenshotDialog));
 
         public ScreenshotDialog()
         {

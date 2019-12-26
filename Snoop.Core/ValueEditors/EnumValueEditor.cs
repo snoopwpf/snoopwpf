@@ -22,9 +22,9 @@ namespace Snoop
 
         public IList<object> Values { get; } = new List<object>();
 
-        protected override void OnTypeChanged()
+        protected override void OnPropertyTypeChanged()
         {
-            base.OnTypeChanged();
+            base.OnPropertyTypeChanged();
 
             this.isValid = false;
 

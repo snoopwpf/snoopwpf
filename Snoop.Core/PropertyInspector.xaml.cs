@@ -19,15 +19,15 @@ namespace Snoop
 
     public partial class PropertyInspector : INotifyPropertyChanged
     {
-        public static readonly RoutedCommand PopTargetCommand = new RoutedCommand("PopTarget", typeof(PropertyInspector));
+        public static readonly RoutedCommand PopTargetCommand = new RoutedCommand(nameof(PopTargetCommand), typeof(PropertyInspector));
 
-        public static readonly RoutedCommand DelveCommand = new RoutedCommand();
-        public static readonly RoutedCommand DelveBindingCommand = new RoutedCommand();
-        public static readonly RoutedCommand DelveBindingExpressionCommand = new RoutedCommand();
-        public static readonly RoutedCommand CopyResourceNameCommand = new RoutedCommand("CopyResourceName", typeof(PropertyInspector));
-        public static readonly RoutedCommand CopyXamlCommand = new RoutedCommand("CopyXaml", typeof(PropertyInspector));
+        public static readonly RoutedCommand DelveCommand = new RoutedCommand(nameof(DelveCommand), typeof(PropertyInspector));
+        public static readonly RoutedCommand DelveBindingCommand = new RoutedCommand(nameof(DelveBindingCommand), typeof(PropertyInspector));
+        public static readonly RoutedCommand DelveBindingExpressionCommand = new RoutedCommand(nameof(DelveBindingExpressionCommand), typeof(PropertyInspector));
+        public static readonly RoutedCommand CopyResourceNameCommand = new RoutedCommand(nameof(CopyResourceNameCommand), typeof(PropertyInspector));
+        public static readonly RoutedCommand CopyXamlCommand = new RoutedCommand(nameof(CopyXamlCommand), typeof(PropertyInspector));
 
-        public static readonly RoutedCommand NavigateToAssemblyInExplorerCommand = new RoutedCommand("NavigateToAssemblyInExplorer", typeof(PropertyInspector));
+        public static readonly RoutedCommand NavigateToAssemblyInExplorerCommand = new RoutedCommand(nameof(NavigateToAssemblyInExplorerCommand), typeof(PropertyInspector));
 
         private object target;
 
@@ -130,9 +130,9 @@ namespace Snoop
                 nameof(RootTarget),
                 typeof(object),
                 typeof(PropertyInspector),
-                new PropertyMetadata(HandleRootTargetChanged));
+                new PropertyMetadata(OnRootTargetChanged));
 
-        private static void HandleRootTargetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnRootTargetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var inspector = (PropertyInspector)d;
 

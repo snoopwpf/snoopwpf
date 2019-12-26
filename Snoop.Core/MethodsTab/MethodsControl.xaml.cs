@@ -23,7 +23,7 @@ namespace Snoop.MethodsTab
             this.InitializeComponent();
             DependencyPropertyDescriptor.FromProperty(RootTargetProperty, typeof(MethodsControl)).AddValueChanged(this, this.RootTargetChanged);
 
-            //DependencyPropertyDescriptor.FromProperty(TargetProperty, typeof(MethodsControl)).AddValueChanged(this, TargetChanged);
+            //DependencyPropertyDescriptor.FromProperty(TargetProperty, typeof(MethodsControl)).AddValueChanged(this, OnTargetChanged);
             DependencyPropertyDescriptor.FromProperty(Selector.SelectedValueProperty, typeof(ComboBox)).AddValueChanged(this.comboBoxMethods, this.ComboBoxMethodChanged);
             DependencyPropertyDescriptor.FromProperty(IsSelectedProperty, typeof(MethodsControl)).AddValueChanged(this, this.IsSelectedChanged);
 
@@ -104,7 +104,7 @@ namespace Snoop.MethodsTab
         public static readonly DependencyProperty IsSelectedProperty =
             DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(MethodsControl), new UIPropertyMetadata(false));
 
-        private static void TargetChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        private static void OnTargetChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
             if (e.NewValue != e.OldValue)
             {
@@ -176,7 +176,7 @@ namespace Snoop.MethodsTab
 
         // Using a DependencyProperty as the backing store for Target.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TargetProperty =
-            DependencyProperty.Register(nameof(Target), typeof(object), typeof(MethodsControl), new UIPropertyMetadata(TargetChanged));
+            DependencyProperty.Register(nameof(Target), typeof(object), typeof(MethodsControl), new UIPropertyMetadata(OnTargetChanged));
 
         public void InvokeMethodClick(object sender, RoutedEventArgs e)
         {
