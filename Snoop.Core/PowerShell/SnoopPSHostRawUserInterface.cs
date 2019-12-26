@@ -7,9 +7,17 @@ namespace Snoop.PowerShell
 {
     using System;
     using System.Management.Automation.Host;
+    using System.Windows.Controls;
 
     internal class SnoopPSHostRawUserInterface : PSHostRawUserInterface
     {
+        private readonly TextBox outputTextBox;
+
+        public SnoopPSHostRawUserInterface(TextBox outputTextBox)
+        {
+            this.outputTextBox = outputTextBox;
+        }
+
         public override KeyInfo ReadKey(ReadKeyOptions options)
         {
             throw new NotImplementedException();
@@ -27,7 +35,12 @@ namespace Snoop.PowerShell
 
         public override void SetBufferContents(Rectangle rectangle, BufferCell fill)
         {
-            throw new NotImplementedException();
+            // Handle clear/cls etc.
+            if (fill.BufferCellType == BufferCellType.Complete
+                && rectangle == new Rectangle(-1, -1, -1, -1))
+            {
+                this.outputTextBox.Clear();
+            }
         }
 
         public override BufferCell[,] GetBufferContents(Rectangle rectangle)

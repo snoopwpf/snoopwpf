@@ -11,11 +11,19 @@ namespace Snoop.PowerShell
     using System.Management.Automation;
     using System.Management.Automation.Host;
     using System.Security;
+    using System.Windows.Controls;
 
     internal class SnoopPSHostUserInterface : PSHostUserInterface
     {
-        private readonly PSHostRawUserInterface rawUI = new SnoopPSHostRawUserInterface();
-        
+        private readonly PSHostRawUserInterface rawUI;
+        private readonly TextBox outputTextBox;
+
+        public SnoopPSHostUserInterface(TextBox outputTextBox)
+        {
+            this.outputTextBox = outputTextBox;
+            this.rawUI = new SnoopPSHostRawUserInterface(this.outputTextBox);
+        }
+
         public event Action<string> OnVerbose = delegate { };
         public event Action<string> OnDebug = delegate { };
         public event Action<string> OnWarning = delegate { };

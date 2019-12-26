@@ -25,7 +25,7 @@
 			<CheckBox
 				x:Name="autoExpandCheckBox"
 			    Style="{x:Null}"
-			>
+				IsChecked="True">
 				<TextBlock Style="{x:Null}" Text="Auto-expand"/>
 				<CheckBox.ToolTip>
 					<TextBlock

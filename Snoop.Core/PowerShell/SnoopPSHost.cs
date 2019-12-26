@@ -12,6 +12,7 @@ namespace Snoop.PowerShell
     using System.Management.Automation.Host;
     using System.Reflection;
     using System.Threading;
+    using System.Windows.Controls;
 
     internal class SnoopPSHost : PSHost
     {
@@ -20,9 +21,9 @@ namespace Snoop.PowerShell
         private readonly PSObject privateData;
         private readonly Hashtable privateHashtable;
 
-        public SnoopPSHost(Action<string> onOutput)
+        public SnoopPSHost(TextBox outputTextBox, Action<string> onOutput)
         {
-            this.ui = new SnoopPSHostUserInterface();
+            this.ui = new SnoopPSHostUserInterface(outputTextBox);
             this.ui.OnDebug += onOutput;
             this.ui.OnError += onOutput;
             this.ui.OnVerbose += onOutput;

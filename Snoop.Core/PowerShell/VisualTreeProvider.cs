@@ -8,6 +8,7 @@ namespace Snoop.PowerShell
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.IO;
     using System.Linq;
     using System.Management.Automation;
@@ -170,6 +171,21 @@ namespace Snoop.PowerShell
             }
 
             this.oneTimeSyncTimer = new Timer(this.OnSyncSelectedItem, currentTry, LocationChangeNotifyDelay, Timeout.Infinite);
+        }
+
+        protected override ProviderInfo Start(ProviderInfo providerInfo)
+        {
+            providerInfo.Home = $"{ShellConstants.DriveName}:\\";
+
+            return base.Start(providerInfo);
+        }
+
+        protected override Collection<PSDriveInfo> InitializeDefaultDrives()
+        {
+            var drives = base.InitializeDefaultDrives();
+            var snoopDriveInfo = new PSDriveInfo(ShellConstants.DriveName, this.ProviderInfo, "/", string.Empty, null);
+            drives.Add(snoopDriveInfo);
+            return drives;
         }
 
         protected override void GetChildItems(string path, bool recurse)

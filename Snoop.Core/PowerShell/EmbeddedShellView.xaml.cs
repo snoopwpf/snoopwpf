@@ -6,20 +6,16 @@
 namespace Snoop.PowerShell
 {
     using System;
+    using System.ComponentModel;
     using System.IO;
     using System.Management.Automation;
     using System.Management.Automation.Runspaces;
     using System.Reflection;
-    using System.Threading;
     using System.Windows;
-    using System.Windows.Controls;
     using System.Windows.Input;
     using Snoop.Infrastructure;
 
-    /// <summary>
-    /// Interaction logic for EmbeddedShellView.xaml
-    /// </summary>
-    public partial class EmbeddedShellView : UserControl
+    public partial class EmbeddedShellView
     {
         public event Action<VisualTreeItem> ProviderLocationChanged = delegate { }; 
 
@@ -37,7 +33,9 @@ namespace Snoop.PowerShell
         }
 
         public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(EmbeddedShellView), new PropertyMetadata(default(bool), OnIsSelectedChanged));
-        
+        private SnoopUI snoopUi;
+        private bool isSettingLocationFromLocationProvider;
+
         public bool IsSelected
         {
             get { return (bool)this.GetValue(IsSelectedProperty); }
@@ -50,10 +48,11 @@ namespace Snoop.PowerShell
 
             if ((bool)e.NewValue == false)
             {
+                view.Shutdown();
                 return;
             }
 
-            view.WhenLoaded(x => ((EmbeddedShellView)x).Start(VisualTreeHelper2.GetAncestor<SnoopUI>(view)));
+            view.WhenLoaded(x => ((EmbeddedShellView)x).Start(VisualTreeHelper2.GetAncestor<SnoopUI>((EmbeddedShellView)x)));
         }
 
         /// <summary>
@@ -73,42 +72,27 @@ namespace Snoop.PowerShell
 
             this.isStarted = true;
 
+            this.snoopUi = snoopUi;
+
             {
                 // ignore execution-policy
                 var iis = InitialSessionState.CreateDefault();
                 iis.AuthorizationManager = new AuthorizationManager(Guid.NewGuid().ToString());
                 iis.Providers.Add(new SessionStateProviderEntry(ShellConstants.DriveName, typeof(VisualTreeProvider), string.Empty));
 
-                this.host = new SnoopPSHost(x => this.outputTextBox.AppendText(x));
+                this.host = new SnoopPSHost(this.outputTextBox, x => this.outputTextBox.AppendText(x));
                 this.runspace = RunspaceFactory.CreateRunspace(this.host, iis);
                 this.runspace.ThreadOptions = PSThreadOptions.UseCurrentThread;
 
                 #if NET40
-                this.runspace.ApartmentState = ApartmentState.STA;
+                this.runspace.ApartmentState = System.Threading.ApartmentState.STA;
                 #endif
 
                 this.runspace.Open();
-
-                // default required if you intend to inject scriptblocks into the host application
-                Runspace.DefaultRunspace = this.runspace;
             }
 
             {
-                this.Invoke(string.Format("new-psdrive {0} {0} -root /", ShellConstants.DriveName));
-
-                // synchronize selected and root tree elements
-                snoopUi.PropertyChanged += (sender, e) =>
-                                      {
-                                          switch (e.PropertyName)
-                                          {
-                                              case nameof(SnoopUI.CurrentSelection):
-                                                  this.SetVariable(ShellConstants.Selected, snoopUi.CurrentSelection);
-                                                  break;
-                                              case nameof(SnoopUI.Root):
-                                                  this.SetVariable(ShellConstants.Root, snoopUi.Root);
-                                                  break;
-                                          }
-                                      };
+                snoopUi.PropertyChanged += this.OnSnoopUiOnPropertyChanged;
 
                 // allow scripting of the host controls
                 this.SetVariable("snoopui", snoopUi);
@@ -120,13 +104,14 @@ namespace Snoop.PowerShell
                 var action = new Action<VisualTreeItem>(item => this.Dispatcher.BeginInvoke(new Action(() => this.ProviderLocationChanged(item))));
                 this.SetVariable(ShellConstants.LocationChangedActionKey, action);
 
-                string folder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..", "Scripts");
-                this.Invoke(string.Format("import-module \"{0}\"", Path.Combine(folder, ShellConstants.SnoopModule)));
+                var folder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..", "Scripts");
+                this.Invoke($"import-module \"{Path.Combine(folder, ShellConstants.SnoopModule)}\"");
 
                 this.outputTextBox.Clear();
+
                 this.Invoke("write-host 'Welcome to the Snoop PowerShell console!'");
                 this.Invoke("write-host '----------------------------------------'");
-                this.Invoke(string.Format("write-host 'To get started, try using the ${0} and ${1} variables.'", ShellConstants.Root, ShellConstants.Selected));
+                this.Invoke($"write-host 'To get started, try using the ${ShellConstants.Root} and ${ShellConstants.Selected} variables.'");
 
                 this.FindAndLoadProfile(folder);
 
@@ -134,25 +119,77 @@ namespace Snoop.PowerShell
             }
 
             {
-                RoutedPropertyChangedEventHandler<object> onSelectedItemChanged = (sender, e) => this.NotifySelected(snoopUi.CurrentSelection);
-                Action<VisualTreeItem> onProviderLocationChanged = item => this.Dispatcher.BeginInvoke(new Action(() =>
-                                                                                                                  {
-                                                                                                                      item.IsSelected = true;
-                                                                                                                      snoopUi.CurrentSelection = item;
-                                                                                                                  }));
 
                 // sync the current location
-                snoopUi.Tree.SelectedItemChanged += onSelectedItemChanged;
-                this.ProviderLocationChanged += onProviderLocationChanged;
+                snoopUi.Tree.SelectedItemChanged += this.OnSnoopUiSelectedItemChanged;
+                this.ProviderLocationChanged += this.OnProviderLocationChanged;
 
                 // clean up garbage!
-                snoopUi.Closed += delegate
-                                  {
-                                      snoopUi.Tree.SelectedItemChanged -= onSelectedItemChanged;
-                                      this.ProviderLocationChanged -= onProviderLocationChanged;
-                                  };
+                snoopUi.Closed += this.OnSnoopUiClosed;
             }
         }
+
+        private void Shutdown()
+        {
+            this.UnsubscribeSnoopUiEvents();
+
+            this.ProviderLocationChanged -= this.OnProviderLocationChanged;
+
+            this.host = null;
+            
+            this.runspace?.Dispose();
+            this.runspace = null;
+
+            this.isStarted = false;
+        }
+
+        private void UnsubscribeSnoopUiEvents()
+        {
+            if (this.snoopUi != null)
+            {
+                this.snoopUi.PropertyChanged -= this.OnSnoopUiOnPropertyChanged;
+                this.snoopUi.Tree.SelectedItemChanged -= this.OnSnoopUiSelectedItemChanged;
+                this.snoopUi.Closed -= this.OnSnoopUiClosed;
+            }
+        }
+
+        private void OnSnoopUiClosed(object sender, EventArgs e)
+        {
+            this.UnsubscribeSnoopUiEvents();
+        }
+
+        private void OnSnoopUiOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var snoopUi = (SnoopUI)sender;
+
+            switch (e.PropertyName)
+            {
+                case nameof(SnoopUI.CurrentSelection):
+                    this.SetVariable(ShellConstants.Selected, snoopUi.CurrentSelection);
+                    break;
+
+                case nameof(SnoopUI.Root):
+                    this.SetVariable(ShellConstants.Root, snoopUi.Root);
+                    break;
+            }
+        }
+
+        private void OnSnoopUiSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => this.NotifySelected(this.snoopUi.CurrentSelection);
+
+        private void OnProviderLocationChanged(VisualTreeItem item) =>
+            this.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                this.isSettingLocationFromLocationProvider = true;
+                try
+                {
+                    item.IsSelected = true;
+                    this.snoopUi.CurrentSelection = item;
+                }
+                finally
+                {
+                    this.isSettingLocationFromLocationProvider = false;
+                }
+            }));
 
         public void SetVariable(string name, object instance)
         {
@@ -160,7 +197,7 @@ namespace Snoop.PowerShell
             this.host[name] = instance;
 
             // expose to the current runspace
-            this.Invoke(string.Format("${0} = $host.PrivateData['{0}']", name));
+            this.Invoke($"${name} = $host.PrivateData['{name}']");
         }
 
         public void NotifySelected(VisualTreeItem item)
@@ -170,7 +207,7 @@ namespace Snoop.PowerShell
                 item.IsExpanded = true;
             }
 
-            this.Invoke(string.Format("cd {0}:\\{1}", ShellConstants.DriveName, item.NodePath()));
+            this.Invoke($"cd {ShellConstants.DriveName}:\\{item.NodePath()}", showPrompt: this.isSettingLocationFromLocationProvider == false);
         }
 
         private void FindAndLoadProfile(string scriptFolder)
@@ -220,54 +257,74 @@ namespace Snoop.PowerShell
                     }
                     break;
                 case Key.Return:
-                    this.outputTextBox.AppendText(Environment.NewLine);
-                    this.outputTextBox.AppendText(this.commandTextBox.Text);
-                    this.outputTextBox.AppendText(Environment.NewLine);
+                    // Only append text if there was a command
+                    if (string.IsNullOrEmpty(this.commandTextBox.Text) == false)
+                    {
+                        this.outputTextBox.AppendText(this.commandTextBox.Text);
+                    }
 
-                    this.Invoke(this.commandTextBox.Text, true);
+                    this.Invoke(this.commandTextBox.Text, true, showPrompt: true);
                     this.commandTextBox.Clear();
                     break;
             }
         }
 
-        private void Invoke(string script, bool addToHistory = false)
+        private void Invoke(string script, bool addToHistory = false, bool showPrompt = false)
         {
             this.historyIndex = 0;
 
-            try
+            if (showPrompt)
             {
-                using (var pipe = this.runspace.CreatePipeline(script, addToHistory))
+                this.outputTextBox.AppendText(Environment.NewLine);
+            }
+
+            if (string.IsNullOrEmpty(script) == false)
+            {
+                try
                 {
-                    var cmd = new Command("Out-String");
-                    cmd.Parameters.Add("Width", Math.Max(2, (int)(this.ActualWidth * 0.7)));
-                    pipe.Commands.Add(cmd);
-
-                    foreach (var item in pipe.Invoke())
+                    using (var pipe = this.runspace.CreatePipeline(script, addToHistory))
                     {
-                        this.outputTextBox.AppendText(item.ToString());
-                    }
+                        var cmd = new Command("Out-String");
+                        cmd.Parameters.Add("Width", Math.Max(2, (int)(this.ActualWidth * 0.7)));
+                        pipe.Commands.Add(cmd);
 
-                    foreach (PSObject item in pipe.Error.ReadToEnd())
-                    {
-                        var error = (ErrorRecord)item.BaseObject;
-                        this.OutputErrorRecord(error);
+                        foreach (var item in pipe.Invoke())
+                        {
+                            var textData = item.ToString()?.TrimEnd();
+                            this.outputTextBox.AppendText(textData);
+                        }
+
+                        foreach (PSObject item in pipe.Error.ReadToEnd())
+                        {
+                            var error = (ErrorRecord)item.BaseObject;
+                            this.OutputErrorRecord(error);
+                        }
                     }
                 }
-            }
-            catch (RuntimeException ex)
-            {
-                this.OutputErrorRecord(ex.ErrorRecord);
-            }
-            catch (Exception ex)
-            {
-                this.outputTextBox.AppendText(string.Format("Oops!  Uncaught exception invoking on the PowerShell runspace: {0}", ex.Message));
+                catch (RuntimeException ex)
+                {
+                    this.OutputErrorRecord(ex.ErrorRecord);
+                }
+                catch (Exception ex)
+                {
+                    this.outputTextBox.AppendText(string.Format("Oops! Uncaught exception invoking on the PowerShell runspace: {0}", ex));
+                }
             }
 
             this.outputTextBox.ScrollToEnd();
+
+            if (showPrompt)
+            {
+                this.outputTextBox.AppendText(Environment.NewLine);
+
+                // ReSharper disable once TailRecursiveCall
+                this.Invoke("prompt");
+            }
         }
 
         private void OutputErrorRecord(ErrorRecord error)
         {
+            this.outputTextBox.AppendText(Environment.NewLine);
             this.outputTextBox.AppendText(string.Format("{0}{1}", error, error.InvocationInfo != null ? error.InvocationInfo.PositionMessage : string.Empty));
             this.outputTextBox.AppendText(string.Format("{1}  + CategoryInfo          : {0}", error.CategoryInfo, Environment.NewLine));
             this.outputTextBox.AppendText(string.Format("{1}  + FullyQualifiedErrorId : {0}", error.FullyQualifiedErrorId, Environment.NewLine));
