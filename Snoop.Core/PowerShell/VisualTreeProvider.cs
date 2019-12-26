@@ -15,9 +15,10 @@ namespace Snoop.PowerShell
     using System.Threading;
 
     [CmdletProvider(nameof(VisualTreeProvider), ProviderCapabilities.Filter)]
-    public class VisualTreeProvider : NavigationCmdletProvider, IDisposable
+    public class VisualTreeProvider : NavigationCmdletProvider
     {
-        internal const int LocationChangeNotifyDelay = 250;
+        private Timer oneTimeSyncTimer;
+        private const int LocationChangeNotifyDelay = 250;
 
         private VisualTreeItem Root
         {
@@ -28,35 +29,89 @@ namespace Snoop.PowerShell
             }
         }
 
-        private readonly Timer selectedTimer;
-        private string lastLocation = string.Empty;
-
-        public VisualTreeProvider()
+        private string LastKnownSnoopLocation
         {
-            this.selectedTimer = new Timer(this.OnSyncSelectedItem, null, Timeout.Infinite, Timeout.Infinite);
+            get
+            {
+                var data = (Hashtable)this.Host.PrivateData.BaseObject;
+                return (string)data[ShellConstants.LastKnownSnoopLocation];
+            }
+
+            set
+            {
+                var data = (Hashtable)this.Host.PrivateData.BaseObject;
+                data[ShellConstants.LastKnownSnoopLocation] = value;
+            }
         }
 
-        private void OnSyncSelectedItem(object _)
+        public bool IsCurrentlySynchingLastKnownSnoopLocation
         {
-            // the PSDrive.CurrentLocation gets set, but i couldn't find a way to have it notify
-            // so unfortunately we have to poll :(
-            if (this.PSDriveInfo.CurrentLocation != this.lastLocation)
+            get
             {
-                var item = this.GetTreeItem(this.PSDriveInfo.CurrentLocation);
+                var data = (Hashtable)this.Host.PrivateData.BaseObject;
+                return ((bool?)data[ShellConstants.IsCurrentlySynchingLastKnownSnoopLocation]).GetValueOrDefault(false);
+            }
 
-                if (item != null)
-                {
-                    var data = (Hashtable)this.Host.PrivateData.BaseObject;
-                    var action = (Action<VisualTreeItem>)data[ShellConstants.LocationChangedActionKey];
-                    action(item);
-                }
-                else
-                {
-                    // the visual tree changed drastically, we must reset the current location
-                    this.PSDriveInfo.CurrentLocation = string.Empty;
-                }
+            set
+            {
+                var data = (Hashtable)this.Host.PrivateData.BaseObject;
+                data[ShellConstants.IsCurrentlySynchingLastKnownSnoopLocation] = value;
+            }
+        }
 
-                this.lastLocation = this.PSDriveInfo.CurrentLocation;
+        private void OnSyncSelectedItem(object currentTryObj)
+        {
+            var currentTry = (int)currentTryObj;
+
+            if (currentTry >= 5)
+            {
+                return;
+            }
+
+            if (currentTry == 0
+                && this.IsCurrentlySynchingLastKnownSnoopLocation)
+            {
+                return;
+            }
+
+            this.IsCurrentlySynchingLastKnownSnoopLocation = true;
+
+            try
+            {
+                // the PSDrive.CurrentLocation gets set, but i couldn't find a way to have it notify
+                // so unfortunately we have to poll :(
+                if (this.PSDriveInfo.CurrentLocation != this.LastKnownSnoopLocation)
+                {
+                    var item = this.GetTreeItem(this.PSDriveInfo.CurrentLocation);
+
+                    if (item != null)
+                    {
+                        var data = (Hashtable)this.Host.PrivateData.BaseObject;
+                        var action = (Action<VisualTreeItem>)data[ShellConstants.LocationChangedActionKey];
+                        action(item);
+                    }
+                    else
+                    {
+                        // the visual tree changed drastically, we must reset the current location
+                        this.PSDriveInfo.CurrentLocation = string.Empty;
+                    }
+
+                    this.LastKnownSnoopLocation = this.PSDriveInfo.CurrentLocation;
+                }
+            }
+            catch
+            {
+                this.oneTimeSyncTimer?.Dispose();
+                this.oneTimeSyncTimer = null;
+
+                this.StartNewOneTimeSyncTimer(++currentTry);
+            }
+            finally
+            {
+                this.oneTimeSyncTimer?.Dispose();
+                this.oneTimeSyncTimer = null;
+
+                this.IsCurrentlySynchingLastKnownSnoopLocation = false;
             }
         }
 
@@ -77,7 +132,7 @@ namespace Snoop.PowerShell
 
             if (path.Equals("\\"))
             {
-                this.selectedTimer.Change(LocationChangeNotifyDelay, Timeout.Infinite);
+                this.StartNewOneTimeSyncTimer();
                 return this.Root;
             }
 
@@ -86,7 +141,7 @@ namespace Snoop.PowerShell
             var count = 0;
             foreach (var part in parts)
             {
-                foreach (var c in current.Children)
+                foreach (var c in current.Children.ToList())
                 {
                     var name = c.NodeName();
                     if (name.Equals(part, StringComparison.OrdinalIgnoreCase))
@@ -100,11 +155,21 @@ namespace Snoop.PowerShell
 
             if (count == parts.Length)
             {
-                this.selectedTimer.Change(LocationChangeNotifyDelay, Timeout.Infinite);
+                this.StartNewOneTimeSyncTimer();
                 return current;
             }
 
             return null;
+        }
+
+        private void StartNewOneTimeSyncTimer(int currentTry = 0)
+        {
+            if (this.oneTimeSyncTimer != null)
+            {
+                return;
+            }
+
+            this.oneTimeSyncTimer = new Timer(this.OnSyncSelectedItem, currentTry, LocationChangeNotifyDelay, Timeout.Infinite);
         }
 
         protected override void GetChildItems(string path, bool recurse)
@@ -112,7 +177,7 @@ namespace Snoop.PowerShell
             var item = this.GetTreeItem(path);
             if (item != null)
             {
-                foreach (var c in item.Children)
+                foreach (var c in item.Children.ToList())
                 {
                     var p = c.NodePath();
                     this.GetItem(p);
@@ -133,7 +198,8 @@ namespace Snoop.PowerShell
         protected override bool HasChildItems(string path)
         {
             var item = this.GetTreeItem(path);
-            return item != null && item.Children.Count > 0;
+            return item != null 
+                   && item.Children.Any();
         }
 
         protected override bool IsItemContainer(string path)
@@ -176,7 +242,7 @@ namespace Snoop.PowerShell
             var item = this.GetTreeItem(path);
             if (item != null)
             {
-                foreach (var child in item.Children)
+                foreach (var child in item.Children.ToList())
                 {
                     var name = child.NodeName();
                     var nodePath = child.NodePath();
@@ -184,15 +250,9 @@ namespace Snoop.PowerShell
                 }
             }
         }
-
-        public void Dispose()
-        {
-            this.selectedTimer.Dispose();
-            GC.SuppressFinalize(this);
-        }
     }
 
-    internal static class VisualTreeProviderExtensions
+    internal static class VisualTreeItemExtensions
     {
         public static string NodePath(this VisualTreeItem item)
         {
@@ -216,7 +276,9 @@ namespace Snoop.PowerShell
             if (item.Parent != null)
             {
                 var parent = item.Parent;
-                var similarChildren = parent.Children.Where(c => GetName(c).Equals(name)).ToList();
+                var similarChildren = parent.Children.ToList()
+                                        .Where(c => GetName(c).Equals(name))
+                                        .ToList();
                 if (similarChildren.Count > 1)
                 {
                     name += similarChildren.IndexOf(item) + 1;

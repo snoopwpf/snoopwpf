@@ -41,6 +41,16 @@ namespace Snoop.PowerShell
         public const string DriveName = "snoop";
 
         /// <summary>
+        /// Are we currently synching the last known location in PowerShell known by Snoop.
+        /// </summary>
+        public const string IsCurrentlySynchingLastKnownSnoopLocation = "IsCurrentlySynchingLastKnownSnoopLocation";
+
+        /// <summary>
+        /// The last known location in PowerShell known by Snoop.
+        /// </summary>
+        public const string LastKnownSnoopLocation = "LastKnownSnoopLocation";
+
+        /// <summary>
         /// Gets the key for storing an <see cref="Action{T}"/> of type <see cref="VisualTreeItem"/>.
         /// </summary>
         public const string LocationChangedActionKey = "lca_key";

@@ -6,6 +6,7 @@
 
   - [#40](../../issues/40) - Message: Cannot set Expression. It is marked as 'NonShareable' and has already been used.
   - [#45](../../issues/45) - Keystrokes go to Visual Studio main window when inspecting Visual Studio (thanks @KirillOsenkov)
+  - [#66](../../issues/66) - System.InvalidOperationException: Collection was modified; enumeration operation may not execute.
   - [#101](../../issues/101) - My Style is being applied to the "Change Target" Window
   - [#150](../../issues/150) - Format and parse property values with the same format provider
   - [#151](../../issues/151) - Dependency properties are filtered wrong and less properties are shown than should be
