@@ -154,7 +154,7 @@ namespace Snoop
 
         public static readonly DependencyProperty IndentProperty =
             DependencyProperty.Register(
-                "Indent",
+                nameof(Indent),
                 typeof(double),
                 typeof(ProperTreeViewItem));
 

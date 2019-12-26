@@ -102,7 +102,7 @@ namespace Snoop.MethodsTab
 
         // Using a DependencyProperty as the backing store for IsSelected.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IsSelectedProperty =
-            DependencyProperty.Register("IsSelected", typeof(bool), typeof(MethodsControl), new UIPropertyMetadata(false));
+            DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(MethodsControl), new UIPropertyMetadata(false));
 
         private static void TargetChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {

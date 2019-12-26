@@ -284,7 +284,9 @@ namespace Snoop.PowerShell
                     using (var pipe = this.runspace.CreatePipeline(script, addToHistory))
                     {
                         var cmd = new Command("Out-String");
+#pragma warning disable INPC013 // Use nameof.
                         cmd.Parameters.Add("Width", Math.Max(2, (int)(this.ActualWidth * 0.7)));
+#pragma warning restore INPC013 // Use nameof.
                         pipe.Commands.Add(cmd);
 
                         foreach (var item in pipe.Invoke())

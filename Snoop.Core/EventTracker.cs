@@ -124,16 +124,11 @@ namespace Snoop
     {
         public TrackedEvent(RoutedEventArgs routedEventArgs, EventEntry originator)
         {
-            this.routedEventArgs = routedEventArgs;
+            this.EventArgs = routedEventArgs;
             this.AddEventEntry(originator);
         }
 
-        public RoutedEventArgs EventArgs
-        {
-            get { return this.routedEventArgs; }
-        }
-
-        private readonly RoutedEventArgs routedEventArgs;
+        public RoutedEventArgs EventArgs { get; }
 
         public EventEntry Originator
         {
@@ -166,12 +161,7 @@ namespace Snoop
 
         private object handledBy;
 
-        public ObservableCollection<EventEntry> Stack
-        {
-            get { return this.stack; }
-        }
-
-        private readonly ObservableCollection<EventEntry> stack = new ObservableCollection<EventEntry>();
+        public ObservableCollection<EventEntry> Stack { get; } = new ObservableCollection<EventEntry>();
 
         public void AddEventEntry(EventEntry eventEntry)
         {

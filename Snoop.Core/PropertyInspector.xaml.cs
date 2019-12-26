@@ -537,7 +537,9 @@ namespace Snoop
                         Properties.Settings.Default.UserDefinedPropertyFilterSets = this.userFilterSets;
                         Properties.Settings.Default.Save();
 
+                        #pragma warning disable INPC015
                         this.SelectedFilterSet = null;
+                        #pragma warning restore INPC015
                         this.allFilterSets = null;
 
                         // trigger the UI to re-bind to the collection, so user sees changes they just made

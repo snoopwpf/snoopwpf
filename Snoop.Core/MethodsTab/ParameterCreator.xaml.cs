@@ -25,7 +25,7 @@ namespace Snoop.MethodsTab
 
         // Using a DependencyProperty as the backing store for Target.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty RootTargetProperty =
-            DependencyProperty.Register("RootTarget", typeof(object), typeof(ParameterCreator), new UIPropertyMetadata(null));
+            DependencyProperty.Register(nameof(RootTarget), typeof(object), typeof(ParameterCreator), new UIPropertyMetadata(null));
 
         public object SelectedTarget
         {

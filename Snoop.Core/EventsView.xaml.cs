@@ -61,13 +61,15 @@ namespace Snoop
         {
             get
             {
-                var pgd = new PropertyGroupDescription();
-                pgd.PropertyName = "Category";
-                pgd.StringComparison = StringComparison.OrdinalIgnoreCase;
+                var pgd = new PropertyGroupDescription
+                {
+                    PropertyName = nameof(EventTracker.Category),
+                    StringComparison = StringComparison.OrdinalIgnoreCase
+                };
 
                 var cvs = new CollectionViewSource();
-                cvs.SortDescriptions.Add(new SortDescription("Category", ListSortDirection.Ascending));
-                cvs.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
+                cvs.SortDescriptions.Add(new SortDescription(nameof(EventTracker.Category), ListSortDirection.Ascending));
+                cvs.SortDescriptions.Add(new SortDescription(nameof(EventTracker.Name), ListSortDirection.Ascending));
                 cvs.GroupDescriptions.Add(pgd);
 
                 cvs.Source = this.trackers;

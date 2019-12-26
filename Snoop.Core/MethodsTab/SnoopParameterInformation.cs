@@ -142,6 +142,6 @@ namespace Snoop.MethodsTab
 
         // Using a DependencyProperty as the backing store for ParameterValue.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ParameterValueProperty =
-            DependencyProperty.Register("ParameterValue", typeof(object), typeof(SnoopParameterInformation), new UIPropertyMetadata(null));
+            DependencyProperty.Register(nameof(ParameterValue), typeof(object), typeof(SnoopParameterInformation), new UIPropertyMetadata(null));
     }
 }

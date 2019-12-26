@@ -82,7 +82,7 @@ namespace Snoop
 
         public static readonly DependencyProperty TargetProperty =
             DependencyProperty.Register(
-                "Target",
+                nameof(Target),
                 typeof(object),
                 typeof(PropertyGrid2),
                 new PropertyMetadata(HandleTargetChanged));

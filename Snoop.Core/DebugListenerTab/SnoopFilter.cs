@@ -15,7 +15,7 @@
 
         public void ResetDirtyFlag()
         {
-            this.isDirty = false;
+            this.IsDirty = false;
         }
 
         public bool IsDirty
@@ -25,7 +25,11 @@
                 return this.isDirty;
             }
 
-            protected set { this.isDirty = value; }
+            protected set
+            {
+                this.isDirty = value; 
+                this.RaisePropertyChanged(nameof(this.IsDirty));
+            }
         }
 
         public abstract bool FilterMatches(string debugLine);

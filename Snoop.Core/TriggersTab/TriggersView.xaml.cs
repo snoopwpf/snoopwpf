@@ -42,7 +42,7 @@ namespace Snoop.TriggersTab
             view.Update();
         }
 
-        public static readonly DependencyProperty RootTargetProperty = DependencyProperty.Register("RootTarget", typeof(object), typeof(TriggersView), new PropertyMetadata(default, OnRootTargetChanged));
+        public static readonly DependencyProperty RootTargetProperty = DependencyProperty.Register(nameof(RootTarget), typeof(object), typeof(TriggersView), new PropertyMetadata(default, OnRootTargetChanged));
 
         public object RootTarget
         {
@@ -58,7 +58,7 @@ namespace Snoop.TriggersTab
         }
 
         private static readonly DependencyPropertyKey TriggerItemsPropertyKey
-            = DependencyProperty.RegisterReadOnly("TriggerItems", typeof(ICollectionView), typeof(TriggersView), new FrameworkPropertyMetadata(default(ICollectionView)));
+            = DependencyProperty.RegisterReadOnly(nameof(TriggerItems), typeof(ICollectionView), typeof(TriggersView), new FrameworkPropertyMetadata(default(ICollectionView)));
 
         public static readonly DependencyProperty TriggerItemsProperty = TriggerItemsPropertyKey.DependencyProperty;
 
@@ -69,7 +69,7 @@ namespace Snoop.TriggersTab
         }
 
         private static readonly DependencyPropertyKey HasTriggerItemsPropertyKey
-            = DependencyProperty.RegisterReadOnly("HasTriggerItems", typeof(bool), typeof(TriggersView), new FrameworkPropertyMetadata(default(bool)));
+            = DependencyProperty.RegisterReadOnly(nameof(HasTriggerItems), typeof(bool), typeof(TriggersView), new FrameworkPropertyMetadata(default(bool)));
 
         public static readonly DependencyProperty HasTriggerItemsProperty = HasTriggerItemsPropertyKey.DependencyProperty;
 
@@ -79,7 +79,7 @@ namespace Snoop.TriggersTab
             protected set { this.SetValue(HasTriggerItemsPropertyKey, value); }
         }
 
-        public static readonly DependencyProperty SelectedSetterItemProperty = DependencyProperty.Register("SelectedSetterItem", typeof(SetterItem), typeof(TriggersView), new PropertyMetadata(default(SetterItem)));
+        public static readonly DependencyProperty SelectedSetterItemProperty = DependencyProperty.Register(nameof(SelectedSetterItem), typeof(SetterItem), typeof(TriggersView), new PropertyMetadata(default(SetterItem)));
 
         public SetterItem SelectedSetterItem
         {

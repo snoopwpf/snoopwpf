@@ -265,7 +265,9 @@ namespace Snoop
                     // FUTURE: This could be extended to other types.
                     if (value is BindingBase)
                     {
+#pragma warning disable INPC013
                         stringValue = string.Format("[{0}]", "Binding");
+#pragma warning restore INPC013
                     }
                     else if (value is DynamicResourceExtension)
                     {
@@ -592,16 +594,16 @@ namespace Snoop
 
         public bool HasChangedRecently
         {
-            get { return this.changedRecently; }
+            get { return this.hasChangedRecently; }
 
             set
             {
-                this.changedRecently = value;
+                this.hasChangedRecently = value;
                 this.OnPropertyChanged(nameof(this.HasChangedRecently));
             }
         }
 
-        private bool changedRecently;
+        private bool hasChangedRecently;
 
         public ValueSource ValueSource
         {

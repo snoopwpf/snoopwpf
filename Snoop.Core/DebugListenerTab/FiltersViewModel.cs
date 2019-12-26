@@ -10,12 +10,13 @@
     [Serializable]
     public class FiltersViewModel : INotifyPropertyChanged
     {
-        private List<SnoopMultipleFilter> multipleFilters = new List<SnoopMultipleFilter>();
+        private readonly List<SnoopMultipleFilter> multipleFilters = new List<SnoopMultipleFilter>();
         private bool isDirty;
 
         public void ResetDirtyFlag()
         {
-            this.isDirty = false;
+            this.IsDirty = false;
+
             foreach (var filter in this.filters)
             {
                 filter.ResetDirtyFlag();
@@ -40,6 +41,13 @@
                 }
 
                 return false;
+            }
+
+            private set
+            {
+                this.isDirty = value;
+
+                this.RaisePropertyChanged(nameof(this.IsDirty));
             }
         }
 
@@ -175,13 +183,15 @@
 
         public void AddFilter(SnoopFilter filter)
         {
-            this.isDirty = true;
+            this.IsDirty = true;
+
             this.filters.Add(filter);
         }
 
         public void RemoveFilter(SnoopFilter filter)
         {
-            this.isDirty = true;
+            this.IsDirty = true;
+
             var singleFilter = filter as SnoopSingleFilter;
             if (singleFilter != null)
             {

@@ -38,7 +38,7 @@ namespace Snoop
         /// </summary>
         public static readonly DependencyProperty TargetProperty =
             DependencyProperty.Register(
-                "Target",
+                nameof(Target),
                 typeof(object),
                 typeof(Previewer),
                 new FrameworkPropertyMetadata(
@@ -78,7 +78,7 @@ namespace Snoop
         /// </summary>
         public static readonly DependencyProperty IsActiveProperty =
             DependencyProperty.Register(
-                "IsActive",
+                nameof(IsActive),
                 typeof(bool),
                 typeof(Previewer),
                 new FrameworkPropertyMetadata(

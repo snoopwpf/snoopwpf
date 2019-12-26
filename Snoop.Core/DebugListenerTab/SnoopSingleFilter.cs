@@ -7,13 +7,27 @@
     public class SnoopSingleFilter : SnoopFilter, ICloneable
     {
         private string text;
+        private FilterType filterType;
 
         public SnoopSingleFilter()
         {
             this.Text = string.Empty;
         }
 
-        public FilterType FilterType { get; set; }
+        public FilterType FilterType
+        {
+            get => this.filterType;
+            set
+            {
+                if (value == this.filterType)
+                {
+                    return;
+                }
+
+                this.filterType = value;
+                this.RaisePropertyChanged(nameof(this.FilterType));
+            }
+        }
 
         public string Text
         {
@@ -76,7 +90,7 @@
             {
                 IsGrouped = this.IsGrouped,
                 GroupId = this.GroupId,
-                text = this.text,
+                Text = this.Text,
                 FilterType = this.FilterType,
                 IsInverse = this.IsInverse
             };

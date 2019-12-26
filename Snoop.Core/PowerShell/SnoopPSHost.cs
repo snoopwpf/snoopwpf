@@ -16,7 +16,7 @@ namespace Snoop.PowerShell
 
     internal class SnoopPSHost : PSHost
     {
-        private readonly Guid id = Guid.NewGuid();
+        private readonly Guid instanceId = Guid.NewGuid();
         private readonly SnoopPSHostUserInterface ui;
         private readonly PSObject privateData;
         private readonly Hashtable privateHashtable;
@@ -66,12 +66,12 @@ namespace Snoop.PowerShell
 
         public override Guid InstanceId
         {
-            get { return this.id; }
+            get { return this.instanceId; }
         }
 
         public override string Name
         {
-            get { return this.id.ToString(); }
+            get { return this.instanceId.ToString(); }
         }
 
         public override PSHostUserInterface UI

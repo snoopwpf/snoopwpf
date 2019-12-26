@@ -43,7 +43,7 @@ namespace Snoop
         /// </summary>
         public static readonly DependencyProperty TargetProperty =
             DependencyProperty.Register(
-                "Target",
+                nameof(Target),
                 typeof(object),
                 typeof(ZoomerControl),
                 new FrameworkPropertyMetadata(

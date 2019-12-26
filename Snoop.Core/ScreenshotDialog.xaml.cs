@@ -37,7 +37,7 @@ namespace Snoop
 
         public static readonly DependencyProperty FilePathProperty =
             DependencyProperty.Register(
-                "FilePath",
+                nameof(FilePath),
                 typeof(string),
                 typeof(ScreenshotDialog),
                 new UIPropertyMetadata(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\SnoopScreenshot.png"));
