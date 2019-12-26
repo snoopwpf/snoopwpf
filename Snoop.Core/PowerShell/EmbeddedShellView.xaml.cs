@@ -48,7 +48,6 @@ namespace Snoop.PowerShell
 
             if ((bool)e.NewValue == false)
             {
-                view.Shutdown();
                 return;
             }
 
@@ -155,7 +154,7 @@ namespace Snoop.PowerShell
 
         private void OnSnoopUiClosed(object sender, EventArgs e)
         {
-            this.UnsubscribeSnoopUiEvents();
+            this.Shutdown();
         }
 
         private void OnSnoopUiOnPropertyChanged(object sender, PropertyChangedEventArgs e)
