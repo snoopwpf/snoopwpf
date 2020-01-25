@@ -66,7 +66,7 @@ namespace Snoop
             }
             catch (NullReferenceException)
             {
-                // swallow this exception since you can Snoop just fine anyways.
+                // swallow this exception since you can snoop just fine anyways.
             }
 
             this.CommandBindings.Add(new CommandBinding(IntrospectCommand, this.HandleIntrospection));

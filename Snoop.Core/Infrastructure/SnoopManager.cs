@@ -138,7 +138,7 @@
                 }
                 else
                 {
-                    ErrorDialog.ShowDialog(exception, "Error Snooping", "There was an error snooping the application.", exceptionAlreadyHandled: true);
+                    ErrorDialog.ShowDialog(exception, "Error snooping", "There was an error snooping the application.", exceptionAlreadyHandled: true);
                 }
 
                 return false;
@@ -249,6 +249,7 @@
 
                 var presentationSourceRootVisualDispatcher = presentationSourceRootVisual.Dispatcher;
 
+                // Check if we have already seen this dispatcher and it's root visual
                 if (dispatchers.IndexOf(presentationSourceRootVisualDispatcher) == -1)
                 {
                     rootVisuals.Add(presentationSourceRootVisual);
@@ -268,7 +269,7 @@
                 {
                     var result =
                         MessageBox.Show(
-                            "Snoop has noticed windows running in multiple dispatchers!\n\n" +
+                            "Snoop has noticed windows running in multiple dispatchers.\n\n" +
                             "Would you like to enter multiple dispatcher mode, and have a separate Snoop window for each dispatcher?\n\n" +
                             "Without having a separate Snoop window for each dispatcher, you will not be able to Snoop the windows in the dispatcher threads outside of the main dispatcher. " +
                             "Also, note, that if you bring up additional windows in additional dispatchers (after snooping), you will need to Snoop again in order to launch Snoop windows for those additional dispatchers.",
