@@ -6,6 +6,8 @@
 namespace Snoop
 {
     using System;
+    using System.Diagnostics;
+    using System.Threading;
     using System.Windows;
     using Snoop.Infrastructure;
 
@@ -39,11 +41,24 @@ namespace Snoop
         }
 
         /// <summary>
-        /// 
+        /// Shows a dialog containing the details for <paramref name="exception"/>.
         /// </summary>
-        /// <returns><c>true</c> is the exception should be marked handled and <c>false</c> if the exception should NOT be </returns>
+        /// <returns><c>true</c> if the exception should be marked handled and <c>false</c> if the exception should NOT be marked as handled.</returns>
 	    public static bool ShowDialog(Exception exception, string title = "Error occurred", string caption = "An error has occured", bool exceptionAlreadyHandled = false)
         {
+            Trace.WriteLine($"Showing error dialog.");
+            Trace.WriteLine($"Title:     {title}");
+            Trace.WriteLine($"Caption:   {caption}");
+            Trace.WriteLine($"Exception: {exception}");
+
+            if (Thread.CurrentThread.GetApartmentState() != ApartmentState.STA)
+            {
+                var finalMessage = caption + $"\nException:\n{exception}";
+                MessageBox.Show(finalMessage, title, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.Yes);
+
+                return true;
+            }
+
             // should we check if the exception came from Snoop? perhaps seeing if any Snoop call is in the stack trace?
             var dialog = new ErrorDialog
             {

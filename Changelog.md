@@ -12,6 +12,7 @@
   - [#151](../../issues/151) - Dependency properties are filtered wrong and less properties are shown than should be
   - [#152](../../issues/152) - Magnified view only works for main window
   - [#156](../../issues/156) - Delve BindingExpression throws exception
+  - [#159](../../issues/159) - Errors require STA
 
 - ### Improvements
 

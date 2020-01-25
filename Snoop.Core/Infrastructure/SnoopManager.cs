@@ -73,7 +73,8 @@
                             "Without having a separate Snoop window for each app domain, you will not be able to Snoop the windows in the app domains outside of the main app domain. ",
                             "Enter Multiple AppDomain Mode",
                             MessageBoxButton.YesNo,
-                            MessageBoxImage.Question);
+                            MessageBoxImage.Question,
+                            MessageBoxResult.No);
 
                     if (result != MessageBoxResult.Yes)
                     {
