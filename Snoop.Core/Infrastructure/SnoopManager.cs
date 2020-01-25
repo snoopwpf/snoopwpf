@@ -96,13 +96,13 @@
 
                     foreach (var appDomain in appDomains)
                     {
-                        Trace.WriteLine($"Trying to create snoop instance in app domain \"{appDomain.FriendlyName}\"...");
+                        Trace.WriteLine($"Trying to create Snoop instance in app domain \"{appDomain.FriendlyName}\"...");
 
                         try
                         {
                             var crossAppDomainSnoop = (SnoopManager)appDomain.CreateInstanceFromAndUnwrap(assemblyFullName, fullName);
 
-                            Trace.WriteLine($"Successfully created snoop instance in app domain \"{appDomain.FriendlyName}\".");
+                            Trace.WriteLine($"Successfully created Snoop instance in app domain \"{appDomain.FriendlyName}\".");
 
                             //runs in a separate AppDomain
                             var appDomainSucceeded = crossAppDomainSnoop.GoBabyGoForCurrentAppDomain(settingsData);
@@ -110,7 +110,7 @@
                         }
                         catch (Exception exception)
                         {
-                            Trace.WriteLine($"Failed to create snoop instance in app domain \"{appDomain.FriendlyName}\".");
+                            Trace.WriteLine($"Failed to create Snoop instance in app domain \"{appDomain.FriendlyName}\".");
                             Trace.WriteLine(exception);
                         }
                     }
@@ -134,7 +134,7 @@
         // ReSharper disable once MemberCanBeMadeStatic.Local
         private bool GoBabyGoForCurrentAppDomain(TransientSettingsData settingsData)
         {
-            Trace.WriteLine($"Trying to run snoop in app domain \"{AppDomain.CurrentDomain.FriendlyName}\"...");
+            Trace.WriteLine($"Trying to run Snoop in app domain \"{AppDomain.CurrentDomain.FriendlyName}\"...");
 
             try
             {
@@ -142,11 +142,11 @@
 
                 SnoopApplication(settingsData, instanceCreator);
 
-                Trace.WriteLine($"Successfully running snoop in app domain \"{AppDomain.CurrentDomain.FriendlyName}\".");
+                Trace.WriteLine($"Successfully running Snoop in app domain \"{AppDomain.CurrentDomain.FriendlyName}\".");
             }
             catch (Exception exception)
             {
-                Trace.WriteLine($"Failed to to run snoop in app domain \"{AppDomain.CurrentDomain.FriendlyName}\".");
+                Trace.WriteLine($"Failed to to run Snoop in app domain \"{AppDomain.CurrentDomain.FriendlyName}\".");
 
                 if (SnoopModes.MultipleAppDomainMode)
                 {
