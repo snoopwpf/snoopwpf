@@ -70,7 +70,7 @@
                         MessageBox.Show(
                             "Snoop has noticed multiple app domains.\n\n" +
                             "Would you like to enter multiple app domain mode, and have a separate Snoop window for each app domain?\n\n" +
-                            "Without having a separate Snoop window for each app domain, you will not be able to Snoop the windows in the app domains outside of the main app domain. ",
+                            "Without having a separate Snoop window for each app domain, you will not be able to Snoop the windows in the app domains outside of the main app domain.",
                             "Enter Multiple AppDomain Mode",
                             MessageBoxButton.YesNo,
                             MessageBoxImage.Question,
@@ -131,7 +131,16 @@
             }
             catch (Exception exception)
             {
-                ErrorDialog.ShowDialog(exception, "Error Snooping", "There was an error snooping the application.", exceptionAlreadyHandled: true);
+                if (SnoopModes.MultipleAppDomainMode)
+                {
+                    Trace.WriteLine($"Could not snoop a specific app domain with friendly name of \"{AppDomain.CurrentDomain.FriendlyName}\" in multiple app domain mode.");
+                    Trace.WriteLine(exception);
+                }
+                else
+                {
+                    ErrorDialog.ShowDialog(exception, "Error Snooping", "There was an error snooping the application.", exceptionAlreadyHandled: true);
+                }
+
                 return false;
             }
 
