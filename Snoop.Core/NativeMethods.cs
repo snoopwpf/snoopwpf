@@ -394,9 +394,9 @@ namespace Snoop
 
         //public static System.Windows.Rect GetWindowRect(IntPtr hwnd)
         //{
-        //	RECT rect = new RECT();
-        //	GetWindowRect(hwnd, out rect);
-        //	return new System.Windows.Rect(rect.Left, rect.Top, rect.Right - rect.Left, rect.Bottom - rect.Top);
+        //  RECT rect = new RECT();
+        //  GetWindowRect(hwnd, out rect);
+        //  return new System.Windows.Rect(rect.Left, rect.Top, rect.Right - rect.Left, rect.Bottom - rect.Top);
         //}
 
         [DllImport("user32.dll")]

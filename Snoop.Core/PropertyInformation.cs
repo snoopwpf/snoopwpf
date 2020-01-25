@@ -800,7 +800,7 @@ namespace Snoop
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-		private static IList<PropertyInformation> GetExtendedProperties(object obj)
+        private static IList<PropertyInformation> GetExtendedProperties(object obj)
         {
             if (obj is null
                 || ResourceKeyCache.Contains(obj) == false)

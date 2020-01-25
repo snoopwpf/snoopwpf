@@ -21,8 +21,8 @@ namespace Snoop.Converters
         #region IValueConverter Members
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            // value (object)	the runtime value - compare against known incompatible types (use list from config)
-            // return (boolean)	whether the type is supported or not
+            // value (object)   the runtime value - compare against known incompatible types (use list from config)
+            // return (boolean) whether the type is supported or not
 
             if (value == null)
             {

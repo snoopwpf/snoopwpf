@@ -16,9 +16,9 @@ namespace Snoop.Converters
         #region IValueConverter Members
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            // value (string)	ARGB text (i.e. #FF102030)
-            // parameter (int)	which "part" to return (0 = alpha, 1 = Red, 2 = Green, 3 = Blue)
-            // return (string)	the 2-digit hex value for the requested portion 
+            // value (string)   ARGB text (i.e. #FF102030)
+            // parameter (int)  which "part" to return (0 = alpha, 1 = Red, 2 = Green, 3 = Blue)
+            // return (string)  the 2-digit hex value for the requested portion 
 
             if (value == null || value == DependencyProperty.UnsetValue)
             {

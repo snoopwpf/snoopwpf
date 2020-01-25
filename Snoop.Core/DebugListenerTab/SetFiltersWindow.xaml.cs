@@ -156,19 +156,19 @@
 
         //private SnoopSingleFilter MakeDeepCopyOfFilter(SnoopSingleFilter filter)
         //{
-        //	try
-        //	{
-        //		BinaryFormatter formatter = new BinaryFormatter();
-        //		var ms = new System.IO.MemoryStream();
-        //		formatter.Serialize(ms, filter);
-        //		SnoopSingleFilter deepCopy = (SnoopSingleFilter)formatter.Deserialize(ms);
-        //		ms.Close();
-        //		return deepCopy;
-        //	}
-        //	catch (Exception)
-        //	{
-        //		return null;
-        //	}
+        //  try
+        //  {
+        //      BinaryFormatter formatter = new BinaryFormatter();
+        //      var ms = new System.IO.MemoryStream();
+        //      formatter.Serialize(ms, filter);
+        //      SnoopSingleFilter deepCopy = (SnoopSingleFilter)formatter.Deserialize(ms);
+        //      ms.Close();
+        //      return deepCopy;
+        //  }
+        //  catch (Exception)
+        //  {
+        //      return null;
+        //  }
         //}
 
         private readonly List<SnoopSingleFilter> initialFilters;

@@ -15,8 +15,8 @@ namespace Snoop.Converters
         #region IValueConverter Members
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            // value (String[])	
-            // return	string		CSV version of the string array
+            // value (String[]) 
+            // return   string      CSV version of the string array
 
             if (value == null)
             {
@@ -29,8 +29,8 @@ namespace Snoop.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            // value (string)		CSV version of the string array
-            // return (string[])	array of strings split by ","
+            // value (string)       CSV version of the string array
+            // return (string[])    array of strings split by ","
 
             if (value == null)
             {

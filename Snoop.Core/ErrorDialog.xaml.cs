@@ -44,7 +44,7 @@ namespace Snoop
         /// Shows a dialog containing the details for <paramref name="exception"/>.
         /// </summary>
         /// <returns><c>true</c> if the exception should be marked handled and <c>false</c> if the exception should NOT be marked as handled.</returns>
-	    public static bool ShowDialog(Exception exception, string title = "Error occurred", string caption = "An error has occured", bool exceptionAlreadyHandled = false)
+        public static bool ShowDialog(Exception exception, string title = "Error occurred", string caption = "An error has occured", bool exceptionAlreadyHandled = false)
         {
             Trace.WriteLine($"Showing error dialog.");
             Trace.WriteLine($"Title:     {title}");
