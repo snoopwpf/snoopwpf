@@ -17,7 +17,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+    <AutoGenerateBindingRedirects Condition="$(DefineConstants.Contains(NETCOREAPP)) == false">true</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
   <ItemGroup>

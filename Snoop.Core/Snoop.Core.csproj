@@ -24,11 +24,11 @@
     <_WpfCommonNetFxReference Remove="System.Windows.Controls.Ribbon" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
+  <ItemGroup Condition="$(DefineConstants.Contains(NETCOREAPP)) == false">
     <PackageReference Include="microsoft.powershell.3.referenceassemblies" Version="1.0.0" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+  <ItemGroup Condition="$(DefineConstants.Contains(NETCOREAPP))">
     <!-- <PackageReference Include="microsoft.powershell.3.referenceassemblies" Version="1.0.0" />  -->
 
     <PackageReference Include="System.Management.Automation" Version="6.2.3">
