@@ -144,8 +144,8 @@ namespace Snoop
 
         public override object Target
         {
-            get => this.currentSelection?.Target;
-            set => this.currentSelection = this.FindItem(value);
+            get => this.CurrentSelection?.Target;
+            set => this.CurrentSelection = this.FindItem(value);
         }
 
         /// <summary>

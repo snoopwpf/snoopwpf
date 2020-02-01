@@ -5,6 +5,7 @@ namespace Snoop
     using System.Windows;
     using System.Windows.Input;
     using System.Windows.Media;
+    using System.Windows.Threading;
     using Snoop.Infrastructure.Helpers;
 
     public static class MouseDeviceExtensions
@@ -13,15 +14,15 @@ namespace Snoop
 
         public static IInputElement GetDirectlyOver(this MouseDevice mouseDevice)
         {
-            return GetElementAtMousePos()
+            return GetElementAtMousePos(mouseDevice.Dispatcher)
                    ?? rawDirectlyOverPropertyInfo?.GetValue(mouseDevice, null) as IInputElement
-                   ?? Mouse.PrimaryDevice.DirectlyOver;
+                   ?? mouseDevice.DirectlyOver;
         }
 
-        private static FrameworkElement GetElementAtMousePos()
+        private static FrameworkElement GetElementAtMousePos(Dispatcher dispatcher)
         {
             var windowHandleUnderMouse = NativeMethods.GetWindowUnderMouse();
-            var windowUnderMouse = WindowHelper.GetVisibleWindow(windowHandleUnderMouse);
+            var windowUnderMouse = WindowHelper.GetVisibleWindow(windowHandleUnderMouse, dispatcher);
 
             FrameworkElement directlyOverElement = null;
 

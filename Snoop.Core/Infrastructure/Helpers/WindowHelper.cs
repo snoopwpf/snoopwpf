@@ -7,23 +7,37 @@
 
     public static class WindowHelper
     {
-        public static Window GetVisibleWindow(long hwnd, Dispatcher dispatcher = null)
+        /// <summary>
+        /// Gets the <see cref="Window"/> associated with <paramref name="hwnd"/> which belongs to <paramref name="dispatcher"/>.
+        /// </summary>
+        /// <returns>
+        /// <c>null</c> if <paramref name="hwnd"/> or <paramref name="dispatcher"/> are <c>null</c>.
+        /// </returns>
+        public static Window GetVisibleWindow(long hwnd, Dispatcher dispatcher)
         {
             return GetVisibleWindow(new IntPtr(hwnd), dispatcher);
         }
 
-        public static Window GetVisibleWindow(IntPtr hwnd, Dispatcher dispatcher = null)
+        /// <summary>
+        /// Gets the <see cref="Window"/> associated with <paramref name="hwnd"/> which belongs to <paramref name="dispatcher"/>.
+        /// </summary>
+        /// <returns>
+        /// <c>null</c> if <paramref name="hwnd"/> or <paramref name="dispatcher"/> are <c>null</c>.
+        /// </returns>
+        public static Window GetVisibleWindow(IntPtr hwnd, Dispatcher dispatcher)
         {
-            if (hwnd == IntPtr.Zero)
+            if (hwnd == IntPtr.Zero
+                || dispatcher is null)
             {
                 return null;
             }
 
             var hwndSource = HwndSource.FromHwnd(hwnd);
+
             if (hwndSource != null
                 && hwndSource.RootVisual is Window window
-                && window.Visibility == Visibility.Visible
-                && (dispatcher == null || window.Dispatcher == dispatcher))
+                && window.Dispatcher == dispatcher
+                && window.Visibility == Visibility.Visible)
             {
                 return window;
             }

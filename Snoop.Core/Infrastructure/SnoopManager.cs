@@ -12,8 +12,35 @@
     using Snoop.Infrastructure.Helpers;
     using Snoop.Windows;
 
-    public class SnoopManager : MarshalByRefObject
+    [Serializable]
+    public class SnoopCrossAppDomainInjector : MarshalByRefObject
     {
+        public SnoopCrossAppDomainInjector()
+        {
+            SnoopModes.MultipleAppDomainMode = true;
+
+            // We have to do this in the constructor because we might not be able to cast correctly.
+            // Not being able to cast might be the case if the app domain we should run in uses shadow copies for it's assemblies.
+            this.RunInCurrentAppDomain(Environment.GetEnvironmentVariable("Snoop.SettingsFile"));
+        }
+
+        private void RunInCurrentAppDomain(string settingsFile)
+        {
+            var settingsData = TransientSettingsData.LoadCurrent(settingsFile);
+            new SnoopManager().RunInCurrentAppDomain(settingsData);
+        }
+    }
+
+    public class SnoopManager
+    {
+        /// <summary>
+        /// This is the main entry point being called by the GenericInjector.
+        /// </summary>
+        /// <param name="settingsFile">Full path to a file containing our <see cref="TransientSettingsData"/>.</param>
+        /// <returns>
+        /// <c>0</c> if the injection succeeded.
+        /// <c>1</c> if the injection failed with an error.
+        /// <c>2</c> if the injection succeeded, but we couldn't find anything for snooping.</returns>
         [PublicAPI]
         public static int StartSnoop(string settingsFile)
         {
@@ -50,13 +77,13 @@
             {
                 Trace.WriteLine("Snoop wasn't able to enumerate app domains or MultipleAppDomainMode was disabled. Trying to run in single app domain mode.");
 
-                succeeded = this.GoBabyGoForCurrentAppDomain(settingsData);
+                succeeded = this.RunInCurrentAppDomain(settingsData);
             }
             else if (numberOfAppDomains == 1)
             {
                 Trace.WriteLine("Only found one app domain. Running in single app domain mode.");
 
-                succeeded = this.GoBabyGoForCurrentAppDomain(settingsData);
+                succeeded = this.RunInCurrentAppDomain(settingsData);
             }
             else
             {
@@ -85,14 +112,17 @@
                 if (shouldUseMultipleAppDomainMode == false
                     || appDomains == null)
                 {
-                    succeeded = this.GoBabyGoForCurrentAppDomain(settingsData);
+                    succeeded = this.RunInCurrentAppDomain(settingsData);
                 }
                 else
                 {
                     SnoopModes.MultipleAppDomainMode = true;
 
+                    // Use environment variable to transport snoop settings file accross multiple app domains
+                    Environment.SetEnvironmentVariable("Snoop.SettingsFile", settingsFile, EnvironmentVariableTarget.Process);
+
                     var assemblyFullName = typeof(SnoopManager).Assembly.Location;
-                    var fullName = typeof(SnoopManager).FullName;
+                    var fullInjectorClassName = typeof(SnoopCrossAppDomainInjector).FullName;
 
                     foreach (var appDomain in appDomains)
                     {
@@ -100,13 +130,14 @@
 
                         try
                         {
-                            var crossAppDomainSnoop = (SnoopManager)appDomain.CreateInstanceFromAndUnwrap(assemblyFullName, fullName);
+                            // the injection code runs inside the constructor of SnoopCrossAppDomainManager
+                            appDomain.CreateInstanceFrom(assemblyFullName, fullInjectorClassName);
+
+                            // if there is no exception we consider the injection successful
+                            var appDomainSucceeded = true;
+                            succeeded = succeeded || appDomainSucceeded;
 
                             Trace.WriteLine($"Successfully created Snoop instance in app domain \"{appDomain.FriendlyName}\".");
-
-                            //runs in a separate AppDomain
-                            var appDomainSucceeded = crossAppDomainSnoop.GoBabyGoForCurrentAppDomain(settingsData);
-                            succeeded = succeeded || appDomainSucceeded;
                         }
                         catch (Exception exception)
                         {
@@ -119,20 +150,16 @@
 
             if (succeeded == false)
             {
-                MessageBox.Show(
-                        "Can't find a current application or a PresentationSource root visual.",
-                        "Can't Snoop",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Exclamation);
+                MessageBox.Show("Can't find a current application or a PresentationSource root visual.",
+                                "Can't Snoop",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Exclamation);
             }
 
             return succeeded;
         }
 
-        // We have to wrap the call to SnoopUI.GoBabyGoForCurrentAppDomain in an instance member.
-        // Otherwise we are not called in the desired appdomain.
-        // ReSharper disable once MemberCanBeMadeStatic.Local
-        private bool GoBabyGoForCurrentAppDomain(TransientSettingsData settingsData)
+        public bool RunInCurrentAppDomain(TransientSettingsData settingsData)
         {
             Trace.WriteLine($"Trying to run Snoop in app domain \"{AppDomain.CurrentDomain.FriendlyName}\"...");
 
@@ -140,9 +167,11 @@
             {
                 var instanceCreator = GetInstanceCreator(settingsData.StartTarget);
 
-                SnoopApplication(settingsData, instanceCreator);
+                var result = InjectSnoopIntoDispatchers(settingsData, (data, dispatcher) => CreateSnoopWindow(data, dispatcher, instanceCreator));
 
                 Trace.WriteLine($"Successfully running Snoop in app domain \"{AppDomain.CurrentDomain.FriendlyName}\".");
+
+                return result;
             }
             catch (Exception exception)
             {
@@ -160,8 +189,6 @@
 
                 return false;
             }
-
-            return true;
         }
 
         private static Func<SnoopMainBaseWindow> GetInstanceCreator(SnoopStartTarget startTarget)
@@ -179,46 +206,31 @@
             }
         }
 
-        private static void SnoopApplication(TransientSettingsData settingsData, Func<SnoopMainBaseWindow> instanceCreator)
+        private static SnoopMainBaseWindow CreateSnoopWindow(TransientSettingsData settingsData, Dispatcher dispatcher, Func<SnoopMainBaseWindow> instanceCreator)
         {
-            Trace.WriteLine("Snooping application.");
+            var snoopWindow = instanceCreator();
 
-            var dispatcher = Application.Current?.Dispatcher ?? Dispatcher.CurrentDispatcher;
+            var targetWindowOnSameDispatcher = WindowHelper.GetVisibleWindow(settingsData.TargetWindowHandle, dispatcher);
 
-            if (dispatcher.CheckAccess())
+            snoopWindow.Title = TryGetWindowOrMainWindowTitle(targetWindowOnSameDispatcher);
+
+            if (string.IsNullOrEmpty(snoopWindow.Title))
             {
-                Trace.WriteLine("Starting snoop UI...");
-
-                var targetWindow = WindowHelper.GetVisibleWindow(settingsData.TargetWindowHandle, dispatcher);
-
-                var snoop = instanceCreator();
-
-                snoop.Title = TryGetWindowOrMainWindowTitle(targetWindow);
-
-                if (string.IsNullOrEmpty(snoop.Title))
-                {
-                    snoop.Title = "Snoop";
-                }
-                else
-                {
-                    snoop.Title += " - Snoop";
-                }
-
-                snoop.Inspect();
-
-                if (targetWindow != null)
-                {
-                    snoop.Target = targetWindow;
-                }
-
-                CheckForOtherDispatchers(dispatcher, settingsData, instanceCreator);
+                snoopWindow.Title = "Snoop";
             }
             else
             {
-                Trace.WriteLine("Current dispatcher runs on a different thread.");
-
-                dispatcher.Invoke((Action)(() => SnoopApplication(settingsData, instanceCreator)));
+                snoopWindow.Title += " - Snoop";
             }
+
+            snoopWindow.Inspect();
+
+            if (targetWindowOnSameDispatcher != null)
+            {
+                snoopWindow.Target = targetWindowOnSameDispatcher;
+            }
+
+            return snoopWindow;
         }
 
         private static string TryGetWindowOrMainWindowTitle(Window targetWindow)
@@ -237,29 +249,21 @@
             return string.Empty;
         }
 
-        private static void CheckForOtherDispatchers(Dispatcher mainDispatcher, TransientSettingsData settingsData, Func<SnoopMainBaseWindow> instanceCreator)
+        private static bool InjectSnoopIntoDispatchers(TransientSettingsData settingsData, Func<TransientSettingsData, Dispatcher, SnoopMainBaseWindow> instanceCreator)
         {
-            if (settingsData.MultipleDispatcherMode == MultipleDispatcherMode.NeverUse)
-            {
-                return;
-            }
-
             // check and see if any of the root visuals have a different mainDispatcher
             // if so, ask the user if they wish to enter multiple mainDispatcher mode.
             // if they do, launch a snoop ui for every additional mainDispatcher.
             // see http://snoopwpf.codeplex.com/workitem/6334 for more info.
 
             var rootVisuals = new List<Visual>();
-            var dispatchers = new List<Dispatcher>
-                              {
-                                  mainDispatcher
-                              };
+            var dispatchers = new List<Dispatcher>();
 
             foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
             {
                 var presentationSourceRootVisual = presentationSource.RootVisual;
 
-                if (!(presentationSourceRootVisual is Window))
+                if (!(presentationSourceRootVisual is Visual))
                 {
                     continue;
                 }
@@ -269,14 +273,33 @@
                 // Check if we have already seen this dispatcher and it's root visual
                 if (dispatchers.IndexOf(presentationSourceRootVisualDispatcher) == -1)
                 {
-                    rootVisuals.Add(presentationSourceRootVisual);
                     dispatchers.Add(presentationSourceRootVisualDispatcher);
+
+                    rootVisuals.Add(presentationSourceRootVisual);
                 }
             }
 
             var useMultipleDispatcherMode = false;
             if (rootVisuals.Count > 0)
             {
+                if (rootVisuals.Count == 1
+                    || settingsData.MultipleDispatcherMode == MultipleDispatcherMode.NeverUse)
+                {
+                    var rootVisual = rootVisuals[0];
+
+                    rootVisual.Dispatcher.Invoke((Action)(() =>
+                    {
+                        var snoopInstance = instanceCreator(settingsData, rootVisual.Dispatcher);
+
+                        if (snoopInstance.Target is null)
+                        {
+                            snoopInstance.Target = rootVisual;
+                        }
+                    }));
+
+                    return true;
+                }
+
                 // Should we skip the question and always use multiple dispatcher mode?
                 if (settingsData.MultipleDispatcherMode == MultipleDispatcherMode.AlwaysUse)
                 {
@@ -303,10 +326,16 @@
                 if (useMultipleDispatcherMode)
                 {
                     SnoopModes.MultipleDispatcherMode = true;
+
                     var thread = new Thread(DispatchOut);
                     thread.Start(new DispatchOutParameters(settingsData, instanceCreator, rootVisuals));
+
+                    // todo: check if we really created something
+                    return true;
                 }
             }
+
+            return false;
         }
 
         private static void DispatchOut(object o)
@@ -315,25 +344,23 @@
 
             foreach (var visual in dispatchOutParameters.Visuals)
             {
-                if (visual.Dispatcher == null)
-                {
-                    Trace.WriteLine($"\"{ObjectToStringConverter.Instance.Convert(visual)}\" has no dispatcher.");
-                    continue;
-                }
-
                 // launch a snoop ui on each dispatcher
                 visual.Dispatcher.Invoke(
                     (Action)(() =>
                     {
-                        var snoopOtherDispatcher = dispatchOutParameters.InstanceCreator();
-                        snoopOtherDispatcher.Inspect(visual);
+                        var snoopInstance = dispatchOutParameters.InstanceCreator(dispatchOutParameters.SettingsData, visual.Dispatcher);
+
+                        if (snoopInstance.Target is null)
+                        {
+                            snoopInstance.Target = visual;
+                        }
                     }));
             }
         }
 
         private class DispatchOutParameters
         {
-            public DispatchOutParameters(TransientSettingsData settingsData, Func<SnoopMainBaseWindow> instanceCreator, List<Visual> visuals)
+            public DispatchOutParameters(TransientSettingsData settingsData, Func<TransientSettingsData, Dispatcher, SnoopMainBaseWindow> instanceCreator, List<Visual> visuals)
             {
                 this.SettingsData = settingsData;
                 this.InstanceCreator = instanceCreator;
@@ -342,7 +369,7 @@
 
             public TransientSettingsData SettingsData { get; }
 
-            public Func<SnoopMainBaseWindow> InstanceCreator { get; }
+            public Func<TransientSettingsData, Dispatcher, SnoopMainBaseWindow> InstanceCreator { get; }
 
             public List<Visual> Visuals { get; }
         }
