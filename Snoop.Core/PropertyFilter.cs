@@ -17,6 +17,7 @@ namespace Snoop
     using System.Windows.Input;
     using System.Windows.Markup;
     using System.Windows.Media;
+    using System.Windows.Media.Animation;
     using System.Windows.Navigation;
     using Snoop.Infrastructure;
 
@@ -153,13 +154,21 @@ namespace Snoop
             typeof(NameScope),
             typeof(NavigationService),
             typeof(NumberSubstitution),
+            typeof(SpellCheck),
+            typeof(Stylus),
+            typeof(TextSearch),
+            typeof(Timeline),
+            typeof(ToolBar),
             typeof(ToolTipService),
             typeof(Typography),
+            typeof(VirtualizingPanel),
+            typeof(VisualStateManager),
             typeof(XmlAttributeProperties),
 
             // Snoops own attached properties
+            typeof(AttachedPropertyManager),
             typeof(BringIntoViewBehavior),
-            typeof(AttachedPropertyManager)
+            typeof(ComboBoxSettings)
         };
 
         private static readonly List<string> uncommonPropertyNames = new List<string>
