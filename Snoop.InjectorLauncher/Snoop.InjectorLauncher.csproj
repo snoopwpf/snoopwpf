@@ -23,12 +23,10 @@
     <ApplicationManifest Include="../Shared/app.manifest" />
 
     <Compile Include="..\Shared\InjectorData.cs" Link="InjectorData.cs" />
+    <Compile Include="..\Snoop.Core\Data\TransientSettingsData.cs" Link="Data\TransientSettingsData.cs" />
+    <Compile Include="..\Snoop.Core\NativeMethods.cs" Link="NativeMethods.cs" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="..\Snoop.Core\Snoop.Core.csproj" />
-  </ItemGroup>
-  
+   
   <Target Name="Compilex64" AfterTargets="Build">
     <Message Text="Building injector launcher for x64..." Importance="High" />
     <MSBuild Condition="'$(PlatformTarget)' == 'x86'" Projects="$(MSBuildProjectFile)" Targets="Restore;Build" Properties="Configuration=$(Configuration);PlatformTarget=x64" RunEachTargetSeparately="false" />
