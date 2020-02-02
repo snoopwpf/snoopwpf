@@ -17,7 +17,7 @@ namespace Snoop.PowerShell
 
     public partial class EmbeddedShellView
     {
-        public event Action<VisualTreeItem> ProviderLocationChanged;
+        public event Action<TreeItem> ProviderLocationChanged;
 
         private Runspace runspace;
         private SnoopPSHost host;
@@ -100,7 +100,7 @@ namespace Snoop.PowerShell
                 this.SetVariable(ShellConstants.Selected, snoopUi.CurrentSelection);
 
                 // marshall back to the UI thread when the provider notifiers of a location change
-                var action = new Action<VisualTreeItem>(item => this.Dispatcher.BeginInvoke(new Action(() => this.ProviderLocationChanged?.Invoke(item))));
+                var action = new Action<TreeItem>(item => this.Dispatcher.BeginInvoke(new Action(() => this.ProviderLocationChanged?.Invoke(item))));
                 this.SetVariable(ShellConstants.LocationChangedActionKey, action);
 
                 var folder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..", "Scripts");
@@ -174,7 +174,7 @@ namespace Snoop.PowerShell
 
         private void OnSnoopUiSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => this.NotifySelected(this.snoopUi.CurrentSelection);
 
-        private void OnProviderLocationChanged(VisualTreeItem item) =>
+        private void OnProviderLocationChanged(TreeItem item) =>
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
                 this.isSettingLocationFromLocationProvider = true;
@@ -198,7 +198,7 @@ namespace Snoop.PowerShell
             this.Invoke($"${name} = $host.PrivateData['{name}']");
         }
 
-        public void NotifySelected(VisualTreeItem item)
+        public void NotifySelected(TreeItem item)
         {
             if (this.autoExpandCheckBox.IsChecked == true)
             {

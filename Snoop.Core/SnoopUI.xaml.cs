@@ -113,7 +113,7 @@ namespace Snoop
         /// <summary>
         /// This is the collection of VisualTreeItem(s) that the visual tree TreeView binds to.
         /// </summary>
-        public ObservableCollection<VisualTreeItem> VisualTreeItems { get; } = new ObservableCollection<VisualTreeItem>();
+        public ObservableCollection<TreeItem> VisualTreeItems { get; } = new ObservableCollection<TreeItem>();
 
         #endregion
 
@@ -122,13 +122,13 @@ namespace Snoop
         /// <summary>
         /// Root element of the visual tree
         /// </summary>
-        public VisualTreeItem Root
+        public TreeItem Root
         {
-            get { return this.rootVisualTreeItem; }
+            get { return this.rootTreeItem; }
 
             private set
             {
-                this.rootVisualTreeItem = value;
+                this.rootTreeItem = value;
                 this.OnPropertyChanged(nameof(this.Root));
             }
         }
@@ -136,7 +136,7 @@ namespace Snoop
         /// <summary>
         /// rootVisualTreeItem is the VisualTreeItem for the root you are inspecting.
         /// </summary>
-        private VisualTreeItem rootVisualTreeItem;
+        private TreeItem rootTreeItem;
 
         /// <summary>
         /// root is the object you are inspecting.
@@ -155,7 +155,7 @@ namespace Snoop
         /// <summary>
         /// Currently selected item in the tree view.
         /// </summary>
-        public VisualTreeItem CurrentSelection
+        public TreeItem CurrentSelection
         {
             get { return this.currentSelection; }
 
@@ -183,7 +183,7 @@ namespace Snoop
                 this.OnPropertyChanged(nameof(this.CurrentFocusScope));
 
                 if (this.VisualTreeItems.Count > 1 
-                    || (this.VisualTreeItems.Count == 1 && this.VisualTreeItems[0] != this.rootVisualTreeItem))
+                    || (this.VisualTreeItems.Count == 1 && this.VisualTreeItems[0] != this.rootTreeItem))
                 {
                     // Check whether the selected item is filtered out by the filter,
                     // in which case reset the filter.
@@ -203,7 +203,7 @@ namespace Snoop
             }
         }
 
-        private VisualTreeItem currentSelection;
+        private TreeItem currentSelection;
 
         #endregion
 
@@ -307,7 +307,7 @@ namespace Snoop
 
         #region Public Methods
 
-        public void ApplyReduceDepthFilter(VisualTreeItem newRoot)
+        public void ApplyReduceDepthFilter(TreeItem newRoot)
         {
             if (this.reducedDepthRoot != newRoot)
             {
@@ -332,7 +332,7 @@ namespace Snoop
         /// that have been changed by the user.  
         /// </summary>
         /// <param name="owningObject">currently selected object that owns the properties in the grid (before changing selection to the new object)</param>
-        private void SaveEditedProperties(VisualTreeItem owningObject)
+        private void SaveEditedProperties(TreeItem owningObject)
         {
             foreach (var property in this.PropertyGrid.PropertyGrid.Properties)
             {
@@ -406,7 +406,7 @@ namespace Snoop
 
                 this.VisualTreeItems.Clear();
 
-                this.Root = VisualTreeItem.Construct(this.root, null);
+                this.Root = TreeItem.Construct(this.root, null);
 
                 if (currentTarget != null)
                 {
@@ -573,19 +573,19 @@ namespace Snoop
         #region Private Methods
 
         /// <summary>
-        /// Find the VisualTreeItem for the specified visual.
+        /// Find the TreeItem for the specified target.
         /// If the item is not found and is not part of the Snoop UI,
-        /// the tree will be adjusted to include the window the item is in.
+        /// the tree will be adjusted to include the root visual the item is in.
         /// </summary>
-        private VisualTreeItem FindItem(object target)
+        private TreeItem FindItem(object target)
         {
-            if (this.rootVisualTreeItem == null)
+            if (this.rootTreeItem == null)
             {
                 return null;
             }
 
-            var node = this.rootVisualTreeItem.FindNode(target);
-            var rootVisual = this.rootVisualTreeItem.MainVisual;
+            var node = this.rootTreeItem.FindNode(target);
+            var rootVisual = this.rootTreeItem.MainVisual;
 
             if (node != null)
             {
@@ -614,9 +614,9 @@ namespace Snoop
                 }
             }
 
-            this.rootVisualTreeItem.Reload();
+            this.rootTreeItem.Reload();
 
-            node = this.rootVisualTreeItem.FindNode(target);
+            node = this.rootTreeItem.FindNode(target);
 
             this.SetFilter(this.filter);
 
@@ -625,7 +625,7 @@ namespace Snoop
 
         private void HandleTreeSelectedItemChanged(object sender, EventArgs e)
         {
-            if (this.Tree.SelectedItem is VisualTreeItem item)
+            if (this.Tree.SelectedItem is TreeItem item)
             {
                 this.CurrentSelection = item;
             }
@@ -649,19 +649,19 @@ namespace Snoop
             }
             else if (this.filter == "Show only visuals with binding errors")
             {
-                this.FilterBindings(this.rootVisualTreeItem);
+                this.FilterBindings(this.rootTreeItem);
             }
             else if (this.filter.Length == 0)
             {
-                this.VisualTreeItems.Add(this.rootVisualTreeItem);
+                this.VisualTreeItems.Add(this.rootTreeItem);
             }
             else
             {
-                this.FilterTree(this.rootVisualTreeItem, this.filter.ToLower());
+                this.FilterTree(this.rootTreeItem, this.filter.ToLower());
             }
         }
 
-        private void FilterTree(VisualTreeItem node, string filter)
+        private void FilterTree(TreeItem node, string filter)
         {
             foreach (var child in node.Children)
             {
@@ -676,7 +676,7 @@ namespace Snoop
             }
         }
 
-        private void FilterBindings(VisualTreeItem node)
+        private void FilterBindings(TreeItem node)
         {
             foreach (var child in node.Children)
             {
@@ -697,8 +697,8 @@ namespace Snoop
 
             this.VisualTreeItems.Clear();
 
-            this.Root = VisualTreeItem.Construct(newRoot, null);
-            this.CurrentSelection = this.rootVisualTreeItem;
+            this.Root = TreeItem.Construct(newRoot, null);
+            this.CurrentSelection = this.rootTreeItem;
 
             this.SetFilter(this.filter);
 
@@ -716,7 +716,7 @@ namespace Snoop
 
         private readonly DelayedCall filterCall;
 
-        private VisualTreeItem reducedDepthRoot;
+        private TreeItem reducedDepthRoot;
 
         private IInputElement currentFocus;
         private IInputElement previousFocus;
@@ -768,17 +768,17 @@ namespace Snoop
     {
         private static readonly object @lock = new object();
 
-        private static readonly Dictionary<Dispatcher, Dictionary<VisualTreeItem, List<PropertyValueInfo>>> itemsWithEditedProperties =
-            new Dictionary<Dispatcher, Dictionary<VisualTreeItem, List<PropertyValueInfo>>>();
+        private static readonly Dictionary<Dispatcher, Dictionary<TreeItem, List<PropertyValueInfo>>> itemsWithEditedProperties =
+            new Dictionary<Dispatcher, Dictionary<TreeItem, List<PropertyValueInfo>>>();
 
-        public static void AddEditedProperty(Dispatcher dispatcher, VisualTreeItem propertyOwner, PropertyInformation propInfo)
+        public static void AddEditedProperty(Dispatcher dispatcher, TreeItem propertyOwner, PropertyInformation propInfo)
         {
             lock (@lock)
             {
                 // first get the dictionary we're using for the given dispatcher
                 if (!itemsWithEditedProperties.TryGetValue(dispatcher, out var dispatcherList))
                 {
-                    dispatcherList = new Dictionary<VisualTreeItem, List<PropertyValueInfo>>();
+                    dispatcherList = new Dictionary<TreeItem, List<PropertyValueInfo>>();
                     itemsWithEditedProperties.Add(dispatcher, dispatcherList);
                 }
 

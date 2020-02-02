@@ -23,7 +23,7 @@ namespace Snoop
     {
         private AdornerContainer adornerContainer;
 
-        public VisualItem(Visual visual, VisualTreeItem parent)
+        public VisualItem(Visual visual, TreeItem parent)
             : base(visual, parent)
         {
             this.Visual = visual;
@@ -123,7 +123,7 @@ namespace Snoop
             }
         }
 
-        protected override void Reload(List<VisualTreeItem> toBeRemoved)
+        protected override void Reload(List<TreeItem> toBeRemoved)
         {
             // having the call to base.Reload here ... puts the application resources at the very top of the tree view.
             // this used to be at the bottom. putting it here makes it consistent (and easier to use) with ApplicationTreeItem

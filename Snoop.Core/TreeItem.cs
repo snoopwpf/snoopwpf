@@ -15,7 +15,7 @@ namespace Snoop
     using System.Windows.Media;
     using JetBrains.Annotations;
 
-    public class VisualTreeItem : INotifyPropertyChanged
+    public class TreeItem : INotifyPropertyChanged
     {
         private bool isExpanded;
         private bool isSelected;
@@ -25,7 +25,7 @@ namespace Snoop
         private string typeNameLower = string.Empty;
         private int visualChildrenCount;
 
-        protected VisualTreeItem(object target, VisualTreeItem parent)
+        protected TreeItem(object target, TreeItem parent)
         {
             this.Target = target ?? throw new ArgumentNullException(nameof(target));
 
@@ -38,17 +38,17 @@ namespace Snoop
         }
 
         /// <summary>
-        /// The WPF object that this VisualTreeItem is wrapping
+        /// The WPF object that this instance is wrapping
         /// </summary>
         public object Target { get; }
 
         /// <summary>
-        /// The VisualTreeItem parent of this VisualTreeItem
+        /// The parent of this instance
         /// </summary>
-        public VisualTreeItem Parent { get; }
+        public TreeItem Parent { get; }
 
         /// <summary>
-        /// The depth (in the visual tree) of this VisualTreeItem
+        /// The depth (in the visual tree) of this instance
         /// </summary>
         public int Depth { get; }
 
@@ -77,9 +77,9 @@ namespace Snoop
         public int SortOrder { get; protected set; }
 
         /// <summary>
-        /// The VisualTreeItem children of this VisualTreeItem
+        /// The children of this instance
         /// </summary>
-        public ObservableCollection<VisualTreeItem> Children { get; } = new ObservableCollection<VisualTreeItem>();
+        public ObservableCollection<TreeItem> Children { get; } = new ObservableCollection<TreeItem>();
 
         public bool IsSelected
         {
@@ -135,32 +135,32 @@ namespace Snoop
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public static VisualTreeItem Construct(object target, VisualTreeItem parent)
+        public static TreeItem Construct(object target, TreeItem parent)
         {
-            VisualTreeItem visualTreeItem;
+            TreeItem treeItem;
 
             switch (target)
             {
                 case Visual visual:
-                    visualTreeItem = new VisualItem(visual, parent);
+                    treeItem = new VisualItem(visual, parent);
                     break;
 
                 case ResourceDictionary resourceDictionary:
-                    visualTreeItem = new ResourceDictionaryItem(resourceDictionary, parent);
+                    treeItem = new ResourceDictionaryItem(resourceDictionary, parent);
                     break;
 
                 case Application application:
-                    visualTreeItem = new ApplicationTreeItem(application, parent);
+                    treeItem = new ApplicationTreeItem(application, parent);
                     break;
 
                 default:
-                    visualTreeItem = new VisualTreeItem(target, parent);
+                    treeItem = new TreeItem(target, parent);
                     break;
             }
 
-            visualTreeItem.Reload();
+            treeItem.Reload();
 
-            return visualTreeItem;
+            return treeItem;
         }
 
         public override string ToString()
@@ -203,7 +203,7 @@ namespace Snoop
 
             this.typeNameLower = this.Target != null ? this.Target.GetType().Name.ToLower() : string.Empty;
 
-            var toBeRemoved = new List<VisualTreeItem>(this.Children);
+            var toBeRemoved = new List<TreeItem>(this.Children);
 
             this.Reload(toBeRemoved);
 
@@ -244,11 +244,11 @@ namespace Snoop
             return name;
         }
 
-        protected virtual void Reload(List<VisualTreeItem> toBeRemoved)
+        protected virtual void Reload(List<TreeItem> toBeRemoved)
         {
         }
 
-        public virtual VisualTreeItem FindNode(object target)
+        public virtual TreeItem FindNode(object target)
         {
             if (target is null)
             {
@@ -301,7 +301,7 @@ namespace Snoop
             return false;
         }
 
-        protected void RemoveChild(VisualTreeItem item)
+        protected void RemoveChild(TreeItem item)
         {
             item.IsSelected = false;
             this.Children.Remove(item);

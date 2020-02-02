@@ -176,7 +176,7 @@ All other rights reserved.
 			HorizontalAlignment="Stretch"
 		>
 			<TreeView.Resources>
-				<HierarchicalDataTemplate DataType="{x:Type local:VisualTreeItem}" ItemsSource="{Binding Children}">
+				<HierarchicalDataTemplate DataType="{x:Type local:TreeItem}" ItemsSource="{Binding Children}">
 					<TextBlock
 						Text="{Binding}"
 						HorizontalAlignment="Stretch"

@@ -27,7 +27,7 @@ namespace Snoop
                 return false;
             }
 
-            var rootItem = (VisualTreeItem)this.rootItem.Target;
+            var rootItem = (TreeItem)this.rootItem.Target;
             if (rootItem == null)
             {
                 return false;
@@ -42,7 +42,7 @@ namespace Snoop
                 }
             }
 
-            var item = (VisualTreeItem)curNode.DataContext;
+            var item = (TreeItem)curNode.DataContext;
             var selectedItem = this.snoopUI.CurrentSelection;
             if (selectedItem != null && item.Depth < selectedItem.Depth)
             {
@@ -129,7 +129,7 @@ namespace Snoop
                 }
 
                 this.maxDepth = (240 - rootLayoutDepth) / levelLayoutDepth;
-                this.rootItem = new WeakReference((VisualTreeItem)root.DataContext);
+                this.rootItem = new WeakReference((TreeItem)root.DataContext);
             }
         }
 

@@ -21,12 +21,12 @@ namespace Snoop.PowerShell
         private Timer oneTimeSyncTimer;
         private const int LocationChangeNotifyDelay = 250;
 
-        private VisualTreeItem Root
+        private TreeItem Root
         {
             get
             {
                 var data = (Hashtable)this.Host.PrivateData.BaseObject;
-                return (VisualTreeItem)data[ShellConstants.Root];
+                return (TreeItem)data[ShellConstants.Root];
             }
         }
 
@@ -88,7 +88,7 @@ namespace Snoop.PowerShell
                     if (item != null)
                     {
                         var data = (Hashtable)this.Host.PrivateData.BaseObject;
-                        var action = (Action<VisualTreeItem>)data[ShellConstants.LocationChangedActionKey];
+                        var action = (Action<TreeItem>)data[ShellConstants.LocationChangedActionKey];
                         action(item);
                     }
                     else
@@ -127,7 +127,7 @@ namespace Snoop.PowerShell
             return path;
         }
 
-        private VisualTreeItem GetTreeItem(string path)
+        private TreeItem GetTreeItem(string path)
         {
             path = GetValidPath(path);
 
@@ -268,9 +268,9 @@ namespace Snoop.PowerShell
         }
     }
 
-    internal static class VisualTreeItemExtensions
+    internal static class TreeItemExtensions
     {
-        public static string NodePath(this VisualTreeItem item)
+        public static string NodePath(this TreeItem item)
         {
             var parts = new List<string>();
 
@@ -285,7 +285,7 @@ namespace Snoop.PowerShell
             return string.Join("\\", parts.ToArray());
         }
 
-        public static string NodeName(this VisualTreeItem item)
+        public static string NodeName(this TreeItem item)
         {
             var name = GetName(item);
 
@@ -304,7 +304,7 @@ namespace Snoop.PowerShell
             return name;
         }
 
-        private static string GetName(VisualTreeItem item)
+        private static string GetName(TreeItem item)
         {
             return item.Target.GetType().Name;
         }

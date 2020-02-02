@@ -15,7 +15,7 @@ namespace Snoop
     {
         private readonly Application application;
 
-        public ApplicationTreeItem(Application application, VisualTreeItem parent)
+        public ApplicationTreeItem(Application application, TreeItem parent)
             : base(application, parent)
         {
             this.application = application;
@@ -26,7 +26,7 @@ namespace Snoop
 
         protected override ResourceDictionary ResourceDictionary => this.application.Resources;
 
-        protected override void Reload(List<VisualTreeItem> toBeRemoved)
+        protected override void Reload(List<TreeItem> toBeRemoved)
         {
             // having the call to base.Reload here ... puts the application resources at the very top of the tree view
             base.Reload(toBeRemoved);

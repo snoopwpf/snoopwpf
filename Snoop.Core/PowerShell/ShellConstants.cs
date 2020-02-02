@@ -51,7 +51,7 @@ namespace Snoop.PowerShell
         public const string LastKnownSnoopLocation = "LastKnownSnoopLocation";
 
         /// <summary>
-        /// Gets the key for storing an <see cref="Action{T}"/> of type <see cref="VisualTreeItem"/>.
+        /// Gets the key for storing an <see cref="Action{T}"/> of type <see cref="TreeItem"/>.
         /// </summary>
         public const string LocationChangedActionKey = "lca_key";
 

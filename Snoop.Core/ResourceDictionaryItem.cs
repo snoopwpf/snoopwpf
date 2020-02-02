@@ -11,14 +11,14 @@ namespace Snoop
     using System.Windows.Data;
     using System.Windows.Markup;
 
-    public class ResourceDictionaryItem : VisualTreeItem
+    public class ResourceDictionaryItem : TreeItem
     {
         private static readonly SortDescription dictionarySortDescription = new SortDescription(nameof(SortOrder), ListSortDirection.Ascending);
         private static readonly SortDescription displayNameSortDescription = new SortDescription(nameof(DisplayName), ListSortDirection.Ascending);
 
         private readonly ResourceDictionary dictionary;
 
-        public ResourceDictionaryItem(ResourceDictionary dictionary, VisualTreeItem parent)
+        public ResourceDictionaryItem(ResourceDictionary dictionary, TreeItem parent)
             : base(dictionary, parent)
         {
             this.dictionary = dictionary;
@@ -28,7 +28,7 @@ namespace Snoop
             childrenView.SortDescriptions.Add(displayNameSortDescription);
         }
 
-        public override VisualTreeItem FindNode(object target)
+        public override TreeItem FindNode(object target)
         {
             return null;
         }
@@ -45,7 +45,7 @@ namespace Snoop
             return source;
         }
 
-        protected override void Reload(List<VisualTreeItem> toBeRemoved)
+        protected override void Reload(List<TreeItem> toBeRemoved)
         {
             base.Reload(toBeRemoved);
 
@@ -117,11 +117,11 @@ namespace Snoop
         }
     }
 
-    public class ResourceItem : VisualTreeItem
+    public class ResourceItem : TreeItem
     {
         private readonly object key;
 
-        public ResourceItem(object target, object key, VisualTreeItem parent)
+        public ResourceItem(object target, object key, TreeItem parent)
             : base(target, parent)
         {
             this.key = key;

@@ -8,16 +8,16 @@ namespace Snoop
     using System.Collections.Generic;
     using System.Windows;
 
-    public abstract class ResourceContainerItem : VisualTreeItem
+    public abstract class ResourceContainerItem : TreeItem
     {
-        protected ResourceContainerItem(object target, VisualTreeItem parent)
+        protected ResourceContainerItem(object target, TreeItem parent)
             : base(target, parent)
         {
         }
 
         protected abstract ResourceDictionary ResourceDictionary { get; }
 
-        protected override void Reload(List<VisualTreeItem> toBeRemoved)
+        protected override void Reload(List<TreeItem> toBeRemoved)
         {
             base.Reload(toBeRemoved);
 
