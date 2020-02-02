@@ -6,6 +6,7 @@ namespace Snoop
     using System.Windows.Input;
     using System.Windows.Media;
     using System.Windows.Threading;
+    using Snoop.Infrastructure;
     using Snoop.Infrastructure.Helpers;
 
     public static class MouseDeviceExtensions
@@ -43,7 +44,8 @@ namespace Snoop
         {
             if (result != null
                 && result.VisualHit is FrameworkElement frameworkElement
-                && frameworkElement.IsVisible)
+                && frameworkElement.IsVisible
+                && frameworkElement.IsPartOfSnoopVisualTree() == false)
             {
                 directlyOverElement = frameworkElement;
                 return HitTestResultBehavior.Stop;

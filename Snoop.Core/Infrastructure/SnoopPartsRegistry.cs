@@ -9,6 +9,7 @@ namespace Snoop.Infrastructure
     using System.Collections.Generic;
     using System.Linq;
     using System.Windows.Media;
+    using Snoop.AttachedProperties;
 
     /// <summary>
     ///     This service allows Snoop to mark certain visuals as visual tree roots of its own UI.
@@ -29,6 +30,11 @@ namespace Snoop.Infrastructure
                 return false;
             }
 
+            if (SnoopAttachedProperties.GetIsSnoopPart(visual))
+            {
+                return true;
+            }
+
             foreach (var registeredSnoopVisual in registeredSnoopVisualTreeRoots.ToList())
             {
                 if (registeredSnoopVisual.IsAlive == false)
@@ -39,7 +45,7 @@ namespace Snoop.Infrastructure
 
                 var snoopVisual = (Visual)registeredSnoopVisual.Target;
 
-                if (visual == snoopVisual
+                if (ReferenceEquals(visual, snoopVisual)
                     || (visual.Dispatcher == snoopVisual.Dispatcher && visual.IsDescendantOf(snoopVisual)))
                 {
                     return true;

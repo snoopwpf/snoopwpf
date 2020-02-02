@@ -8,25 +8,32 @@ namespace Snoop
     using System.Windows;
     using System.Windows.Documents;
     using System.Windows.Media;
+    using Snoop.AttachedProperties;
 
     /// <summary>
     /// Simple helper class to allow any UIElements to be used as an Adorner.
     /// </summary>
     public class AdornerContainer : Adorner
     {
+        private UIElement child;
+
+        static AdornerContainer()
+        {
+            IsHitTestVisibleProperty.OverrideMetadata(typeof(AdornerContainer), new UIPropertyMetadata(false));
+        }
+
         public AdornerContainer(UIElement adornedElement)
             : base(adornedElement)
         {
+            SnoopAttachedProperties.SetIsSnoopPart(this, true);
         }
 
-        protected override int VisualChildrenCount
-        {
-            get { return this.child == null ? 0 : 1; }
-        }
+        protected override int VisualChildrenCount => this.child is null ? 0 : 1;
 
         protected override Visual GetVisualChild(int index)
         {
-            if (index == 0 && this.child != null)
+            if (index == 0
+                && this.child != null)
             {
                 return this.child;
             }
@@ -36,10 +43,7 @@ namespace Snoop
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            if (this.child != null)
-            {
-                this.child.Arrange(new Rect(finalSize));
-            }
+            this.child?.Arrange(new Rect(finalSize));
 
             return finalSize;
         }
@@ -54,7 +58,5 @@ namespace Snoop
                 this.child = value;
             }
         }
-
-        private UIElement child;
     }
 }

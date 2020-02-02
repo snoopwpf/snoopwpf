@@ -92,7 +92,8 @@ namespace Snoop
             if (adornerLayer != null
                 && this.Visual is UIElement visualElement)
             {
-                if (this.IsSelected && this.adornerContainer == null)
+                if (this.IsSelected 
+                    && this.adornerContainer == null)
                 {
                     var border = new Border
                     {

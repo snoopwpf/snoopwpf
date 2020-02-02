@@ -88,7 +88,7 @@ All other rights reserved.
             <ComboBox
                 Style="{x:Null}"
                 x:Name="FilterSetCombo"
-                i:ComboBoxSettings.IsSnoopPart="True"
+                i:ComboBoxSettings.RegisterAsSnoopPart="True"
                 Width="100"
                 Margin="0,0,2,0"
                 Padding="4 1 4 1"

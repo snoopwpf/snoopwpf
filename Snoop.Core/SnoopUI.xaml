@@ -124,7 +124,7 @@ All other rights reserved.
 		<ComboBox
 			x:Name="filterComboBox"
             Style="{x:Null}"
-			i:ComboBoxSettings.IsSnoopPart="True"
+			i:ComboBoxSettings.RegisterAsSnoopPart="True"
 			IsEditable="True"
 			Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}"
 			Margin="2,2,22,2"

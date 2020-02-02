@@ -21,11 +21,10 @@ namespace Snoop.Infrastructure
         /// If ComboBox is a part of Snoop UI it doesn't take part in
         /// routed events monitoring.
         /// </summary>
-        /// <param name="obj"></param>
         /// <returns></returns>
-        public static bool GetIsSnoopPart(ComboBox obj)
+        public static bool GetRegisterAsSnoopPart(ComboBox obj)
         {
-            return (bool)obj.GetValue(IsSnoopPartProperty);
+            return (bool)obj.GetValue(RegisterAsSnoopPartProperty);
         }
 
         /// <summary>
@@ -33,33 +32,31 @@ namespace Snoop.Infrastructure
         /// If ComboBox is a part of Snoop UI it doesn't take part in 
         /// routed events monitoring.
         /// </summary>
-        public static void SetIsSnoopPart(ComboBox obj, bool value)
+        public static void SetRegisterAsSnoopPart(ComboBox obj, bool value)
         {
-            obj.SetValue(IsSnoopPartProperty, value);
+            obj.SetValue(RegisterAsSnoopPartProperty, value);
         }
 
         /// <summary>
-        /// Identifies the <see cref="IsSnoopPart"/> attached property.
+        /// Identifies the "RegisterAsSnoopPart" attached property.
         /// </summary>
-        public static readonly DependencyProperty IsSnoopPartProperty =
+        public static readonly DependencyProperty RegisterAsSnoopPartProperty =
             DependencyProperty.RegisterAttached(
-                "IsSnoopPart",
+                "RegisterAsSnoopPart",
                 typeof(bool),
                 typeof(ComboBoxSettings),
-                new PropertyMetadata(false, OnIsSnoopPartChanged));
+                new PropertyMetadata(false, OnRegisterAsSnoopPartChanged));
 
-        private static void OnIsSnoopPartChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
+        private static void OnRegisterAsSnoopPartChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
         {
-            var cb = o as ComboBox;
-            if (cb != null)
-            {
-                cb.WhenLoaded(fe => UpdateSnoopPartSettings(cb, (bool)e.NewValue));
-            }
+            var comboBox = o as ComboBox;
+            comboBox?.WhenLoaded(fe => UpdateSnoopPartSettings(comboBox, (bool)e.NewValue));
         }
 
         private static void UpdateSnoopPartSettings(ComboBox comboBox, bool isSnoopPart)
         {
             var popup = GetComboBoxPopup(comboBox);
+
             if (popup == null)
             {
                 return;
@@ -77,7 +74,7 @@ namespace Snoop.Infrastructure
 
         private static Popup GetComboBoxPopup(ComboBox comboBox)
         {
-            if (comboBox == null || comboBox.Template == null)
+            if (comboBox?.Template == null)
             {
                 return null;
             }

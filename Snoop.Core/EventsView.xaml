@@ -284,7 +284,7 @@ All other rights reserved.
 	<ComboBox
 		x:Name="EventChooser"
 	    Style="{x:Null}"
-		i:ComboBoxSettings.IsSnoopPart="True"
+		i:ComboBoxSettings.RegisterAsSnoopPart="True"
 		HorizontalAlignment="Stretch"
 		VerticalAlignment="Stretch"
 		Margin="0,0,20,0"
