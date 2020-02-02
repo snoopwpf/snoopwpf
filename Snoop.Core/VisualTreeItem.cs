@@ -212,6 +212,9 @@ namespace Snoop
                 this.RemoveChild(item);
             }
 
+            // Reset visual children count prior to re-calculation
+            this.visualChildrenCount = 0;
+
             // calculate the number of visual children
             foreach (var child in this.Children)
             {
