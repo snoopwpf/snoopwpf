@@ -218,7 +218,7 @@ All other rights reserved.
 			</TreeView.ItemContainerStyle>
 
 			<local:ProperTreeView.ToolTip>
-				<TextBlock Style="{x:Null}" Text="Hold down Ctrl-Shift and mouse over elements in the target app to select them."/>
+				<TextBlock Style="{x:Null}" Text="Hold down Ctrl or Ctrl + Shift and mouse over elements in the target app to select them."/>
 			</local:ProperTreeView.ToolTip>
 		</local:ProperTreeView>
 		
