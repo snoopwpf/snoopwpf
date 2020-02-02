@@ -22,6 +22,8 @@ namespace Snoop
 
         public DataTemplate BrushTemplate { get; set; }
 
+        public DataTemplate WithResourceKeyTemplate { get; set; }
+
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
             var property = (PropertyInformation)item;
@@ -51,6 +53,11 @@ namespace Snoop
             if (typeof(Brush).IsAssignableFrom(property.PropertyType))
             {
                 return this.BrushTemplate;
+            }
+
+            if (string.IsNullOrEmpty(property.ResourceKey) == false)
+            {
+                return this.WithResourceKeyTemplate;
             }
 
             return this.StandardTemplate;

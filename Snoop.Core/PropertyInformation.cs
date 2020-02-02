@@ -15,6 +15,7 @@ namespace Snoop
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Windows;
+    using System.Windows.Controls;
     using System.Windows.Data;
     using System.Windows.Media;
     using System.Windows.Threading;
@@ -235,16 +236,36 @@ namespace Snoop
 
         public string ResourceKey
         {
-            get => this.resourceKey;
-            private set
+            get
             {
-                if (value == this.resourceKey)
+                var value = this.Value;
+                if (value is null
+                    || this.property is null)
                 {
-                    return;
+                    return null;
                 }
 
-                this.resourceKey = value;
-                this.OnPropertyChanged(nameof(this.ResourceKey));
+                string resourceKey = null;
+
+                if (this.Target is DependencyObject dependencyObject)
+                {
+                    // Cache the resource key for this item if not cached already. This could be done for more types, but would need to optimize perf.
+                    if (this.TypeMightHaveResourceKey(this.property.PropertyType))
+                    {
+                        var resourceItem = value;
+                        resourceKey = ResourceKeyCache.GetKey(resourceItem);
+
+                        if (string.IsNullOrEmpty(resourceKey))
+                        {
+                            resourceKey = ResourceDictionaryKeyHelpers.GetKeyOfResourceItem(dependencyObject, resourceItem);
+                            ResourceKeyCache.Cache(resourceItem, resourceKey);
+                        }
+
+                        Debug.Assert(resourceKey != null, "resourceKey != null");
+                    }
+                }
+
+                return resourceKey;
             }
         }
 
@@ -253,7 +274,7 @@ namespace Snoop
             get
             {
                 var value = this.Value;
-                if (value == null)
+                if (value is null)
                 {
                     return string.Empty;
                 }
@@ -294,26 +315,8 @@ namespace Snoop
                     stringValue = "Transparent";
                 }
 
-                if (this.Target is DependencyObject dependencyObject)
+                if (this.Target is DependencyObject)
                 {
-                    // Cache the resource key for this item if not cached already. This could be done for more types, but would need to optimize perf.
-                    this.ResourceKey = null;
-
-                    if (this.property != null
-                        && (this.property.PropertyType == typeof(Style) || this.property.PropertyType == typeof(Brush)))
-                    {
-                        var resourceItem = value;
-                        this.ResourceKey = ResourceKeyCache.GetKey(resourceItem);
-
-                        if (string.IsNullOrEmpty(this.ResourceKey))
-                        {
-                            this.ResourceKey = ResourceDictionaryKeyHelpers.GetKeyOfResourceItem(dependencyObject, resourceItem);
-                            ResourceKeyCache.Cache(resourceItem, this.ResourceKey);
-                        }
-
-                        Debug.Assert(this.ResourceKey != null, "this.ResourceKey != null");
-                    }
-
                     // Display both the value and the resource key, if there's a key for this property.
                     if (string.IsNullOrEmpty(this.ResourceKey) == false)
                     {
@@ -343,6 +346,14 @@ namespace Snoop
 
                 return stringValue;
             }
+        }
+
+        private bool TypeMightHaveResourceKey(Type type)
+        {
+            return type == typeof(Style)
+                   || type == typeof(ControlTemplate)
+                   || type == typeof(Color)
+                   || type == typeof(Brush);
         }
 
         /// <summary>
@@ -735,6 +746,7 @@ namespace Snoop
             this.OnPropertyChanged(nameof(this.IsLocallySet));
             this.OnPropertyChanged(nameof(this.IsInvalidBinding));
             this.OnPropertyChanged(nameof(this.StringValue));
+            this.OnPropertyChanged(nameof(this.ResourceKey));
             this.OnPropertyChanged(nameof(this.DescriptiveValue));
             this.OnPropertyChanged(nameof(this.IsDatabound));
             this.OnPropertyChanged(nameof(this.IsExpression));
@@ -909,7 +921,6 @@ namespace Snoop
 
         private bool isRunning;
         private bool ignoreUpdate;
-        private string resourceKey;
         private static readonly Attribute[] getAllPropertiesAttributeFilter = { new PropertyFilterAttribute(PropertyFilterOptions.All) };
 
         public bool IsCollection()

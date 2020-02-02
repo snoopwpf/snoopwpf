@@ -8,8 +8,34 @@ All other rights reserved.
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:snoop="clr-namespace:Snoop"
-	xmlns:converters="clr-namespace:Snoop.Converters">
-	<Style TargetType="{x:Type snoop:StandardValueEditor}">
+	xmlns:converters="clr-namespace:Snoop.Converters" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:valueEditors="clr-namespace:Snoop.ValueEditors"
+    mc:Ignorable="d">
+
+    <Style TargetType="{x:Type valueEditors:MouseWheelValueEditor}">
+        <Setter Property="DockPanel.Dock" Value="Right"/>
+        <Setter Property="Margin" Value="5,0,0,0"/>
+        <Setter Property="Visibility" Value="Collapsed"/>
+        <Setter Property="ToolTip">
+            <Setter.Value>
+                <DataTemplate>
+                    <TextBlock Style="{x:Null}" Text="Scroll mouse wheel here to edit value"/>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}" Value="True"/>
+                    <Condition Binding="{Binding CanEdit}" Value="True"/>
+                </MultiDataTrigger.Conditions>
+                <Setter Property="Visibility" Value="Visible"/>
+            </MultiDataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="{x:Type snoop:StandardValueEditor}">
 		<Style.Resources>
             <DataTemplate x:Key="EmptyValueTemplate" DataType="snoop:ValueEditor">
                 <TextBlock Style="{x:Null}" Text="{Binding DescriptiveValue}"/>
@@ -20,7 +46,7 @@ All other rights reserved.
 			</DataTemplate>
 
 			<DataTemplate x:Key="SelectedValueTemplate" DataType="snoop:StandardValueEditor">
-				<snoop:EditTextBox Height="Auto" Text="{Binding StringValue}" HorizontalAlignment="Stretch" Padding="1" BorderThickness="0" Background="White" VerticalContentAlignment="Center"/>
+				<snoop:EditTextBox Height="Auto" IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}" Text="{Binding StringValue}" HorizontalAlignment="Stretch" Padding="1" BorderThickness="0" Background="White" VerticalContentAlignment="Center"/>
 			</DataTemplate>
         </Style.Resources>
 		
@@ -57,7 +83,6 @@ All other rights reserved.
                         <MultiTrigger>
 							<MultiTrigger.Conditions>
 								<Condition Property="IsSelected" Value="True"/>
-								<Condition Property="IsEditable" Value="True"/>
 							</MultiTrigger.Conditions>
 							<Setter TargetName="ValueHolder" Property="ContentTemplate" Value="{DynamicResource SelectedValueTemplate}"/>
 						</MultiTrigger>
@@ -79,7 +104,7 @@ All other rights reserved.
         <Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type snoop:BoolValueEditor}">
-					<StackPanel Orientation="Horizontal">
+					<StackPanel Orientation="Horizontal" d:DataContext="{d:DesignInstance snoop:PropertyInformation, IsDesignTimeCreatable=False}">
 						<CheckBox
 							x:Name="PART_CheckBox"
 						    Style="{x:Null}"
@@ -182,7 +207,7 @@ All other rights reserved.
 			</DataTemplate>
 
 			<DataTemplate x:Key="SelectedValueTemplate" DataType="snoop:BrushValueEditor">
-				<snoop:EditTextBox Height="Auto" Text="{Binding StringValue}" HorizontalAlignment="Stretch" Padding="1" BorderThickness="0" Background="White" VerticalContentAlignment="Center"/>
+				<snoop:EditTextBox Height="Auto" IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}" Text="{Binding StringValue}" HorizontalAlignment="Stretch" Padding="1" BorderThickness="0" Background="White" VerticalContentAlignment="Center"/>
 			</DataTemplate>
 
 			<DataTemplate x:Key="EmptyValueTemplate"/>
@@ -192,11 +217,11 @@ All other rights reserved.
 	<Style TargetType="{x:Type snoop:EnumValueEditor}">
 		<Style.Resources>
 			<DataTemplate x:Key="UnselectedValueTemplate" DataType="snoop:ValueEditor">
-				<TextBlock Style="{x:Null}" Text="{Binding DescriptiveValue}"/>
+				<TextBlock Style="{x:Null}" Text="{Binding DescriptiveValue}" />
 			</DataTemplate>
 
 			<DataTemplate x:Key="SelectedValueTemplate" DataType="snoop:EnumValueEditor">
-				<ComboBox Style="{x:Null}" Height="16" Padding="2,-2,2,0" ItemsSource="{Binding Values}" IsSynchronizedWithCurrentItem="True"/>
+				<ComboBox Style="{x:Null}" Height="16" Padding="2,-2,2,0" IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}" ItemsSource="{Binding Values}" IsSynchronizedWithCurrentItem="True" />
 			</DataTemplate>
 		</Style.Resources>
 
@@ -219,4 +244,126 @@ All other rights reserved.
 			</Setter.Value>
 		</Setter>
 	</Style>
+
+	<snoop:ValueEditorTemplateSelector x:Key="EditorSelector">
+		<snoop:ValueEditorTemplateSelector.StandardTemplate>
+			<DataTemplate DataType="snoop:PropertyInformation">
+				<DockPanel>
+					<!-- add mouse wheel editor to right of value (only visible when IsSelected and CanEdit) -->
+					<valueEditors:MouseWheelValueEditor/>
+
+					<snoop:StandardValueEditor
+						PropertyType="{Binding PropertyType}"
+						Value="{Binding Value, Mode=TwoWay}"
+						DescriptiveValue="{Binding DescriptiveValue, Mode=OneWay}"
+						IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
+						IsEditable="{Binding CanEdit}"
+						PropertyInfo="{Binding}"
+					/>
+
+					<!-- to allow ValueEditor to live on the left and not stretch -->
+					<Border/>
+				</DockPanel>
+			</DataTemplate>
+		</snoop:ValueEditorTemplateSelector.StandardTemplate>
+
+		<snoop:ValueEditorTemplateSelector.EnumTemplate>
+			<DataTemplate DataType="snoop:PropertyInformation">
+				<DockPanel>
+					<!-- add mouse wheel editor to right of value (only visible when IsSelected and CanEdit) -->
+					<valueEditors:MouseWheelValueEditor/>
+
+					<snoop:EnumValueEditor
+						PropertyType="{Binding PropertyType}"
+						Value="{Binding Value, Mode=TwoWay}"
+						DescriptiveValue="{Binding DescriptiveValue, Mode=OneWay}"
+						IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
+						IsEditable="{Binding CanEdit}"
+						PropertyInfo="{Binding}"
+					/>
+
+					<!-- to allow ValueEditor to live on the left and not stretch -->
+					<Border/>
+				</DockPanel>
+			</DataTemplate>
+		</snoop:ValueEditorTemplateSelector.EnumTemplate>
+
+		<snoop:ValueEditorTemplateSelector.BoolTemplate>
+			<DataTemplate DataType="snoop:PropertyInformation">
+				<DockPanel>
+					<!-- add mouse wheel editor to right of value (only visible when IsSelected and CanEdit) -->
+					<valueEditors:MouseWheelValueEditor/>
+
+					<snoop:BoolValueEditor
+						PropertyType="{Binding PropertyType}"
+						Value="{Binding Value, Mode=TwoWay}"
+						DescriptiveValue="{Binding DescriptiveValue, Mode=OneWay}"
+						IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
+						IsEditable="{Binding CanEdit}"
+						PropertyInfo="{Binding}"
+					/>
+
+					<!-- to allow ValueEditor to live on the left and not stretch -->
+					<Border/>
+				</DockPanel>
+			</DataTemplate>
+		</snoop:ValueEditorTemplateSelector.BoolTemplate>
+
+        <snoop:ValueEditorTemplateSelector.StringTemplate>
+            <DataTemplate DataType="snoop:PropertyInformation">
+                <DockPanel>
+                    <snoop:StringValueEditor
+                        PropertyType="{Binding PropertyType}"
+                        Value="{Binding Value, Mode=TwoWay}"
+                        DescriptiveValue="{Binding DescriptiveValue, Mode=OneWay}"
+                        IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
+                        IsEditable="{Binding CanEdit}"
+                        PropertyInfo="{Binding}"
+                    />
+
+                    <!-- to allow ValueEditor to live on the left and not stretch -->
+                    <Border/>
+                </DockPanel>
+            </DataTemplate>
+        </snoop:ValueEditorTemplateSelector.StringTemplate>
+
+		<snoop:ValueEditorTemplateSelector.BrushTemplate>
+			<DataTemplate DataType="snoop:PropertyInformation">
+				<DockPanel>
+					<!-- add mouse wheel editor to right of value (only visible when IsSelected and CanEdit) -->
+					<valueEditors:MouseWheelValueEditor/>
+
+					<snoop:BrushValueEditor
+						PropertyType="{Binding PropertyType}"
+						Value="{Binding Value, Mode=TwoWay}"
+						DescriptiveValue="{Binding DescriptiveValue, Mode=OneWay}"
+						IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
+						IsEditable="{Binding CanEdit}"
+						PropertyInfo="{Binding}"
+					/>
+
+					<!-- to allow ValueEditor to live on the left and not stretch -->
+					<Border/>
+				</DockPanel>
+			</DataTemplate>
+		</snoop:ValueEditorTemplateSelector.BrushTemplate>
+
+        <snoop:ValueEditorTemplateSelector.WithResourceKeyTemplate>
+            <DataTemplate DataType="snoop:PropertyInformation">
+                <DockPanel>
+                    <snoop:StandardValueEditor
+                        PropertyType="{Binding PropertyType}"
+                        Value="{Binding ResourceKey, Mode=OneWay}"
+                        DescriptiveValue="{Binding DescriptiveValue, Mode=OneWay}"
+                        IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
+                        IsEditable="False"
+                        PropertyInfo="{Binding}"
+                    />
+
+                    <!-- to allow ValueEditor to live on the left and not stretch -->
+                    <Border/>
+                </DockPanel>
+            </DataTemplate>
+        </snoop:ValueEditorTemplateSelector.WithResourceKeyTemplate>
+	</snoop:ValueEditorTemplateSelector>
 </ResourceDictionary>
