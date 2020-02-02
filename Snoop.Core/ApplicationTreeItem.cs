@@ -11,7 +11,7 @@ namespace Snoop
     using System.Windows.Media;
     using Snoop.Infrastructure;
 
-    public class ApplicationTreeItem : ResourceContainerItem
+    public class ApplicationTreeItem : ResourceContainerTreeItem
     {
         private readonly Application application;
 

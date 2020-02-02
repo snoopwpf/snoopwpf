@@ -22,12 +22,15 @@ namespace Snoop
 
         private string name = string.Empty;
         private string nameLower = string.Empty;
-        private string typeNameLower = string.Empty;
+        private readonly string typeNameLower;
         private int visualChildrenCount;
 
         protected TreeItem(object target, TreeItem parent)
         {
             this.Target = target ?? throw new ArgumentNullException(nameof(target));
+            this.TargetType = this.Target.GetType();
+
+            this.typeNameLower = this.TargetType.Name.ToLower();
 
             this.Parent = parent;
 
@@ -41,6 +44,8 @@ namespace Snoop
         /// The WPF object that this instance is wrapping
         /// </summary>
         public object Target { get; }
+
+        public Type TargetType { get; }
 
         /// <summary>
         /// The parent of this instance
@@ -100,7 +105,7 @@ namespace Snoop
                 }
 
                 this.OnPropertyChanged(nameof(this.IsSelected));
-                this.OnSelectionChanged();
+                this.OnIsSelectedChanged();
             }
         }
 
@@ -142,11 +147,11 @@ namespace Snoop
             switch (target)
             {
                 case Visual visual:
-                    treeItem = new VisualItem(visual, parent);
+                    treeItem = new VisualTreeItem(visual, parent);
                     break;
 
                 case ResourceDictionary resourceDictionary:
-                    treeItem = new ResourceDictionaryItem(resourceDictionary, parent);
+                    treeItem = new ResourceDictionaryTreeItem(resourceDictionary, parent);
                     break;
 
                 case Application application:
@@ -165,10 +170,10 @@ namespace Snoop
 
         public override string ToString()
         {
-            var sb = new StringBuilder(50);
+            var sb = new StringBuilder(4 + 1 + this.Name.Length + 2 + this.TargetType.Name.Length + 1 + this.visualChildrenCount > 0 ? 3 : 0);
 
             // [depth] name (type) numberOfChildren
-            sb.AppendFormat("[{0:D3}] {1} ({2})", this.Depth, this.Name, this.Target.GetType().Name);
+            sb.AppendFormat("[{0:D3}] {1} ({2})", this.Depth, this.Name, this.TargetType.Name);
 
             if (this.visualChildrenCount != 0)
             {
@@ -179,7 +184,7 @@ namespace Snoop
             return sb.ToString();
         }
 
-        protected virtual void OnSelectionChanged()
+        protected virtual void OnIsSelectedChanged()
         {
         }
 
@@ -201,8 +206,6 @@ namespace Snoop
         {
             this.GetName();
 
-            this.typeNameLower = this.Target != null ? this.Target.GetType().Name.ToLower() : string.Empty;
-
             var toBeRemoved = new List<TreeItem>(this.Children);
 
             this.Reload(toBeRemoved);
@@ -218,7 +221,7 @@ namespace Snoop
             // calculate the number of visual children
             foreach (var child in this.Children)
             {
-                if (child is VisualItem)
+                if (child is VisualTreeItem)
                 {
                     this.visualChildrenCount++;
                 }
@@ -229,19 +232,19 @@ namespace Snoop
 
         protected virtual string GetName()
         {
-            var name = string.Empty;
+            var result = string.Empty;
 
             if (this.Target is FrameworkElement targetFrameworkElement)
             {
-                name = targetFrameworkElement.Name;
+                result = targetFrameworkElement.Name;
 
-                if (string.IsNullOrEmpty(name))
+                if (string.IsNullOrEmpty(result))
                 {
-                    name = AutomationProperties.GetAutomationId(targetFrameworkElement);
+                    result = AutomationProperties.GetAutomationId(targetFrameworkElement);
                 }
             }
 
-            return name;
+            return result;
         }
 
         protected virtual void Reload(List<TreeItem> toBeRemoved)
@@ -254,8 +257,6 @@ namespace Snoop
             {
                 return null;
             }
-
-            // todo: it might be faster to have a map for the lookup check into this at some point
 
             if (ReferenceEquals(this.Target, target))
             {

@@ -11,14 +11,14 @@ namespace Snoop
     using System.Windows.Data;
     using System.Windows.Markup;
 
-    public class ResourceDictionaryItem : TreeItem
+    public class ResourceDictionaryTreeItem : TreeItem
     {
         private static readonly SortDescription dictionarySortDescription = new SortDescription(nameof(SortOrder), ListSortDirection.Ascending);
         private static readonly SortDescription displayNameSortDescription = new SortDescription(nameof(DisplayName), ListSortDirection.Ascending);
 
         private readonly ResourceDictionary dictionary;
 
-        public ResourceDictionaryItem(ResourceDictionary dictionary, TreeItem parent)
+        public ResourceDictionaryTreeItem(ResourceDictionary dictionary, TreeItem parent)
             : base(dictionary, parent)
         {
             this.dictionary = dictionary;
@@ -52,7 +52,7 @@ namespace Snoop
             var order = 0;
             foreach (var mergedDictionary in this.dictionary.MergedDictionaries)
             {
-                var resourceDictionaryItem = new ResourceDictionaryItem(mergedDictionary, this)
+                var resourceDictionaryItem = new ResourceDictionaryTreeItem(mergedDictionary, this)
                 {
                     SortOrder = order
                 };

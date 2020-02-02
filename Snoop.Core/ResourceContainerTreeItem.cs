@@ -8,9 +8,9 @@ namespace Snoop
     using System.Collections.Generic;
     using System.Windows;
 
-    public abstract class ResourceContainerItem : TreeItem
+    public abstract class ResourceContainerTreeItem : TreeItem
     {
-        protected ResourceContainerItem(object target, TreeItem parent)
+        protected ResourceContainerTreeItem(object target, TreeItem parent)
             : base(target, parent)
         {
         }

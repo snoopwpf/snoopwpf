@@ -19,11 +19,11 @@ namespace Snoop
     /// <summary>
     /// Main class that represents a visual in the visual tree
     /// </summary>
-    public class VisualItem : ResourceContainerItem
+    public class VisualTreeItem : ResourceContainerTreeItem
     {
         private AdornerContainer adornerContainer;
 
-        public VisualItem(Visual visual, TreeItem parent)
+        public VisualTreeItem(Visual visual, TreeItem parent)
             : base(visual, parent)
         {
             this.Visual = visual;
@@ -84,7 +84,7 @@ namespace Snoop
             }
         }
 
-        protected override void OnSelectionChanged()
+        protected override void OnIsSelectedChanged()
         {
             // Add adorners for the visual this is representing.
             var adornerLayer = AdornerLayer.GetAdornerLayer(this.Visual);

@@ -610,7 +610,7 @@ namespace Snoop
                         return null; // Something went wrong. At least we will not crash with null ref here.
                     }
 
-                    this.Root = new VisualItem(presentationSource.RootVisual, null);
+                    this.Root = new VisualTreeItem(presentationSource.RootVisual, null);
                 }
             }
 
