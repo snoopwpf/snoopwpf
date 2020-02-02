@@ -9,7 +9,6 @@ namespace Snoop
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Text;
     using System.Windows;
     using System.Windows.Automation;
@@ -21,7 +20,7 @@ namespace Snoop
         private bool isExpanded;
         private bool isSelected;
 
-        private string name;
+        private string name = string.Empty;
         private string nameLower = string.Empty;
         private string typeNameLower = string.Empty;
         private int visualChildrenCount;
@@ -53,6 +52,30 @@ namespace Snoop
         /// </summary>
         public int Depth { get; }
 
+        public string Name
+        {
+            get => this.name;
+
+            private set
+            {
+                if (this.name == value)
+                {
+                    return;
+                }
+
+                // ensure that name never is null
+                this.name = value ?? string.Empty;
+                this.nameLower = this.name.ToLower();
+
+                this.OnPropertyChanged(nameof(this.Name));
+                this.OnPropertyChanged(nameof(this.DisplayName));
+            }
+        }
+
+        public virtual string DisplayName => this.Name;
+
+        public int SortOrder { get; protected set; }
+
         /// <summary>
         /// The VisualTreeItem children of this VisualTreeItem
         /// </summary>
@@ -63,35 +86,39 @@ namespace Snoop
             get => this.isSelected;
             set
             {
-                if (this.isSelected != value)
+                if (this.isSelected == value)
                 {
-                    this.isSelected = value;
-
-                    // Need to expand all ancestors so this will be visible in the tree.
-                    if (this.isSelected)
-                    {
-                        this.Parent?.ExpandTo();
-                    }
-
-                    this.OnPropertyChanged(nameof(this.IsSelected));
-                    this.OnSelectionChanged();
+                    return;
                 }
+
+                this.isSelected = value;
+
+                // Need to expand all ancestors so this will be visible in the tree.
+                if (this.isSelected)
+                {
+                    this.Parent?.ExpandTo();
+                }
+
+                this.OnPropertyChanged(nameof(this.IsSelected));
+                this.OnSelectionChanged();
             }
         }
 
         /// <summary>
-        /// Need this to databind to TreeView so we can display to hidden items.
+        /// Need this to databind to TreeView so we can expand our children.
         /// </summary>
         public bool IsExpanded
         {
             get => this.isExpanded;
             set
             {
-                if (this.isExpanded != value)
+                if (this.isExpanded == value)
                 {
-                    this.isExpanded = value;
-                    this.OnPropertyChanged(nameof(this.IsExpanded));
+                    return;
                 }
+
+                this.isExpanded = value;
+                this.OnPropertyChanged(nameof(this.IsExpanded));
             }
         }
 
@@ -141,7 +168,8 @@ namespace Snoop
             var sb = new StringBuilder(50);
 
             // [depth] name (type) numberOfChildren
-            sb.AppendFormat("[{0}] {1} ({2})", this.Depth.ToString("D3"), this.name, this.Target.GetType().Name);
+            sb.AppendFormat("[{0:D3}] {1} ({2})", this.Depth, this.Name, this.Target.GetType().Name);
+
             if (this.visualChildrenCount != 0)
             {
                 sb.Append(' ');
@@ -171,21 +199,8 @@ namespace Snoop
         /// </summary>
         public void Reload()
         {
-            if (this.Target is FrameworkElement targetFrameworkElement)
-            {
-                this.name = targetFrameworkElement.Name;
-                if (string.IsNullOrEmpty(this.name))
-                {
-                    this.name = AutomationProperties.GetAutomationId(targetFrameworkElement);
-                }
-            }
+            this.GetName();
 
-            if (this.name == null)
-            {
-                this.name = string.Empty;
-            }
-
-            this.nameLower = (this.name ?? string.Empty).ToLower();
             this.typeNameLower = this.Target != null ? this.Target.GetType().Name.ToLower() : string.Empty;
 
             var toBeRemoved = new List<VisualTreeItem>(this.Children);
@@ -207,6 +222,23 @@ namespace Snoop
 
                 this.visualChildrenCount += child.visualChildrenCount;
             }
+        }
+
+        protected virtual string GetName()
+        {
+            var name = string.Empty;
+
+            if (this.Target is FrameworkElement targetFrameworkElement)
+            {
+                name = targetFrameworkElement.Name;
+
+                if (string.IsNullOrEmpty(name))
+                {
+                    name = AutomationProperties.GetAutomationId(targetFrameworkElement);
+                }
+            }
+
+            return name;
         }
 
         protected virtual void Reload(List<VisualTreeItem> toBeRemoved)

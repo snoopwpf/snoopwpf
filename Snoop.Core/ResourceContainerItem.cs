@@ -21,14 +21,15 @@ namespace Snoop
         {
             base.Reload(toBeRemoved);
 
-            var resources = this.ResourceDictionary;
+            var resourceDictionary = this.ResourceDictionary;
 
-            if (resources != null && resources.Count != 0)
+            if (resourceDictionary != null
+                && (resourceDictionary.Count != 0 || resourceDictionary.MergedDictionaries.Count > 0))
             {
                 var foundItem = false;
                 foreach (var item in toBeRemoved)
                 {
-                    if (item.Target == resources)
+                    if (item.Target == resourceDictionary)
                     {
                         toBeRemoved.Remove(item);
                         item.Reload();
@@ -39,7 +40,7 @@ namespace Snoop
 
                 if (foundItem == false)
                 {
-                    this.Children.Add(Construct(resources, this));
+                    this.Children.Add(Construct(resourceDictionary, this));
                 }
             }
         }

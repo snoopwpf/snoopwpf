@@ -6,27 +6,57 @@
 namespace Snoop
 {
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Windows;
+    using System.Windows.Data;
     using System.Windows.Markup;
 
     public class ResourceDictionaryItem : VisualTreeItem
     {
+        private static readonly SortDescription dictionarySortDescription = new SortDescription(nameof(SortOrder), ListSortDirection.Ascending);
+        private static readonly SortDescription displayNameSortDescription = new SortDescription(nameof(DisplayName), ListSortDirection.Ascending);
+
         private readonly ResourceDictionary dictionary;
 
         public ResourceDictionaryItem(ResourceDictionary dictionary, VisualTreeItem parent)
             : base(dictionary, parent)
         {
             this.dictionary = dictionary;
+
+            var childrenView = CollectionViewSource.GetDefaultView(this.Children);
+            childrenView.SortDescriptions.Add(dictionarySortDescription);
+            childrenView.SortDescriptions.Add(displayNameSortDescription);
         }
 
-        public override string ToString()
+        protected override string GetName()
         {
-            return this.Children.Count + " Resources";
+            var source = this.dictionary.Source?.ToString();
+
+            if (string.IsNullOrEmpty(source))
+            {
+                return base.GetName();
+            }
+
+            return source;
         }
 
         protected override void Reload(List<VisualTreeItem> toBeRemoved)
         {
             base.Reload(toBeRemoved);
+
+            var order = 0;
+            foreach (var mergedDictionary in this.dictionary.MergedDictionaries)
+            {
+                var resourceDictionaryItem = new ResourceDictionaryItem(mergedDictionary, this)
+                {
+                    SortOrder = order
+                };
+                resourceDictionaryItem.Reload();
+
+                this.Children.Add(resourceDictionaryItem);
+
+                ++order;
+            }
 
             foreach (var key in this.dictionary.Keys)
             {
@@ -68,6 +98,18 @@ namespace Snoop
                 }
             }
         }
+
+        public override string ToString()
+        {
+            var source = this.dictionary.Source?.ToString();
+
+            if (string.IsNullOrEmpty(source))
+            {
+                return $"{this.Children.Count} resources";
+            }
+
+            return $"{this.Children.Count} resources ({source})";
+        }
     }
 
     public class ResourceItem : VisualTreeItem
@@ -78,7 +120,10 @@ namespace Snoop
             : base(target, parent)
         {
             this.key = key;
+            this.SortOrder = int.MaxValue;
         }
+
+        public override string DisplayName => this.key.ToString();
 
         public override string ToString()
         {
