@@ -248,11 +248,16 @@ namespace Snoop
         {
         }
 
-        public VisualTreeItem FindNode(object target)
+        public virtual VisualTreeItem FindNode(object target)
         {
+            if (target is null)
+            {
+                return null;
+            }
+
             // todo: it might be faster to have a map for the lookup check into this at some point
 
-            if (this.Target == target)
+            if (ReferenceEquals(this.Target, target))
             {
                 return this;
             }
@@ -260,7 +265,8 @@ namespace Snoop
             foreach (var child in this.Children)
             {
                 var node = child.FindNode(target);
-                if (node != null)
+
+                if (!(node is null))
                 {
                     return node;
                 }
@@ -272,8 +278,8 @@ namespace Snoop
         /// <summary>
         /// Used for tree search.
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="value">The value to search for.</param>
+        /// <returns><c>true</c> if this matches <paramref name="value"/>. Otherwise <c>false</c>.</returns>
         public bool Filter(string value)
         {
             if (this.typeNameLower.Contains(value))

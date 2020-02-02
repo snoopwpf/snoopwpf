@@ -108,8 +108,16 @@ All other rights reserved.
 		</ResourceDictionary>
 	</Window.Resources>
 
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_Tracking options">
+                <MenuItem Header="Handle _CTRL" IsCheckable="True" IsChecked="{Binding IsHandlingCTRL}" />
+                <MenuItem Header="Handle CTRL + _SHIFT" IsCheckable="True" IsChecked="{Binding IsHandlingCTRL_SHIFT}" />
+            </MenuItem>
+        </Menu>
+
 	<Grid>
-		<Grid.RowDefinitions>
+        <Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="5*"/>
 			<RowDefinition Height="1*"/>
@@ -449,4 +457,5 @@ All other rights reserved.
 			</StackPanel>
 		</StatusBar>
 	</Grid>
+    </DockPanel>
 </windows:SnoopMainBaseWindow>

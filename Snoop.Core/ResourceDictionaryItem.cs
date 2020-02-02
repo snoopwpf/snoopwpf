@@ -28,6 +28,11 @@ namespace Snoop
             childrenView.SortDescriptions.Add(displayNameSortDescription);
         }
 
+        public override VisualTreeItem FindNode(object target)
+        {
+            return null;
+        }
+
         protected override string GetName()
         {
             var source = this.dictionary.Source?.ToString();

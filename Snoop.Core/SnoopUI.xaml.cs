@@ -13,6 +13,7 @@ namespace Snoop
     using System.Linq;
     using System.Text;
     using System.Windows;
+    using System.Windows.Controls;
     using System.Windows.Documents;
     using System.Windows.Input;
     using System.Windows.Media;
@@ -47,6 +48,7 @@ namespace Snoop
         #endregion
 
         #region Public Constructor
+
         public SnoopUI()
         {
             this.filterCall = new DelayedCall(this.ProcessFilter, DispatcherPriority.Background);
@@ -105,6 +107,7 @@ namespace Snoop
         #endregion
 
         #region Public Properties
+
         #region VisualTreeItems
 
         /// <summary>
@@ -134,6 +137,7 @@ namespace Snoop
         /// rootVisualTreeItem is the VisualTreeItem for the root you are inspecting.
         /// </summary>
         private VisualTreeItem rootVisualTreeItem;
+
         /// <summary>
         /// root is the object you are inspecting.
         /// </summary>
@@ -292,6 +296,13 @@ namespace Snoop
         }
 
         #endregion
+
+        // ReSharper disable once InconsistentNaming
+        public bool IsHandlingCTRL_SHIFT { get; set; } = true;
+
+        // ReSharper disable once InconsistentNaming
+        public bool IsHandlingCTRL { get; set; } = true;
+
         #endregion
 
         #region Public Methods
@@ -485,25 +496,71 @@ namespace Snoop
         {
             this.OnPropertyChanged(nameof(this.CurrentFocus));
 
+            if (this.IsHandlingCTRL == false
+                && this.IsHandlingCTRL_SHIFT == false)
+            {
+                return;
+            }
+
             var currentModifiers = InputManager.Current.PrimaryKeyboardDevice.Modifiers;
-            if (!((currentModifiers & ModifierKeys.Control) != 0 && (currentModifiers & ModifierKeys.Shift) != 0))
+
+            var isControlPressed = currentModifiers.HasFlag(ModifierKeys.Control);
+            var isShiftPressed = currentModifiers.HasFlag(ModifierKeys.Shift);
+
+            if (isControlPressed == false
+                && isShiftPressed == false)
             {
                 return;
             }
 
-            var directlyOver = Mouse.PrimaryDevice.GetDirectlyOver() as Visual;
-            if (directlyOver == null
-                || directlyOver.IsDescendantOf(this)
-                || directlyOver.IsPartOfSnoopVisualTree())
+            var itemToFind = Mouse.PrimaryDevice.GetDirectlyOver() as Visual;
+
+            if (itemToFind is null
+                || itemToFind.IsDescendantOf(this)
+                || itemToFind.IsPartOfSnoopVisualTree())
             {
                 return;
             }
 
-            var node = this.FindItem(directlyOver);
+            // If Shift is not pressed search up the tree of templated parents.
+            if (this.IsHandlingCTRL
+                && isShiftPressed == false
+                && itemToFind is FrameworkElement frameworkElement)
+            {
+                itemToFind = GetItemToFindAndSkipTemplateParts(frameworkElement);
+            }
+
+            var node = this.FindItem(itemToFind);
             if (node != null)
             {
                 this.CurrentSelection = node;
             }
+        }
+
+        private static Visual GetItemToFindAndSkipTemplateParts(FrameworkElement frameworkElement)
+        {
+            Visual itemToFind = frameworkElement;
+
+            while (!(frameworkElement?.TemplatedParent is null))
+            {
+                frameworkElement = frameworkElement?.TemplatedParent as FrameworkElement;
+                itemToFind = frameworkElement;
+            }
+
+            if (!(itemToFind is null))
+            {
+                var parent = VisualTreeHelper.GetParent(itemToFind) as FrameworkElement;
+
+                // If the current item is of a certain type and is part of a template try to look further up the tree
+                if (!(parent?.TemplatedParent is null)
+                    && (parent is ContentPresenter
+                        || parent is AccessText))
+                {
+                    return GetItemToFindAndSkipTemplateParts(parent);
+                }
+            }
+
+            return itemToFind;
         }
 
         private void SnoopUI_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -514,6 +571,7 @@ namespace Snoop
         #endregion
 
         #region Private Methods
+
         /// <summary>
         /// Find the VisualTreeItem for the specified visual.
         /// If the item is not found and is not part of the Snoop UI,
@@ -528,44 +586,46 @@ namespace Snoop
 
             var node = this.rootVisualTreeItem.FindNode(target);
             var rootVisual = this.rootVisualTreeItem.MainVisual;
-            if (node == null)
+
+            if (node != null)
             {
-                var visual = target as Visual;
-                if (visual != null && rootVisual != null)
+                return node;
+            }
+
+            if (target is Visual visual
+                && rootVisual != null)
+            {
+                // If target is a part of the SnoopUI, let's get out of here.
+                if (visual.IsDescendantOf(this))
                 {
-                    // If target is a part of the SnoopUI, let's get out of here.
-                    if (visual.IsDescendantOf(this))
-                    {
-                        return null;
-                    }
-
-                    // If not in the root tree, make the root be the tree the visual is in.
-                    if (!visual.IsDescendantOf(rootVisual))
-                    {
-                        var presentationSource = PresentationSource.FromVisual(visual);
-                        if (presentationSource == null)
-                        {
-                            return null; // Something went wrong. At least we will not crash with null ref here.
-                        }
-
-                        this.Root = new VisualItem(presentationSource.RootVisual, null);
-                    }
+                    return null;
                 }
 
-                this.rootVisualTreeItem.Reload();
+                // If not in the root tree, make the root be the tree the visual is in.
+                if (visual.IsDescendantOf(rootVisual) == false)
+                {
+                    var presentationSource = PresentationSource.FromVisual(visual);
+                    if (presentationSource == null)
+                    {
+                        return null; // Something went wrong. At least we will not crash with null ref here.
+                    }
 
-                node = this.rootVisualTreeItem.FindNode(target);
-
-                this.SetFilter(this.filter);
+                    this.Root = new VisualItem(presentationSource.RootVisual, null);
+                }
             }
+
+            this.rootVisualTreeItem.Reload();
+
+            node = this.rootVisualTreeItem.FindNode(target);
+
+            this.SetFilter(this.filter);
 
             return node;
         }
 
         private void HandleTreeSelectedItemChanged(object sender, EventArgs e)
         {
-            var item = this.Tree.SelectedItem as VisualTreeItem;
-            if (item != null)
+            if (this.Tree.SelectedItem is VisualTreeItem item)
             {
                 this.CurrentSelection = item;
             }
@@ -573,10 +633,10 @@ namespace Snoop
 
         private void ProcessFilter()
         {
-            if (SnoopModes.MultipleDispatcherMode && !this.Dispatcher.CheckAccess())
+            if (SnoopModes.MultipleDispatcherMode 
+                && this.Dispatcher.CheckAccess() == false)
             {
-                Action action = () => this.ProcessFilter();
-                this.Dispatcher.BeginInvoke(action);
+                this.Dispatcher.BeginInvoke((Action)this.ProcessFilter);
                 return;
             }
 
