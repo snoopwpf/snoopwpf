@@ -67,6 +67,11 @@ namespace Snoop
 
         public static bool IsSafeToVisualize(Visual visual)
         {
+            if (visual is null)
+            {
+                return false;
+            }
+
             if (visual is Window)
             {
                 var source = PresentationSource.FromVisual(visual) as HwndSource;

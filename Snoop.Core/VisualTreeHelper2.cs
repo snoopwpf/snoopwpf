@@ -11,78 +11,54 @@ namespace Snoop
 
     public static class VisualTreeHelper2
     {
-        public delegate TResult Func<T1, T2, TResult>(T1 v1, T2 v2);
+        public delegate HitTestFilterBehavior EnumerateTreeFilterCallback(DependencyObject input, object misc);
 
-        public delegate HitTestFilterBehavior EnumerateTreeFilterCallback(Visual visual, object misc);
+        public delegate HitTestResultBehavior EnumerateTreeResultCallback(DependencyObject input, object misc);
 
-        public delegate HitTestResultBehavior EnumerateTreeResultCallback(Visual visual, object misc);
-
-        public static bool IsFrameworkElementName(Visual visual, object name)
+        public static T GetAncestor<T>(DependencyObject input, Predicate<T> predicate = null)
+            where T : DependencyObject
         {
-            var element = visual as FrameworkElement;
-            return element != null && string.CompareOrdinal(element.Name, (string)name) == 0;
-        }
+            var current = input;
 
-        public static bool IsFrameworkElementTemplatedChild(Visual visual, object templatedParent)
-        {
-            var element = visual as FrameworkElement;
-            return element != null && element.TemplatedParent == (DependencyObject)templatedParent;
+            {
+                if (current is T result
+                    && predicate?.Invoke(result) != false)
+                {
+                    return result;
+                }
+            }
+
+            while (!(current is null))
+            {
+                current = VisualTreeHelper.GetParent(current);
+
+                if (current is T result
+                    && predicate?.Invoke(result) != false)
+                {
+                    return result;
+                }
+            }
+
+            return null;
         }
 
         public static void EnumerateTree(Visual reference, EnumerateTreeFilterCallback filterCallback, EnumerateTreeResultCallback enumeratorCallback, object misc)
         {
-            if (reference == null)
+            if (reference is null)
             {
                 throw new ArgumentNullException(nameof(reference));
             }
-            else
-            {
-                DoEnumerateTree(reference, filterCallback, enumeratorCallback, misc);
-            }
+
+            DoEnumerateTree(reference, filterCallback, enumeratorCallback, misc);
         }
 
-        public static T GetAncestor<T>(Visual cur, Visual root, Func<Visual, object, bool> predicate, object param)
-            where T : Visual
-        {
-            var result = cur as T;
-            while (cur != null && cur != root && (result == null || (predicate != null && !predicate(result, param))))
-            {
-                cur = (Visual)VisualTreeHelper.GetParent(cur);
-                result = cur as T;
-            }
-
-            return result;
-        }
-
-        public static T GetAncestor<T>(Visual cur, Visual root, Func<Visual, object, bool> predicate)
-            where T : Visual
-        {
-            return GetAncestor<T>(cur, root, predicate, null);
-        }
-
-        public static T GetAncestor<T>(Visual cur, Visual root)
-            where T : Visual
-        {
-            return GetAncestor<T>(cur, root, null, null);
-        }
-
-        public static T GetAncestor<T>(Visual cur)
-            where T : Visual
-        {
-            return GetAncestor<T>(cur, null, null, null);
-        }
-
-        private static bool DoEnumerateTree(Visual reference, EnumerateTreeFilterCallback filterCallback, EnumerateTreeResultCallback enumeratorCallback, object misc)
+        private static bool DoEnumerateTree(DependencyObject reference, EnumerateTreeFilterCallback filterCallback, EnumerateTreeResultCallback enumeratorCallback, object misc)
         {
             for (var i = 0; i < VisualTreeHelper.GetChildrenCount(reference); ++i)
             {
-                var child = (Visual)VisualTreeHelper.GetChild(reference, i);
+                var child = VisualTreeHelper.GetChild(reference, i);
 
-                var filterResult = HitTestFilterBehavior.Continue;
-                if (filterCallback != null)
-                {
-                    filterResult = filterCallback(child, misc);
-                }
+                var filterResult = filterCallback?.Invoke(child, misc) ?? HitTestFilterBehavior.Continue;
 
                 var enumerateSelf = true;
                 var enumerateChildren = true;
@@ -91,22 +67,26 @@ namespace Snoop
                 {
                     case HitTestFilterBehavior.Continue:
                         break;
+
                     case HitTestFilterBehavior.ContinueSkipChildren:
                         enumerateChildren = false;
                         break;
+
                     case HitTestFilterBehavior.ContinueSkipSelf:
                         enumerateSelf = false;
                         break;
+
                     case HitTestFilterBehavior.ContinueSkipSelfAndChildren:
                         enumerateChildren = false;
                         enumerateSelf = false;
                         break;
+
                     default:
                         return false;
                 }
 
-                if ((enumerateSelf && enumeratorCallback != null && enumeratorCallback(child, misc) == HitTestResultBehavior.Stop)
-                    || (enumerateChildren && !DoEnumerateTree(child, filterCallback, enumeratorCallback, misc)))
+                if ((enumerateSelf && enumeratorCallback?.Invoke(child, misc) == HitTestResultBehavior.Stop)
+                    || (enumerateChildren && DoEnumerateTree(child, filterCallback, enumeratorCallback, misc) == false))
                 {
                     return false;
                 }

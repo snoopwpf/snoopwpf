@@ -23,7 +23,7 @@ namespace Snoop
         private string name = string.Empty;
         private string nameLower = string.Empty;
         private readonly string typeNameLower;
-        private int visualChildrenCount;
+        private int childrenCount;
 
         protected TreeItem(object target, TreeItem parent)
         {
@@ -170,15 +170,15 @@ namespace Snoop
 
         public override string ToString()
         {
-            var sb = new StringBuilder(4 + 1 + this.Name.Length + 2 + this.TargetType.Name.Length + 1 + this.visualChildrenCount > 0 ? 3 : 0);
+            var sb = new StringBuilder(4 + 1 + this.Name.Length + 2 + this.TargetType.Name.Length + 1 + this.childrenCount > 0 ? 3 : 0);
 
             // [depth] name (type) numberOfChildren
             sb.AppendFormat("[{0:D3}] {1} ({2})", this.Depth, this.Name, this.TargetType.Name);
 
-            if (this.visualChildrenCount != 0)
+            if (this.childrenCount != 0)
             {
                 sb.Append(' ');
-                sb.Append(this.visualChildrenCount.ToString());
+                sb.Append(this.childrenCount.ToString());
             }
 
             return sb.ToString();
@@ -215,18 +215,18 @@ namespace Snoop
                 this.RemoveChild(item);
             }
 
-            // Reset visual children count prior to re-calculation
-            this.visualChildrenCount = 0;
+            // Reset children count prior to re-calculation
+            this.childrenCount = 0;
 
             // calculate the number of visual children
             foreach (var child in this.Children)
             {
                 if (child is VisualTreeItem)
                 {
-                    this.visualChildrenCount++;
+                    this.childrenCount++;
                 }
 
-                this.visualChildrenCount += child.visualChildrenCount;
+                this.childrenCount += child.childrenCount;
             }
         }
 

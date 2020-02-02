@@ -28,15 +28,16 @@ namespace Snoop
             }
 
             var rootItem = (TreeItem)this.rootItem.Target;
-            if (rootItem == null)
+            if (rootItem is null)
             {
                 return false;
             }
 
             if (this.snoopUI == null)
             {
-                this.snoopUI = VisualTreeHelper2.GetAncestor<SnoopUI>(this);
-                if (this.snoopUI == null)
+                this.snoopUI = Window.GetWindow(this) as SnoopUI;
+
+                if (this.snoopUI is null)
                 {
                     return false;
                 }
