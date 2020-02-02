@@ -263,7 +263,7 @@
             {
                 var presentationSourceRootVisual = presentationSource.RootVisual;
 
-                if (!(presentationSourceRootVisual is Visual))
+                if (presentationSourceRootVisual is null)
                 {
                     continue;
                 }
