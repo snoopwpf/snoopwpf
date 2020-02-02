@@ -157,47 +157,49 @@ namespace Snoop
 
             set
             {
-                if (this.currentSelection != value)
+                if (this.currentSelection == value)
                 {
-                    if (this.currentSelection != null)
+                    return;
+                }
+
+                if (this.currentSelection != null)
+                {
+                    this.SaveEditedProperties(this.currentSelection);
+                    this.currentSelection.IsSelected = false;
+                }
+
+                this.currentSelection = value;
+
+                if (this.currentSelection != null)
+                {
+                    this.currentSelection.IsSelected = true;
+                }
+
+                this.OnPropertyChanged(nameof(this.CurrentSelection));
+                this.OnPropertyChanged(nameof(this.CurrentFocusScope));
+
+                if (this.VisualTreeItems.Count > 1 
+                    || (this.VisualTreeItems.Count == 1 && this.VisualTreeItems[0] != this.rootVisualTreeItem))
+                {
+                    // Check whether the selected item is filtered out by the filter,
+                    // in which case reset the filter.
+                    var tmp = this.currentSelection;
+
+                    while (tmp != null && !this.VisualTreeItems.Contains(tmp))
                     {
-                        this.SaveEditedProperties(this.currentSelection);
-                        this.currentSelection.IsSelected = false;
+                        tmp = tmp.Parent;
                     }
 
-                    this.currentSelection = value;
-
-                    if (this.currentSelection != null)
+                    if (tmp == null)
                     {
-                        this.currentSelection.IsSelected = true;
-                        this.lastNonNullSelection = this.currentSelection;
-                    }
-
-                    this.OnPropertyChanged(nameof(this.CurrentSelection));
-                    this.OnPropertyChanged(nameof(this.CurrentFocusScope));
-
-                    if (this.VisualTreeItems.Count > 1 || (this.VisualTreeItems.Count == 1 && this.VisualTreeItems[0] != this.rootVisualTreeItem))
-                    {
-                        // Check whether the selected item is filtered out by the filter,
-                        // in which case reset the filter.
-                        var tmp = this.currentSelection;
-                        while (tmp != null && !this.VisualTreeItems.Contains(tmp))
-                        {
-                            tmp = tmp.Parent;
-                        }
-
-                        if (tmp == null)
-                        {
-                            // The selected item is not a descendant of any root.
-                            RefreshCommand.Execute(null, this);
-                        }
+                        // The selected item is not a descendant of any root.
+                        RefreshCommand.Execute(null, this);
                     }
                 }
             }
         }
 
         private VisualTreeItem currentSelection;
-        private VisualTreeItem lastNonNullSelection;
 
         #endregion
 
@@ -280,13 +282,7 @@ namespace Snoop
         {
             get
             {
-                if (this.CurrentSelection == null)
-                {
-                    return null;
-                }
-
-                var selectedItem = this.CurrentSelection.Target as DependencyObject;
-                if (selectedItem != null)
+                if (this.CurrentSelection?.Target is DependencyObject selectedItem)
                 {
                     return FocusManager.GetFocusScope(selectedItem);
                 }
@@ -294,6 +290,7 @@ namespace Snoop
                 return null;
             }
         }
+
         #endregion
         #endregion
 
