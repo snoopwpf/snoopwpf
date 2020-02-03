@@ -14,6 +14,7 @@ namespace Snoop
     using System.Windows.Data;
     using System.Windows.Documents;
     using System.Windows.Media;
+    using JetBrains.Annotations;
     using Snoop.Infrastructure;
 
     /// <summary>
@@ -21,31 +22,42 @@ namespace Snoop
     /// </summary>
     public class VisualTreeItem : ResourceContainerTreeItem
     {
-        private AdornerContainer adornerContainer;
+        private static readonly Attribute[] propertyFilterAttributes = { new PropertyFilterAttribute(PropertyFilterOptions.All) };
 
-        public VisualTreeItem(Visual visual, TreeItem parent)
-            : base(visual, parent)
+        private AdornerContainer adornerContainer;
+        
+        public VisualTreeItem(DependencyObject target, TreeItem parent)
+            : base(target, parent)
         {
-            this.Visual = visual;
+            this.DependencyObject = target;
+            this.Visual = target as Visual;
         }
 
+        [NotNull]
+        public DependencyObject DependencyObject { get; }
+
+        [CanBeNull]
         public Visual Visual { get; }
 
         public override bool HasBindingError
         {
             get
             {
-                var propertyDescriptors = TypeDescriptor.GetProperties(this.Visual, new Attribute[] { new PropertyFilterAttribute(PropertyFilterOptions.All) });
+                var propertyDescriptors = TypeDescriptor.GetProperties(this.DependencyObject, propertyFilterAttributes);
+
                 foreach (PropertyDescriptor property in propertyDescriptors)
                 {
                     var dpd = DependencyPropertyDescriptor.FromProperty(property);
-                    if (dpd != null)
+                    if (dpd == null)
                     {
-                        var expression = BindingOperations.GetBindingExpressionBase(this.Visual, dpd.DependencyProperty);
-                        if (expression != null && (expression.HasError || expression.Status != BindingStatus.Active))
-                        {
-                            return true;
-                        }
+                        continue;
+                    }
+
+                    var expression = BindingOperations.GetBindingExpressionBase(this.DependencyObject, dpd.DependencyProperty);
+                    if (expression != null
+                        && (expression.HasError || expression.Status != BindingStatus.Active))
+                    {
+                        return true;
                     }
                 }
 
@@ -75,9 +87,14 @@ namespace Snoop
         {
             get
             {
-                if (this.Visual is FrameworkElement frameworkElement)
+                if (this.Target is FrameworkElement frameworkElement)
                 {
                     return frameworkElement.Resources;
+                }
+
+                if (this.Target is FrameworkContentElement frameworkContentElement)
+                {
+                    return frameworkContentElement.Resources;
                 }
 
                 return null;
@@ -86,13 +103,18 @@ namespace Snoop
 
         protected override void OnIsSelectedChanged()
         {
+            if (this.Visual is null)
+            {
+                return;
+            }
+
             // Add adorners for the visual this is representing.
             var adornerLayer = AdornerLayer.GetAdornerLayer(this.Visual);
 
             if (adornerLayer != null
                 && this.Visual is UIElement visualElement)
             {
-                if (this.IsSelected 
+                if (this.IsSelected
                     && this.adornerContainer == null)
                 {
                     var border = new Border
@@ -129,7 +151,7 @@ namespace Snoop
             // this used to be at the bottom. putting it here makes it consistent (and easier to use) with ApplicationTreeItem
             base.Reload(toBeRemoved);
 
-            if (this.Visual is Window window)
+            if (this.Target is Window window)
             {
                 foreach (Window ownedWindow in window.OwnedWindows)
                 {
@@ -154,27 +176,34 @@ namespace Snoop
             }
 
             // remove items that are no longer in tree, add new ones.
-            for (var i = 0; i < VisualTreeHelper.GetChildrenCount(this.Visual); i++)
+            for (var i = 0; i < VisualTreeHelper.GetChildrenCount(this.DependencyObject); i++)
             {
-                var child = VisualTreeHelper.GetChild(this.Visual, i);
-                if (child != null)
-                {
-                    var foundItem = false;
-                    foreach (var item in toBeRemoved)
-                    {
-                        if (ReferenceEquals(item.Target, child))
-                        {
-                            toBeRemoved.Remove(item);
-                            item.Reload();
-                            foundItem = true;
-                            break;
-                        }
-                    }
+                var child = VisualTreeHelper.GetChild(this.DependencyObject, i);
 
-                    if (foundItem == false)
+                // ReSharper disable HeuristicUnreachableCode
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+                if (child is null)
+                {
+                    continue;
+                }
+
+                // ReSharper restore HeuristicUnreachableCode
+
+                var foundItem = false;
+                foreach (var item in toBeRemoved)
+                {
+                    if (ReferenceEquals(item.Target, child))
                     {
-                        this.Children.Add(Construct(child, this));
+                        toBeRemoved.Remove(item);
+                        item.Reload();
+                        foundItem = true;
+                        break;
                     }
+                }
+
+                if (foundItem == false)
+                {
+                    this.Children.Add(Construct(child, this));
                 }
             }
 
