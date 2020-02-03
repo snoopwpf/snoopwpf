@@ -14,6 +14,7 @@ namespace Snoop.PowerShell
     using System.Management.Automation;
     using System.Management.Automation.Provider;
     using System.Threading;
+    using Snoop.Data.Tree;
 
     [CmdletProvider(nameof(VisualTreeProvider), ProviderCapabilities.Filter)]
     public class VisualTreeProvider : NavigationCmdletProvider

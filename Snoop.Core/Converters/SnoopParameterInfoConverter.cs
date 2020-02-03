@@ -11,7 +11,7 @@ namespace Snoop.Converters
     using System.Reflection;
     using System.Windows;
     using System.Windows.Data;
-    using Snoop.MethodsTab;
+    using Snoop.Views.MethodsTab;
 
     public class SnoopParameterInfoConverter : IValueConverter
     {

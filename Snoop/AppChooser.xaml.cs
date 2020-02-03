@@ -14,8 +14,10 @@ namespace Snoop
     using System.Windows.Data;
     using System.Windows.Input;
     using System.Windows.Threading;
+    using Snoop.Infrastructure;
     using Snoop.Properties;
     using Snoop.Views;
+    using Snoop.Windows;
 
     public partial class AppChooser
     {

@@ -7,7 +7,7 @@ namespace Snoop.InjectorLauncher
     using System.Reflection;
     using System.Runtime.InteropServices;
     using JetBrains.Annotations;
-    using Snoop;
+    using Snoop.Infrastructure;
 
     /// <summary>
     /// Class responsible for injecting snoop into a foreign process.

@@ -1,4 +1,4 @@
-﻿namespace Snoop.TriggersTab.Triggers
+﻿namespace Snoop.Views.TriggersTab.Triggers
 {
     using System.Windows;
     using System.Xml.Linq;

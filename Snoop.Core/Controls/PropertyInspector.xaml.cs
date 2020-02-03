@@ -3,7 +3,7 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop
+namespace Snoop.Controls
 {
     using System;
     using System.Collections.Generic;
@@ -15,7 +15,9 @@ namespace Snoop
     using System.Windows.Input;
     using JetBrains.Annotations;
     using Snoop.Infrastructure;
+    using Snoop.Infrastructure.Extensions;
     using Snoop.Infrastructure.Helpers;
+    using Snoop.Windows;
 
     public partial class PropertyInspector : INotifyPropertyChanged
     {

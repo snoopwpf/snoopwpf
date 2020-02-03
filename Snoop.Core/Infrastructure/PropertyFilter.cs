@@ -3,7 +3,7 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop
+namespace Snoop.Infrastructure
 {
     using System;
     using System.Collections.Generic;
@@ -19,7 +19,6 @@ namespace Snoop
     using System.Windows.Media;
     using System.Windows.Media.Animation;
     using System.Windows.Navigation;
-    using Snoop.Infrastructure;
 
     public class PropertyFilter
     {

@@ -3,10 +3,9 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop
+namespace Snoop.Infrastructure
 {
     using System.Windows;
-    using Snoop.Infrastructure;
 
     /// <summary>
     /// Exposes attached behaviors that brings given FrameworkElement into view.

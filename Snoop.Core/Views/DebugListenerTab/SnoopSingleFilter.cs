@@ -1,4 +1,4 @@
-﻿namespace Snoop.DebugListenerTab
+﻿namespace Snoop.Views.DebugListenerTab
 {
     using System;
     using System.Text.RegularExpressions;

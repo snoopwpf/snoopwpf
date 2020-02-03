@@ -3,7 +3,7 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop.Infrastructure
+namespace Snoop.Infrastructure.Helpers
 {
     using System.Windows;
     using System.Windows.Media;

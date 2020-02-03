@@ -9,10 +9,10 @@ All other rights reserved.
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:System="clr-namespace:System;assembly=mscorlib"
 	xmlns:my='clr-namespace:Snoop'
->
+	xmlns:controls="clr-namespace:Snoop.Controls">
 	<!-- styles & templates to make treeview select the whole width wide and not scroll horizontally-->
 
-	<my:IndentToMarginConverter x:Key='IndentToMarginConverter'/>
+	<controls:IndentToMarginConverter x:Key='IndentToMarginConverter'/>
 
 	<Style x:Key='TreeViewToggleStyle' TargetType="{x:Type ToggleButton}">
 		<Setter Property="Focusable" Value="False"/>
@@ -112,7 +112,7 @@ All other rights reserved.
 						>
 							<StackPanel
 								Orientation='Horizontal'
-								Margin='{Binding Indent, Converter={StaticResource IndentToMarginConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type my:ProperTreeViewItem}}}'
+								Margin='{Binding Indent, Converter={StaticResource IndentToMarginConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:ProperTreeViewItem}}}'
 							>
 								<ToggleButton
 									x:Name="Expander"

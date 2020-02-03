@@ -1,4 +1,4 @@
-﻿namespace Snoop.BehaviorsTab
+﻿namespace Snoop.Views.BehaviorsTab
 {
     using System;
     using System.Collections;

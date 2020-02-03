@@ -3,13 +3,14 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop
+namespace Snoop.Windows
 {
     using System;
     using System.Diagnostics;
     using System.Threading;
     using System.Windows;
     using Snoop.Infrastructure;
+    using Snoop.Infrastructure.Helpers;
 
     public partial class ErrorDialog
     {

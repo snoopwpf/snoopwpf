@@ -1,4 +1,4 @@
-﻿namespace Snoop.DebugListenerTab
+﻿namespace Snoop.Views.DebugListenerTab
 {
     using System;
     using System.Diagnostics;
@@ -7,6 +7,7 @@
     using System.Windows.Controls;
     using System.Windows.Threading;
     using Snoop.Infrastructure;
+    using Snoop.Infrastructure.Extensions;
 
     public partial class DebugListenerControl : IListener
     {

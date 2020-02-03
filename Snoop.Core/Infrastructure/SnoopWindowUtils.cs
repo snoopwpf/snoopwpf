@@ -3,14 +3,13 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop
+namespace Snoop.Infrastructure
 {
     using System;
     using System.Runtime.InteropServices;
     using System.Windows;
     using System.Windows.Interop;
     using Snoop.Data;
-    using Snoop.Infrastructure;
     using Snoop.Infrastructure.Helpers;
     using Rectangle = System.Drawing.Rectangle;
 

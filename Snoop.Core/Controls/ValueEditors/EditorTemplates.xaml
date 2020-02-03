@@ -10,7 +10,9 @@ All other rights reserved.
 	xmlns:snoop="clr-namespace:Snoop"
 	xmlns:converters="clr-namespace:Snoop.Converters" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:valueEditors="clr-namespace:Snoop.ValueEditors"
+    xmlns:valueEditors="clr-namespace:Snoop.Controls.ValueEditors"
+    xmlns:controls="clr-namespace:Snoop.Controls"
+    xmlns:infrastructure="clr-namespace:Snoop.Infrastructure"
     mc:Ignorable="d">
 
     <Style TargetType="{x:Type valueEditors:MouseWheelValueEditor}">
@@ -35,30 +37,30 @@ All other rights reserved.
         </Style.Triggers>
     </Style>
 
-    <Style TargetType="{x:Type snoop:StandardValueEditor}">
+    <Style TargetType="{x:Type valueEditors:StandardValueEditor}">
 		<Style.Resources>
-            <DataTemplate x:Key="EmptyValueTemplate" DataType="snoop:ValueEditor">
+            <DataTemplate x:Key="EmptyValueTemplate" DataType="valueEditors:ValueEditor">
                 <TextBlock Style="{x:Null}" Text="{Binding DescriptiveValue}"/>
             </DataTemplate>
 
-            <DataTemplate x:Key="UnselectedValueTemplate" DataType="snoop:ValueEditor">
+            <DataTemplate x:Key="UnselectedValueTemplate" DataType="valueEditors:ValueEditor">
 				<TextBlock Style="{x:Null}" Text="{Binding DescriptiveValue}"/>
 			</DataTemplate>
 
-			<DataTemplate x:Key="SelectedValueTemplate" DataType="snoop:StandardValueEditor">
-				<snoop:EditTextBox Height="Auto" IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}" Text="{Binding StringValue}" HorizontalAlignment="Stretch" Padding="1" BorderThickness="0" Background="White" VerticalContentAlignment="Center"/>
+			<DataTemplate x:Key="SelectedValueTemplate" DataType="valueEditors:StandardValueEditor">
+				<controls:EditTextBox Height="Auto" IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}" Text="{Binding StringValue}" HorizontalAlignment="Stretch" Padding="1" BorderThickness="0" Background="White" VerticalContentAlignment="Center"/>
 			</DataTemplate>
         </Style.Resources>
 		
 		<Setter Property="Template">
 			<Setter.Value>
-				<ControlTemplate TargetType="{x:Type snoop:StandardValueEditor}">
+				<ControlTemplate TargetType="{x:Type valueEditors:StandardValueEditor}">
 					<StackPanel Orientation="Horizontal">
 						<Button Style="{x:Null}" 
 								x:Name="OpenDetailsEditor"
 								DockPanel.Dock="Left"
                                 Visibility="Collapsed"
-								Command="{x:Static snoop:ValueEditor.OpenDetailsEditorCommand}"
+								Command="{x:Static valueEditors:ValueEditor.OpenDetailsEditorCommand}"
                                 Content=" ... ">
                             <Button.ToolTip>
                                 <TextBlock Style="{x:Null}">
@@ -100,11 +102,11 @@ All other rights reserved.
 		</Setter>
 	</Style>
 	
-	<Style TargetType="{x:Type snoop:BoolValueEditor}">
+	<Style TargetType="{x:Type valueEditors:BoolValueEditor}">
         <Setter Property="Template">
 			<Setter.Value>
-				<ControlTemplate TargetType="{x:Type snoop:BoolValueEditor}">
-					<StackPanel Orientation="Horizontal" d:DataContext="{d:DesignInstance snoop:PropertyInformation, IsDesignTimeCreatable=False}">
+				<ControlTemplate TargetType="{x:Type valueEditors:BoolValueEditor}">
+					<StackPanel Orientation="Horizontal" d:DataContext="{d:DesignInstance infrastructure:PropertyInformation, IsDesignTimeCreatable=False}">
 						<CheckBox
 							x:Name="PART_CheckBox"
 						    Style="{x:Null}"
@@ -124,12 +126,12 @@ All other rights reserved.
 		</Setter>
 	</Style>
 
-    <Style TargetType="{x:Type snoop:StringValueEditor}"
-           BasedOn="{StaticResource {x:Type snoop:StandardValueEditor}}">
+    <Style TargetType="{x:Type valueEditors:StringValueEditor}"
+           BasedOn="{StaticResource {x:Type valueEditors:StandardValueEditor}}">
 		<Style.Setters>
 			<Setter Property="DetailsEditorTemplate">
 				<Setter.Value>
-                    <DataTemplate DataType="snoop:StringValueEditor">
+                    <DataTemplate DataType="valueEditors:StringValueEditor">
                         <TextBox Style="{x:Null}"
                                  IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}"
                                  IsReadOnlyCaretVisible="True"
@@ -144,8 +146,8 @@ All other rights reserved.
         </Style.Setters>
     </Style>
 	
-	<Style TargetType="{x:Type snoop:BrushValueEditor}"
-           BasedOn="{StaticResource {x:Type snoop:StandardValueEditor}}">
+	<Style TargetType="{x:Type valueEditors:BrushValueEditor}"
+           BasedOn="{StaticResource {x:Type valueEditors:StandardValueEditor}}">
 		<Style.Resources>
 			<DrawingBrush Stretch="Fill" TileMode="Tile" x:Key="CheckerboardBrush" Viewport="0,0,16,16" ViewportUnits="Absolute">
 				<DrawingBrush.Drawing>
@@ -156,7 +158,7 @@ All other rights reserved.
 				</DrawingBrush.Drawing>
 			</DrawingBrush>
 
-			<DataTemplate x:Key="UnselectedValueTemplate" DataType="snoop:ValueEditor">
+			<DataTemplate x:Key="UnselectedValueTemplate" DataType="valueEditors:ValueEditor">
 				<Grid Height="Auto" HorizontalAlignment="Left">
                     <Grid.ToolTip>
                         <ToolTip Style="{x:Null}">
@@ -206,28 +208,28 @@ All other rights reserved.
 				</Grid>
 			</DataTemplate>
 
-			<DataTemplate x:Key="SelectedValueTemplate" DataType="snoop:BrushValueEditor">
-				<snoop:EditTextBox Height="Auto" IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}" Text="{Binding StringValue}" HorizontalAlignment="Stretch" Padding="1" BorderThickness="0" Background="White" VerticalContentAlignment="Center"/>
+			<DataTemplate x:Key="SelectedValueTemplate" DataType="valueEditors:BrushValueEditor">
+				<controls:EditTextBox Height="Auto" IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}" Text="{Binding StringValue}" HorizontalAlignment="Stretch" Padding="1" BorderThickness="0" Background="White" VerticalContentAlignment="Center"/>
 			</DataTemplate>
 
 			<DataTemplate x:Key="EmptyValueTemplate"/>
 		</Style.Resources>
     </Style>
 	
-	<Style TargetType="{x:Type snoop:EnumValueEditor}">
+	<Style TargetType="{x:Type valueEditors:EnumValueEditor}">
 		<Style.Resources>
-			<DataTemplate x:Key="UnselectedValueTemplate" DataType="snoop:ValueEditor">
+			<DataTemplate x:Key="UnselectedValueTemplate" DataType="valueEditors:ValueEditor">
 				<TextBlock Style="{x:Null}" Text="{Binding DescriptiveValue}" />
 			</DataTemplate>
 
-			<DataTemplate x:Key="SelectedValueTemplate" DataType="snoop:EnumValueEditor">
+			<DataTemplate x:Key="SelectedValueTemplate" DataType="valueEditors:EnumValueEditor">
 				<ComboBox Style="{x:Null}" Height="16" Padding="2,-2,2,0" IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}" ItemsSource="{Binding Values}" IsSynchronizedWithCurrentItem="True" />
 			</DataTemplate>
 		</Style.Resources>
 
 		<Setter Property="Template">
 			<Setter.Value>
-				<ControlTemplate TargetType="{x:Type snoop:EnumValueEditor}">
+				<ControlTemplate TargetType="{x:Type valueEditors:EnumValueEditor}">
 					<ContentPresenter Name="ValueHolder" Style="{x:Null}" ContentTemplate="{DynamicResource UnselectedValueTemplate}" Content="{Binding RelativeSource={RelativeSource TemplatedParent}}"/>
 
 					<ControlTemplate.Triggers>
@@ -245,14 +247,14 @@ All other rights reserved.
 		</Setter>
 	</Style>
 
-	<snoop:ValueEditorTemplateSelector x:Key="EditorSelector">
-		<snoop:ValueEditorTemplateSelector.StandardTemplate>
-			<DataTemplate DataType="snoop:PropertyInformation">
+	<valueEditors:ValueEditorTemplateSelector x:Key="EditorSelector">
+		<valueEditors:ValueEditorTemplateSelector.StandardTemplate>
+			<DataTemplate DataType="infrastructure:PropertyInformation">
 				<DockPanel>
 					<!-- add mouse wheel editor to right of value (only visible when IsSelected and CanEdit) -->
 					<valueEditors:MouseWheelValueEditor/>
 
-					<snoop:StandardValueEditor
+					<valueEditors:StandardValueEditor
 						PropertyType="{Binding PropertyType}"
 						Value="{Binding Value, Mode=TwoWay}"
 						DescriptiveValue="{Binding DescriptiveValue, Mode=OneWay}"
@@ -265,15 +267,15 @@ All other rights reserved.
 					<Border/>
 				</DockPanel>
 			</DataTemplate>
-		</snoop:ValueEditorTemplateSelector.StandardTemplate>
+		</valueEditors:ValueEditorTemplateSelector.StandardTemplate>
 
-		<snoop:ValueEditorTemplateSelector.EnumTemplate>
-			<DataTemplate DataType="snoop:PropertyInformation">
+		<valueEditors:ValueEditorTemplateSelector.EnumTemplate>
+			<DataTemplate DataType="infrastructure:PropertyInformation">
 				<DockPanel>
 					<!-- add mouse wheel editor to right of value (only visible when IsSelected and CanEdit) -->
 					<valueEditors:MouseWheelValueEditor/>
 
-					<snoop:EnumValueEditor
+					<valueEditors:EnumValueEditor
 						PropertyType="{Binding PropertyType}"
 						Value="{Binding Value, Mode=TwoWay}"
 						DescriptiveValue="{Binding DescriptiveValue, Mode=OneWay}"
@@ -286,15 +288,15 @@ All other rights reserved.
 					<Border/>
 				</DockPanel>
 			</DataTemplate>
-		</snoop:ValueEditorTemplateSelector.EnumTemplate>
+		</valueEditors:ValueEditorTemplateSelector.EnumTemplate>
 
-		<snoop:ValueEditorTemplateSelector.BoolTemplate>
-			<DataTemplate DataType="snoop:PropertyInformation">
+		<valueEditors:ValueEditorTemplateSelector.BoolTemplate>
+			<DataTemplate DataType="infrastructure:PropertyInformation">
 				<DockPanel>
 					<!-- add mouse wheel editor to right of value (only visible when IsSelected and CanEdit) -->
 					<valueEditors:MouseWheelValueEditor/>
 
-					<snoop:BoolValueEditor
+					<valueEditors:BoolValueEditor
 						PropertyType="{Binding PropertyType}"
 						Value="{Binding Value, Mode=TwoWay}"
 						DescriptiveValue="{Binding DescriptiveValue, Mode=OneWay}"
@@ -307,12 +309,12 @@ All other rights reserved.
 					<Border/>
 				</DockPanel>
 			</DataTemplate>
-		</snoop:ValueEditorTemplateSelector.BoolTemplate>
+		</valueEditors:ValueEditorTemplateSelector.BoolTemplate>
 
-        <snoop:ValueEditorTemplateSelector.StringTemplate>
-            <DataTemplate DataType="snoop:PropertyInformation">
+        <valueEditors:ValueEditorTemplateSelector.StringTemplate>
+            <DataTemplate DataType="infrastructure:PropertyInformation">
                 <DockPanel>
-                    <snoop:StringValueEditor
+                    <valueEditors:StringValueEditor
                         PropertyType="{Binding PropertyType}"
                         Value="{Binding Value, Mode=TwoWay}"
                         DescriptiveValue="{Binding DescriptiveValue, Mode=OneWay}"
@@ -325,15 +327,15 @@ All other rights reserved.
                     <Border/>
                 </DockPanel>
             </DataTemplate>
-        </snoop:ValueEditorTemplateSelector.StringTemplate>
+        </valueEditors:ValueEditorTemplateSelector.StringTemplate>
 
-		<snoop:ValueEditorTemplateSelector.BrushTemplate>
-			<DataTemplate DataType="snoop:PropertyInformation">
+		<valueEditors:ValueEditorTemplateSelector.BrushTemplate>
+			<DataTemplate DataType="infrastructure:PropertyInformation">
 				<DockPanel>
 					<!-- add mouse wheel editor to right of value (only visible when IsSelected and CanEdit) -->
 					<valueEditors:MouseWheelValueEditor/>
 
-					<snoop:BrushValueEditor
+					<valueEditors:BrushValueEditor
 						PropertyType="{Binding PropertyType}"
 						Value="{Binding Value, Mode=TwoWay}"
 						DescriptiveValue="{Binding DescriptiveValue, Mode=OneWay}"
@@ -346,12 +348,12 @@ All other rights reserved.
 					<Border/>
 				</DockPanel>
 			</DataTemplate>
-		</snoop:ValueEditorTemplateSelector.BrushTemplate>
+		</valueEditors:ValueEditorTemplateSelector.BrushTemplate>
 
-        <snoop:ValueEditorTemplateSelector.WithResourceKeyTemplate>
-            <DataTemplate DataType="snoop:PropertyInformation">
+        <valueEditors:ValueEditorTemplateSelector.WithResourceKeyTemplate>
+            <DataTemplate DataType="infrastructure:PropertyInformation">
                 <DockPanel>
-                    <snoop:StandardValueEditor
+                    <valueEditors:StandardValueEditor
                         PropertyType="{Binding PropertyType}"
                         Value="{Binding ResourceKey, Mode=OneWay}"
                         DescriptiveValue="{Binding DescriptiveValue, Mode=OneWay}"
@@ -364,6 +366,6 @@ All other rights reserved.
                     <Border/>
                 </DockPanel>
             </DataTemplate>
-        </snoop:ValueEditorTemplateSelector.WithResourceKeyTemplate>
-	</snoop:ValueEditorTemplateSelector>
+        </valueEditors:ValueEditorTemplateSelector.WithResourceKeyTemplate>
+	</valueEditors:ValueEditorTemplateSelector>
 </ResourceDictionary>

@@ -3,7 +3,7 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop.MethodsTab
+namespace Snoop.Views.MethodsTab
 {
     using System;
     using System.ComponentModel;
@@ -11,6 +11,7 @@ namespace Snoop.MethodsTab
     using System.Windows;
     using System.Windows.Input;
     using Snoop.Infrastructure;
+    using Snoop.Infrastructure.Extensions;
 
     public class SnoopParameterInformation : DependencyObject
     {

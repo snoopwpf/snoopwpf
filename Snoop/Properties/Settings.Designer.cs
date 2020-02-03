@@ -25,9 +25,9 @@ namespace Snoop.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public WINDOWPLACEMENT? AppChooserWindowPlacement {
+        public Snoop.Infrastructure.WINDOWPLACEMENT? AppChooserWindowPlacement {
             get {
-                return ((WINDOWPLACEMENT?)(this["AppChooserWindowPlacement"]));
+                return ((Snoop.Infrastructure.WINDOWPLACEMENT?)(this["AppChooserWindowPlacement"]));
             }
             set {
                 this["AppChooserWindowPlacement"] = value;

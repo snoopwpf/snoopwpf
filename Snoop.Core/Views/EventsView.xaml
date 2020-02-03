@@ -11,8 +11,10 @@ All other rights reserved.
 	xmlns:d="http://schemas.microsoft.com/expression/interactivedesigner/2006"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:i="clr-namespace:Snoop.Infrastructure"
+	xmlns:snoopwpf="urn:snoopwpf"
+	xmlns:views="clr-namespace:Snoop.Views"
 	mc:Ignorable="d"
-	x:Class="Snoop.EventsView"
+	x:Class="Snoop.Views.EventsView"
 	x:Name="Events"
 	MinHeight="0"
 	MinWidth="0"
@@ -33,17 +35,17 @@ All other rights reserved.
 
 			<DataTemplate DataType="{x:Type ExecutedRoutedEventArgs}">
 				<StackPanel Orientation="Horizontal">
-                    <TextBlock Style="{x:Null}" Text="{Binding Command, Converter={x:Static local:ObjectToStringConverter.Instance}}"/>
+                    <TextBlock Style="{x:Null}" Text="{Binding Command, Converter={x:Static snoopwpf:ObjectToStringConverter.Instance}}"/>
 				</StackPanel>
 			</DataTemplate>
 
-            <DataTemplate DataType="{x:Type local:EventTracker}">
+            <DataTemplate DataType="{x:Type i:EventTracker}">
 				<CheckBox Style="{x:Null}" IsChecked="{Binding IsEnabled}">
 					<TextBlock Style="{x:Null}" Text="{Binding RoutedEvent.Name}"/>
 				</CheckBox>
 			</DataTemplate>
 
-            <HierarchicalDataTemplate ItemsSource="{Binding Stack}" DataType="{x:Type local:TrackedEvent}">
+            <HierarchicalDataTemplate ItemsSource="{Binding Stack}" DataType="{x:Type i:TrackedEvent}">
 				<Grid x:Name="Grid" Background="Transparent">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="*"/>
@@ -56,7 +58,7 @@ All other rights reserved.
 					<StackPanel Orientation="Horizontal">
 						<ContentControl Style="{x:Null}" Content="{Binding EventArgs}" Focusable="False"/>
 						<TextBlock Style="{x:Null}" Text=" on "/>
-                        <TextBlock Style="{x:Null}" Text="{Binding Originator.Handler, Converter={x:Static local:ObjectToStringConverter.Instance}}" Grid.Column="1"/>
+                        <TextBlock Style="{x:Null}" Text="{Binding Originator.Handler, Converter={x:Static snoopwpf:ObjectToStringConverter.Instance}}" Grid.Column="1"/>
 					</StackPanel>
 					<ContentControl
 						x:Name="Handler"
@@ -68,7 +70,7 @@ All other rights reserved.
 					>
 						<StackPanel Orientation="Horizontal">
 							<TextBlock Style="{x:Null}" Text="Handled by: "/>
-                            <TextBlock Style="{x:Null}" Text="{Binding HandledBy, Converter={x:Static local:ObjectToStringConverter.Instance}}"/>
+                            <TextBlock Style="{x:Null}" Text="{Binding HandledBy, Converter={x:Static snoopwpf:ObjectToStringConverter.Instance}}"/>
 						</StackPanel>
 					</ContentControl>
 				</Grid>
@@ -79,13 +81,13 @@ All other rights reserved.
 				</HierarchicalDataTemplate.Triggers>
 			</HierarchicalDataTemplate>
 
-            <HierarchicalDataTemplate DataType="{x:Type local:EventEntry}">
+            <HierarchicalDataTemplate DataType="{x:Type i:EventEntry}">
 				<Grid Name="Grid" Background="Transparent">
 					<Grid.ToolTip>
 						<TextBlock Style="{x:Null}" Text="Click to select the element that handled this"/>
 					</Grid.ToolTip>
 					<StackPanel Orientation="Horizontal">
-                        <TextBlock Style="{x:Null}" Text="{Binding Handler, Converter={x:Static local:ObjectToStringConverter.Instance}}"/>
+                        <TextBlock Style="{x:Null}" Text="{Binding Handler, Converter={x:Static snoopwpf:ObjectToStringConverter.Instance}}"/>
 						<TextBlock Style="{x:Null}" Text=" handled: "/>
 						<TextBlock Style="{x:Null}" Text="{Binding Handled}" Grid.Column="1"/>
 					</StackPanel>
@@ -304,7 +306,7 @@ All other rights reserved.
 		Height="18"
 		HorizontalAlignment="Right"
 		Padding="3"
-		Command="{x:Static local:EventsView.ClearCommand}"
+		Command="{x:Static views:EventsView.ClearCommand}"
 	>
 		<Grid>
 			<Path

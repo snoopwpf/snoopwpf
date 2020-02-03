@@ -1,8 +1,7 @@
-﻿namespace Snoop
+﻿namespace Snoop.Infrastructure.Helpers
 {
     using System.Collections.Generic;
     using System.Windows.Data;
-    using Snoop.Infrastructure.Helpers;
 
     public static class BindingDisplayHelper
     {

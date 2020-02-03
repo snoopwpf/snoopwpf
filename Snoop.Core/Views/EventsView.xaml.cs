@@ -3,14 +3,13 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop
+namespace Snoop.Views
 {
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
@@ -18,6 +17,7 @@ namespace Snoop
     using System.Windows.Media;
     using JetBrains.Annotations;
     using Snoop.Infrastructure;
+    using Snoop.Windows;
 
     public partial class EventsView : INotifyPropertyChanged
     {

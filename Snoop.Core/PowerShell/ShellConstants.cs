@@ -7,6 +7,7 @@ namespace Snoop.PowerShell
 {
     using System;
     using Microsoft.Win32;
+    using Snoop.Data.Tree;
 
     internal static class ShellConstants
     {

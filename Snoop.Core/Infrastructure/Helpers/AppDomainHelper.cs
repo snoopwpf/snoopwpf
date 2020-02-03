@@ -1,4 +1,4 @@
-﻿namespace Snoop.Infrastructure
+﻿namespace Snoop.Infrastructure.Helpers
 {
 #if NETCOREAPP
     using System;

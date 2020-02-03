@@ -3,11 +3,10 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop
+namespace Snoop.Infrastructure
 {
     using System.Windows;
     using System.Windows.Threading;
-    using Snoop.Infrastructure;
 
     public delegate void DelayedHandler();
 

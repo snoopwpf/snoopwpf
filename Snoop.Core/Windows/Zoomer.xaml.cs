@@ -3,7 +3,7 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop
+namespace Snoop.Windows
 {
     using System;
     using System.ComponentModel;
@@ -12,6 +12,7 @@ namespace Snoop
     using System.Windows.Data;
     using System.Windows.Input;
     using System.Windows.Media;
+    using Snoop.Controls;
     using Snoop.Infrastructure;
 
     public sealed partial class Zoomer

@@ -1,12 +1,12 @@
-namespace Snoop.TriggersTab.Triggers
+namespace Snoop.Views.TriggersTab.Triggers
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Windows;
     using System.Windows.Data;
     using JetBrains.Annotations;
     using Snoop.Infrastructure;
+    using Snoop.Infrastructure.Helpers;
 
     public class ConditionItem : DependencyObject, IDisposable, INotifyPropertyChanged
     {

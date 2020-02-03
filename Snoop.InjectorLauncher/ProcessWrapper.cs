@@ -2,7 +2,7 @@ namespace Snoop.InjectorLauncher
 {
     using System;
     using System.Diagnostics;
-    using Snoop;
+    using Snoop.Infrastructure;
 
     public class ProcessWrapper
     {

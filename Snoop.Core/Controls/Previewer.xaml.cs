@@ -3,12 +3,13 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop
+namespace Snoop.Controls
 {
     using System.Windows;
     using System.Windows.Input;
     using System.Windows.Media;
-    using Snoop.Infrastructure;
+    using Snoop.Infrastructure.Extensions;
+    using Snoop.Windows;
 
     public partial class Previewer
     {

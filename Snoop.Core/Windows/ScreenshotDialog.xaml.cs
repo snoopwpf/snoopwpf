@@ -3,7 +3,7 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop
+namespace Snoop.Windows
 {
     using System;
     using System.Windows;
@@ -11,6 +11,7 @@ namespace Snoop
     using System.Windows.Input;
     using System.Windows.Media;
     using Microsoft.Win32;
+    using Snoop.Infrastructure;
 
     /// <summary>
     /// Interaction logic for ScreenShotDialog.xaml

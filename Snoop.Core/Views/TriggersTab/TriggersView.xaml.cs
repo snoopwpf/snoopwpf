@@ -1,6 +1,6 @@
 ﻿// Original code for viewing Triggers was taken from https://archive.codeplex.com/?p=wpfinspector which is written by Christian Moser
 
-namespace Snoop.TriggersTab
+namespace Snoop.Views.TriggersTab
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -8,7 +8,7 @@ namespace Snoop.TriggersTab
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
-    using Snoop.TriggersTab.Triggers;
+    using Snoop.Views.TriggersTab.Triggers;
 
     public partial class TriggersView
     {

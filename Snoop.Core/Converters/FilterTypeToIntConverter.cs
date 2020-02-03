@@ -2,7 +2,7 @@
 {
     using System;
     using System.Windows.Data;
-    using Snoop.DebugListenerTab;
+    using Snoop.Views.DebugListenerTab;
 
     public class FilterTypeToIntConverter : IValueConverter
     {

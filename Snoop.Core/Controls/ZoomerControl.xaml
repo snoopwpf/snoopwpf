@@ -5,7 +5,7 @@ Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 All other rights reserved.
 -->
 <UserControl
-	x:Class="Snoop.ZoomerControl"
+	x:Class="Snoop.Controls.ZoomerControl"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -13,6 +13,7 @@ All other rights reserved.
 	mc:Ignorable="d"
 	Focusable="True"
 	xmlns:xv="clr-namespace:Snoop"
+	xmlns:windows="clr-namespace:Snoop.Windows"
 	d:DesignWidth="300"
 	d:DesignHeight="300"
 >
@@ -27,7 +28,7 @@ All other rights reserved.
 		<Grid.Background>
 			<Binding ElementName="ColorSlider" Path="Value">
 				<Binding.Converter>
-					<xv:DoubleToWhitenessConverter/>
+					<windows:DoubleToWhitenessConverter/>
 				</Binding.Converter>
 			</Binding>
 		</Grid.Background>

@@ -3,7 +3,7 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop
+namespace Snoop.Controls
 {
     using System;
     using System.Diagnostics;
@@ -12,6 +12,9 @@ namespace Snoop
     using System.Windows.Controls;
     using System.Windows.Data;
     using System.Windows.Media;
+    using Snoop.Data.Tree;
+    using Snoop.Infrastructure.Helpers;
+    using Snoop.Windows;
 
     public class ProperTreeView : TreeView
     {

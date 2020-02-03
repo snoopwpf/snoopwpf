@@ -4,15 +4,16 @@ This source is subject to the Microsoft Public License (Ms-PL).
 Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 All other rights reserved.
 -->
-<windows:SnoopBaseWindow x:Class="Snoop.MethodsTab.ParameterCreator"
+<windows:SnoopBaseWindow x:Class="Snoop.Views.MethodsTab.ParameterCreator"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      mc:Ignorable="d" 
-      xmlns:local="clr-namespace:Snoop.MethodsTab"
+      mc:Ignorable="d"
       xmlns:snoopNS="clr-namespace:Snoop"
       xmlns:windows="clr-namespace:Snoop.Windows"
+      xmlns:controls="clr-namespace:Snoop.Controls"
+      xmlns:local="clr-namespace:Snoop.Views.MethodsTab"
       Width="700" 
       Height="350"
       Title="ParameterCreator"
@@ -27,7 +28,7 @@ All other rights reserved.
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <TextBlock Name="TextBlockDescription" x:FieldModifier="public" Style="{x:Null}" FontWeight="Bold" Grid.Column="0" HorizontalAlignment="Left" TextWrapping="Wrap" />
-        <snoopNS:PropertyInspector x:Name="propertyInspector" Grid.Row="1"
+        <controls:PropertyInspector x:Name="propertyInspector" Grid.Row="1"
                                  RootTarget="{Binding Path=RootTarget, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:ParameterCreator}}}" 
                                  NameValueOnly="True"
                                  />

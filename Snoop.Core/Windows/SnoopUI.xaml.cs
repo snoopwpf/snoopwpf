@@ -3,7 +3,7 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop
+namespace Snoop.Windows
 {
     using System;
     using System.Collections.Generic;
@@ -19,7 +19,9 @@ namespace Snoop
     using System.Windows.Media;
     using System.Windows.Threading;
     using JetBrains.Annotations;
+    using Snoop.Data.Tree;
     using Snoop.Infrastructure;
+    using Snoop.Infrastructure.Helpers;
 
     public sealed partial class SnoopUI : INotifyPropertyChanged
     {

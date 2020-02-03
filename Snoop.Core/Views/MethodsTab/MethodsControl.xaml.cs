@@ -3,7 +3,7 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop.MethodsTab
+namespace Snoop.Views.MethodsTab
 {
     using System;
     using System.Collections.Generic;
@@ -14,7 +14,8 @@ namespace Snoop.MethodsTab
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
     using Snoop.Converters;
-    using Snoop.Infrastructure;
+    using Snoop.Infrastructure.Extensions;
+    using Snoop.Windows;
 
     public partial class MethodsControl
     {

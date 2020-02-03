@@ -1,4 +1,4 @@
-﻿namespace Snoop.TriggersTab.Triggers
+﻿namespace Snoop.Views.TriggersTab.Triggers
 {
     using System.Collections.Generic;
     using System.Linq;

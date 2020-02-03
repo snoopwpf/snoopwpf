@@ -1,7 +1,8 @@
-﻿namespace Snoop.Infrastructure
+﻿namespace Snoop.Converters
 {
     using System;
     using System.ComponentModel;
+    using Snoop.Infrastructure;
 
     public class StringValueConverter
     {
@@ -13,27 +14,34 @@
             }
 
             var converter = TypeDescriptor.GetConverter(targetType);
-            if (converter != null)
+            // ReSharper disable ConditionIsAlwaysTrueOrFalse
+            // ReSharper disable HeuristicUnreachableCode
+            if (converter is null)
             {
+                return null;
+            }
+
+            // ReSharper restore HeuristicUnreachableCode
+            // ReSharper restore ConditionIsAlwaysTrueOrFalse
+
+            try
+            {
+                using (new InvariantThreadCultureScope())
+                {
+                    return GetValueFromConverter(targetType, value, converter);
+                }
+            }
+            catch
+            {
+                // If we land here the problem might have been related to the threads culture.
+                // If the user entered data that was culture specific, we try setting it again using the original culture and not an invariant.
                 try
                 {
-                    using (new InvariantThreadCultureScope())
-                    {
-                        return GetValueFromConverter(targetType, value, converter);
-                    }
+                    return GetValueFromConverter(targetType, value, converter);
                 }
                 catch
                 {
-                    // If we land here the problem might have been related to the threads culture.
-                    // If the user entered data that was culture specific, we try setting it again using the original culture and not an invariant.
-                    try
-                    {
-                        return GetValueFromConverter(targetType, value, converter);
-                    }
-                    catch
-                    {
-                        // todo: How should we notify the user about failures?
-                    }
+                    // todo: How should we notify the user about failures?
                 }
             }
 

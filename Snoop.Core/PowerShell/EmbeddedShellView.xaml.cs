@@ -13,7 +13,10 @@ namespace Snoop.PowerShell
     using System.Reflection;
     using System.Windows;
     using System.Windows.Input;
+    using Snoop.Data.Tree;
     using Snoop.Infrastructure;
+    using Snoop.Infrastructure.Helpers;
+    using Snoop.Windows;
 
     public partial class EmbeddedShellView
     {

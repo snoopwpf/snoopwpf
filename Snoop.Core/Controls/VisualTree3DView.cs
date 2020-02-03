@@ -3,7 +3,7 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop
+namespace Snoop.Controls
 {
     using System;
     using System.Windows;
@@ -11,6 +11,7 @@ namespace Snoop
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
     using System.Windows.Media.Media3D;
+    using Snoop.Infrastructure;
 
     public class VisualTree3DView : Viewport3D
     {

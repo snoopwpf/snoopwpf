@@ -5,7 +5,7 @@ Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 All other rights reserved.
 -->
 <windows:SnoopMainBaseWindow
-	x:Class="Snoop.SnoopUI"
+	x:Class="Snoop.Windows.SnoopUI"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
 	xmlns:local="clr-namespace:Snoop"
@@ -13,12 +13,15 @@ All other rights reserved.
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:d="http://schemas.microsoft.com/expression/interactivedesigner/2006"
     xmlns:conv="clr-namespace:Snoop.Converters"
-	xmlns:MethodsTabNS="clr-namespace:Snoop.MethodsTab"
-    xmlns:DebugListenerNS="clr-namespace:Snoop.DebugListenerTab"
-    xmlns:triggersTab="clr-namespace:Snoop.TriggersTab"
-    xmlns:behaviorsTab="clr-namespace:Snoop.BehaviorsTab"
     xmlns:windows="clr-namespace:Snoop.Windows"
     xmlns:powerShell="clr-namespace:Snoop.PowerShell"
+    xmlns:controls="clr-namespace:Snoop.Controls"
+    xmlns:tree="clr-namespace:Snoop.Data.Tree"
+    xmlns:views="clr-namespace:Snoop.Views"
+    xmlns:triggersTab="clr-namespace:Snoop.Views.TriggersTab"
+    xmlns:behaviorsTab="clr-namespace:Snoop.Views.BehaviorsTab"
+    xmlns:methodsTab="clr-namespace:Snoop.Views.MethodsTab"
+    xmlns:debugListenerTab="clr-namespace:Snoop.Views.DebugListenerTab"
     mc:Ignorable="d"
 	Title="Snoop"
     MinWidth="480"
@@ -156,7 +159,7 @@ All other rights reserved.
 			HorizontalAlignment="Right"
 			VerticalAlignment="Center"
 			Margin="0,2,2,2"
-			Command="{x:Static local:SnoopUI.RefreshCommand}"
+			Command="{x:Static windows:SnoopUI.RefreshCommand}"
 		>
 			<Image Source="{StaticResource reloadDrawingImage}"/>
 			<Button.ToolTip>
@@ -165,7 +168,7 @@ All other rights reserved.
 		</Button>
 
 		<!-- Visual Tree TreeView -->
-		<local:ProperTreeView
+		<controls:ProperTreeView
 			x:Name="Tree"
 			Grid.Row="1"
 			Grid.RowSpan="2"
@@ -176,11 +179,11 @@ All other rights reserved.
 			HorizontalAlignment="Stretch"
 		>
 			<TreeView.Resources>
-				<HierarchicalDataTemplate DataType="{x:Type local:TreeItem}" ItemsSource="{Binding Children}">
+				<HierarchicalDataTemplate DataType="{x:Type tree:TreeItem}" ItemsSource="{Binding Children}">
 					<TextBlock
 						Text="{Binding}"
 						HorizontalAlignment="Stretch"
-						local:BringIntoViewBehavior.IsActive="{Binding IsSelected}"
+						i:BringIntoViewBehavior.IsActive="{Binding IsSelected}"
 						Background="Transparent"
 						Foreground="Black"
 					/>
@@ -191,7 +194,7 @@ All other rights reserved.
 			</TreeView.Resources>
 
             <TreeView.ItemContainerStyle>
-				<Style BasedOn="{StaticResource ProperTreeViewItemStyle}" TargetType="{x:Type local:ProperTreeViewItem}">
+				<Style BasedOn="{StaticResource ProperTreeViewItemStyle}" TargetType="{x:Type controls:ProperTreeViewItem}">
 					<Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
 					<Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
 					<Setter Property="Background" Value="{Binding TreeBackgroundBrush}"/>
@@ -217,10 +220,10 @@ All other rights reserved.
 				</Style>
 			</TreeView.ItemContainerStyle>
 
-			<local:ProperTreeView.ToolTip>
+			<controls:ProperTreeView.ToolTip>
 				<TextBlock Style="{x:Null}" Text="Hold down Ctrl or Ctrl + Shift and mouse over elements in the target app to select them."/>
-			</local:ProperTreeView.ToolTip>
-		</local:ProperTreeView>
+			</controls:ProperTreeView.ToolTip>
+		</controls:ProperTreeView>
 		
 		<!-- Vertical GridSplitter (between the visual tree tree view and the tab control (with the property grid/events view)) -->
 		<GridSplitter
@@ -258,7 +261,7 @@ All other rights reserved.
 						</TextBlock.ToolTip>
 					</TextBlock>
 				</TabItem.Header>
-				<local:PropertyInspector x:Name="PropertyGrid" RootTarget="{Binding CurrentSelection.Target}"/>
+				<controls:PropertyInspector x:Name="PropertyGrid" RootTarget="{Binding CurrentSelection.Target}"/>
 			</TabItem>
 			<TabItem Style="{x:Null}">
 				<TabItem.Header>
@@ -275,7 +278,7 @@ All other rights reserved.
 						</TextBlock.ToolTip>
 					</TextBlock>
 				</TabItem.Header>
-				<local:PropertyInspector x:Name="DataContextPropertyGrid" RootTarget="{Binding CurrentSelection.Target.DataContext}"/>
+				<controls:PropertyInspector x:Name="DataContextPropertyGrid" RootTarget="{Binding CurrentSelection.Target.DataContext}"/>
 			</TabItem>
 			<TabItem Style="{x:Null}">
 				<TabItem.Header>
@@ -292,7 +295,7 @@ All other rights reserved.
 						</TextBlock.ToolTip>
 					</TextBlock>
 				</TabItem.Header>
-				<local:EventsView/>
+				<views:EventsView/>
 			</TabItem>
 		    <TabItem Style="{x:Null}">
 		        <TabItem.Header>
@@ -347,7 +350,7 @@ All other rights reserved.
 					</TextBlock>
 				</TabItem.Header>
 
-				<MethodsTabNS:MethodsControl
+				<methodsTab:MethodsControl
 					RootTarget="{Binding CurrentSelection.Target}"
 					IsSelected="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}"
 				/>
@@ -389,7 +392,7 @@ All other rights reserved.
 					</TextBlock>
 				</TabItem.Header>
 
-				<DebugListenerNS:DebugListenerControl/>
+				<debugListenerTab:DebugListenerControl/>
 			</TabItem>
 		</TabControl>
 
@@ -405,7 +408,7 @@ All other rights reserved.
 		/>
 
 		<!-- Previewer -->
-		<local:Previewer
+		<controls:Previewer
 			x:Name="PreviewArea"
 			Grid.Row="2"
 			Grid.Column="1"
@@ -419,13 +422,13 @@ All other rights reserved.
 				<StackPanel Orientation="Horizontal">
 					<TextBlock Style="{x:Null}" Text="Keyboard.FocusedElement:"/>
 					<TextBlock Style="{x:Null}" Margin="3,0,0,0">
-						<local:NoFocusHyperlink
+						<windows:NoFocusHyperlink
 							Focusable="False"
-							Command="{x:Static local:SnoopUI.SelectFocusCommand}"
+							Command="{x:Static windows:SnoopUI.SelectFocusCommand}"
 							CommandParameter="{Binding CurrentFocus}"
 						>
-							<TextBlock Text="{Binding CurrentFocus, Converter={x:Static local:ObjectToStringConverter.Instance}}"/>
-						</local:NoFocusHyperlink>
+							<TextBlock Text="{Binding CurrentFocus, Converter={x:Static conv:ObjectToStringConverter.Instance}}"/>
+						</windows:NoFocusHyperlink>
 					</TextBlock>
 					<TextBlock Style="{x:Null}" Text="; "/>
 					<StackPanel.ToolTip>
@@ -439,13 +442,13 @@ All other rights reserved.
 				<StackPanel Orientation="Horizontal">
 					<TextBlock Style="{x:Null}" Text="Current FocusScope:"/>
 					<TextBlock Style="{x:Null}" Margin="3,0,0,0">
-						<local:NoFocusHyperlink
+						<windows:NoFocusHyperlink
 							Focusable="False"
-							Command="{x:Static local:SnoopUI.SelectFocusScopeCommand}"
+							Command="{x:Static windows:SnoopUI.SelectFocusScopeCommand}"
 							CommandParameter="{Binding CurrentFocusScope}"
 						>
-							<TextBlock Text="{Binding CurrentFocusScope, Converter={x:Static local:ObjectToStringConverter.Instance}}"/>
-						</local:NoFocusHyperlink>
+							<TextBlock Text="{Binding CurrentFocusScope, Converter={x:Static conv:ObjectToStringConverter.Instance}}"/>
+						</windows:NoFocusHyperlink>
 					</TextBlock>
 					<StackPanel.ToolTip>
 						<StackPanel>

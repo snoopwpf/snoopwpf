@@ -3,7 +3,7 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop
+namespace Snoop.Infrastructure
 {
     using System;
     using System.Collections;
@@ -21,7 +21,7 @@ namespace Snoop
     using System.Windows.Threading;
     using JetBrains.Annotations;
     using Snoop.Converters;
-    using Snoop.Infrastructure;
+    using Snoop.Infrastructure.Helpers;
 
     public class PropertyInformation : DependencyObject, IComparable, INotifyPropertyChanged
     {

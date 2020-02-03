@@ -1,4 +1,4 @@
-﻿namespace Snoop.TriggersTab.Triggers
+﻿namespace Snoop.Views.TriggersTab.Triggers
 {
     using System;
     using System.ComponentModel;
@@ -7,6 +7,7 @@
     using System.Windows.Data;
     using Snoop.Converters;
     using Snoop.Infrastructure;
+    using Snoop.Infrastructure.Helpers;
 
     /// <summary>
     ///     Abstraction model of a <see cref="Setter" />

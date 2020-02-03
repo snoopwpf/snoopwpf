@@ -3,13 +3,14 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop
+namespace Snoop.Controls.ValueEditors
 {
     using System;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
-    using Snoop.ValueEditors.Details;
+    using Snoop.Controls.ValueEditors.Details;
+    using Snoop.Infrastructure;
 
     public abstract class ValueEditor : ContentControl
     {

@@ -9,7 +9,7 @@ All other rights reserved.
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:xv="clr-namespace:Snoop"
 	xmlns:windows="clr-namespace:Snoop.Windows"
-	x:Class="Snoop.Zoomer"
+	x:Class="Snoop.Windows.Zoomer"
 	Icon="Snoop.ico"
 	Title="Zoomer"
 	Width="640"
@@ -28,25 +28,25 @@ All other rights reserved.
 		<Grid.Background>
 			<Binding ElementName="ColorSlider" Path="Value">
 				<Binding.Converter>
-					<xv:DoubleToWhitenessConverter/>
+					<windows:DoubleToWhitenessConverter/>
 				</Binding.Converter>
 			</Binding>
 		</Grid.Background>
 
 		<Grid.ContextMenu>
 			<ContextMenu Style="{x:Null}">
-				<MenuItem Style="{x:Null}" Command="{x:Static xv:Zoomer.SwitchTo2DCommand}">
+				<MenuItem Style="{x:Null}" Command="{x:Static windows:Zoomer.SwitchTo2DCommand}">
 					<MenuItem.Header>
 						<TextBlock Style="{x:Null}" Text="2D view"/>
 					</MenuItem.Header>
 				</MenuItem>
-				<MenuItem Style="{x:Null}" Command="{x:Static xv:Zoomer.SwitchTo3DCommand}">
+				<MenuItem Style="{x:Null}" Command="{x:Static windows:Zoomer.SwitchTo3DCommand}">
 					<MenuItem.Header>
 						<TextBlock Style="{x:Null}" Text="3D view"/>
 					</MenuItem.Header>
 				</MenuItem>
 				<Separator/>
-				<MenuItem Style="{x:Null}" Command="{x:Static xv:Zoomer.ResetCommand}">
+				<MenuItem Style="{x:Null}" Command="{x:Static windows:Zoomer.ResetCommand}">
 					<MenuItem.Header>
 						<TextBlock Style="{x:Null}" Text="Reset"/>
 					</MenuItem.Header>
@@ -70,7 +70,7 @@ All other rights reserved.
 				Cursor="Arrow"
 				Focusable="False"
 				IsChecked="True"
-				Command="{x:Static xv:Zoomer.SwitchTo2DCommand}"
+				Command="{x:Static windows:Zoomer.SwitchTo2DCommand}"
 			>
 				<TextBlock Style="{x:Null}" Text="2D"/>
 				<RadioButton.ToolTip>
@@ -84,7 +84,7 @@ All other rights reserved.
 				Margin="2,0,0,0"
 				Cursor="Arrow"
 				Focusable="False"
-				Command="{x:Static xv:Zoomer.SwitchTo3DCommand}"
+				Command="{x:Static windows:Zoomer.SwitchTo3DCommand}"
 			>
 				<TextBlock Style="{x:Null}" Text="3D"/>
 				<RadioButton.ToolTip>

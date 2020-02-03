@@ -3,7 +3,7 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop
+namespace Snoop.Windows
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -12,6 +12,7 @@ namespace Snoop
     using System.Windows;
     using System.Windows.Controls;
     using JetBrains.Annotations;
+    using Snoop.Infrastructure;
 
     public partial class EditUserFilters : INotifyPropertyChanged
     {

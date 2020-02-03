@@ -10,8 +10,9 @@ All other rights reserved.
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:d="http://schemas.microsoft.com/expression/interactivedesigner/2006"
 	xmlns:my='clr-namespace:Snoop'
+	xmlns:controls="clr-namespace:Snoop.Controls"
 	mc:Ignorable="d"
-	x:Class="Snoop.Previewer"
+	x:Class="Snoop.Controls.Previewer"
 >
 	<UserControl.Resources>
 		<ResourceDictionary>
@@ -299,7 +300,7 @@ All other rights reserved.
 	</UserControl.Resources>
 
 	<Grid DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
-		<my:ZoomerControl x:Name="Zoomer"/>
+		<controls:ZoomerControl x:Name="Zoomer"/>
 
 		<Button
 		    Style="{x:Null}"
@@ -309,7 +310,7 @@ All other rights reserved.
 			VerticalAlignment="Bottom"
 			Margin="0,0,44,0"
 			Template="{DynamicResource ButtonLeft}"
-			Command="{x:Static my:Previewer.MagnifyCommand}"
+			Command="{x:Static controls:Previewer.MagnifyCommand}"
 		>
 			<Image x:Name="Image" Style="{x:Null}" Source="{DynamicResource magnifyingGlassDrawingImage}"/>
 			<Button.ToolTip>
@@ -346,7 +347,7 @@ All other rights reserved.
 			HorizontalAlignment="Right"
 			VerticalAlignment="Bottom"
 			Template="{DynamicResource ButtonRight}"
-			Command="{x:Static my:Previewer.ScreenshotCommand}"
+			Command="{x:Static controls:Previewer.ScreenshotCommand}"
 		>
 			<Image Style="{x:Null}" Margin="1" Source="{DynamicResource cameraDrawingImage}"/>
 			<Button.ToolTip>

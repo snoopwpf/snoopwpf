@@ -17,4 +17,7 @@ using System.Windows.Markup;
 [assembly: XmlnsPrefix("urn:snoopwpf", "snoopwpf")]
 [assembly: XmlnsDefinition("urn:snoopwpf", "Snoop")]
 [assembly: XmlnsDefinition("urn:snoopwpf", "Snoop.Converters")]
-[assembly: XmlnsDefinition("urn:snoopwpf", "Snoop.ValueEditors")]
+[assembly: XmlnsDefinition("urn:snoopwpf", "Snoop.Controls")]
+[assembly: XmlnsDefinition("urn:snoopwpf", "Snoop.Controls.ValueEditors")]
+[assembly: XmlnsDefinition("urn:snoopwpf", "Snoop.Data")]
+[assembly: XmlnsDefinition("urn:snoopwpf", "Snoop.Infrastructure")]

@@ -1,9 +1,9 @@
-﻿namespace Snoop.TriggersTab.Triggers
+﻿namespace Snoop.Views.TriggersTab.Triggers
 {
     using System.Collections.Generic;
     using System.Linq;
     using System.Windows;
-    using Snoop.Infrastructure;
+    using Snoop.Infrastructure.Helpers;
 
     public class TriggerItem : TriggerItemBase
     {
