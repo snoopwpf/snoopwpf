@@ -20,7 +20,7 @@ All other rights reserved.
 	<Grid.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="ProperTreeViewResources.xaml"/>
+				<ResourceDictionary Source="../Controls/ProperTreeViewResources.xaml"/>
 			</ResourceDictionary.MergedDictionaries>
 
 			<DataTemplate x:Key="CategoryTemplate">

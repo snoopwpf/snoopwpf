@@ -13,8 +13,8 @@
     <Grid.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="..\Icons.xaml"/>
-                <ResourceDictionary Source="..\ValueEditors\EditorTemplates.xaml"/>
+                <ResourceDictionary Source="../../Icons.xaml"/>
+                <ResourceDictionary Source="../../Controls/ValueEditors/EditorTemplates.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <Style x:Key="Snoop.TriggerControlStyle" TargetType="{x:Type HeaderedContentControl}">

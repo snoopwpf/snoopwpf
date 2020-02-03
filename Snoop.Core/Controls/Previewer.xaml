@@ -16,7 +16,7 @@ All other rights reserved.
 	<UserControl.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="Icons.xaml"/>
+				<ResourceDictionary Source="../Icons.xaml"/>
 			</ResourceDictionary.MergedDictionaries>
 
 			<DrawingBrush x:Key="previewerSnoopDogDrawingBrush" Stretch="Uniform">
