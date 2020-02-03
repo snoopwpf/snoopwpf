@@ -25,7 +25,7 @@ namespace Snoop
         private static readonly Attribute[] propertyFilterAttributes = { new PropertyFilterAttribute(PropertyFilterOptions.All) };
 
         private AdornerContainer adornerContainer;
-        
+
         public VisualTreeItem(DependencyObject target, TreeItem parent)
             : base(target, parent)
         {
@@ -144,7 +144,7 @@ namespace Snoop
                 }
             }
         }
-
+        
         protected override void Reload(List<TreeItem> toBeRemoved)
         {
             // having the call to base.Reload here ... puts the application resources at the very top of the tree view.
