@@ -120,11 +120,14 @@ namespace Snoop.Infrastructure
         /// <param name="target">the item in the collection</param>
         /// <param name="component">the collection</param>
         /// <param name="displayName">the display name that goes in the name column, i.e. this[x]</param>
-        public PropertyInformation(object target, object component, string displayName, bool isCopyable = false)
+        public PropertyInformation(object target, object component, string displayName, object value, bool isCopyable = false)
             : this(target, null, displayName, displayName)
         {
             this.component = component;
             this.isCopyable = isCopyable;
+            this.isRunning = false;
+            this.Value = value;
+            this.isRunning = true;
         }
 
         public void Teardown()
@@ -788,21 +791,21 @@ namespace Snoop.Infrastructure
                 properties.AddRange(extendedProps);
             }
 
+            // sort the properties before adding potential collection items
+            properties.Sort();
+
             // if the object is a collection, add the items in the collection as properties
             if (obj is ICollection collection)
             {
                 var index = 0;
                 foreach (var item in collection)
                 {
-                    var info = new PropertyInformation(item, collection, "this[" + index + "]");
+                    var info = new PropertyInformation(item, collection, "this[" + index + "]", item);
+
                     index++;
-                    info.Value = item;
                     properties.Add(info);
                 }
             }
-
-            // sort the properties
-            properties.Sort();
 
             return properties;
         }
@@ -821,10 +824,7 @@ namespace Snoop.Infrastructure
             }
 
             var key = ResourceKeyCache.GetKey(obj);
-            var prop = new PropertyInformation(key, new object(), "x:Key", true)
-            {
-                Value = key
-            };
+            var prop = new PropertyInformation(key, new object(), "x:Key", key, true);
             return new List<PropertyInformation>
             {
                 prop
