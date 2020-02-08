@@ -11,6 +11,11 @@ namespace Snoop
 
     public partial class App
     {
+        public App()
+        {
+            this.InitializeComponent();
+        }
+
         /// <inheritdoc />
         protected override void OnStartup(StartupEventArgs e)
         {
