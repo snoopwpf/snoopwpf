@@ -342,13 +342,13 @@ namespace Snoop.Infrastructure
                 }
             }
 
-            if (functionOffsetFromBaseAddress != 0)
+            if (functionOffsetFromBaseAddress == 0)
             {
-                var remoteModuleHandle = GetRemoteModuleHandle(targetProcess, moduleName);
-                return new UIntPtr((ulong)remoteModuleHandle + functionOffsetFromBaseAddress);
+                throw new Exception($"Could not find local method handle for \"{procName}\" in module \"{moduleName}\".");
             }
 
-            return UIntPtr.Zero;
+            var remoteModuleHandle = GetRemoteModuleHandle(targetProcess, moduleName);
+            return new UIntPtr((ulong)remoteModuleHandle + functionOffsetFromBaseAddress);
         }
 
         public static IntPtr GetRemoteModuleHandle(Process targetProcess, string moduleName)
