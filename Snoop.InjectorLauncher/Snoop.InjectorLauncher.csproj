@@ -26,6 +26,10 @@
     <Compile Include="..\Snoop.Core\Data\TransientSettingsData.cs" Link="Data\TransientSettingsData.cs" />
     <Compile Include="..\Snoop.Core\Infrastructure\NativeMethods.cs" Link="NativeMethods.cs" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommandLineParser" />
+  </ItemGroup>
    
   <Target Name="Compilex64" AfterTargets="Build" Condition="'$(PlatformTarget)' == 'x86'">
     <Message Text="Building injector launcher for x64..." Importance="High" />

@@ -8,8 +8,8 @@ namespace Snoop.InjectorLauncher
     using System;
     using System.Diagnostics;
     using System.IO;
-    using System.Linq;
     using System.Reflection;
+    using CommandLine;
     using Snoop.Data;
 
     public static class Program
@@ -18,14 +18,23 @@ namespace Snoop.InjectorLauncher
         {
             Injector.LogMessage("Starting the injection process...", false);
 
+            InjectorLauncherCommandLineOptions commandLineOptions = null;
+            Parser.Default.ParseArguments<InjectorLauncherCommandLineOptions>(args)
+                .WithParsed(options => commandLineOptions = options);
+
+            return Run(commandLineOptions);
+        }
+
+        private static int Run(InjectorLauncherCommandLineOptions commandLineOptions)
+        {
             try
             {
-                if (args.Any(x => x.Equals("-debug", StringComparison.OrdinalIgnoreCase)))
+                if (commandLineOptions.Debug)
                 {
                     Debugger.Launch();
                 }
 
-                var processWrapper = ProcessWrapper.From(args[0]);
+                var processWrapper = ProcessWrapper.From(commandLineOptions.Target);
 
                 // Check for target process and our bitness.
                 // If they don't match we redirect everything to the appropriate injector launcher.
@@ -40,8 +49,7 @@ namespace Snoop.InjectorLauncher
 
                         var originalProcessFileName = currentProcess.MainModule.ModuleName;
                         var correctBitnessFileName = originalProcessFileName.Replace(currentProcessBitness, processWrapper.Bitness);
-                        var commandLine = string.Join(" ", Environment.GetCommandLineArgs().Skip(1));
-                        var processStartInfo = new ProcessStartInfo(currentProcess.MainModule.FileName.Replace(originalProcessFileName, correctBitnessFileName), commandLine)
+                        var processStartInfo = new ProcessStartInfo(currentProcess.MainModule.FileName.Replace(originalProcessFileName, correctBitnessFileName), Parser.Default.FormatCommandLine(commandLineOptions))
                         {
                             CreateNoWindow = true,
                             WorkingDirectory = currentProcess.StartInfo.WorkingDirectory
@@ -61,11 +69,11 @@ namespace Snoop.InjectorLauncher
                     }
                 }
 
-                var assemblyNameOrFullPath = args[1];
-                var className = args[2];
-                var methodName = args[3];
-                var settingsFile = args.Length >= 5
-                    ? args[4]
+                var assemblyNameOrFullPath = commandLineOptions.Assembly;
+                var className = commandLineOptions.ClassName;
+                var methodName = commandLineOptions.MethodName;
+                var settingsFile = string.IsNullOrEmpty(commandLineOptions.SettingsFile) == false
+                    ? commandLineOptions.SettingsFile
                     : new TransientSettingsData
                     {
                         StartTarget = SnoopStartTarget.SnoopUI,

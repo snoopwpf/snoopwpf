@@ -8,12 +8,14 @@ namespace Snoop
     using System.Diagnostics;
     using System.IO;
     using System.Reflection;
+    using CommandLine;
     using Snoop.Data;
+    using Snoop.InjectorLauncher;
 
     /// <summary>
     /// Class responsible for launching a new injector process.
     /// </summary>
-    public static class InjectorLauncher
+    public static class InjectorLauncherManager
     {
         private static string GetSuffix(WindowInfo windowInfo)
         {
@@ -51,7 +53,17 @@ Snoop requires this component, which is part of the Snoop project, to do it's jo
                     throw new FileNotFoundException(message, injectorLauncherExe);
                 }
 
-                var startInfo = new ProcessStartInfo(injectorLauncherExe, $"{windowInfo.OwningProcess.Id}:{windowInfo.HWnd} \"{assembly}\" \"{className}\" \"{methodName}\" \"{transientSettingsFile}\"")
+                var injectorLauncherCommandLineOptions = new InjectorLauncherCommandLineOptions
+                {
+                    Target = $"{windowInfo.OwningProcess.Id}:{windowInfo.HWnd}",
+                    Assembly = assembly,
+                    ClassName = className,
+                    MethodName = methodName,
+                    SettingsFile = transientSettingsFile
+                };
+
+                var commandLine = CommandLine.Parser.Default.FormatCommandLine(injectorLauncherCommandLineOptions);
+                var startInfo = new ProcessStartInfo(injectorLauncherExe, commandLine)
                 {
                     UseShellExecute = false,
                     Verb = windowInfo.IsOwningProcessElevated

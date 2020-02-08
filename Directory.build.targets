@@ -33,5 +33,9 @@
     <DebugType>full</DebugType>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Update="CommandLineParser" Version="2.*" />
+  </ItemGroup>
+
   <Target Name="ForceRestore" BeforeTargets="ResolvePackageAssets" DependsOnTargets="Restore" />
 </Project>

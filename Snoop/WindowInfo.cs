@@ -168,7 +168,7 @@ namespace Snoop
 
             try
             {
-                InjectorLauncher.Launch(this, typeof(SnoopManager).GetMethod(nameof(SnoopManager.StartSnoop)), CreateTransientSettingsData(SnoopStartTarget.SnoopUI, this.HWnd));
+                InjectorLauncherManager.Launch(this, typeof(SnoopManager).GetMethod(nameof(SnoopManager.StartSnoop)), CreateTransientSettingsData(SnoopStartTarget.SnoopUI, this.HWnd));
             }
             catch (Exception e)
             {
@@ -186,7 +186,7 @@ namespace Snoop
 
             try
             {
-                InjectorLauncher.Launch(this, typeof(SnoopManager).GetMethod(nameof(SnoopManager.StartSnoop)), CreateTransientSettingsData(SnoopStartTarget.Zoomer, this.HWnd));
+                InjectorLauncherManager.Launch(this, typeof(SnoopManager).GetMethod(nameof(SnoopManager.StartSnoop)), CreateTransientSettingsData(SnoopStartTarget.Zoomer, this.HWnd));
             }
             catch (Exception e)
             {

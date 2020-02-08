@@ -21,6 +21,7 @@
     <AutoGenerateBindingRedirects Condition="$(DefineConstants.Contains(NETCOREAPP)) == false">true</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
+  <!-- Analyzer references -->
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2019.*" privateAssets="all" includeAssets="build;compile" />
     

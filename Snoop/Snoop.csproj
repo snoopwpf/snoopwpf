@@ -22,6 +22,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="..\Snoop.InjectorLauncher\InjectorLauncherCommandLineOptions.cs" Link="InjectorLauncherCommandLineOptions.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
     </None>
@@ -29,5 +33,9 @@
 
   <ItemGroup>
      <ProjectReference Include="../Snoop.Core/Snoop.Core.csproj" /> 
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommandLineParser" />
   </ItemGroup>
 </Project>
