@@ -58,12 +58,12 @@ std::unique_ptr<FrameworkExecutor> GetExecutor(const std::wstring& framework)
 
 extern "C" __declspec(dllexport) int STDMETHODVCALLTYPE ExecuteInDefaultAppDomain(const LPCWSTR input)
 {
-	OutputDebugString(input);
+	OutputDebugStringEx(input);
 	const auto parts = split(input, L"<|>");
 
 	if (parts.size() != 5)
 	{
-		OutputDebugString(L"Not enough parameters.");
+		OutputDebugStringEx(L"Not enough parameters.");
 		return E_INVALIDARG;
 	}
 
@@ -77,7 +77,7 @@ extern "C" __declspec(dllexport) int STDMETHODVCALLTYPE ExecuteInDefaultAppDomai
 
 	if (!executor)
 	{
-		OutputDebugString(L"No executor found.");
+		OutputDebugStringEx(L"No executor found.");
 		return E_NOTIMPL;
 	}
 	
@@ -88,7 +88,7 @@ extern "C" __declspec(dllexport) int STDMETHODVCALLTYPE ExecuteInDefaultAppDomai
 	{
 		const _com_error err(hr);
 		const auto errorMessage = err.ErrorMessage();
-		OutputDebugString(errorMessage);
+		OutputDebugStringEx(errorMessage);
 	}
 	
 	return hr;
