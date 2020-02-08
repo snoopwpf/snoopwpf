@@ -21,6 +21,11 @@
     <AutoGenerateBindingRedirects Condition="$(DefineConstants.Contains(NETCOREAPP)) == false">true</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
+  <!-- Configuration for GitVersionTask -->
+  <PropertyGroup>
+    <WriteVersionInfoToBuildLog>false</WriteVersionInfoToBuildLog>
+  </PropertyGroup>
+
   <!-- Build references -->
   <ItemGroup>
     <PackageReference Include="GitVersionTask" Version="5.*" PrivateAssets="All" IncludeAssets="build; native" />
