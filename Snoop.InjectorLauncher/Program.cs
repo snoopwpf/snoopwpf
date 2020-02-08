@@ -67,9 +67,6 @@ namespace Snoop.InjectorLauncher
                     }
                 }
 
-                var assemblyNameOrFullPath = commandLineOptions.Assembly;
-                var className = commandLineOptions.ClassName;
-                var methodName = commandLineOptions.MethodName;
                 var settingsFile = string.IsNullOrEmpty(commandLineOptions.SettingsFile) == false
                     ? commandLineOptions.SettingsFile
                     : new TransientSettingsData
@@ -80,9 +77,9 @@ namespace Snoop.InjectorLauncher
 
                 var injectorData = new InjectorData
                 {
-                    FullAssemblyPath = GetAssemblyPath(processWrapper, assemblyNameOrFullPath),
-                    ClassName = className,
-                    MethodName = methodName,
+                    FullAssemblyPath = GetAssemblyPath(processWrapper, commandLineOptions.Assembly),
+                    ClassName = commandLineOptions.ClassName,
+                    MethodName = commandLineOptions.MethodName,
                     SettingsFile = settingsFile
                 };
 
