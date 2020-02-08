@@ -14,7 +14,7 @@ namespace Snoop.InjectorLauncher
     /// </summary>
     public static class Injector
     {
-        public static void LogMessage(string message, bool append)
+        public static void LogMessage(string message, bool append = true)
         {
             var applicationDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             applicationDataPath += "\\Snoop";
@@ -31,7 +31,7 @@ namespace Snoop.InjectorLauncher
                 File.Delete(pathname);
             }
 
-            var logMessage = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss") + " : " + message;
+            var logMessage = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss") + ": " + message;
 
             Trace.WriteLine(logMessage);
 
@@ -122,7 +122,7 @@ namespace Snoop.InjectorLauncher
                 }
                 catch (Exception e)
                 {
-                    LogMessage(e.ToString(), true);
+                    LogMessage(e.ToString());
                 }
             }
             else
@@ -240,7 +240,7 @@ namespace Snoop.InjectorLauncher
                         }
                         catch (Exception e)
                         {
-                            LogMessage(e.ToString(), true);
+                            LogMessage(e.ToString());
                         }
                     }
                 }

@@ -13,12 +13,17 @@ namespace Snoop.InjectorLauncher
             this.Handle = NativeMethods.OpenProcess(NativeMethods.ProcessAccessFlags.All, false, process.Id);
             this.WindowHandle = windowHandle;
 
-            this.Bitness = NativeMethods.IsProcess64Bit(this.Process)
-                               ? "x64"
-                               : "x86";
+            this.Bitness = GetBitnessAsString(this.Process);
 
             this.SupportedFrameworkName = GetTargetFramework(process);
             this.RequiresIJWHost = this.SupportedFrameworkName == "netcoreapp3.0";
+        }
+
+        public static string GetBitnessAsString(Process process)
+        {
+            return NativeMethods.IsProcess64Bit(process)
+                ? "x64"
+                : "x86";
         }
 
         public Process Process { get; }
@@ -60,7 +65,7 @@ namespace Snoop.InjectorLauncher
 
             if (processId == 0)
             {
-                Injector.LogMessage($"Could not get process for window handle {windowHandle}", true);
+                Injector.LogMessage($"Could not get process for window handle {windowHandle}");
                 return null;
             }
 
@@ -71,8 +76,8 @@ namespace Snoop.InjectorLauncher
             }
             catch (Exception e)
             {
-                Injector.LogMessage($"Could not get process for PID = {processId}.", true);
-                Injector.LogMessage(e.ToString(), true);
+                Injector.LogMessage($"Could not get process for PID = {processId}.");
+                Injector.LogMessage(e.ToString());
             }
 
             return null;

@@ -18,46 +18,94 @@ namespace Snoop.InjectorLauncher
         {
             Injector.LogMessage("Starting the injection process...", false);
 
-            if (args.Any(x => x.Equals("-debug", StringComparison.OrdinalIgnoreCase)))
-            {
-                Debugger.Launch();
-            }
-
-            var processWrapper = ProcessWrapper.From(args[0]);
-
-            var assemblyNameOrFullPath = args[1];
-            var className = args[2];
-            var methodName = args[3];
-            var settingsFile = args.Length >= 3
-                ? args[4]
-                : new TransientSettingsData
-                {
-                    StartTarget = SnoopStartTarget.SnoopUI,
-                    TargetWindowHandle = processWrapper.WindowHandle.ToInt64()
-                }.WriteToFile();
-
-            var injectorData = new InjectorData
-            {
-                FullAssemblyPath = GetAssemblyPath(processWrapper, assemblyNameOrFullPath),
-                ClassName = className,
-                MethodName = methodName,
-                SettingsFile = settingsFile
-            };
-
             try
             {
-                Injector.InjectIntoProcess(processWrapper, injectorData);
+                if (args.Any(x => x.Equals("-debug", StringComparison.OrdinalIgnoreCase)))
+                {
+                    Debugger.Launch();
+                }
+
+                var processWrapper = ProcessWrapper.From(args[0]);
+
+                // Check for target process and our bitness.
+                // If they don't match we redirect everything to the appropriate injector launcher.
+                {
+                    var currentProcess = Process.GetCurrentProcess();
+                    var currentProcessBitness = ProcessWrapper.GetBitnessAsString(currentProcess);
+                    if (processWrapper.Bitness.Equals(currentProcessBitness) == false)
+                    {
+                        Injector.LogMessage("Target process and injector process have different bitness, trying to redirect to secondary process...");
+
+                        Debugger.Launch();
+
+                        var originalProcessFileName = currentProcess.MainModule.ModuleName;
+                        var correctBitnessFileName = originalProcessFileName.Replace(currentProcessBitness, processWrapper.Bitness);
+                        var commandLine = string.Join(" ", Environment.GetCommandLineArgs().Skip(1));
+                        var processStartInfo = new ProcessStartInfo(currentProcess.MainModule.FileName.Replace(originalProcessFileName, correctBitnessFileName), commandLine)
+                        {
+                            CreateNoWindow = true,
+                            WorkingDirectory = currentProcess.StartInfo.WorkingDirectory
+                        };
+
+                        using (var process = Process.Start(processStartInfo))
+                        {
+                            if (process == null)
+                            {
+                                Injector.LogMessage("Failed to start process for redirection.");
+                                return 1;
+                            }
+
+                            process.WaitForExit();
+                            return process.ExitCode;
+                        }
+                    }
+                }
+
+                var assemblyNameOrFullPath = args[1];
+                var className = args[2];
+                var methodName = args[3];
+                var settingsFile = args.Length >= 5
+                    ? args[4]
+                    : new TransientSettingsData
+                    {
+                        StartTarget = SnoopStartTarget.SnoopUI,
+                        TargetWindowHandle = processWrapper.WindowHandle.ToInt64()
+                    }.WriteToFile();
+
+                var injectorData = new InjectorData
+                {
+                    FullAssemblyPath = GetAssemblyPath(processWrapper, assemblyNameOrFullPath),
+                    ClassName = className,
+                    MethodName = methodName,
+                    SettingsFile = settingsFile
+                };
+
+                if (File.Exists(injectorData.FullAssemblyPath) == false)
+                {
+                    Injector.LogMessage($"Could not find \"{injectorData.FullAssemblyPath}\".");
+                    return 1;
+                }
+
+                try
+                {
+                    Injector.InjectIntoProcess(processWrapper, injectorData);
+                }
+                catch (Exception exception)
+                {
+                    Injector.LogMessage($"Failed to inject Snoop into process {processWrapper.Process.ProcessName} (PID = {processWrapper.Process.Id})");
+                    Injector.LogMessage(exception.ToString());
+                    return 1;
+                }
+
+                Injector.LogMessage($"Successfully injected Snoop into process {processWrapper.Process.ProcessName} (PID = {processWrapper.Process.Id})");
+
+                return 0;
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                Injector.LogMessage($"Failed to inject Snoop into process {processWrapper.Process.ProcessName} (PID = {processWrapper.Process.Id})", true);
-                Injector.LogMessage(exception.ToString(), true);
+                Injector.LogMessage(ex.ToString());
                 return 1;
             }
-
-            Injector.LogMessage($"Successfully injected Snoop into process {processWrapper.Process.ProcessName} (PID = {processWrapper.Process.Id})", true);
-
-            return 0;
         }
 
         private static string GetAssemblyPath(ProcessWrapper processWrapper, string assemblyNameOrFullPath)
