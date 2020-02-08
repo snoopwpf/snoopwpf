@@ -62,7 +62,7 @@ Snoop requires this component, which is part of the Snoop project, to do it's jo
                     SettingsFile = transientSettingsFile
                 };
 
-                var commandLine = CommandLine.Parser.Default.FormatCommandLine(injectorLauncherCommandLineOptions);
+                var commandLine = Parser.Default.FormatCommandLine(injectorLauncherCommandLineOptions);
                 var startInfo = new ProcessStartInfo(injectorLauncherExe, commandLine)
                 {
                     UseShellExecute = false,
