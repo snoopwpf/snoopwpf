@@ -45,8 +45,6 @@ namespace Snoop.InjectorLauncher
                     {
                         Injector.LogMessage("Target process and injector process have different bitness, trying to redirect to secondary process...");
 
-                        Debugger.Launch();
-
                         var originalProcessFileName = currentProcess.MainModule.ModuleName;
                         var correctBitnessFileName = originalProcessFileName.Replace(currentProcessBitness, processWrapper.Bitness);
                         var processStartInfo = new ProcessStartInfo(currentProcess.MainModule.FileName.Replace(originalProcessFileName, correctBitnessFileName), Parser.Default.FormatCommandLine(commandLineOptions))
