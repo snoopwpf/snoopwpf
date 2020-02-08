@@ -322,7 +322,6 @@ namespace Snoop.Infrastructure
         public static UIntPtr GetRemoteProcAddress(Process targetProcess, string moduleName, string procName)
         {
             ulong functionOffsetFromBaseAddress = 0;
-            ulong remoteProcAddress = 0;
 
             foreach (ProcessModule mod in Process.GetCurrentProcess().Modules)
             {
@@ -345,19 +344,25 @@ namespace Snoop.Infrastructure
 
             if (functionOffsetFromBaseAddress != 0)
             {
-                foreach (ProcessModule mod in targetProcess.Modules)
-                {
-                    if (mod.ModuleName.Equals(moduleName, StringComparison.OrdinalIgnoreCase)
-                        || mod.FileName.Equals(moduleName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        remoteProcAddress = (ulong)mod.BaseAddress + functionOffsetFromBaseAddress;
+                var remoteModuleHandle = GetRemoteModuleHandle(targetProcess, moduleName);
+                return new UIntPtr((ulong)remoteModuleHandle + functionOffsetFromBaseAddress);
+            }
 
-                        break;
-                    }
+            return UIntPtr.Zero;
+        }
+
+        public static IntPtr GetRemoteModuleHandle(Process targetProcess, string moduleName)
+        {
+            foreach (ProcessModule mod in targetProcess.Modules)
+            {
+                if (mod.ModuleName.Equals(moduleName, StringComparison.OrdinalIgnoreCase)
+                    || mod.FileName.Equals(moduleName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return mod.BaseAddress;
                 }
             }
 
-            return new UIntPtr(remoteProcAddress);
+            return IntPtr.Zero;
         }
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
