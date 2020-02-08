@@ -16,17 +16,14 @@ namespace Snoop.InjectorLauncher
     {
         public static int Main(string[] args)
         {
-            Injector.LogMessage("Starting the injection process...", false);
-
-            InjectorLauncherCommandLineOptions commandLineOptions = null;
-            Parser.Default.ParseArguments<InjectorLauncherCommandLineOptions>(args)
-                .WithParsed(options => commandLineOptions = options);
-
-            return Run(commandLineOptions);
+            return Parser.Default.ParseArguments<InjectorLauncherCommandLineOptions>(args)
+                .MapResult(Run, errs => 1);
         }
 
         private static int Run(InjectorLauncherCommandLineOptions commandLineOptions)
         {
+            Injector.LogMessage("Starting the injection process...", false);
+
             try
             {
                 if (commandLineOptions.Debug)
