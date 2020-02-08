@@ -66,6 +66,7 @@ Snoop requires this component, which is part of the Snoop project, to do it's jo
                 var startInfo = new ProcessStartInfo(injectorLauncherExe, commandLine)
                 {
                     UseShellExecute = false,
+                    CreateNoWindow = true,
                     Verb = windowInfo.IsOwningProcessElevated
                                                ? "runas"
                                                : null

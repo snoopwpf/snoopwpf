@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <TargetFramework>net40</TargetFramework>
     <PlatformTarget>x86</PlatformTarget>
     <ApplicationIcon>..\Artwork\Snoop.ico</ApplicationIcon>
