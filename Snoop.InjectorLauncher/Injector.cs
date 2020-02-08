@@ -85,6 +85,7 @@ namespace Snoop.InjectorLauncher
                 if (writeProcessMemoryResult == false
                     || bytesWritten == 0)
                 {
+                    Marshal.FreeHGlobal(address);
                     throw Marshal.GetExceptionForHR(Marshal.GetLastWin32Error());
                 }
 
@@ -125,6 +126,8 @@ namespace Snoop.InjectorLauncher
                 {
                     LogMessage(e.ToString());
                 }
+
+                Marshal.FreeHGlobal(address);
             }
             else
             {
@@ -243,6 +246,8 @@ namespace Snoop.InjectorLauncher
                         {
                             LogMessage(e.ToString());
                         }
+
+                        Marshal.FreeHGlobal(address);
                     }
                 }
                 else
