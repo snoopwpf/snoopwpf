@@ -6,11 +6,6 @@
     <Company>https://github.com/snoopwpf/snoopwpf</Company>
     <Product>Snoop</Product>
     <Copyright>Copyright © Cory Plotts, Bastian Schmidt 2010 - $([System.DateTime]::Today.ToString(yyyy))</Copyright>
-
-    <Version>3.0.0.0</Version>
-    <AssemblyVersion>$(Version)</AssemblyVersion>
-    <FileVersion>$(Version)</FileVersion>
-    <InformationalVersion>SRC</InformationalVersion>
   </PropertyGroup>
 
   <!-- SourceLink -->
