@@ -34,6 +34,7 @@ namespace Snoop.InjectorLauncher
             var logMessage = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss") + ": " + message;
 
             Trace.WriteLine(logMessage);
+            Console.WriteLine(logMessage);
 
             var fi = new FileInfo(pathname);
 
@@ -60,7 +61,7 @@ namespace Snoop.InjectorLauncher
         /// </summary>
         private static IntPtr LoadLibraryInForeignProcess(ProcessWrapper processWrapper, string pathToDll)
         {
-            Trace.WriteLine($"Trying to load '{pathToDll}' in process {processWrapper.Id}...");
+            LogMessage($"Trying to load '{pathToDll}' in process {processWrapper.Id}...");
 
             if (File.Exists(pathToDll) == false)
             {
@@ -135,7 +136,7 @@ namespace Snoop.InjectorLauncher
                 throw new Exception($"Could not load '{pathToDll}' in process '{processWrapper.Id}'.");
             }
 
-            Trace.WriteLine($"Successfully loaded '{pathToDll}' with handle {moduleHandleInForeignProcess} in process {processWrapper.Id}.");
+            LogMessage($"Successfully loaded '{pathToDll}' with handle {moduleHandleInForeignProcess} in process {processWrapper.Id}.");
 
             return moduleHandleInForeignProcess;
         }
@@ -145,7 +146,7 @@ namespace Snoop.InjectorLauncher
             var injectorDllName = $"Snoop.GenericInjector.{processWrapper.Bitness}.dll";
             var pathToInjectorDll = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), injectorDllName);
 
-            Trace.WriteLine($"Trying to load '{pathToInjectorDll}'...");
+            LogMessage($"Trying to load '{pathToInjectorDll}'...");
 
             if (File.Exists(pathToInjectorDll) == false)
             {
@@ -159,7 +160,7 @@ namespace Snoop.InjectorLauncher
                 throw new Win32Exception();
             }
 
-            Trace.WriteLine($"Successfully loaded '{pathToInjectorDll}' with handle {hLibrary}.");
+            LogMessage($"Successfully loaded '{pathToInjectorDll}' with handle {hLibrary}.");
 
             var hLibraryInForeignProcess = LoadLibraryInForeignProcess(processWrapper, pathToInjectorDll);
 
@@ -214,7 +215,7 @@ namespace Snoop.InjectorLauncher
                                     // Get handle of the loaded module
                                     NativeMethods.GetExitCodeThread(remoteThread, out var resultFromExecuteInDefaultAppDomain);
 
-                                    Trace.WriteLine($"Received \"{resultFromExecuteInDefaultAppDomain}\" from injector component.");
+                                    LogMessage($"Received \"{resultFromExecuteInDefaultAppDomain}\" from injector component.");
 
                                     if (resultFromExecuteInDefaultAppDomain != IntPtr.Zero)
                                     {
@@ -229,7 +230,7 @@ namespace Snoop.InjectorLauncher
                         }
                         else
                         {
-                            Trace.WriteLine("Could not get proc address for \"ExecuteInDefaultAppDomain\".");
+                            LogMessage("Could not get proc address for \"ExecuteInDefaultAppDomain\".");
                         }
                     }
                     finally
