@@ -16,8 +16,10 @@ namespace Snoop.InjectorLauncher
     {
         public static int Main(string[] args)
         {
-            return Parser.Default.ParseArguments<InjectorLauncherCommandLineOptions>(args)
+            var runResult = Parser.Default.ParseArguments<InjectorLauncherCommandLineOptions>(args)
                 .MapResult(Run, errs => 1);
+
+            return runResult;
         }
 
         private static int Run(InjectorLauncherCommandLineOptions commandLineOptions)
