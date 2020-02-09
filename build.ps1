@@ -36,7 +36,7 @@ function ExecSafe([scriptblock] $cmd) {
 if (Test-Path $DotNetGlobalFile) {
     $DotNetGlobal = $(Get-Content $DotNetGlobalFile | Out-String | ConvertFrom-Json)
     if ($DotNetGlobal.PSObject.Properties["sdk"] -and $DotNetGlobal.sdk.PSObject.Properties["version"]) {
-        #$DotNetVersion = $DotNetGlobal.sdk.version
+        $DotNetVersion = $DotNetGlobal.sdk.version
     }
 }
 
