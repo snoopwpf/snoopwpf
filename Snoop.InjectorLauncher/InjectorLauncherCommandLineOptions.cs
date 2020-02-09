@@ -4,22 +4,22 @@
 
     public class InjectorLauncherCommandLineOptions
     {
-        [Option('t', "TargetPID", Required = true, HelpText = "The target process id.")]
+        [Option('t', "targetPID", Required = true, HelpText = "The target process id.")]
         public int TargetPID { get; set; }
 
-        [Option('h', "TargetHwnd", HelpText = "The target window handle.")]
+        [Option('h', "targetHwnd", HelpText = "The target window handle.")]
         public int TargetHwnd { get; set; }
 
-        [Option('a', "Assembly", Required = true)]
+        [Option('a', "assembly", Required = true)]
         public string Assembly { get; set; }
 
-        [Option('c', "ClassName", Required = true)]
+        [Option('c', "className", Required = true)]
         public string ClassName { get; set; }
 
-        [Option('m', "MethodName", Required = true)]
+        [Option('m', "methodName", Required = true)]
         public string MethodName { get; set; }
 
-        [Option('s', "SettingsFile")]
+        [Option('s', "settingsFile")]
         public string SettingsFile { get; set; }
 
         [Option('v', "verbose", HelpText = "Set output to verbose messages.")]

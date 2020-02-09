@@ -4,10 +4,10 @@
 
     public interface IOptionsWithTarget
     {
-        [Option('t', "TargetPID", Required = true, HelpText = "The target process id.")]
+        [Option('t', "targetPID", Required = true, HelpText = "The target process id.")]
         int TargetPID { get; set; }
 
-        [Option('h', "TargetHwnd", HelpText = "The target window handle.")]
+        [Option('h', "targetHwnd", HelpText = "The target window handle.")]
         int TargetHwnd { get; set; }
     }
 
