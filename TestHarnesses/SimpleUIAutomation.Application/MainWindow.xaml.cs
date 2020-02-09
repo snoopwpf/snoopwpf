@@ -48,7 +48,13 @@
             var automationAssemblyPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), automationAssemblyName);
             var arguments = $"--targetPID {Process.GetCurrentProcess().Id} --assembly \"{automationAssemblyPath}\" --className SimpleUIAutomation.AutomationDriver --methodName StartAutomation --settingsFile \"{tempFile}\"";
 
-            Process.Start(@"..\..\..\..\bin\debug\Snoop.InjectorLauncher.x64.exe", arguments);
+            var startInfo = new ProcessStartInfo(@"..\..\..\..\bin\debug\Snoop.InjectorLauncher.x64.exe", arguments)
+            {
+                // Hide the console window
+                CreateNoWindow = true
+            };
+
+            Process.Start(startInfo);
         }
     }
 }
