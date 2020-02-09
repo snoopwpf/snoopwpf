@@ -204,7 +204,7 @@ namespace Snoop.Data.Tree
         /// </summary>
         public void Reload()
         {
-            this.GetName();
+            this.Name = this.GetName();
 
             var toBeRemoved = new List<TreeItem>(this.Children);
 
