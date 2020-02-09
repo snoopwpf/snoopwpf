@@ -40,7 +40,7 @@
                         Width="32"
                         Height="32"
                         Margin="0 0 2 0"
-                        Visibility="{Binding IsOwningProcessElevated, Converter={x:Static snoop:BoolToVisibilityConverter.DefaultInstance}}">
+                        Visibility="{Binding OwningProcessInfo.IsProcessElevated, Converter={x:Static snoop:BoolToVisibilityConverter.DefaultInstance}}">
                     <Image Style="{x:Null}"
                            Source="{Binding Source={x:Static infrastructure:SystemIcon.Shield}, Converter={x:Static converters:SystemIconToImageSourceConverter.Instance}, ConverterParameter=32}" />
                 </Border>

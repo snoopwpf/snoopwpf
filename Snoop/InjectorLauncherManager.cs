@@ -20,7 +20,7 @@ namespace Snoop
     {
         private static string GetSuffix(ProcessInfo processInfo)
         {
-            var bitness = processInfo.IsOwningProcess64Bit
+            var bitness = processInfo.IsProcess64Bit
                 ? "x64"
                 : "x86";
 
@@ -70,7 +70,7 @@ Snoop requires this component, which is part of the Snoop project, to do it's jo
                 {
                     UseShellExecute = false,
                     CreateNoWindow = true,
-                    Verb = processInfo.IsOwningProcessElevated
+                    Verb = processInfo.IsProcessElevated
                                                ? "runas"
                                                : null
                 };

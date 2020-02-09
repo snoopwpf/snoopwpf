@@ -24,9 +24,9 @@
 
         public Process Process { get; set; }
 
-        public bool IsOwningProcess64Bit => this.isOwningProcess64Bit ??= NativeMethods.IsProcess64Bit(this.Process);
+        public bool IsProcess64Bit => this.isOwningProcess64Bit ??= NativeMethods.IsProcess64Bit(this.Process);
 
-        public bool IsOwningProcessElevated => this.isOwningProcessElevated ??= NativeMethods.IsProcessElevated(this.Process);
+        public bool IsProcessElevated => this.isOwningProcessElevated ??= NativeMethods.IsProcessElevated(this.Process);
 
         public AttachResult Snoop(IntPtr targetHwnd)
         {
