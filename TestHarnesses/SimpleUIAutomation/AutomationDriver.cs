@@ -47,8 +47,11 @@
                     Input(button, splittedLine[2]);
                 }
 
+                // if you want to observe the real speed of this thing, just remove the next delay line
                 await Task.Delay(TimeSpan.FromMilliseconds(500));
             }
+
+            await Task.CompletedTask;
         }
 
         private static void Click(ButtonBase button)
