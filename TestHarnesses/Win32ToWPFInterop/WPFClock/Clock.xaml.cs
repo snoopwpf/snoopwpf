@@ -1,57 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Threading;
-using System.Windows.Threading;
-using System.Windows.Media.Animation;
-
-namespace WpfClockNS
+﻿namespace WpfClockNS
 {
+    using System;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Media.Animation;
+    using System.Windows.Threading;
+
     public partial class Clock : ContentControl
     {
-        private DispatcherTimer _dayTimer;
+        private DispatcherTimer dayTimer;
+
         public Clock()
         {
-            InitializeComponent();
-            this.Loaded += new RoutedEventHandler(Clock_Loaded);
-
+            this.InitializeComponent();
+            this.Loaded += new RoutedEventHandler(this.Clock_Loaded);
         }
 
-        void Clock_Loaded(object sender, RoutedEventArgs e) {
+        private void Clock_Loaded(object sender, RoutedEventArgs e)
+        {
             // set the datacontext to be today's date
             DateTime now = DateTime.Now;
-            DataContext = now.Day.ToString();
+            this.DataContext = now.Day.ToString();
 
             // then set up a timer to fire at the start of tomorrow, so that we can update
             // the datacontext
-            _dayTimer = new DispatcherTimer();
-            _dayTimer.Interval = new TimeSpan(1, 0, 0, 0) - now.TimeOfDay;
-            _dayTimer.Tick += new EventHandler(OnDayChange);
-            _dayTimer.Start();
+            this.dayTimer = new DispatcherTimer();
+            this.dayTimer.Interval = new TimeSpan(1, 0, 0, 0) - now.TimeOfDay;
+            this.dayTimer.Tick += new EventHandler(this.OnDayChange);
+            this.dayTimer.Start();
 
             // finally, seek the timeline, which assumes a beginning at midnight, to the appropriate
             // offset
-            Storyboard sb = (Storyboard)PodClock.FindResource("sb");
-            sb.Begin(PodClock, HandoffBehavior.SnapshotAndReplace, true);
-            sb.Seek(PodClock, now.TimeOfDay, TimeSeekOrigin.BeginTime);
+            Storyboard sb = (Storyboard)this.PodClock.FindResource("sb");
+            sb.Begin(this.PodClock, HandoffBehavior.SnapshotAndReplace, true);
+            sb.Seek(this.PodClock, now.TimeOfDay, TimeSeekOrigin.BeginTime);
         }
 
-		private void OnDayChange(object sender, EventArgs e)
-		{
+        private void OnDayChange(object sender, EventArgs e)
+        {
             // date has changed, update the datacontext to reflect today's date
-			DateTime now = DateTime.Now;
-			DataContext = now.Day.ToString();
-			_dayTimer.Interval = new TimeSpan(1, 0, 0, 0);
-		}
-	}
+            DateTime now = DateTime.Now;
+            this.DataContext = now.Day.ToString();
+            this.dayTimer.Interval = new TimeSpan(1, 0, 0, 0);
+        }
+    }
 }
