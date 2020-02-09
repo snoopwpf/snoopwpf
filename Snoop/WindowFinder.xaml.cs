@@ -13,6 +13,7 @@ namespace Snoop
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
     using Snoop.Infrastructure;
+    using Snoop.Windows;
 
     public enum WindowFinderType
     {
@@ -173,14 +174,22 @@ namespace Snoop
 
         private static void AttachSnoop(WindowInfo windowInfo)
         {
-            new AttachFailedHandler(windowInfo);
-            windowInfo.Snoop();
+            var result = windowInfo.OwningProcessInfo.Snoop(windowInfo.HWnd);
+
+            if (result?.Success == false)
+            {
+                ErrorDialog.ShowDialog(result.AttachException, "Can't Snoop the process", $"Failed to attach to '{result.WindowName}'.", true);
+            }
         }
 
         private static void AttachMagnify(WindowInfo windowInfo)
         {
-            new AttachFailedHandler(windowInfo);
-            windowInfo.Magnify();
+            var result = windowInfo.OwningProcessInfo.Magnify(windowInfo.HWnd);
+
+            if (result?.Success == false)
+            {
+                ErrorDialog.ShowDialog(result.AttachException, "Can't Snoop the process", $"Failed to attach to '{result.WindowName}'.", true);
+            }
         }
 
         // https://stackoverflow.com/a/27077188/122048

@@ -66,9 +66,8 @@ namespace Snoop
                         {
                             var windowInfo = new WindowInfo(windowHandle);
                             if (windowInfo.IsValidProcess
-                                && !this.IsAlreadInList(windowInfo.OwningProcess))
+                                && !this.IsAlreadInList(windowInfo.OwningProcessInfo.Process))
                             {
-                                new AttachFailedHandler(windowInfo, this);
                                 this.windowInfos.Add(windowInfo);
                             }
                         }
@@ -110,7 +109,7 @@ namespace Snoop
         {
             foreach (var window in this.windowInfos)
             {
-                if (window.OwningProcess.Id == process.Id)
+                if (window.OwningProcessInfo.Process.Id == process.Id)
                 {
                     return true;
                 }
@@ -132,13 +131,23 @@ namespace Snoop
         private void HandleInspectCommand(object sender, ExecutedRoutedEventArgs e)
         {
             var window = (WindowInfo)this.WindowInfos.CurrentItem;
-            window?.Snoop();
+            var result = window?.OwningProcessInfo.Snoop(window.HWnd);
+
+            if (result?.Success == false)
+            {
+                ErrorDialog.ShowDialog(result.AttachException, "Can't Snoop the process", $"Failed to attach to '{result.WindowName}'.", true);
+            }
         }
 
         private void HandleMagnifyCommand(object sender, ExecutedRoutedEventArgs e)
         {
             var window = (WindowInfo)this.WindowInfos.CurrentItem;
-            window?.Magnify();
+            var result = window.OwningProcessInfo?.Magnify(window.HWnd);
+
+            if (result?.Success == false)
+            {
+                ErrorDialog.ShowDialog(result.AttachException, "Can't Snoop the process", $"Failed to attach to '{result.WindowName}'.", true);
+            }
         }
 
         private void HandleRefreshCommand(object sender, ExecutedRoutedEventArgs e)
@@ -193,35 +202,32 @@ namespace Snoop
         }
     }
 
-    public class AttachFailedEventArgs : EventArgs
+    public class AttachResult
     {
-        public AttachFailedEventArgs(Exception attachException, string windowName)
+        public AttachResult()
         {
+            this.Success = true;
+        }
+
+        public AttachResult(Exception attachException)
+        {
+            this.Success = false;
+
+            this.AttachException = attachException;
+        }
+
+        public AttachResult(Exception attachException, string windowName)
+        {
+            this.Success = false;
+
             this.AttachException = attachException;
             this.WindowName = windowName;
         }
 
+        public bool Success { get; }
+
         public Exception AttachException { get; }
 
         public string WindowName { get; }
-    }
-
-    public class AttachFailedHandler
-    {
-        private readonly AppChooser appChooser;
-
-        public AttachFailedHandler(WindowInfo window, AppChooser appChooser = null)
-        {
-            window.AttachFailed += this.OnSnoopAttachFailed;
-            this.appChooser = appChooser;
-        }
-
-        private void OnSnoopAttachFailed(object sender, AttachFailedEventArgs e)
-        {
-            ErrorDialog.ShowDialog(e.AttachException, "Can't Snoop the process", $"Failed to attach to '{e.WindowName}'.", true);
-
-            // TODO This should be implemented through the event broker, not like this.
-            this.appChooser?.Refresh();
-        }
     }
 }

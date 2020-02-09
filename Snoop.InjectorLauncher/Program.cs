@@ -31,7 +31,7 @@ namespace Snoop.InjectorLauncher
                     Debugger.Launch();
                 }
 
-                var processWrapper = ProcessWrapper.From(commandLineOptions.Target);
+                var processWrapper = ProcessWrapper.From(commandLineOptions.TargetPID, new IntPtr(commandLineOptions.TargetHwnd));
 
                 // Check for target process and our bitness.
                 // If they don't match we redirect everything to the appropriate injector launcher.

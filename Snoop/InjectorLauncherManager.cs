@@ -5,6 +5,7 @@
 
 namespace Snoop
 {
+    using System;
     using System.Diagnostics;
     using System.IO;
     using System.Reflection;
@@ -17,21 +18,21 @@ namespace Snoop
     /// </summary>
     public static class InjectorLauncherManager
     {
-        private static string GetSuffix(WindowInfo windowInfo)
+        private static string GetSuffix(ProcessInfo processInfo)
         {
-            var bitness = windowInfo.IsOwningProcess64Bit
+            var bitness = processInfo.IsOwningProcess64Bit
                 ? "x64"
                 : "x86";
 
             return bitness;
         }
 
-        public static void Launch(WindowInfo windowInfo, MethodInfo methodInfo, TransientSettingsData transientSettingsData)
+        public static void Launch(ProcessInfo processInfo, IntPtr targetHwnd, MethodInfo methodInfo, TransientSettingsData transientSettingsData)
         {
-            Launch(windowInfo, methodInfo.DeclaringType.Assembly.GetName().Name, methodInfo.DeclaringType.FullName, methodInfo.Name, transientSettingsData.WriteToFile());
+            Launch(processInfo, targetHwnd, methodInfo.DeclaringType.Assembly.GetName().Name, methodInfo.DeclaringType.FullName, methodInfo.Name, transientSettingsData.WriteToFile());
         }
 
-        public static void Launch(WindowInfo windowInfo, string assembly, string className, string methodName, string transientSettingsFile)
+        public static void Launch(ProcessInfo processInfo, IntPtr targetHwnd, string assembly, string className, string methodName, string transientSettingsFile)
         {
             if (File.Exists(transientSettingsFile) == false)
             {
@@ -42,7 +43,7 @@ namespace Snoop
             {
                 var location = Assembly.GetExecutingAssembly().Location;
                 var directory = Path.GetDirectoryName(location) ?? string.Empty;
-                var injectorLauncherExe = Path.Combine(directory, $"Snoop.InjectorLauncher.{GetSuffix(windowInfo)}.exe");
+                var injectorLauncherExe = Path.Combine(directory, $"Snoop.InjectorLauncher.{GetSuffix(processInfo)}.exe");
 
                 if (File.Exists(injectorLauncherExe) == false)
                 {
@@ -55,11 +56,13 @@ Snoop requires this component, which is part of the Snoop project, to do it's jo
 
                 var injectorLauncherCommandLineOptions = new InjectorLauncherCommandLineOptions
                 {
-                    Target = $"{windowInfo.OwningProcess.Id}:{windowInfo.HWnd}",
+                    TargetPID = processInfo.Process.Id,
+                    TargetHwnd = targetHwnd.ToInt32(),
                     Assembly = assembly,
                     ClassName = className,
                     MethodName = methodName,
-                    SettingsFile = transientSettingsFile
+                    SettingsFile = transientSettingsFile,
+                    Debug = Program.Debug
                 };
 
                 var commandLine = Parser.Default.FormatCommandLine(injectorLauncherCommandLineOptions);
@@ -67,7 +70,7 @@ Snoop requires this component, which is part of the Snoop project, to do it's jo
                 {
                     UseShellExecute = false,
                     CreateNoWindow = true,
-                    Verb = windowInfo.IsOwningProcessElevated
+                    Verb = processInfo.IsOwningProcessElevated
                                                ? "runas"
                                                : null
                 };

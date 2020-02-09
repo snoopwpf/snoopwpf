@@ -5,10 +5,7 @@ namespace Snoop
     using System.Diagnostics;
     using System.Linq;
     using System.Text.RegularExpressions;
-    using System.Windows.Input;
-    using Snoop.Data;
     using Snoop.Infrastructure;
-    using Snoop.Properties;
 
     public class WindowInfo
     {
@@ -18,9 +15,7 @@ namespace Snoop
         private static readonly Regex windowClassNameRegex = new Regex(@"^HwndWrapper\[.*;.*;.*\]$", RegexOptions.Compiled);
 
         private IList<NativeMethods.MODULEENTRY32> modules;
-        private Process owningProcess;
-        private bool? isOwningProcess64Bit;
-        private bool? isOwningProcessElevated;
+        private ProcessInfo owningProcessInfo;
         private static readonly int snoopProcessId = Process.GetCurrentProcess().Id;
 
         public WindowInfo(IntPtr hwnd)
@@ -28,14 +23,12 @@ namespace Snoop
             this.HWnd = hwnd;
         }
 
-        public event EventHandler<AttachFailedEventArgs> AttachFailed;
-
         public static void ClearCachedWindowHandleInfo()
         {
             windowHandleToValidityMap.Clear();
         }
 
-        public IList<NativeMethods.MODULEENTRY32> Modules => this.modules ?? (this.modules = NativeMethods.GetModulesFromWindowHandle(this.HWnd).ToList());
+        public IList<NativeMethods.MODULEENTRY32> Modules => this.modules ??= NativeMethods.GetModulesFromWindowHandle(this.HWnd).ToList();
 
         public bool IsValidProcess
         {
@@ -55,14 +48,14 @@ namespace Snoop
                         return isValid;
                     }
 
-                    var process = this.OwningProcess;
+                    var process = this.OwningProcessInfo;
                     if (process == null)
                     {
                         return false;
                     }
 
                     // else determine the process validity and cache it.
-                    if (process.Id == snoopProcessId)
+                    if (process.Process.Id == snoopProcessId)
                     {
                         isValid = false;
 
@@ -121,11 +114,7 @@ namespace Snoop
             }
         }
 
-        public Process OwningProcess => this.owningProcess ?? (this.owningProcess = NativeMethods.GetWindowThreadProcess(this.HWnd));
-
-        public bool IsOwningProcess64Bit => (this.isOwningProcess64Bit ?? (this.isOwningProcess64Bit = NativeMethods.IsProcess64Bit(this.OwningProcess))) == true;
-
-        public bool IsOwningProcessElevated => (this.isOwningProcessElevated ?? (this.isOwningProcessElevated = NativeMethods.IsProcessElevated(this.OwningProcess))) == true;
+        public ProcessInfo OwningProcessInfo => this.owningProcessInfo ??= new ProcessInfo(NativeMethods.GetWindowThreadProcess(this.HWnd));
 
         public IntPtr HWnd { get; }
 
@@ -133,14 +122,14 @@ namespace Snoop
         {
             get
             {
-                var process = this.OwningProcess;
+                var processInfo = this.OwningProcessInfo;
                 var windowTitle = NativeMethods.GetText(this.HWnd);
 
                 if (string.IsNullOrEmpty(windowTitle))
                 {
                     try
                     {
-                        windowTitle = process.MainWindowTitle;
+                        windowTitle = processInfo.Process.MainWindowTitle;
                     }
                     catch (InvalidOperationException)
                     {
@@ -149,7 +138,7 @@ namespace Snoop
                     }
                 }
 
-                return $"{windowTitle} - {process.ProcessName} [{process.Id}]";
+                return $"{windowTitle} - {processInfo.Process.ProcessName} [{processInfo.Process.Id}]";
             }
         }
 
@@ -160,62 +149,6 @@ namespace Snoop
         public override string ToString()
         {
             return this.Description;
-        }
-
-        public void Snoop()
-        {
-            Mouse.OverrideCursor = Cursors.Wait;
-
-            try
-            {
-                InjectorLauncherManager.Launch(this, typeof(SnoopManager).GetMethod(nameof(SnoopManager.StartSnoop)), CreateTransientSettingsData(SnoopStartTarget.SnoopUI, this.HWnd));
-            }
-            catch (Exception e)
-            {
-                this.OnFailedToAttach(e);
-            }
-            finally
-            {
-                Mouse.OverrideCursor = null;
-            }
-        }
-
-        public void Magnify()
-        {
-            Mouse.OverrideCursor = Cursors.Wait;
-
-            try
-            {
-                InjectorLauncherManager.Launch(this, typeof(SnoopManager).GetMethod(nameof(SnoopManager.StartSnoop)), CreateTransientSettingsData(SnoopStartTarget.Zoomer, this.HWnd));
-            }
-            catch (Exception e)
-            {
-                this.OnFailedToAttach(e);
-            }
-            finally
-            {
-                Mouse.OverrideCursor = null;
-            }
-        }
-
-        private void OnFailedToAttach(Exception e)
-        {
-            this.AttachFailed?.Invoke(this, new AttachFailedEventArgs(e, this.Description));
-        }
-
-        private static TransientSettingsData CreateTransientSettingsData(SnoopStartTarget startTarget, IntPtr targetWindowHandle)
-        {
-            var settings = Settings.Default;
-
-            return new TransientSettingsData
-            {
-                StartTarget = startTarget,
-                TargetWindowHandle = targetWindowHandle.ToInt64(),
-
-                MultipleAppDomainMode = settings.MultipleAppDomainMode,
-                MultipleDispatcherMode = settings.MultipleDispatcherMode,
-                SetWindowOwner = settings.SetOwnerWindow
-            };
         }
     }
 }

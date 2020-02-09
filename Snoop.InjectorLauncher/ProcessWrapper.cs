@@ -40,16 +40,7 @@ namespace Snoop.InjectorLauncher
 
         public bool RequiresIJWHost { get; }
 
-        public static ProcessWrapper From(string processIdAndOptionalWindowHandle)
-        {
-            var splitted = processIdAndOptionalWindowHandle.Split(':');
-            var processId = int.Parse(splitted[0]);
-            var windowHandle = splitted.Length > 1 ? new IntPtr(int.Parse(splitted[1])) : IntPtr.Zero;
-
-            return new ProcessWrapper(Process.GetProcessById(processId), windowHandle);
-        }
-
-        public static ProcessWrapper FromProcessId(int processId, IntPtr windowHandle)
+        public static ProcessWrapper From(int processId, IntPtr windowHandle)
         {
             return new ProcessWrapper(Process.GetProcessById(processId), windowHandle);
         }

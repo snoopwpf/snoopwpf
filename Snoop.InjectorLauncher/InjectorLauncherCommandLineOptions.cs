@@ -4,8 +4,11 @@
 
     public class InjectorLauncherCommandLineOptions
     {
-        [Option('t', "target", Required = true)]
-        public string Target { get; set; }
+        [Option('t', "TargetPID", Required = true, HelpText = "The target process id.")]
+        public int TargetPID { get; set; }
+
+        [Option('h', "TargetHwnd", HelpText = "The target window handle.")]
+        public int TargetHwnd { get; set; }
 
         [Option('a', "Assembly", Required = true)]
         public string Assembly { get; set; }
