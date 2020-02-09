@@ -94,7 +94,8 @@ class Build : NukeBuild
     Target Restore => _ => _
         .Executes(() =>
         {
-            ProcessTasks.StartProcess(PaketDirectory / "paket.exe", "restore");
+            var paketProcess = ProcessTasks.StartProcess(PaketDirectory / "paket.exe", "restore");
+            paketProcess.AssertZeroExitCode();
 
             DotNetRestore(s => s
                 .SetProjectFile(Solution));
