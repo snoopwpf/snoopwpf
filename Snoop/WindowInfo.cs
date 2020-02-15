@@ -23,6 +23,12 @@ namespace Snoop
             this.HWnd = hwnd;
         }
 
+        public WindowInfo(IntPtr hwnd, Process owningProcess)
+        : this(hwnd)
+        {
+            this.owningProcessInfo = new ProcessInfo(owningProcess);
+        }
+
         public static void ClearCachedWindowHandleInfo()
         {
             windowHandleToValidityMap.Clear();

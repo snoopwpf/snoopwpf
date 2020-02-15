@@ -62,13 +62,18 @@ namespace Snoop
                     {
                         Mouse.OverrideCursor = Cursors.Wait;
 
-                        foreach (var windowHandle in NativeMethods.ToplevelWindows)
+                        var processes = Process.GetProcesses().Except(new[] { Process.GetCurrentProcess() });
+
+                        foreach (var process in processes)
                         {
-                            var windowInfo = new WindowInfo(windowHandle);
-                            if (windowInfo.IsValidProcess
-                                && !this.IsAlreadInList(windowInfo.OwningProcessInfo.Process))
+                            var windows = NativeMethods.GetRootWindowsOfProcess(process.Id);
+                            var windowInfoCollection = windows.Select(h => new WindowInfo(h, process));
+                            foreach (var windowInfo in windowInfoCollection)
                             {
-                                this.windowInfos.Add(windowInfo);
+                                if (windowInfo.IsValidProcess && !this.IsAlreadInList(process))
+                                {
+                                    this.windowInfos.Add(windowInfo);
+                                }
                             }
                         }
 
