@@ -34,6 +34,7 @@ Highlights:
 - Rewritten injector code
 - You no longer have to have installed any Microsoft Visual C++ Redistributable(s)
 - Snooping disabled controls when holding CTRL + SHIFT works now
+- Drastically improved performance of AppChooser.Refresh() (thanks @mikel785)
 
 Known issues:
 
