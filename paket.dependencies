@@ -1,8 +1,0 @@
-source https://api.nuget.org/v3/index.json
-
-framework: net40
-specific_version: false
-redirects: off
-
-nuget nuget.commandline
-nuget wix

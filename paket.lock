@@ -1,7 +1,0 @@
-REDIRECTS: OFF
-SPECIFIC-VERSION: FALSE
-RESTRICTION: == net40
-NUGET
-  remote: https://api.nuget.org/v3/index.json
-    nuget.commandline (5.0.2)
-    wix (3.11.1)

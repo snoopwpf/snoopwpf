@@ -61,11 +61,9 @@ class Build : NukeBuild
 
     AbsolutePath ChocolateyDirectory => RootDirectory / "chocolatey";
 
-    AbsolutePath PaketDirectory => RootDirectory / ".paket";
+    string CandleExecutable => ToolPathResolver.GetPackageExecutable("wix", "candle.exe");
 
-    AbsolutePath PackagesDirectory => RootDirectory / "packages";
-
-    AbsolutePath WixDirectory => PackagesDirectory / "wix/tools";
+    string LightExecutable => ToolPathResolver.GetPackageExecutable("wix", "light.exe");
 
     Target CleanOutput => _ => _
         .Executes(() =>
@@ -76,9 +74,6 @@ class Build : NukeBuild
     Target Restore => _ => _
         .Executes(() =>
         {
-            var paketProcess = ProcessTasks.StartProcess(PaketDirectory / "paket.exe", "restore");
-            paketProcess.AssertZeroExitCode();
-
             DotNetRestore(s => s
                 .SetProjectFile(Solution));
         });
@@ -137,11 +132,11 @@ class Build : NukeBuild
         .DependsOn(Compile)
         .Executes(() =>
                   {
-                    var candleProcess = ProcessTasks.StartProcess(WixDirectory / "candle.exe", 
+                    var candleProcess = ProcessTasks.StartProcess(CandleExecutable, 
                                             $"snoop.wxs -ext WixUIExtension -o \"{OutputDirectory / "Snoop.wixobj"}\" -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -nologo");
                     candleProcess.AssertZeroExitCode();
 
-                    var lightProcess = ProcessTasks.StartProcess(WixDirectory / "light.exe", 
+                    var lightProcess = ProcessTasks.StartProcess(LightExecutable, 
                                             $"-out \"{OutputDirectory / $"Snoop.{GitVersion.NuGetVersion}.msi"}\" -b \"{CurrentBuildOutputDirectory}\" \"{OutputDirectory / "Snoop.wixobj"}\" -ext WixUIExtension -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -pdbout \"{OutputDirectory / "Snoop.wixpdb"}\" -nologo -sice:ICE61");
                     lightProcess.AssertZeroExitCode();
                   });
