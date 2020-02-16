@@ -42,17 +42,6 @@ class Build : NukeBuild
         Console.WriteLine("AssemblySemVer  Version: {0}", GitVersion.AssemblySemVer);
         Console.WriteLine("MajorMinorPatch Version: {0}", GitVersion.MajorMinorPatch);
         Console.WriteLine("NuGet           Version: {0}", GitVersion.NuGetVersion);
-
-        if (IsLocalBuild == false) 
-        {
-            try
-            {
-                GitVersionTasks.GitVersion(s => s.SetOutput(GitVersionOutput.buildserver));   
-            }
-            catch (Exception e) when (e.GetType().Name == "JsonReaderException")
-            {
-            }
-        }
     }
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
@@ -77,13 +66,6 @@ class Build : NukeBuild
     AbsolutePath PackagesDirectory => RootDirectory / "packages";
 
     AbsolutePath WixDirectory => PackagesDirectory / "wix/tools";
-
-    Target Clean => _ => _
-        .DependsOn(CleanOutput)
-        .Executes(() =>
-        {
-            // EnsureCleanDirectory(OutputDirectory);
-        });
 
     Target CleanOutput => _ => _
         .Executes(() =>
