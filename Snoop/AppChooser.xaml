@@ -21,7 +21,7 @@ All other rights reserved.
 	Title="Snoop"
 	SizeToContent="Width"
 	Height="26"
-    MinHeight="26"
+  MinHeight="26"
 	ResizeMode="NoResize"
 	MouseLeftButtonDown="HandleMouseLeftButtonDown"
 	SnapsToDevicePixels="False"
@@ -32,6 +32,7 @@ All other rights reserved.
 	Foreground="{x:Null}"
 	Style="{DynamicResource windowStyle}"
 	DataContext="{Binding RelativeSource={RelativeSource Self}}"
+  x:Name="Root"
 >
 	<Window.Resources>
 		<!-- mouseOverBackgroundBrush -->
@@ -269,26 +270,53 @@ All other rights reserved.
             </Border>
 
             <TextBlock Grid.Column="1"
-                       Style="{x:Null}"
                        Text="{Binding ProcessId, StringFormat={}[{0}]}"
-                       Margin="0,0,6,0">
+                       Margin="0,0,6,0"
+                       MouseRightButtonUp="HandleDropDownColumn_OnMouseRightButtonUp">
+              <TextBlock.Style>
+                <Style TargetType="{x:Type TextBlock}">
+                  <Style.Triggers>
+                    <DataTrigger Binding="{Binding Path=DataContext.SortColumn, ElementName=Root}" Value="1">
+                      <Setter Property="TextBlock.FontWeight" Value="Bold"/>
+                    </DataTrigger>
+                  </Style.Triggers>
+                </Style>
+              </TextBlock.Style>
               <TextBlock.ToolTip>
                 <Run Text="{Binding ProcessId, Mode=OneWay, StringFormat={}PID: &#x2019;{0}&#x2019;}"/>
               </TextBlock.ToolTip>
             </TextBlock>
 
             <TextBlock Grid.Column="2"
-                       Style="{x:Null}"
                        Text="{Binding ProcessName}"
-                       Margin="0,0,6,0">
+                       Margin="0,0,6,0"
+                       MouseRightButtonUp="HandleDropDownColumn_OnMouseRightButtonUp">
+              <TextBlock.Style>
+                <Style TargetType="{x:Type TextBlock}">
+                  <Style.Triggers>
+                    <DataTrigger Binding="{Binding Path=DataContext.SortColumn, ElementName=Root}" Value="2">
+                      <Setter Property="TextBlock.FontWeight" Value="Bold"/>
+                    </DataTrigger>
+                  </Style.Triggers>
+                </Style>
+              </TextBlock.Style>
               <TextBlock.ToolTip>
                 <Run Text="{Binding Path=ProcessName, Mode=OneWay, StringFormat={}Process name: &#x2019;{0}&#x2019;}"/>
               </TextBlock.ToolTip>
             </TextBlock>
 
             <TextBlock Grid.Column="3"
-                       Style="{x:Null}"
-                       Text="{Binding WindowTitle}">
+                       Text="{Binding WindowTitle}"
+                       MouseRightButtonUp="HandleDropDownColumn_OnMouseRightButtonUp">
+              <TextBlock.Style>
+                <Style TargetType="{x:Type TextBlock}">
+                  <Style.Triggers>
+                    <DataTrigger Binding="{Binding Path=DataContext.SortColumn, ElementName=Root}" Value="3">
+                      <Setter Property="TextBlock.FontWeight" Value="Bold"/>
+                    </DataTrigger>
+                  </Style.Triggers>
+                </Style>
+              </TextBlock.Style>
               <TextBlock.ToolTip>
                 <Run Text="{Binding Path=WindowTitle, Mode=OneWay, StringFormat={}Window title: &#x2019;{0}&#x2019;}"/>
               </TextBlock.ToolTip>

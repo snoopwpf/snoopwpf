@@ -11,6 +11,7 @@ namespace Snoop
     using System.Diagnostics;
     using System.Linq;
     using System.Windows;
+    using System.Windows.Controls;
     using System.Windows.Data;
     using System.Windows.Input;
     using System.Windows.Threading;
@@ -38,6 +39,7 @@ namespace Snoop
         {
             this.WindowInfos = CollectionViewSource.GetDefaultView(this.windowInfos);
             this.WindowInfos?.SortDescriptions.Add(new SortDescription(nameof(WindowInfo.ProcessId), ListSortDirection.Ascending));
+            this.SortColumn = 1;
 
             this.InitializeComponent();
 
@@ -50,6 +52,8 @@ namespace Snoop
         }
 
         public ICollectionView WindowInfos { get; }
+
+        public int SortColumn { get; private set; }
 
         public void Refresh()
         {
@@ -205,6 +209,53 @@ namespace Snoop
             }
 
             RefreshCommand.Execute(null, this);
+        }
+
+        /// <summary>
+        /// Catch rmb from TextBlock of combobox drop down list to implement sorting.
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Arguments</param>
+        private void HandleDropDownColumn_OnMouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is TextBlock textBlock)
+            {
+                var gridColumn = (int)textBlock.GetValue(Grid.ColumnProperty);
+                this.SortColumn = gridColumn;
+
+                var propertyName = default(string);
+                switch (gridColumn)
+                {
+                    //by pid
+                    case 1:
+                        propertyName = nameof(WindowInfo.ProcessId);
+                        break;
+                    //by process name
+                    case 2:
+                        propertyName = nameof(WindowInfo.ProcessName);
+                        break;
+                    //by window name
+                    case 3:
+                        propertyName = nameof(WindowInfo.WindowTitle);
+                        break;
+                }
+
+                //read current sort order
+                var sortDirection = this.WindowInfos.SortDescriptions.FirstOrDefault().Direction;
+
+                //1 - read current target property for sorting.
+                //2 - if current property not changed from last click - invert direction
+                //3 - if property changed - direction does not change
+                var currentSortProperty = this.WindowInfos.SortDescriptions.FirstOrDefault().PropertyName;
+                if (string.Equals(currentSortProperty, propertyName))
+                {
+                    //toggle sort direction
+                    sortDirection = sortDirection == ListSortDirection.Ascending ? ListSortDirection.Descending : ListSortDirection.Ascending;
+                }
+
+                this.WindowInfos.SortDescriptions.Clear();
+                this.WindowInfos.SortDescriptions.Add(new SortDescription(propertyName, sortDirection));
+            }
         }
     }
 
