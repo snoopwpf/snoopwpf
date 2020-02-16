@@ -130,6 +130,7 @@ class Build : NukeBuild
     Target Setup => _ => _
         .DependsOn(CleanOutput)
         .DependsOn(Compile)
+        .After(Pack)
         .Executes(() =>
                   {
                     var candleProcess = ProcessTasks.StartProcess(CandleExecutable, 
