@@ -283,7 +283,11 @@ All other rights reserved.
                 </Style>
               </TextBlock.Style>
               <TextBlock.ToolTip>
-                <Run Text="{Binding ProcessId, Mode=OneWay, StringFormat={}PID: &#x2019;{0}&#x2019;}"/>
+                <TextBlock>
+                  <Run Text="{Binding ProcessId, Mode=OneWay, StringFormat={}PID: &#x2019;{0}&#x2019;}"/>
+                  <LineBreak/>
+                  <Run Text="Right mouse button click to sort"/>
+                </TextBlock>
               </TextBlock.ToolTip>
             </TextBlock>
 
@@ -301,7 +305,11 @@ All other rights reserved.
                 </Style>
               </TextBlock.Style>
               <TextBlock.ToolTip>
-                <Run Text="{Binding Path=ProcessName, Mode=OneWay, StringFormat={}Process name: &#x2019;{0}&#x2019;}"/>
+                <TextBlock>
+                  <Run Text="{Binding Path=ProcessName, Mode=OneWay, StringFormat={}Process name: &#x2019;{0}&#x2019;}"/>
+                  <LineBreak/>
+                  <Run Text="Right mouse button click to sort"/>
+                </TextBlock>
               </TextBlock.ToolTip>
             </TextBlock>
 
@@ -318,7 +326,11 @@ All other rights reserved.
                 </Style>
               </TextBlock.Style>
               <TextBlock.ToolTip>
-                <Run Text="{Binding Path=WindowTitle, Mode=OneWay, StringFormat={}Window title: &#x2019;{0}&#x2019;}"/>
+                <TextBlock>
+                  <Run Text="{Binding Path=WindowTitle, Mode=OneWay, StringFormat={}Window title: &#x2019;{0}&#x2019;}"/>
+                  <LineBreak/>
+                  <Run Text="Right mouse button click to sort"/>
+                </TextBlock>
               </TextBlock.ToolTip>
             </TextBlock>
           </Grid>
