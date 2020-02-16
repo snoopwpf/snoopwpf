@@ -37,6 +37,7 @@ namespace Snoop
         public AppChooser()
         {
             this.WindowInfos = CollectionViewSource.GetDefaultView(this.windowInfos);
+            this.WindowInfos?.SortDescriptions.Add(new SortDescription(nameof(WindowInfo.ProcessId), ListSortDirection.Ascending));
 
             this.InitializeComponent();
 

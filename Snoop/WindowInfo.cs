@@ -148,6 +148,38 @@ namespace Snoop
             }
         }
 
+        #region UI Binding sources
+
+        public string WindowTitle
+        {
+            get
+            {
+                var processInfo = this.OwningProcessInfo;
+                var windowTitle = NativeMethods.GetText(this.HWnd);
+
+                if (string.IsNullOrEmpty(windowTitle))
+                {
+                    try
+                    {
+                        windowTitle = processInfo.Process.MainWindowTitle;
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        // The process closed while we were trying to evaluate it
+                        return string.Empty;
+                    }
+                }
+
+                return windowTitle;
+            }
+        }
+
+        public string ProcessName => this.OwningProcessInfo?.Process?.ProcessName;
+
+        public int ProcessId => this.OwningProcessInfo?.Process?.Id ?? -1;
+
+        #endregion
+
         public string ClassName => NativeMethods.GetClassName(this.HWnd);
 
         public string TraceInfo => $"{this.Description} [{this.HWnd.ToInt64():X8}] {this.ClassName}";
