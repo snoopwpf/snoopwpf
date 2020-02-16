@@ -133,11 +133,11 @@ class Build : NukeBuild
         .Executes(() =>
                   {
                     var candleProcess = ProcessTasks.StartProcess(CandleExecutable, 
-                                            $"snoop.wxs -ext WixUIExtension -o \"{OutputDirectory / "Snoop.wixobj"}\" -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -nologo");
+                        $"snoop.wxs -ext WixUIExtension -o \"{OutputDirectory / "Snoop.wixobj"}\" -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -nologo");
                     candleProcess.AssertZeroExitCode();
 
                     var lightProcess = ProcessTasks.StartProcess(LightExecutable, 
-                                            $"-out \"{OutputDirectory / $"Snoop.{GitVersion.NuGetVersion}.msi"}\" -b \"{CurrentBuildOutputDirectory}\" \"{OutputDirectory / "Snoop.wixobj"}\" -ext WixUIExtension -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -pdbout \"{OutputDirectory / "Snoop.wixpdb"}\" -nologo -sice:ICE61");
+                        $"-out \"{OutputDirectory / $"Snoop.{GitVersion.NuGetVersion}.msi"}\" -b \"{CurrentBuildOutputDirectory}\" \"{OutputDirectory / "Snoop.wixobj"}\" -ext WixUIExtension -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -pdbout \"{OutputDirectory / "Snoop.wixpdb"}\" -nologo -sice:ICE61");
                     lightProcess.AssertZeroExitCode();
                   });
 
