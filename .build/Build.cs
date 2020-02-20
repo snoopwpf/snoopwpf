@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nuke.Common;
 using Nuke.Common.Execution;
@@ -50,6 +51,8 @@ class Build : NukeBuild
     [Solution] readonly Solution Solution;
     [GitRepository] readonly GitRepository GitRepository;
     [GitVersion] readonly GitVersion GitVersion;
+    
+    private readonly List<string> checkSumFiles = new List<string>();
 
     AbsolutePath BuildBinDirectory => RootDirectory / "bin";
 
@@ -64,6 +67,8 @@ class Build : NukeBuild
     string CandleExecutable => ToolPathResolver.GetPackageExecutable("wix", "candle.exe");
 
     string LightExecutable => ToolPathResolver.GetPackageExecutable("wix", "light.exe");
+
+    string FenceOutput = "".PadLeft(30, '#');
 
     Target CleanOutput => _ => _
         .Executes(() =>
@@ -120,11 +125,21 @@ class Build : NukeBuild
                 DeleteDirectory(tempDirectory);
             }
 
-            var nupkgs = OutputDirectory.GlobFiles("*.nupkg");
+            var nupkgs = OutputDirectory.GlobFiles($"snoop.{GitVersion.NuGetVersion}.nupkg");
+            var nupkg = nupkgs.First();
 
-            CompressionTasks.UncompressZip(nupkgs.First(), tempDirectory);
+            {
+                var outputFile = nupkg;
+                checkSumFiles.Add(outputFile);
+            }
 
-            CompressionTasks.Compress(tempDirectory / "tools",  OutputDirectory / $"snoop.{GitVersion.NuGetVersion}.zip", info => info.Name.Contains("chocolatey") == false && info.Name != "VERIFICATION.txt");
+            {
+                CompressionTasks.UncompressZip(nupkg, tempDirectory);
+
+                var outputFile = OutputDirectory / $"snoop.{GitVersion.NuGetVersion}.zip";
+                CompressionTasks.Compress(tempDirectory / "tools",  outputFile, info => info.Name.Contains("chocolatey") == false && info.Name != "VERIFICATION.txt");
+                checkSumFiles.Add(outputFile);
+            }
         });
 
     Target Setup => _ => _
@@ -137,10 +152,28 @@ class Build : NukeBuild
                         $"snoop.wxs -ext WixUIExtension -o \"{OutputDirectory / "Snoop.wixobj"}\" -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -nologo");
                     candleProcess.AssertZeroExitCode();
 
+                    var outputFile = $"{OutputDirectory / $"Snoop.{GitVersion.NuGetVersion}.msi"}";
                     var lightProcess = ProcessTasks.StartProcess(LightExecutable, 
-                        $"-out \"{OutputDirectory / $"Snoop.{GitVersion.NuGetVersion}.msi"}\" -b \"{CurrentBuildOutputDirectory}\" \"{OutputDirectory / "Snoop.wixobj"}\" -ext WixUIExtension -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -pdbout \"{OutputDirectory / "Snoop.wixpdb"}\" -nologo -sice:ICE61");
+                        $"-out \"{outputFile}\" -b \"{CurrentBuildOutputDirectory}\" \"{OutputDirectory / "Snoop.wixobj"}\" -ext WixUIExtension -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -pdbout \"{OutputDirectory / "Snoop.wixpdb"}\" -nologo -sice:ICE61");
                     lightProcess.AssertZeroExitCode();
+
+                    checkSumFiles.Add(outputFile);
                   });
+
+    Target CheckSums => _ => _
+        .TriggeredBy(Pack, Setup)
+        .Executes(() => 
+                {
+                    foreach (var item in checkSumFiles)
+                    {
+                        var checkSum = FileHelper.SHA256CheckSum(item);
+                        Logger.Info(FenceOutput);
+                        Logger.Info($"CheckSum for \"{item}\".");
+                        Logger.Info($"SHA256 \"{checkSum}\".");
+                        Logger.Info(FenceOutput);
+                    }
+                }
+        );
 
     Target CI => _ => _
         .DependsOn(Compile, Pack, Setup);
