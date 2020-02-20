@@ -1,34 +1,29 @@
 # configuration for develop and master branch
+branches:
+  only:
+    - master
+    - develop
 
--
-  branches:
-    only:
-      - master
-      - develop
+image: Visual Studio 2019
+test: off
 
-  skip_tags: true
-  image: Visual Studio 2019
-  configuration: Release
-  test: off
+pull_requests:
+  do_not_increment_build_number: false
 
-  pull_requests:
-    do_not_increment_build_number: false
+install:
+  - cinst dotnetcore-sdk --version 3.1.100
 
-  install:
-    # Install dotnet core latest
-    - cinst dotnetcore-sdk
+build_script:
+  - ps: .\build.ps1 CI
 
-  build_script:
-    - ps: .\build.ps1 CI
+artifacts:
+  - path: \output\*.msi
+  - path: \output\*.nupkg
+  - path: \output\*.zip
 
-  artifacts:
-    - path: \output\*.msi
-    - path: \output\*.nupkg
-    - path: \output\*.zip
+nuget:
+  disable_publish_on_pr: true
 
-  nuget:
-    disable_publish_on_pr: true
-
-  skip_commits:
-    files:
-      - '**/*.md'
+skip_commits:
+  files:
+    - '**/*.md'
