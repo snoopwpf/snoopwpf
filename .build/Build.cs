@@ -71,22 +71,19 @@ class Build : NukeBuild
     string FenceOutput = "".PadLeft(30, '#');
 
     Target CleanOutput => _ => _
-        .Executes(() =>
-                  {
-                      EnsureCleanDirectory(OutputDirectory);
-                  });
+        .Executes(() => {
+            EnsureCleanDirectory(OutputDirectory);
+        });
 
     Target Restore => _ => _
-        .Executes(() =>
-        {
+        .Executes(() => {
             DotNetRestore(s => s
                 .SetProjectFile(Solution));
         });
 
     Target Compile => _ => _
         .DependsOn(Restore)
-        .Executes(() =>
-        {
+        .Executes(() => {
             MSBuild(s => s
                 .SetProjectFile(Solution)
                 .SetConfiguration(Configuration)
@@ -103,8 +100,7 @@ class Build : NukeBuild
     Target Pack => _ => _
         .DependsOn(CleanOutput)
         .DependsOn(Compile)
-        .Executes(() =>
-        {
+        .Executes(() => {
             // Generate ingore files to prevent chocolatey from generating shims for them
             foreach (var launcher in CurrentBuildOutputDirectory.GlobFiles("Snoop.InjectorLauncher.*.exe"))
             {
@@ -146,34 +142,31 @@ class Build : NukeBuild
         .DependsOn(CleanOutput)
         .DependsOn(Compile)
         .After(Pack)
-        .Executes(() =>
-                  {
-                    var candleProcess = ProcessTasks.StartProcess(CandleExecutable, 
-                        $"snoop.wxs -ext WixUIExtension -o \"{OutputDirectory / "Snoop.wixobj"}\" -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -nologo");
-                    candleProcess.AssertZeroExitCode();
+        .Executes(() => {
+            var candleProcess = ProcessTasks.StartProcess(CandleExecutable, 
+                $"snoop.wxs -ext WixUIExtension -o \"{OutputDirectory / "Snoop.wixobj"}\" -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -nologo");
+            candleProcess.AssertZeroExitCode();
 
-                    var outputFile = $"{OutputDirectory / $"Snoop.{GitVersion.NuGetVersion}.msi"}";
-                    var lightProcess = ProcessTasks.StartProcess(LightExecutable, 
-                        $"-out \"{outputFile}\" -b \"{CurrentBuildOutputDirectory}\" \"{OutputDirectory / "Snoop.wixobj"}\" -ext WixUIExtension -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -pdbout \"{OutputDirectory / "Snoop.wixpdb"}\" -nologo -sice:ICE61");
-                    lightProcess.AssertZeroExitCode();
+            var outputFile = $"{OutputDirectory / $"Snoop.{GitVersion.NuGetVersion}.msi"}";
+            var lightProcess = ProcessTasks.StartProcess(LightExecutable, 
+                $"-out \"{outputFile}\" -b \"{CurrentBuildOutputDirectory}\" \"{OutputDirectory / "Snoop.wixobj"}\" -ext WixUIExtension -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -pdbout \"{OutputDirectory / "Snoop.wixpdb"}\" -nologo -sice:ICE61");
+            lightProcess.AssertZeroExitCode();
 
-                    checkSumFiles.Add(outputFile);
-                  });
+            checkSumFiles.Add(outputFile);
+        });
 
     Target CheckSums => _ => _
         .TriggeredBy(Pack, Setup)
-        .Executes(() => 
-                {
-                    foreach (var item in checkSumFiles)
-                    {
-                        var checkSum = FileHelper.SHA256CheckSum(item);
-                        Logger.Info(FenceOutput);
-                        Logger.Info($"CheckSum for \"{item}\".");
-                        Logger.Info($"SHA256 \"{checkSum}\".");
-                        Logger.Info(FenceOutput);
-                    }
-                }
-        );
+        .Executes(() => {
+            foreach (var item in checkSumFiles)
+            {
+                var checkSum = FileHelper.SHA256CheckSum(item);
+                Logger.Info(FenceOutput);
+                Logger.Info($"CheckSum for \"{item}\".");
+                Logger.Info($"SHA256 \"{checkSum}\".");
+                Logger.Info(FenceOutput);
+            }
+        });
 
     Target CI => _ => _
         .DependsOn(Compile, Pack, Setup);
