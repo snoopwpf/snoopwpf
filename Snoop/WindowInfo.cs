@@ -124,29 +124,7 @@ namespace Snoop
 
         public IntPtr HWnd { get; }
 
-        public string Description
-        {
-            get
-            {
-                var processInfo = this.OwningProcessInfo;
-                var windowTitle = NativeMethods.GetText(this.HWnd);
-
-                if (string.IsNullOrEmpty(windowTitle))
-                {
-                    try
-                    {
-                        windowTitle = processInfo.Process.MainWindowTitle;
-                    }
-                    catch (InvalidOperationException)
-                    {
-                        // The process closed while we were trying to evaluate it
-                        return string.Empty;
-                    }
-                }
-
-                return $"{windowTitle} - {processInfo.Process.ProcessName} [{processInfo.Process.Id}]";
-            }
-        }
+        public string Description => $"{this.WindowTitle} - {this.OwningProcessInfo?.Process?.ProcessName ?? string.Empty} [{this.OwningProcessInfo?.Process?.Id}]";
 
         #region UI Binding sources
 
