@@ -38,6 +38,7 @@
     - Holding CTRL tries to skip template parts
     - Holding CTRL + SHIFT does not skip template parts
   - [#161](../../issues/161) - Drastically improved performance of AppChooser.Refresh() (thanks @mikel785)
+  - [#162](../../issues/162) - Usability improvements for process dropdown (thanks @mikel785)
 
 ## 2.11.0
 
