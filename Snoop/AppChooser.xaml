@@ -15,12 +15,12 @@ All other rights reserved.
 	xmlns:infrastructure="clr-namespace:Snoop.Infrastructure"
 	xmlns:converters="clr-namespace:Snoop.Converters"
 	xmlns:snoop="urn:snoopwpf"
-	x:Class="Snoop.AppChooser"
+  x:Class="Snoop.AppChooser"
 	Icon="Snoop.ico"
 	Title="Snoop"
 	SizeToContent="Width"
 	Height="26"
-    MinHeight="26"
+  MinHeight="26"
 	ResizeMode="NoResize"
 	MouseLeftButtonDown="HandleMouseLeftButtonDown"
 	SnapsToDevicePixels="False"
@@ -31,6 +31,7 @@ All other rights reserved.
 	Foreground="{x:Null}"
 	Style="{DynamicResource windowStyle}"
 	DataContext="{Binding RelativeSource={RelativeSource Self}}"
+  x:Name="Root"
 >
 	<Window.Resources>
 		<!-- mouseOverBackgroundBrush -->
@@ -231,7 +232,8 @@ All other rights reserved.
 		</StackPanel>
 
 		<!-- windows combo box -->
-		<ComboBox
+    <ComboBox
+			Grid.IsSharedSizeScope="True"
 			x:Name="windowsComboBox"
 			Grid.Column="1"
 			VerticalAlignment="Center"
@@ -247,29 +249,143 @@ All other rights reserved.
 			FocusVisualStyle="{DynamicResource simpleComboBoxFocusStyle}"
 			DropDownOpened="HandleWindowsComboBox_OnDropDownOpened"
 			ToolTip="This combo box shows the list of applications that can be Snoop(ed).">
-            <ComboBox.ItemTemplate>
-                <DataTemplate DataType="my:WindowInfo">
-                    <Grid Style="{x:Null}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <Border Grid.Column="0"
-                                Style="{x:Null}"
-                                Width="16"
-                                Height="16">
-                            <Image Style="{x:Null}"
-                                   Visibility="{Binding OwningProcessInfo.IsProcessElevated, Converter={x:Static snoop:BoolToVisibilityConverter.DefaultInstance}}"
-                                   Source="{Binding Source={x:Static infrastructure:SystemIcon.Shield}, Converter={x:Static converters:SystemIconToImageSourceConverter.Instance}, ConverterParameter=16}" />
-                        </Border>
+      <ComboBox.Resources>
+        <!-- Drop down list item template -->
+        <DataTemplate x:Key="DropDownItemTemplate" DataType="{x:Type my:WindowInfo}">
+          <Grid Style="{x:Null}">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" SharedSizeGroup="Column1"/>
+              <ColumnDefinition Width="Auto" SharedSizeGroup="Column2"/>
+              <ColumnDefinition Width="Auto" SharedSizeGroup="Column3"/>
+              <ColumnDefinition Width="Auto" SharedSizeGroup="Column4"/>
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="0"
+                    Style="{x:Null}"
+                    Width="16"
+                    Height="16">
+              <Image Style="{x:Null}"
+                     Visibility="{Binding OwningProcessInfo.IsProcessElevated, Converter={x:Static snoop:BoolToVisibilityConverter.DefaultInstance}}"
+                     Source="{Binding Source={x:Static infrastructure:SystemIcon.Shield},
+                                                       Converter={x:Static converters:SystemIconToImageSourceConverter.Instance},
+                                                       ConverterParameter=16,
+                                                       Mode=OneTime}" />
+            </Border>
 
-                        <TextBlock Grid.Column="1" 
-                                   Style="{x:Null}"
-                                   Text="{Binding}" />
-                    </Grid>
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-		</ComboBox>
+            <TextBlock Grid.Column="1"
+                       Text="{Binding ProcessId, StringFormat={}[{0}], Mode=OneTime}"
+                       Margin="0,0,6,0"
+                       MouseRightButtonUp="HandleDropDownColumn_OnMouseRightButtonUp">
+              <TextBlock.Style>
+                <Style TargetType="{x:Type TextBlock}">
+                  <Style.Triggers>
+                    <DataTrigger Binding="{Binding Path=SortColumn, ElementName=Root}" Value="1">
+                      <Setter Property="TextBlock.FontWeight" Value="Bold"/>
+                    </DataTrigger>
+                  </Style.Triggers>
+                </Style>
+              </TextBlock.Style>
+              <TextBlock.ToolTip>
+                <TextBlock Style="{x:Null}">
+                  <Run Text="{Binding ProcessId, Mode=OneTime, StringFormat={}PID: &#x2019;{0}&#x2019;}" Style="{x:Null}"/>
+                  <LineBreak Style="{x:Null}"/>
+                  <Run Text="Right mouse button click to sort" Style="{x:Null}"/>
+                </TextBlock>
+              </TextBlock.ToolTip>
+            </TextBlock>
+
+            <TextBlock Grid.Column="2"
+                       Text="{Binding ProcessName, Mode=OneTime}"
+                       Margin="0,0,6,0"
+                       MouseRightButtonUp="HandleDropDownColumn_OnMouseRightButtonUp">
+              <TextBlock.Style>
+                <Style TargetType="{x:Type TextBlock}">
+                  <Style.Triggers>
+                    <DataTrigger Binding="{Binding Path=SortColumn, ElementName=Root, Mode=OneWay}" Value="2">
+                      <Setter Property="TextBlock.FontWeight" Value="Bold"/>
+                    </DataTrigger>
+                  </Style.Triggers>
+                </Style>
+              </TextBlock.Style>
+              <TextBlock.ToolTip>
+                <TextBlock Style="{x:Null}">
+                  <Run Text="{Binding Path=ProcessName, Mode=OneTime, StringFormat={}Process name: &#x2019;{0}&#x2019;}" Style="{x:Null}"/>
+                  <LineBreak Style="{x:Null}"/>
+                  <Run Text="Right mouse button click to sort" Style="{x:Null}"/>
+                </TextBlock>
+              </TextBlock.ToolTip>
+            </TextBlock>
+
+            <TextBlock Grid.Column="3"
+                       Text="{Binding WindowTitle, Mode=OneTime}"
+                       MouseRightButtonUp="HandleDropDownColumn_OnMouseRightButtonUp">
+              <TextBlock.Style>
+                <Style TargetType="{x:Type TextBlock}">
+                  <Style.Triggers>
+                    <DataTrigger Binding="{Binding Path=SortColumn, ElementName=Root}" Value="3">
+                      <Setter Property="TextBlock.FontWeight" Value="Bold"/>
+                    </DataTrigger>
+                  </Style.Triggers>
+                </Style>
+              </TextBlock.Style>
+              <TextBlock.ToolTip>
+                <TextBlock Style="{x:Null}">
+                  <Run Text="{Binding Path=WindowTitle, Mode=OneTime, StringFormat={}Window title: &#x2019;{0}&#x2019;}" Style="{x:Null}"/>
+                  <LineBreak Style="{x:Null}"/>
+                  <Run Text="Right mouse button click to sort" Style="{x:Null}"/>
+                </TextBlock>
+              </TextBlock.ToolTip>
+            </TextBlock>
+          </Grid>
+        </DataTemplate>
+
+        <!-- Selection item template for compact representation -->
+        <DataTemplate x:Key="SelectionItemTemplate" DataType="{x:Type my:WindowInfo}">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto"/>
+              <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="0"
+                    Style="{x:Null}"
+                    Width="16"
+                    Height="16">
+              <Image Style="{x:Null}"
+                     Visibility="{Binding OwningProcessInfo.IsProcessElevated, Converter={x:Static snoop:BoolToVisibilityConverter.DefaultInstance}}"
+                     Source="{Binding Source={x:Static infrastructure:SystemIcon.Shield}, Converter={x:Static converters:SystemIconToImageSourceConverter.Instance}, ConverterParameter=16}" />
+            </Border>
+            <TextBlock Grid.Column="1"
+                       Style="{x:Null}">
+              <TextBlock.Text>
+                <MultiBinding StringFormat="{}[{0}] - {1} - {2}">
+                  <MultiBinding.Bindings>
+                    <Binding Path="ProcessId"/>
+                    <Binding Path="ProcessName"/>
+                    <Binding Path="WindowTitle"/>
+                  </MultiBinding.Bindings>
+                </MultiBinding>
+              </TextBlock.Text>
+            </TextBlock>
+          </Grid>
+        </DataTemplate>
+      </ComboBox.Resources>
+      <ComboBox.ItemTemplate>
+        <!-- Due to design limitations we can not just set SelectionBoxItemTemplate and be happy -->
+        <DataTemplate DataType="my:WindowInfo">
+          <ContentPresenter x:Name="Presenter"
+                            Content="{Binding}"
+                            ContentTemplate="{StaticResource DropDownItemTemplate}"
+                            Style="{x:Null}"/>
+          <DataTemplate.Triggers>
+            <DataTrigger
+                Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ComboBoxItem, AncestorLevel=1}}"
+                Value="{x:Null}">
+              <Setter TargetName="Presenter" Property="ContentTemplate"
+                      Value="{StaticResource SelectionItemTemplate}" />
+            </DataTrigger>
+          </DataTemplate.Triggers>
+        </DataTemplate>
+      </ComboBox.ItemTemplate>
+    </ComboBox>
 
 		<!-- refresh button -->
 		<Button

@@ -124,7 +124,11 @@ namespace Snoop
 
         public IntPtr HWnd { get; }
 
-        public string Description
+        public string Description => $"{this.WindowTitle} - {this.OwningProcessInfo?.Process?.ProcessName ?? string.Empty} [{this.OwningProcessInfo?.Process?.Id}]";
+
+        #region UI Binding sources
+
+        public string WindowTitle
         {
             get
             {
@@ -144,9 +148,15 @@ namespace Snoop
                     }
                 }
 
-                return $"{windowTitle} - {processInfo.Process.ProcessName} [{processInfo.Process.Id}]";
+                return windowTitle;
             }
         }
+
+        public string ProcessName => this.OwningProcessInfo?.Process?.ProcessName;
+
+        public int ProcessId => this.OwningProcessInfo?.Process?.Id ?? -1;
+
+        #endregion
 
         public string ClassName => NativeMethods.GetClassName(this.HWnd);
 
