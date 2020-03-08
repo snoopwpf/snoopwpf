@@ -3,6 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
     using System.Threading;
     using System.Windows;
     using System.Windows.Media;
@@ -130,6 +133,8 @@
 
                         try
                         {
+                            AttachAssemblyResolveHandler(appDomain);
+
                             // the injection code runs inside the constructor of SnoopCrossAppDomainManager
                             appDomain.CreateInstanceFrom(assemblyFullName, fullInjectorClassName);
 
@@ -165,6 +170,8 @@
 
             try
             {
+                AttachAssemblyResolveHandler(AppDomain.CurrentDomain);
+
                 var instanceCreator = GetInstanceCreator(settingsData.StartTarget);
 
                 var result = InjectSnoopIntoDispatchers(settingsData, (data, dispatcher) => CreateSnoopWindow(data, dispatcher, instanceCreator));
@@ -189,6 +196,26 @@
 
                 return false;
             }
+        }
+
+        private static void AttachAssemblyResolveHandler(AppDomain domain)
+        {
+            domain.AssemblyResolve += (sender, args) =>
+            {
+                if (!args.Name.Contains("Snoop"))
+                {
+                    return null;
+                }
+
+                var assemblyName = new AssemblyName(args.Name);
+
+                var codeBase = Assembly.GetExecutingAssembly().Location;
+                var dir = Path.GetDirectoryName(codeBase);
+
+                return (from file in Directory.EnumerateFiles(dir, "*.dll")
+                    where file.Contains(assemblyName.Name)
+                    select Assembly.LoadFrom(file)).FirstOrDefault();
+            };
         }
 
         private static Func<SnoopMainBaseWindow> GetInstanceCreator(SnoopStartTarget startTarget)
