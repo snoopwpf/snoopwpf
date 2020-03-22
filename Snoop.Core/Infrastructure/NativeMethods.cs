@@ -231,7 +231,7 @@ namespace Snoop.Infrastructure
                     do
                     {
                         yield return me32;
-                    } 
+                    }
                     while (Module32Next(hModuleSnap, ref me32));
                 }
             }
