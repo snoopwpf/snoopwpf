@@ -19,7 +19,7 @@ ICLRRuntimeHost* GetNETCoreCLRRuntimeHost()
 
 	OutputDebugStringEx(L"NetCoreApp3_0Executor: Got handle for coreclr.dll.");
 
-	OutputDebugString(L"NetCoreApp3_0Executor: Getting handle for GetCLRRuntimeHost...");
+	OutputDebugStringEx(L"NetCoreApp3_0Executor: Getting handle for GetCLRRuntimeHost...");
 
 	const auto pfnGetCLRRuntimeHost = FnGetNETCoreCLRRuntimeHost(::GetProcAddress(coreCLRModule, "GetCLRRuntimeHost"));
 	if (!pfnGetCLRRuntimeHost)
