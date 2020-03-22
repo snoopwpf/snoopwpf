@@ -16,7 +16,6 @@ namespace Snoop.InjectorLauncher
             this.Bitness = GetBitnessAsString(this.Process);
 
             this.SupportedFrameworkName = GetTargetFramework(process);
-            this.RequiresIJWHost = this.SupportedFrameworkName == "netcoreapp3.0";
         }
 
         public static string GetBitnessAsString(Process process)
@@ -37,8 +36,6 @@ namespace Snoop.InjectorLauncher
         public string Bitness { get; }
 
         public string SupportedFrameworkName { get; }
-
-        public bool RequiresIJWHost { get; }
 
         public static ProcessWrapper From(int processId, IntPtr windowHandle)
         {
