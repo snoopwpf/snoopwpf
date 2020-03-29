@@ -3,6 +3,7 @@ branches:
   only:
     - master
     - develop
+    - /\d*\.\d*\.\d*/
 
 image: Visual Studio 2019
 test: off
