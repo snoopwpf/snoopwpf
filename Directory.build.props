@@ -1,4 +1,4 @@
-﻿<Project>
+<Project>
   <PropertyGroup>
     <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
   </PropertyGroup>
@@ -28,7 +28,7 @@
 
   <!-- Build references -->
   <ItemGroup>
-    <PackageReference Include="GitVersionTask" Version="5.2.2" PrivateAssets="All" IncludeAssets="build; native" />
+    <PackageReference Include="GitVersionTask" Version="5.*" PrivateAssets="All" IncludeAssets="build; native" />
   </ItemGroup>
 
   <!-- Analyzer references -->
