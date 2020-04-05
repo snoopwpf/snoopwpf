@@ -45,11 +45,15 @@ class Build : NukeBuild
         Console.WriteLine("NuGet           Version: {0}", GitVersion.NuGetVersion);
     }
 
+    string ProjectName = "Snoop";
+
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
     [Solution] readonly Solution Solution;
+
     [GitRepository] readonly GitRepository GitRepository;
+
     [GitVersion] readonly GitVersion GitVersion;
     
     private readonly List<string> checkSumFiles = new List<string>();
@@ -57,8 +61,6 @@ class Build : NukeBuild
     AbsolutePath BuildBinDirectory => RootDirectory / "bin";
 
     AbsolutePath CurrentBuildOutputDirectory => BuildBinDirectory / Configuration;
-
-    AbsolutePath IntermediateOutputDirectory => RootDirectory / "";
 
     AbsolutePath OutputDirectory => RootDirectory / "output";
 
@@ -102,26 +104,26 @@ class Build : NukeBuild
         .DependsOn(Compile)
         .Executes(() => {
             // Generate ingore files to prevent chocolatey from generating shims for them
-            foreach (var launcher in CurrentBuildOutputDirectory.GlobFiles("Snoop.InjectorLauncher.*.exe"))
+            foreach (var launcher in CurrentBuildOutputDirectory.GlobFiles($"{ProjectName}.InjectorLauncher.*.exe"))
             {
                 using (System.IO.File.Create(launcher + ".ignore")) { };
             }
 
             NuGetTasks.NuGetPack(s => s
-                .SetTargetPath(ChocolateyDirectory / "snoop.nuspec")
+                .SetTargetPath(ChocolateyDirectory / $"{ProjectName}.nuspec")
                 .SetVersion(GitVersion.NuGetVersion)
                 .SetConfiguration(Configuration)
                 .SetOutputDirectory(OutputDirectory)
                 .SetNoPackageAnalysis(true));
 
-            var tempDirectory = TemporaryDirectory / "SnoopBuild";
+            var tempDirectory = TemporaryDirectory / $"{ProjectName}Build";
 
             if (DirectoryExists(tempDirectory))
             {
                 DeleteDirectory(tempDirectory);
             }
 
-            var nupkgs = OutputDirectory.GlobFiles($"snoop.{GitVersion.NuGetVersion}.nupkg");
+            var nupkgs = OutputDirectory.GlobFiles($"{ProjectName}.{GitVersion.NuGetVersion}.nupkg");
             var nupkg = nupkgs.First();
 
             {
@@ -132,7 +134,7 @@ class Build : NukeBuild
             {
                 CompressionTasks.UncompressZip(nupkg, tempDirectory);
 
-                var outputFile = OutputDirectory / $"snoop.{GitVersion.NuGetVersion}.zip";
+                var outputFile = OutputDirectory / $"{ProjectName}.{GitVersion.NuGetVersion}.zip";
                 CompressionTasks.Compress(tempDirectory / "tools",  outputFile, info => info.Name.Contains("chocolatey") == false && info.Name != "VERIFICATION.txt");
                 checkSumFiles.Add(outputFile);
             }
@@ -144,12 +146,12 @@ class Build : NukeBuild
         .After(Pack)
         .Executes(() => {
             var candleProcess = ProcessTasks.StartProcess(CandleExecutable, 
-                $"snoop.wxs -ext WixUIExtension -o \"{OutputDirectory / "Snoop.wixobj"}\" -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -nologo");
+                $"{ProjectName}.wxs -ext WixUIExtension -o \"{OutputDirectory / $"{ProjectName}.wixobj"}\" -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -nologo");
             candleProcess.AssertZeroExitCode();
 
-            var outputFile = $"{OutputDirectory / $"Snoop.{GitVersion.NuGetVersion}.msi"}";
+            var outputFile = $"{OutputDirectory / $"{ProjectName}.{GitVersion.NuGetVersion}.msi"}";
             var lightProcess = ProcessTasks.StartProcess(LightExecutable, 
-                $"-out \"{outputFile}\" -b \"{CurrentBuildOutputDirectory}\" \"{OutputDirectory / "Snoop.wixobj"}\" -ext WixUIExtension -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -pdbout \"{OutputDirectory / "Snoop.wixpdb"}\" -nologo -sice:ICE61");
+                $"-out \"{outputFile}\" -b \"{CurrentBuildOutputDirectory}\" \"{OutputDirectory / $"{ProjectName}.wixobj"}\" -ext WixUIExtension -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -pdbout \"{OutputDirectory / $"{ProjectName}.wixpdb"}\" -nologo -sice:ICE61");
             lightProcess.AssertZeroExitCode();
 
             checkSumFiles.Add(outputFile);
