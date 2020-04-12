@@ -6,42 +6,42 @@
 typedef HRESULT(STDAPICALLTYPE* FnGetNETCoreCLRRuntimeHost)(REFIID riid, IUnknown** pUnk);
 
 // Returns the ICLRRuntimeHost instance or nullptr on failure.
-ICLRRuntimeHost* GetNETCoreCLRRuntimeHost()
+ICLRRuntimeHost* NetCoreApp3_0Executor::GetNETCoreCLRRuntimeHost()
 {
-	OutputDebugStringEx(L"NetCoreApp3_0Executor: Getting handle for coreclr.dll...");
+	this->Log(L"Getting handle for coreclr.dll...");
 	const auto coreCLRModule = ::GetModuleHandle(L"coreclr.dll");
 
 	if (!coreCLRModule)
 	{
-		OutputDebugStringEx(L"NetCoreApp3_0Executor: Could not get handle for coreclr.dll.");
+		this->Log(L"Could not get handle for coreclr.dll.");
 		return nullptr;
 	}
 
-	OutputDebugStringEx(L"NetCoreApp3_0Executor: Got handle for coreclr.dll.");
+	this->Log(L"Got handle for coreclr.dll.");
 
-	OutputDebugStringEx(L"NetCoreApp3_0Executor: Getting handle for GetCLRRuntimeHost...");
+	this->Log(L"Getting handle for GetCLRRuntimeHost...");
 
 	const auto pfnGetCLRRuntimeHost = FnGetNETCoreCLRRuntimeHost(::GetProcAddress(coreCLRModule, "GetCLRRuntimeHost"));
 	if (!pfnGetCLRRuntimeHost)
 	{
-		OutputDebugStringEx(L"NetCoreApp3_0Executor: Could not get handle for GetCLRRuntimeHost.");
+		this->Log(L"Could not get handle for GetCLRRuntimeHost.");
 		return nullptr;
 	}
 
-	OutputDebugStringEx(L"NetCoreApp3_0Executor: Got handle for GetCLRRuntimeHost.");
+	this->Log(L"Got handle for GetCLRRuntimeHost.");
 
-	OutputDebugStringEx(L"NetCoreApp3_0Executor: Trying to get runtime host...");
+	this->Log(L"Trying to get runtime host...");
 
 	ICLRRuntimeHost* clrRuntimeHost = nullptr;
 	const auto hr = pfnGetCLRRuntimeHost(IID_ICLRRuntimeHost, reinterpret_cast<IUnknown**>(&clrRuntimeHost));
 	
 	if (FAILED(hr)) 
 	{
-		OutputDebugStringEx(L"NetCoreApp3_0Executor: Could not get runtime host.");
+		this->Log(L"Could not get runtime host.");
 		return nullptr;
 	}
 
-	OutputDebugStringEx(L"NetCoreApp3_0Executor: Got runtime host.");
+	this->Log(L"Got runtime host.");
 
 	return clrRuntimeHost;
 }
@@ -55,11 +55,11 @@ int NetCoreApp3_0Executor::Execute(LPCWSTR pwzAssemblyPath, LPCWSTR pwzTypeName,
 		return E_FAIL;
 	}
 
-	OutputDebugStringEx(L"NetCoreApp3_0Executor: Trying to ExecuteInDefaultAppDomain...");
+	this->Log(L"Trying to ExecuteInDefaultAppDomain...");
 
 	const auto hr = host->ExecuteInDefaultAppDomain(pwzAssemblyPath, pwzTypeName, pwzMethodName, pwzArgument, pReturnValue);
 
-	OutputDebugStringEx(L"NetCoreApp3_0Executor: ExecuteInDefaultAppDomain finished.");
+	this->Log(L"ExecuteInDefaultAppDomain finished.");
 
 	host->Release();
 

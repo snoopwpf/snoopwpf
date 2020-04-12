@@ -43,7 +43,10 @@ std::vector<std::wstring> split(const std::wstring& input, const std::wstring& d
 
 std::unique_ptr<FrameworkExecutor> GetExecutor(const std::wstring& framework)
 {
-	if (icase_cmp(framework, L"netcoreapp3.0"))
+	OutputDebugStringEx(L"Trying to get executor for framework '%s'...", framework.c_str());
+	
+	if (icase_cmp(framework, L"netcoreapp3.0")
+		|| icase_cmp(framework, L"netcoreapp3.1"))
 	{
 		return std::make_unique<NetCoreApp3_0Executor>();
 	}
@@ -53,6 +56,8 @@ std::unique_ptr<FrameworkExecutor> GetExecutor(const std::wstring& framework)
 		return std::make_unique<NetFull4_0Executor>();
 	}
 
+	OutputDebugStringEx(L"Framework '%s' is not supported.", framework.c_str());
+	
 	return nullptr;
 }
 
