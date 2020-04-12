@@ -75,11 +75,46 @@ namespace Snoop.InjectorLauncher
         {
             var modules = NativeMethods.GetModules(process);
 
+            var wpfgfx_cor3Found = false;
+            FileVersionInfo hostFxrVersionInfo = null;
+
             foreach (var module in modules)
             {
-                if (module.szModule.IndexOf("wpfgfx_cor3", StringComparison.OrdinalIgnoreCase) >= 0)
+                if (module.szModule.Equals("hostfxr.dll", StringComparison.OrdinalIgnoreCase))
+                {
+                    hostFxrVersionInfo = FileVersionInfo.GetVersionInfo(module.szExePath);
+                }
+
+                if (module.szModule.StartsWith("wpfgfx_cor3.dll", StringComparison.OrdinalIgnoreCase))
+                {
+                    wpfgfx_cor3Found = true;
+                }
+
+                if (wpfgfx_cor3Found
+                    && !(hostFxrVersionInfo is null))
+                {
+                    break;
+                }
+            }
+
+            if (wpfgfx_cor3Found)
+            {
+                if (hostFxrVersionInfo == null)
                 {
                     return "netcoreapp3.0";
+                }
+
+                switch (hostFxrVersionInfo.FileMajorPart)
+                {
+                    case 3:
+                        if (hostFxrVersionInfo.FileMinorPart >= 100)
+                        {
+                            return "netcoreapp3.1";
+                        }
+                        else
+                        {
+                            return "netcoreapp3.0";
+                        }
                 }
             }
 
