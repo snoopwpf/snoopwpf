@@ -63,38 +63,56 @@ std::unique_ptr<FrameworkExecutor> GetExecutor(const std::wstring& framework)
 
 extern "C" __declspec(dllexport) int STDMETHODVCALLTYPE ExecuteInDefaultAppDomain(const LPCWSTR input)
 {
-	OutputDebugStringEx(input);
-	const auto parts = split(input, L"<|>");
-
-	if (parts.size() != 5)
+	try
 	{
-		OutputDebugStringEx(L"Not enough parameters.");
-		return E_INVALIDARG;
-	}
+		OutputDebugStringEx(input);
+		const auto parts = split(input, L"<|>");
 
-	const auto& framework = parts.at(0);
-	const auto& assemblyPath = parts.at(1);
-	const auto& className = parts.at(2);
-	const auto& method = parts.at(3);
-	const auto& parameter = parts.at(4);
+		if (parts.size() != 5)
+		{
+			OutputDebugStringEx(L"Not enough parameters.");
+			return E_INVALIDARG;
+		}
 
-	const auto executor = GetExecutor(framework);
+		const auto& framework = parts.at(0);
+		const auto& assemblyPath = parts.at(1);
+		const auto& className = parts.at(2);
+		const auto& method = parts.at(3);
+		const auto& parameter = parts.at(4);
 
-	if (!executor)
-	{
-		OutputDebugStringEx(L"No executor found.");
-		return E_NOTIMPL;
-	}
-	
-	DWORD* retVal = nullptr;
-	const auto hr = executor->Execute(assemblyPath.c_str(), className.c_str(), method.c_str(), parameter.c_str(), retVal);
+		const auto executor = GetExecutor(framework);
+
+		if (!executor)
+		{
+			OutputDebugStringEx(L"No executor found.");
+			return E_NOTIMPL;
+		}
 		
-	if (FAILED(hr))
-	{
-		const _com_error err(hr);
-		const auto errorMessage = err.ErrorMessage();
-		OutputDebugStringEx(errorMessage);
+		DWORD* retVal = nullptr;
+		const auto hr = executor->Execute(assemblyPath.c_str(), className.c_str(), method.c_str(), parameter.c_str(), retVal);
+			
+		if (FAILED(hr))
+		{
+			const _com_error err(hr);
+
+			OutputDebugStringEx(L"Error while calling '%s' on '%s' from '%s' with '%s'", method.c_str(), className.c_str(), assemblyPath.c_str(), parameter.c_str());
+			OutputDebugStringEx(L"HResult: %i", hr);
+			OutputDebugStringEx(L"Message: %s", err.ErrorMessage());
+			OutputDebugStringEx(L"Description: %s", std::wstring(err.Description(), SysStringLen(err.Description())).c_str());
+		}
+		
+		return hr;
 	}
-	
-	return hr;
+	catch (std::exception& exception)
+	{
+		OutputDebugStringEx(L"ExecuteInDefaultAppDomain failed with exception.");
+		OutputDebugStringEx(L"Exception:");
+		OutputDebugStringEx(to_wstring(exception.what()));
+	}
+	catch (...)
+	{
+		OutputDebugStringEx(L"ExecuteInDefaultAppDomain failed with unknown exception.");
+	}
+
+	return E_FAIL;
 }

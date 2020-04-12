@@ -7,25 +7,18 @@
 #pragma once
 
 // add headers that you want to pre-compile here
+#include <locale>
 #include <memory>
 #include <string>
 #include <stdexcept>
 
 #include "framework.h"
 
-template<typename ... Args>
-static std::wstring string_format(const std::string& format, Args ... args)
+static std::wstring to_wstring(const std::string& input)
 {
-    const size_t size = snprintf(nullptr, 0, format.c_str(), args...) + 1; // Extra space for '\0'
-	
-    if( size <= 0 )
-    {
-	    throw std::runtime_error("Error during formatting.");
-    }
-
-    const std::unique_ptr<char[]> buf(new char[size]);
-    snprintf(buf.get(), size, format.c_str(), args...);
-    return std::wstring(buf.get(), buf.get() + size - 1); // We don't want the '\0' inside
+	std::wstring_convert<std::codecvt<wchar_t,char,std::mbstate_t>> conv;
+	auto wstr = conv.from_bytes(input);
+	return wstr;
 }
 
 template<typename ... Args>
@@ -41,13 +34,6 @@ static std::wstring string_format(const std::wstring& format, Args ... args)
     const std::unique_ptr<wchar_t[]> buf(new wchar_t[size]);
     swprintf(buf.get(), size, format.c_str(), args...);
     return std::wstring(buf.get(), buf.get() + size - 1); // We don't want the '\0' inside
-}
-
-template<typename ... Args>
-static void OutputDebugStringEx(const std::string& format, Args ... args)
-{
-	const auto output = string_format(format, args...);
-	OutputDebugString(output.c_str());
 }
 
 template<typename ... Args>
