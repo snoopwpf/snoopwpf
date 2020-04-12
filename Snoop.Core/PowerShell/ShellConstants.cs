@@ -6,6 +6,7 @@
 namespace Snoop.PowerShell
 {
     using System;
+    using System.IO;
     using Microsoft.Win32;
     using Snoop.Data.Tree;
 
@@ -63,18 +64,53 @@ namespace Snoop.PowerShell
         {
             get
             {
-                var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\PowerShell\1\PowerShellEngine");
-                if (key != null)
-                {
-                    var keyValue = key.GetValue("PowerShellVersion");
-                    if ("2.0".Equals(keyValue))
+                #if NETCOREAPP3_0
+                    return false;
+                #elif NETCOREAPP3_1
+                    if (File.Exists(GetPowerShellAssemblyPath()))
                     {
                         return true;
                     }
-                }
 
-                return false;
+                    var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\PowerShellCore\InstalledVersions\31ab5147-9a97-4452-8443-d9709f0516e1");
+                    if (key != null)
+                    {
+                        var keyValue = key.GetValue("SemanticVersion") as string;
+                        if (Version.TryParse(keyValue, out var version)
+                            && version >= new Version(7, 0))
+                        {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                #elif NET40
+                    var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\PowerShell\3\PowerShellEngine");
+                    if (key != null)
+                    {
+                        var keyValue = key.GetValue("PowerShellVersion") as string;
+                        if (Version.TryParse(keyValue, out var version)
+                            && version >= new Version(3, 0))
+                        {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                #else
+                    invalid target framework
+                #endif
             }
         }
+
+#if NETCOREAPP3_1
+        public static string GetPowerShellAssemblyPath()
+        {
+            var rootPath = Environment.Is64BitProcess
+                ? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)
+                : Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
+            return Path.Combine(rootPath, @"PowerShell\7\System.Management.Automation.dll");
+        }
+#endif
     }
 }

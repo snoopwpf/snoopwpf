@@ -1,8 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
-
 <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.0;net40</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.0;netcoreapp3.1;net40</TargetFrameworks>
 
     <RootNamespace>Snoop</RootNamespace>
 
@@ -24,21 +22,15 @@
     <_WpfCommonNetFxReference Remove="System.Windows.Controls.Ribbon" />
   </ItemGroup>
 
-  <ItemGroup Condition="$(DefineConstants.Contains(NETCOREAPP)) == false">
-    <PackageReference Include="microsoft.powershell.3.referenceassemblies" Version="1.0.0" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
+    <PackageReference Include="microsoft.powershell.3.referenceassemblies" Version="1.0.0"  PrivateAssets="All" />
   </ItemGroup>
 
-  <ItemGroup Condition="$(DefineConstants.Contains(NETCOREAPP))">
-    <!-- <PackageReference Include="microsoft.powershell.3.referenceassemblies" Version="1.0.0" />  -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+    <PackageReference Include="System.Management.Automation" Version="6.2.3" PrivateAssets="All" />
+  </ItemGroup>
 
-    <PackageReference Include="System.Management.Automation" Version="6.2.3">
-      <IncludeAssets>all</IncludeAssets>
-    </PackageReference>
-
-    <!--<PackageReference Include="Microsoft.PowerShell.SDK" Version="7.0.0-preview.4">
-      <IncludeAssets>all</IncludeAssets>
-    </PackageReference>-->
-    <!--<PackageReference Include="Microsoft.PowerShell.Commands.Diagnostics" Version="6.2.*" />
-    <PackageReference Include="Microsoft.WSMan.Management" Version="6.2.*"/> -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+    <PackageReference Include="System.Management.Automation" Version="7.0.0" PrivateAssets="All" />
   </ItemGroup>
 </Project>
