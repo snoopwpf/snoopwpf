@@ -145,7 +145,9 @@ namespace Snoop.InjectorLauncher
                     throw new Exception($"Could not load \"{pathToDll}\" in process \"{processWrapper.Id}\".");
                 }
 
-                LogMessage($"Successfully loaded \"{pathToDll}\" with handle \"{moduleHandleInForeignProcess}\" in process \"{processWrapper.Id}\".");
+                var remoteHandle = NativeMethods.GetRemoteModuleHandle(processWrapper.Process, Path.GetFileName(pathToDll));
+
+                LogMessage($"Successfully loaded \"{pathToDll}\" with handle \"{moduleHandleInForeignProcess}\" (\"{remoteHandle}\") in process \"{processWrapper.Id}\".");
             }
             finally
             {

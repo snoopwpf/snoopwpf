@@ -328,13 +328,13 @@ namespace Snoop.Infrastructure
                 if (mod.ModuleName.Equals(moduleName, StringComparison.OrdinalIgnoreCase)
                     || mod.FileName.Equals(moduleName, StringComparison.OrdinalIgnoreCase))
                 {
-                    Trace.WriteLine($"Checking module {moduleName} with base address {mod.BaseAddress} for procaddress of {procName}...");
+                    Trace.WriteLine($"Checking module \"{moduleName}\" with base address \"{mod.BaseAddress}\" for procaddress of \"{procName}\"...");
 
                     var procAddress = GetProcAddress(mod.BaseAddress, procName).ToUInt64();
 
                     if (procAddress != 0)
                     {
-                        Trace.WriteLine($"Got proc address in foreign process with {procAddress}.");
+                        Trace.WriteLine($"Got proc address in foreign process with \"{procAddress}\".");
                         functionOffsetFromBaseAddress = procAddress - (ulong)mod.BaseAddress;
                     }
 
