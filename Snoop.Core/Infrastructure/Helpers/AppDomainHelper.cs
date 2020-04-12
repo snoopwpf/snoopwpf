@@ -1,6 +1,6 @@
 ﻿namespace Snoop.Infrastructure.Helpers
 {
-#if NETCOREAPP
+#if NETCOREAPP // Appdomains don't exist in .net core
     using System;
     using System.Collections.Generic;
 
