@@ -33,7 +33,7 @@
 
   <!-- Analyzer references -->
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2019.*" privateAssets="all" includeAssets="build;compile" />
+    <PackageReference Include="JetBrains.Annotations" Version="2020.*" privateAssets="all" includeAssets="build;compile" />
     
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" version="3.*" privateAssets="all" includeAssets="build;analyzers" />
 
