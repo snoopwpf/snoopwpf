@@ -38,6 +38,14 @@
             </Component>
           </Directory>
 
+          <Directory Id="netcoreapp31" Name="netcoreapp3.1">
+            <Component Id="Snoop.Core.netcoreapp3.1.dll" Guid="{FF43CCAC-9D8B-42BE-A571-809F3E14082D}">
+                <File Id="Snoop.Core.netcoreapp3.1.dll" KeyPath="yes" Source="SourceDir\netcoreapp3.1\Snoop.Core.dll" />
+                <File Id="Snoop.Core.netcoreapp3.1.deps.json" Source="SourceDir\netcoreapp3.1\Snoop.Core.deps.json" />
+                <File Id="Snoop.Core.netcoreapp3.1.pdb" Source="SourceDir\netcoreapp3.1\Snoop.Core.pdb" />
+            </Component>
+          </Directory>
+
           <Component Id="Snoop.GenericInjector.x64.dll" Guid="{DF9AFA72-A1C6-48C5-9BF0-F00C284FA111}">
               <File Id="Snoop.GenericInjector.x64.dll" KeyPath="yes" Source="SourceDir\Snoop.GenericInjector.x64.dll" />
               <File Id="Snoop.GenericInjector.x64.pdb" Source="SourceDir\Snoop.GenericInjector.x64.pdb" />
@@ -113,6 +121,7 @@
       <ComponentRef Id="System.Management.Automation.dll" />
 
       <ComponentRef Id="Snoop.Core.netcoreapp3.0.dll" />
+      <ComponentRef Id="Snoop.Core.netcoreapp3.1.dll" />
 
       <ComponentRef Id="Snoop.GenericInjector.x64.dll" />
       <ComponentRef Id="Snoop.GenericInjector.x86.dll" />
