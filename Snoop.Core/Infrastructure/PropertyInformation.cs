@@ -681,13 +681,17 @@ namespace Snoop.Infrastructure
             var dp = this.DependencyProperty;
             var d = this.Target as DependencyObject;
 
-            if (SnoopModes.MultipleDispatcherMode && d != null && d.Dispatcher != this.Dispatcher)
+            if (SnoopModes.MultipleDispatcherMode
+                && d != null
+                && d.Dispatcher != this.Dispatcher)
             {
                 return;
             }
 
-            if (dp != null && d != null)
+            if (dp != null
+                && d != null)
             {
+                //Debugger.Launch();
                 if (d.ReadLocalValue(dp) != DependencyProperty.UnsetValue)
                 {
                     this.isLocallySet = true;
@@ -698,7 +702,7 @@ namespace Snoop.Infrastructure
                 {
                     this.isDatabound = true;
 
-                    if (expression.HasError 
+                    if (expression.HasError
                         || (expression.Status != BindingStatus.Active && !(expression is PriorityBindingExpression)))
                     {
                         this.isInvalidBinding = true;
@@ -714,28 +718,15 @@ namespace Snoop.Infrastructure
                         BindingOperations.SetBinding(d, dp, expression.ParentBindingBase);
                         this.ignoreUpdate = false;
 
-                        // cplotts note: maciek ... are you saying that this is another, more concise way to dispatch the following code?
-                        //Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
-                        //    {
-                        //        bindingError = builder.ToString();
-                        //        this.OnPropertyChanged("BindingError");
-                        //        PresentationTraceSources.DataBindingSource.Listeners.Remove(tracer);
-                        //        writer.Close();
-                        //    });
-
                         // this needs to happen on idle so that we can actually run the binding, which may occur asynchronously.
-                        this.Dispatcher.BeginInvoke(
-                            DispatcherPriority.ApplicationIdle,
-                            new DispatcherOperationCallback(
-                                delegate
+                        this.RunInDispatcherAsync(
+                                () =>
                                 {
                                     this.bindingError = builder.ToString();
                                     this.OnPropertyChanged(nameof(this.BindingError));
                                     PresentationTraceSources.DataBindingSource.Listeners.Remove(tracer);
                                     writer.Close();
-                                    return null;
-                                }),
-                            null);
+                                }, DispatcherPriority.ApplicationIdle);
                     }
                     else
                     {

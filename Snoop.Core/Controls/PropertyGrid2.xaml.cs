@@ -40,7 +40,7 @@ namespace Snoop.Controls
             this.filterTimer.Interval = TimeSpan.FromSeconds(0.3);
             this.filterTimer.Tick += (s, e) =>
             {
-                this.filterCall.Enqueue();
+                this.filterCall.Enqueue(this.Dispatcher);
                 this.filterTimer.Stop();
             };
         }
@@ -185,7 +185,7 @@ namespace Snoop.Controls
 
             if (i == numberToAdd)
             {
-                this.processIncrementalCall.Enqueue();
+                this.processIncrementalCall.Enqueue(this.Dispatcher);
             }
             else
             {
@@ -197,10 +197,12 @@ namespace Snoop.Controls
         {
             var propertyInformation = (PropertyInformation)eventArgs.Parameter;
             var window = new Window();
-            var textbox = new TextBox();
-            textbox.IsReadOnly = true;
-            textbox.Text = propertyInformation.BindingError;
-            textbox.TextWrapping = TextWrapping.Wrap;
+            var textbox = new TextBox
+            {
+                IsReadOnly = true,
+                Text = propertyInformation.BindingError,
+                TextWrapping = TextWrapping.Wrap
+            };
             window.Content = textbox;
             window.Width = 400;
             window.Height = 300;
@@ -421,7 +423,7 @@ namespace Snoop.Controls
             this.visiblePropertyCount = 0;
 
             this.propertiesToAdd = null;
-            this.processIncrementalCall.Enqueue();
+            this.processIncrementalCall.Enqueue(this.Dispatcher);
         }
 
         private object target;

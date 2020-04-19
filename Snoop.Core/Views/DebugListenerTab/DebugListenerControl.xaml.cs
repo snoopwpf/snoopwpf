@@ -42,7 +42,7 @@
             this.allText.Append(str + Environment.NewLine);
             if (!this.filtersViewModel.IsSet || this.filtersViewModel.FilterMatches(str))
             {
-                this.Dispatcher.BeginInvoke(DispatcherPriority.Render, () => this.DoWrite(str));
+                this.Dispatcher.RunInDispatcherAsync(() => this.DoWrite(str), DispatcherPriority.Render);
             }
         }
 
@@ -82,10 +82,12 @@
             {
                 Topmost = true
             };
+
             setFiltersWindow.ShowDialogEx(this);
 
-            var allLines = this.allText.ToString().Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            var allLines = this.allText.ToString().Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             this.textBoxDebugContent.Clear();
+
             foreach (var line in allLines)
             {
                 if (this.filtersViewModel.FilterMatches(line))

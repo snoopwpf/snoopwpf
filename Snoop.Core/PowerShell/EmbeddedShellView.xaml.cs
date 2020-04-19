@@ -103,7 +103,7 @@ namespace Snoop.PowerShell
                 this.SetVariable(ShellConstants.Selected, snoopUi.CurrentSelection);
 
                 // marshall back to the UI thread when the provider notifiers of a location change
-                var action = new Action<TreeItem>(item => this.Dispatcher.BeginInvoke(new Action(() => this.ProviderLocationChanged?.Invoke(item))));
+                var action = new Action<TreeItem>(item => this.RunInDispatcherAsync(() => this.ProviderLocationChanged?.Invoke(item)));
                 this.SetVariable(ShellConstants.LocationChangedActionKey, action);
 
                 var folder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..", "Scripts");
@@ -178,7 +178,7 @@ namespace Snoop.PowerShell
         private void OnSnoopUiSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => this.NotifySelected(this.snoopUi.CurrentSelection);
 
         private void OnProviderLocationChanged(TreeItem item) =>
-            this.Dispatcher.BeginInvoke(new Action(() =>
+            this.Dispatcher.RunInDispatcherAsync(() =>
             {
                 this.isSettingLocationFromLocationProvider = true;
                 try
@@ -190,7 +190,7 @@ namespace Snoop.PowerShell
                 {
                     this.isSettingLocationFromLocationProvider = false;
                 }
-            }));
+            });
 
         public void SetVariable(string name, object instance)
         {

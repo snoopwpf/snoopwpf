@@ -59,9 +59,7 @@ namespace Snoop
         {
             this.windowInfos.Clear();
 
-            this.Dispatcher.BeginInvoke(
-                DispatcherPriority.Loaded,
-                (DispatcherOperationCallback)(x =>
+            this.RunInDispatcherAsync(() =>
                 {
                     try
                     {
@@ -91,10 +89,7 @@ namespace Snoop
                     {
                         Mouse.OverrideCursor = null;
                     }
-
-                    return null;
-                }),
-                null);
+                }, DispatcherPriority.Loaded);
         }
 
         protected override void OnSourceInitialized(EventArgs e)

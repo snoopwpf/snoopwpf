@@ -17,6 +17,15 @@ namespace Snoop.Windows
 
     public sealed partial class Zoomer
     {
+        private readonly TranslateTransform translation = new TranslateTransform();
+        private readonly ScaleTransform zoom = new ScaleTransform();
+        private readonly TransformGroup transform = new TransformGroup();
+        private Point downPoint;
+        private object target;
+        private VisualTree3DView visualTree3DView;
+
+        private const double ZoomFactor = 1.1;
+
         static Zoomer()
         {
             ResetCommand = new RoutedCommand("Reset", typeof(Zoomer));
@@ -272,52 +281,6 @@ namespace Snoop.Windows
             return ZoomerUtilities.CreateIfPossible(item);
         }
 
-        //private UIElement CreateIfPossible(object item)
-        //{
-        //    if (item is Window && VisualTreeHelper.GetChildrenCount((Visual)item) == 1)
-        //        item = VisualTreeHelper.GetChild((Visual)item, 0);
-
-        //    if (item is FrameworkElement)
-        //    {
-        //        FrameworkElement uiElement = (FrameworkElement)item;
-        //        VisualBrush brush = new VisualBrush(uiElement);
-        //        brush.Stretch = Stretch.Uniform;
-        //        Rectangle rect = new Rectangle();
-        //        rect.Fill = brush;
-        //        rect.Width = uiElement.ActualWidth;
-        //        rect.Height = uiElement.ActualHeight;
-        //        return rect;
-        //    }
-
-        //    else if (item is ResourceDictionary)
-        //    {
-        //        StackPanel stackPanel = new StackPanel();
-
-        //        foreach (object value in ((ResourceDictionary)item).Values)
-        //        {
-        //            UIElement element = CreateIfPossible(value);
-        //            if (element != null)
-        //                stackPanel.Children.Add(element);
-        //        }
-        //        return stackPanel;
-        //    }
-        //    else if (item is Brush)
-        //    {
-        //        Rectangle rect = new Rectangle();
-        //        rect.Width = 10;
-        //        rect.Height = 10;
-        //        rect.Fill = (Brush)item;
-        //        return rect;
-        //    }
-        //    else if (item is ImageSource)
-        //    {
-        //        Image image = new Image();
-        //        image.Source = (ImageSource)item;
-        //        return image;
-        //    }
-        //    return null;
-        //}
-
         private void Zoom(double newZoom, Point offset)
         {
             var v = new Vector((1 - newZoom) * offset.X, (1 - newZoom) * offset.Y);
@@ -329,15 +292,6 @@ namespace Snoop.Windows
             this.zoom.ScaleX *= newZoom;
             this.zoom.ScaleY *= newZoom;
         }
-
-        private readonly TranslateTransform translation = new TranslateTransform();
-        private readonly ScaleTransform zoom = new ScaleTransform();
-        private readonly TransformGroup transform = new TransformGroup();
-        private Point downPoint;
-        private object target;
-        private VisualTree3DView visualTree3DView;
-
-        private const double ZoomFactor = 1.1;
     }
 
     [ValueConversion(typeof(double), typeof(SolidColorBrush))]

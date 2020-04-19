@@ -243,7 +243,7 @@ namespace Snoop.Windows
 
         private void EnqueueAfterSettingFilter()
         {
-            this.filterCall.Enqueue();
+            this.filterCall.Enqueue(this.Dispatcher);
 
             this.OnPropertyChanged(nameof(this.Filter));
         }
@@ -315,14 +315,13 @@ namespace Snoop.Windows
             {
                 if (this.reducedDepthRoot == null)
                 {
-                    this.Dispatcher.BeginInvoke(
-                        DispatcherPriority.Background,
+                    this.RunInDispatcherAsync(
                         () =>
                         {
                             this.VisualTreeItems.Clear();
                             this.VisualTreeItems.Add(this.reducedDepthRoot);
                             this.reducedDepthRoot = null;
-                        });
+                        }, DispatcherPriority.Background);
                 }
 
                 this.reducedDepthRoot = newRoot;
@@ -635,10 +634,10 @@ namespace Snoop.Windows
 
         private void ProcessFilter()
         {
-            if (SnoopModes.MultipleDispatcherMode 
+            if (SnoopModes.MultipleDispatcherMode
                 && this.Dispatcher.CheckAccess() == false)
             {
-                this.Dispatcher.BeginInvoke((Action)this.ProcessFilter);
+                this.RunInDispatcherAsync(this.ProcessFilter);
                 return;
             }
 

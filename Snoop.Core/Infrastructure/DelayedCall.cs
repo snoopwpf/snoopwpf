@@ -12,44 +12,34 @@ namespace Snoop.Infrastructure
 
     public class DelayedCall
     {
+        private readonly DelayedHandler handler;
+        private readonly DispatcherPriority priority;
+
+        private bool queued;
+
         public DelayedCall(DelayedHandler handler, DispatcherPriority priority)
         {
             this.handler = handler;
             this.priority = priority;
         }
 
-        public void Enqueue()
+        public void Enqueue(Dispatcher dispatcher)
         {
-            if (!this.queued)
+            if (this.queued)
             {
-                this.queued = true;
-
-                Dispatcher dispatcher = null;
-                if (Application.Current == null || SnoopModes.MultipleDispatcherMode)
-                {
-                    dispatcher = Dispatcher.CurrentDispatcher;
-                }
-                else
-                {
-                    dispatcher = Application.Current.Dispatcher;
-                }
-
-                dispatcher.BeginInvoke(this.priority, new DispatcherOperationCallback(this.Process), null);
+                return;
             }
+
+            this.queued = true;
+
+            dispatcher.RunInDispatcherAsync(this.Process, this.priority);
         }
 
-        private object Process(object arg)
+        private void Process()
         {
             this.queued = false;
 
             this.handler();
-
-            return null;
         }
-
-        private readonly DelayedHandler handler;
-        private readonly DispatcherPriority priority;
-
-        private bool queued;
     }
 }

@@ -95,19 +95,16 @@ namespace Snoop.Views
                         }
 
                         var tvi = (TreeViewItem)this.EventTree.ItemContainerGenerator.ContainerFromItem(trackedEvent);
-                        if (tvi != null)
-                        {
-                            tvi.BringIntoView();
-                        }
+                        tvi?.BringIntoView();
                     };
 
-                if (!this.Dispatcher.CheckAccess())
+                if (this.Dispatcher.CheckAccess())
                 {
-                    this.Dispatcher.BeginInvoke(action);
+                    action.Invoke();
                 }
                 else
                 {
-                    action.Invoke();
+                    this.RunInDispatcherAsync(action);
                 }
             }
         }
@@ -121,13 +118,13 @@ namespace Snoop.Views
         {
             if (e.NewValue != null)
             {
-                if (e.NewValue is EventEntry)
+                if (e.NewValue is EventEntry entry)
                 {
-                    SnoopUI.InspectCommand.Execute(((EventEntry)e.NewValue).Handler, this);
+                    SnoopUI.InspectCommand.Execute(entry.Handler, this);
                 }
-                else if (e.NewValue is TrackedEvent)
+                else if (e.NewValue is TrackedEvent @event)
                 {
-                    SnoopUI.InspectCommand.Execute(((TrackedEvent)e.NewValue).EventArgs, this);
+                    SnoopUI.InspectCommand.Execute(@event.EventArgs, this);
                 }
             }
         }
