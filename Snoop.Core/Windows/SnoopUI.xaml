@@ -8,11 +8,11 @@ All other rights reserved.
 	x:Class="Snoop.Windows.SnoopUI"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-	xmlns:local="clr-namespace:Snoop"
-	xmlns:i="clr-namespace:Snoop.Infrastructure"
+	xmlns:snoop="clr-namespace:Snoop"
+	xmlns:infrastructure="clr-namespace:Snoop.Infrastructure"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:d="http://schemas.microsoft.com/expression/interactivedesigner/2006"
-    xmlns:conv="clr-namespace:Snoop.Converters"
+    xmlns:converters="clr-namespace:Snoop.Converters"
     xmlns:windows="clr-namespace:Snoop.Windows"
     xmlns:powerShell="clr-namespace:Snoop.PowerShell"
     xmlns:controls="clr-namespace:Snoop.Controls"
@@ -135,7 +135,7 @@ All other rights reserved.
 		<ComboBox
 			x:Name="filterComboBox"
             Style="{x:Null}"
-			i:ComboBoxSettings.RegisterAsSnoopPart="True"
+			infrastructure:ComboBoxSettings.RegisterAsSnoopPart="True"
 			IsEditable="True"
 			Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}"
 			Margin="2,2,22,2"
@@ -183,7 +183,7 @@ All other rights reserved.
 					<TextBlock
 						Text="{Binding}"
 						HorizontalAlignment="Stretch"
-						i:BringIntoViewBehavior.IsActive="{Binding IsSelected}"
+						infrastructure:BringIntoViewBehavior.IsActive="{Binding IsSelected}"
 						Background="Transparent"
 						Foreground="Black"
 					/>
@@ -357,7 +357,7 @@ All other rights reserved.
 			</TabItem>
 
 			<TabItem Style="{x:Null}"
-				     Visibility="{Binding Converter={x:Static conv:IsPowerShellAvailableToVisibilityConverter.DefaultInstance}}">
+				     Visibility="{Binding Converter={x:Static converters:IsPowerShellAvailableToVisibilityConverter.DefaultInstance}}">
 				<TabItem.Header>
 					<TextBlock Style="{x:Null}" Text="PowerShell">
 						<TextBlock.ToolTip>
@@ -427,7 +427,7 @@ All other rights reserved.
 							Command="{x:Static windows:SnoopUI.SelectFocusCommand}"
 							CommandParameter="{Binding CurrentFocus}"
 						>
-							<TextBlock Text="{Binding CurrentFocus, Converter={x:Static conv:ObjectToStringConverter.Instance}}"/>
+							<TextBlock Text="{Binding CurrentFocus, Converter={x:Static converters:ObjectToStringConverter.Instance}}"/>
 						</windows:NoFocusHyperlink>
 					</TextBlock>
 					<TextBlock Style="{x:Null}" Text="; "/>
@@ -447,7 +447,7 @@ All other rights reserved.
 							Command="{x:Static windows:SnoopUI.SelectFocusScopeCommand}"
 							CommandParameter="{Binding CurrentFocusScope}"
 						>
-							<TextBlock Text="{Binding CurrentFocusScope, Converter={x:Static conv:ObjectToStringConverter.Instance}}"/>
+							<TextBlock Text="{Binding CurrentFocusScope, Converter={x:Static converters:ObjectToStringConverter.Instance}}"/>
 						</windows:NoFocusHyperlink>
 					</TextBlock>
 					<StackPanel.ToolTip>

@@ -9,7 +9,7 @@ All other rights reserved.
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:d="http://schemas.microsoft.com/expression/interactivedesigner/2006"
-	xmlns:my='clr-namespace:Snoop'
+	xmlns:snoop='clr-namespace:Snoop'
 	xmlns:controls="clr-namespace:Snoop.Controls"
 	mc:Ignorable="d"
 	x:Class="Snoop.Controls.Previewer"

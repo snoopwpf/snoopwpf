@@ -7,13 +7,13 @@ All other rights reserved.
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:input="clr-namespace:System.Windows.Input;assembly=PresentationCore"
-        xmlns:my="clr-namespace:Snoop"
+        xmlns:snoop="clr-namespace:Snoop"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:infrastructure="clr-namespace:Snoop.Infrastructure"
         xmlns:converters="clr-namespace:Snoop.Converters"
-        xmlns:snoop="urn:snoopwpf"
+        xmlns:snoopwpf="urn:snoopwpf"
         x:Class="Snoop.AppChooser"
         Icon="Snoop.ico"
         Title="Snoop"
@@ -248,7 +248,7 @@ All other rights reserved.
                   ToolTip="This combo box shows the list of applications that can be Snoop(ed).">
             <ComboBox.Resources>
                 <!-- Drop down list item template -->
-                <DataTemplate x:Key="DropDownItemTemplate" DataType="{x:Type my:WindowInfo}">
+                <DataTemplate x:Key="DropDownItemTemplate" DataType="{x:Type snoop:WindowInfo}">
                     <Grid Style="{x:Null}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" SharedSizeGroup="Column1" />
@@ -261,7 +261,7 @@ All other rights reserved.
                                 Width="16"
                                 Height="16">
                             <Image Style="{x:Null}"
-                                   Visibility="{Binding OwningProcessInfo.IsProcessElevated, Converter={x:Static snoop:BoolToVisibilityConverter.DefaultInstance}}"
+                                   Visibility="{Binding OwningProcessInfo.IsProcessElevated, Converter={x:Static snoopwpf:BoolToVisibilityConverter.DefaultInstance}}"
                                    Source="{Binding Source={x:Static infrastructure:SystemIcon.Shield},
                                                        Converter={x:Static converters:SystemIconToImageSourceConverter.Instance},
                                                        ConverterParameter=16,
@@ -340,7 +340,7 @@ All other rights reserved.
                 </DataTemplate>
 
                 <!-- Selection item template for compact representation -->
-                <DataTemplate x:Key="SelectionItemTemplate" DataType="{x:Type my:WindowInfo}">
+                <DataTemplate x:Key="SelectionItemTemplate" DataType="{x:Type snoop:WindowInfo}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -351,7 +351,7 @@ All other rights reserved.
                                 Width="16"
                                 Height="16">
                             <Image Style="{x:Null}"
-                                   Visibility="{Binding OwningProcessInfo.IsProcessElevated, Converter={x:Static snoop:BoolToVisibilityConverter.DefaultInstance}}"
+                                   Visibility="{Binding OwningProcessInfo.IsProcessElevated, Converter={x:Static snoopwpf:BoolToVisibilityConverter.DefaultInstance}}"
                                    Source="{Binding Source={x:Static infrastructure:SystemIcon.Shield}, Converter={x:Static converters:SystemIconToImageSourceConverter.Instance}, ConverterParameter=16}" />
                         </Border>
                         <TextBlock Grid.Column="1"
@@ -371,7 +371,7 @@ All other rights reserved.
             </ComboBox.Resources>
             <ComboBox.ItemTemplate>
                 <!-- Due to design limitations we can not just set SelectionBoxItemTemplate and be happy -->
-                <DataTemplate DataType="my:WindowInfo">
+                <DataTemplate DataType="snoop:WindowInfo">
                     <ContentPresenter x:Name="Presenter"
                                       Content="{Binding}"
                                       ContentTemplate="{StaticResource DropDownItemTemplate}"
@@ -395,7 +395,7 @@ All other rights reserved.
                 VerticalAlignment="Center"
                 Margin="2,0,0,0"
                 Style="{StaticResource appChooserButtonStyle}"
-                Command="{x:Static my:AppChooser.RefreshCommand}"
+                Command="{x:Static snoop:AppChooser.RefreshCommand}"
                 ToolTip="Refresh (F5) the combo box list of applications that can be Snoop(ed).">
             <Grid>
                 <Path Fill="{DynamicResource DeepBlueColorBrush}" Stretch="Fill" Stroke="{x:Null}"
@@ -426,7 +426,7 @@ All other rights reserved.
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     Style="{DynamicResource appChooserButtonStyle}"
-                    Command="{x:Static my:AppChooser.MagnifyCommand}"
+                    Command="{x:Static snoop:AppChooser.MagnifyCommand}"
                     ToolTip="Magnify the application selected in the combo box."
                     ToolTipService.ShowOnDisabled="True">
                 <Viewbox Height="16">
@@ -498,7 +498,7 @@ All other rights reserved.
                 </Viewbox>
             </Button>
             <!-- crosshairs magnify window finder -->
-            <my:WindowFinder Margin="2,0,0,0" WindowFinderType="Magnify"
+            <snoop:WindowFinder Margin="2,0,0,0" WindowFinderType="Magnify"
                              ToolTip="Drag and drop this crosshairs over a WPF window in order to Magnify it." />
 
             <!-- snoop button -->
@@ -508,7 +508,7 @@ All other rights reserved.
                     Margin="8,0,0,0"
                     Style="{DynamicResource appChooserButtonStyle}"
                     IsDefault="True"
-                    Command="{x:Static my:AppChooser.InspectCommand}"
+                    Command="{x:Static snoop:AppChooser.InspectCommand}"
                     ToolTip="Snoop the application selected in the combo box."
                     ToolTipService.ShowOnDisabled="True">
                 <Viewbox Height="13">
@@ -722,7 +722,7 @@ All other rights reserved.
                 </Viewbox>
             </Button>
             <!-- crosshairs snoop window finder -->
-            <my:WindowFinder Margin="2,0,0,0" WindowFinderType="Snoop"
+            <snoop:WindowFinder Margin="2,0,0,0" WindowFinderType="Snoop"
                              ToolTip="Drag and drop this crosshairs over a WPF window in order to Snoop it." />
         </StackPanel>
 
@@ -732,7 +732,7 @@ All other rights reserved.
                 Height="20"
                 Margin="0,0,8,0"
                 ToolTip="Change Snoop settings."
-                Command="{x:Static my:AppChooser.SettingsCommand}">
+                Command="{x:Static snoop:AppChooser.SettingsCommand}">
             <Image Style="{x:Null}"
                    Source="{Binding Source={x:Static infrastructure:SystemIcon.Settings}, Converter={x:Static converters:SystemIconToImageSourceConverter.Instance}, ConverterParameter=16}" />
         </Button>
@@ -744,7 +744,7 @@ All other rights reserved.
                 Height="20"
                 Style="{DynamicResource appChooserMinimizeCloseButtonStyle}"
                 ToolTip="Minimize the Snoop Application Chooser."
-                Command="{x:Static my:AppChooser.MinimizeCommand}">
+                Command="{x:Static snoop:AppChooser.MinimizeCommand}">
             <Path Stretch="Fill"
                   Stroke="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=Button}}"
                   StrokeThickness="3"

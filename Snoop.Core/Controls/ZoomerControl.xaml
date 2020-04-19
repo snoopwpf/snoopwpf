@@ -12,7 +12,7 @@ All other rights reserved.
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	mc:Ignorable="d"
 	Focusable="True"
-	xmlns:xv="clr-namespace:Snoop"
+	xmlns:snoop="clr-namespace:Snoop"
 	xmlns:windows="clr-namespace:Snoop.Windows"
 	d:DesignWidth="300"
 	d:DesignHeight="300"
@@ -26,12 +26,8 @@ All other rights reserved.
 		Mouse.MouseUp="Content_MouseUp"
 	>
 		<Grid.Background>
-			<Binding ElementName="ColorSlider" Path="Value">
-				<Binding.Converter>
-					<windows:DoubleToWhitenessConverter/>
-				</Binding.Converter>
-			</Binding>
-		</Grid.Background>
+			<Binding ElementName="ColorSlider" Path="Value" Converter="{x:Static windows:DoubleToWhitenessConverter.Default}" />
+        </Grid.Background>
 
 		<Viewbox x:Name="Viewbox" Style="{x:Null}" />
 

@@ -8,8 +8,8 @@ All other rights reserved.
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     x:Class="Snoop.Controls.PropertyInspector"
-    xmlns:i="clr-namespace:Snoop.Infrastructure"
-    xmlns:my="clr-namespace:Snoop"
+    xmlns:infrastructure="clr-namespace:Snoop.Infrastructure"
+    xmlns:snoop="clr-namespace:Snoop"
     xmlns:controls="clr-namespace:Snoop.Controls"
     x:Name="propertyInspector"
     MinHeight="0"
@@ -21,7 +21,7 @@ All other rights reserved.
                 <ResourceDictionary Source="ValueEditors\EditorTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <DataTemplate x:Key="stylelessTextBlockDataTemplate" DataType="my:PropertyFilterSet">
+            <DataTemplate x:Key="stylelessTextBlockDataTemplate" DataType="infrastructure:PropertyFilterSet">
                 <TextBlock Style="{x:Null}" Margin="0" Padding="0" Text="{Binding DisplayName}" />
             </DataTemplate>
         </ResourceDictionary>
@@ -89,7 +89,7 @@ All other rights reserved.
             <ComboBox
                 Style="{x:Null}"
                 x:Name="FilterSetCombo"
-                i:ComboBoxSettings.RegisterAsSnoopPart="True"
+                infrastructure:ComboBoxSettings.RegisterAsSnoopPart="True"
                 Width="100"
                 Margin="0,0,2,0"
                 Padding="4 1 4 1"

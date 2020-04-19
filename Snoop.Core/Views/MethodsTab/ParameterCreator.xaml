@@ -10,10 +10,10 @@ All other rights reserved.
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       mc:Ignorable="d"
-      xmlns:snoopNS="clr-namespace:Snoop"
+      xmlns:snoop="clr-namespace:Snoop"
       xmlns:windows="clr-namespace:Snoop.Windows"
       xmlns:controls="clr-namespace:Snoop.Controls"
-      xmlns:local="clr-namespace:Snoop.Views.MethodsTab"
+      xmlns:methodsTab="clr-namespace:Snoop.Views.MethodsTab"
       Width="700" 
       Height="350"
       Title="ParameterCreator"
@@ -29,9 +29,8 @@ All other rights reserved.
         </Grid.ColumnDefinitions>
         <TextBlock Name="TextBlockDescription" x:FieldModifier="public" Style="{x:Null}" FontWeight="Bold" Grid.Column="0" HorizontalAlignment="Left" TextWrapping="Wrap" />
         <controls:PropertyInspector x:Name="propertyInspector" Grid.Row="1"
-                                 RootTarget="{Binding Path=RootTarget, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:ParameterCreator}}}" 
-                                 NameValueOnly="True"
-                                 />
+                                 RootTarget="{Binding Path=RootTarget, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type methodsTab:ParameterCreator}}}" 
+                                 NameValueOnly="True" />
 
         <StackPanel Style="{x:Null}" Margin="15,15,0,15" Grid.Row="2" Orientation="Horizontal">
             <Button Name="btnOK" Style="{x:Null}" Height="25" Width="100" Grid.Row="1" Margin="0,0,0,0" Click="OKClick" Content="OK" HorizontalAlignment="Left" VerticalAlignment="Center" />

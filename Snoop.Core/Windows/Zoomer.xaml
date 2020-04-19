@@ -7,10 +7,9 @@ All other rights reserved.
 <windows:SnoopMainBaseWindow
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:xv="clr-namespace:Snoop"
+	xmlns:snoop="clr-namespace:Snoop"
 	xmlns:windows="clr-namespace:Snoop.Windows"
 	x:Class="Snoop.Windows.Zoomer"
-	Icon="Snoop.ico"
 	Title="Zoomer"
 	Width="640"
 	Height="480"
@@ -26,12 +25,8 @@ All other rights reserved.
 		Mouse.MouseWheel="Content_MouseWheel"
 	>
 		<Grid.Background>
-			<Binding ElementName="ColorSlider" Path="Value">
-				<Binding.Converter>
-					<windows:DoubleToWhitenessConverter/>
-				</Binding.Converter>
-			</Binding>
-		</Grid.Background>
+			<Binding ElementName="ColorSlider" Path="Value" Converter="{x:Static windows:DoubleToWhitenessConverter.Default}" />
+        </Grid.Background>
 
 		<Grid.ContextMenu>
 			<ContextMenu Style="{x:Null}">

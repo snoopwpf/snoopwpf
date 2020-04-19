@@ -139,7 +139,7 @@ namespace Snoop.Windows
             return root;
         }
 
-        private void HandleReset(object target, ExecutedRoutedEventArgs args)
+        private void HandleReset(object sender, ExecutedRoutedEventArgs args)
         {
             this.translation.X = 0;
             this.translation.Y = 0;
@@ -155,45 +155,45 @@ namespace Snoop.Windows
             }
         }
 
-        private void CanReset(object target, CanExecuteRoutedEventArgs args)
+        private void CanReset(object sender, CanExecuteRoutedEventArgs args)
         {
             args.CanExecute = true;
             args.Handled = true;
         }
 
-        private void HandleZoomIn(object target, ExecutedRoutedEventArgs args)
+        private void HandleZoomIn(object sender, ExecutedRoutedEventArgs args)
         {
             var offset = Mouse.GetPosition(this.Viewbox);
             this.Zoom(ZoomFactor, offset);
         }
 
-        private void HandleZoomOut(object target, ExecutedRoutedEventArgs args)
+        private void HandleZoomOut(object sender, ExecutedRoutedEventArgs args)
         {
             var offset = Mouse.GetPosition(this.Viewbox);
             this.Zoom(1 / ZoomFactor, offset);
         }
 
-        private void HandlePanLeft(object target, ExecutedRoutedEventArgs args)
+        private void HandlePanLeft(object sender, ExecutedRoutedEventArgs args)
         {
             this.translation.X -= 5;
         }
 
-        private void HandlePanRight(object target, ExecutedRoutedEventArgs args)
+        private void HandlePanRight(object sender, ExecutedRoutedEventArgs args)
         {
             this.translation.X += 5;
         }
 
-        private void HandlePanUp(object target, ExecutedRoutedEventArgs args)
+        private void HandlePanUp(object sender, ExecutedRoutedEventArgs args)
         {
             this.translation.Y -= 5;
         }
 
-        private void HandlePanDown(object target, ExecutedRoutedEventArgs args)
+        private void HandlePanDown(object sender, ExecutedRoutedEventArgs args)
         {
             this.translation.Y += 5;
         }
 
-        private void HandleSwitchTo2D(object target, ExecutedRoutedEventArgs args)
+        private void HandleSwitchTo2D(object sender, ExecutedRoutedEventArgs args)
         {
             if (this.visualTree3DView != null)
             {
@@ -203,9 +203,9 @@ namespace Snoop.Windows
             }
         }
 
-        private void HandleSwitchTo3D(object target, ExecutedRoutedEventArgs args)
+        private void HandleSwitchTo3D(object sender, ExecutedRoutedEventArgs args)
         {
-            if (this.visualTree3DView == null 
+            if (this.visualTree3DView == null
                 && this.target is Visual visual)
             {
                 try
@@ -223,7 +223,7 @@ namespace Snoop.Windows
             }
         }
 
-        private void CanSwitchTo3D(object target, CanExecuteRoutedEventArgs args)
+        private void CanSwitchTo3D(object sender, CanExecuteRoutedEventArgs args)
         {
             args.CanExecute = this.target is Visual;
             args.Handled = true;
@@ -318,16 +318,16 @@ namespace Snoop.Windows
         //    return null;
         //}
 
-        private void Zoom(double zoom, Point offset)
+        private void Zoom(double newZoom, Point offset)
         {
-            var v = new Vector((1 - zoom) * offset.X, (1 - zoom) * offset.Y);
+            var v = new Vector((1 - newZoom) * offset.X, (1 - newZoom) * offset.Y);
 
             var translationVector = v * this.transform.Value;
             this.translation.X += translationVector.X;
             this.translation.Y += translationVector.Y;
 
-            this.zoom.ScaleX *= zoom;
-            this.zoom.ScaleY *= zoom;
+            this.zoom.ScaleX *= newZoom;
+            this.zoom.ScaleY *= newZoom;
         }
 
         private readonly TranslateTransform translation = new TranslateTransform();
@@ -338,12 +338,14 @@ namespace Snoop.Windows
         private VisualTree3DView visualTree3DView;
 
         private const double ZoomFactor = 1.1;
-
-        private delegate void Action();
     }
 
-    public class DoubleToWhitenessConverter : IValueConverter
+    [ValueConversion(typeof(double), typeof(SolidColorBrush))]
+    [ValueConversion(typeof(float), typeof(SolidColorBrush))]
+    public sealed class DoubleToWhitenessConverter : IValueConverter
     {
+        public static readonly DoubleToWhitenessConverter Default = new DoubleToWhitenessConverter();
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var val = (float)(double)value;
