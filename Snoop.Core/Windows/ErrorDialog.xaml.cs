@@ -101,7 +101,7 @@ namespace Snoop.Windows
 
                 var titleParameter = Uri.EscapeDataString(this.Exception.Message);
                 var bodyParameter = Uri.EscapeDataString(body);
-                System.Diagnostics.Process.Start($"https://github.com/cplotts/snoopwpf/issues/new?title={titleParameter}&body={bodyParameter}");
+                Process.Start($"https://github.com/snoopwpf/snoopwpf/issues/new?title={titleParameter}&body={bodyParameter}");
             }
             catch (Exception exception)
             {
@@ -146,10 +146,20 @@ namespace Snoop.Windows
 
         private string GenerateIssueBody()
         {
+            var exceptionDetails = this.Exception.ToString();
+
+            const int maxExceptionDetailsLength = 4000;
+            if (exceptionDetails.Length > maxExceptionDetailsLength)
+            {
+                exceptionDetails = exceptionDetails.Substring(0, maxExceptionDetailsLength);
+                exceptionDetails += Environment.NewLine;
+                exceptionDetails += $"Exception details truncated at {maxExceptionDetailsLength} chars.";
+            }
+
             return $@"**Place your issue description here.**
 
 Exception details:
-{this.Exception}
+{exceptionDetails}
 
 ---
 ### Environment
