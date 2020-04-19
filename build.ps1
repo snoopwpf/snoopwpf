@@ -17,7 +17,7 @@ $BuildProjectFile = "$PSScriptRoot\.build\_build.csproj"
 $TempDirectory = "$PSScriptRoot\.tmp"
 
 $DotNetGlobalFile = "$PSScriptRoot\global.json"
-$DotNetInstallUrl = "https://raw.githubusercontent.com/dotnet/cli/master/scripts/obtain/dotnet-install.ps1"
+$DotNetInstallUrl = "https://dot.net/v1/dotnet-install.ps1"
 $DotNetChannel = "Current"
 
 $env:DOTNET_SKIP_FIRST_TIME_EXPERIENCE = 1
@@ -52,6 +52,7 @@ else {
     # Download install script
     $DotNetInstallFile = "$TempDirectory\dotnet-install.ps1"
     New-Item -ItemType Directory -Path $TempDirectory -Force | Out-Null
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     (New-Object System.Net.WebClient).DownloadFile($DotNetInstallUrl, $DotNetInstallFile)
 
     # Install by channel or version
@@ -65,4 +66,4 @@ else {
 Write-Output "Microsoft (R) .NET Core SDK version $(& $env:DOTNET_EXE --version)"
 
 ExecSafe { & $env:DOTNET_EXE build $BuildProjectFile /nodeReuse:false }
-ExecSafe { & $env:DOTNET_EXE run --project $BuildProjectFile --no-build -- $BuildArguments }
+ExecSafe { & $env:DOTNET_EXE run --project $BuildProjectFile --no-build -- $BuildArguments -nologo }

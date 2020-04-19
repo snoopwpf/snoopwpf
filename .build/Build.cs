@@ -28,7 +28,18 @@ class Build : NukeBuild
     ///   - Microsoft VisualStudio     https://nuke.build/visualstudio
     ///   - Microsoft VSCode           https://nuke.build/vscode
 
-    public static int Main () => Execute<Build>(x => x.Compile);
+    static Build()
+    {
+        // generated with http://patorjk.com/software/taag/#p=display&f=ANSI%20Shadow&t=SnoopWPF
+        Logger.Normal("███████╗███╗   ██╗ ██████╗  ██████╗ ██████╗ ██╗    ██╗██████╗ ███████╗");
+        Logger.Normal("██╔════╝████╗  ██║██╔═══██╗██╔═══██╗██╔══██╗██║    ██║██╔══██╗██╔════╝");
+        Logger.Normal("███████╗██╔██╗ ██║██║   ██║██║   ██║██████╔╝██║ █╗ ██║██████╔╝█████╗  ");
+        Logger.Normal("╚════██║██║╚██╗██║██║   ██║██║   ██║██╔═══╝ ██║███╗██║██╔═══╝ ██╔══╝  ");
+        Logger.Normal("███████║██║ ╚████║╚██████╔╝╚██████╔╝██║     ╚███╔███╔╝██║     ██║     ");
+        Logger.Normal("╚══════╝╚═╝  ╚═══╝ ╚═════╝  ╚═════╝ ╚═╝      ╚══╝╚══╝ ╚═╝     ╚═╝     ");
+    }
+
+    public static int Main() => Execute<Build>(x => x.Compile);
 
     protected override void OnBuildInitialized()
     {
@@ -54,9 +65,9 @@ class Build : NukeBuild
 
     [GitRepository] readonly GitRepository GitRepository;
 
-    [GitVersion] readonly GitVersion GitVersion;
+    [GitVersion(Framework = "netcoreapp3.1")] readonly GitVersion GitVersion;
     
-    private readonly List<string> checkSumFiles = new List<string>();
+    readonly List<string> checkSumFiles = new List<string>();
 
     AbsolutePath BuildBinDirectory => RootDirectory / "bin";
 
