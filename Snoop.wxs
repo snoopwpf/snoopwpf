@@ -88,12 +88,18 @@
                           IconIndex="0" 
                           Advertise="yes" /> 
               </File>
+              <File Id="Snoop.pdb" Source="SourceDir\Snoop.pdb" />
           </Component>
           <Component Id="Snoop.exe.config" Guid="{8BB4A7B2-F181-40E8-BCFF-FCC287DA8D06}">
               <File Id="Snoop.exe.config" KeyPath="yes" Source="SourceDir\Snoop.exe.config" />
           </Component>
-          <Component Id="Snoop.pdb" Guid="{A74F3E32-B62B-43CB-BC54-B429D9093BFF}">
-              <File Id="Snoop.pdb" KeyPath="yes" Source="SourceDir\Snoop.pdb" />
+
+          <Component Id="Snoop.com" Guid="{cb40d877-92dc-452a-96c6-65f9a0d64439}">
+              <File Id="Snoop.com" KeyPath="yes" Source="SourceDir\Snoop.com" />
+          </Component>
+
+          <Component Id="Snoop.com.config" Guid="{e123e7d3-8371-43b8-b509-651c9cf0f158}">
+              <File Id="Snoop.com.config" KeyPath="yes" Source="SourceDir\Snoop.com.config" />
           </Component>
  
           <Directory Id="SnoopScriptsFolder" Name="Scripts"> 
@@ -131,7 +137,8 @@
 
       <ComponentRef Id="Snoop.exe" />
       <ComponentRef Id="Snoop.exe.config" />
-      <ComponentRef Id="Snoop.pdb" />
+      <ComponentRef Id="Snoop.com" />
+      <ComponentRef Id="Snoop.com.config" />
       <ComponentRef Id="Root.Snoop.Core.net40.dll" />
 
       <ComponentRef Id="SnoopScriptsComponent"/> 

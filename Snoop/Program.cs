@@ -4,11 +4,17 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Runtime.InteropServices;
     using System.Windows;
     using CommandLine;
 
     public static class Program
     {
+        [DllImport("kernel32.dll")]
+        private static extern IntPtr GetConsoleWindow();
+
+        public static bool IsConsoleApp { get; } = GetConsoleWindow() != IntPtr.Zero;
+
         public static bool Debug { get; set; }
 
         [STAThread]
@@ -60,7 +66,14 @@
                 return Run(new SnoopCommandLineOptions());
             }
 
-            ShowErrorsGui(helpWriter.ToString());
+            if (IsConsoleApp)
+            {
+                Console.Error.WriteLine(helpWriter.ToString());
+            }
+            else
+            {
+                ShowErrorsGui(helpWriter.ToString());
+            }
 
             return 1;
         }

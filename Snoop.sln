@@ -34,6 +34,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Artwork", "Artwork", "{711D
 		Artwork\SnoopCamera.design = Artwork\SnoopCamera.design
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snoop.Console", "Snoop.Console\Snoop.Console.csproj", "{9CD2ABCD-5DCA-49CA-9B29-8DEEF8DEC38D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +58,10 @@ Global
 		{1E16FD0C-92AA-403D-B949-1F19B96DD3CE}.Debug|Any CPU.Build.0 = Debug|Win32
 		{1E16FD0C-92AA-403D-B949-1F19B96DD3CE}.Release|Any CPU.ActiveCfg = Release|Win32
 		{1E16FD0C-92AA-403D-B949-1F19B96DD3CE}.Release|Any CPU.Build.0 = Release|Win32
+		{9CD2ABCD-5DCA-49CA-9B29-8DEEF8DEC38D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CD2ABCD-5DCA-49CA-9B29-8DEEF8DEC38D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CD2ABCD-5DCA-49CA-9B29-8DEEF8DEC38D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CD2ABCD-5DCA-49CA-9B29-8DEEF8DEC38D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
