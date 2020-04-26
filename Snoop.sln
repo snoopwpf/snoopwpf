@@ -36,6 +36,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Artwork", "Artwork", "{711D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snoop.Console", "Snoop.Console\Snoop.Console.csproj", "{9CD2ABCD-5DCA-49CA-9B29-8DEEF8DEC38D}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", ".build\_build.csproj", "{F26BF9F3-A62E-4F0B-B04B-2A8E333FF5FA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +64,8 @@ Global
 		{9CD2ABCD-5DCA-49CA-9B29-8DEEF8DEC38D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CD2ABCD-5DCA-49CA-9B29-8DEEF8DEC38D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9CD2ABCD-5DCA-49CA-9B29-8DEEF8DEC38D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F26BF9F3-A62E-4F0B-B04B-2A8E333FF5FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F26BF9F3-A62E-4F0B-B04B-2A8E333FF5FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Nuke.Common;
 using Nuke.Common.Execution;
@@ -165,6 +166,9 @@ class Build : NukeBuild
                 $"-out \"{outputFile}\" -b \"{CurrentBuildOutputDirectory}\" \"{ArtifactsDirectory / $"{ProjectName}.wixobj"}\" -ext WixUIExtension -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -pdbout \"{ArtifactsDirectory / $"{ProjectName}.wixpdb"}\" -nologo -sice:ICE61");
             lightProcess.AssertZeroExitCode();
 
+            var tempFiles = ArtifactsDirectory.GlobFiles("*.wix*");
+            tempFiles.ForEach(DeleteFile);
+
             checkSumFiles.Add(outputFile);
         });
 
@@ -177,6 +181,7 @@ class Build : NukeBuild
                 Logger.Info(FenceOutput);
                 Logger.Info($"CheckSum for \"{item}\".");
                 Logger.Info($"SHA256 \"{checkSum}\".");
+                File.WriteAllText(item + ".sha256", checkSum);
                 Logger.Info(FenceOutput);
             }
         });
