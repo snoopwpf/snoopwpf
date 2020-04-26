@@ -3,12 +3,14 @@ Intermediate/
 bin/
 obj/
 output/
+artifacts/
 Debug/
 Release/
 packages/
 paket-files/
 .tmp/
 *.vs
+*.vscode
 *.user
 *.opensdf
 *.sdf

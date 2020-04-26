@@ -73,7 +73,7 @@ class Build : NukeBuild
 
     AbsolutePath CurrentBuildOutputDirectory => BuildBinDirectory / Configuration;
 
-    AbsolutePath OutputDirectory => RootDirectory / "output";
+    AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
 
     AbsolutePath ChocolateyDirectory => RootDirectory / "chocolatey";
 
@@ -85,7 +85,7 @@ class Build : NukeBuild
 
     Target CleanOutput => _ => _
         .Executes(() => {
-            EnsureCleanDirectory(OutputDirectory);
+            EnsureCleanDirectory(ArtifactsDirectory);
         });
 
     Target Restore => _ => _
@@ -124,7 +124,7 @@ class Build : NukeBuild
                 .SetTargetPath(ChocolateyDirectory / $"{ProjectName}.nuspec")
                 .SetVersion(GitVersion.NuGetVersion)
                 .SetConfiguration(Configuration)
-                .SetOutputDirectory(OutputDirectory)
+                .SetOutputDirectory(ArtifactsDirectory)
                 .SetNoPackageAnalysis(true));
 
             var tempDirectory = TemporaryDirectory / $"{ProjectName}Build";
@@ -134,7 +134,7 @@ class Build : NukeBuild
                 DeleteDirectory(tempDirectory);
             }
 
-            var nupkgs = OutputDirectory.GlobFiles($"{ProjectName}.{GitVersion.NuGetVersion}.nupkg");
+            var nupkgs = ArtifactsDirectory.GlobFiles($"{ProjectName}.{GitVersion.NuGetVersion}.nupkg");
             var nupkg = nupkgs.First();
 
             {
@@ -145,7 +145,7 @@ class Build : NukeBuild
             {
                 CompressionTasks.UncompressZip(nupkg, tempDirectory);
 
-                var outputFile = OutputDirectory / $"{ProjectName}.{GitVersion.NuGetVersion}.zip";
+                var outputFile = ArtifactsDirectory / $"{ProjectName}.{GitVersion.NuGetVersion}.zip";
                 CompressionTasks.Compress(tempDirectory / "tools",  outputFile, info => info.Name.Contains("chocolatey") == false && info.Name != "VERIFICATION.txt");
                 checkSumFiles.Add(outputFile);
             }
@@ -157,12 +157,12 @@ class Build : NukeBuild
         .After(Pack)
         .Executes(() => {
             var candleProcess = ProcessTasks.StartProcess(CandleExecutable, 
-                $"{ProjectName}.wxs -ext WixUIExtension -o \"{OutputDirectory / $"{ProjectName}.wixobj"}\" -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -nologo");
+                $"{ProjectName}.wxs -ext WixUIExtension -o \"{ArtifactsDirectory / $"{ProjectName}.wixobj"}\" -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -nologo");
             candleProcess.AssertZeroExitCode();
 
-            var outputFile = $"{OutputDirectory / $"{ProjectName}.{GitVersion.NuGetVersion}.msi"}";
+            var outputFile = $"{ArtifactsDirectory / $"{ProjectName}.{GitVersion.NuGetVersion}.msi"}";
             var lightProcess = ProcessTasks.StartProcess(LightExecutable, 
-                $"-out \"{outputFile}\" -b \"{CurrentBuildOutputDirectory}\" \"{OutputDirectory / $"{ProjectName}.wixobj"}\" -ext WixUIExtension -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -pdbout \"{OutputDirectory / $"{ProjectName}.wixpdb"}\" -nologo -sice:ICE61");
+                $"-out \"{outputFile}\" -b \"{CurrentBuildOutputDirectory}\" \"{ArtifactsDirectory / $"{ProjectName}.wixobj"}\" -ext WixUIExtension -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -pdbout \"{ArtifactsDirectory / $"{ProjectName}.wixpdb"}\" -nologo -sice:ICE61");
             lightProcess.AssertZeroExitCode();
 
             checkSumFiles.Add(outputFile);
