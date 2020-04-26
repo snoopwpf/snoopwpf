@@ -68,13 +68,14 @@ class Build : NukeBuild
 
     [GitVersion(Framework = "netcoreapp3.1")] readonly GitVersion GitVersion;
     
-    readonly List<string> checkSumFiles = new List<string>();
+    readonly List<string> CheckSumFiles = new List<string>();
 
     AbsolutePath BuildBinDirectory => RootDirectory / "bin";
 
     AbsolutePath CurrentBuildOutputDirectory => BuildBinDirectory / Configuration;
 
-    AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
+    [Parameter]
+    readonly AbsolutePath ArtifactsDirectory = RootDirectory / "artifacts";
 
     AbsolutePath ChocolateyDirectory => RootDirectory / "chocolatey";
 
@@ -82,7 +83,7 @@ class Build : NukeBuild
 
     string LightExecutable => ToolPathResolver.GetPackageExecutable("wix", "light.exe");
 
-    string FenceOutput = "".PadLeft(30, '#');
+    readonly string FenceOutput = "".PadLeft(30, '#');
 
     Target CleanOutput => _ => _
         .Executes(() => {
@@ -118,7 +119,7 @@ class Build : NukeBuild
             // Generate ingore files to prevent chocolatey from generating shims for them
             foreach (var launcher in CurrentBuildOutputDirectory.GlobFiles($"{ProjectName}.InjectorLauncher.*.exe"))
             {
-                using (System.IO.File.Create(launcher + ".ignore")) { };
+                using (File.Create(launcher + ".ignore")) { };
             }
 
             NuGetTasks.NuGetPack(s => s
@@ -127,28 +128,21 @@ class Build : NukeBuild
                 .SetConfiguration(Configuration)
                 .SetOutputDirectory(ArtifactsDirectory)
                 .SetNoPackageAnalysis(true));
+            
+            var tempDirectory = TemporaryDirectory / $"{ProjectName}{nameof(Pack)}";
 
-            var tempDirectory = TemporaryDirectory / $"{ProjectName}Build";
+            EnsureCleanDirectory(tempDirectory);
 
-            if (DirectoryExists(tempDirectory))
-            {
-                DeleteDirectory(tempDirectory);
-            }
+            var nupkg = ArtifactsDirectory / $"{ProjectName}.{GitVersion.NuGetVersion}.nupkg";
 
-            var nupkgs = ArtifactsDirectory.GlobFiles($"{ProjectName}.{GitVersion.NuGetVersion}.nupkg");
-            var nupkg = nupkgs.First();
-
-            {
-                var outputFile = nupkg;
-                checkSumFiles.Add(outputFile);
-            }
+            CheckSumFiles.Add(nupkg);
 
             {
                 CompressionTasks.UncompressZip(nupkg, tempDirectory);
 
                 var outputFile = ArtifactsDirectory / $"{ProjectName}.{GitVersion.NuGetVersion}.zip";
                 CompressionTasks.Compress(tempDirectory / "tools",  outputFile, info => info.Name.Contains("chocolatey") == false && info.Name != "VERIFICATION.txt");
-                checkSumFiles.Add(outputFile);
+                CheckSumFiles.Add(outputFile);
             }
         });
 
@@ -157,25 +151,26 @@ class Build : NukeBuild
         .DependsOn(Compile)
         .After(Pack)
         .Executes(() => {
+            var tempDirectory = TemporaryDirectory / $"{ProjectName}{nameof(Setup)}";
+
+            EnsureCleanDirectory(tempDirectory);
+
             var candleProcess = ProcessTasks.StartProcess(CandleExecutable, 
-                $"{ProjectName}.wxs -ext WixUIExtension -o \"{ArtifactsDirectory / $"{ProjectName}.wixobj"}\" -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -nologo");
+                $"{ProjectName}.wxs -ext WixUIExtension -o \"{tempDirectory / $"{ProjectName}.wixobj"}\" -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -nologo");
             candleProcess.AssertZeroExitCode();
 
             var outputFile = $"{ArtifactsDirectory / $"{ProjectName}.{GitVersion.NuGetVersion}.msi"}";
             var lightProcess = ProcessTasks.StartProcess(LightExecutable, 
-                $"-out \"{outputFile}\" -b \"{CurrentBuildOutputDirectory}\" \"{ArtifactsDirectory / $"{ProjectName}.wixobj"}\" -ext WixUIExtension -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -pdbout \"{ArtifactsDirectory / $"{ProjectName}.wixpdb"}\" -nologo -sice:ICE61");
+                $"-out \"{outputFile}\" -b \"{CurrentBuildOutputDirectory}\" \"{tempDirectory / $"{ProjectName}.wixobj"}\" -ext WixUIExtension -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -pdbout \"{tempDirectory / $"{ProjectName}.wixpdb"}\" -nologo -sice:ICE61");
             lightProcess.AssertZeroExitCode();
 
-            var tempFiles = ArtifactsDirectory.GlobFiles("*.wix*");
-            tempFiles.ForEach(DeleteFile);
-
-            checkSumFiles.Add(outputFile);
+            CheckSumFiles.Add(outputFile);
         });
 
     Target CheckSums => _ => _
         .TriggeredBy(Pack, Setup)
         .Executes(() => {
-            foreach (var item in checkSumFiles)
+            foreach (var item in CheckSumFiles)
             {
                 var checkSum = FileHelper.SHA256CheckSum(item);
                 Logger.Info(FenceOutput);
