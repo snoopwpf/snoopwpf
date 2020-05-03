@@ -144,8 +144,20 @@ namespace Snoop.Infrastructure
             All = 0x0000001F
         }
 
-        // see https://msdn.microsoft.com/en-us/library/windows/desktop/ms684139%28v=vs.85%29.aspx
+        public static bool IsProcess64BitWithoutException(Process process)
+        {
+            try
+            {
+                return IsProcess64Bit(process);
+            }
+            catch (Exception e)
+            {
+                Trace.WriteLine(e);
+                return false;
+            }
+        }
 
+        // see https://msdn.microsoft.com/en-us/library/windows/desktop/ms684139%28v=vs.85%29.aspx
         public static bool IsProcess64Bit(Process process)
         {
             if (Environment.Is64BitOperatingSystem == false)

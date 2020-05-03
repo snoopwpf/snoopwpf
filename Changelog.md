@@ -13,6 +13,7 @@
   - [#152](../../issues/152) - Magnified view only works for main window
   - [#156](../../issues/156) - Delve BindingExpression throws exception
   - [#159](../../issues/159) - Errors require STA
+  - [#177](../../issues/177) - Could not query process information.
   - Snoop now properly selects the targeted window on startup
   - Snooping multiple app domains now also works for app domains that use shadow copies of assemblies
   - Snooping multiple app domains now also checks for multiple dispatchers in each app domain

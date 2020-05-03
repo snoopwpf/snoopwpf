@@ -24,7 +24,9 @@
 
         public Process Process { get; set; }
 
-        public bool IsProcess64Bit => this.isOwningProcess64Bit ??= NativeMethods.IsProcess64Bit(this.Process);
+        // This property has to work without exceptions.
+        // This bit of information is mainly used by the InjectLauncherManager, which handles wrong info from this property later.
+        public bool IsProcess64Bit => this.isOwningProcess64Bit ??= NativeMethods.IsProcess64BitWithoutException(this.Process);
 
         public bool IsProcessElevated => this.isOwningProcessElevated ??= NativeMethods.IsProcessElevated(this.Process);
 
