@@ -27,10 +27,10 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
-    <PackageReference Include="System.Management.Automation" Version="6.2.3" PrivateAssets="All" />
+    <PackageReference Include="System.Management.Automation" Version="6.2.5" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
-    <PackageReference Include="System.Management.Automation" Version="7.0.0" PrivateAssets="All" />
+    <PackageReference Include="System.Management.Automation" Version="6.2.5" PrivateAssets="All" />
   </ItemGroup>
 </Project>
