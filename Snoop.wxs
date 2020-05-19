@@ -102,6 +102,10 @@
               <File Id="Snoop.com.config" KeyPath="yes" Source="SourceDir\Snoop.com.config" />
           </Component>
  
+          <Component Id="CommandLine.dll" Guid="{a6e69fb8-8471-40a4-9a38-a4b31cac0e61}">
+            <File Id="CommandLine.dll" KeyPath="yes" Source="SourceDir\CommandLine.dll" />
+          </Component>
+
           <Directory Id="SnoopScriptsFolder" Name="Scripts"> 
             <Component Id="SnoopScriptsComponent" Guid="65AD97C3-5B32-4020-892C-1D0E38656D6D"> 
               <File Id="SnoopScriptsFile" Name="Snoop.psm1" Source="Scripts\Snoop.psm1" /> 
@@ -139,6 +143,7 @@
       <ComponentRef Id="Snoop.exe.config" />
       <ComponentRef Id="Snoop.com" />
       <ComponentRef Id="Snoop.com.config" />
+      <ComponentRef Id="CommandLine.dll" />
       <ComponentRef Id="Root.Snoop.Core.net40.dll" />
 
       <ComponentRef Id="SnoopScriptsComponent"/> 

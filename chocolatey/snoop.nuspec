@@ -32,6 +32,8 @@
     <file src="..\bin\$Configuration$\Snoop.pdb" target="tools\" />
     <file src="..\bin\$Configuration$\Snoop.com" target="tools\" />
     <file src="..\bin\$Configuration$\Snoop.com.config" target="tools\" />
+
+    <file src="..\bin\$Configuration$\CommandLine.dll" target="tools\" />
     
     <file src="..\bin\$Configuration$\net40\Snoop.Core*.config" target="tools\net40\" />
     <file src="..\bin\$Configuration$\net40\Snoop.Core*.dll" target="tools\net40\" />
