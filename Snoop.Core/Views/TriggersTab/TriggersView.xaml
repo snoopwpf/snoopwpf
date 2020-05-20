@@ -6,6 +6,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:snoop="clr-namespace:Snoop"
       xmlns:triggers="clr-namespace:Snoop.Views.TriggersTab.Triggers"
+      xmlns:triggersTab="clr-namespace:Snoop.Views.TriggersTab"
       mc:Ignorable="d"
       x:Name="triggerView">
     <Grid.Resources>
