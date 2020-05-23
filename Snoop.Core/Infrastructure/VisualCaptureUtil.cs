@@ -107,7 +107,6 @@ namespace Snoop.Infrastructure
                 renderTargetBitmap.Render(visual);
             }
 
-            renderTargetBitmap.Freeze();
             return renderTargetBitmap;
         }
     }
