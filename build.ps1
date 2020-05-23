@@ -64,6 +64,7 @@ else {
 }
 
 Write-Output "Microsoft (R) .NET Core SDK version $(& $env:DOTNET_EXE --version)"
-
-ExecSafe { & $env:DOTNET_EXE build $BuildProjectFile /nodeReuse:false }
+Write-Output "Preparing and running build..."
+ExecSafe { & $env:DOTNET_EXE build $BuildProjectFile -c release /nodeReuse:false /nologo /consoleLoggerParameters:"ErrorsOnly;NoSummary" }
+Write-Output "Starting build..."
 ExecSafe { & $env:DOTNET_EXE run --project $BuildProjectFile --no-build -- $BuildArguments -nologo }
