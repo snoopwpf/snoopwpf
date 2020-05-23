@@ -5,7 +5,9 @@
 
 namespace Snoop.Infrastructure
 {
+    using System;
     using System.Windows;
+    using System.Windows.Controls;
     using System.Windows.Interop;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
@@ -36,17 +38,6 @@ namespace Snoop.Infrastructure
                 bounds = VisualTreeHelper.GetDescendantBounds(visual);
             }
 
-            var scale = dpi / BaseDpi;
-            var finalImageSize = new Size((int)(bounds.Width * scale), (int)(bounds.Height * scale));
-
-            var rtb =
-                new RenderTargetBitmap(
-                    (int)finalImageSize.Width,
-                    (int)finalImageSize.Height,
-                    dpi,
-                    dpi,
-                    PixelFormats.Pbgra32);
-
             var dv = new DrawingVisual();
             using (var ctx = dv.RenderOpen())
             {
@@ -54,6 +45,7 @@ namespace Snoop.Infrastructure
                 ctx.DrawRectangle(vb, null, new Rect(default, bounds.Size));
             }
 
+            var rtb = RenderVisualToRenderTargetBitmap(dv, bounds, dpi, PixelFormats.Pbgra32);
             rtb.Render(dv);
 
             SaveRTBAsPNG(rtb, filename);
@@ -93,5 +85,30 @@ namespace Snoop.Infrastructure
         }
 
         private const double BaseDpi = 96;
+
+        public static RenderTargetBitmap RenderVisualToRenderTargetBitmap(Visual visual, Rect bounds, int dpi, PixelFormat pixelFormat, Viewport3D viewport3D = null)
+        {
+            return RenderVisualToRenderTargetBitmap(visual, new Size(bounds.Width, bounds.Height), dpi, pixelFormat, viewport3D);
+        }
+
+        public static RenderTargetBitmap RenderVisualToRenderTargetBitmap(Visual visual, Size bounds, int dpi, PixelFormat pixelFormat, Viewport3D viewport3D = null)
+        {
+            var scale = dpi / BaseDpi;
+
+            var renderTargetBitmap = new RenderTargetBitmap((int)Math.Ceiling(scale * bounds.Width), (int)Math.Ceiling(scale * bounds.Height), scale * BaseDpi, scale * BaseDpi, pixelFormat);
+            if (viewport3D != null)
+            {
+                typeof(RenderTargetBitmap)
+                    .GetMethod("RenderForBitmapEffect", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                    .Invoke(renderTargetBitmap, new object[] { visual, Matrix.Identity, Rect.Empty });
+            }
+            else
+            {
+                renderTargetBitmap.Render(visual);
+            }
+
+            renderTargetBitmap.Freeze();
+            return renderTargetBitmap;
+        }
     }
 }

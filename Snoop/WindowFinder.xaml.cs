@@ -207,8 +207,7 @@ namespace Snoop
                 control.Arrange(rect);
                 control.UpdateLayout();
 
-                var rtb = new RenderTargetBitmap((int)control.DesiredSize.Width, (int)control.DesiredSize.Height, 96, 96, PixelFormats.Pbgra32);
-                rtb.Render(control);
+                var rtb = VisualCaptureUtil.RenderVisualToRenderTargetBitmap(control, new Size(control.DesiredSize.Width, control.DesiredSize.Height), 96, PixelFormats.Pbgra32);
 
                 var encoder = new PngBitmapEncoder();
                 encoder.Frames.Add(BitmapFrame.Create(rtb));

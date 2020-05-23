@@ -9,7 +9,6 @@ namespace Snoop.Controls
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Media;
-    using System.Windows.Media.Imaging;
     using System.Windows.Media.Media3D;
     using Snoop.Infrastructure;
 
@@ -167,32 +166,22 @@ namespace Snoop.Controls
                 offsetMatrixTransform.Freeze();
 
                 var drawingVisual = new DrawingVisual();
-                var drawingContext = drawingVisual.RenderOpen();
-                drawingContext.PushTransform(offsetMatrixTransform);
-                if (this.drawOutlines)
+                using (var drawingContext = drawingVisual.RenderOpen())
                 {
-                    drawingContext.DrawRectangle(null, OutlinePen, bounds);
-                }
+                    drawingContext.PushTransform(offsetMatrixTransform);
+                    if (this.drawOutlines)
+                    {
+                        drawingContext.DrawRectangle(null, OutlinePen, bounds);
+                    }
 
-                drawingContext.DrawDrawing(drawing);
-                drawingContext.Pop();
-                drawingContext.Close();
+                    drawingContext.DrawDrawing(drawing);
+                    drawingContext.Pop();
+                }
 
                 visual = drawingVisual;
             }
 
-            var renderTargetBitmap = new RenderTargetBitmap((int)Math.Ceiling(bounds.Width), (int)Math.Ceiling(bounds.Height), 96, 96, PixelFormats.Default);
-            if (viewport != null)
-            {
-                typeof(RenderTargetBitmap).GetMethod("RenderForBitmapEffect", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).Invoke(renderTargetBitmap,
-                    new object[] { visual, Matrix.Identity, Rect.Empty });
-            }
-            else
-            {
-                renderTargetBitmap.Render(visual);
-            }
-
-            renderTargetBitmap.Freeze();
+            var renderTargetBitmap = VisualCaptureUtil.RenderVisualToRenderTargetBitmap(visual, bounds, 96, PixelFormats.Default, viewport);
             var imageBrush = new ImageBrush(renderTargetBitmap);
             imageBrush.Freeze();
 
