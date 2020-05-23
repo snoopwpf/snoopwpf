@@ -45,6 +45,7 @@ if (Test-Path $DotNetGlobalFile) {
 if ($null -ne (Get-Command "dotnet" -ErrorAction SilentlyContinue) -and `
      (!(Test-Path variable:DotNetVersion) -or $(& dotnet --version) -ge $DotNetVersion)) {
     $env:DOTNET_EXE = (Get-Command "dotnet").Path
+    Write-Verbose "Found dotnet with version $(& dotnet --version) at $($env:DOTNET_EXE)"
 }
 else {
     Write-Verbose "Could not find dotnet command. Starting download..."
