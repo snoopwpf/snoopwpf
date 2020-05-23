@@ -9,7 +9,7 @@ image: Visual Studio 2019
 test: off
 
 build_script:
-  - ps: .\build.ps1 CI
+  - ps: .\build.ps1 CI -Verbose
 
 artifacts:
   - path: \artifacts\*.*

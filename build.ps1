@@ -37,6 +37,7 @@ if (Test-Path $DotNetGlobalFile) {
     $DotNetGlobal = $(Get-Content $DotNetGlobalFile | Out-String | ConvertFrom-Json)
     if ($DotNetGlobal.PSObject.Properties["sdk"] -and $DotNetGlobal.sdk.PSObject.Properties["version"]) {
         $DotNetVersion = $DotNetGlobal.sdk.version
+        Write-Verbose "Using SDK-Version $DotNetVersion from global.json"
     }
 }
 
@@ -46,6 +47,8 @@ if ($null -ne (Get-Command "dotnet" -ErrorAction SilentlyContinue) -and `
     $env:DOTNET_EXE = (Get-Command "dotnet").Path
 }
 else {
+    Write-Verbose "Could not find dotnet command. Starting download..."
+
     $DotNetDirectory = "$TempDirectory\dotnet-win"
     $env:DOTNET_EXE = "$DotNetDirectory\dotnet.exe"
 
