@@ -8,6 +8,9 @@ branches:
 image: Visual Studio 2019
 test: off
 
+install:
+  - cinst dotnetcore-sdk --version 3.1.202
+
 build_script:
   - ps: dotnet --list-sdks; .\build.ps1 CI -Verbose
 
