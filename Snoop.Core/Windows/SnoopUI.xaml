@@ -22,6 +22,7 @@ All other rights reserved.
     xmlns:behaviorsTab="clr-namespace:Snoop.Views.BehaviorsTab"
     xmlns:methodsTab="clr-namespace:Snoop.Views.MethodsTab"
     xmlns:debugListenerTab="clr-namespace:Snoop.Views.DebugListenerTab"
+    xmlns:markup="clr-namespace:Snoop.Extensions.Markup"
     mc:Ignorable="d"
 	Title="Snoop"
     MinWidth="480"
@@ -111,15 +112,25 @@ All other rights reserved.
 		</ResourceDictionary>
 	</Window.Resources>
 
-    <DockPanel>
-        <Menu DockPanel.Dock="Top">
-            <MenuItem Header="_Tracking options">
-                <MenuItem Header="Handle _CTRL" IsCheckable="True" IsChecked="{Binding IsHandlingCTRL}" />
-                <MenuItem Header="Handle CTRL + _SHIFT" IsCheckable="True" IsChecked="{Binding IsHandlingCTRL_SHIFT}" />
-            </MenuItem>
-        </Menu>
+    <DockPanel Style="{x:Null}">
+        <StackPanel Style="{x:Null}"
+                    DockPanel.Dock="Top"
+                    Orientation="Horizontal">
+			<ComboBox Style="{x:Null}"
+                      ItemsSource="{Binding Source={markup:EnumBindingSource {x:Type tree:TreeType}}}"
+                      SelectedItem="{Binding CurrentTreeType, Mode=TwoWay}" />
+			<Menu Style="{x:Null}">
+                <MenuItem Style="{x:Null}"
+                          Header="_Tracking options">
+                    <MenuItem Style="{x:Null}"
+                              Header="Handle _CTRL" IsCheckable="True" IsChecked="{Binding IsHandlingCTRL}" />
+                    <MenuItem Style="{x:Null}"
+                              Header="Handle CTRL + _SHIFT" IsCheckable="True" IsChecked="{Binding IsHandlingCTRL_SHIFT}" />
+                </MenuItem>
+			</Menu>
+        </StackPanel>
 
-	<Grid>
+	<Grid Style="{x:Null}">
         <Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="5*"/>
@@ -144,7 +155,7 @@ All other rights reserved.
 				<TextBlock Style="{x:Null}" Text="Clear any filter applied to the tree view"/>
 			</ComboBoxItem>
 			<ComboBoxItem>
-				<TextBlock Style="{x:Null}" Text="Show only visuals with binding errors"/>
+				<TextBlock Style="{x:Null}" Text="Show only elements with binding errors"/>
 			</ComboBoxItem>
 			<ComboBox.ToolTip>
 				<TextBlock Style="{x:Null}" Text="Enter text in the combo box to filter the tree view by name or type"/>
@@ -175,7 +186,7 @@ All other rights reserved.
 			MinHeight="0"
 			MinWidth="0"
 			Margin="2,0,2,0"
-			ItemsSource="{Binding VisualTreeItems}"
+			ItemsSource="{Binding TreeItems}"
 			HorizontalAlignment="Stretch"
 		>
 			<TreeView.Resources>

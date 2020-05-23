@@ -10,8 +10,8 @@ namespace Snoop.Data.Tree
 
     public abstract class ResourceContainerTreeItem : TreeItem
     {
-        protected ResourceContainerTreeItem(object target, TreeItem parent)
-            : base(target, parent)
+        protected ResourceContainerTreeItem(object target, TreeItem parent, TreeService treeService)
+            : base(target, parent, treeService)
         {
         }
 
@@ -40,7 +40,7 @@ namespace Snoop.Data.Tree
 
                 if (foundItem == false)
                 {
-                    this.Children.Add(Construct(resourceDictionary, this));
+                    this.Children.Add(this.TreeService.Construct(resourceDictionary, this));
                 }
             }
         }
