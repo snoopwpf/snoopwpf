@@ -12,7 +12,7 @@ install:
   - cinst dotnetcore-sdk --version 3.1.202
 
 build_script:
-  - ps: dotnet --list-sdks; .\build.ps1 CI -Verbose
+  - ps: .\build.ps1 CI -Verbose
 
 artifacts:
   - path: \artifacts\*.*
