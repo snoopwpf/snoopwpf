@@ -9,11 +9,13 @@ namespace Snoop.Windows
     using System.ComponentModel;
     using System.Globalization;
     using System.Windows;
+    using System.Windows.Controls;
     using System.Windows.Data;
     using System.Windows.Input;
     using System.Windows.Media;
     using Snoop.Controls;
     using Snoop.Infrastructure;
+    using Snoop.Properties;
 
     public sealed partial class Zoomer
     {
@@ -22,6 +24,7 @@ namespace Snoop.Windows
         private readonly TransformGroup transform = new TransformGroup();
         private Point downPoint;
         private object target;
+        private Visual targetVisual;
         private VisualTree3DView visualTree3DView;
 
         private const double ZoomFactor = 1.1;
@@ -79,11 +82,12 @@ namespace Snoop.Windows
 
         public override object Target
         {
-            get { return this.target; }
+            get => this.target;
 
             set
             {
                 this.target = value;
+                this.targetVisual = value as Visual;
                 var element = this.CreateIfPossible(value);
                 this.Viewbox.Child = element;
             }
@@ -104,7 +108,7 @@ namespace Snoop.Windows
             base.OnSourceInitialized(e);
 
             // load the window placement details from the user settings.
-            SnoopWindowUtils.LoadWindowPlacement(this, Properties.Settings.Default.ZoomerWindowPlacement);
+            SnoopWindowUtils.LoadWindowPlacement(this, Settings.Default.ZoomerWindowPlacement);
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -114,7 +118,7 @@ namespace Snoop.Windows
             this.Viewbox.Child = null;
 
             // persist the window placement details to the user settings.
-            SnoopWindowUtils.SaveWindowPlacement(this, wp => Properties.Settings.Default.ZoomerWindowPlacement = wp);
+            SnoopWindowUtils.SaveWindowPlacement(this, wp => Settings.Default.ZoomerWindowPlacement = wp);
         }
 
         /// <inheritdoc />
@@ -159,8 +163,11 @@ namespace Snoop.Windows
 
             if (this.visualTree3DView != null)
             {
-                this.visualTree3DView.Reset();
+                this.visualTree3DView = null;
                 this.ZScaleSlider.Value = 0;
+                this.dpiBox.SelectedIndex = 2;
+
+                this.CreateAndSetVisualTree3DView(this.targetVisual);
             }
         }
 
@@ -208,33 +215,39 @@ namespace Snoop.Windows
             {
                 this.Target = this.target;
                 this.visualTree3DView = null;
-                this.ZScaleSlider.Visibility = Visibility.Collapsed;
+                this.ThreeDViewControls.Visibility = Visibility.Collapsed;
             }
         }
 
         private void HandleSwitchTo3D(object sender, ExecutedRoutedEventArgs args)
         {
             if (this.visualTree3DView == null
-                && this.target is Visual visual)
+                && this.targetVisual != null)
             {
-                try
-                {
-                    Mouse.OverrideCursor = Cursors.Wait;
-                    this.visualTree3DView = new VisualTree3DView(visual);
-                    this.Viewbox.Child = this.visualTree3DView;
-                }
-                finally
-                {
-                    Mouse.OverrideCursor = null;
-                }
+                this.CreateAndSetVisualTree3DView(this.targetVisual);
 
-                this.ZScaleSlider.Visibility = Visibility.Visible;
+                this.ThreeDViewControls.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void CreateAndSetVisualTree3DView(Visual visual)
+        {
+            try
+            {
+                Mouse.OverrideCursor = Cursors.Wait;
+
+                this.visualTree3DView = new VisualTree3DView(visual, int.Parse(((TextBlock)((ComboBoxItem)this.dpiBox.SelectedItem).Content).Text));
+                this.Viewbox.Child = this.visualTree3DView;
+            }
+            finally
+            {
+                Mouse.OverrideCursor = null;
             }
         }
 
         private void CanSwitchTo3D(object sender, CanExecuteRoutedEventArgs args)
         {
-            args.CanExecute = this.target is Visual;
+            args.CanExecute = this.targetVisual != null;
             args.Handled = true;
         }
 
@@ -291,6 +304,22 @@ namespace Snoop.Windows
 
             this.zoom.ScaleX *= newZoom;
             this.zoom.ScaleY *= newZoom;
+        }
+
+        private void DpiBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.visualTree3DView != null
+                && this.targetVisual != null)
+            {
+                this.translation.X = 0;
+                this.translation.Y = 0;
+                this.zoom.ScaleX = 1;
+                this.zoom.ScaleY = 1;
+                this.zoom.CenterX = 0;
+                this.zoom.CenterY = 0;
+
+                this.CreateAndSetVisualTree3DView(this.targetVisual);
+            }
         }
     }
 

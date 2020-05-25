@@ -6,6 +6,8 @@
 namespace Snoop.Infrastructure
 {
     using System;
+    using System.IO;
+    using System.Reflection;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Interop;
@@ -15,6 +17,8 @@ namespace Snoop.Infrastructure
 
     public class VisualCaptureUtil
     {
+        private const double BaseDpi = 96;
+
         public static void SaveVisual(Visual visual, int dpi, string filename)
         {
             // sometimes RenderTargetBitmap doesn't render the Visual or doesn't render the Visual properly
@@ -22,39 +26,24 @@ namespace Snoop.Infrastructure
             // where he wraps the Visual inside of a VisualBrush and then renders it.
             // http://blogs.msdn.com/b/jaimer/archive/2009/07/03/rendertargetbitmap-tips.aspx
 
-            if (visual == null || !IsSafeToVisualize(visual))
+            var visualBrush = CreateVisualBrushSafe(visual);
+
+            if (visualBrush is null)
             {
                 return;
             }
 
-            Rect bounds;
-            var uiElement = visual as UIElement;
-            if (uiElement != null)
-            {
-                bounds = new Rect(new Size((int)uiElement.RenderSize.Width, (int)uiElement.RenderSize.Height));
-            }
-            else
-            {
-                bounds = VisualTreeHelper.GetDescendantBounds(visual);
-            }
+            var renderTargetBitmap = RenderVisualWithHighQuality(visual, dpi);
 
-            var dv = new DrawingVisual();
-            using (var ctx = dv.RenderOpen())
-            {
-                var vb = new VisualBrush(visual);
-                ctx.DrawRectangle(vb, null, new Rect(default, bounds.Size));
-            }
-
-            var rtb = RenderVisualToRenderTargetBitmap(dv, bounds, dpi, PixelFormats.Pbgra32);
-            rtb.Render(dv);
-
-            SaveRTBAsPNG(rtb, filename);
+            SaveAsPng(renderTargetBitmap, filename);
         }
 
         [CanBeNull]
         public static VisualBrush CreateVisualBrushSafe(Visual visual)
         {
-            return IsSafeToVisualize(visual) ? new VisualBrush(visual) : null;
+            return IsSafeToVisualize(visual)
+                ? new VisualBrush(visual)
+                : null;
         }
 
         public static bool IsSafeToVisualize(Visual visual)
@@ -73,33 +62,49 @@ namespace Snoop.Infrastructure
             return true;
         }
 
-        private static void SaveRTBAsPNG(RenderTargetBitmap bitmap, string filename)
+        private static void SaveAsPng(RenderTargetBitmap bitmap, string filename)
         {
             var pngBitmapEncoder = new PngBitmapEncoder();
             pngBitmapEncoder.Frames.Add(BitmapFrame.Create(bitmap));
 
-            using (var fileStream = System.IO.File.Create(filename))
+            using (var fileStream = File.Create(filename))
             {
                 pngBitmapEncoder.Save(fileStream);
             }
         }
 
-        private const double BaseDpi = 96;
-
-        public static RenderTargetBitmap RenderVisualToRenderTargetBitmap(Visual visual, Rect bounds, int dpi, PixelFormat pixelFormat, Viewport3D viewport3D = null)
+        /// <summary>
+        /// Draws <paramref name="visual"/> in smaller tiles using multiple <see cref="VisualBrush"/>.
+        /// </summary>
+        /// <remarks>
+        /// This way we workaround a limitation in <see cref="VisualBrush"/> which causes poor quality for larger visuals.
+        /// </remarks>
+        public static RenderTargetBitmap RenderVisualWithHighQuality(Visual visual, int dpi, PixelFormat? pixelFormat = null, Viewport3D viewport3D = null)
         {
-            return RenderVisualToRenderTargetBitmap(visual, new Size(bounds.Width, bounds.Height), dpi, pixelFormat, viewport3D);
+            var size = GetSize(visual);
+
+            var drawingVisual = new DrawingVisual();
+            using (var drawingContext = drawingVisual.RenderOpen())
+            {
+                DrawVisualInTiles(visual, drawingContext, size);
+            }
+
+            var renderTargetBitmap = RenderVisual(drawingVisual, size, dpi, pixelFormat, viewport3D);
+            return renderTargetBitmap;
         }
 
-        public static RenderTargetBitmap RenderVisualToRenderTargetBitmap(Visual visual, Size bounds, int dpi, PixelFormat pixelFormat, Viewport3D viewport3D = null)
+        public static RenderTargetBitmap RenderVisual(Visual visual, Size bounds, int dpi, PixelFormat? pixelFormat = null, Viewport3D viewport3D = null)
         {
             var scale = dpi / BaseDpi;
 
-            var renderTargetBitmap = new RenderTargetBitmap((int)Math.Ceiling(scale * bounds.Width), (int)Math.Ceiling(scale * bounds.Height), scale * BaseDpi, scale * BaseDpi, pixelFormat);
+            pixelFormat ??= PixelFormats.Pbgra32;
+
+            var renderTargetBitmap = new RenderTargetBitmap((int)Math.Ceiling(scale * bounds.Width), (int)Math.Ceiling(scale * bounds.Height), dpi, dpi, pixelFormat.Value);
+
             if (viewport3D != null)
             {
                 typeof(RenderTargetBitmap)
-                    .GetMethod("RenderForBitmapEffect", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                    .GetMethod("RenderForBitmapEffect", BindingFlags.Instance | BindingFlags.NonPublic)
                     .Invoke(renderTargetBitmap, new object[] { visual, Matrix.Identity, Rect.Empty });
             }
             else
@@ -108,6 +113,77 @@ namespace Snoop.Infrastructure
             }
 
             return renderTargetBitmap;
+        }
+
+        private static Size GetSize(Visual visual)
+        {
+            if (visual is UIElement uiElement)
+            {
+                return uiElement.RenderSize;
+            }
+
+            var descendantBounds = VisualTreeHelper.GetDescendantBounds(visual);
+            return new Size(descendantBounds.Width, descendantBounds.Height);
+        }
+
+        /// <summary>
+        /// Draws <paramref name="visual"/> in smaller tiles using multiple <see cref="VisualBrush"/> to <paramref name="drawingContext"/>.
+        /// This way we workaround a limitation in <see cref="VisualBrush"/> which causes poor quality for larger visuals.
+        /// </summary>
+        /// <param name="visual">The visual to be drawn.</param>
+        /// <param name="drawingContext">The <see cref="DrawingContext"/> to use.</param>
+        /// <param name="visualSize">The size of <paramref name="visual"/>.</param>
+        /// <param name="tileWidth">The width of one tile.</param>
+        /// <param name="tileHeight">The height of one tile.</param>
+        /// <remarks>
+        /// Original version of this method was copied from https://srndolha.wordpress.com/2012/10/16/exported-drawingvisual-quality-when-using-visualbrush/
+        ///
+        /// A tile size of 32x32 turned out deliver the best quality while not increasing computation time too much.
+        /// </remarks>
+        private static void DrawVisualInTiles(Visual visual, DrawingContext drawingContext, Size visualSize, double tileWidth = 32, double tileHeight = 32)
+        {
+            var visualWidth = visualSize.Width;
+            var visualHeight = visualSize.Height;
+
+            var verticalTileCount = visualHeight / tileHeight;
+            var horizontalTileCount = visualWidth / tileWidth;
+
+            for (var i = 0; i <= verticalTileCount; i++)
+            {
+                for (var j = 0; j <= horizontalTileCount; j++)
+                {
+                    var width = tileWidth;
+                    var height = tileHeight;
+
+                    // Check if we would exceed the width of the visual and limit it by the remaining
+                    if ((j + 1) * tileWidth > visualWidth)
+                    {
+                        width = visualWidth - (j * tileWidth);
+                    }
+
+                    // Check if we would exceed the height of the visual and limit it by the remaining
+                    if ((i + 1) * tileHeight > visualHeight)
+                    {
+                        height = visualHeight - (i * tileHeight);
+                    }
+
+                    var x = j * tileWidth;
+                    var y = i * tileHeight;
+
+                    var rectangle = new Rect(x, y, width, height);
+
+                    var contentBrush = new VisualBrush(visual)
+                    {
+                        Stretch = Stretch.None,
+                        AlignmentX = AlignmentX.Left,
+                        AlignmentY = AlignmentY.Top,
+                        Viewbox = rectangle,
+                        ViewboxUnits = BrushMappingMode.Absolute
+                    };
+
+                    drawingContext.DrawRectangle(contentBrush, null, rectangle);
+                }
+            }
         }
     }
 }
