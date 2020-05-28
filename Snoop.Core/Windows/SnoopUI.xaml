@@ -272,15 +272,17 @@ All other rights reserved.
 								<TextBlock Style="{x:Null}" Text="Properties View"/>
 								<TextBlock
 									Style="{x:Null}"
-									Text="Lists all the properties on currently selected object. You can even edit these properties or right-click and then delve into them."
+									Text="Lists all the properties of the currently selected object. You can even edit these properties or right-click and then delve into them."
 									TextWrapping="Wrap"
 								/>
 							</StackPanel>
 						</TextBlock.ToolTip>
 					</TextBlock>
 				</TabItem.Header>
+
 				<controls:PropertyInspector x:Name="PropertyGrid" RootTarget="{Binding CurrentSelection.Target}"/>
 			</TabItem>
+
 			<TabItem Style="{x:Null}">
 				<TabItem.Header>
 					<TextBlock Style="{x:Null}" Text="Data Context">
@@ -289,7 +291,7 @@ All other rights reserved.
 								<TextBlock Style="{x:Null}" Text="Data Context View"/>
 								<TextBlock
 									Style="{x:Null}"
-									Text="Lists all the properties for the Data Context of the currently selected object. You can even edit these properties or right-click and then delve into them."
+									Text="Lists all the properties of the DataContext of the currently selected object. You can even edit these properties or right-click and then delve into them."
 									TextWrapping="Wrap"
 								/>
 							</StackPanel>
