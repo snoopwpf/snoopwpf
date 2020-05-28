@@ -2,19 +2,17 @@
 {
     using System;
     using System.Diagnostics;
+    using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
+    using JetBrains.Annotations;
 
     public class LowLevelMouseHook
     {
-        #pragma warning disable SA1310
-        private const int WH_MOUSE_LL = 14;
-        #pragma warning restore SA1310
-
         private IntPtr hookId = IntPtr.Zero;
 
         // We need to place this on a field/member.
         // Otherwise the delegate will be garbage collected and our hook crashes.
-        private readonly LowLevelMouseProc cachedProc;
+        private readonly NativeMethods.HookProc cachedProc;
 
         public LowLevelMouseHook()
         {
@@ -52,66 +50,36 @@
                 return;
             }
 
-            UnhookWindowsHookEx(this.hookId);
+            NativeMethods.UnhookWindowsHookEx(this.hookId);
             this.hookId = IntPtr.Zero;
         }
 
-        private static IntPtr CreateHook(LowLevelMouseProc proc)
+        private static IntPtr CreateHook(NativeMethods.HookProc proc)
         {
-            using (var curProcess = Process.GetCurrentProcess())
-            {
-                using (var curModule = curProcess.MainModule)
-                {
-                    return SetWindowsHookEx(WH_MOUSE_LL, proc, GetModuleHandle(curModule.ModuleName), 0);
-                }
-            }
+            using var curProcess = Process.GetCurrentProcess();
+            using var curModule = curProcess.MainModule;
+
+            return NativeMethods.SetWindowsHookEx(NativeMethods.HookType.WH_MOUSE_LL, proc, NativeMethods.GetModuleHandle(curModule.ModuleName), 0);
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         private IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
         {
             if (nCode < 0)
             {
                 //you need to call CallNextHookEx without further processing
                 //and return the value returned by CallNextHookEx
-                return CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
-            }
-
-            if ((MouseMessages)wParam == MouseMessages.WM_LBUTTONUP)
-            {
+                return NativeMethods.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
             }
 
             var hookStruct = (MSLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(MSLLHOOKSTRUCT));
 
             this.LowLevelMouseMove?.Invoke(this, new LowLevelMouseMoveEventArgs(hookStruct.Point));
 
-            return CallNextHookEx(this.hookId, nCode, wParam, lParam);
+            return NativeMethods.CallNextHookEx(this.hookId, nCode, wParam, lParam);
         }
 
-        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        private static extern IntPtr SetWindowsHookEx(int idHook, LowLevelMouseProc lpfn, IntPtr hMod, uint dwThreadId);
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool UnhookWindowsHookEx(IntPtr hhk);
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        private static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        private static extern IntPtr GetModuleHandle(string lpModuleName);
-
-        internal delegate IntPtr LowLevelMouseProc(int nCode, IntPtr wParam, IntPtr lParam);
-
-        private enum MouseMessages
-        {
-            WM_LBUTTONDOWN = 0x0201,
-            WM_LBUTTONUP = 0x0202,
-            WM_MOUSEMOVE = 0x0200,
-            WM_MOUSEWHEEL = 0x020A,
-            WM_RBUTTONDOWN = 0x0204,
-            WM_RBUTTONUP = 0x0205
-        }
-
+        [PublicAPI]
         [StructLayout(LayoutKind.Sequential)]
         private struct MSLLHOOKSTRUCT
         {
