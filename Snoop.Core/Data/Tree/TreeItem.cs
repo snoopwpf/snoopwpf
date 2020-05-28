@@ -167,7 +167,7 @@ namespace Snoop.Data.Tree
         /// Expand this element and all elements leading to it.
         /// Used to show this element in the tree view.
         /// </summary>
-        private void ExpandTo()
+        public void ExpandTo()
         {
             this.Parent?.ExpandTo();
 

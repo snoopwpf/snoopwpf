@@ -65,7 +65,12 @@
             {
                 foreach (var child in treeItem.Children)
                 {
-                    child.IsExpanded = true;
+                    if (child is ResourceDictionaryTreeItem)
+                    {
+                        continue;
+                    }
+
+                    child.ExpandTo();
                 }
             }
 
