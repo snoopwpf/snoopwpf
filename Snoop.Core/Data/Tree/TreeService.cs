@@ -5,6 +5,7 @@
     using System.Windows;
     using System.Windows.Automation;
     using System.Windows.Automation.Peers;
+    using System.Windows.Controls.Primitives;
     using System.Windows.Media;
     using System.Windows.Media.Media3D;
 
@@ -48,6 +49,10 @@
 
                 case Window window:
                     treeItem = new WindowTreeItem(window, parent, this);
+                    break;
+
+                case Popup poup:
+                    treeItem = new PopupTreeItem(poup, parent, this);
                     break;
 
                 case DependencyObject dependencyObject:
