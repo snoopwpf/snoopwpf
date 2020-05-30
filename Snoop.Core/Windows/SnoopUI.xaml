@@ -22,6 +22,7 @@ All other rights reserved.
     xmlns:behaviorsTab="clr-namespace:Snoop.Views.BehaviorsTab"
     xmlns:methodsTab="clr-namespace:Snoop.Views.MethodsTab"
     xmlns:debugListenerTab="clr-namespace:Snoop.Views.DebugListenerTab"
+    xmlns:markup="clr-namespace:Snoop.Extensions.Markup"
     mc:Ignorable="d"
 	Title="Snoop"
     MinWidth="480"
@@ -46,13 +47,13 @@ All other rights reserved.
 							<Setter Property="Control.Template">
 								<Setter.Value>
 									<ControlTemplate>
-										<Rectangle
-											Stroke="#FF000000"
-											StrokeThickness="1"
-											Margin="3,3,3,3"
-											SnapsToDevicePixels="True"
-											StrokeDashArray="1 2"
-										/>
+										<Rectangle Style="{x:Null}"
+                                                   Stroke="#FF000000"
+                                                   StrokeThickness="1"
+                                                   Margin="3,3,3,3"
+                                                   SnapsToDevicePixels="True"
+                                                   StrokeDashArray="1 2"
+                                        />
 									</ControlTemplate>
 								</Setter.Value>
 							</Setter>
@@ -75,13 +76,13 @@ All other rights reserved.
 				<Setter Property="Template">
 					<Setter.Value>
 						<ControlTemplate TargetType="{x:Type ButtonBase}">
-							<Grid Width="Auto" Height="Auto">
-								<Border
-									x:Name="border"
-									BorderBrush="#FF696969"
-									BorderThickness="1,1,1,1"
-									CornerRadius="4,4,4,4"
-								/>
+							<Grid Style="{x:Null}" Width="Auto" Height="Auto">
+								<Border  Style="{x:Null}"
+                                         x:Name="border"
+                                         BorderBrush="#FF696969"
+                                         BorderThickness="1,1,1,1"
+                                         CornerRadius="4,4,4,4"
+                                />
 								<ContentPresenter Margin="2,2,2,2"/>
 							</Grid>
 							<ControlTemplate.Triggers>
@@ -111,15 +112,31 @@ All other rights reserved.
 		</ResourceDictionary>
 	</Window.Resources>
 
-    <DockPanel>
-        <Menu DockPanel.Dock="Top">
-            <MenuItem Header="_Tracking options">
-                <MenuItem Header="Handle _CTRL" IsCheckable="True" IsChecked="{Binding IsHandlingCTRL}" />
-                <MenuItem Header="Handle CTRL + _SHIFT" IsCheckable="True" IsChecked="{Binding IsHandlingCTRL_SHIFT}" />
-            </MenuItem>
-        </Menu>
+    <DockPanel Style="{x:Null}">
+        <StackPanel Style="{x:Null}"
+                    DockPanel.Dock="Top"
+                    Orientation="Horizontal">
+			<Label Style="{x:Null}" 
+				   Padding="2"
+                   Target="{Binding ElementName=TreeTypeComboBox}" 
+                   Content="Tree:" />
+            <ComboBox Style="{x:Null}"
+                      x:Name="TreeTypeComboBox"
+                      Padding="4,2"
+                      ItemsSource="{Binding Source={markup:EnumBindingSource {x:Type tree:TreeType}}}"
+                      SelectedItem="{Binding CurrentTreeType, Mode=TwoWay}" />
+			<Menu Style="{x:Null}">
+                <MenuItem Style="{x:Null}"
+                          Header="_Tracking options">
+                    <MenuItem Style="{x:Null}"
+                              Header="Handle _CTRL" IsCheckable="True" IsChecked="{Binding IsHandlingCTRL}" />
+                    <MenuItem Style="{x:Null}"
+                              Header="Handle CTRL + _SHIFT" IsCheckable="True" IsChecked="{Binding IsHandlingCTRL_SHIFT}" />
+                </MenuItem>
+			</Menu>
+        </StackPanel>
 
-	<Grid>
+	<Grid Style="{x:Null}">
         <Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="5*"/>
@@ -140,11 +157,11 @@ All other rights reserved.
 			Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}"
 			Margin="2,2,22,2"
 		>
-			<ComboBoxItem>
+			<ComboBoxItem Style="{x:Null}">
 				<TextBlock Style="{x:Null}" Text="Clear any filter applied to the tree view"/>
 			</ComboBoxItem>
-			<ComboBoxItem>
-				<TextBlock Style="{x:Null}" Text="Show only visuals with binding errors"/>
+			<ComboBoxItem Style="{x:Null}">
+				<TextBlock Style="{x:Null}" Text="Show only elements with binding errors"/>
 			</ComboBoxItem>
 			<ComboBox.ToolTip>
 				<TextBlock Style="{x:Null}" Text="Enter text in the combo box to filter the tree view by name or type"/>
@@ -175,12 +192,13 @@ All other rights reserved.
 			MinHeight="0"
 			MinWidth="0"
 			Margin="2,0,2,0"
-			ItemsSource="{Binding VisualTreeItems}"
+			ItemsSource="{Binding TreeItems}"
 			HorizontalAlignment="Stretch"
 		>
 			<TreeView.Resources>
 				<HierarchicalDataTemplate DataType="{x:Type tree:TreeItem}" ItemsSource="{Binding Children}">
 					<TextBlock
+                        Style="{x:Null}"
 						Text="{Binding}"
 						HorizontalAlignment="Stretch"
 						infrastructure:BringIntoViewBehavior.IsActive="{Binding IsSelected}"
@@ -205,8 +223,8 @@ All other rights reserved.
 							<Setter Property="Template">
 								<Setter.Value>
 									<ControlTemplate TargetType="{x:Type ToolTip}">
-										<Grid Width="200" Height="200">
-											<Rectangle Fill="{TemplateBinding Content}" RadiusX="10" RadiusY="10" Margin="10"/>
+										<Grid Width="200" Height="200" Style="{x:Null}">
+											<Rectangle Style="{x:Null}" Fill="{TemplateBinding Content}" RadiusX="10" RadiusY="10" Margin="10"/>
 
 											<Grid.Effect>
 												<DropShadowEffect/>
@@ -254,15 +272,17 @@ All other rights reserved.
 								<TextBlock Style="{x:Null}" Text="Properties View"/>
 								<TextBlock
 									Style="{x:Null}"
-									Text="Lists all the properties on currently selected object. You can even edit these properties or right-click and then delve into them."
+									Text="Lists all the properties of the currently selected object. You can even edit these properties or right-click and then delve into them."
 									TextWrapping="Wrap"
 								/>
 							</StackPanel>
 						</TextBlock.ToolTip>
 					</TextBlock>
 				</TabItem.Header>
+
 				<controls:PropertyInspector x:Name="PropertyGrid" RootTarget="{Binding CurrentSelection.Target}"/>
 			</TabItem>
+
 			<TabItem Style="{x:Null}">
 				<TabItem.Header>
 					<TextBlock Style="{x:Null}" Text="Data Context">
@@ -271,7 +291,7 @@ All other rights reserved.
 								<TextBlock Style="{x:Null}" Text="Data Context View"/>
 								<TextBlock
 									Style="{x:Null}"
-									Text="Lists all the properties for the Data Context of the currently selected object. You can even edit these properties or right-click and then delve into them."
+									Text="Lists all the properties of the DataContext of the currently selected object. You can even edit these properties or right-click and then delve into them."
 									TextWrapping="Wrap"
 								/>
 							</StackPanel>
@@ -280,11 +300,12 @@ All other rights reserved.
 				</TabItem.Header>
 				<controls:PropertyInspector x:Name="DataContextPropertyGrid" RootTarget="{Binding CurrentSelection.Target.DataContext}"/>
 			</TabItem>
+
 			<TabItem Style="{x:Null}">
 				<TabItem.Header>
 					<TextBlock Style="{x:Null}" Text="Events">
 						<TextBlock.ToolTip>
-							<StackPanel MaxWidth="300">
+							<StackPanel Style="{x:Null}" MaxWidth="300">
 								<TextBlock Style="{x:Null}" Text="Events View"/>
 								<TextBlock
 									Style="{x:Null}"
@@ -295,13 +316,15 @@ All other rights reserved.
 						</TextBlock.ToolTip>
 					</TextBlock>
 				</TabItem.Header>
+
 				<views:EventsView/>
 			</TabItem>
+
 		    <TabItem Style="{x:Null}">
 		        <TabItem.Header>
 		            <TextBlock Style="{x:Null}" Text="Triggers">
 		                <TextBlock.ToolTip>
-		                    <StackPanel MaxWidth="300">
+		                    <StackPanel Style="{x:Null}" MaxWidth="300">
 		                        <TextBlock Style="{x:Null}" Text="Triggers View"/>
 		                        <TextBlock
 		                            Style="{x:Null}"
@@ -312,14 +335,16 @@ All other rights reserved.
 		                </TextBlock.ToolTip>
 		            </TextBlock>
 		        </TabItem.Header>
+
 		        <triggersTab:TriggersView RootTarget="{Binding CurrentSelection.Target}"
 		                                  IsSelected="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}" />
 		    </TabItem>
+
 			<TabItem Style="{x:Null}">
 				<TabItem.Header>
 					<TextBlock Style="{x:Null}" Text="Behaviors">
 						<TextBlock.ToolTip>
-							<StackPanel MaxWidth="300">
+							<StackPanel Style="{x:Null}" MaxWidth="300">
 								<TextBlock Style="{x:Null}" Text="Behaviors View"/>
 								<TextBlock
 									Style="{x:Null}"
@@ -330,6 +355,7 @@ All other rights reserved.
 						</TextBlock.ToolTip>
 					</TextBlock>
 				</TabItem.Header>
+
 				<behaviorsTab:BehaviorsView RootTarget="{Binding CurrentSelection.Target}"
 											IsSelected="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}" />
 			</TabItem>
@@ -338,7 +364,7 @@ All other rights reserved.
 				<TabItem.Header>
 					<TextBlock Style="{x:Null}" Text="Methods">
 						<TextBlock.ToolTip>
-							<StackPanel MaxWidth="300">
+							<StackPanel Style="{x:Null}" MaxWidth="300">
 								<TextBlock Style="{x:Null}" Text="Methods View"/>
 								<TextBlock
 									Style="{x:Null}"
@@ -361,7 +387,7 @@ All other rights reserved.
 				<TabItem.Header>
 					<TextBlock Style="{x:Null}" Text="PowerShell">
 						<TextBlock.ToolTip>
-							<StackPanel MaxWidth="300">
+							<StackPanel Style="{x:Null}" MaxWidth="300">
 								<TextBlock Style="{x:Null}" Text="PowerShell View"/>
 								<TextBlock
 									Style="{x:Null}"
@@ -380,7 +406,7 @@ All other rights reserved.
 				<TabItem.Header>
 					<TextBlock Style="{x:Null}" Text="Debug Listener">
 						<TextBlock.ToolTip>
-							<StackPanel MaxWidth="300">
+							<StackPanel Style="{x:Null}" MaxWidth="300">
 								<TextBlock Style="{x:Null}" Text="Debug Listener"/>
 								<TextBlock
 									Style="{x:Null}"
@@ -418,8 +444,8 @@ All other rights reserved.
 
 		<!-- StatusBar -->
 		<StatusBar Style="{x:Null}" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="0">
-			<StackPanel Orientation="Horizontal">
-				<StackPanel Orientation="Horizontal">
+			<StackPanel Style="{x:Null}" Orientation="Horizontal">
+				<StackPanel Style="{x:Null}" Orientation="Horizontal">
 					<TextBlock Style="{x:Null}" Text="Keyboard.FocusedElement:"/>
 					<TextBlock Style="{x:Null}" Margin="3,0,0,0">
 						<windows:NoFocusHyperlink
@@ -427,19 +453,19 @@ All other rights reserved.
 							Command="{x:Static windows:SnoopUI.SelectFocusCommand}"
 							CommandParameter="{Binding CurrentFocus}"
 						>
-							<TextBlock Text="{Binding CurrentFocus, Converter={x:Static converters:ObjectToStringConverter.Instance}}"/>
+							<TextBlock Style="{x:Null}" Text="{Binding CurrentFocus, Converter={x:Static converters:ObjectToStringConverter.Instance}}"/>
 						</windows:NoFocusHyperlink>
 					</TextBlock>
 					<TextBlock Style="{x:Null}" Text="; "/>
 					<StackPanel.ToolTip>
-						<StackPanel>
+						<StackPanel Style="{x:Null}">
 							<TextBlock Style="{x:Null}" Text="This is the object that has keyboard focus."/>
 							<TextBlock Style="{x:Null}" Text="Click the link to select this object."/>
 						</StackPanel>
 					</StackPanel.ToolTip>
 				</StackPanel>
 
-				<StackPanel Orientation="Horizontal">
+				<StackPanel Style="{x:Null}" Orientation="Horizontal">
 					<TextBlock Style="{x:Null}" Text="Current FocusScope:"/>
 					<TextBlock Style="{x:Null}" Margin="3,0,0,0">
 						<windows:NoFocusHyperlink
@@ -451,7 +477,7 @@ All other rights reserved.
 						</windows:NoFocusHyperlink>
 					</TextBlock>
 					<StackPanel.ToolTip>
-						<StackPanel>
+						<StackPanel Style="{x:Null}">
 							<TextBlock Style="{x:Null}" Text="This is the object that is the root of the current focus scope."/>
 							<TextBlock Style="{x:Null}" Text="Click the link to select this object."/>
 						</StackPanel>

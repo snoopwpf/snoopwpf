@@ -8,7 +8,6 @@ namespace Snoop.Data.Tree
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
@@ -21,14 +20,14 @@ namespace Snoop.Data.Tree
     /// <summary>
     /// Main class that represents a visual in the visual tree
     /// </summary>
-    public class VisualTreeItem : ResourceContainerTreeItem
+    public class DependencyObjectTreeItem : ResourceContainerTreeItem
     {
         private static readonly Attribute[] propertyFilterAttributes = { new PropertyFilterAttribute(PropertyFilterOptions.All) };
 
         private AdornerContainer adornerContainer;
 
-        public VisualTreeItem(DependencyObject target, TreeItem parent)
-            : base(target, parent)
+        public DependencyObjectTreeItem(DependencyObject target, TreeItem parent, TreeService treeService)
+            : base(target, parent, treeService)
         {
             this.DependencyObject = target;
             this.Visual = target as Visual;
@@ -152,35 +151,9 @@ namespace Snoop.Data.Tree
             // this used to be at the bottom. putting it here makes it consistent (and easier to use) with ApplicationTreeItem
             base.Reload(toBeRemoved);
 
-            if (this.Target is Window window)
-            {
-                foreach (Window ownedWindow in window.OwnedWindows)
-                {
-                    if (ownedWindow.IsInitialized == false
-                        || ownedWindow.CheckAccess() == false
-                        || ownedWindow.IsPartOfSnoopVisualTree())
-                    {
-                        continue;
-                    }
-
-                    // don't recreate existing items but reload them instead
-                    var existingItem = toBeRemoved.FirstOrDefault(x => ReferenceEquals(x.Target, ownedWindow));
-                    if (existingItem != null)
-                    {
-                        toBeRemoved.Remove(existingItem);
-                        existingItem.Reload();
-                        continue;
-                    }
-
-                    this.Children.Add(Construct(ownedWindow, this));
-                }
-            }
-
             // remove items that are no longer in tree, add new ones.
-            for (var i = 0; i < VisualTreeHelper.GetChildrenCount(this.DependencyObject); i++)
+            foreach (var child in this.TreeService.GetChildren(this))
             {
-                var child = VisualTreeHelper.GetChild(this.DependencyObject, i);
-
                 // ReSharper disable HeuristicUnreachableCode
                 // ReSharper disable once ConditionIsAlwaysTrueOrFalse
                 if (child is null)
@@ -204,20 +177,22 @@ namespace Snoop.Data.Tree
 
                 if (foundItem == false)
                 {
-                    this.Children.Add(Construct(child, this));
+                    this.Children.Add(this.TreeService.Construct(child, this));
                 }
             }
 
-            if (this.Visual is Grid grid)
+            if (this.Target is Grid grid
+                // The logical tree already contains these elements
+                && this.TreeService.TreeType != TreeType.Logical)
             {
                 foreach (var row in grid.RowDefinitions)
                 {
-                    this.Children.Add(Construct(row, this));
+                    this.Children.Add(this.TreeService.Construct(row, this));
                 }
 
                 foreach (var column in grid.ColumnDefinitions)
                 {
-                    this.Children.Add(Construct(column, this));
+                    this.Children.Add(this.TreeService.Construct(column, this));
                 }
             }
         }

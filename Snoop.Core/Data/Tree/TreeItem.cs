@@ -25,7 +25,7 @@ namespace Snoop.Data.Tree
         private readonly string typeNameLower;
         private int childItemCount;
 
-        protected TreeItem(object target, TreeItem parent)
+        public TreeItem(object target, TreeItem parent, TreeService treeService)
         {
             this.Target = target ?? throw new ArgumentNullException(nameof(target));
             this.TargetType = this.Target.GetType();
@@ -33,6 +33,7 @@ namespace Snoop.Data.Tree
             this.typeNameLower = this.TargetType.Name.ToLower();
 
             this.Parent = parent;
+            this.TreeService = treeService;
 
             if (parent != null)
             {
@@ -51,6 +52,8 @@ namespace Snoop.Data.Tree
         /// The parent of this instance
         /// </summary>
         public TreeItem Parent { get; }
+
+        public TreeService TreeService { get; }
 
         /// <summary>
         /// The depth (in the visual tree) of this instance
@@ -140,34 +143,6 @@ namespace Snoop.Data.Tree
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public static TreeItem Construct(object target, TreeItem parent)
-        {
-            TreeItem treeItem;
-
-            switch (target)
-            {
-                case Visual visual:
-                    treeItem = new VisualTreeItem(visual, parent);
-                    break;
-
-                case ResourceDictionary resourceDictionary:
-                    treeItem = new ResourceDictionaryTreeItem(resourceDictionary, parent);
-                    break;
-
-                case Application application:
-                    treeItem = new ApplicationTreeItem(application, parent);
-                    break;
-
-                default:
-                    treeItem = new TreeItem(target, parent);
-                    break;
-            }
-
-            treeItem.Reload();
-
-            return treeItem;
-        }
-
         public override string ToString()
         {
             var sb = new StringBuilder(4 + 1 + this.Name.Length + 2 + this.TargetType.Name.Length + 1 + this.childItemCount > 0 ? 3 : 0);
@@ -192,7 +167,7 @@ namespace Snoop.Data.Tree
         /// Expand this element and all elements leading to it.
         /// Used to show this element in the tree view.
         /// </summary>
-        private void ExpandTo()
+        public void ExpandTo()
         {
             this.Parent?.ExpandTo();
 
@@ -221,7 +196,7 @@ namespace Snoop.Data.Tree
             // calculate the number of visual children
             foreach (var child in this.Children)
             {
-                if (child is VisualTreeItem)
+                if (child is DependencyObjectTreeItem)
                 {
                     this.childItemCount++;
                 }

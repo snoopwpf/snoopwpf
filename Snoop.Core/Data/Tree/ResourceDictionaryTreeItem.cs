@@ -18,8 +18,8 @@ namespace Snoop.Data.Tree
 
         private readonly ResourceDictionary dictionary;
 
-        public ResourceDictionaryTreeItem(ResourceDictionary dictionary, TreeItem parent)
-            : base(dictionary, parent)
+        public ResourceDictionaryTreeItem(ResourceDictionary dictionary, TreeItem parent, TreeService treeService)
+            : base(dictionary, parent, treeService)
         {
             this.dictionary = dictionary;
 
@@ -52,7 +52,7 @@ namespace Snoop.Data.Tree
             var order = 0;
             foreach (var mergedDictionary in this.dictionary.MergedDictionaries)
             {
-                var resourceDictionaryItem = new ResourceDictionaryTreeItem(mergedDictionary, this)
+                var resourceDictionaryItem = new ResourceDictionaryTreeItem(mergedDictionary, this, this.TreeService)
                 {
                     SortOrder = order
                 };
@@ -99,7 +99,7 @@ namespace Snoop.Data.Tree
 
                 if (foundItem == false)
                 {
-                    this.Children.Add(new ResourceItem(target, key, this));
+                    this.Children.Add(new ResourceItem(target, key, this, this.TreeService));
                 }
             }
         }
@@ -121,8 +121,8 @@ namespace Snoop.Data.Tree
     {
         private readonly object key;
 
-        public ResourceItem(object target, object key, TreeItem parent)
-            : base(target, parent)
+        public ResourceItem(object target, object key, TreeItem parent, TreeService treeService)
+            : base(target, parent, treeService)
         {
             this.key = key;
             this.SortOrder = int.MaxValue;

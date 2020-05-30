@@ -15,8 +15,8 @@ namespace Snoop.Data.Tree
     {
         private readonly Application application;
 
-        public ApplicationTreeItem(Application application, TreeItem parent)
-            : base(application, parent)
+        public ApplicationTreeItem(Application application, TreeItem parent, TreeService treeService)
+            : base(application, parent, treeService)
         {
             this.application = application;
             this.IsExpanded = true;
@@ -55,7 +55,7 @@ namespace Snoop.Data.Tree
                     continue;
                 }
 
-                this.Children.Add(Construct(window, this));
+                this.Children.Add(this.TreeService.Construct(window, this));
             }
         }
     }
