@@ -775,15 +775,15 @@ namespace Snoop.Infrastructure
                 }
             }
 
+            // sort the properties before adding potential collection items
+            properties.Sort();
+
             //delve path. also, issue 4919
             var extendedProps = GetExtendedProperties(obj);
             if (extendedProps != null)
             {
-                properties.AddRange(extendedProps);
+                properties.InsertRange(0, extendedProps);
             }
-
-            // sort the properties before adding potential collection items
-            properties.Sort();
 
             // if the object is a collection, add the items in the collection as properties
             if (obj is ICollection collection)
