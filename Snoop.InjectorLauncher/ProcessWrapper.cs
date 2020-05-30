@@ -15,7 +15,7 @@ namespace Snoop.InjectorLauncher
 
             this.Bitness = GetBitnessAsString(this.Process);
 
-            this.SupportedFrameworkName = GetTargetFramework(process);
+            this.SupportedFrameworkName = GetSupportedTargetFramework(process);
         }
 
         public static string GetBitnessAsString(Process process)
@@ -71,18 +71,25 @@ namespace Snoop.InjectorLauncher
             return null;
         }
 
-        private static string GetTargetFramework(Process process)
+        private static string GetSupportedTargetFramework(Process process)
         {
             var modules = NativeMethods.GetModules(process);
 
             var wpfgfx_cor3Found = false;
-            FileVersionInfo hostFxrVersionInfo = null;
+            FileVersionInfo hostPolicyVersionInfo = null;
 
             foreach (var module in modules)
             {
-                if (module.szModule.Equals("hostfxr.dll", StringComparison.OrdinalIgnoreCase))
+#if DEBUG
+                Trace.WriteLine(module.szExePath);
+                var fileVersionInfo = FileVersionInfo.GetVersionInfo(module.szExePath);
+                Trace.WriteLine($"File: {fileVersionInfo.FileMajorPart}.{fileVersionInfo.FileMinorPart}");
+                Trace.WriteLine($"Prod: {fileVersionInfo.ProductMajorPart}.{fileVersionInfo.ProductMinorPart}");
+#endif
+
+                if (module.szModule.StartsWith("hostpolicy.dll", StringComparison.OrdinalIgnoreCase))
                 {
-                    hostFxrVersionInfo = FileVersionInfo.GetVersionInfo(module.szExePath);
+                    hostPolicyVersionInfo = FileVersionInfo.GetVersionInfo(module.szExePath);
                 }
 
                 if (module.szModule.StartsWith("wpfgfx_cor3.dll", StringComparison.OrdinalIgnoreCase))
@@ -91,7 +98,7 @@ namespace Snoop.InjectorLauncher
                 }
 
                 if (wpfgfx_cor3Found
-                    && !(hostFxrVersionInfo is null))
+                    && hostPolicyVersionInfo != null)
                 {
                     break;
                 }
@@ -99,22 +106,20 @@ namespace Snoop.InjectorLauncher
 
             if (wpfgfx_cor3Found)
             {
-                if (hostFxrVersionInfo == null)
+                switch (hostPolicyVersionInfo?.ProductMajorPart)
                 {
-                    return "netcoreapp3.0";
-                }
+                    case 5:
+                        // we currently map from net 5 to netcoreapp 3.1
+                        return "netcoreapp3.1"; //return "net5.0";
 
-                switch (hostFxrVersionInfo.FileMajorPart)
-                {
+                    case 3 when hostPolicyVersionInfo.ProductMinorPart >= 1:
+                        return "netcoreapp3.1";
+
                     case 3:
-                        if (hostFxrVersionInfo.FileMinorPart >= 100)
-                        {
-                            return "netcoreapp3.1";
-                        }
-                        else
-                        {
-                            return "netcoreapp3.0";
-                        }
+                        return "netcoreapp3.0";
+
+                    default:
+                        return "netcoreapp3.0";
                 }
             }
 
