@@ -431,18 +431,23 @@ namespace Snoop.Windows
             Mouse.OverrideCursor = Cursors.Wait;
             try
             {
-                var currentTarget = this.CurrentSelection?.Target;
+                var previousSelection = this.CurrentSelection;
+                var previousTarget = previousSelection?.Target;
 
                 this.TreeItems.Clear();
 
                 this.Root = this.TreeService.Construct(this.root, null);
 
-                if (currentTarget != null)
+                if (previousTarget != null)
                 {
-                    var treeItem = this.FindItem(currentTarget);
+                    var treeItem = this.FindItem(previousTarget);
                     if (treeItem != null)
                     {
                         this.CurrentSelection = treeItem;
+                        if (previousSelection.IsExpanded)
+                        {
+                            this.CurrentSelection.ExpandTo();
+                        }
                     }
                 }
 
@@ -608,18 +613,40 @@ namespace Snoop.Windows
         /// </summary>
         private TreeItem FindItem(object target)
         {
-            if (this.rootTreeItem == null)
+            if (this.Root == null)
             {
                 return null;
             }
 
-            var node = this.rootTreeItem.FindNode(target);
-            var rootVisual = this.rootTreeItem.MainVisual;
-
-            if (node != null)
             {
-                return node;
+                var node = this.Root.FindNode(target);
+
+                if (node != null)
+                {
+                    return node;
+                }
             }
+
+            // Not every visual element is in the logical tree, so try the visual tree
+            if (this.TreeService.TreeType == TreeType.Logical
+                && target is DependencyObject dependencyObject)
+            {
+                var parent = VisualTreeHelper.GetParent(dependencyObject);
+
+                while (parent != null)
+                {
+                    var node = this.Root.FindNode(parent);
+
+                    if (node != null)
+                    {
+                        return node;
+                    }
+
+                    parent = VisualTreeHelper.GetParent(parent);
+                }
+            }
+
+            var rootVisual = this.Root.MainVisual;
 
             if (target is Visual visual
                 && rootVisual != null)
@@ -639,17 +666,19 @@ namespace Snoop.Windows
                         return null; // Something went wrong. At least we will not crash with null ref here.
                     }
 
-                    this.Root = new DependencyObjectTreeItem(presentationSource.RootVisual, null, this.TreeService);
+                    this.Root = this.TreeService.Construct(presentationSource.RootVisual, null);
                 }
             }
 
-            this.rootTreeItem.Reload();
+            this.Root.Reload();
 
-            node = this.rootTreeItem.FindNode(target);
+            {
+                var node = this.Root.FindNode(target);
 
-            this.SetFilter(this.filter);
+                this.SetFilter(this.filter);
 
-            return node;
+                return node;
+            }
         }
 
         private void HandleTreeSelectedItemChanged(object sender, EventArgs e)
