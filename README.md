@@ -43,6 +43,7 @@ Highlights:
 - Usability improvements for process dropdown (thanks @mikel785)
 - Support for displaying the logical tree and the tree of wpf automation peers
 - Ability to inspect `Popup` without opening it
+- `Snoop.exe` and the inject laucnher now support commandline args
 
 Known issues:
 

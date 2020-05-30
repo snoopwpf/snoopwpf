@@ -30,6 +30,7 @@
   - [#82](../../issues/82) - Missing possibility of copying value of the specific node
   - [#98](../../issues/98) - .NETCore 3.0 support
   - [#108](../../issues/108) - SnoopWPF on "Disabled" control state?
+  - [#129](../../issues/129) - Command line args
   - [#139](../../issues/139) - Value Input did not support NewLine (\r\n)  
     This is achieved by a new detail value editor.
   - [#140](../../issues/140) - CTRL_SHIFT stops working
