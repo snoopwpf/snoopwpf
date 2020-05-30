@@ -181,7 +181,9 @@ namespace Snoop.Data.Tree
                 }
             }
 
-            if (this.Visual is Grid grid)
+            if (this.Target is Grid grid
+                // The logical tree already contains these elements
+                && this.TreeService.TreeType != TreeType.Logical)
             {
                 foreach (var row in grid.RowDefinitions)
                 {
