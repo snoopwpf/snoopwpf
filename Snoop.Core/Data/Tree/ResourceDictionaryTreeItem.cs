@@ -5,7 +5,6 @@
 
 namespace Snoop.Data.Tree
 {
-    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Windows;
     using System.Windows.Data;
@@ -45,10 +44,8 @@ namespace Snoop.Data.Tree
             return source;
         }
 
-        protected override void Reload(List<TreeItem> toBeRemoved)
+        protected override void ReloadCore()
         {
-            base.Reload(toBeRemoved);
-
             var order = 0;
             foreach (var mergedDictionary in this.dictionary.MergedDictionaries)
             {
@@ -85,22 +82,7 @@ namespace Snoop.Data.Tree
                     continue;
                 }
 
-                var foundItem = false;
-                foreach (var item in toBeRemoved)
-                {
-                    if (item.Target == target)
-                    {
-                        toBeRemoved.Remove(item);
-                        item.Reload();
-                        foundItem = true;
-                        break;
-                    }
-                }
-
-                if (foundItem == false)
-                {
-                    this.Children.Add(new ResourceItem(target, key, this, this.TreeService));
-                }
+                this.Children.Add(new ResourceItem(target, key, this, this.TreeService));
             }
         }
 

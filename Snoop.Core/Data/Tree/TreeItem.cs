@@ -6,7 +6,6 @@
 namespace Snoop.Data.Tree
 {
     using System;
-    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Text;
@@ -181,19 +180,14 @@ namespace Snoop.Data.Tree
         {
             this.Name = this.GetName();
 
-            var toBeRemoved = new List<TreeItem>(this.Children);
+            this.Children.Clear();
 
-            this.Reload(toBeRemoved);
-
-            foreach (var item in toBeRemoved)
-            {
-                this.RemoveChild(item);
-            }
+            this.ReloadCore();
 
             // Reset children count prior to re-calculation
             this.childItemCount = 0;
 
-            // calculate the number of visual children
+            // calculate the number of dependency object children
             foreach (var child in this.Children)
             {
                 if (child is DependencyObjectTreeItem)
@@ -222,7 +216,7 @@ namespace Snoop.Data.Tree
             return result;
         }
 
-        protected virtual void Reload(List<TreeItem> toBeRemoved)
+        protected virtual void ReloadCore()
         {
         }
 

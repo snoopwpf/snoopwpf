@@ -5,8 +5,6 @@
 
 namespace Snoop.Data.Tree
 {
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Windows;
     using System.Windows.Media;
     using Snoop.Infrastructure;
@@ -26,10 +24,10 @@ namespace Snoop.Data.Tree
 
         protected override ResourceDictionary ResourceDictionary => this.application.Resources;
 
-        protected override void Reload(List<TreeItem> toBeRemoved)
+        protected override void ReloadCore()
         {
-            // having the call to base.Reload here ... puts the application resources at the very top of the tree view
-            base.Reload(toBeRemoved);
+            // having the call to base.ReloadCore here ... puts the application resources at the very top of the tree view
+            base.ReloadCore();
 
             foreach (Window window in this.application.Windows)
             {
@@ -43,15 +41,6 @@ namespace Snoop.Data.Tree
                 // windows which have an owner are added as child items in VisualItem, so we have to skip them here
                 if (window.Owner != null)
                 {
-                    continue;
-                }
-
-                // don't recreate existing items but reload them instead
-                var existingItem = toBeRemoved.FirstOrDefault(x => ReferenceEquals(x.Target, window));
-                if (existingItem != null)
-                {
-                    toBeRemoved.Remove(existingItem);
-                    existingItem.Reload();
                     continue;
                 }
 

@@ -1,7 +1,5 @@
 ﻿namespace Snoop.Data.Tree
 {
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Windows;
     using Snoop.Infrastructure;
 
@@ -15,9 +13,9 @@
             this.targetWindow = target;
         }
 
-        protected override void Reload(List<TreeItem> toBeRemoved)
+        protected override void ReloadCore()
         {
-            base.Reload(toBeRemoved);
+            base.ReloadCore();
 
             foreach (Window ownedWindow in this.targetWindow.OwnedWindows)
             {
@@ -25,15 +23,6 @@
                     || ownedWindow.CheckAccess() == false
                     || ownedWindow.IsPartOfSnoopVisualTree())
                 {
-                    continue;
-                }
-
-                // don't recreate existing items but reload them instead
-                var existingItem = toBeRemoved.FirstOrDefault(x => ReferenceEquals(x.Target, ownedWindow));
-                if (existingItem != null)
-                {
-                    toBeRemoved.Remove(existingItem);
-                    existingItem.Reload();
                     continue;
                 }
 

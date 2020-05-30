@@ -6,7 +6,6 @@
 namespace Snoop.Data.Tree
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Windows;
     using System.Windows.Controls;
@@ -145,40 +144,21 @@ namespace Snoop.Data.Tree
             }
         }
         
-        protected override void Reload(List<TreeItem> toBeRemoved)
+        protected override void ReloadCore()
         {
-            // having the call to base.Reload here ... puts the application resources at the very top of the tree view.
+            // having the call to base.ReloadCore here ... puts the application resources at the very top of the tree view.
             // this used to be at the bottom. putting it here makes it consistent (and easier to use) with ApplicationTreeItem
-            base.Reload(toBeRemoved);
+            base.ReloadCore();
 
             // remove items that are no longer in tree, add new ones.
             foreach (var child in this.TreeService.GetChildren(this))
             {
-                // ReSharper disable HeuristicUnreachableCode
-                // ReSharper disable once ConditionIsAlwaysTrueOrFalse
                 if (child is null)
                 {
                     continue;
                 }
 
-                // ReSharper restore HeuristicUnreachableCode
-
-                var foundItem = false;
-                foreach (var item in toBeRemoved)
-                {
-                    if (ReferenceEquals(item.Target, child))
-                    {
-                        toBeRemoved.Remove(item);
-                        item.Reload();
-                        foundItem = true;
-                        break;
-                    }
-                }
-
-                if (foundItem == false)
-                {
-                    this.Children.Add(this.TreeService.Construct(child, this));
-                }
+                this.Children.Add(this.TreeService.Construct(child, this));
             }
 
             if (this.Target is Grid grid
