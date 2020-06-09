@@ -842,8 +842,17 @@ namespace Snoop.Infrastructure
             {
                 try
                 {
-                    // try to get the properties using the GetProperties method that takes an instance
-                    var properties = TypeDescriptor.GetProperties(obj, attributes);
+                    PropertyDescriptorCollection properties;
+                    if (obj is ICustomTypeDescriptor customTypeDescriptor)
+                    {
+                        properties = customTypeDescriptor.GetProperties();
+                    }
+                    else
+                    {
+                        // try to get the properties using the GetProperties method that takes an instance
+                        properties = TypeDescriptor.GetProperties(obj, attributes);
+                    }
+                    
                     noException = true;
 
                     MergeProperties(properties, propertiesToReturn);
