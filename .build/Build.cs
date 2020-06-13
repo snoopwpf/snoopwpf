@@ -108,7 +108,7 @@ class Build : NukeBuild
 
             DotNetBuild(s => s
                 .SetProjectFile(Solution)
-                .SetConfiguration("CI")
+                .SetConfiguration("CI_" + Configuration)
                 .SetAssemblyVersion(GitVersion.AssemblySemVer)
                 .SetFileVersion(GitVersion.AssemblySemVer)
                 .SetInformationalVersion(GitVersion.InformationalVersion)
