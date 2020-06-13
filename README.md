@@ -30,7 +30,7 @@ Please note that this version is not yet finished.
 
 Highlights:
 
-- Support for .NET Core 3.0 and 3.1 (including self contained and single file applications)
+- Support for .NET Core (3.0, 3.1 and 5.0) (including self contained and single file applications)
 - Rewritten injector code
 - You no longer have to have installed any Microsoft Visual C++ Redistributable(s)
 - Snooping disabled controls when holding CTRL + SHIFT works now
@@ -83,14 +83,14 @@ Here are the links to the current Snoop Tips & Tricks:
 - http://www.cplotts.com/2011/02/14/snoop-tips-tricks-2-snooping-transient-visuals
 - http://www.cplotts.com/2012/05/31/snoop-tips-tricks-3-the-crosshairs
 
-## Why can't I snoop WPF 3.5 applications?
+## Why can't I snoop .NET 3.5 applications?
 
 Well, you can! You will just need to use Snoop 2.9.0 and earlier, in order to do so.
-As part of the process of moving to Visual Studio 2017, we have dropped support for WPF 3.5 applications.
+As part of the process of moving to Visual Studio 2019, we have dropped support for .NET 3.5 applications.
 
 ## How do i build Snoop?
 
-Just open `Snoop.sln` with Visual Studio 2019 (16.3 or later) and build it.
+Just open `Snoop.sln` with Visual Studio 2019 (16.6 or later) and build it.
 Please note that you need the Visual Studio 2019 C++ payload and in case you are using a later version you also need the VC++ 142 payload.
 
 ## Contributors

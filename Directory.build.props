@@ -1,6 +1,7 @@
 ﻿<Project>
   <PropertyGroup>
     <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -10,6 +11,7 @@
   <PropertyGroup>
     <LangVersion>preview</LangVersion>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <NoWarn>$(NoWarn);NU1503</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -23,19 +25,19 @@
 
   <!-- Build references -->
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.*" PrivateAssets="All" IncludeAssets="build; native" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" IncludeAssets="build; native" />
   </ItemGroup>
 
   <!-- Analyzer references -->
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2020.*" privateAssets="all" includeAssets="build;compile" />
+    <PackageReference Include="JetBrains.Annotations" privateAssets="all" includeAssets="build;compile" />
     
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" version="3.*" privateAssets="all" includeAssets="build;analyzers" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" privateAssets="all" includeAssets="build;analyzers" />
 
-    <PackageReference Include="PropertyChangedAnalyzers" version="3.*" privateAssets="all" includeAssets="build;analyzers" />
+    <PackageReference Include="PropertyChangedAnalyzers" privateAssets="all" includeAssets="build;analyzers" />
     <!--<PackageReference Include="ReflectionAnalyzers" version="0.1-dev" privateAssets="all" includeAssets="build;analyzers" />-->
 
-    <PackageReference Include="StyleCop.Analyzers" version="1.*" privateAssets="all" includeAssets="build;analyzers" />
-    <PackageReference Include="WpfAnalyzers" version="3.*" privateAssets="all" includeAssets="build;analyzers" />
+    <PackageReference Include="StyleCop.Analyzers" privateAssets="all" includeAssets="build;analyzers" />
+    <PackageReference Include="WpfAnalyzers" privateAssets="all" includeAssets="build;analyzers" />
   </ItemGroup>
 </Project>

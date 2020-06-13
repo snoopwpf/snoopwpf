@@ -23,14 +23,14 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
-    <PackageReference Include="microsoft.powershell.3.referenceassemblies" Version="1.0.0" PrivateAssets="All" />
+    <PackageReference Include="microsoft.powershell.3.referenceassemblies" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
-    <PackageReference Include="System.Management.Automation" Version="6.2.3" PrivateAssets="All" />
+    <PackageReference Include="System.Management.Automation" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
-    <PackageReference Include="System.Management.Automation" Version="7.0.0" PrivateAssets="All" />
+    <PackageReference Include="System.Management.Automation" PrivateAssets="All" />
   </ItemGroup>
 </Project>
