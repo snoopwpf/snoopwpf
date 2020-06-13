@@ -62,3 +62,6 @@ dotnet_diagnostic.INPC010.severity = none
 
 # INPC017: Backing field name must match.
 dotnet_diagnostic.INPC017.severity = none
+
+# Default severity for analyzer diagnostics with category 'StyleCop.CSharp.DocumentationRules'
+dotnet_analyzer_diagnostic.category-StyleCop.CSharp.DocumentationRules.severity = none
