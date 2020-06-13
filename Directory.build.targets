@@ -28,5 +28,23 @@
     <DebugType>full</DebugType>
   </PropertyGroup>
 
+  <!-- Build references -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" IncludeAssets="build; native" />
+  </ItemGroup>
+
+  <!-- Analyzer references -->
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" privateAssets="all" includeAssets="build;compile" />
+    
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" privateAssets="all" includeAssets="build;analyzers" />
+
+    <!-- <PackageReference Include="PropertyChangedAnalyzers" privateAssets="all" includeAssets="build;analyzers" /> -->
+    <!--<PackageReference Include="ReflectionAnalyzers" version="0.1-dev" privateAssets="all" includeAssets="build;analyzers" />-->
+
+    <PackageReference Include="StyleCop.Analyzers" privateAssets="all" includeAssets="build;analyzers" />
+    <PackageReference Include="WpfAnalyzers" privateAssets="all" includeAssets="build;analyzers" />
+  </ItemGroup>
+
   <Target Name="ForceRestore" BeforeTargets="ResolvePackageAssets" DependsOnTargets="Restore" />
 </Project>

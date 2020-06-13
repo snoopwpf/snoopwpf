@@ -23,6 +23,9 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy &quot;$(TargetPath)&quot; &quot;$(OutDir)\Snoop.com&quot; /Y&#xD;&#xA;copy &quot;$(TargetPath).config&quot; &quot;$(OutDir)\Snoop.com.config&quot; /Y" />
+    <Copy SourceFiles="$(TargetPath)"
+          DestinationFiles="$(OutDir)\Snoop.com" />
+    <Copy SourceFiles="$(TargetPath).config"
+          DestinationFiles="$(OutDir)\Snoop.com.config" />
   </Target>
 </Project>

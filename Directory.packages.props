@@ -21,10 +21,8 @@
         <PackageVersion Include="JetBrains.Annotations" Version="2020.*" />
         
         <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" version="3.*" />
-
-        <PackageVersion Include="PropertyChangedAnalyzers" version="3.*" />
-
         <PackageVersion Include="StyleCop.Analyzers" version="1.*" />
+
         <PackageVersion Include="WpfAnalyzers" version="3.*" />
     </ItemGroup>
 </Project>
