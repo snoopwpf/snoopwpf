@@ -103,6 +103,8 @@ class Build : NukeBuild
                 .SetProjectFile(RootDirectory / "Snoop.GenericInjector/Snoop.GenericInjector.vcxproj")
                 .SetConfiguration(Configuration)
                 .SetTargetPlatform(MSBuildTargetPlatform.Win32)
+                .SetAssemblyVersion(GitVersion.AssemblySemVer)
+                .SetInformationalVersion(GitVersion.InformationalVersion)
                 .DisableRestore()
                 .SetVerbosity(MSBuildVerbosity.Minimal));
 
