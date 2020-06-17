@@ -10,6 +10,8 @@ namespace Snoop
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
@@ -29,6 +31,7 @@ namespace Snoop
         public static readonly RoutedCommand MinimizeCommand = new RoutedCommand(nameof(MinimizeCommand), typeof(AppChooser));
 
         private readonly ObservableCollection<WindowInfo> windowInfos = new ObservableCollection<WindowInfo>();
+        private LowLevelKeyboardHook keyboardHook;
 
         static AppChooser()
         {
@@ -73,7 +76,7 @@ namespace Snoop
                             var windowInfoCollection = windows.Select(h => new WindowInfo(h, process));
                             foreach (var windowInfo in windowInfoCollection)
                             {
-                                if (windowInfo.IsValidProcess && !this.IsAlreadInList(process))
+                                if (windowInfo.IsValidProcess && !this.IsAlreadyInList(process))
                                 {
                                     this.windowInfos.Add(windowInfo);
                                 }
@@ -96,8 +99,40 @@ namespace Snoop
         {
             base.OnSourceInitialized(e);
 
+            this.keyboardHook = new LowLevelKeyboardHook();
+            this.keyboardHook.LowLevelKeyUp += KeyboardHook_LowLevelKeyUp;
+            this.keyboardHook.Start();
+
             // load the window placement details from the user settings.
             SnoopWindowUtils.LoadWindowPlacement(this, Settings.Default.AppChooserWindowPlacement);
+        }
+
+        private static void KeyboardHook_LowLevelKeyUp(object sender, LowLevelKeyboardHook.LowLevelKeyPressEventArgs e)
+        {
+            if (e.ModifierKeys.HasFlag(ModifierKeys.Control)
+                && e.ModifierKeys.HasFlag(ModifierKeys.Windows)
+                && e.ModifierKeys.HasFlag(ModifierKeys.Alt)
+                && e.Key == Key.F12)
+            {
+                var thread = new Thread(AttachToForegroundWindow);
+                thread.SetApartmentState(ApartmentState.STA);
+                thread.Start();
+            }
+        }
+
+        private static void AttachToForegroundWindow()
+        {
+            var foregroundWindow = NativeMethods.GetForegroundWindow();
+
+            if (foregroundWindow != IntPtr.Zero)
+            {
+                var windowInfo = new WindowInfo(foregroundWindow);
+
+                if (windowInfo.IsValidProcess)
+                {
+                    WindowFinder.AttachSnoop(windowInfo);
+                }
+            }
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -110,7 +145,14 @@ namespace Snoop
             Settings.Default.Save();
         }
 
-        private bool IsAlreadInList(Process process)
+        protected override void OnClosed(EventArgs e)
+        {
+            this.keyboardHook.Stop();
+
+            base.OnClosed(e);
+        }
+
+        private bool IsAlreadyInList(Process process)
         {
             foreach (var window in this.windowInfos)
             {

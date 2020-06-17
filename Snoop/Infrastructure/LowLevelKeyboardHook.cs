@@ -5,7 +5,6 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Windows.Input;
-    using JetBrains.Annotations;
 
     public class LowLevelKeyboardHook
     {
@@ -36,6 +35,19 @@
             public ModifierKeys ModifierKeys { get; }
 
             public Key Key { get; }
+
+            public static LowLevelKeyPressEventArgs CreateNew(Key key)
+            {
+                var modifierKeys = Keyboard.Modifiers;
+
+                if (Keyboard.IsKeyDown(Key.LWin)
+                    || Keyboard.IsKeyDown(Key.RWin))
+                {
+                    modifierKeys |= ModifierKeys.Windows;
+                }
+
+                return new LowLevelKeyPressEventArgs(modifierKeys, key);
+            }
         }
 
         public event EventHandler<LowLevelKeyPressEventArgs> LowLevelKeyDown;
@@ -76,9 +88,10 @@
         [MethodImpl(MethodImplOptions.NoInlining)]
         private IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
         {
+            const int HC_ACTION = 0;
             //you need to call CallNextHookEx without further processing
             //and return the value returned by CallNextHookEx
-            if (nCode > 0)
+            if (nCode == HC_ACTION)
             {
                 var hookStruct = (KBDLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(KBDLLHOOKSTRUCT));
 
@@ -98,7 +111,7 @@
         private static LowLevelKeyPressEventArgs CreateEventArgs(KBDLLHOOKSTRUCT hookStruct)
         {
             var key = KeyInterop.KeyFromVirtualKey(hookStruct.VKCode);
-            return new LowLevelKeyPressEventArgs(Keyboard.Modifiers, key);
+            return LowLevelKeyPressEventArgs.CreateNew(key);
         }
 
         [StructLayout(LayoutKind.Sequential)]

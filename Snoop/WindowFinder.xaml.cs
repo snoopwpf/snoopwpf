@@ -172,7 +172,7 @@ namespace Snoop
             this.lastWindowInfoCursor = null;
         }
 
-        private static void AttachSnoop(WindowInfo windowInfo)
+        public static void AttachSnoop(WindowInfo windowInfo)
         {
             var result = windowInfo.OwningProcessInfo.Snoop(windowInfo.HWnd);
 
