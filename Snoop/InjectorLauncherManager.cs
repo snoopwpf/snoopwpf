@@ -71,8 +71,9 @@ Snoop requires this component, which is part of the Snoop project, to do it's jo
                 var commandLine = Parser.Default.FormatCommandLine(injectorLauncherCommandLineOptions);
                 var startInfo = new ProcessStartInfo(injectorLauncherExe, commandLine)
                 {
-                    UseShellExecute = false,
+                    UseShellExecute = true,
                     CreateNoWindow = true,
+                    WindowStyle = ProcessWindowStyle.Hidden,
                     Verb = processInfo.IsProcessElevated
                                                ? "runas"
                                                : null
