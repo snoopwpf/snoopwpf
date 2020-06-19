@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:windows="clr-namespace:Snoop.Windows"
+        xmlns:details="clr-namespace:Snoop.Controls.ValueEditors.Details"
         mc:Ignorable="d"
         Title="Value editor"
         Width="480"
@@ -14,8 +15,8 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <ContentPresenter Style="{x:Null}" Content="{Binding ValueEditor, RelativeSource={RelativeSource AncestorType=local:ValueEditorDetailsWindow}}"
-                          ContentTemplate="{Binding ValueEditor.DetailsEditorTemplate, RelativeSource={RelativeSource AncestorType=local:ValueEditorDetailsWindow}}" />
+        <ContentPresenter Style="{x:Null}" Content="{Binding ValueEditor, RelativeSource={RelativeSource AncestorType=details:ValueEditorDetailsWindow}}"
+                          ContentTemplate="{Binding ValueEditor.DetailsEditorTemplate, RelativeSource={RelativeSource AncestorType=details:ValueEditorDetailsWindow}}" />
 
         <StackPanel Grid.Row="1"
                    Style="{x:Null}"
