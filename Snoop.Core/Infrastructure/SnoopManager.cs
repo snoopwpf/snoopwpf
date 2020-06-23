@@ -1,4 +1,4 @@
-namespace Snoop.Infrastructure
+﻿namespace Snoop.Infrastructure
 {
     using System;
     using System.Collections.Generic;
@@ -357,6 +357,24 @@ namespace Snoop.Infrastructure
                     thread.Start(new DispatchOutParameters(settingsData, instanceCreator, rootVisuals));
 
                     // todo: check if we really created something
+                    return true;
+                }
+                else // User didn't want to enter multiple dispatcher mode.
+                {
+                    var rootVisual = Application.Current?.MainWindow?.CheckAccess() == true
+                                    ? Application.Current.MainWindow
+                                    : rootVisuals[0];
+
+                    rootVisual.Dispatcher.Invoke((Action)(() =>
+                    {
+                        var snoopInstance = instanceCreator(settingsData, rootVisual.Dispatcher);
+
+                        if (snoopInstance.Target is null)
+                        {
+                            snoopInstance.Target = rootVisual;
+                        }
+                    }));
+
                     return true;
                 }
             }
