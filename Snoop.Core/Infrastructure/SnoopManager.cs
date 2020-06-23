@@ -1,4 +1,4 @@
-﻿namespace Snoop.Infrastructure
+namespace Snoop.Infrastructure
 {
     using System;
     using System.Collections.Generic;
@@ -267,8 +267,7 @@
                 return targetWindow.Title;
             }
 
-            if (Application.Current != null
-                && Application.Current.MainWindow != null)
+            if (Application.Current?.MainWindow?.CheckAccess() == true)
             {
                 return Application.Current.MainWindow.Title;
             }
