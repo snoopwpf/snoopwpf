@@ -6,6 +6,7 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Threading;
+    using Snoop.Core.Properties;
     using Snoop.Infrastructure;
     using Snoop.Infrastructure.Extensions;
 
@@ -17,7 +18,7 @@
 
         public DebugListenerControl()
         {
-            this.filtersViewModel = new FiltersViewModel(Properties.Settings.Default.SnoopDebugFilters);
+            this.filtersViewModel = new FiltersViewModel(Settings.Default.SnoopDebugFilters);
             this.DataContext = this.filtersViewModel;
 
             this.InitializeComponent();
@@ -71,7 +72,7 @@
             if (result == MessageBoxResult.Yes)
             {
                 this.filtersViewModel.ClearFilters();
-                Properties.Settings.Default.SnoopDebugFilters = null;
+                Settings.Default.SnoopDebugFilters = null;
                 this.textBoxDebugContent.Text = this.allText.ToString();
             }
         }

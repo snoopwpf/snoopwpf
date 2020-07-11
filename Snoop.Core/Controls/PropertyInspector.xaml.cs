@@ -14,6 +14,7 @@ namespace Snoop.Controls
     using System.Windows;
     using System.Windows.Input;
     using JetBrains.Annotations;
+    using Snoop.Core.Properties;
     using Snoop.Infrastructure;
     using Snoop.Infrastructure.Extensions;
     using Snoop.Infrastructure.Helpers;
@@ -54,10 +55,10 @@ namespace Snoop.Controls
             this.MouseDown += this.MouseDownHandler;
             this.KeyDown += this.PropertyInspector_KeyDown;
 
-            this.checkBoxClearAfterDelve.Checked += (s, e) => Properties.Settings.Default.ClearAfterDelve = this.checkBoxClearAfterDelve.IsChecked.HasValue && this.checkBoxClearAfterDelve.IsChecked.Value;
-            this.checkBoxClearAfterDelve.Unchecked += (s, e) => Properties.Settings.Default.ClearAfterDelve = this.checkBoxClearAfterDelve.IsChecked.HasValue && this.checkBoxClearAfterDelve.IsChecked.Value;
+            this.checkBoxClearAfterDelve.Checked += (s, e) => Settings.Default.ClearAfterDelve = this.checkBoxClearAfterDelve.IsChecked.HasValue && this.checkBoxClearAfterDelve.IsChecked.Value;
+            this.checkBoxClearAfterDelve.Unchecked += (s, e) => Settings.Default.ClearAfterDelve = this.checkBoxClearAfterDelve.IsChecked.HasValue && this.checkBoxClearAfterDelve.IsChecked.Value;
 
-            this.checkBoxClearAfterDelve.IsChecked = Properties.Settings.Default.ClearAfterDelve;
+            this.checkBoxClearAfterDelve.IsChecked = Settings.Default.ClearAfterDelve;
         }
 
         public bool NameValueOnly
@@ -536,8 +537,8 @@ namespace Snoop.Controls
                         // take the adjusted values from the dialog
                         this.UserFilterSets = CleanFiltersForUserFilters(dlg.ItemsSource);
 
-                        Properties.Settings.Default.UserDefinedPropertyFilterSets = this.userFilterSets;
-                        Properties.Settings.Default.Save();
+                        Settings.Default.UserDefinedPropertyFilterSets = this.userFilterSets;
+                        Settings.Default.Save();
 
                         #pragma warning disable INPC015
                         this.SelectedFilterSet = null;
@@ -571,7 +572,7 @@ namespace Snoop.Controls
 
                     try
                     {
-                        var userFilters = Properties.Settings.Default.UserDefinedPropertyFilterSets;
+                        var userFilters = Settings.Default.UserDefinedPropertyFilterSets;
 
                         if (userFilters != null)
                         {

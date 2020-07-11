@@ -99,7 +99,7 @@ namespace Snoop
         {
             base.OnSourceInitialized(e);
 
-            this.keyboardHook = new LowLevelKeyboardHook();
+            this.keyboardHook = new LowLevelKeyboardHook(PresentationSource.FromVisual(this));
             this.keyboardHook.LowLevelKeyUp += KeyboardHook_LowLevelKeyUp;
             this.keyboardHook.Start();
 
@@ -107,12 +107,9 @@ namespace Snoop
             SnoopWindowUtils.LoadWindowPlacement(this, Settings.Default.AppChooserWindowPlacement);
         }
 
-        private static void KeyboardHook_LowLevelKeyUp(object sender, LowLevelKeyboardHook.LowLevelKeyPressEventArgs e)
+        private static void KeyboardHook_LowLevelKeyUp(object sender, KeyEventArgs e)
         {
-            if (e.ModifierKeys.HasFlag(ModifierKeys.Control)
-                && e.ModifierKeys.HasFlag(ModifierKeys.Windows)
-                && e.ModifierKeys.HasFlag(ModifierKeys.Alt)
-                && e.Key == Key.F12)
+            if (Settings.Default.GlobalHotKey.Matches(null, e))
             {
                 var thread = new Thread(AttachToForegroundWindow);
                 thread.SetApartmentState(ApartmentState.STA);

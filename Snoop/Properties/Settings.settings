@@ -3,16 +3,19 @@
   <Profiles />
   <Settings>
     <Setting Name="AppChooserWindowPlacement" Type="System.String" Scope="User">
-      <Value Profile="(Default)"></Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="SetOwnerWindow" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="MultipleAppDomainMode" Type="Snoop.Data.MultipleAppDomainMode" Scope="User">
-        <Value Profile="(Default)">Ask</Value>
+      <Value Profile="(Default)">Ask</Value>
     </Setting>
     <Setting Name="MultipleDispatcherMode" Type="Snoop.Data.MultipleDispatcherMode" Scope="User">
-        <Value Profile="(Default)">Ask</Value>
+      <Value Profile="(Default)">Ask</Value>
+    </Setting>
+    <Setting Name="GlobalHotKey" Type="System.String" Scope="User">
+      <Value Profile="(Default)">CTRL + WIN + ALT + F12</Value>
     </Setting>
   </Settings>
 </SettingsFile>

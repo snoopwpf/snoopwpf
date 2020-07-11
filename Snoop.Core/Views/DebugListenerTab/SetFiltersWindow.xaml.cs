@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Windows;
     using System.Windows.Controls;
+    using Snoop.Core.Properties;
 
     public partial class SetFiltersWindow
     {
@@ -131,7 +132,7 @@
                 }
             }
 
-            Properties.Settings.Default.SnoopDebugFilters = singleFilters.ToArray();
+            Settings.Default.SnoopDebugFilters = singleFilters.ToArray();
         }
 
         private List<SnoopSingleFilter> MakeDeepCopyOfFilters(IEnumerable<SnoopFilter> filters)

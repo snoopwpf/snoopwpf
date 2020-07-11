@@ -8,7 +8,6 @@ namespace Snoop.Controls.ValueEditors
     using System.Windows;
     using System.Windows.Data;
     using Snoop.Converters;
-    using Snoop.Infrastructure;
 
     public class StandardValueEditor : ValueEditor
     {
@@ -56,10 +55,7 @@ namespace Snoop.Controls.ValueEditors
             var value = this.Value;
             if (value != null)
             {
-                using (new InvariantThreadCultureScope())
-                {
-                    this.StringValue = value.ToString();
-                }
+                this.StringValue = StringValueConverter.ConvertToString(value.GetType(), value);
             }
             else
             {

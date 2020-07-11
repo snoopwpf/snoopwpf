@@ -3,7 +3,7 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop.Properties
+namespace Snoop.Core.Properties
 {
     // This class allows you to handle specific events on the settings class:
     //  The SettingChanging event is raised before a setting's value is changed.

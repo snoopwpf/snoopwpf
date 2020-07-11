@@ -19,6 +19,7 @@ namespace Snoop.Windows
     using System.Windows.Media;
     using System.Windows.Threading;
     using JetBrains.Annotations;
+    using Snoop.Core.Properties;
     using Snoop.Data.Tree;
     using Snoop.Infrastructure;
     using Snoop.Infrastructure.Helpers;
@@ -374,13 +375,13 @@ namespace Snoop.Windows
             base.OnSourceInitialized(e);
 
             // load whether all properties are shown by default
-            this.PropertyGrid.ShowDefaults = Properties.Settings.Default.ShowDefaults;
+            this.PropertyGrid.ShowDefaults = Settings.Default.ShowDefaults;
 
             // load whether the previewer is shown by default
-            this.PreviewArea.IsActive = Properties.Settings.Default.ShowPreviewer;
+            this.PreviewArea.IsActive = Settings.Default.ShowPreviewer;
 
             // load the window placement details from the user settings.
-            SnoopWindowUtils.LoadWindowPlacement(this, Properties.Settings.Default.SnoopUIWindowPlacement);
+            SnoopWindowUtils.LoadWindowPlacement(this, Settings.Default.SnoopUIWindowPlacement);
         }
 
         /// <summary>
@@ -396,16 +397,16 @@ namespace Snoop.Windows
             EventsListener.Stop();
 
             // persist the window placement details to the user settings.
-            SnoopWindowUtils.SaveWindowPlacement(this, wp => Properties.Settings.Default.SnoopUIWindowPlacement = wp);
+            SnoopWindowUtils.SaveWindowPlacement(this, wp => Settings.Default.SnoopUIWindowPlacement = wp);
 
             // persist whether all properties are shown by default
-            Properties.Settings.Default.ShowDefaults = this.PropertyGrid.ShowDefaults;
+            Settings.Default.ShowDefaults = this.PropertyGrid.ShowDefaults;
 
             // persist whether the previewer is shown by default
-            Properties.Settings.Default.ShowPreviewer = this.PreviewArea?.IsActive == true;
+            Settings.Default.ShowPreviewer = this.PreviewArea?.IsActive == true;
 
             // actually do the persisting
-            Properties.Settings.Default.Save();
+            Settings.Default.Save();
         }
 
         #endregion

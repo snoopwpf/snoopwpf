@@ -7,11 +7,15 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
+
 namespace Snoop.Properties {
-    
-    
+    using System.Configuration;
+    using System.Windows.Input;
+    using Snoop.Data;
+
+
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.8.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.6.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -57,7 +61,7 @@ namespace Snoop.Properties {
                 this["MultipleAppDomainMode"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Ask")]
@@ -67,6 +71,18 @@ namespace Snoop.Properties {
             }
             set {
                 this["MultipleDispatcherMode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SettingsSerializeAs(SettingsSerializeAs.String)]
+        public global::Snoop.Data.KeyGestureEx GlobalHotKey {
+            get {
+                return ((KeyGestureEx)(this["GlobalHotKey"])) ?? (KeyGestureEx)(this["GlobalHotKey"] = new KeyGestureEx(Key.F12, ModifierKeys.Control | ModifierKeys.Windows | ModifierKeys.Alt));
+            }
+            set {
+                this["GlobalHotKey"] = value;
             }
         }
     }

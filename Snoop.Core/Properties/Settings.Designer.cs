@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Snoop.Properties {
+namespace Snoop.Core.Properties {
     using Snoop.Infrastructure;
     using Snoop.Views.DebugListenerTab;
 

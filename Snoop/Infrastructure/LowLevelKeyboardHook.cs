@@ -4,10 +4,12 @@
     using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
+    using System.Windows;
     using System.Windows.Input;
 
     public class LowLevelKeyboardHook
     {
+        private readonly PresentationSource presentationSource;
 #pragma warning disable SA1310 // Field names should not contain underscore
         private static readonly IntPtr WM_KEYDOWN = new IntPtr(0x0100);
         private static readonly IntPtr WM_KEYUP = new IntPtr(0x0101);
@@ -19,40 +21,41 @@
         // Otherwise the delegate will be garbage collected and our hook crashes.
         private readonly NativeMethods.HookProc cachedProc;
 
-        public LowLevelKeyboardHook()
+        public LowLevelKeyboardHook(PresentationSource presentationSource)
         {
+            this.presentationSource = presentationSource;
             this.cachedProc = this.HookCallback;
         }
 
-        public class LowLevelKeyPressEventArgs : EventArgs
-        {
-            public LowLevelKeyPressEventArgs(ModifierKeys modifierKeys, Key key)
-            {
-                this.ModifierKeys = modifierKeys;
-                this.Key = key;
-            }
+        //public class LowLevelKeyPressEventArgs : EventArgs
+        //{
+        //    public LowLevelKeyPressEventArgs(ModifierKeys modifierKeys, Key key)
+        //    {
+        //        this.ModifierKeys = modifierKeys;
+        //        this.Key = key;
+        //    }
 
-            public ModifierKeys ModifierKeys { get; }
+        //    public ModifierKeys ModifierKeys { get; }
 
-            public Key Key { get; }
+        //    public Key Key { get; }
 
-            public static LowLevelKeyPressEventArgs CreateNew(Key key)
-            {
-                var modifierKeys = Keyboard.Modifiers;
+        //    public static LowLevelKeyPressEventArgs CreateNew(Key key)
+        //    {
+        //        var modifierKeys = Keyboard.Modifiers;
 
-                if (Keyboard.IsKeyDown(Key.LWin)
-                    || Keyboard.IsKeyDown(Key.RWin))
-                {
-                    modifierKeys |= ModifierKeys.Windows;
-                }
+        //        if (Keyboard.IsKeyDown(Key.LWin)
+        //            || Keyboard.IsKeyDown(Key.RWin))
+        //        {
+        //            modifierKeys |= ModifierKeys.Windows;
+        //        }
 
-                return new LowLevelKeyPressEventArgs(modifierKeys, key);
-            }
-        }
+        //        return new LowLevelKeyPressEventArgs(modifierKeys, key);
+        //    }
+        //}
 
-        public event EventHandler<LowLevelKeyPressEventArgs> LowLevelKeyDown;
+        public event EventHandler<KeyEventArgs> LowLevelKeyDown;
 
-        public event EventHandler<LowLevelKeyPressEventArgs> LowLevelKeyUp;
+        public event EventHandler<KeyEventArgs> LowLevelKeyUp;
 
         public bool IsRunning => this.hookId != IntPtr.Zero;
 
@@ -97,21 +100,24 @@
 
                 if (wParam == WM_KEYDOWN)
                 {
-                    this.LowLevelKeyDown?.Invoke(this, CreateEventArgs(hookStruct));
+                    this.LowLevelKeyDown?.Invoke(this, CreateEventArgs(this.presentationSource, hookStruct));
                 }
                 else if (wParam == WM_KEYUP)
                 {
-                    this.LowLevelKeyUp?.Invoke(this, CreateEventArgs(hookStruct));
+                    this.LowLevelKeyUp?.Invoke(this, CreateEventArgs(this.presentationSource, hookStruct));
                 }
             }
 
             return NativeMethods.CallNextHookEx(this.hookId, nCode, wParam, lParam);
         }
 
-        private static LowLevelKeyPressEventArgs CreateEventArgs(KBDLLHOOKSTRUCT hookStruct)
+        private static KeyEventArgs CreateEventArgs(PresentationSource presentationSource, KBDLLHOOKSTRUCT hookStruct)
         {
             var key = KeyInterop.KeyFromVirtualKey(hookStruct.VKCode);
-            return LowLevelKeyPressEventArgs.CreateNew(key);
+
+            var keyEventArgs = new KeyEventArgs(Keyboard.PrimaryDevice, presentationSource, -1, key);
+
+            return keyEventArgs;
         }
 
         [StructLayout(LayoutKind.Sequential)]
