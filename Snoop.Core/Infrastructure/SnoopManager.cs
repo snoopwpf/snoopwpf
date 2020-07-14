@@ -361,17 +361,15 @@
                 }
                 else // User didn't want to enter multiple dispatcher mode.
                 {
-                    var rootVisual = Application.Current?.MainWindow?.CheckAccess() == true
-                                    ? Application.Current.MainWindow
-                                    : rootVisuals[0];
+                    var dispatcher = Application.Current?.Dispatcher ?? rootVisuals[0].Dispatcher;
 
-                    rootVisual.Dispatcher.Invoke((Action)(() =>
+                    dispatcher.Invoke((Action)(() =>
                     {
-                        var snoopInstance = instanceCreator(settingsData, rootVisual.Dispatcher);
+                        var snoopInstance = instanceCreator(settingsData, dispatcher);
 
                         if (snoopInstance.Target is null)
                         {
-                            snoopInstance.Target = rootVisual;
+                            snoopInstance.Target = rootVisuals.FirstOrDefault(x => x.Dispatcher == dispatcher);
                         }
                     }));
 
