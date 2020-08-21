@@ -35,6 +35,7 @@
             var hwndSource = HwndSource.FromHwnd(hwnd);
 
             if (hwndSource != null
+                && (hwndSource.Dispatcher is null || hwndSource.CheckAccess())
                 && hwndSource.RootVisual is Window window
                 && window.Dispatcher == dispatcher
                 && window.Visibility == Visibility.Visible)

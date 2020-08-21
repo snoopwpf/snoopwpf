@@ -267,7 +267,8 @@
                 return targetWindow.Title;
             }
 
-            if (Application.Current?.MainWindow?.CheckAccess() == true)
+            if (Application.Current?.CheckAccess() == true
+                && Application.Current?.MainWindow?.CheckAccess() == true)
             {
                 return Application.Current.MainWindow.Title;
             }
@@ -277,49 +278,40 @@
 
         private static bool InjectSnoopIntoDispatchers(TransientSettingsData settingsData, Func<TransientSettingsData, Dispatcher, SnoopMainBaseWindow> instanceCreator)
         {
-            // check and see if any of the root visuals have a different mainDispatcher
-            // if so, ask the user if they wish to enter multiple mainDispatcher mode.
-            // if they do, launch a snoop ui for every additional mainDispatcher.
-            // see http://snoopwpf.codeplex.com/workitem/6334 for more info.
+            // Check and see if any of the PresentationSources have different dispatchers.
+            // If so, ask the user if they wish to enter multiple dispatcher mode.
+            // If they do, launch a snoop ui for every additional dispatcher.
+            // See http://snoopwpf.codeplex.com/workitem/6334 for more info.
 
-            var rootVisuals = new List<Visual>();
             var dispatchers = new List<Dispatcher>();
 
             foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
             {
-                var presentationSourceRootVisual = presentationSource.RootVisual;
+                var presentationSourceDispatcher = presentationSource.Dispatcher;
 
-                if (presentationSourceRootVisual is null)
+                // Check if we have already seen this dispatcher
+                if (dispatchers.IndexOf(presentationSourceDispatcher) == -1)
                 {
-                    continue;
-                }
-
-                var presentationSourceRootVisualDispatcher = presentationSourceRootVisual.Dispatcher;
-
-                // Check if we have already seen this dispatcher and it's root visual
-                if (dispatchers.IndexOf(presentationSourceRootVisualDispatcher) == -1)
-                {
-                    dispatchers.Add(presentationSourceRootVisualDispatcher);
-
-                    rootVisuals.Add(presentationSourceRootVisual);
+                    dispatchers.Add(presentationSourceDispatcher);
                 }
             }
 
             var useMultipleDispatcherMode = false;
-            if (rootVisuals.Count > 0)
+            if (dispatchers.Count > 0)
             {
-                if (rootVisuals.Count == 1
+                if (dispatchers.Count == 1
                     || settingsData.MultipleDispatcherMode == MultipleDispatcherMode.NeverUse)
                 {
-                    var rootVisual = rootVisuals[0];
+                    //var rootVisual = rootVisuals[0];
+                    var dispatcher = dispatchers[0];
 
-                    rootVisual.Dispatcher.Invoke((Action)(() =>
+                    dispatcher.Invoke((Action)(() =>
                     {
-                        var snoopInstance = instanceCreator(settingsData, rootVisual.Dispatcher);
+                        var snoopInstance = instanceCreator(settingsData, dispatcher);
 
                         if (snoopInstance.Target is null)
                         {
-                            snoopInstance.Target = rootVisual;
+                            snoopInstance.Target = GetRootVisual(dispatcher);
                         }
                     }));
 
@@ -354,14 +346,14 @@
                     SnoopModes.MultipleDispatcherMode = true;
 
                     var thread = new Thread(DispatchOut);
-                    thread.Start(new DispatchOutParameters(settingsData, instanceCreator, rootVisuals));
+                    thread.Start(new DispatchOutParameters(settingsData, instanceCreator, dispatchers));
 
                     // todo: check if we really created something
                     return true;
                 }
                 else // User didn't want to enter multiple dispatcher mode.
                 {
-                    var dispatcher = Application.Current?.Dispatcher ?? rootVisuals[0].Dispatcher;
+                    var dispatcher = Application.Current?.Dispatcher ?? dispatchers[0];
 
                     dispatcher.Invoke((Action)(() =>
                     {
@@ -369,7 +361,7 @@
 
                         if (snoopInstance.Target is null)
                         {
-                            snoopInstance.Target = rootVisuals.FirstOrDefault(x => x.Dispatcher == dispatcher);
+                            snoopInstance.Target = GetRootVisual(dispatcher);
                         }
                     }));
 
@@ -380,21 +372,29 @@
             return false;
         }
 
+        private static Visual GetRootVisual(Dispatcher dispatcher)
+        {
+            return PresentationSource.CurrentSources
+                .OfType<PresentationSource>()
+                .FirstOrDefault(x => x.Dispatcher == dispatcher)
+                ?.RootVisual;
+        }
+
         private static void DispatchOut(object o)
         {
             var dispatchOutParameters = (DispatchOutParameters)o;
 
-            foreach (var visual in dispatchOutParameters.Visuals)
+            foreach (var dispatcher in dispatchOutParameters.Dispatchers)
             {
                 // launch a snoop ui on each dispatcher
-                visual.Dispatcher.Invoke(
+                dispatcher.Invoke(
                     (Action)(() =>
                     {
-                        var snoopInstance = dispatchOutParameters.InstanceCreator(dispatchOutParameters.SettingsData, visual.Dispatcher);
+                        var snoopInstance = dispatchOutParameters.InstanceCreator(dispatchOutParameters.SettingsData, dispatcher);
 
                         if (snoopInstance.Target is null)
                         {
-                            snoopInstance.Target = visual;
+                            snoopInstance.Target = GetRootVisual(dispatcher);
                         }
                     }));
             }
@@ -402,18 +402,18 @@
 
         private class DispatchOutParameters
         {
-            public DispatchOutParameters(TransientSettingsData settingsData, Func<TransientSettingsData, Dispatcher, SnoopMainBaseWindow> instanceCreator, List<Visual> visuals)
+            public DispatchOutParameters(TransientSettingsData settingsData, Func<TransientSettingsData, Dispatcher, SnoopMainBaseWindow> instanceCreator, List<Dispatcher> dispatchers)
             {
                 this.SettingsData = settingsData;
                 this.InstanceCreator = instanceCreator;
-                this.Visuals = visuals;
+                this.Dispatchers = dispatchers;
             }
 
             public TransientSettingsData SettingsData { get; }
 
             public Func<TransientSettingsData, Dispatcher, SnoopMainBaseWindow> InstanceCreator { get; }
 
-            public List<Visual> Visuals { get; }
+            public List<Dispatcher> Dispatchers { get; }
         }
     }
 }

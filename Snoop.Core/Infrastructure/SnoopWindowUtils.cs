@@ -29,7 +29,8 @@ namespace Snoop.Infrastructure
             {
                 foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
                 {
-                    if (presentationSource.RootVisual is Window window
+                    if (presentationSource.CheckAccess()
+                        && presentationSource.RootVisual is Window window
                         && window.Dispatcher.CheckAccess()
                         && window.Visibility == Visibility.Visible)
                     {
@@ -39,7 +40,8 @@ namespace Snoop.Infrastructure
                 }
             }
             else if (ownerWindow == null
-                     && Application.Current != null)
+                     && Application.Current != null
+                     && Application.Current.CheckAccess())
             {
                 if (Application.Current.MainWindow != null
                     && Application.Current.MainWindow.CheckAccess()
@@ -68,7 +70,8 @@ namespace Snoop.Infrastructure
                 // third: try and find a visible window in the list of current presentation sources
                 foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
                 {
-                    if (presentationSource.RootVisual is Window window
+                    if (presentationSource.CheckAccess()
+                        && presentationSource.RootVisual is Window window
                         && window.Dispatcher.CheckAccess()
                         && window.Visibility == Visibility.Visible)
                     {
