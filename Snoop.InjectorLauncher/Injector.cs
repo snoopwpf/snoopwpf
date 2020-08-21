@@ -16,25 +16,25 @@ namespace Snoop.InjectorLauncher
     {
         public static void LogMessage(string message, bool append = true)
         {
+            var logMessage = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss") + ": " + message;
+
+            Trace.WriteLine(logMessage);
+            Console.WriteLine(logMessage);
+
             var applicationDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             applicationDataPath += "\\Snoop";
 
-            if (!Directory.Exists(applicationDataPath))
+            if (Directory.Exists(applicationDataPath) == false)
             {
                 Directory.CreateDirectory(applicationDataPath);
             }
 
             var pathname = Path.Combine(applicationDataPath, "SnoopLog.txt");
 
-            if (!append)
+            if (append == false)
             {
                 File.Delete(pathname);
             }
-
-            var logMessage = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss") + ": " + message;
-
-            Trace.WriteLine(logMessage);
-            Console.WriteLine(logMessage);
 
             var fi = new FileInfo(pathname);
 
@@ -68,9 +68,9 @@ namespace Snoop.InjectorLauncher
                 throw new FileNotFoundException("Could not find file for loading in foreign process.", pathToDll);
             }
 
-            var moduleHandleInForeignProcess = IntPtr.Zero;
-
             var stringForRemoteProcess = pathToDll;
+
+            Trace.WriteLine(Marshal.GetLastWin32Error());
 
             var bufLen = (stringForRemoteProcess.Length + 1) * Marshal.SizeOf(typeof(char));
             var remoteAddress = NativeMethods.VirtualAllocEx(processWrapper.Handle, IntPtr.Zero, (uint)bufLen, NativeMethods.AllocationType.Commit, NativeMethods.MemoryProtection.ReadWrite);
@@ -85,6 +85,7 @@ namespace Snoop.InjectorLauncher
 
             try
             {
+                LogMessage($"Trying to write {size} bytes in foreign process");
                 var writeProcessMemoryResult = NativeMethods.WriteProcessMemory(processWrapper.Handle, remoteAddress, address, size, out var bytesWritten);
 
                 if (writeProcessMemoryResult == false
@@ -101,7 +102,8 @@ namespace Snoop.InjectorLauncher
 
                 if (procAddress == UIntPtr.Zero)
                 {
-                    // todo: error handling
+                    LogMessage("Could get proc address for LoadLibraryW.");
+                    throw new Win32Exception();
                 }
 
                 var remoteThread = NativeMethods.CreateRemoteThread(processWrapper.Handle,
@@ -112,18 +114,23 @@ namespace Snoop.InjectorLauncher
                     0,
                     out _);
 
+                IntPtr moduleHandleInForeignProcess;
                 try
                 {
                     if (remoteThread == IntPtr.Zero)
                     {
                         LogMessage("Could not create remote thread.");
+                        throw new Win32Exception();
                     }
                     else
                     {
                         NativeMethods.WaitForSingleObject(remoteThread);
 
                         // Get handle of the loaded module
-                        NativeMethods.GetExitCodeThread(remoteThread, out moduleHandleInForeignProcess);
+                        if (NativeMethods.GetExitCodeThread(remoteThread, out moduleHandleInForeignProcess) == false)
+                        {
+                            throw new Win32Exception();
+                        }
                     }
                 }
                 finally
@@ -148,29 +155,21 @@ namespace Snoop.InjectorLauncher
                 var remoteHandle = NativeMethods.GetRemoteModuleHandle(processWrapper.Process, Path.GetFileName(pathToDll));
 
                 LogMessage($"Successfully loaded \"{pathToDll}\" with handle \"{moduleHandleInForeignProcess}\" (\"{remoteHandle}\") in process \"{processWrapper.Id}\".");
+
+                return remoteHandle;
             }
             finally
             {
                 Marshal.FreeHGlobal(address);
             }
-
-            return moduleHandleInForeignProcess;
         }
 
         /// <summary>
         /// Frees a library in a foreign process.
         /// </summary>
-        private static bool FreeLibraryInForeignProcess(ProcessWrapper processWrapper, string moduleName)
+        private static bool FreeLibraryInForeignProcess(ProcessWrapper processWrapper, string moduleName, IntPtr moduleHandleInForeignProcess)
         {
-            LogMessage($"Trying to free module \"{moduleName}\" in process \"{processWrapper.Id}\"...");
-
-            var moduleHandleInForeignProcess = NativeMethods.GetRemoteModuleHandle(processWrapper.Process, moduleName);
-
-            if (moduleHandleInForeignProcess == IntPtr.Zero)
-            {
-                LogMessage($"Could not find loaded module \"{moduleName}\" in process \"{processWrapper.Id}\".");
-                return false;
-            }
+            LogMessage($"Trying to free module \"{moduleName}\" with handle {moduleHandleInForeignProcess} in process \"{processWrapper.Id}\"...");
 
             LogMessage($"Freeing \"{moduleHandleInForeignProcess}\" in process \"{processWrapper.Id}\"...");
 
@@ -235,12 +234,17 @@ namespace Snoop.InjectorLauncher
 
             var bufLen = (stringForRemoteProcess.Length + 1) * Marshal.SizeOf(typeof(char));
 
-            var remoteAddress = NativeMethods.VirtualAllocEx(processWrapper.Handle, IntPtr.Zero, (uint)bufLen, NativeMethods.AllocationType.Commit, NativeMethods.MemoryProtection.ReadWrite);
+            LogMessage($"Trying to allocate {bufLen} bytes in foreign process...");
+            Trace.WriteLine(Marshal.GetLastWin32Error());
+
+            var remoteAddress = NativeMethods.VirtualAllocEx(processWrapper.Handle, IntPtr.Zero, (uint)bufLen, NativeMethods.AllocationType.Commit | NativeMethods.AllocationType.Reserve, NativeMethods.MemoryProtection.ReadWrite);
 
             if (remoteAddress == IntPtr.Zero)
             {
                 throw new Win32Exception();
             }
+
+            LogMessage("Successfully allocated memory in foreign process.");
 
             var address = Marshal.StringToHGlobalUni(stringForRemoteProcess);
             var size = (uint)(sizeof(char) * stringForRemoteProcess.Length);
@@ -255,7 +259,7 @@ namespace Snoop.InjectorLauncher
                     throw Marshal.GetExceptionForHR(Marshal.GetLastWin32Error());
                 }
 
-                IntPtr hLibrary = IntPtr.Zero;
+                var hLibrary = IntPtr.Zero;
 
                 try
                 {
@@ -263,7 +267,7 @@ namespace Snoop.InjectorLauncher
                     hLibrary = NativeMethods.LoadLibrary(pathToInjectorDll);
 
                     // Load library into foreign process before invoking our method
-                    LoadLibraryInForeignProcess(processWrapper, pathToInjectorDll);
+                    var moduleHandleInForeignProcess = LoadLibraryInForeignProcess(processWrapper, pathToInjectorDll);
 
                     try
                     {
@@ -282,7 +286,7 @@ namespace Snoop.InjectorLauncher
                             if (remoteThread == IntPtr.Zero)
                             {
                                 LogMessage("Could not create remote thread.");
-                                return;
+                                throw new Win32Exception();
                             }
 
                             NativeMethods.WaitForSingleObject(remoteThread);
@@ -304,7 +308,7 @@ namespace Snoop.InjectorLauncher
                     }
                     finally
                     {
-                        FreeLibraryInForeignProcess(processWrapper, injectorDllName);
+                        FreeLibraryInForeignProcess(processWrapper, injectorDllName, moduleHandleInForeignProcess);
                     }
                 }
                 finally

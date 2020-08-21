@@ -370,6 +370,7 @@ namespace Snoop.Infrastructure
                 if (mod.ModuleName.Equals(moduleName, StringComparison.OrdinalIgnoreCase)
                     || mod.FileName.Equals(moduleName, StringComparison.OrdinalIgnoreCase))
                 {
+                    Trace.WriteLine($"Found module \"{moduleName}\" with base address \"{mod.BaseAddress}\".");
                     return mod.BaseAddress;
                 }
             }
@@ -525,7 +526,7 @@ namespace Snoop.Infrastructure
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool FreeLibrary(IntPtr hModule);
 
-        [DllImport("kernel32.dll")]
+        [DllImport("kernel32.dll", SetLastError = true)]
         public static extern IntPtr CreateRemoteThread(ProcessHandle handle,
                                                 IntPtr lpThreadAttributes, uint dwStackSize, UIntPtr lpStartAddress,
                                                 IntPtr lpParameter, uint dwCreationFlags, out IntPtr lpThreadId);
