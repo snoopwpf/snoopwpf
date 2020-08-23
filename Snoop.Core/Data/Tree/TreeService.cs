@@ -1,4 +1,4 @@
-namespace Snoop.Data.Tree
+﻿namespace Snoop.Data.Tree
 {
     using System;
     using System.Collections;
@@ -97,6 +97,18 @@ namespace Snoop.Data.Tree
                 default:
                     throw new ArgumentOutOfRangeException(nameof(treeType), treeType, null);
             }
+        }
+    }
+
+    public sealed class RawTreeServiceWithoutChildren : TreeService
+    {
+        public static readonly RawTreeServiceWithoutChildren DefaultInstance = new RawTreeServiceWithoutChildren();
+
+        public override TreeType TreeType { get; } = TreeType.Visual;
+
+        public override IEnumerable GetChildren(object target)
+        {
+            yield break;
         }
     }
 
