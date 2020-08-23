@@ -15,6 +15,7 @@ namespace Snoop.Infrastructure
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Windows;
+    using System.Windows.Automation.Peers;
     using System.Windows.Controls;
     using System.Windows.Data;
     using System.Windows.Media;
@@ -826,6 +827,44 @@ namespace Snoop.Infrastructure
                 || obj.GetType().IsValueType)
             {
                 return new List<PropertyInformation> { new PropertyInformation(obj, null, "ToString", obj, isCopyable: true) };
+            }
+
+            if (obj is AutomationPeer automationPeer)
+            {
+                var automationProperties = new List<PropertyInformation>
+                    {
+                        new PropertyInformation(obj, null, "ClassName", automationPeer.GetClassName(), isCopyable: true),
+                        new PropertyInformation(obj, null, "Name", automationPeer.GetName(), isCopyable: true),
+                        new PropertyInformation(obj, null, "AcceleratorKey", automationPeer.GetAcceleratorKey(), isCopyable: true),
+                        new PropertyInformation(obj, null, "AccessKey", automationPeer.GetAccessKey(), isCopyable: true),
+                        new PropertyInformation(obj, null, "AutomationControlType", automationPeer.GetAutomationControlType(), isCopyable: true),
+                        new PropertyInformation(obj, null, "AutomationId", automationPeer.GetAutomationId(), isCopyable: true),
+                        new PropertyInformation(obj, null, "BoundingRectangle", automationPeer.GetBoundingRectangle(), isCopyable: true),
+                        new PropertyInformation(obj, null, "ClickablePoint", automationPeer.GetClickablePoint(), isCopyable: true),
+                        new PropertyInformation(obj, null, "HelpText", automationPeer.GetHelpText(), isCopyable: true),
+                        new PropertyInformation(obj, null, "ItemStatus", automationPeer.GetItemStatus(), isCopyable: true),
+                        new PropertyInformation(obj, null, "ItemType", automationPeer.GetItemType(), isCopyable: true),
+                        new PropertyInformation(obj, null, "LabeledBy", automationPeer.GetLabeledBy(), isCopyable: true),
+                        #if !NET40
+                        new PropertyInformation(obj, null, "LiveSetting", automationPeer.GetLiveSetting(), isCopyable: true),
+                        #endif
+                        new PropertyInformation(obj, null, "LocalizedControlType", automationPeer.GetLocalizedControlType(), isCopyable: true),
+                        new PropertyInformation(obj, null, "Orientation", automationPeer.GetOrientation(), isCopyable: true),
+                    };
+
+                var supportedPatterns = new List<string>();
+
+                foreach (PatternInterface patternInterface in Enum.GetValues(typeof(PatternInterface)))
+                {
+                    if (automationPeer.GetPattern(patternInterface) is not null)
+                    {
+                        supportedPatterns.Add(patternInterface.ToString());
+                    }
+                }
+
+                automationProperties.Add(new PropertyInformation(obj, null, "SupportedPatterns", string.Join(", ", supportedPatterns), isCopyable: true));
+
+                return automationProperties;
             }
 
             return null;
