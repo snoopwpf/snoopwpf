@@ -90,7 +90,7 @@ As part of the process of moving to Visual Studio 2019, we have dropped support 
 
 ## How do i build Snoop?
 
-Just open `Snoop.sln` with Visual Studio 2019 (16.6 or later) and build it.
+Just open `Snoop.sln` with Visual Studio 2019 (16.7 or later) and build it.
 Please note that you need the Visual Studio 2019 C++ payload and in case you are using a later version you also need the VC++ 142 payload.
 
 ## Contributors
