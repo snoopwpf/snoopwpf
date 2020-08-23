@@ -630,8 +630,8 @@ namespace Snoop.Windows
                 }
             }
 
-            // Not every visual element is in the logical tree, so try the visual tree
-            if (this.TreeService.TreeType == TreeType.Logical
+            // Not every visual element is in the logical or the automation tree, so try the visual tree
+            if ((this.TreeService.TreeType == TreeType.Logical || this.TreeService.TreeType == TreeType.Automation)
                 && target is DependencyObject dependencyObject)
             {
                 var parent = VisualTreeHelper.GetParent(dependencyObject);
