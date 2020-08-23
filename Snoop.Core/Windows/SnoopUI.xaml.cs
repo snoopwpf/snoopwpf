@@ -445,6 +445,8 @@ namespace Snoop.Windows
                     if (treeItem != null)
                     {
                         this.CurrentSelection = treeItem;
+                        this.PropertyGrid.PropertyGrid.RefreshPropertyGrid();
+
                         if (previousSelection.IsExpanded)
                         {
                             this.CurrentSelection.ExpandTo();
