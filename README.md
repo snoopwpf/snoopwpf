@@ -41,7 +41,7 @@ Highlights:
   - Holding CTRL + SHIFT does not skip template parts
 - Drastically improved performance of AppChooser.Refresh() (thanks @mikel785)
 - Usability improvements for process dropdown (thanks @mikel785)
-- Support for displaying the logical tree and the tree of wpf automation peers
+- Support for displaying the logical tree and the tree of WPF automation peers
 - Ability to inspect `Popup` without opening it
 - `Snoop.exe` and the inject laucnher now support commandline args
 
