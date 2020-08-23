@@ -1,4 +1,4 @@
-﻿namespace Snoop.Data.Tree
+namespace Snoop.Data.Tree
 {
     using System;
     using System.Collections;
@@ -51,8 +51,8 @@
                     treeItem = new WindowTreeItem(window, parent, this);
                     break;
 
-                case Popup poup:
-                    treeItem = new PopupTreeItem(poup, parent, this);
+                case Popup popup:
+                    treeItem = new PopupTreeItem(popup, parent, this);
                     break;
 
                 case DependencyObject dependencyObject:
@@ -88,7 +88,7 @@
             {
                 case TreeType.Visual:
                     return new VisualTreeService();
-                    
+
                 case TreeType.Logical:
                     return new LogicalTreeService();
 
