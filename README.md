@@ -44,6 +44,7 @@ Highlights:
 - Support for displaying the logical tree and the tree of WPF automation peers
 - Ability to inspect `Popup` without opening it
 - `Snoop.exe` and the inject laucnher now support commandline args
+- Global hotkey support (just start snoop, focus a WPF application and hit CTRL + WIN + ALT + F12)
 
 Known issues:
 
