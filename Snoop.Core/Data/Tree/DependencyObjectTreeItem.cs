@@ -150,7 +150,6 @@ namespace Snoop.Data.Tree
             // this used to be at the bottom. putting it here makes it consistent (and easier to use) with ApplicationTreeItem
             base.ReloadCore();
 
-            // remove items that are no longer in tree, add new ones.
             foreach (var child in this.TreeService.GetChildren(this))
             {
                 if (child is null)
