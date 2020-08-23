@@ -9,7 +9,7 @@ image: Visual Studio 2019
 test: off
 
 install:
-  - cinst dotnetcore-sdk --version 3.1.400
+  - cinst dotnetcore-sdk --version 3.1.401
 
 build_script:
   - ps: .\build.ps1 CI -Verbose
