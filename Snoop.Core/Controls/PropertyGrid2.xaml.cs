@@ -416,7 +416,7 @@ namespace Snoop.Controls
             }
         }
 
-        private void RefreshPropertyGrid()
+        public void RefreshPropertyGrid()
         {
             this.allProperties.Clear();
             this.Properties.Clear();
