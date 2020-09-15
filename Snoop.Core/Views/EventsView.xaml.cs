@@ -185,40 +185,4 @@ namespace Snoop.Views
         }
         #endregion
     }
-
-    public class InterestingEvent
-    {
-        public InterestingEvent(object handledBy, RoutedEventArgs eventArgs)
-        {
-            this.handledBy = handledBy;
-            this.triggeredOn = null;
-            this.eventArgs = eventArgs;
-        }
-
-        public RoutedEventArgs EventArgs
-        {
-            get { return this.eventArgs; }
-        }
-
-        private readonly RoutedEventArgs eventArgs;
-
-        public object HandledBy
-        {
-            get { return this.handledBy; }
-        }
-
-        private readonly object handledBy;
-
-        public object TriggeredOn
-        {
-            get { return this.triggeredOn; }
-        }
-
-        private readonly object triggeredOn;
-
-        public bool Handled
-        {
-            get { return this.handledBy != null; }
-        }
-    }
 }
