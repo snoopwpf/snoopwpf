@@ -200,22 +200,32 @@
 
         private static void AttachAssemblyResolveHandler(AppDomain domain)
         {
-            domain.AssemblyResolve += (sender, args) =>
+            try
             {
-                if (args.Name.StartsWith("Snoop.Core,"))
-                {
-                    return Assembly.GetExecutingAssembly();
-                }
+                domain.AssemblyResolve += HandleDomainAssemblyResolve;
+            }
+            catch (Exception exception)
+            {
+                Trace.TraceError("Could not attach assembly resolver. Loading snoop assemblies might fail.");
+                Trace.TraceError(exception.ToString());
+            }
+        }
 
-                #if NETCOREAPP3_1
-                if (args.Name.StartsWith("System.Management.Automation,"))
-                {
-                    return Assembly.LoadFrom(Snoop.PowerShell.ShellConstants.GetPowerShellAssemblyPath());
-                }
-                #endif
+        private static Assembly HandleDomainAssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            if (args.Name?.StartsWith("Snoop.Core,") == true)
+            {
+                return Assembly.GetExecutingAssembly();
+            }
 
-                return null;
-            };
+#if NETCOREAPP3_1
+            if (args.Name?.StartsWith("System.Management.Automation,") == true)
+            {
+                return Assembly.LoadFrom(Snoop.PowerShell.ShellConstants.GetPowerShellAssemblyPath());
+            }
+#endif
+
+            return null;
         }
 
         private static Func<SnoopMainBaseWindow> GetInstanceCreator(SnoopStartTarget startTarget)
