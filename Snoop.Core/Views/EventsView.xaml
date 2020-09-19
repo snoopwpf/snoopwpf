@@ -280,8 +280,9 @@ All other rights reserved.
 	
 	<Grid.RowDefinitions>
 		<RowDefinition Height="Auto"/>
-		<RowDefinition Height="*"/>
-	</Grid.RowDefinitions>
+        <RowDefinition Height="*"/>
+        <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
 
 	<ComboBox
 		x:Name="EventChooser"
@@ -349,4 +350,8 @@ All other rights reserved.
 			</Style>
 		</TreeView.ItemContainerStyle>
 	</TreeView>
+    <StackPanel Orientation="Horizontal" Grid.Row="2">
+        <TextBlock Text="Maximum events displayed: "/>
+        <TextBox Text="{Binding ElementName=Events, Path=MaxEventsDisplayed}" MinWidth="64" BorderThickness="0" VerticalAlignment="Stretch"/>
+    </StackPanel>
 </Grid>
