@@ -352,6 +352,6 @@ All other rights reserved.
 	</TreeView>
     <StackPanel Style="{x:Null}" Orientation="Horizontal" Grid.Row="2">
         <TextBlock Style="{x:Null}" Text="Maximum events displayed: "/>
-        <TextBox Style="{x:Null}" Text="{Binding ElementName=Events, Path=MaxEventsDisplayed}" MinWidth="64" BorderThickness="0" VerticalAlignment="Stretch" />
+        <TextBox Style="{x:Null}" Text="{Binding ElementName=Events, Path=MaxEventsDisplayed}" MinWidth="64" VerticalAlignment="Stretch" />
     </StackPanel>
 </Grid>
