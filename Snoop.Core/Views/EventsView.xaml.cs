@@ -57,6 +57,41 @@ namespace Snoop.Views
 
         private readonly ObservableCollection<TrackedEvent> interestingEvents = new ObservableCollection<TrackedEvent>();
 
+        public int MaxEventsDisplayed
+        {
+            get { return this.maxEventsDisplayed; }
+
+            set
+            {
+                if (value < 0)
+                {
+                    value = 0;
+                }
+
+                this.maxEventsDisplayed = value;
+                this.OnPropertyChanged(nameof(this.MaxEventsDisplayed));
+
+                if (this.maxEventsDisplayed == 0)
+                {
+                    this.interestingEvents.Clear();
+                }
+                else
+                {
+                    this.EnforceInterestingEventsLimit();
+                }
+            }
+        }
+
+        private int maxEventsDisplayed = 100;
+
+        private void EnforceInterestingEventsLimit()
+        {
+            while (this.interestingEvents.Count > this.maxEventsDisplayed)
+            {
+                this.interestingEvents.RemoveAt(0);
+            }
+        }
+
         public object AvailableEvents
         {
             get
@@ -88,11 +123,7 @@ namespace Snoop.Views
                     () =>
                     {
                         this.interestingEvents.Add(trackedEvent);
-
-                        while (this.interestingEvents.Count > 100)
-                        {
-                            this.interestingEvents.RemoveAt(0);
-                        }
+                        this.EnforceInterestingEventsLimit();
 
                         var tvi = (TreeViewItem)this.EventTree.ItemContainerGenerator.ContainerFromItem(trackedEvent);
                         tvi?.BringIntoView();
@@ -153,41 +184,5 @@ namespace Snoop.Views
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
-    }
-
-    public class InterestingEvent
-    {
-        public InterestingEvent(object handledBy, RoutedEventArgs eventArgs)
-        {
-            this.handledBy = handledBy;
-            this.triggeredOn = null;
-            this.eventArgs = eventArgs;
-        }
-
-        public RoutedEventArgs EventArgs
-        {
-            get { return this.eventArgs; }
-        }
-
-        private readonly RoutedEventArgs eventArgs;
-
-        public object HandledBy
-        {
-            get { return this.handledBy; }
-        }
-
-        private readonly object handledBy;
-
-        public object TriggeredOn
-        {
-            get { return this.triggeredOn; }
-        }
-
-        private readonly object triggeredOn;
-
-        public bool Handled
-        {
-            get { return this.handledBy != null; }
-        }
     }
 }
