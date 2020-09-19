@@ -47,6 +47,7 @@
   - [#161](../../issues/161) - Drastically improved performance of AppChooser.Refresh() (thanks @mikel785)
   - [#162](../../issues/162) - Usability improvements for process dropdown (thanks @mikel785)
   - [#181](../../issues/181) - Add inspection of Popup without opening it
+  - [#190](../../issues/190) - Events view - editible events history max count (thanks @X39)
 
 ## 2.11.0
 
