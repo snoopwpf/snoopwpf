@@ -17,7 +17,7 @@
 			Content="Launch New Window (on a new Dispatcher)"
 			Width="300"
 			Height="50"
-			Click="dispatcherLaunchButton_Click"
+			Click="DispatcherLaunchButton_Click"
 		/>
 		<Button
 			x:Name="noDispatcherLaunchButton"
@@ -25,7 +25,7 @@
 			Content="Launch New Window (on current Dispatcher)"
 			Width="300"
 			Height="50"
-			Click="noDispatcherLaunchButton_Click"
+			Click="NoDispatcherLaunchButton_Click"
 		/>
 	</Grid>
 </Window>

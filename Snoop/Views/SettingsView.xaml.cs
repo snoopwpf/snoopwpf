@@ -5,6 +5,7 @@
     using System.ComponentModel;
     using System.Linq;
     using System.Windows;
+    using Snoop.Infrastructure;
     using Snoop.Properties;
 
     public partial class SettingsView
@@ -13,7 +14,8 @@
                                                                         {
                                                                             nameof(Settings.Default.MultipleAppDomainMode),
                                                                             nameof(Settings.Default.MultipleDispatcherMode),
-                                                                            nameof(Settings.Default.SetOwnerWindow)
+                                                                            nameof(Settings.Default.SetOwnerWindow),
+                                                                            nameof(Settings.Default.GlobalHotKey)
                                                                         };
 
         public static readonly DependencyProperty PropertiesProperty = DependencyProperty.Register(nameof(Properties), typeof(ObservableCollection<PropertyInformation>), typeof(SettingsView), new PropertyMetadata(default(ObservableCollection<PropertyInformation>)));
@@ -21,8 +23,11 @@
         public SettingsView()
         {
             this.InitializeComponent();
-            
-            this.Properties = new ObservableCollection<PropertyInformation>(TypeDescriptor.GetProperties(Settings.Default).OfType<PropertyDescriptor>().Where(x => realSettingsProperties.Contains(x.Name)).Select(x => new PropertyInformation(Settings.Default, x, x.Name, x.DisplayName)));
+
+            this.Properties = new ObservableCollection<PropertyInformation>(TypeDescriptor.GetProperties(Settings.Default)
+                                                                                          .OfType<PropertyDescriptor>()
+                                                                                          .Where(x => realSettingsProperties.Contains(x.Name))
+                                                                                          .Select(x => new PropertyInformation(Settings.Default, x, x.Name, x.DisplayName)));
         }
 
         public ObservableCollection<PropertyInformation> Properties

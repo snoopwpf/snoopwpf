@@ -1,0 +1,157 @@
+﻿<!--
+(c) Copyright Cory Plotts.
+This source is subject to the Microsoft Public License (Ms-PL).
+Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
+All other rights reserved.
+-->
+<Grid
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Class="Snoop.Controls.PropertyInspector"
+    xmlns:infrastructure="clr-namespace:Snoop.Infrastructure"
+    xmlns:snoop="clr-namespace:Snoop"
+    xmlns:controls="clr-namespace:Snoop.Controls"
+    x:Name="propertyInspector"
+    MinHeight="0"
+    MinWidth="0">
+    <Grid.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Icons.xaml" />
+                <ResourceDictionary Source="ValueEditors\EditorTemplates.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <DataTemplate x:Key="stylelessTextBlockDataTemplate" DataType="infrastructure:PropertyFilterSet">
+                <TextBlock Style="{x:Null}" Margin="0" Padding="0" Text="{Binding DisplayName}" />
+            </DataTemplate>
+        </ResourceDictionary>
+    </Grid.Resources>
+
+    <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="22" />
+        <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+
+    <TextBox Grid.Row="0" Margin="2" Style="{x:Null}" BorderThickness="0"
+             Text="{Binding ElementName=propertyInspector, Path=DelvePath, Mode=OneWay}" Background="Transparent"
+             TextWrapping="Wrap" AcceptsReturn="False" IsReadOnly="True">
+        <TextBox.ToolTip>
+            <TextBlock Style="{x:Null}" Text="This is the delve path of the currently selected object" />
+        </TextBox.ToolTip>
+    </TextBox>
+
+    <TextBlock Grid.Row="1" Margin="2" Style="{x:Null}" Background="Transparent" TextWrapping="Wrap">
+        <Hyperlink Style="{x:Null}"
+                   Command="{x:Static controls:PropertyInspector.NavigateToAssemblyInExplorerCommand}"
+                   CommandParameter="{Binding ElementName=propertyInspector, Path=DelveType, Mode=OneWay}">
+            <TextBlock Style="{x:Null}"
+                       Text="{Binding ElementName=propertyInspector, Path=DelveType.FullName, Mode=OneWay}" />
+        </Hyperlink>
+        <TextBlock.ToolTip>
+            <TextBlock Style="{x:Null}" Text="This is the type of the currently selected object" />
+        </TextBlock.ToolTip>
+    </TextBlock>
+
+    <DockPanel Grid.Row="2"
+               LastChildFill="True"
+               Margin="0,0,0,2">
+        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+            <CheckBox x:Name="checkBoxClearAfterDelve"
+                      Content="Clear after delve"
+                      Margin="0,2,2,0" />
+            <Button
+                Command="{x:Static controls:PropertyInspector.PopTargetCommand}"
+                Margin="0,0,2,0"
+                Width="18"
+                Height="18"
+                MinWidth="0"
+                MinHeight="0"
+                ToolTipService.ShowOnDisabled="True">
+                <Button.Style>
+                    <Style>
+                        <Style.Triggers>
+                            <Trigger Property="Button.IsEnabled" Value="False">
+                                <Setter Property="Button.Opacity" Value=".5" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Image Style="{x:Null}" Source="{StaticResource scopeUpDrawingImage}" Margin="3" />
+                <Button.ToolTip>
+                    <StackPanel>
+                        <TextBlock Style="{x:Null}" Text="Click this button to pop up 1 level in scope" />
+                        <TextBlock Style="{x:Null}" Text="(after you have delved into something)." />
+                    </StackPanel>
+                </Button.ToolTip>
+            </Button>
+            <ComboBox
+                Style="{x:Null}"
+                x:Name="FilterSetCombo"
+                infrastructure:ComboBoxSettings.RegisterAsSnoopPart="True"
+                Width="100"
+                Margin="0,0,2,0"
+                Padding="4 1 4 1"
+                ItemsSource="{Binding Path=AllFilterSets, ElementName=propertyInspector}"
+                SelectedItem="{Binding Path=SelectedFilterSet, ElementName=propertyInspector, Mode=TwoWay}"
+                ItemTemplate="{StaticResource stylelessTextBlockDataTemplate}">
+                <ComboBox.ToolTip>
+                    <StackPanel>
+                        <TextBlock Style="{x:Null}" Text="With this combo box, you can select" />
+                        <TextBlock Style="{x:Null}" Text="a certain set of properties to view." />
+                    </StackPanel>
+                </ComboBox.ToolTip>
+            </ComboBox>
+            <ToggleButton
+                Style="{x:Null}"
+                IsChecked="{Binding ElementName=propertyInspector, Path=ShowDefaults}"
+                Width="18"
+                Height="18"
+                Padding="0"
+                Margin="0,0,2,0">
+                <TextBlock Style="{x:Null}" FontWeight="Bold">D</TextBlock>
+                <ToggleButton.ToolTip>
+                    <StackPanel>
+                        <TextBlock Style="{x:Null}" Text="Toggle this button ON to show properties" />
+                        <TextBlock Style="{x:Null}" Text="that are unchanged from their default values." />
+                    </StackPanel>
+                </ToggleButton.ToolTip>
+            </ToggleButton>
+            <ToggleButton
+                Style="{x:Null}"
+                IsChecked="{Binding ElementName=propertyInspector, Path=ShowPropertiesFromUncommonTypes}"
+                Width="18"
+                Height="18"
+                Padding="0"
+                Margin="0,0,2,0">
+                <TextBlock Style="{x:Null}" FontWeight="Bold">U</TextBlock>
+                <ToggleButton.ToolTip>
+                    <StackPanel>
+                        <TextBlock Style="{x:Null}" Text="Toggle this button ON to show properties" />
+                        <TextBlock Style="{x:Null}" Text="that are not commonly used in WPF applications." />
+                    </StackPanel>
+                </ToggleButton.ToolTip>
+            </ToggleButton>
+        </StackPanel>
+
+        <TextBox
+            x:Name="PropertiesFilter"
+            Style="{x:Null}"
+            DockPanel.Dock="Left"
+            Text="{Binding ElementName=propertyInspector, Path=StringFilter, UpdateSourceTrigger=PropertyChanged}"
+            Margin="0,0,2,0">
+            <TextBox.ToolTip>
+                <TextBlock Style="{x:Null}" Text="Type in this text box to filter properties" />
+            </TextBox.ToolTip>
+        </TextBox>
+    </DockPanel>
+
+    <controls:PropertyGrid2
+        x:Name="PropertyGrid"
+        Grid.Row="3"
+        Grid.Column="1"
+        MinHeight="0"
+        MinWidth="0"
+        Target="{Binding ElementName=propertyInspector, Path=Target}" />
+</Grid>

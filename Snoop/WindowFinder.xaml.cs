@@ -13,6 +13,7 @@ namespace Snoop
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
     using Snoop.Infrastructure;
+    using Snoop.Windows;
 
     public enum WindowFinderType
     {
@@ -24,7 +25,7 @@ namespace Snoop
     {
         private static readonly Point cursorHotSpot = new Point(16, 20);
         private readonly Cursor crosshairsCursor;
-        private Point _startPoint;
+        private Point startPoint;
         private WindowInfo currentWindowInfo;
         private readonly LowLevelMouseHook lowLevelMouseHook;
 
@@ -48,7 +49,7 @@ namespace Snoop
         /// <inheritdoc />
         protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
         {
-            this._startPoint = e.GetPosition(null);
+            this.startPoint = e.GetPosition(null);
             this.StartSnoopTargetsSearch();
             e.Handled = true;
 
@@ -61,7 +62,7 @@ namespace Snoop
             base.OnMouseMove(e);
 
             var currentPosition = e.GetPosition(null);
-            var diff = this._startPoint - currentPosition;
+            var diff = this.startPoint - currentPosition;
 
             if (e.LeftButton == MouseButtonState.Pressed
                 && (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance || Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance))
@@ -75,18 +76,20 @@ namespace Snoop
         {
             base.OnMouseLeftButtonUp(e);
 
+            var windowInfoToUse = this.currentWindowInfo;
+
             this.StopSnoopTargetsSearch();
 
-            if (this.currentWindowInfo != null
-                && this.currentWindowInfo.IsValidProcess)
+            if (windowInfoToUse != null
+                && windowInfoToUse.IsValidProcess)
             {
                 if (this.WindowFinderType == WindowFinderType.Snoop)
                 {
-                    this.AttachSnoop();
+                    AttachSnoop(windowInfoToUse);
                 }
                 else if (this.WindowFinderType == WindowFinderType.Magnify)
                 {
-                    this.AttachMagnify();
+                    AttachMagnify(windowInfoToUse);
                 }
             }
         }
@@ -137,6 +140,8 @@ namespace Snoop
 
             this.ReleaseMouseCapture();
 
+            this.currentWindowInfo = null;
+
             this.snoopCrosshairsImage.Visibility = Visibility.Visible;
 
             // clear out cached process info to make the force refresh do the process check over again.
@@ -167,20 +172,28 @@ namespace Snoop
             this.lastWindowInfoCursor = null;
         }
 
-        private void AttachSnoop()
+        public static void AttachSnoop(WindowInfo windowInfo)
         {
-            new AttachFailedHandler(this.currentWindowInfo);
-            this.currentWindowInfo.Snoop();
+            var result = windowInfo.OwningProcessInfo.Snoop(windowInfo.HWnd);
+
+            if (result?.Success == false)
+            {
+                ErrorDialog.ShowDialog(result.AttachException, "Can't Snoop the process", $"Failed to attach to '{result.WindowName}'.", true);
+            }
         }
 
-        private void AttachMagnify()
+        private static void AttachMagnify(WindowInfo windowInfo)
         {
-            new AttachFailedHandler(this.currentWindowInfo);
-            this.currentWindowInfo.Magnify();
+            var result = windowInfo.OwningProcessInfo.Magnify(windowInfo.HWnd);
+
+            if (result?.Success == false)
+            {
+                ErrorDialog.ShowDialog(result.AttachException, "Can't Snoop the process", $"Failed to attach to '{result.WindowName}'.", true);
+            }
         }
 
         // https://stackoverflow.com/a/27077188/122048
-        private static Cursor ConvertToCursor(UIElement control, Point hotSpot = default(Point))
+        private static Cursor ConvertToCursor(UIElement control, Point hotSpot = default)
         {
             // convert FrameworkElement to PNG stream
             using (var pngStream = new MemoryStream())
@@ -188,18 +201,17 @@ namespace Snoop
                 control.InvalidateMeasure();
                 control.InvalidateArrange();
                 control.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-                
+
                 var rect = new Rect(0, 0, control.DesiredSize.Width, control.DesiredSize.Height);
-                
+
                 control.Arrange(rect);
                 control.UpdateLayout();
 
-                var rtb = new RenderTargetBitmap((int)control.DesiredSize.Width, (int)control.DesiredSize.Height, 96, 96, PixelFormats.Pbgra32);
-                rtb.Render(control);
+                var rtb = VisualCaptureUtil.RenderVisual(control, new Size(control.DesiredSize.Width, control.DesiredSize.Height), 96, PixelFormats.Pbgra32);
 
-                var png = new PngBitmapEncoder();
-                png.Frames.Add(BitmapFrame.Create(rtb));
-                png.Save(pngStream);
+                var encoder = new PngBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(rtb));
+                encoder.Save(pngStream);
 
                 // write cursor header info
                 using (var cursorStream = new MemoryStream())

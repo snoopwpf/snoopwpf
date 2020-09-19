@@ -3,88 +3,112 @@
   <!-- ID="*" will generate a new GUID for product code at time of build. --> 
   <!-- Product code changes AND version number changes (first 3 digits), then a major upgrade will be triggered. --> 
    
-  <Product 
-    Id="*" 
-    Name="Snoop" 
-    Manufacturer="Cory Plotts" 
-    Language="1033" 
-    Version="$(var.ProductVersion)" 
-    UpgradeCode="FBEC01D7-CE1B-46F4-9498-71A96FEA8A15" 
-  > 
-    <Package InstallerVersion="301" Compressed="yes"/> 
+  <Product Id="*" 
+           Name="Snoop" 
+           Manufacturer="Cory Plotts" 
+           Language="1033" 
+           Version="$(var.ProductVersion)" 
+           UpgradeCode="FBEC01D7-CE1B-46F4-9498-71A96FEA8A15"> 
+    <Package InstallerVersion="301" Compressed="yes" /> 
  
     <MajorUpgrade AllowDowngrades="no" DowngradeErrorMessage="Newer version already installed." AllowSameVersionUpgrades="yes" />
      
-    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR"/> 
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" /> 
  
-    <Media Id="1" Cabinet="media1.cab" EmbedCab="yes"/> 
+    <Media Id="1" Cabinet="media1.cab" EmbedCab="yes" CompressionLevel="high" /> 
  
     <Directory Id="TARGETDIR" Name="SourceDir"> 
       <Directory Id="ProgramFilesFolder"> 
-        <Directory Id="INSTALLDIR" Name="Snoop"> 
-          <Component Id="Snoop" Guid="5624FD27-2409-4E5A-86E1-7C1A9C52A2F4"> 
-            <File 
-              Id="SnoopEXE" 
-              Name="Snoop.exe" 
-              Source="Snoop.exe" 
-              KeyPath="yes" 
-            > 
-              <Shortcut 
-                Id="desktopSnoopShortcut" 
-                Directory="DesktopFolder" 
-                Name="Snoop $(var.ProductVersion)" 
-                WorkingDirectory="INSTALLDIR" 
-                Icon="Snoop.exe" 
-                IconIndex="0" 
-                Advertise="yes" 
-              /> 
-              <Shortcut 
-                Id="startMenuSnoopShortcut" 
-                Directory="ProgramMenuDir" 
-                Name="Snoop $(var.ProductVersion)" 
-                WorkingDirectory="INSTALLDIR" 
-                Icon="Snoop.exe" 
-                IconIndex="0" 
-                Advertise="yes" 
-              /> 
-            </File> 
+        <Directory Id="INSTALLDIR" Name="Snoop">
+          <Directory Id="net40" Name="net40">
+            <Component Id="Snoop.Core.net40.dll" Guid="{71FAE20E-805A-4182-9860-7480BBD400BF}">
+                <File Id="Snoop.Core.net40.dll" KeyPath="yes" Source="SourceDir\net40\Snoop.Core.dll" />
+                <File Id="Snoop.Core.net40.pdb" Source="SourceDir\net40\Snoop.Core.pdb" />
+            </Component>
+            <Component Id="System.Management.Automation.dll" Guid="{77A47D45-F96D-41CF-BAAC-8CDE0B10350C}">
+                <File Id="System.Management.Automation.dll" KeyPath="yes" Source="SourceDir\net40\System.Management.Automation.dll" />
+            </Component>
+          </Directory>
+
+          <Directory Id="netcoreapp30" Name="netcoreapp3.0">
+            <Component Id="Snoop.Core.netcoreapp3.0.dll" Guid="{936DC81A-039F-41C3-8F46-23AEBCFF7B22}">
+                <File Id="Snoop.Core.netcoreapp3.0.dll" KeyPath="yes" Source="SourceDir\netcoreapp3.0\Snoop.Core.dll" />
+                <File Id="Snoop.Core.netcoreapp3.0.deps.json" Source="SourceDir\netcoreapp3.0\Snoop.Core.deps.json" />
+                <File Id="Snoop.Core.netcoreapp3.0.pdb" Source="SourceDir\netcoreapp3.0\Snoop.Core.pdb" />
+            </Component>
+          </Directory>
+
+          <Directory Id="netcoreapp31" Name="netcoreapp3.1">
+            <Component Id="Snoop.Core.netcoreapp3.1.dll" Guid="{FF43CCAC-9D8B-42BE-A571-809F3E14082D}">
+                <File Id="Snoop.Core.netcoreapp3.1.dll" KeyPath="yes" Source="SourceDir\netcoreapp3.1\Snoop.Core.dll" />
+                <File Id="Snoop.Core.netcoreapp3.1.deps.json" Source="SourceDir\netcoreapp3.1\Snoop.Core.deps.json" />
+                <File Id="Snoop.Core.netcoreapp3.1.pdb" Source="SourceDir\netcoreapp3.1\Snoop.Core.pdb" />
+            </Component>
+          </Directory>
+
+          <Component Id="Snoop.GenericInjector.x64.dll" Guid="{DF9AFA72-A1C6-48C5-9BF0-F00C284FA111}">
+              <File Id="Snoop.GenericInjector.x64.dll" KeyPath="yes" Source="SourceDir\Snoop.GenericInjector.x64.dll" />
+              <File Id="Snoop.GenericInjector.x64.pdb" Source="SourceDir\Snoop.GenericInjector.x64.pdb" />
+          </Component>
+          <Component Id="Snoop.GenericInjector.x86.dll" Guid="{DCCFD1DE-F53E-428C-95F1-4435FA9AC0CD}">
+              <File Id="Snoop.GenericInjector.x86.dll" KeyPath="yes" Source="SourceDir\Snoop.GenericInjector.x86.dll" />
+              <File Id="Snoop.GenericInjector.x86.pdb" Source="SourceDir\Snoop.GenericInjector.x86.pdb" />
+          </Component>
+
+          <Component Id="Snoop.InjectorLauncher.x64.exe" Guid="{2B8C5745-FC92-4617-A7C8-3A2AC4AD6DC8}">
+              <File Id="Snoop.InjectorLauncher.x64.exe" KeyPath="yes" Source="SourceDir\Snoop.InjectorLauncher.x64.exe" />
+              <File Id="Snoop.InjectorLauncher.x64.exe.config" Source="SourceDir\Snoop.InjectorLauncher.x64.exe.config" />
+              <File Id="Snoop.InjectorLauncher.x64.pdb" Source="SourceDir\Snoop.InjectorLauncher.x64.pdb" />
+          </Component>
+          <Component Id="Snoop.InjectorLauncher.x86.exe" Guid="{2D10FBCC-4F56-4CD7-A69B-42A2ADEA5065}">
+              <File Id="Snoop.InjectorLauncher.x86.exe" KeyPath="yes" Source="SourceDir\Snoop.InjectorLauncher.x86.exe" />
+              <File Id="Snoop.InjectorLauncher.x86.exe.config" Source="SourceDir\Snoop.InjectorLauncher.x86.exe.config" />
+              <File Id="Snoop.InjectorLauncher.x86.pdb" Source="SourceDir\Snoop.InjectorLauncher.x86.pdb" />
+          </Component>
+
+          <Component Id="Root.Snoop.Core.net40.dll" Guid="{3DAA043B-7FFB-4CB6-A3C3-D67DF9D0B3D2}">
+              <File Id="Root.Snoop.Core.dll" KeyPath="yes" Source="SourceDir\Snoop.Core.dll" />
+              <File Id="Root.Snoop.Core.pdb" Source="SourceDir\Snoop.Core.pdb" />
+          </Component>
+
+          <Component Id="Snoop.exe" Guid="{82953F7E-F81D-44E9-8274-D80815109361}">
+              <File Id="Snoop.exe" KeyPath="yes" Source="SourceDir\Snoop.exe">
+                <Shortcut Id="desktopSnoopShortcut" 
+                          Directory="DesktopFolder" 
+                          Name="Snoop" 
+                          WorkingDirectory="INSTALLDIR" 
+                          Icon="Snoop.exe" 
+                          IconIndex="0" 
+                          Advertise="yes" /> 
+                <Shortcut Id="startMenuSnoopShortcut" 
+                          Directory="ProgramMenuDir" 
+                          Name="Snoop" 
+                          WorkingDirectory="INSTALLDIR" 
+                          Icon="Snoop.exe" 
+                          IconIndex="0" 
+                          Advertise="yes" /> 
+              </File>
+              <File Id="Snoop.pdb" Source="SourceDir\Snoop.pdb" />
+          </Component>
+          <Component Id="Snoop.exe.config" Guid="{8BB4A7B2-F181-40E8-BCFF-FCC287DA8D06}">
+              <File Id="Snoop.exe.config" KeyPath="yes" Source="SourceDir\Snoop.exe.config" />
+          </Component>
+
+          <Component Id="Snoop.com" Guid="{cb40d877-92dc-452a-96c6-65f9a0d64439}">
+              <File Id="Snoop.com" KeyPath="yes" Source="SourceDir\Snoop.com" />
+          </Component>
+
+          <Component Id="Snoop.com.config" Guid="{e123e7d3-8371-43b8-b509-651c9cf0f158}">
+              <File Id="Snoop.com.config" KeyPath="yes" Source="SourceDir\Snoop.com.config" />
+          </Component>
  
-            <File 
-              Id="SnoopCFG" 
-              Name="Snoop.exe.config" 
-              Source="Snoop.exe.config" 
-            /> 
- 
-            <File 
-              Id="ManagedInjectorLauncher3240" 
-              Name="ManagedInjectorLauncher32-4.0.exe" 
-              Source="ManagedInjectorLauncher32-4.0.exe" 
-            /> 
-            <File 
-              Id="ManagedInjector3240" 
-              Name="ManagedInjector32-4.0.dll" 
-              Source="ManagedInjector32-4.0.dll" 
-            /> 
- 
-            <File 
-              Id="ManagedInjectorLauncher6440" 
-              Name="ManagedInjectorLauncher64-4.0.exe" 
-              Source="ManagedInjectorLauncher64-4.0.exe" 
-            /> 
-            <File 
-              Id="ManagedInjector6440" 
-              Name="ManagedInjector64-4.0.dll" 
-              Source="ManagedInjector64-4.0.dll" 
-            /> 
-          </Component> 
- 
+          <Component Id="CommandLine.dll" Guid="{a6e69fb8-8471-40a4-9a38-a4b31cac0e61}">
+            <File Id="CommandLine.dll" KeyPath="yes" Source="SourceDir\CommandLine.dll" />
+          </Component>
+
           <Directory Id="SnoopScriptsFolder" Name="Scripts"> 
             <Component Id="SnoopScriptsComponent" Guid="65AD97C3-5B32-4020-892C-1D0E38656D6D"> 
-              <File 
-                Id="SnoopScriptsFile" 
-                Name="Snoop.psm1" 
-                Source="Scripts\Snoop.psm1" 
-              /> 
+              <File Id="SnoopScriptsFile" Name="Snoop.psm1" Source="Scripts\Snoop.psm1" /> 
             </Component> 
           </Directory> 
         </Directory> 
@@ -101,9 +125,27 @@
  
       <Directory Id="DesktopFolder" Name="Desktop"/> 
     </Directory> 
- 
+
     <Feature Id="ProductFeature" Title="Snoop" Description="Snoop, the WPF Spying Utility" Level="1" ConfigurableDirectory="INSTALLDIR"> 
-      <ComponentRef Id="Snoop"/> 
+      <ComponentRef Id="Snoop.Core.net40.dll" />
+      <ComponentRef Id="System.Management.Automation.dll" />
+
+      <ComponentRef Id="Snoop.Core.netcoreapp3.0.dll" />
+      <ComponentRef Id="Snoop.Core.netcoreapp3.1.dll" />
+
+      <ComponentRef Id="Snoop.GenericInjector.x64.dll" />
+      <ComponentRef Id="Snoop.GenericInjector.x86.dll" />
+
+      <ComponentRef Id="Snoop.InjectorLauncher.x64.exe" />
+      <ComponentRef Id="Snoop.InjectorLauncher.x86.exe" />
+
+      <ComponentRef Id="Snoop.exe" />
+      <ComponentRef Id="Snoop.exe.config" />
+      <ComponentRef Id="Snoop.com" />
+      <ComponentRef Id="Snoop.com.config" />
+      <ComponentRef Id="CommandLine.dll" />
+      <ComponentRef Id="Root.Snoop.Core.net40.dll" />
+
       <ComponentRef Id="SnoopScriptsComponent"/> 
       <ComponentRef Id="ProgramMenuDir"/> 
     </Feature> 
@@ -111,12 +153,7 @@
     <UIRef Id="WixUI_InstallDir"/> 
     <WixVariable Id="WixUILicenseRtf" Value="License.rtf"/> 
     <WixVariable Id="WixUIBannerBmp" Value="..\..\Artwork\Banner.bmp"/> 
-    <WixVariable Id="WixUIDialogBmp" Value="..\..\Artwork\Dialog.bmp"/> 
-    <!-- <WixVariable Id="WixUIExclamationIco" Value="Bitmaps\Exclamation.ico"/> 
-    <WixVariable Id="WixUIInfoIco" Value="Bitmaps\Information.ico"/> 
-    <WixVariable Id="WixUINewIco" Value="Bitmaps\New.ico"/> 
-    <WixVariable Id="WixUIUpIco" Value="Bitmaps\Up.ico"/>  -->
- 
+    <WixVariable Id="WixUIDialogBmp" Value="..\..\Artwork\Dialog.bmp"/>  
     <Icon Id="Snoop.exe" SourceFile="Snoop.exe"/>
     <Icon Id="icon.ico" SourceFile="..\..\Artwork\Snoop.ico"/>
     <Property Id="ARPPRODUCTICON" Value="icon.ico" />

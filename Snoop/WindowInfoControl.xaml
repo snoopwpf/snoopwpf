@@ -3,18 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:Snoop"
+             xmlns:snoop="clr-namespace:Snoop"
              xmlns:infrastructure="clr-namespace:Snoop.Infrastructure"
              xmlns:converters="clr-namespace:Snoop.Converters"
+             xmlns:snoopwpf="urn:snoopwpf"
              mc:Ignorable="d"
              d:DesignHeight="40"
              d:DesignWidth="600"
+             SnapsToDevicePixels="True"
              TextOptions.TextFormattingMode="Display"
              TextOptions.TextHintingMode="Fixed"
              TextOptions.TextRenderingMode="Aliased">
     <!-- The TextOptions set above are important to get a crisp and clear image of this control when it's converted to an image/cursor -->
     <Border>
-        <StackPanel d:DataContext="{d:DesignInstance local:WindowInfo}" 
+        <StackPanel d:DataContext="{d:DesignInstance snoop:WindowInfo}" 
                     Orientation="Horizontal"
                     Margin="8 0 0 0"
                     Height="40">
@@ -38,21 +40,11 @@
                         Width="32"
                         Height="32"
                         Margin="0 0 2 0"
-                        Visibility="{Binding IsOwningProcessElevated, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        Visibility="{Binding OwningProcessInfo.IsProcessElevated, Converter={x:Static snoopwpf:BoolToVisibilityConverter.DefaultInstance}}">
                     <Image Style="{x:Null}"
                            Source="{Binding Source={x:Static infrastructure:SystemIcon.Shield}, Converter={x:Static converters:SystemIconToImageSourceConverter.Instance}, ConverterParameter=32}" />
                 </Border>
 
-                <!--<Path Grid.Column="2"
-                      Data="{DynamicResource snoopDogStreamGeometry}"
-                      Stretch="Uniform">
-                    <Path.Fill>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                            <GradientStop Color="#FFEEEEEE" Offset="0" />
-                            <GradientStop Color="#FF596F7E" Offset="1" />
-                        </LinearGradientBrush>
-                    </Path.Fill>
-                </Path>-->
                 <Path Grid.Column="1"
                       Width="32"
                       Height="32"
@@ -63,16 +55,17 @@
                       StrokeThickness="1">
                     <Path.Fill>
                         <LinearGradientBrush StartPoint="-0.943,2.158" EndPoint="0.835,-1.356">
-                            <GradientStop Color="#000073E6" Offset="0" />
-                            <GradientStop Color="#91037790" Offset="0.5" />
-                            <GradientStop Color="#03006EB9" Offset="1" />
+                            <GradientStop Color="#FF0073E6" Offset="0" />
+                            <GradientStop Color="#FF037790" Offset="0.5" />
+                            <GradientStop Color="#FF006EB9" Offset="1" />
                         </LinearGradientBrush>
                     </Path.Fill>
                 </Path>
 
                 <Border Grid.Column="2"
                         Background="White"
-                        CornerRadius="4"
+                        BorderBrush="Black"
+                        BorderThickness="1"
                         VerticalAlignment="Center">
                     <TextBlock TextTrimming="CharacterEllipsis"
                                Foreground="Black"

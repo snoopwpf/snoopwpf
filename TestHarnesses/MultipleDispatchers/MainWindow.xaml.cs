@@ -16,9 +16,9 @@
             if (newDispatcher)
             {
                 var thread = new Thread(NewDispatcherWindow)
-                             {
-                                 IsBackground = true
-                             };
+                {
+                    IsBackground = true
+                };
                 thread.SetApartmentState(ApartmentState.STA);
                 thread.Start();
             }
@@ -36,12 +36,12 @@
             Dispatcher.Run();
         }
 
-        private void dispatcherLaunchButton_Click(object sender, RoutedEventArgs e)
+        private void DispatcherLaunchButton_Click(object sender, RoutedEventArgs e)
         {
             NewWindow(true);
         }
 
-        private void noDispatcherLaunchButton_Click(object sender, RoutedEventArgs e)
+        private void NoDispatcherLaunchButton_Click(object sender, RoutedEventArgs e)
         {
             NewWindow(false);
         }

@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+    <TargetFramework>net40</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputType>Exe</OutputType>
+    <UseWpf>true</UseWpf>
+
+    <AssemblyTitle>Snoop</AssemblyTitle>
+    <ApplicationIcon>..\Artwork\Snoop.ico</ApplicationIcon>
+    <ApplicationManifest>../Shared/app.manifest</ApplicationManifest>
+    <StartupObject>Snoop.ConsoleProgram</StartupObject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../Snoop/app.config" />
+    <None Include="../Shared/app.manifest" />
+
+    <Resource Include="..\Artwork\*.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+     <ProjectReference Include="../Snoop/Snoop.csproj" /> 
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Copy SourceFiles="$(TargetPath)"
+          DestinationFiles="$(OutDir)\Snoop.com" />
+    <Copy SourceFiles="$(TargetPath).config"
+          DestinationFiles="$(OutDir)\Snoop.com.config" />
+  </Target>
+</Project>

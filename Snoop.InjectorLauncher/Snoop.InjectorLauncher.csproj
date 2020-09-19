@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net40</TargetFramework>
+    <PlatformTarget>x86</PlatformTarget>
+    <ApplicationIcon>..\Artwork\Snoop.ico</ApplicationIcon>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+
+    <ApplicationIcon>..\Artwork\Snoop.ico</ApplicationIcon>
+    <ApplicationManifest>../Shared/app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetName>$(AssemblyName).$(PlatformTarget)</TargetName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DefaultItemExcludes Condition="'$(PlatformTarget)' == 'x86'">$(DefaultItemExcludes);obj/x64/**/*</DefaultItemExcludes>
+    <DefaultItemExcludes Condition="'$(PlatformTarget)' == 'x64'">$(DefaultItemExcludes);obj/x86/**/*</DefaultItemExcludes>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <ApplicationManifest Include="../Shared/app.manifest" />
+
+    <Compile Include="..\Shared\InjectorData.cs" Link="InjectorData.cs" />
+    <Compile Include="..\Snoop.Core\Data\TransientSettingsData.cs" Link="Data\TransientSettingsData.cs" />
+    <Compile Include="..\Snoop.Core\Infrastructure\NativeMethods.cs" Link="NativeMethods.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommandLineParser" />
+  </ItemGroup>
+   
+  <Target Name="Compilex64" AfterTargets="Build" Condition="'$(PlatformTarget)' == 'x86'">
+    <Message Text="Building injector launcher for x64..." Importance="High" />
+    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Restore;Build" Properties="Configuration=$(Configuration);PlatformTarget=x64" RunEachTargetSeparately="false" />
+  </Target>
+</Project>

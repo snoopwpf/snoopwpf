@@ -1,0 +1,31 @@
+﻿<Grid x:Class="Snoop.Views.BehaviorsTab.BehaviorsView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:converters="clr-namespace:Snoop.Converters"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:snoop="clr-namespace:Snoop"
+      xmlns:controls="clr-namespace:Snoop.Controls"
+      mc:Ignorable="d"
+      x:Name="behaviorView">
+    <Grid Visibility="{Binding HasBehaviors, ElementName=behaviorView, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="2*"/>
+        </Grid.RowDefinitions>
+
+        <ListBox Grid.Row="0" ItemsSource="{Binding Behaviors, ElementName=behaviorView}" SelectedItem="{Binding SelectedBehavior, ElementName=behaviorView}" />
+
+        <GridSplitter Grid.Row="1" Height="4" HorizontalAlignment="Stretch" />
+
+        <controls:PropertyInspector Grid.Row="2" RootTarget="{Binding Path=SelectedBehavior, ElementName=behaviorView}"/>
+    </Grid>
+
+    <TextBlock Style="{x:Null}"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"
+               Text="The element has no behaviors"
+               Visibility="{Binding HasBehaviors, ElementName=behaviorView, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}, ConverterParameter=True}"
+               Opacity="0.6" />
+</Grid>

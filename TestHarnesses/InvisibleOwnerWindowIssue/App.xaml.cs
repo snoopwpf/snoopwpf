@@ -1,45 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Windows;
-using System.Windows.Shapes;
-using System.Windows.Media;
-
-namespace InvisibleOwnerWindowIssue
+﻿namespace InvisibleOwnerWindowIssue
 {
-	/// <summary>
-	/// Interaction logic for App.xaml
-	/// </summary>
-	public partial class App : Application
-	{
-		private Window _hiddenWindow;
-		private Window _shownWindow;
+    using System.Windows;
+    using System.Windows.Media;
+    using System.Windows.Shapes;
 
-		protected override void OnStartup(StartupEventArgs args)
-		{
-			base.OnStartup(args);
+    /// <summary>
+    /// Interaction logic for App.xaml
+    /// </summary>
+    public partial class App : Application
+    {
+        private Window hiddenWindow;
+        private Window shownWindow;
 
-			_hiddenWindow = new Window();
-			_hiddenWindow.Title = "Hidden";
+        protected override void OnStartup(StartupEventArgs args)
+        {
+            base.OnStartup(args);
 
-			_shownWindow = new Window();
-			_shownWindow.Width = 300;
-			_shownWindow.Height = 300;
-			_shownWindow.Title = "Shown";
-			Rectangle rectangle = new Rectangle();
-			rectangle.Width = 200;
-			rectangle.Height = 50;
-			rectangle.HorizontalAlignment = HorizontalAlignment.Center;
-			rectangle.VerticalAlignment = VerticalAlignment.Center;
-			rectangle.Fill = new SolidColorBrush(Colors.DarkRed);
-			_shownWindow.Content = rectangle;
-			_shownWindow.Closing += (sender, e) =>
-			{
-				_hiddenWindow.Close();
-			};
-			_shownWindow.Show();
-		}
-	}
+            this.hiddenWindow = new Window();
+            this.hiddenWindow.Title = "Hidden";
+
+            this.shownWindow = new Window();
+            this.shownWindow.Width = 300;
+            this.shownWindow.Height = 300;
+            this.shownWindow.Title = "Shown";
+            Rectangle rectangle = new Rectangle();
+            rectangle.Width = 200;
+            rectangle.Height = 50;
+            rectangle.HorizontalAlignment = HorizontalAlignment.Center;
+            rectangle.VerticalAlignment = VerticalAlignment.Center;
+            rectangle.Fill = new SolidColorBrush(Colors.DarkRed);
+            this.shownWindow.Content = rectangle;
+            this.shownWindow.Closing += (sender, e) =>
+            {
+                this.hiddenWindow.Close();
+            };
+            this.shownWindow.Show();
+        }
+    }
 }

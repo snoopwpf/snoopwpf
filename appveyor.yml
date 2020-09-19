@@ -1,29 +1,25 @@
-# configuration for develop and master branch
+# http://www.appveyor.com/docs/appveyor-yml
+branches:
+  only:
+    - master
+    - develop
+    - /\d*\.\d*\.\d*/
 
--
-  branches:
-    only:
-      - master
-      - develop
+image: Visual Studio 2019
+test: off
 
-  skip_tags: true
-  image: Visual Studio 2017
-  configuration: Release
-  platform: Mixed Platforms
-  test: off
+install:
+  - cinst dotnetcore-sdk --version 3.1.401
 
-  pull_requests:
-    do_not_increment_build_number: false
+build_script:
+  - ps: .\build.ps1 CI -Verbose
 
-  build_script:
-    - ps: .\build.ps1 -Package -Verbose
+artifacts:
+  - path: \artifacts\*.*
 
-  artifacts:
-    - path: \build\publish\*.*
+nuget:
+  disable_publish_on_pr: true
 
-  nuget:
-    disable_publish_on_pr: true
-
-  skip_commits:
-    files:
-      - '**/*.md'
+skip_commits:
+  files:
+    - '**/*.md'

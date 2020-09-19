@@ -5,11 +5,26 @@
 
 namespace Snoop
 {
+    using System;
     using System.Windows;
     using Snoop.Properties;
 
     public partial class App
     {
+        public App()
+        {
+            this.InitializeComponent();
+        }
+
+        /// <inheritdoc />
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+
+            this.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri($"pack://application:,,,/Snoop.Core;component/Icons.xaml") });
+            this.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri($"pack://application:,,,/Snoop.Core;component/Controls/ValueEditors/EditorTemplates.xaml") });
+        }
+
         private void Application_Exit(object sender, ExitEventArgs e)
         {
             Settings.Default.Save();

@@ -14,11 +14,8 @@ All other rights reserved.
 	<Application.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="Icons.xaml"/>
-				<ResourceDictionary Source="Simple Styles.xaml"/>
+                <ResourceDictionary Source="Simple Styles.xaml"/>
 			</ResourceDictionary.MergedDictionaries>
-
-		    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
             <!-- appChooserButtonStyle -->
 			<Style x:Key="appChooserButtonStyle" TargetType="{x:Type Button}">

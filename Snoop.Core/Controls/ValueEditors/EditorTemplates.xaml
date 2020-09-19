@@ -1,0 +1,371 @@
+<!--
+(c) Copyright Cory Plotts.
+This source is subject to the Microsoft Public License (Ms-PL).
+Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
+All other rights reserved.
+-->
+<ResourceDictionary 
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:snoop="clr-namespace:Snoop"
+	xmlns:converters="clr-namespace:Snoop.Converters" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:valueEditors="clr-namespace:Snoop.Controls.ValueEditors"
+    xmlns:controls="clr-namespace:Snoop.Controls"
+    xmlns:infrastructure="clr-namespace:Snoop.Infrastructure"
+    mc:Ignorable="d">
+
+    <Style TargetType="{x:Type valueEditors:MouseWheelValueEditor}">
+        <Setter Property="DockPanel.Dock" Value="Right"/>
+        <Setter Property="Margin" Value="5,0,0,0"/>
+        <Setter Property="Visibility" Value="Collapsed"/>
+        <Setter Property="ToolTip">
+            <Setter.Value>
+                <DataTemplate>
+                    <TextBlock Style="{x:Null}" Text="Scroll mouse wheel here to edit value"/>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}" Value="True"/>
+                    <Condition Binding="{Binding CanEdit}" Value="True"/>
+                </MultiDataTrigger.Conditions>
+                <Setter Property="Visibility" Value="Visible"/>
+            </MultiDataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="{x:Type valueEditors:StandardValueEditor}">
+		<Style.Resources>
+            <DataTemplate x:Key="EmptyValueTemplate" DataType="valueEditors:ValueEditor">
+                <TextBlock Style="{x:Null}" Text="{Binding DescriptiveValue}"/>
+            </DataTemplate>
+
+            <DataTemplate x:Key="UnselectedValueTemplate" DataType="valueEditors:ValueEditor">
+				<TextBlock Style="{x:Null}" Text="{Binding DescriptiveValue}"/>
+			</DataTemplate>
+
+			<DataTemplate x:Key="SelectedValueTemplate" DataType="valueEditors:StandardValueEditor">
+				<controls:EditTextBox Height="Auto" IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}" Text="{Binding StringValue}" HorizontalAlignment="Stretch" Padding="1" BorderThickness="0" Background="White" VerticalContentAlignment="Center"/>
+			</DataTemplate>
+        </Style.Resources>
+		
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type valueEditors:StandardValueEditor}">
+					<StackPanel Orientation="Horizontal">
+						<Button Style="{x:Null}" 
+								x:Name="OpenDetailsEditor"
+								DockPanel.Dock="Left"
+                                Visibility="Collapsed"
+								Command="{x:Static valueEditors:ValueEditor.OpenDetailsEditorCommand}"
+                                Content=" ... ">
+                            <Button.ToolTip>
+                                <TextBlock Style="{x:Null}">
+                                    Opens an editor window where you can see and edit the full value.
+                                    <LineBreak Style="{x:Null}" /> 
+                                    Editing is only possible if the property is not read only.
+                                </TextBlock> 
+                            </Button.ToolTip>
+                        </Button>
+
+                        <ContentPresenter Name="ValueHolder" Style="{x:Null}" ContentTemplate="{DynamicResource UnselectedValueTemplate}" Content="{Binding RelativeSource={RelativeSource TemplatedParent}}">
+					        <ContentPresenter.ToolTip>
+						        <TextBlock Style="{x:Null}" Text="{TemplateBinding DescriptiveValue}"/>
+					        </ContentPresenter.ToolTip>
+				        </ContentPresenter>
+					</StackPanel>
+
+					<ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding Value}" Value="{x:Null}">
+                            <Setter TargetName="ValueHolder" Property="ContentTemplate" Value="{DynamicResource EmptyValueTemplate}"/>
+                        </DataTrigger>
+                        <MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="IsSelected" Value="True"/>
+							</MultiTrigger.Conditions>
+							<Setter TargetName="ValueHolder" Property="ContentTemplate" Value="{DynamicResource SelectedValueTemplate}"/>
+						</MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsSelected" Value="True"/>
+                                <Condition Property="SupportsDetailsEditor" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="OpenDetailsEditor" Property="Visibility" Value="Visible"/>
+                        </MultiTrigger>
+					</ControlTemplate.Triggers>
+
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	
+	<Style TargetType="{x:Type valueEditors:BoolValueEditor}">
+        <Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type valueEditors:BoolValueEditor}">
+					<StackPanel Orientation="Horizontal" d:DataContext="{d:DesignInstance infrastructure:PropertyInformation, IsDesignTimeCreatable=False}">
+						<CheckBox
+							x:Name="PART_CheckBox"
+						    Style="{x:Null}"
+							IsChecked="{Binding Value, Mode=TwoWay}"
+							IsEnabled="{TemplateBinding IsEditable}"
+							VerticalAlignment="Center"
+						/>
+						<TextBlock Style="{x:Null}" 
+						           Margin="3,0" 
+											 Text="{Binding Path=DescriptiveValue}"
+											 Visibility="{Binding Path=IsExpression, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}}"
+											 VerticalAlignment="Center"
+											 />
+					</StackPanel>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+    <Style TargetType="{x:Type valueEditors:StringValueEditor}"
+           BasedOn="{StaticResource {x:Type valueEditors:StandardValueEditor}}">
+		<Style.Setters>
+			<Setter Property="DetailsEditorTemplate">
+				<Setter.Value>
+                    <DataTemplate DataType="valueEditors:StringValueEditor">
+                        <TextBox Style="{x:Null}"
+                                 IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}"
+                                 IsReadOnlyCaretVisible="True"
+                                 AcceptsReturn="True"
+                                 TextWrapping="Wrap"
+                                 VerticalScrollBarVisibility="Visible"
+                                 HorizontalScrollBarVisibility="Disabled"
+                                 Text="{Binding StringValueForDetailsEditor}" />
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+	
+	<Style TargetType="{x:Type valueEditors:BrushValueEditor}"
+           BasedOn="{StaticResource {x:Type valueEditors:StandardValueEditor}}">
+		<Style.Resources>
+			<DrawingBrush Stretch="Fill" TileMode="Tile" x:Key="CheckerboardBrush" Viewport="0,0,16,16" ViewportUnits="Absolute">
+				<DrawingBrush.Drawing>
+					<DrawingGroup>
+						<GeometryDrawing Brush="White" Geometry="M 0,0 L 2,0 2,2 0,2 Z"/>
+						<GeometryDrawing Brush="LightGray" Geometry="M 0,0 L 1,0 1,2 2,2 2,1 0,1 Z"/>
+					</DrawingGroup>
+				</DrawingBrush.Drawing>
+			</DrawingBrush>
+
+			<DataTemplate x:Key="UnselectedValueTemplate" DataType="valueEditors:ValueEditor">
+				<Grid Height="Auto" HorizontalAlignment="Left">
+                    <Grid.ToolTip>
+                        <ToolTip Style="{x:Null}">
+                            <ListBox Style="{x:Null}" ItemsSource="{Binding Value, Converter={x:Static converters:BrushStopsConverter.DefaultInstance}}" 
+                                        Height="200"
+                                        Width="200">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="converters:BrushStop">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="40" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Style="{x:Null}"
+                                                       Grid.Column="0" 
+                                                       Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+                                                       Text="{Binding Offset}" 
+                                                       Margin="4" />
+                                            <TextBlock Style="{x:Null}"
+                                                       Grid.Column="1" 
+                                                       Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+                                                       Text="{Binding ColorText}" 
+                                                       Margin="4" />
+                                            <Border Grid.Column="2"
+                                                    BorderBrush="{DynamicResource SolidBorderBrush}" 
+                                                    BorderThickness="1"
+                                                    VerticalAlignment="Stretch"
+                                                    HorizontalAlignment="Stretch">
+                                                <Border.Background>
+                                                    <SolidColorBrush Color="{Binding Color}" />
+                                                </Border.Background>
+                                            </Border>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ListBox>
+                        </ToolTip>
+                    </Grid.ToolTip>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="48"/>
+						<ColumnDefinition/>
+					</Grid.ColumnDefinitions>
+					<Rectangle Fill="{StaticResource CheckerboardBrush}"/>
+					<Rectangle Fill="{Binding Value}" Stroke="{TemplateBinding TextElement.Foreground}" StrokeThickness="1"/>
+					<TextBlock Grid.Column="1" Style="{x:Null}" Margin="5,0,0,0" Text="{Binding DescriptiveValue}"/>
+				</Grid>
+			</DataTemplate>
+
+			<DataTemplate x:Key="SelectedValueTemplate" DataType="valueEditors:BrushValueEditor">
+				<controls:EditTextBox Height="Auto" IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}" Text="{Binding StringValue}" HorizontalAlignment="Stretch" Padding="1" BorderThickness="0" Background="White" VerticalContentAlignment="Center"/>
+			</DataTemplate>
+
+			<DataTemplate x:Key="EmptyValueTemplate"/>
+		</Style.Resources>
+    </Style>
+	
+	<Style TargetType="{x:Type valueEditors:EnumValueEditor}">
+		<Style.Resources>
+			<DataTemplate x:Key="UnselectedValueTemplate" DataType="valueEditors:ValueEditor">
+				<TextBlock Style="{x:Null}" Text="{Binding DescriptiveValue}" />
+			</DataTemplate>
+
+			<DataTemplate x:Key="SelectedValueTemplate" DataType="valueEditors:EnumValueEditor">
+				<ComboBox Style="{x:Null}" Height="16" Padding="2,-2,2,0" IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}" ItemsSource="{Binding Values}" IsSynchronizedWithCurrentItem="True" />
+			</DataTemplate>
+		</Style.Resources>
+
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type valueEditors:EnumValueEditor}">
+					<ContentPresenter Name="ValueHolder" Style="{x:Null}" ContentTemplate="{DynamicResource UnselectedValueTemplate}" Content="{Binding RelativeSource={RelativeSource TemplatedParent}}"/>
+
+					<ControlTemplate.Triggers>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="IsSelected" Value="True"/>
+								<Condition Property="IsEditable" Value="True"/>
+							</MultiTrigger.Conditions>
+							<Setter TargetName="ValueHolder" Property="ContentTemplate" Value="{DynamicResource SelectedValueTemplate}"/>
+						</MultiTrigger>
+					</ControlTemplate.Triggers>
+
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<valueEditors:ValueEditorTemplateSelector x:Key="EditorSelector">
+		<valueEditors:ValueEditorTemplateSelector.StandardTemplate>
+			<DataTemplate DataType="infrastructure:PropertyInformation">
+				<DockPanel>
+					<!-- add mouse wheel editor to right of value (only visible when IsSelected and CanEdit) -->
+					<valueEditors:MouseWheelValueEditor/>
+
+					<valueEditors:StandardValueEditor
+						PropertyType="{Binding PropertyType}"
+						Value="{Binding Value, Mode=TwoWay}"
+						DescriptiveValue="{Binding DescriptiveValue, Mode=OneWay}"
+						IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
+						IsEditable="{Binding CanEdit}"
+						PropertyInfo="{Binding}"
+					/>
+
+					<!-- to allow ValueEditor to live on the left and not stretch -->
+					<Border/>
+				</DockPanel>
+			</DataTemplate>
+		</valueEditors:ValueEditorTemplateSelector.StandardTemplate>
+
+		<valueEditors:ValueEditorTemplateSelector.EnumTemplate>
+			<DataTemplate DataType="infrastructure:PropertyInformation">
+				<DockPanel>
+					<!-- add mouse wheel editor to right of value (only visible when IsSelected and CanEdit) -->
+					<valueEditors:MouseWheelValueEditor/>
+
+					<valueEditors:EnumValueEditor
+						PropertyType="{Binding PropertyType}"
+						Value="{Binding Value, Mode=TwoWay}"
+						DescriptiveValue="{Binding DescriptiveValue, Mode=OneWay}"
+						IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
+						IsEditable="{Binding CanEdit}"
+						PropertyInfo="{Binding}"
+					/>
+
+					<!-- to allow ValueEditor to live on the left and not stretch -->
+					<Border/>
+				</DockPanel>
+			</DataTemplate>
+		</valueEditors:ValueEditorTemplateSelector.EnumTemplate>
+
+		<valueEditors:ValueEditorTemplateSelector.BoolTemplate>
+			<DataTemplate DataType="infrastructure:PropertyInformation">
+				<DockPanel>
+					<!-- add mouse wheel editor to right of value (only visible when IsSelected and CanEdit) -->
+					<valueEditors:MouseWheelValueEditor/>
+
+					<valueEditors:BoolValueEditor
+						PropertyType="{Binding PropertyType}"
+						Value="{Binding Value, Mode=TwoWay}"
+						DescriptiveValue="{Binding DescriptiveValue, Mode=OneWay}"
+						IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
+						IsEditable="{Binding CanEdit}"
+						PropertyInfo="{Binding}"
+					/>
+
+					<!-- to allow ValueEditor to live on the left and not stretch -->
+					<Border/>
+				</DockPanel>
+			</DataTemplate>
+		</valueEditors:ValueEditorTemplateSelector.BoolTemplate>
+
+        <valueEditors:ValueEditorTemplateSelector.StringTemplate>
+            <DataTemplate DataType="infrastructure:PropertyInformation">
+                <DockPanel>
+                    <valueEditors:StringValueEditor
+                        PropertyType="{Binding PropertyType}"
+                        Value="{Binding Value, Mode=TwoWay}"
+                        DescriptiveValue="{Binding DescriptiveValue, Mode=OneWay}"
+                        IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
+                        IsEditable="{Binding CanEdit}"
+                        PropertyInfo="{Binding}"
+                    />
+
+                    <!-- to allow ValueEditor to live on the left and not stretch -->
+                    <Border/>
+                </DockPanel>
+            </DataTemplate>
+        </valueEditors:ValueEditorTemplateSelector.StringTemplate>
+
+		<valueEditors:ValueEditorTemplateSelector.BrushTemplate>
+			<DataTemplate DataType="infrastructure:PropertyInformation">
+				<DockPanel>
+					<!-- add mouse wheel editor to right of value (only visible when IsSelected and CanEdit) -->
+					<valueEditors:MouseWheelValueEditor/>
+
+					<valueEditors:BrushValueEditor
+						PropertyType="{Binding PropertyType}"
+						Value="{Binding Value, Mode=TwoWay}"
+						DescriptiveValue="{Binding DescriptiveValue, Mode=OneWay}"
+						IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
+						IsEditable="{Binding CanEdit}"
+						PropertyInfo="{Binding}"
+					/>
+
+					<!-- to allow ValueEditor to live on the left and not stretch -->
+					<Border/>
+				</DockPanel>
+			</DataTemplate>
+		</valueEditors:ValueEditorTemplateSelector.BrushTemplate>
+
+        <valueEditors:ValueEditorTemplateSelector.WithResourceKeyTemplate>
+            <DataTemplate DataType="infrastructure:PropertyInformation">
+                <DockPanel>
+                    <valueEditors:StandardValueEditor
+                        PropertyType="{Binding PropertyType}"
+                        Value="{Binding ResourceKey, Mode=OneWay}"
+                        DescriptiveValue="{Binding DescriptiveValue, Mode=OneWay}"
+                        IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
+                        IsEditable="False"
+                        PropertyInfo="{Binding}"
+                    />
+
+                    <!-- to allow ValueEditor to live on the left and not stretch -->
+                    <Border/>
+                </DockPanel>
+            </DataTemplate>
+        </valueEditors:ValueEditorTemplateSelector.WithResourceKeyTemplate>
+	</valueEditors:ValueEditorTemplateSelector>
+</ResourceDictionary>

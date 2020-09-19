@@ -12,22 +12,53 @@
     <iconUrl>https://github.com/snoopwpf/snoopwpf/raw/master/Artwork/Snoop.ico</iconUrl>
     <description>
     Snoop allows you to spy/browse the visual tree of a running WPF application (without the need for a debugger) ... and change properties ... amongst other things.
-    A changelog can be found at https://github.com/snoopwpf/snoopwpf/blob/master/Changelog.md.
+    The changelog for release versions can be found at https://github.com/snoopwpf/snoopwpf/blob/master/Changelog.md.
+    The changelog for preview versions can be found at https://github.com/snoopwpf/snoopwpf/blob/develop/Changelog.md.
     </description>
     <tags>snoop spy wpf</tags>
-    <dependencies>
-      <dependency id="vcredist140" version="14.12.25810" />
-    </dependencies>
   </metadata>
   <files>
     <file src="..\License.txt" target="tools\" />
     <file src="tools\*" target="tools\" />
-    <file src="..\build\$Configuration$\Scripts\*" target="tools\Scripts\" />
-    <file src="..\build\$Configuration$\*.config" target="tools\" />
-    <file src="..\build\$Configuration$\*.dll" target="tools\" />    
-    <file src="..\build\$Configuration$\*.exe" target="tools\" />
-    <file src="..\build\$Configuration$\*.pdb" target="tools\" />
-    <file src="..\build\$Configuration$\*.ignore" target="tools\" />
-    <file src="..\build\$Configuration$\*.gui" target="tools\" />
+    <file src="..\bin\$Configuration$\Scripts\*" target="tools\Scripts\" />
+
+    <file src="..\bin\$Configuration$\Snoop.Core*.config" target="tools\" />
+    <file src="..\bin\$Configuration$\Snoop.Core*.dll" target="tools\" />
+    <file src="..\bin\$Configuration$\Snoop.Core*.pdb" target="tools\" />
+    <file src="..\bin\$Configuration$\Snoop.Core*.json" target="tools\" />
+
+    <file src="..\bin\$Configuration$\Snoop.exe" target="tools\" />
+    <file src="..\bin\$Configuration$\Snoop.exe.config" target="tools\" />
+    <file src="..\bin\$Configuration$\Snoop.pdb" target="tools\" />
+    <file src="..\bin\$Configuration$\Snoop.com" target="tools\" />
+    <file src="..\bin\$Configuration$\Snoop.com.config" target="tools\" />
+
+    <file src="..\bin\$Configuration$\CommandLine.dll" target="tools\" />
+    
+    <file src="..\bin\$Configuration$\net40\Snoop.Core*.config" target="tools\net40\" />
+    <file src="..\bin\$Configuration$\net40\Snoop.Core*.dll" target="tools\net40\" />
+    <file src="..\bin\$Configuration$\net40\Snoop.Core*.pdb" target="tools\net40\" />
+    <file src="..\bin\$Configuration$\net40\System.Management.Automation.dll" target="tools\net40\" />
+
+    <file src="..\bin\$Configuration$\netcoreapp3.0\Snoop.Core*.config" target="tools\netcoreapp3.0\" />
+    <file src="..\bin\$Configuration$\netcoreapp3.0\Snoop.Core*.dll" target="tools\netcoreapp3.0\" />
+    <file src="..\bin\$Configuration$\netcoreapp3.0\Snoop.Core*.pdb" target="tools\netcoreapp3.0\" />
+    <file src="..\bin\$Configuration$\netcoreapp3.0\Snoop.Core*.json" target="tools\netcoreapp3.0\" />
+
+    <file src="..\bin\$Configuration$\netcoreapp3.1\Snoop.Core*.config" target="tools\netcoreapp3.1\" />
+    <file src="..\bin\$Configuration$\netcoreapp3.1\Snoop.Core*.dll" target="tools\netcoreapp3.1\" />
+    <file src="..\bin\$Configuration$\netcoreapp3.1\Snoop.Core*.pdb" target="tools\netcoreapp3.1\" />
+    <file src="..\bin\$Configuration$\netcoreapp3.1\Snoop.Core*.json" target="tools\netcoreapp3.1\" />
+
+    <file src="..\bin\$Configuration$\Snoop.GenericInjector.*.dll" target="tools\" />
+    <file src="..\bin\$Configuration$\Snoop.GenericInjector.*.pdb" target="tools\" />
+
+    <file src="..\bin\$Configuration$\Snoop.InjectorLauncher.*.exe" target="tools\" />
+    <file src="..\bin\$Configuration$\Snoop.InjectorLauncher.*.exe.config" target="tools\" />
+    <file src="..\bin\$Configuration$\Snoop.InjectorLauncher.*.pdb" target="tools\" />
+    <file src="..\bin\$Configuration$\Snoop.InjectorLauncher.*.exe.ignore" target="tools\" />
+
+    <file src="..\bin\$Configuration$\*.ignore" target="tools\" />
+    <file src="..\bin\$Configuration$\*.gui" target="tools\" />
   </files>
 </package>

@@ -2,11 +2,15 @@ Build/
 Intermediate/
 bin/
 obj/
+output/
+artifacts/
 Debug/
 Release/
 packages/
 paket-files/
+.tmp/
 *.vs
+*.vscode
 *.user
 *.opensdf
 *.sdf
@@ -19,3 +23,6 @@ paket-files/
 _ReSharper*/
 *.[Rr]e[Ss]harper
 *.DotSettings.user
+
+# Designer
+FAML.Designer.settings
