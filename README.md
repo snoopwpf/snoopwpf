@@ -16,9 +16,9 @@ It allows you to spy/browse the visual tree of a running application (without th
 
 ## Where can i download Snoop?/How can i install Snoop?
 
-- [chocolatey](https://chocolatey.org/packages/snoop)
-- [github releases](https://github.com/snoopwpf/snoopwpf/releases)
-- [appveyor](https://ci.appveyor.com/project/batzen/snoopwpf) for the latest preview versions (built on every code change)
+- [chocolatey](https://chocolatey.org/packages/snoop) for stable and some preview versions
+- [github releases](https://github.com/snoopwpf/snoopwpf/releases) for stable versions
+- [appveyor](https://ci.appveyor.com/project/batzen/snoopwpf/build/artifacts) for the latest preview versions (built on every code change)
 - Please note that you need at least .NET Framework 4.0 to run Snoop
 
 ## Versions
