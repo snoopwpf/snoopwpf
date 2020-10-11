@@ -119,7 +119,6 @@ class Build : NukeBuild
         });
 
     Target CompileTestHarnesses => _ => _
-        .DependsOn(Restore)
         .Executes(() =>
         {
             MSBuild(s => s

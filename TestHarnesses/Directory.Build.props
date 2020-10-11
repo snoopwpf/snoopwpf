@@ -1,0 +1,8 @@
+<Project>
+  <Import Project="../Directory.build.props" />
+
+  <PropertyGroup>
+    <OutputPath>$(MSBuildThisFileDirectory)\bin\$(MSBuildProjectName)\$(Configuration)\</OutputPath>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+</Project>
