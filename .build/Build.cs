@@ -118,6 +118,18 @@ class Build : NukeBuild
                 .SetVerbosity(DotNetVerbosity.Minimal));
         });
 
+    Target CompileTestHarnesses => _ => _
+        .DependsOn(Restore)
+        .Executes(() =>
+        {
+            MSBuild(s => s
+                .SetProjectFile(RootDirectory / "TestHarnesses/TestHarnesses.sln")
+                .SetConfiguration(Configuration)
+                .SetAssemblyVersion(GitVersion.AssemblySemVer)
+                .SetInformationalVersion(GitVersion.InformationalVersion)
+                .SetVerbosity(MSBuildVerbosity.Minimal));
+        });
+
     Target Pack => _ => _
         .DependsOn(CleanOutput)
         .DependsOn(Compile)
