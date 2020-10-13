@@ -16,4 +16,7 @@
     <PackageDownload Include="wix" Version="[3.11.2]" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="../**/Directory.*.*" LinkBase="Directory.*.*" />
+  </ItemGroup>
 </Project>
