@@ -677,6 +677,7 @@ namespace Snoop.Infrastructure
 
             this.isLocallySet = false;
             this.isInvalidBinding = false;
+            this.bindingError = string.Empty;
             this.isDatabound = false;
 
             var dp = this.DependencyProperty;
@@ -707,31 +708,6 @@ namespace Snoop.Infrastructure
                         || (expression.Status != BindingStatus.Active && !(expression is PriorityBindingExpression)))
                     {
                         this.isInvalidBinding = true;
-
-                        var builder = new StringBuilder();
-                        var writer = new StringWriter(builder);
-                        var tracer = new TextWriterTraceListener(writer);
-                        PresentationTraceSources.DataBindingSource.Listeners.Add(tracer);
-
-                        // reset binding to get the error message.
-                        this.ignoreUpdate = true;
-                        d.ClearValue(dp);
-                        BindingOperations.SetBinding(d, dp, expression.ParentBindingBase);
-                        this.ignoreUpdate = false;
-
-                        // this needs to happen on idle so that we can actually run the binding, which may occur asynchronously.
-                        this.RunInDispatcherAsync(
-                                () =>
-                                {
-                                    this.bindingError = builder.ToString();
-                                    this.OnPropertyChanged(nameof(this.BindingError));
-                                    PresentationTraceSources.DataBindingSource.Listeners.Remove(tracer);
-                                    writer.Close();
-                                }, DispatcherPriority.ApplicationIdle);
-                    }
-                    else
-                    {
-                        this.bindingError = string.Empty;
                     }
                 }
 
@@ -740,6 +716,7 @@ namespace Snoop.Infrastructure
 
             this.OnPropertyChanged(nameof(this.IsLocallySet));
             this.OnPropertyChanged(nameof(this.IsInvalidBinding));
+            this.OnPropertyChanged(nameof(this.BindingError));
             this.OnPropertyChanged(nameof(this.StringValue));
             this.OnPropertyChanged(nameof(this.ResourceKey));
             this.OnPropertyChanged(nameof(this.DescriptiveValue));
@@ -747,6 +724,62 @@ namespace Snoop.Infrastructure
             this.OnPropertyChanged(nameof(this.IsExpression));
             this.OnPropertyChanged(nameof(this.IsAnimated));
             this.OnPropertyChanged(nameof(this.ValueSource));
+        }
+
+        public void UpdateBindingError()
+        {
+            if (this.IsDatabound == false
+                || this.IsInvalidBinding == false)
+            {
+                return;
+            }
+
+            var dp = this.DependencyProperty;
+            var d = this.Target as DependencyObject;
+
+            if (SnoopModes.MultipleDispatcherMode
+                && d != null
+                && d.Dispatcher != this.Dispatcher)
+            {
+                return;
+            }
+
+            if (dp is null
+                || d is null)
+            {
+                return;
+            }
+
+            var expression = BindingOperations.GetBindingExpressionBase(d, dp);
+
+            if (expression is null)
+            {
+                return;
+            }
+
+            var builder = new StringBuilder();
+            var writer = new StringWriter(builder);
+            var tracer = new TextWriterTraceListener(writer);
+            var levelBefore = PresentationTraceSources.DataBindingSource.Switch.Level;
+            PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.All;
+            PresentationTraceSources.DataBindingSource.Listeners.Add(tracer);
+
+            // reset binding to get the error message.
+            this.ignoreUpdate = true;
+            d.ClearValue(dp);
+            BindingOperations.SetBinding(d, dp, expression.ParentBindingBase);
+            this.ignoreUpdate = false;
+
+            // this needs to happen on idle so that we can actually run the binding, which may occur asynchronously.
+            this.RunInDispatcherAsync(
+                () =>
+                {
+                    this.bindingError = builder.ToString();
+                    this.OnPropertyChanged(nameof(this.BindingError));
+                    PresentationTraceSources.DataBindingSource.Listeners.Remove(tracer);
+                    writer.Close();
+                    PresentationTraceSources.DataBindingSource.Switch.Level = levelBefore;
+                }, DispatcherPriority.ApplicationIdle);
         }
 
         public static List<PropertyInformation> GetProperties(object obj)
