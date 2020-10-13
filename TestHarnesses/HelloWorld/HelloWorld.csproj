@@ -1,14 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks>net462;net40</TargetFrameworks>
+    <!-- <TargetFrameworks>net5.0;netcoreapp3.1;net462;net40</TargetFrameworks> -->
+    <TargetFrameworks>netcoreapp3.1;net462;net40</TargetFrameworks>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System.Xaml" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-  </ItemGroup>
 </Project>

@@ -122,11 +122,20 @@ class Build : NukeBuild
         .Executes(() =>
         {
             MSBuild(s => s
+                .SetProjectFile(RootDirectory / "TestHarnesses/Win32ToWPFInterop/Win32Clock/win32clock.vcxproj")
+                .SetConfiguration(Configuration)
+                .SetTargetPlatform(MSBuildTargetPlatform.Win32)
+                .SetAssemblyVersion(GitVersion.AssemblySemVer)
+                .SetInformationalVersion(GitVersion.InformationalVersion)
+                .DisableRestore()
+                .SetVerbosity(MSBuildVerbosity.Minimal));
+
+            DotNetBuild(s => s
                 .SetProjectFile(RootDirectory / "TestHarnesses/TestHarnesses.sln")
                 .SetConfiguration(Configuration)
                 .SetAssemblyVersion(GitVersion.AssemblySemVer)
                 .SetInformationalVersion(GitVersion.InformationalVersion)
-                .SetVerbosity(MSBuildVerbosity.Minimal));
+                .SetVerbosity(DotNetVerbosity.Minimal));
         });
 
     Target Pack => _ => _
