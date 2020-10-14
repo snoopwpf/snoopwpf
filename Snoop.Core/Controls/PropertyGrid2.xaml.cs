@@ -11,6 +11,7 @@ namespace Snoop.Controls
     using System.ComponentModel;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Windows.Data;
     using System.Windows.Input;
     using System.Windows.Threading;
     using JetBrains.Annotations;
@@ -196,26 +197,37 @@ namespace Snoop.Controls
         private void HandleShowBindingErrors(object sender, ExecutedRoutedEventArgs eventArgs)
         {
             var propertyInformation = (PropertyInformation)eventArgs.Parameter;
-            var window = new Window();
-            var textbox = new TextBox
+
+            if (string.IsNullOrEmpty(propertyInformation.BindingError))
+            {
+                propertyInformation.UpdateBindingError();
+            }
+
+            var textBox = new TextBox
             {
                 IsReadOnly = true,
-                Text = propertyInformation.BindingError,
+                IsReadOnlyCaretVisible = true,
+                AcceptsReturn = true,
                 TextWrapping = TextWrapping.Wrap
             };
-            window.Content = textbox;
-            window.Width = 400;
-            window.Height = 300;
-            window.Title = "Binding Errors for " + propertyInformation.DisplayName;
+            textBox.SetBinding(TextBox.TextProperty, new Binding(nameof(propertyInformation.BindingError)) { Source = propertyInformation, Mode = BindingMode.OneWay });
+
+            var window = new Window
+            {
+                Content = textBox,
+                Width = 400,
+                Height = 300,
+                Title = "Binding Errors for " + propertyInformation.DisplayName
+            };
             SnoopPartsRegistry.AddSnoopVisualTreeRoot(window);
             window.Show();
         }
 
         private void CanShowBindingErrors(object sender, CanExecuteRoutedEventArgs e)
         {
-            if (e.Parameter != null && !string.IsNullOrEmpty(((PropertyInformation)e.Parameter).BindingError))
+            if (e.Parameter is PropertyInformation propertyInformation)
             {
-                e.CanExecute = true;
+                e.CanExecute = propertyInformation.IsInvalidBinding;
             }
 
             e.Handled = true;
@@ -223,9 +235,9 @@ namespace Snoop.Controls
 
         private void CanClear(object sender, CanExecuteRoutedEventArgs e)
         {
-            if (e.Parameter != null && ((PropertyInformation)e.Parameter).IsLocallySet)
+            if (e.Parameter is PropertyInformation propertyInformation)
             {
-                e.CanExecute = true;
+                e.CanExecute = propertyInformation.IsLocallySet;
             }
 
             e.Handled = true;
