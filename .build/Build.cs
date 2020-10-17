@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using Nuke.Common;
 using Nuke.Common.Execution;
 using Nuke.Common.Git;
@@ -49,7 +50,7 @@ class Build : NukeBuild
         ProcessTasks.DefaultLogInvocation = true;
         ProcessTasks.DefaultLogOutput = true;
 
-        Console.WriteLine("IsLocalBuild           : {0}", IsLocalBuild);
+        Console.WriteLine("IsLocalBuild           : {0}", IsLocalBuild.ToString());
         Console.WriteLine("Informational   Version: {0}", GitVersion.InformationalVersion);
         Console.WriteLine("SemVer          Version: {0}", GitVersion.SemVer);
         Console.WriteLine("AssemblySemVer  Version: {0}", GitVersion.AssemblySemVer);
@@ -118,6 +119,26 @@ class Build : NukeBuild
                 .SetVerbosity(DotNetVerbosity.Minimal));
         });
 
+    Target CompileTestHarnesses => _ => _
+        .Executes(() =>
+        {
+            MSBuild(s => s
+                .SetProjectFile(RootDirectory / "TestHarnesses/Win32ToWPFInterop/Win32Clock/win32clock.vcxproj")
+                .SetConfiguration(Configuration)
+                .SetTargetPlatform(MSBuildTargetPlatform.Win32)
+                .SetAssemblyVersion(GitVersion.AssemblySemVer)
+                .SetInformationalVersion(GitVersion.InformationalVersion)
+                .DisableRestore()
+                .SetVerbosity(MSBuildVerbosity.Minimal));
+
+            DotNetBuild(s => s
+                .SetProjectFile(RootDirectory / "TestHarnesses/TestHarnesses.sln")
+                .SetConfiguration(Configuration)
+                .SetAssemblyVersion(GitVersion.AssemblySemVer)
+                .SetInformationalVersion(GitVersion.InformationalVersion)
+                .SetVerbosity(DotNetVerbosity.Minimal));
+        });
+
     Target Pack => _ => _
         .DependsOn(CleanOutput)
         .DependsOn(Compile)
@@ -125,7 +146,7 @@ class Build : NukeBuild
             // Generate ingore files to prevent chocolatey from generating shims for them
             foreach (var launcher in CurrentBuildOutputDirectory.GlobFiles($"{ProjectName}.InjectorLauncher.*.exe"))
             {
-                using (File.Create(launcher + ".ignore")) { };
+                using var _ = File.Create(launcher + ".ignore");
             }
 
             NuGetTasks.NuGetPack(s => s

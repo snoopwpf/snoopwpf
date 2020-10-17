@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <!-- <TargetFrameworks>net5.0;netcoreapp3.1;net462;net40</TargetFrameworks> -->
+    <TargetFrameworks>netcoreapp3.1;net462;net40</TargetFrameworks>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 </Project>
