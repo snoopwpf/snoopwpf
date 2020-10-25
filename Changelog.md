@@ -1,6 +1,6 @@
 ﻿# Changelog for Snoop
 
-## 3.0.0 (preview)
+## 3.0.0
 
 - ### Bug fixes
 
@@ -41,7 +41,7 @@
   - [#144](../../issues/144) - Add support for showing behaviors (added by @dezsiszabi in [#149](../../pull/149))
   - Snoop now filters uncommon properties by default
   - Snoop is now able to show `MergedDictionaries` from `ResourceDictionary`
-  - Snoop now has two tracking modes. 
+  - Snoop now has two tracking modes.
     - Holding CTRL tries to skip template parts
     - Holding CTRL + SHIFT does not skip template parts
   - [#161](../../issues/161) - Drastically improved performance of AppChooser.Refresh() (thanks @mikel785)

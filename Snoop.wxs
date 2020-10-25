@@ -5,7 +5,7 @@
    
   <Product Id="*" 
            Name="Snoop" 
-           Manufacturer="Cory Plotts" 
+           Manufacturer="https://github.com/snoopwpf" 
            Language="1033" 
            Version="$(var.ProductVersion)" 
            UpgradeCode="FBEC01D7-CE1B-46F4-9498-71A96FEA8A15"> 

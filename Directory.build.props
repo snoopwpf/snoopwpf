@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <OutputPath>..\bin\$(Configuration)\</OutputPath>
+    <OutputPath>$(MSBuildThisFileDirectory)\bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup>

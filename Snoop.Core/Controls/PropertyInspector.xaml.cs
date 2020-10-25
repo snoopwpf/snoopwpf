@@ -32,6 +32,8 @@ namespace Snoop.Controls
 
         public static readonly RoutedCommand NavigateToAssemblyInExplorerCommand = new RoutedCommand(nameof(NavigateToAssemblyInExplorerCommand), typeof(PropertyInspector));
 
+        public static readonly RoutedCommand UpdateBindingErrorCommand = new RoutedCommand(nameof(UpdateBindingErrorCommand), typeof(PropertyInspector));
+
         private object target;
 
         public PropertyInspector()
@@ -50,7 +52,8 @@ namespace Snoop.Controls
             this.CommandBindings.Add(new CommandBinding(CopyXamlCommand, this.HandleCopyXaml, this.CanCopyXaml));
 
             this.CommandBindings.Add(new CommandBinding(NavigateToAssemblyInExplorerCommand, this.HandleNavigateToAssemblyInExplorer, this.CanNavigateToAssemblyInExplorer));
-
+            this.CommandBindings.Add(new CommandBinding(UpdateBindingErrorCommand, this.HandleUpdateBindingError, this.CanUpdateBindingError));
+            
             // watch for mouse "back" button
             this.MouseDown += this.MouseDownHandler;
             this.KeyDown += this.PropertyInspector_KeyDown;
@@ -431,12 +434,30 @@ namespace Snoop.Controls
             }
             catch
             {
+                // ignored
             }
         }
 
         private void CanNavigateToAssemblyInExplorer(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = e.Parameter is Type;
+        }
+
+        private void CanUpdateBindingError(object sender, CanExecuteRoutedEventArgs e)
+        {
+            if (e.Parameter is PropertyInformation propertyInformation)
+            {
+                e.CanExecute = propertyInformation.IsInvalidBinding
+                               && string.IsNullOrEmpty(propertyInformation.BindingError);
+            }
+        }
+
+        private void HandleUpdateBindingError(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (e.Parameter is PropertyInformation propertyInformation)
+            {
+                propertyInformation.UpdateBindingError();
+            }
         }
 
         public PropertyFilter PropertyFilter
