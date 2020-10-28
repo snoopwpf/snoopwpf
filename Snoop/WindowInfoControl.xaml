@@ -11,7 +11,9 @@
              d:DesignHeight="40"
              d:DesignWidth="600"
              SnapsToDevicePixels="True"
-             TextOptions.TextFormattingMode="Display"
+             UseLayoutRounding="True"
+             FontSize="14"
+             TextOptions.TextFormattingMode="Ideal"
              TextOptions.TextHintingMode="Fixed"
              TextOptions.TextRenderingMode="Aliased">
     <!-- The TextOptions set above are important to get a crisp and clear image of this control when it's converted to an image/cursor -->
