@@ -1,5 +1,11 @@
 ﻿# Changelog for Snoop
 
+## 3.0.1
+
+- ### Bug fixes
+
+  - Fixing window finder cursor display when DPI != 100%
+  
 ## 3.0.0
 
 - ### Bug fixes
