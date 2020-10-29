@@ -6,6 +6,7 @@
 namespace Snoop.Infrastructure
 {
     using System;
+    using System.Diagnostics;
     using System.Runtime.InteropServices;
     using System.Windows;
     using System.Windows.Interop;
@@ -113,8 +114,9 @@ namespace Snoop.Infrastructure
                 var hwnd = new WindowInteropHelper(window).Handle;
                 NativeMethods.SetWindowPlacement(hwnd, ref wp);
             }
-            catch
+            catch (Exception exception)
             {
+                Trace.TraceWarning(exception.ToString());
             }
         }
 
