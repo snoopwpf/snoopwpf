@@ -332,6 +332,25 @@ namespace Snoop.Windows
 
         #region Public Methods
 
+        public void ApplyReduceDepthFilter(TreeItem newRoot)
+        {
+            if (this.reducedDepthRoot != newRoot)
+            {
+                if (this.reducedDepthRoot == null)
+                {
+                    this.RunInDispatcherAsync(
+                        () =>
+                        {
+                            this.TreeItems.Clear();
+                            this.TreeItems.Add(this.reducedDepthRoot);
+                            this.reducedDepthRoot = null;
+                        }, DispatcherPriority.Background);
+                }
+
+                this.reducedDepthRoot = newRoot;
+            }
+        }
+
         /// <summary>
         /// Loop through the properties in the current PropertyGrid and save away any properties
         /// that have been changed by the user.  
@@ -758,6 +777,8 @@ namespace Snoop.Windows
         private string eventFilter = string.Empty;
 
         private readonly DelayedCall filterCall;
+
+        private TreeItem reducedDepthRoot;
 
         private IInputElement currentFocus;
         private IInputElement previousFocus;
