@@ -91,3 +91,4 @@
 - ### Improvements
   
   - Added a new triggers tab to view triggers from ControlTemplates and Styles
+  
