@@ -336,7 +336,8 @@ namespace Snoop.Windows
         {
             if (this.reducedDepthRoot != newRoot)
             {
-                if (this.reducedDepthRoot == null)
+                // Check if we already have a scheduled reduce in progress
+                if (this.reducedDepthRoot is null)
                 {
                     this.RunInDispatcherAsync(
                         () =>
@@ -353,7 +354,7 @@ namespace Snoop.Windows
 
         /// <summary>
         /// Loop through the properties in the current PropertyGrid and save away any properties
-        /// that have been changed by the user.  
+        /// that have been changed by the user.
         /// </summary>
         /// <param name="owningObject">currently selected object that owns the properties in the grid (before changing selection to the new object)</param>
         private void SaveEditedProperties(TreeItem owningObject)
