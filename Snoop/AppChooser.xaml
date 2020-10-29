@@ -20,6 +20,7 @@ All other rights reserved.
         SizeToContent="Width"
         Height="26"
         MinHeight="26"
+        MaxHeight="26"
         ResizeMode="NoResize"
         MouseLeftButtonDown="HandleMouseLeftButtonDown"
         SnapsToDevicePixels="False"
