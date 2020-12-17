@@ -23,7 +23,7 @@ It allows you to spy/browse the visual tree of a running application (without th
 
 ## Versions
 
-### [3.0.0](../../tree/develop)
+### [3.0.0](../../releases/tag/3.0.0)
 
 You can read the [changelog](Changelog.md) for details on what changed in this version.
 Please note that this version is not yet finished.
