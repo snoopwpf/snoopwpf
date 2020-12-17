@@ -62,9 +62,9 @@ namespace Snoop.Views.TriggersTab
 
         public static readonly DependencyProperty TriggerItemsProperty = TriggerItemsPropertyKey.DependencyProperty;
 
-        public ICollectionView TriggerItems
+        public ICollectionView? TriggerItems
         {
-            get { return (ICollectionView)this.GetValue(TriggerItemsProperty); }
+            get { return (ICollectionView?)this.GetValue(TriggerItemsProperty); }
             protected set { this.SetValue(TriggerItemsPropertyKey, value); }
         }
 
@@ -81,9 +81,9 @@ namespace Snoop.Views.TriggersTab
 
         public static readonly DependencyProperty SelectedSetterItemProperty = DependencyProperty.Register(nameof(SelectedSetterItem), typeof(SetterItem), typeof(TriggersView), new PropertyMetadata(default(SetterItem)));
 
-        public SetterItem SelectedSetterItem
+        public SetterItem? SelectedSetterItem
         {
-            get { return (SetterItem)this.GetValue(SelectedSetterItemProperty); }
+            get { return (SetterItem?)this.GetValue(SelectedSetterItemProperty); }
             set { this.SetValue(SelectedSetterItemProperty, value); }
         }
 

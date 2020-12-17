@@ -6,8 +6,13 @@
 
     public class StringValueConverter
     {
-        public static object? ConvertFromString(Type targetType, string value)
+        public static object? ConvertFromString(Type? targetType, string? value)
         {
+            if (targetType is null)
+            {
+                return null;
+            }
+
             if (targetType.IsAssignableFrom(typeof(string)))
             {
                 return value;
@@ -90,7 +95,7 @@
             return null;
         }
 
-        private static object? GetValueFromConverter(Type targetType, string value, TypeConverter converter)
+        private static object? GetValueFromConverter(Type targetType, string? value, TypeConverter converter)
         {
             if (string.IsNullOrEmpty(value)
                 && converter.CanConvertFrom(targetType) == false)

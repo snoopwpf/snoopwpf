@@ -49,15 +49,15 @@
 
         private static readonly DependencyProperty BehaviorsProperty = DependencyProperty.Register(nameof(Behaviors), typeof(ObservableCollection<object>), typeof(BehaviorsView), new PropertyMetadata(default(ObservableCollection<object>)));
 
-        public ObservableCollection<object> Behaviors
+        public ObservableCollection<object>? Behaviors
         {
-            get { return (ObservableCollection<object>)this.GetValue(BehaviorsProperty); }
+            get { return (ObservableCollection<object>?)this.GetValue(BehaviorsProperty); }
             set { this.SetValue(BehaviorsProperty, value); }
         }
 
         private static readonly DependencyProperty SelectedBehaviorProperty = DependencyProperty.Register(nameof(SelectedBehavior), typeof(object), typeof(BehaviorsView), new PropertyMetadata(default(object)));
 
-        public object SelectedBehavior
+        public object? SelectedBehavior
         {
             get { return this.GetValue(SelectedBehaviorProperty); }
             set { this.SetValue(SelectedBehaviorProperty, value); }
@@ -85,7 +85,7 @@
 
         private void Cleanup()
         {
-            this.Behaviors.Clear();
+            this.Behaviors?.Clear();
         }
 
         private void Update()
@@ -138,7 +138,7 @@
                     continue;
                 }
 
-                this.Behaviors.Add(behavior);
+                this.Behaviors?.Add(behavior);
             }
         }
     }

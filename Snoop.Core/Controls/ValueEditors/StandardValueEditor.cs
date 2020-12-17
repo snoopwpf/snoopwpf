@@ -20,18 +20,18 @@ namespace Snoop.Controls.ValueEditors
 
         private bool isUpdatingValue;
 
-        public string StringValue
+        public string? StringValue
         {
-            get => (string)this.GetValue(StringValueProperty);
+            get => (string?)this.GetValue(StringValueProperty);
             set => this.SetValue(StringValueProperty, value);
         }
 
         private static void OnStringValueChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            ((StandardValueEditor)sender).OnStringValueChanged((string)e.NewValue);
+            ((StandardValueEditor)sender).OnStringValueChanged((string?)e.NewValue);
         }
 
-        protected virtual void OnStringValueChanged(string newValue)
+        protected virtual void OnStringValueChanged(string? newValue)
         {
             if (this.isUpdatingValue)
             {

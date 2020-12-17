@@ -12,9 +12,9 @@
             this.InitializeComponent();
         }
 
-        public ValueEditor ValueEditor
+        public ValueEditor? ValueEditor
         {
-            get => (ValueEditor)this.GetValue(ValueEditorProperty);
+            get => (ValueEditor?)this.GetValue(ValueEditorProperty);
             set => this.SetValue(ValueEditorProperty, value);
         }
 

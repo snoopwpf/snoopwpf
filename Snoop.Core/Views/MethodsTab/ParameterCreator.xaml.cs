@@ -19,7 +19,7 @@ namespace Snoop.Views.MethodsTab
 
         public object? RootTarget
         {
-            get { return (object)this.GetValue(RootTargetProperty); }
+            get { return this.GetValue(RootTargetProperty); }
             set { this.SetValue(RootTargetProperty, value); }
         }
 

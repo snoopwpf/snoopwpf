@@ -74,7 +74,7 @@ namespace Snoop.Controls
 
         private readonly ObservableCollection<PropertyInformation> allProperties = new ObservableCollection<PropertyInformation>();
 
-        public object Target
+        public object? Target
         {
             get { return this.GetValue(TargetProperty); }
             set { this.SetValue(TargetProperty, value); }

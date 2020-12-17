@@ -17,9 +17,9 @@ namespace Snoop.Controls.ValueEditors
             this.SupportsDetailsEditor = true;
         }
 
-        public string StringValueForDetailsEditor
+        public string? StringValueForDetailsEditor
         {
-            get => (string)this.GetValue(StringValueForDetailsEditorProperty);
+            get => (string?)this.GetValue(StringValueForDetailsEditorProperty);
             set => this.SetValue(StringValueForDetailsEditorProperty, value);
         }
 
