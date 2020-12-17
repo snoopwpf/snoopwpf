@@ -6,7 +6,7 @@
 
     public class StringValueConverter
     {
-        public static object ConvertFromString(Type targetType, string value)
+        public static object? ConvertFromString(Type targetType, string value)
         {
             if (targetType.IsAssignableFrom(typeof(string)))
             {
@@ -48,7 +48,7 @@
             return null;
         }
 
-        public static string ConvertToString(Type sourceType, object value)
+        public static string? ConvertToString(Type sourceType, object value)
         {
             if (typeof(string).IsAssignableFrom(sourceType))
             {
@@ -90,7 +90,7 @@
             return null;
         }
 
-        private static object GetValueFromConverter(Type targetType, string value, TypeConverter converter)
+        private static object? GetValueFromConverter(Type targetType, string value, TypeConverter converter)
         {
             if (string.IsNullOrEmpty(value)
                 && converter.CanConvertFrom(targetType) == false)
@@ -103,7 +103,7 @@
             }
         }
 
-        private static string GetStringValueFromConverter(object value, TypeConverter converter, bool invariant)
+        private static string? GetStringValueFromConverter(object value, TypeConverter converter, bool invariant)
         {
             if (invariant)
             {

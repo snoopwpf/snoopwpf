@@ -23,9 +23,9 @@ namespace Snoop.Infrastructure
         /// </summary>
         /// <param name="visual">Visual under question</param>
         /// <returns><c>true</c> if <paramref name="visual"/> belongs to Snoop's visual tree. <c>false</c> otherwise.</returns>
-        public static bool IsPartOfSnoopVisualTree(this Visual visual)
+        public static bool IsPartOfSnoopVisualTree(this Visual? visual)
         {
-            if (visual == null)
+            if (visual is null)
             {
                 return false;
             }
@@ -43,7 +43,12 @@ namespace Snoop.Infrastructure
                     continue;
                 }
 
-                var snoopVisual = (Visual)registeredSnoopVisual.Target;
+                var snoopVisual = (Visual?)registeredSnoopVisual.Target;
+
+                if (snoopVisual is null)
+                {
+                    continue;
+                }
 
                 if (ReferenceEquals(visual, snoopVisual)
                     || (visual.Dispatcher == snoopVisual.Dispatcher && visual.IsDescendantOf(snoopVisual)))

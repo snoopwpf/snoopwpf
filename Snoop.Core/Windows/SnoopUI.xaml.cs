@@ -129,7 +129,7 @@ namespace Snoop.Windows
         /// <summary>
         /// Root element of the visual tree
         /// </summary>
-        public TreeItem Root
+        public TreeItem? Root
         {
             get { return this.rootTreeItem; }
 
@@ -143,17 +143,17 @@ namespace Snoop.Windows
         /// <summary>
         /// rootVisualTreeItem is the VisualTreeItem for the root you are inspecting.
         /// </summary>
-        private TreeItem rootTreeItem;
+        private TreeItem? rootTreeItem;
 
         /// <summary>
         /// root is the object you are inspecting.
         /// </summary>
-        private object root;
+        private object? root;
         #endregion
 
         #region CurrentSelection
 
-        public override object Target
+        public override object? Target
         {
             get => this.CurrentSelection?.Target;
             set => this.CurrentSelection = this.FindItem(value);
@@ -162,7 +162,7 @@ namespace Snoop.Windows
         /// <summary>
         /// Currently selected item in the tree view.
         /// </summary>
-        public TreeItem CurrentSelection
+        public TreeItem? CurrentSelection
         {
             get { return this.currentSelection; }
 
@@ -210,7 +210,7 @@ namespace Snoop.Windows
             }
         }
 
-        private TreeItem currentSelection;
+        private TreeItem? currentSelection;
 
         #endregion
 
@@ -271,7 +271,7 @@ namespace Snoop.Windows
         #endregion
 
         #region CurrentFocus
-        public IInputElement CurrentFocus
+        public IInputElement? CurrentFocus
         {
             get
             {
@@ -290,7 +290,7 @@ namespace Snoop.Windows
         #endregion
 
         #region CurrentFocusScope
-        public object CurrentFocusScope
+        public object? CurrentFocusScope
         {
             get
             {
@@ -343,7 +343,11 @@ namespace Snoop.Windows
                         () =>
                         {
                             this.TreeItems.Clear();
-                            this.TreeItems.Add(this.reducedDepthRoot);
+                            if (this.reducedDepthRoot is null == false)
+                            {
+                                this.TreeItems.Add(this.reducedDepthRoot);
+                            }
+
                             this.reducedDepthRoot = null;
                         }, DispatcherPriority.Background);
                 }
@@ -438,7 +442,7 @@ namespace Snoop.Windows
 
                 this.TreeItems.Clear();
 
-                this.Root = this.TreeService.Construct(this.root, null);
+                this.Root = this.TreeService.Construct(this.root!, null);
 
                 if (previousTarget != null)
                 {
@@ -448,7 +452,7 @@ namespace Snoop.Windows
                         this.CurrentSelection = treeItem;
                         this.PropertyGrid.PropertyGrid.RefreshPropertyGrid();
 
-                        if (previousSelection.IsExpanded)
+                        if (previousSelection?.IsExpanded == true)
                         {
                             this.CurrentSelection.ExpandTo();
                         }
@@ -515,7 +519,7 @@ namespace Snoop.Windows
             EditedPropertiesHelper.DumpObjectsWithEditedProperties();
         }
 
-        private void SelectItem(DependencyObject item)
+        private void SelectItem(DependencyObject? item)
         {
             if (item != null)
             {
@@ -575,9 +579,9 @@ namespace Snoop.Windows
             }
         }
 
-        private static Visual GetItemToFindAndSkipTemplateParts(FrameworkElement frameworkElement)
+        private static Visual? GetItemToFindAndSkipTemplateParts(FrameworkElement? frameworkElement)
         {
-            Visual itemToFind = frameworkElement;
+            Visual? itemToFind = frameworkElement;
 
             while (frameworkElement?.TemplatedParent is not null)
             {
@@ -615,7 +619,7 @@ namespace Snoop.Windows
         /// If the item is not found and is not part of the Snoop UI,
         /// the tree will be adjusted to include the root visual the item is in.
         /// </summary>
-        private TreeItem FindItem(object target)
+        private TreeItem? FindItem(object? target)
         {
             if (this.Root == null)
             {
@@ -711,15 +715,15 @@ namespace Snoop.Windows
             }
             else if (this.filter == "Show only elements with binding errors")
             {
-                this.FilterBindings(this.rootTreeItem);
+                this.FilterBindings(this.rootTreeItem!);
             }
             else if (this.filter.Length == 0)
             {
-                this.TreeItems.Add(this.rootTreeItem);
+                this.TreeItems.Add(this.rootTreeItem!);
             }
             else
             {
-                this.FilterTree(this.rootTreeItem, this.filter.ToLower());
+                this.FilterTree(this.rootTreeItem!, this.filter.ToLower());
             }
         }
 
@@ -779,10 +783,10 @@ namespace Snoop.Windows
 
         private readonly DelayedCall filterCall;
 
-        private TreeItem reducedDepthRoot;
+        private TreeItem? reducedDepthRoot;
 
-        private IInputElement currentFocus;
-        private IInputElement previousFocus;
+        private IInputElement? currentFocus;
+        private IInputElement? previousFocus;
 
         /// <summary>
         /// Indicates whether CurrentFocus should retur previously focused element.
@@ -794,7 +798,7 @@ namespace Snoop.Windows
 
         #region INotifyPropertyChanged Members
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged(string propertyName)
@@ -822,9 +826,15 @@ namespace Snoop.Windows
 
     public class PropertyValueInfo
     {
-        public string PropertyName { get; set; }
+        public PropertyValueInfo(string name, object? value)
+        {
+            this.PropertyName = name;
+            this.PropertyValue = value;
+        }
 
-        public object PropertyValue { get; set; }
+        public string PropertyName { get; }
+
+        public object? PropertyValue { get; }
     }
 
     public class EditedPropertiesHelper
@@ -860,11 +870,7 @@ namespace Snoop.Windows
                 }
 
                 // finally add the edited property info
-                propInfoList.Add(new PropertyValueInfo
-                {
-                    PropertyName = propInfo.DisplayName,
-                    PropertyValue = propInfo.Value,
-                });
+                propInfoList.Add(new PropertyValueInfo(propInfo.DisplayName, propInfo.Value));
             }
         }
 

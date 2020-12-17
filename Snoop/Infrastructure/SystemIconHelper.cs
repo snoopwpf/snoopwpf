@@ -35,12 +35,12 @@
         [DllImport("user32.dll", SetLastError = true)]
         private static extern int DestroyIcon(IntPtr hIcon);
 
-        public static ImageSource GetImageSource(SystemIcon systemIcon, int width, int height)
+        public static ImageSource? GetImageSource(SystemIcon systemIcon, int width, int height)
         {
             return GetImageSource(systemIcon.Origin, systemIcon.IconIdOrIndex, width, height);
         }
 
-        private static ImageSource GetImageSource(string filePath, int iconIdOrIndex, int width, int height)
+        private static ImageSource? GetImageSource(string filePath, int iconIdOrIndex, int width, int height)
         {
             var iconHandle = ExtractIcon(IntPtr.Zero, filePath, iconIdOrIndex);
 

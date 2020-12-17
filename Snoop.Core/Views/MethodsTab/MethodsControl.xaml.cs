@@ -19,6 +19,8 @@ namespace Snoop.Views.MethodsTab
 
     public partial class MethodsControl
     {
+        private SnoopMethodInformation? previousMethodInformation;
+        
         public MethodsControl()
         {
             this.InitializeComponent();
@@ -67,7 +69,7 @@ namespace Snoop.Views.MethodsTab
             }
         }
 
-        private void IsSelectedChanged(object sender, EventArgs args)
+        private void IsSelectedChanged(object? sender, EventArgs args)
         {
             if (this.IsSelected)
             {
@@ -76,7 +78,7 @@ namespace Snoop.Views.MethodsTab
             }
         }
 
-        public object RootTarget
+        public object? RootTarget
         {
             get { return (object)this.GetValue(RootTargetProperty); }
             set { this.SetValue(RootTargetProperty, value); }
@@ -86,7 +88,7 @@ namespace Snoop.Views.MethodsTab
         public static readonly DependencyProperty RootTargetProperty =
             DependencyProperty.Register(nameof(RootTarget), typeof(object), typeof(MethodsControl), new UIPropertyMetadata(null));
 
-        private void RootTargetChanged(object sender, EventArgs e)
+        private void RootTargetChanged(object? sender, EventArgs e)
         {
             if (this.IsSelected)
             {
@@ -150,12 +152,11 @@ namespace Snoop.Views.MethodsTab
             }
         }
 
-        private SnoopMethodInformation previousMethodInformation;
-
-        private void ComboBoxMethodChanged(object sender, EventArgs e)
+        private void ComboBoxMethodChanged(object? sender, EventArgs e)
         {
             var selectedMethod = this.comboBoxMethods.SelectedValue as SnoopMethodInformation;
-            if (selectedMethod == null || this.Target == null)
+            if (selectedMethod is null 
+                || this.Target is null)
             {
                 return;
             }
@@ -169,7 +170,7 @@ namespace Snoop.Views.MethodsTab
             this.previousMethodInformation = selectedMethod;
         }
 
-        public object Target
+        public object? Target
         {
             get { return (object)this.GetValue(TargetProperty); }
             set { this.SetValue(TargetProperty, value); }
@@ -179,7 +180,7 @@ namespace Snoop.Views.MethodsTab
         public static readonly DependencyProperty TargetProperty =
             DependencyProperty.Register(nameof(Target), typeof(object), typeof(MethodsControl), new UIPropertyMetadata(OnTargetChanged));
 
-        public void InvokeMethodClick(object sender, RoutedEventArgs e)
+        public void InvokeMethodClick(object? sender, RoutedEventArgs e)
         {
             var selectedMethod = this.comboBoxMethods.SelectedValue as SnoopMethodInformation;
             if (selectedMethod == null)
@@ -197,14 +198,14 @@ namespace Snoop.Views.MethodsTab
             this.TryToInvokeMethod(selectedMethod, parameters);
         }
 
-        private bool TryToCreateParameters(object[] parameters)
+        private bool TryToCreateParameters(object?[] parameters)
         {
             try
             {
                 for (var index = 0; index < this.itemsControlParameters.Items.Count; index++)
                 {
                     var paramInfo = this.itemsControlParameters.Items[index] as SnoopParameterInformation;
-                    if (paramInfo == null)
+                    if (paramInfo is null)
                     {
                         return false;
                     }
@@ -212,12 +213,10 @@ namespace Snoop.Views.MethodsTab
                     if (paramInfo.ParameterType == typeof(DependencyProperty))
                     {
                         var valuePair = paramInfo.ParameterValue as DependencyPropertyNameValuePair;
-                        parameters[index] = valuePair.DependencyProperty;
+                        parameters[index] = valuePair?.DependencyProperty;
                     }
-
-                    //else if (paramInfo.IsCustom || paramInfo.IsEnum)
-                    else if (paramInfo.ParameterValue == null 
-                             || paramInfo.ParameterType.IsInstanceOfType(paramInfo.ParameterValue))
+                    else if (paramInfo.ParameterValue is null 
+                             || paramInfo.ParameterType?.IsInstanceOfType(paramInfo.ParameterValue) == true)
                     {
                         parameters[index] = paramInfo.ParameterValue;
                     }
@@ -291,9 +290,9 @@ namespace Snoop.Views.MethodsTab
             }
         }
 
-        private static IList<SnoopMethodInformation> GetMethodInfos(object o)
+        private static IList<SnoopMethodInformation> GetMethodInfos(object? o)
         {
-            if (o == null)
+            if (o is null)
             {
                 return new ObservableCollection<SnoopMethodInformation>();
             }
@@ -311,7 +310,6 @@ namespace Snoop.Views.MethodsTab
                 }
 
                 var info = new SnoopMethodInformation(method);
-                info.MethodName = method.Name;
 
                 methodsToReturn.Add(info);
             }
@@ -321,17 +319,22 @@ namespace Snoop.Views.MethodsTab
             return methodsToReturn;
         }
 
-        private void ChangeTarget_Click(object sender, RoutedEventArgs e)
+        private void ChangeTarget_Click(object? sender, RoutedEventArgs e)
         {
-            if (this.RootTarget == null)
+            if (this.RootTarget is null)
             {
                 return;
             }
 
-            var paramCreator = new ParameterCreator();
-            paramCreator.TextBlockDescription.Text = "Delve into the new desired target by double-clicking on the property. Clicking OK will select the currently delved property to be the new target.";
-            paramCreator.Title = "Change Target";
-            paramCreator.RootTarget = this.RootTarget;
+            var paramCreator = new ParameterCreator
+            {
+                TextBlockDescription =
+                {
+                    Text = "Delve into the new desired target by double-clicking on the property. Clicking OK will select the currently delved property to be the new target."
+                },
+                Title = "Change Target",
+                RootTarget = this.RootTarget
+            };
 
             paramCreator.ShowDialogEx(this);
 

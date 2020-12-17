@@ -19,7 +19,7 @@ namespace Snoop.Infrastructure
     /// </summary>
     public class EventsListener
     {
-        private static EventsListener current;
+        private static EventsListener? current;
         private readonly Visual visual;
 
         private static readonly Dictionary<Type, Type> registeredTypes = new Dictionary<Type, Type>();
@@ -54,7 +54,7 @@ namespace Snoop.Infrastructure
 
         public ObservableCollection<EventInformation> Events { get; } = new ObservableCollection<EventInformation>();
 
-        public static string Filter { get; set; }
+        public static string? Filter { get; set; }
 
         public static void Stop()
         {
@@ -70,7 +70,7 @@ namespace Snoop.Infrastructure
             }
 
             if (string.IsNullOrEmpty(Filter)
-                || e.RoutedEvent.Name.ContainsIgnoreCase(Filter))
+                || e.RoutedEvent.Name.ContainsIgnoreCase(Filter!))
             {
                 current.Events.Add(new EventInformation(e));
 

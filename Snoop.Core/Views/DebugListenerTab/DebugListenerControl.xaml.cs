@@ -108,12 +108,12 @@
             }
 
             var selectedComboBoxItem = this.comboBoxPresentationTraceLevel.Items[this.comboBoxPresentationTraceLevel.SelectedIndex] as ComboBoxItem;
-            if (selectedComboBoxItem?.Tag == null)
+            if (selectedComboBoxItem?.Tag is null)
             {
                 return;
             }
 
-            var sourceLevel = (SourceLevels)Enum.Parse(typeof(SourceLevels), selectedComboBoxItem.Tag.ToString());
+            var sourceLevel = (SourceLevels)Enum.Parse(typeof(SourceLevels), selectedComboBoxItem.Tag.ToString()!);
             PresentationTraceSources.DataBindingSource.Switch.Level = sourceLevel;
         }
     }

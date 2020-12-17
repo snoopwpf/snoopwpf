@@ -16,7 +16,7 @@ namespace Snoop.Data
             this.SetWindowOwner = true;
         }
 
-        public static TransientSettingsData Current { get; private set; }
+        public static TransientSettingsData? Current { get; private set; }
 
         public SnoopStartTarget StartTarget { get; set; } = SnoopStartTarget.SnoopUI;
 

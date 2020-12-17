@@ -25,9 +25,7 @@ namespace Snoop.Views.MethodsTab
             var listAssemblies = new List<AssemblyNamePair>();
             foreach (var assembly in assemblies)
             {
-                var namePair = new AssemblyNamePair();
-                namePair.Name = assembly.FullName;
-                namePair.Assembly = assembly;
+                var namePair = new AssemblyNamePair(assembly);
 
                 listAssemblies.Add(namePair);
             }
@@ -47,14 +45,13 @@ namespace Snoop.Views.MethodsTab
 
             foreach (var type in types)
             {
-                if (!type.IsPublic || type.IsAbstract)
+                if (!type.IsPublic 
+                    || type.IsAbstract)
                 {
                     continue;
                 }
 
-                var pair = new TypeNamePair();
-                pair.Name = type.Name;
-                pair.Type = type;
+                var pair = new TypeNamePair(type);
 
                 typePairs.Add(pair);
             }
@@ -83,7 +80,7 @@ namespace Snoop.Views.MethodsTab
             this.Close();
         }
 
-        public object Instance
+        public object? Instance
         {
             get;
             private set;

@@ -47,7 +47,7 @@ namespace Snoop.Controls
                 typeof(object),
                 typeof(ZoomerControl),
                 new FrameworkPropertyMetadata(
-                    (object)null,
+                    default,
                     OnTargetChanged));
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace Snoop.Controls
             this.translation.Y = 0.0;
         }
 
-        private UIElement CreateIfPossible(object item)
+        private UIElement? CreateIfPossible(object? item)
         {
             return ZoomerUtilities.CreateIfPossible(item);
         }
@@ -204,7 +204,7 @@ namespace Snoop.Controls
             }
         }
 
-        private Brush pooSniffer;
+        private Brush? pooSniffer;
 
         private readonly TranslateTransform translation = new TranslateTransform();
         private readonly ScaleTransform zoom = new ScaleTransform();

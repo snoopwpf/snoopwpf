@@ -17,7 +17,7 @@ namespace Snoop.Data.Tree
 
         private readonly ResourceDictionary dictionary;
 
-        public ResourceDictionaryTreeItem(ResourceDictionary dictionary, TreeItem parent, TreeService treeService)
+        public ResourceDictionaryTreeItem(ResourceDictionary dictionary, TreeItem? parent, TreeService treeService)
             : base(dictionary, parent, treeService)
         {
             this.dictionary = dictionary;
@@ -27,7 +27,7 @@ namespace Snoop.Data.Tree
             childrenView.SortDescriptions.Add(displayNameSortDescription);
         }
 
-        public override TreeItem FindNode(object target)
+        public override TreeItem? FindNode(object? target)
         {
             return null;
         }
@@ -41,7 +41,7 @@ namespace Snoop.Data.Tree
                 return base.GetName();
             }
 
-            return source;
+            return source!;
         }
 
         protected override void ReloadCore()
@@ -101,16 +101,16 @@ namespace Snoop.Data.Tree
 
     public class ResourceItem : TreeItem
     {
-        private readonly object key;
+        private readonly object? key;
 
-        public ResourceItem(object target, object key, TreeItem parent, TreeService treeService)
+        public ResourceItem(object target, object? key, TreeItem parent, TreeService treeService)
             : base(target, parent, treeService)
         {
             this.key = key;
             this.SortOrder = int.MaxValue;
         }
 
-        public override string DisplayName => this.key.ToString();
+        public override string DisplayName => this.key?.ToString() ?? "{x:Null}";
 
         public override string ToString()
         {

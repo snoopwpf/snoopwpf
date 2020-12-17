@@ -14,7 +14,7 @@ namespace Snoop.Converters
         public static readonly ArgbToPartsConverter Default = new ArgbToPartsConverter();
 
         #region IValueConverter Members
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object Convert(object? value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             // value (string)   ARGB text (i.e. #FF102030)
             // parameter (int)  which "part" to return (0 = alpha, 1 = Red, 2 = Green, 3 = Blue)
@@ -25,13 +25,18 @@ namespace Snoop.Converters
                 return Binding.DoNothing;
             }
 
-            var val = value.ToString();
+            if (parameter is null)
+            {
+                throw new ArgumentNullException(nameof(parameter));
+            }
+
+            var val = value.ToString() ?? string.Empty;
             if (val.Length < 9)
             {
                 return new ArgumentException("Expected converter parameter to be a string in the form of #FF102030");
             }
 
-            var part = int.Parse(parameter.ToString());
+            var part = int.Parse(parameter.ToString()!);
 
             var ret = val.Substring((part * 2) + 1, 2);
             return ret;
@@ -39,7 +44,7 @@ namespace Snoop.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            throw new NotImplementedException();
+            return Binding.DoNothing;
         }
         #endregion
     }

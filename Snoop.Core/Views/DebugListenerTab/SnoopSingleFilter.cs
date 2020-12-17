@@ -11,7 +11,7 @@
 
         public SnoopSingleFilter()
         {
-            this.Text = string.Empty;
+            this.text = string.Empty;
         }
 
         public FilterType FilterType
@@ -46,21 +46,21 @@
         public override bool FilterMatches(string debugLine)
         {
             debugLine = debugLine.ToLower();
-            var text = this.Text.ToLower();
+            var lowerText = this.Text.ToLower();
             var filterMatches = false;
             switch (this.FilterType)
             {
                 case FilterType.Contains:
-                    filterMatches = debugLine.Contains(text);
+                    filterMatches = debugLine.Contains(lowerText);
                     break;
                 case FilterType.StartsWith:
-                    filterMatches = debugLine.StartsWith(text);
+                    filterMatches = debugLine.StartsWith(lowerText);
                     break;
                 case FilterType.EndsWith:
-                    filterMatches = debugLine.EndsWith(text);
+                    filterMatches = debugLine.EndsWith(lowerText);
                     break;
                 case FilterType.RegularExpression:
-                    filterMatches = TryMatch(debugLine, text);
+                    filterMatches = TryMatch(debugLine, lowerText);
                     break;
             }
 

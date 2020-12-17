@@ -33,7 +33,7 @@
         {
         }
 
-        public override bool Matches(object targetElement, InputEventArgs inputEventArgs)
+        public override bool Matches(object? targetElement, InputEventArgs inputEventArgs)
         {
             if (!(inputEventArgs is KeyEventArgs keyEventArgs))
             {

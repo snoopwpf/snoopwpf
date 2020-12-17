@@ -26,10 +26,13 @@
         {
             var realInstance = TemplateHelper.GetChildFromTemplateIfNeeded(this.source, this.trigger.SourceName) as DependencyObject;
 
-            yield return new ConditionItem(this.trigger.Property, realInstance, this.trigger.Value)
+            if (realInstance is null == false)
             {
-                SourceName = this.trigger.SourceName
-            };
+                yield return new ConditionItem(this.trigger.Property, realInstance, this.trigger.Value)
+                {
+                    SourceName = this.trigger.SourceName
+                };
+            }
         }
     }
 }

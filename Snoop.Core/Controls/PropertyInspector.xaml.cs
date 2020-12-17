@@ -34,7 +34,7 @@ namespace Snoop.Controls
 
         public static readonly RoutedCommand UpdateBindingErrorCommand = new RoutedCommand(nameof(UpdateBindingErrorCommand), typeof(PropertyInspector));
 
-        private object target;
+        private object? target;
 
         public PropertyInspector()
         {
@@ -83,7 +83,8 @@ namespace Snoop.Controls
         {
             try
             {
-                ClipboardHelper.SetText(((PropertyInformation)e.Parameter).ResourceKey);
+                var resourceKey = ((PropertyInformation?)e.Parameter)?.ResourceKey ?? string.Empty;
+                ClipboardHelper.SetText(resourceKey);
             }
             catch (Exception exception)
             {
@@ -105,7 +106,8 @@ namespace Snoop.Controls
         {
             try
             {
-                var xaml = XamlWriterHelper.GetXamlAsString(((PropertyInformation)e.Parameter).Value);
+                var value = ((PropertyInformation?)e.Parameter)?.Value;
+                var xaml = XamlWriterHelper.GetXamlAsString(value);
                 ClipboardHelper.SetText(xaml);
             }
             catch (Exception exception)
@@ -125,7 +127,7 @@ namespace Snoop.Controls
             e.Handled = true;
         }
 
-        public object RootTarget
+        public object? RootTarget
         {
             get { return this.GetValue(RootTargetProperty); }
             set { this.SetValue(RootTargetProperty, value); }
@@ -152,7 +154,7 @@ namespace Snoop.Controls
             inspector.targetToFilter.Clear();
         }
 
-        public object Target
+        public object? Target
         {
             get => this.target;
             set
@@ -172,7 +174,7 @@ namespace Snoop.Controls
             }
         }
 
-        private static void HandleTargetChanged(PropertyInspector inspector, object oldValue, object newValue)
+        private static void HandleTargetChanged(PropertyInspector inspector, object? oldValue, object? newValue)
         {
             if (newValue != null)
             {
@@ -212,7 +214,7 @@ namespace Snoop.Controls
             return delvePath.ToString();
         }
 
-        private Type GetCurrentDelveType(Type rootTargetType)
+        private Type? GetCurrentDelveType(Type rootTargetType)
         {
             if (this.delvePathList.Count > 0)
             {
@@ -260,7 +262,7 @@ namespace Snoop.Controls
             }
         }
 
-        public Type DelveType
+        public Type? DelveType
         {
             get
             {
@@ -274,7 +276,7 @@ namespace Snoop.Controls
             }
         }
 
-        public Type Type
+        public Type? Type
         {
             get
             {
@@ -287,7 +289,7 @@ namespace Snoop.Controls
             }
         }
 
-        public void PushTarget(object target)
+        public void PushTarget(object? target)
         {
             this.Target = target;
         }
@@ -329,7 +331,7 @@ namespace Snoop.Controls
             }
         }
 
-        private object GetRealTarget(object target)
+        private object? GetRealTarget(object? target)
         {
             var skipDelve = target as ISkipDelve;
             if (skipDelve != null)
@@ -467,7 +469,7 @@ namespace Snoop.Controls
 
         private readonly PropertyFilter propertyFilter = new PropertyFilter(string.Empty, true);
 
-        public string StringFilter
+        public string? StringFilter
         {
             get { return this.propertyFilter.FilterString; }
 
@@ -533,7 +535,7 @@ namespace Snoop.Controls
         /// Hold the SelectedFilterSet in the PropertyFilter class, but track it here, so we know
         /// when to "refresh" the filtering with filterCall.Enqueue
         /// </summary>
-        public PropertyFilterSet SelectedFilterSet
+        public PropertyFilterSet? SelectedFilterSet
         {
             get { return this.propertyFilter.SelectedFilterSet ?? this.AllFilterSets[0]; }
 
@@ -542,7 +544,7 @@ namespace Snoop.Controls
                 this.propertyFilter.SelectedFilterSet = value;
                 this.OnPropertyChanged(nameof(this.SelectedFilterSet));
 
-                if (value == null)
+                if (value is null)
                 {
                     return;
                 }
@@ -672,25 +674,34 @@ namespace Snoop.Controls
         /// Cleanse the property names in each filter in the collection.
         /// This includes removing spaces from each one, and making them all lower case
         /// </summary>
-        private static PropertyFilterSet[] CleanFiltersForUserFilters(ICollection<PropertyFilterSet> collection)
+        private static PropertyFilterSet[] CleanFiltersForUserFilters(ICollection<PropertyFilterSet>? collection)
         {
+            if (collection is null)
+            {
+#if NET40
+                return new PropertyFilterSet[0];
+#else
+                return Array.Empty<PropertyFilterSet>();
+#endif
+            }
+
             foreach (var filterItem in collection)
             {
-                filterItem.Properties = filterItem.Properties.Select(s => s.ToLower().Trim()).ToArray();
+                filterItem.Properties = filterItem.Properties?.Select(s => s.ToLower().Trim()).ToArray();
             }
 
             return collection.Where(x => x.IsReadOnly == false).ToArray();
         }
 
         private readonly List<object> inspectStack = new List<object>();
-        private PropertyFilterSet[] userFilterSets;
+        private PropertyFilterSet[]? userFilterSets;
         private readonly List<PropertyInformation> delvePathList = new List<PropertyInformation>();
 
         private readonly Inspector inspector;
-        private object lastRootTarget;
+        private object? lastRootTarget;
         private readonly Dictionary<object, string> targetToFilter = new Dictionary<object, string>();
 
-        private PropertyFilterSet[] allFilterSets;
+        private PropertyFilterSet[]? allFilterSets;
 
         private readonly PropertyFilterSet[] defaultFilterSets =
         {
@@ -738,7 +749,7 @@ namespace Snoop.Controls
         };
 
         #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected void OnPropertyChanged(string propertyName)

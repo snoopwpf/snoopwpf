@@ -36,6 +36,11 @@ namespace Snoop.Controls.ValueEditors
                 var values = Enum.GetValues(propertyType);
                 foreach (var value in values)
                 {
+                    if (value is null)
+                    {
+                        continue;
+                    }
+
                     this.Values.Add(value);
 
                     if (this.Value != null
@@ -49,7 +54,7 @@ namespace Snoop.Controls.ValueEditors
             this.isValid = true;
         }
 
-        protected override void OnValueChanged(object newValue)
+        protected override void OnValueChanged(object? newValue)
         {
             base.OnValueChanged(newValue);
 
@@ -64,7 +69,7 @@ namespace Snoop.Controls.ValueEditors
             }
         }
 
-        private void HandleSelectionChanged(object sender, EventArgs e)
+        private void HandleSelectionChanged(object? sender, EventArgs e)
         {
             if (this.isValid
                 && this.Value != null)

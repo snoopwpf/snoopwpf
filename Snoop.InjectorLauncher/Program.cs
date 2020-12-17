@@ -35,6 +35,12 @@ namespace Snoop.InjectorLauncher
 
                 var processWrapper = ProcessWrapper.From(commandLineOptions.TargetPID, new IntPtr(commandLineOptions.TargetHwnd));
 
+                if (processWrapper is null)
+                {
+                    Injector.LogMessage($"Could not find process with ID \"{commandLineOptions.TargetPID}\".");
+                    return 1;
+                }
+
                 // Check for target process and our bitness.
                 // If they don't match we redirect everything to the appropriate injector launcher.
                 {
@@ -84,7 +90,7 @@ namespace Snoop.InjectorLauncher
 
                 if (File.Exists(injectorData.FullAssemblyPath) == false)
                 {
-                    Injector.LogMessage($"Could not find \"{injectorData.FullAssemblyPath}\".");
+                    Injector.LogMessage($"Could not find assembly \"{injectorData.FullAssemblyPath}\".");
                     return 1;
                 }
 

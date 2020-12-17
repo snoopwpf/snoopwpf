@@ -14,7 +14,7 @@
     /// </summary>
     public class SetterItem : IDisposable
     {
-        private AttachedPropertySlot attachedPropertySlot;
+        private AttachedPropertySlot? attachedPropertySlot;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="SetterItem" /> class.
@@ -24,7 +24,7 @@
             this.Property = "Unknown";
 
             this.Setter = setterBase as Setter;
-            if (this.Setter == null)
+            if (this.Setter is null)
             {
                 return;
             }
@@ -33,13 +33,23 @@
 
             var propertyDescriptor = DependencyPropertyDescriptor.FromProperty(this.Setter.Property, element.GetType());
             var targetForPropertyInformation = TemplateHelper.GetChildFromTemplateIfNeeded(element, this.Setter.TargetName);
-            var binding = this.CreateBinding(targetForPropertyInformation, propertyDescriptor, this.Setter);
-            var propertyInformation = new PropertyInformation(targetForPropertyInformation, propertyDescriptor, binding, GetDisplayName(this.Setter));
 
-            this.Value = propertyInformation;
+            if (targetForPropertyInformation is null)
+            {
+                return;
+            }
+
+            var binding = this.CreateBinding(targetForPropertyInformation, propertyDescriptor, this.Setter);
+
+            if (binding is null == false)
+            {
+                var propertyInformation = new PropertyInformation(targetForPropertyInformation, propertyDescriptor, binding, GetDisplayName(this.Setter));
+
+                this.Value = propertyInformation;
+            }
         }
 
-        public Setter Setter { get; }
+        public Setter? Setter { get; }
 
         /// <summary>
         ///     Gets if the value is overridden by a descending style or template
@@ -49,12 +59,12 @@
         /// <summary>
         ///     Gets the name of the property.
         /// </summary>
-        public string Property { get; }
+        public string? Property { get; }
 
         /// <summary>
         ///     Gets the value.
         /// </summary>
-        public PropertyInformation Value { get; }
+        public PropertyInformation? Value { get; }
 
         private static string GetDisplayName(Setter setter)
         {
@@ -70,12 +80,17 @@
             return sb.ToString();
         }
 
-        private Binding CreateBinding(object target, DependencyPropertyDescriptor property, Setter setter)
+        private Binding? CreateBinding(object target, DependencyPropertyDescriptor property, Setter setter)
         {
             if (setter.Value is BindingBase
                 && target is DependencyObject)
             {
                 this.attachedPropertySlot = AttachedPropertyManager.GetAndBindAttachedPropertySlot((DependencyObject)target, (BindingBase)setter.Value);
+
+                if (this.attachedPropertySlot is null)
+                {
+                    return null;
+                }
 
                 var binding = new Binding
                 {

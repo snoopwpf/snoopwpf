@@ -12,9 +12,9 @@ namespace Snoop.Views.MethodsTab
     {
         #region IComparer<Type> Members
 
-        public int Compare(Type x, Type y)
+        public int Compare(Type? x, Type? y)
         {
-            return x.Name.CompareTo(y.Name);
+            return string.Compare(x?.Name, y?.Name, StringComparison.Ordinal);
         }
 
         #endregion

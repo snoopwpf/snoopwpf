@@ -5,9 +5,9 @@
 
     public class EnumBindingSourceExtension : MarkupExtension
     {
-        private Type enumType;
+        private Type? enumType;
 
-        public Type EnumType
+        public Type? EnumType
         {
             get => this.enumType;
             set

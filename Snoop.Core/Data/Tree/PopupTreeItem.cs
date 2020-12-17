@@ -5,7 +5,7 @@
 
     public class PopupTreeItem : DependencyObjectTreeItem
     {
-        public PopupTreeItem(Popup target, TreeItem parent, TreeService treeService)
+        public PopupTreeItem(Popup target, TreeItem? parent, TreeService treeService)
             : base(target, parent, treeService)
         {
             this.PopupTarget = target;
@@ -21,6 +21,11 @@
             {
                 foreach (var child in LogicalTreeHelper.GetChildren(this.PopupTarget))
                 {
+                    if (child is null)
+                    {
+                        continue;
+                    }
+
                     this.Children.Add(this.TreeService.Construct(child, this));
                 }
             }

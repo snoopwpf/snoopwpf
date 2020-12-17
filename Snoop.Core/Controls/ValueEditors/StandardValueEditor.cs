@@ -48,14 +48,14 @@ namespace Snoop.Controls.ValueEditors
             this.Value = StringValueConverter.ConvertFromString(targetType, newValue);
         }
 
-        protected override void OnValueChanged(object newValue)
+        protected override void OnValueChanged(object? newValue)
         {
             this.isUpdatingValue = true;
 
             var value = this.Value;
             if (value != null)
             {
-                this.StringValue = StringValueConverter.ConvertToString(value.GetType(), value);
+                this.StringValue = StringValueConverter.ConvertToString(value.GetType(), value) ?? string.Empty;
             }
             else
             {

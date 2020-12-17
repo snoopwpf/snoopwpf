@@ -20,8 +20,13 @@
             return XElement.Parse(xaml);
         }
 
-        public static string GetXamlAsString(object obj)
+        public static string GetXamlAsString(object? obj)
         {
+            if (obj is null)
+            {
+                return string.Empty;
+            }
+
             var writerSettings = new XmlWriterSettings
             {
                 Indent = true,

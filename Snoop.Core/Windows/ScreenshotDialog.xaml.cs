@@ -66,9 +66,13 @@ namespace Snoop.Windows
                 FilterIndex = 0
             };
 
-            if (fileDialog.ShowDialog(this).Value)
+            if (fileDialog.ShowDialog(this) == true)
             {
-                lastSaveDirectory = Path.GetDirectoryName(fileDialog.FileName);
+                var directoryName = Path.GetDirectoryName(fileDialog.FileName);
+                if (string.IsNullOrEmpty(directoryName) == false)
+                {
+                    lastSaveDirectory = directoryName;
+                }
 
                 VisualCaptureUtil.SaveVisual(this.DataContext as Visual,
                     int.Parse(dpiText),

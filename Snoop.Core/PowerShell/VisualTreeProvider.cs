@@ -19,24 +19,24 @@ namespace Snoop.PowerShell
     [CmdletProvider(nameof(VisualTreeProvider), ProviderCapabilities.Filter)]
     public class VisualTreeProvider : NavigationCmdletProvider
     {
-        private Timer oneTimeSyncTimer;
+        private Timer? oneTimeSyncTimer;
         private const int LocationChangeNotifyDelay = 250;
 
-        private TreeItem Root
+        private TreeItem? Root
         {
             get
             {
                 var data = (Hashtable)this.Host.PrivateData.BaseObject;
-                return (TreeItem)data[ShellConstants.Root];
+                return (TreeItem?)data[ShellConstants.Root];
             }
         }
 
-        private string LastKnownSnoopLocation
+        private string? LastKnownSnoopLocation
         {
             get
             {
                 var data = (Hashtable)this.Host.PrivateData.BaseObject;
-                return (string)data[ShellConstants.LastKnownSnoopLocation];
+                return (string?)data[ShellConstants.LastKnownSnoopLocation];
             }
 
             set
@@ -61,9 +61,9 @@ namespace Snoop.PowerShell
             }
         }
 
-        private void OnSyncSelectedItem(object currentTryObj)
+        private void OnSyncSelectedItem(object? currentTryObj)
         {
-            var currentTry = (int)currentTryObj;
+            var currentTry = (int)currentTryObj!;
 
             if (currentTry >= 5)
             {
@@ -89,8 +89,8 @@ namespace Snoop.PowerShell
                     if (item != null)
                     {
                         var data = (Hashtable)this.Host.PrivateData.BaseObject;
-                        var action = (Action<TreeItem>)data[ShellConstants.LocationChangedActionKey];
-                        action(item);
+                        var action = (Action<TreeItem>?)data[ShellConstants.LocationChangedActionKey];
+                        action?.Invoke(item);
                     }
                     else
                     {
@@ -128,7 +128,7 @@ namespace Snoop.PowerShell
             return path;
         }
 
-        private TreeItem GetTreeItem(string path)
+        private TreeItem? GetTreeItem(string path)
         {
             path = GetValidPath(path);
 
@@ -140,6 +140,12 @@ namespace Snoop.PowerShell
 
             var parts = path.Split(new[] { '\\' }, StringSplitOptions.RemoveEmptyEntries);
             var current = this.Root;
+
+            if (current is null)
+            {
+                return null;
+            }
+
             var count = 0;
             foreach (var part in parts)
             {

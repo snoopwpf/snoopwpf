@@ -19,7 +19,7 @@ namespace Snoop.Infrastructure
     {
         private const double BaseDpi = 96;
 
-        public static void SaveVisual(Visual visual, int dpi, string filename)
+        public static void SaveVisual(Visual? visual, int dpi, string filename)
         {
             // sometimes RenderTargetBitmap doesn't render the Visual or doesn't render the Visual properly
             // below i am using the trick that jamie rodriguez posted on his blog
@@ -28,7 +28,8 @@ namespace Snoop.Infrastructure
 
             var visualBrush = CreateVisualBrushSafe(visual);
 
-            if (visualBrush is null)
+            if (visual is null
+                || visualBrush is null)
             {
                 return;
             }
@@ -38,15 +39,14 @@ namespace Snoop.Infrastructure
             SaveAsPng(renderTargetBitmap, filename);
         }
 
-        [CanBeNull]
-        public static VisualBrush CreateVisualBrushSafe(Visual visual)
+        public static VisualBrush? CreateVisualBrushSafe(Visual? visual)
         {
             return IsSafeToVisualize(visual)
                 ? new VisualBrush(visual)
                 : null;
         }
 
-        public static bool IsSafeToVisualize(Visual visual)
+        public static bool IsSafeToVisualize(Visual? visual)
         {
             if (visual is null)
             {
@@ -79,7 +79,7 @@ namespace Snoop.Infrastructure
         /// <remarks>
         /// This way we workaround a limitation in <see cref="VisualBrush"/> which causes poor quality for larger visuals.
         /// </remarks>
-        public static RenderTargetBitmap RenderVisualWithHighQuality(Visual visual, int dpi, PixelFormat? pixelFormat = null, Viewport3D viewport3D = null)
+        public static RenderTargetBitmap RenderVisualWithHighQuality(Visual visual, int dpi, PixelFormat? pixelFormat = null, Viewport3D? viewport3D = null)
         {
             var size = GetSize(visual);
 
@@ -93,7 +93,7 @@ namespace Snoop.Infrastructure
             return renderTargetBitmap;
         }
 
-        public static RenderTargetBitmap RenderVisual(Visual visual, Size bounds, int dpi, PixelFormat? pixelFormat = null, Viewport3D viewport3D = null)
+        public static RenderTargetBitmap RenderVisual(Visual visual, Size bounds, int dpi, PixelFormat? pixelFormat = null, Viewport3D? viewport3D = null)
         {
             var scale = dpi / BaseDpi;
 
@@ -105,7 +105,7 @@ namespace Snoop.Infrastructure
             {
                 typeof(RenderTargetBitmap)
                     .GetMethod("RenderForBitmapEffect", BindingFlags.Instance | BindingFlags.NonPublic)
-                    .Invoke(renderTargetBitmap, new object[] { visual, Matrix.Identity, Rect.Empty });
+                    ?.Invoke(renderTargetBitmap, new object[] { visual, Matrix.Identity, Rect.Empty });
             }
             else
             {

@@ -20,15 +20,9 @@
             this.Closed += this.SetFiltersWindow_Closed;
         }
 
-        internal FiltersViewModel ViewModel
-        {
-            get
-            {
-                return this.DataContext as FiltersViewModel;
-            }
-        }
+        internal FiltersViewModel ViewModel => (FiltersViewModel)this.DataContext;
 
-        private void SetFiltersWindow_Closed(object sender, EventArgs e)
+        private void SetFiltersWindow_Closed(object? sender, EventArgs e)
         {
             if (this.setFilterClicked || !this.ViewModel.IsDirty)
             {
@@ -110,9 +104,9 @@
 
         private void MenuItemSetInverse_Click(object sender, RoutedEventArgs e)
         {
-            foreach (SnoopFilter filter in this.listBoxFilters.SelectedItems)
+            foreach (SnoopFilter? filter in this.listBoxFilters.SelectedItems)
             {
-                if (filter == null)
+                if (filter is null)
                 {
                     continue;
                 }

@@ -13,14 +13,14 @@ namespace Snoop.Data.Tree
     {
         private readonly Application application;
 
-        public ApplicationTreeItem(Application application, TreeItem parent, TreeService treeService)
+        public ApplicationTreeItem(Application application, TreeItem? parent, TreeService treeService)
             : base(application, parent, treeService)
         {
             this.application = application;
             this.IsExpanded = true;
         }
 
-        public override Visual MainVisual => this.application.MainWindow;
+        public override Visual? MainVisual => this.application.MainWindow;
 
         protected override ResourceDictionary ResourceDictionary => this.application.Resources;
 
@@ -29,8 +29,13 @@ namespace Snoop.Data.Tree
             // having the call to base.ReloadCore here ... puts the application resources at the very top of the tree view
             base.ReloadCore();
 
-            foreach (Window window in this.application.Windows)
+            foreach (Window? window in this.application.Windows)
             {
+                if (window is null)
+                {
+                    continue;
+                }
+
                 if (window.IsInitialized == false
                     || window.CheckAccess() == false
                     || window.IsPartOfSnoopVisualTree())

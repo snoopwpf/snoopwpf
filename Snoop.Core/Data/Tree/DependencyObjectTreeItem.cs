@@ -23,20 +23,18 @@ namespace Snoop.Data.Tree
     {
         private static readonly Attribute[] propertyFilterAttributes = { new PropertyFilterAttribute(PropertyFilterOptions.All) };
 
-        private AdornerContainer adornerContainer;
+        private AdornerContainer? adornerContainer;
 
-        public DependencyObjectTreeItem(DependencyObject target, TreeItem parent, TreeService treeService)
+        public DependencyObjectTreeItem(DependencyObject target, TreeItem? parent, TreeService treeService)
             : base(target, parent, treeService)
         {
             this.DependencyObject = target;
             this.Visual = target as Visual;
         }
 
-        [NotNull]
         public DependencyObject DependencyObject { get; }
 
-        [CanBeNull]
-        public Visual Visual { get; }
+        public Visual? Visual { get; }
 
         public override bool HasBindingError
         {
@@ -44,8 +42,13 @@ namespace Snoop.Data.Tree
             {
                 var propertyDescriptors = TypeDescriptor.GetProperties(this.DependencyObject, propertyFilterAttributes);
 
-                foreach (PropertyDescriptor property in propertyDescriptors)
+                foreach (PropertyDescriptor? property in propertyDescriptors)
                 {
+                    if (property is null)
+                    {
+                        continue;
+                    }
+
                     var dpd = DependencyPropertyDescriptor.FromProperty(property);
                     if (dpd == null)
                     {
@@ -64,11 +67,11 @@ namespace Snoop.Data.Tree
             }
         }
 
-        public override Visual MainVisual => this.Visual;
+        public override Visual? MainVisual => this.Visual;
 
         public override Brush TreeBackgroundBrush => Brushes.Transparent;
 
-        public override Brush VisualBrush
+        public override Brush? VisualBrush
         {
             get
             {
@@ -82,7 +85,7 @@ namespace Snoop.Data.Tree
             }
         }
 
-        protected override ResourceDictionary ResourceDictionary
+        protected override ResourceDictionary? ResourceDictionary
         {
             get
             {

@@ -53,20 +53,19 @@
 
         public FiltersViewModel()
         {
-            this.filters.Add(new SnoopSingleFilter());
-            this.FilterStatus = this.isSet ? "Filter is ON" : "Filter is OFF";
+            this.InitializeFilters(null);
         }
 
-        public FiltersViewModel(IList<SnoopSingleFilter> singleFilters)
+        public FiltersViewModel(IList<SnoopSingleFilter>? singleFilters)
         {
             this.InitializeFilters(singleFilters);
         }
 
-        public void InitializeFilters(IList<SnoopSingleFilter> singleFilters)
+        public void InitializeFilters(IList<SnoopSingleFilter>? singleFilters)
         {
             this.filters.Clear();
 
-            if (singleFilters == null)
+            if (singleFilters is null)
             {
                 this.filters.Add(new SnoopSingleFilter());
                 this.IsSet = false;
@@ -97,11 +96,6 @@
 
         internal void SetIsSet()
         {
-            if (this.filters == null)
-            {
-                this.IsSet = false;
-            }
-
             if (this.filters.Count == 1 && this.filters[0] is SnoopSingleFilter && string.IsNullOrEmpty(((SnoopSingleFilter)this.filters[0]).Text))
             {
                 this.IsSet = false;
@@ -230,7 +224,7 @@
         }
 
         private bool isSet;
-        private string filterStatus;
+        private string filterStatus = "Filter is OFF";
 
         public bool IsSet
         {
@@ -261,11 +255,11 @@
             }
         }
 
-        private readonly ObservableCollection<SnoopFilter> filters = new ObservableCollection<SnoopFilter>();
+        private readonly ObservableCollection<SnoopFilter> filters = new();
 
         public IEnumerable<SnoopFilter> Filters => this.filters;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected void RaisePropertyChanged(string propertyName)

@@ -110,7 +110,7 @@ namespace Snoop.Controls
             }
         }
 
-        public PropertyInformation Selection
+        public PropertyInformation? Selection
         {
             get { return this.selection; }
 
@@ -121,9 +121,9 @@ namespace Snoop.Controls
             }
         }
 
-        private PropertyInformation selection;
+        private PropertyInformation? selection;
 
-        public Type Type
+        public Type? Type
         {
             get
             {
@@ -148,8 +148,6 @@ namespace Snoop.Controls
         /// Delayed loading of the property inspector to avoid creating the entire list of property
         /// editors immediately after selection. Keeps that app running smooth.
         /// </summary>
-        /// <param name="performInitialization"></param>
-        /// <returns></returns>
         private void ProcessIncrementalPropertyAdd()
         {
             var numberToAdd = 10;
@@ -383,7 +381,7 @@ namespace Snoop.Controls
             {
                 var property = (PropertyInformation)((FrameworkElement)sender).DataContext;
 
-                object newTarget = null;
+                object? newTarget = null;
 
                 if (Keyboard.Modifiers == ModifierKeys.Shift)
                 {
@@ -438,9 +436,9 @@ namespace Snoop.Controls
             this.processIncrementalCall.Enqueue(this.Dispatcher);
         }
 
-        private object target;
+        private object? target;
 
-        private IEnumerator<PropertyInformation> propertiesToAdd;
+        private IEnumerator<PropertyInformation>? propertiesToAdd;
         private readonly DelayedCall processIncrementalCall;
         private readonly DelayedCall filterCall;
         private int visiblePropertyCount;
@@ -467,7 +465,7 @@ namespace Snoop.Controls
         }
 
         #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected void OnPropertyChanged(string propertyName)

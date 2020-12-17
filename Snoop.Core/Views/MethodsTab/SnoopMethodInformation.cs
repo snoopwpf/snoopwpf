@@ -11,20 +11,21 @@ namespace Snoop.Views.MethodsTab
 
     public class SnoopMethodInformation : IComparable, IEquatable<SnoopMethodInformation>
     {
-        public string MethodName { get; set; }
+        public string MethodName { get; }
 
         public MethodInfo MethodInfo { get; }
 
         public SnoopMethodInformation(MethodInfo methodInfo)
         {
             this.MethodInfo = methodInfo;
+            this.MethodName = methodInfo.Name;
         }
 
         #region IComparable Members
 
-        public int CompareTo(object obj)
+        public int CompareTo(object? obj)
         {
-            return this.MethodName.CompareTo(((SnoopMethodInformation)obj).MethodName);
+            return string.Compare(this.MethodName, (obj as SnoopMethodInformation)?.MethodName, StringComparison.Ordinal);
         }
 
         #endregion
@@ -36,11 +37,6 @@ namespace Snoop.Views.MethodsTab
 
         public IList<SnoopParameterInformation> GetParameters(Type declaringType)
         {
-            if (this.MethodInfo == null)
-            {
-                return new List<SnoopParameterInformation>();
-            }
-
             var parameterInfos = this.MethodInfo.GetParameters();
 
             var parametersToReturn = new List<SnoopParameterInformation>();
@@ -56,9 +52,9 @@ namespace Snoop.Views.MethodsTab
 
         #region IEquatable<SnoopMethodInformation> Members
 
-        public bool Equals(SnoopMethodInformation other)
+        public bool Equals(SnoopMethodInformation? other)
         {
-            if (other == null)
+            if (other is null)
             {
                 return false;
             }
@@ -68,7 +64,7 @@ namespace Snoop.Views.MethodsTab
                 return false;
             }
 
-            if (!other.MethodInfo.ReturnType.Equals(this.MethodInfo.ReturnType))
+            if (other.MethodInfo.ReturnType != this.MethodInfo.ReturnType)
             {
                 return false;
             }
@@ -86,8 +82,7 @@ namespace Snoop.Views.MethodsTab
                 var thisParameterInfo = thisParameterInfos[i];
                 var otherParameterInfo = otherParameterInfos[i];
 
-                //if (!thisParameterInfo.Equals(otherParameterInfo))
-                if (!this.ParameterInfosEqual(thisParameterInfo, otherParameterInfo))
+                if (ParameterInfosEqual(thisParameterInfo, otherParameterInfo) == false)
                 {
                     return false;
                 }
@@ -96,14 +91,14 @@ namespace Snoop.Views.MethodsTab
             return true;
         }
 
-        private bool ParameterInfosEqual(ParameterInfo parm1, ParameterInfo parm2)
+        private static bool ParameterInfosEqual(ParameterInfo parm1, ParameterInfo parm2)
         {
-            if (!parm1.Name.Equals(parm2.Name))
+            if (parm1.Name?.Equals(parm2.Name) != true)
             {
                 return false;
             }
 
-            if (!parm1.ParameterType.Equals(parm2.ParameterType))
+            if (parm1.ParameterType != parm2.ParameterType)
             {
                 return false;
             }

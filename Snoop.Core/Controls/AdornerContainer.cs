@@ -15,7 +15,7 @@ namespace Snoop.Controls
     /// </summary>
     public class AdornerContainer : Adorner
     {
-        private UIElement child;
+        private UIElement? child;
 
         static AdornerContainer()
         {
@@ -30,7 +30,7 @@ namespace Snoop.Controls
 
         protected override int VisualChildrenCount => this.child is null ? 0 : 1;
 
-        protected override Visual GetVisualChild(int index)
+        protected override Visual? GetVisualChild(int index)
         {
             if (index == 0
                 && this.child != null)
@@ -48,7 +48,7 @@ namespace Snoop.Controls
             return finalSize;
         }
 
-        public UIElement Child
+        public UIElement? Child
         {
             get { return this.child; }
 

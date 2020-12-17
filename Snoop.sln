@@ -14,6 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Changelog.md = Changelog.md
 		Directory.build.props = Directory.build.props
 		Directory.build.targets = Directory.build.targets
+		Directory.packages.props = Directory.packages.props
 		global.json = global.json
 		README.md = README.md
 		Snoop.ruleset = Snoop.ruleset

@@ -53,9 +53,9 @@
         //    }
         //}
 
-        public event EventHandler<KeyEventArgs> LowLevelKeyDown;
+        public event EventHandler<KeyEventArgs>? LowLevelKeyDown;
 
-        public event EventHandler<KeyEventArgs> LowLevelKeyUp;
+        public event EventHandler<KeyEventArgs>? LowLevelKeyUp;
 
         public bool IsRunning => this.hookId != IntPtr.Zero;
 

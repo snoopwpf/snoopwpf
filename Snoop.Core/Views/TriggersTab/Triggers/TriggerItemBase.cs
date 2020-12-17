@@ -29,10 +29,10 @@
     {
         private readonly TriggerBase trigger;
 
-        private readonly List<ConditionItem> conditions = new List<ConditionItem>();
-        private readonly List<SetterItem> setters = new List<SetterItem>();
-        private readonly List<TriggerActionItem> enterActions = new List<TriggerActionItem>();
-        private readonly List<TriggerActionItem> exitActions = new List<TriggerActionItem>();
+        private readonly List<ConditionItem> conditions = new();
+        private readonly List<SetterItem> setters = new();
+        private readonly List<TriggerActionItem> enterActions = new();
+        private readonly List<TriggerActionItem> exitActions = new();
         private bool isActive;
 
         /// <summary>
@@ -49,22 +49,22 @@
         /// <summary>
         ///     Gets the conditions.
         /// </summary>
-        public ICollectionView Conditions { get; private set; }
+        public ICollectionView? Conditions { get; private set; }
 
         /// <summary>
         ///     Gets or the setters.
         /// </summary>
-        public ICollectionView Setters { get; private set; }
+        public ICollectionView? Setters { get; private set; }
 
         /// <summary>
         ///     Gets or the EnterActions.
         /// </summary>
-        public ICollectionView EnterActions { get; private set; }
+        public ICollectionView? EnterActions { get; private set; }
 
         /// <summary>
         ///     Gets or the ExitActions.
         /// </summary>
-        public ICollectionView ExitActions { get; private set; }
+        public ICollectionView? ExitActions { get; private set; }
 
         /// <summary>
         ///     Gets the source of the trigger.
@@ -112,7 +112,7 @@
 
         #region INotifyPropertyChanged Members
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected void RaisePropertyChanged(string propertyName)
@@ -164,7 +164,7 @@
 
         #region Private Members
 
-        private void OnConditionStateChanged(object sender, EventArgs e)
+        private void OnConditionStateChanged(object? sender, EventArgs e)
         {
             if (this.conditions.Any(condition => !condition.IsActive))
             {

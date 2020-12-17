@@ -51,13 +51,13 @@ namespace Snoop.Infrastructure.Helpers
             return string.Empty;
         }
 
-        public static string GetKeyInResourceDictionary(ResourceDictionary dictionary, object resourceItem)
+        public static string? GetKeyInResourceDictionary(ResourceDictionary dictionary, object resourceItem)
         {
             foreach (var key in dictionary.Keys)
             {
                 if (dictionary[key] == resourceItem)
                 {
-                    return key.ToString();
+                    return key?.ToString();
                 }
             }
 

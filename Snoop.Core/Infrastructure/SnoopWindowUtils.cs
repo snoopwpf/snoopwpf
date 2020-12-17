@@ -16,9 +16,9 @@ namespace Snoop.Infrastructure
 
     public static class SnoopWindowUtils
     {
-        public static Window FindOwnerWindow(Window ownedWindow)
+        public static Window? FindOwnerWindow(Window ownedWindow)
         {
-            if (TransientSettingsData.Current.SetWindowOwner == false)
+            if (TransientSettingsData.Current!.SetWindowOwner == false)
             {
                 return null;
             }
@@ -28,8 +28,13 @@ namespace Snoop.Infrastructure
             if (ownerWindow == null
                 && SnoopModes.MultipleDispatcherMode)
             {
-                foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
+                foreach (PresentationSource? presentationSource in PresentationSource.CurrentSources)
                 {
+                    if (presentationSource is null)
+                    {
+                        continue;
+                    }
+
                     if (presentationSource.CheckAccess()
                         && presentationSource.RootVisual is Window window
                         && window.Dispatcher.CheckAccess()
@@ -54,8 +59,13 @@ namespace Snoop.Infrastructure
                 else
                 {
                     // second: try and find a visible window in the list of the current application's windows
-                    foreach (Window window in Application.Current.Windows)
+                    foreach (Window? window in Application.Current.Windows)
                     {
+                        if (window is null)
+                        {
+                            continue;
+                        }
+
                         if (window.CheckAccess()
                             && window.Visibility == Visibility.Visible)
                         {
@@ -69,8 +79,13 @@ namespace Snoop.Infrastructure
             if (ownerWindow == null)
             {
                 // third: try and find a visible window in the list of current presentation sources
-                foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
+                foreach (PresentationSource? presentationSource in PresentationSource.CurrentSources)
                 {
+                    if (presentationSource is null)
+                    {
+                        continue;
+                    }
+
                     if (presentationSource.CheckAccess()
                         && presentationSource.RootVisual is Window window
                         && window.Dispatcher.CheckAccess()

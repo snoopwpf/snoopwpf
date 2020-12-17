@@ -7,12 +7,12 @@
 
     public abstract class SnoopMainBaseWindow : SnoopBaseWindow
     {
-        public abstract object Target { get; set; }
+        public abstract object? Target { get; set; }
 
         public bool Inspect()
         {
             var foundRoot = this.FindRoot();
-            if (foundRoot == null)
+            if (foundRoot is null)
             {
                 if (SnoopModes.MultipleDispatcherMode == false
                     && SnoopModes.MultipleAppDomainMode == false)
@@ -57,14 +57,19 @@
 
         protected abstract void Load(object rootToInspect);
 
-        protected virtual object FindRoot()
+        protected virtual object? FindRoot()
         {
-            object foundRoot = null;
+            object? foundRoot = null;
 
             if (SnoopModes.MultipleDispatcherMode)
             {
-                foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
+                foreach (PresentationSource? presentationSource in PresentationSource.CurrentSources)
                 {
+                    if (presentationSource is null)
+                    {
+                        continue;
+                    }
+
                     if (presentationSource.RootVisual is UIElement element
                         && element.Dispatcher.CheckAccess())
                     {
@@ -84,8 +89,13 @@
 
                 // in this case, let's iterate over PresentationSource.CurrentSources,
                 // and use the first non-null, visible RootVisual we find as root to inspect.
-                foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
+                foreach (PresentationSource? presentationSource in PresentationSource.CurrentSources)
                 {
+                    if (presentationSource is null)
+                    {
+                        continue;
+                    }
+                    
                     if (presentationSource.RootVisual is UIElement element
                         && element.Visibility == Visibility.Visible)
                     {

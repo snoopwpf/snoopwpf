@@ -44,7 +44,7 @@ namespace Snoop.Controls
                 typeof(object),
                 typeof(Previewer),
                 new FrameworkPropertyMetadata(
-                    (object)null,
+                    default,
                     OnTargetChanged));
 
         /// <summary>

@@ -24,7 +24,12 @@
 
             // We have to do this in the constructor because we might not be able to cast correctly.
             // Not being able to cast might be the case if the app domain we should run in uses shadow copies for it's assemblies.
-            this.RunInCurrentAppDomain(Environment.GetEnvironmentVariable("Snoop.SettingsFile"));
+            var settingsFile = Environment.GetEnvironmentVariable("Snoop.SettingsFile");
+
+            if (string.IsNullOrEmpty(settingsFile) == false)
+            {
+                this.RunInCurrentAppDomain(settingsFile);
+            }
         }
 
         private void RunInCurrentAppDomain(string settingsFile)
@@ -66,7 +71,7 @@
 
             var settingsData = TransientSettingsData.LoadCurrent(settingsFile);
 
-            IList<AppDomain> appDomains = null;
+            IList<AppDomain>? appDomains = null;
 
             if (settingsData.MultipleAppDomainMode != MultipleAppDomainMode.NeverUse)
             {
@@ -136,7 +141,7 @@
                             AttachAssemblyResolveHandler(appDomain);
 
                             // the injection code runs inside the constructor of SnoopCrossAppDomainManager
-                            appDomain.CreateInstanceFrom(assemblyFullName, fullInjectorClassName);
+                            appDomain.CreateInstanceFrom(assemblyFullName, fullInjectorClassName!);
 
                             // if there is no exception we consider the injection successful
                             var appDomainSucceeded = true;
@@ -211,7 +216,7 @@
             }
         }
 
-        private static Assembly HandleDomainAssemblyResolve(object sender, ResolveEventArgs args)
+        private static Assembly? HandleDomainAssemblyResolve(object? sender, ResolveEventArgs args)
         {
             if (args.Name?.StartsWith("Snoop.Core,") == true)
             {
@@ -270,7 +275,7 @@
             return snoopWindow;
         }
 
-        private static string TryGetWindowOrMainWindowTitle(Window targetWindow)
+        private static string TryGetWindowOrMainWindowTitle(Window? targetWindow)
         {
             if (targetWindow != null)
             {
@@ -295,8 +300,13 @@
 
             var dispatchers = new List<Dispatcher>();
 
-            foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
+            foreach (PresentationSource? presentationSource in PresentationSource.CurrentSources)
             {
+                if (presentationSource is null)
+                {
+                    continue;
+                }
+
                 var presentationSourceDispatcher = presentationSource.Dispatcher;
 
                 // Check if we have already seen this dispatcher
@@ -382,7 +392,7 @@
             return false;
         }
 
-        private static Visual GetRootVisual(Dispatcher dispatcher)
+        private static Visual? GetRootVisual(Dispatcher dispatcher)
         {
             return PresentationSource.CurrentSources
                 .OfType<PresentationSource>()
@@ -390,9 +400,9 @@
                 ?.RootVisual;
         }
 
-        private static void DispatchOut(object o)
+        private static void DispatchOut(object? o)
         {
-            var dispatchOutParameters = (DispatchOutParameters)o;
+            var dispatchOutParameters = (DispatchOutParameters)o!;
 
             foreach (var dispatcher in dispatchOutParameters.Dispatchers)
             {

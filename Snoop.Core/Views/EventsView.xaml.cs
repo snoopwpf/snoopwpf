@@ -55,7 +55,7 @@ namespace Snoop.Views
             get { return this.interestingEvents; }
         }
 
-        private readonly ObservableCollection<TrackedEvent> interestingEvents = new ObservableCollection<TrackedEvent>();
+        private readonly ObservableCollection<TrackedEvent> interestingEvents = new();
 
         public int MaxEventsDisplayed
         {
@@ -160,11 +160,11 @@ namespace Snoop.Views
             }
         }
 
-        private readonly ObservableCollection<EventTracker> trackers = new ObservableCollection<EventTracker>();
+        private readonly ObservableCollection<EventTracker> trackers = new();
 
         private static readonly List<RoutedEvent> defaultEvents =
-            new List<RoutedEvent>(
-                new RoutedEvent[]
+            new(
+                new[]
                 {
                     Keyboard.KeyDownEvent,
                     Keyboard.KeyUpEvent,
@@ -176,7 +176,7 @@ namespace Snoop.Views
                 });
 
         #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected void OnPropertyChanged(string propertyName)

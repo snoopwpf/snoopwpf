@@ -43,11 +43,16 @@ namespace Snoop.Views.MethodsTab
             return typesAssignable;
         }
 
-        public List<Type> DerivedTypes { get;  set; }
+        public List<Type>? DerivedTypes { get; private set; }
 
         private void TypeSelector_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (this.DerivedTypes == null)
+            if (this.BaseType is null)
+            {
+                return;
+            }
+
+            if (this.DerivedTypes is null)
             {
                 this.DerivedTypes = GetDerivedTypes(this.BaseType);
             }
@@ -55,9 +60,9 @@ namespace Snoop.Views.MethodsTab
             this.comboBoxTypes.ItemsSource = this.DerivedTypes;
         }
 
-        public Type BaseType { get; set; }
+        public Type? BaseType { get; set; }
 
-        public object Instance
+        public object? Instance
         {
             get;
             private set;

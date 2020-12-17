@@ -29,7 +29,7 @@
 
         public abstract IEnumerable GetChildren(object target);
 
-        public virtual TreeItem Construct(object target, TreeItem parent)
+        public virtual TreeItem Construct(object target, TreeItem? parent)
         {
             TreeItem treeItem;
 
@@ -156,7 +156,7 @@
     {
         public override TreeType TreeType { get; } = TreeType.Automation;
 
-        public override TreeItem Construct(object target, TreeItem parent)
+        public override TreeItem Construct(object target, TreeItem? parent)
         {
             if (!(target is AutomationPeer automationPeer)
                 && target is UIElement element)
@@ -201,7 +201,7 @@
                 yield break;
             }
 
-            AutomationElement child;
+            AutomationElement? child;
             try
             {
                 child = treeWalker.GetFirstChild(automationElement);

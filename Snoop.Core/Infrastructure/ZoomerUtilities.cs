@@ -12,7 +12,7 @@ namespace Snoop.Infrastructure
 
     public static class ZoomerUtilities
     {
-        public static UIElement CreateIfPossible(object item)
+        public static UIElement? CreateIfPossible(object? item)
         {
             if (item is Window && VisualTreeHelper.GetChildrenCount((Visual)item) == 1)
             {
@@ -74,7 +74,7 @@ namespace Snoop.Infrastructure
             return rect;
         }
 
-        private static UIElement CreateRectangleForFrameworkElement(FrameworkElement uiElement)
+        private static UIElement? CreateRectangleForFrameworkElement(FrameworkElement uiElement)
         {
             var brush = VisualCaptureUtil.CreateVisualBrushSafe(uiElement);
             if (brush == null)

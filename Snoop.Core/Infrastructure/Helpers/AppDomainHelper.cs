@@ -6,7 +6,7 @@
 
     public class AppDomainHelper
     {
-        public IList<AppDomain> GetAppDomains()
+        public IList<AppDomain>? GetAppDomains()
         {
             return null;
         }
@@ -21,10 +21,10 @@
 
     public class AppDomainHelper
     {
-        private IList<AppDomain> appDomains;
-        private AutoResetEvent autoResetEvent;
+        private IList<AppDomain>? appDomains;
+        private AutoResetEvent? autoResetEvent;
 
-        public IList<AppDomain> GetAppDomains()
+        public IList<AppDomain>? GetAppDomains()
         {
             var staThread = new Thread(this.EnumAppDomains);
             staThread.SetApartmentState(ApartmentState.STA); //STA is required when enumerating app domains
@@ -39,10 +39,10 @@
         private void EnumAppDomains()
         {
             this.appDomains = EnumerateAppDomains();
-            this.autoResetEvent.Set();
+            this.autoResetEvent!.Set();
         }
 
-        private static IList<AppDomain> EnumerateAppDomains()
+        private static IList<AppDomain>? EnumerateAppDomains()
         {
             IList<AppDomain> result = new List<AppDomain>();
             var enumHandle = IntPtr.Zero;

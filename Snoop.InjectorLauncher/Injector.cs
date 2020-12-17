@@ -47,7 +47,14 @@ namespace Snoop.InjectorLauncher
         [PublicAPI]
         public static void InjectIntoProcess(IntPtr windowHandle, InjectorData injectorData)
         {
-            InjectIntoProcess(ProcessWrapper.FromWindowHandle(windowHandle), injectorData);
+            var processFromHandle = ProcessWrapper.FromWindowHandle(windowHandle);
+
+            if (processFromHandle is null)
+            {
+                return; // todo: add logging
+            }
+
+            InjectIntoProcess(processFromHandle, injectorData);
         }
 
         [PublicAPI]

@@ -26,11 +26,11 @@ namespace Snoop
         private static readonly Point cursorHotSpot = new Point(16, 20);
         private readonly Cursor crosshairsCursor;
         private Point startPoint;
-        private WindowInfo currentWindowInfo;
+        private WindowInfo? currentWindowInfo;
         private readonly LowLevelMouseHook lowLevelMouseHook;
 
-        private Cursor currentWindowInfoCursor;
-        private Cursor lastWindowInfoCursor;
+        private Cursor? currentWindowInfoCursor;
+        private Cursor? lastWindowInfoCursor;
 
         public WindowFinder()
         {
@@ -174,7 +174,7 @@ namespace Snoop
 
         public static void AttachSnoop(WindowInfo windowInfo)
         {
-            var result = windowInfo.OwningProcessInfo.Snoop(windowInfo.HWnd);
+            var result = windowInfo.OwningProcessInfo?.Snoop(windowInfo.HWnd);
 
             if (result?.Success == false)
             {
@@ -184,7 +184,7 @@ namespace Snoop
 
         private static void AttachMagnify(WindowInfo windowInfo)
         {
-            var result = windowInfo.OwningProcessInfo.Magnify(windowInfo.HWnd);
+            var result = windowInfo.OwningProcessInfo?.Magnify(windowInfo.HWnd);
 
             if (result?.Success == false)
             {

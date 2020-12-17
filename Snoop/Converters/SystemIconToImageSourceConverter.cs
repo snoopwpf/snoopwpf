@@ -12,7 +12,7 @@
         public static readonly SystemIconToImageSourceConverter Instance = new SystemIconToImageSourceConverter();
 
         /// <inheritdoc />
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var systemIcon = (SystemIcon)value;
             var size = System.Convert.ToInt32(parameter);

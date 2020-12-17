@@ -72,7 +72,7 @@ namespace Snoop.Infrastructure
             }
         }
 
-        private static Popup GetComboBoxPopup(ComboBox comboBox)
+        private static Popup? GetComboBoxPopup(ComboBox comboBox)
         {
             if (comboBox?.Template == null)
             {
@@ -95,10 +95,10 @@ namespace Snoop.Infrastructure
             popup.Closed -= SnoopChildPopupClosed;
         }
 
-        private static void SnoopChildPopupOpened(object sender, EventArgs e)
+        private static void SnoopChildPopupOpened(object? sender, EventArgs e)
         {
-            var popup = (Popup)sender;
-            if (popup.Child != null)
+            var popup = (Popup?)sender;
+            if (popup?.Child != null)
             {
                 // Cannot use 'popup' as a snoop part, since it's not
                 // going to be in the PopupRoot's visual tree. The closest
@@ -107,10 +107,10 @@ namespace Snoop.Infrastructure
             }
         }
 
-        private static void SnoopChildPopupClosed(object sender, EventArgs e)
+        private static void SnoopChildPopupClosed(object? sender, EventArgs e)
         {
-            var popup = (Popup)sender;
-            if (popup.Child != null)
+            var popup = (Popup?)sender;
+            if (popup?.Child != null)
             {
                 // Cannot use 'popup' as a snoop part, since it's not
                 // going to be in the PopupRoot's visual tree. The closest

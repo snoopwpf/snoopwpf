@@ -31,7 +31,8 @@ namespace Snoop
         public static readonly RoutedCommand MinimizeCommand = new RoutedCommand(nameof(MinimizeCommand), typeof(AppChooser));
 
         private readonly ObservableCollection<WindowInfo> windowInfos = new ObservableCollection<WindowInfo>();
-        private LowLevelKeyboardHook keyboardHook;
+
+        private LowLevelKeyboardHook? keyboardHook;
 
         static AppChooser()
         {
@@ -41,7 +42,7 @@ namespace Snoop
         public AppChooser()
         {
             this.WindowInfos = CollectionViewSource.GetDefaultView(this.windowInfos);
-            this.WindowInfos?.SortDescriptions.Add(new SortDescription(nameof(WindowInfo.ProcessId), ListSortDirection.Ascending));
+            this.WindowInfos.SortDescriptions.Add(new SortDescription(nameof(WindowInfo.ProcessId), ListSortDirection.Ascending));
             this.SortColumn = 1;
 
             this.InitializeComponent();
@@ -144,7 +145,7 @@ namespace Snoop
 
         protected override void OnClosed(EventArgs e)
         {
-            this.keyboardHook.Stop();
+            this.keyboardHook?.Stop();
 
             base.OnClosed(e);
         }
@@ -153,7 +154,8 @@ namespace Snoop
         {
             foreach (var window in this.windowInfos)
             {
-                if (window.OwningProcessInfo.Process.Id == process.Id)
+                if (window.OwningProcessInfo is not null
+                    && window.OwningProcessInfo.Process.Id == process.Id)
                 {
                     return true;
                 }
@@ -175,7 +177,7 @@ namespace Snoop
         private void HandleInspectCommand(object sender, ExecutedRoutedEventArgs e)
         {
             var window = (WindowInfo)this.WindowInfos.CurrentItem;
-            var result = window?.OwningProcessInfo.Snoop(window.HWnd);
+            var result = window?.OwningProcessInfo?.Snoop(window.HWnd);
 
             if (result?.Success == false)
             {
@@ -317,8 +319,8 @@ namespace Snoop
 
         public bool Success { get; }
 
-        public Exception AttachException { get; }
+        public Exception? AttachException { get; }
 
-        public string WindowName { get; }
+        public string? WindowName { get; }
     }
 }

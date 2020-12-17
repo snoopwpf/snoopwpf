@@ -5,14 +5,13 @@
     using System.Windows.Controls;
     using System.Windows.Documents;
     using System.Windows.Media;
-    using JetBrains.Annotations;
     using Snoop.Controls;
 
     public class AutomationPeerTreeItem : TreeItem
     {
-        private AdornerContainer adornerContainer;
+        private AdornerContainer? adornerContainer;
 
-        public AutomationPeerTreeItem(AutomationPeer target, TreeItem parent, TreeService treeService)
+        public AutomationPeerTreeItem(AutomationPeer target, TreeItem? parent, TreeService treeService)
             : base(target, parent, treeService)
         {
             if (this.Target is UIElementAutomationPeer uiElementAutomationPeer
@@ -22,8 +21,7 @@
             }
         }
 
-        [CanBeNull]
-        public Visual Visual { get; }
+        public Visual? Visual { get; }
 
         protected override void ReloadCore()
         {

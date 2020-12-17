@@ -8,7 +8,6 @@ namespace Snoop.Windows
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Windows;
     using System.Windows.Controls;
     using JetBrains.Annotations;
@@ -16,8 +15,8 @@ namespace Snoop.Windows
 
     public partial class EditUserFilters : INotifyPropertyChanged
     {
-        private ObservableCollection<PropertyFilterSet> itemsSource;
-        private IEnumerable<PropertyFilterSet> userFilters;
+        private ObservableCollection<PropertyFilterSet>? itemsSource;
+        private IEnumerable<PropertyFilterSet>? userFilters;
 
         public EditUserFilters()
         {
@@ -26,28 +25,28 @@ namespace Snoop.Windows
             this.SetButtonStates();
         }
 
-        public IEnumerable<PropertyFilterSet> UserFilters
+        public IEnumerable<PropertyFilterSet>? UserFilters
         {
-            [DebuggerStepThrough]
             get => this.userFilters;
             set
             {
-                if (value != this.userFilters)
+                if (!ReferenceEquals(value, this.userFilters))
                 {
                     this.userFilters = value;
                     this.OnPropertyChanged(nameof(this.UserFilters));
-                    this.ItemsSource = new ObservableCollection<PropertyFilterSet>(this.UserFilters);
+                    this.ItemsSource = this.UserFilters is null
+                        ? new ObservableCollection<PropertyFilterSet>()
+                        : new ObservableCollection<PropertyFilterSet>(this.UserFilters);
                 }
             }
         }
 
-        public ObservableCollection<PropertyFilterSet> ItemsSource
+        public ObservableCollection<PropertyFilterSet>? ItemsSource
         {
-            [DebuggerStepThrough]
             get => this.itemsSource;
             private set
             {
-                if (value != this.itemsSource)
+                if (!ReferenceEquals(value, this.itemsSource))
                 {
                     this.itemsSource = value;
                     this.OnPropertyChanged(nameof(this.ItemsSource));
@@ -55,7 +54,7 @@ namespace Snoop.Windows
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         private void OkHandler(object sender, RoutedEventArgs e)
         {
@@ -71,6 +70,11 @@ namespace Snoop.Windows
 
         private void AddHandler(object sender, RoutedEventArgs e)
         {
+            if (this.ItemsSource is null)
+            {
+                return;
+            }
+
             var newSet =
                 new PropertyFilterSet
                 {
@@ -89,6 +93,11 @@ namespace Snoop.Windows
 
         private void DeleteHandler(object sender, RoutedEventArgs e)
         {
+            if (this.ItemsSource is null)
+            {
+                return;
+            }
+            
             if (this.filterSetList.SelectedItem is PropertyFilterSet selected)
             {
                 this.ItemsSource.Remove(selected);
@@ -97,6 +106,11 @@ namespace Snoop.Windows
 
         private void UpHandler(object sender, RoutedEventArgs e)
         {
+            if (this.ItemsSource is null)
+            {
+                return;
+            }
+            
             var index = this.filterSetList.SelectedIndex;
             if (index <= 0)
             {
@@ -113,6 +127,11 @@ namespace Snoop.Windows
 
         private void DownHandler(object sender, RoutedEventArgs e)
         {
+            if (this.ItemsSource is null)
+            {
+                return;
+            }
+            
             var index = this.filterSetList.SelectedIndex;
             if (index >= this.ItemsSource.Count - 1)
             {

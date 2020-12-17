@@ -7,14 +7,19 @@
 
     public static class AttachedPropertyManager
     {
-        public static AttachedPropertySlot GetAndBindAttachedPropertySlot(DependencyObject target, BindingBase binding)
+        public static AttachedPropertySlot? GetAndBindAttachedPropertySlot(DependencyObject target, BindingBase binding)
         {
             var nextFreeAttachedProperty = GetNextFreeAttachedProperty(target);
+
+            if (nextFreeAttachedProperty is null)
+            {
+                return null;
+            }
 
             return new AttachedPropertySlot(target, nextFreeAttachedProperty, binding);
         }
 
-        private static DependencyProperty GetNextFreeAttachedProperty(DependencyObject target)
+        private static DependencyProperty? GetNextFreeAttachedProperty(DependencyObject target)
         {
             for (var i = 0; i < int.MaxValue; i++)
             {

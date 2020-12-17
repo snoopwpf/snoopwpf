@@ -18,7 +18,7 @@ namespace Snoop.Controls
     {
         private readonly int maxDepth = 100;
 
-        private SnoopUI snoopUI;
+        private SnoopUI? snoopUI;
 
         // We need this method and what it does because:
         // If we have a tree with levels greater than 150 then we might get an StackOverflowException during measure/arrange.
@@ -63,11 +63,16 @@ namespace Snoop.Controls
                 return false;
             }
 
+            if (item.Parent is null)
+            {
+                return false;
+            }
+
             // Try to show 10 items above new root, that way we can keep a bit of context
             var newRoot = item.Parent;
             for (var i = 0; i < 10; ++i)
             {
-                if (newRoot.Parent is null)
+                if (newRoot?.Parent is null)
                 {
                     break;
                 }
@@ -75,12 +80,12 @@ namespace Snoop.Controls
                 newRoot = newRoot.Parent;
             }
 
-            this.snoopUI.ApplyReduceDepthFilter(newRoot);
+            this.snoopUI.ApplyReduceDepthFilter(newRoot!);
 
             return true;
         }
 
-        private TreeItem GetRootItem()
+        private TreeItem? GetRootItem()
         {
             return this.Items[0] as TreeItem;
         }
@@ -132,7 +137,7 @@ namespace Snoop.Controls
             // Check whether the tree is too deep.
             try
             {
-                var treeView = (ProperTreeView)this.treeView.Target;
+                var treeView = (ProperTreeView?)this.treeView.Target;
                 if (treeView is null
                     || treeView.ApplyReduceDepthFilterIfNeeded(this) == false)
                 {
@@ -152,7 +157,7 @@ namespace Snoop.Controls
             // Check whether the tree is too deep.
             try
             {
-                var treeView = (ProperTreeView)this.treeView.Target;
+                var treeView = (ProperTreeView?)this.treeView.Target;
                 if (treeView is null
                     || treeView.ApplyReduceDepthFilterIfNeeded(this) == false)
                 {
@@ -179,7 +184,7 @@ namespace Snoop.Controls
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return null;
+            return Binding.DoNothing;
         }
     }
 }

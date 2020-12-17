@@ -8,7 +8,7 @@ namespace Snoop.InjectorLauncher
     {
         public ProcessWrapper(Process process, IntPtr windowHandle)
         {
-            this.Process = process;
+            this.Process = process ?? throw new ArgumentNullException(nameof(process));
             this.Id = process.Id;
             this.Handle = NativeMethods.OpenProcess(NativeMethods.ProcessAccessFlags.All, false, process.Id);
             this.WindowHandle = windowHandle;
@@ -37,17 +37,31 @@ namespace Snoop.InjectorLauncher
 
         public string SupportedFrameworkName { get; }
 
-        public static ProcessWrapper From(int processId, IntPtr windowHandle)
+        public static ProcessWrapper? From(int processId, IntPtr windowHandle)
         {
-            return new ProcessWrapper(Process.GetProcessById(processId), windowHandle);
+            var processFromId = Process.GetProcessById(processId);
+
+            if (processFromId is null)
+            {
+                return null;
+            }
+
+            return new ProcessWrapper(processFromId, windowHandle);
         }
 
-        public static ProcessWrapper FromWindowHandle(IntPtr handle)
+        public static ProcessWrapper? FromWindowHandle(IntPtr handle)
         {
-            return new ProcessWrapper(GetProcessFromWindowHandle(handle), handle);
+            var processFromWindowHandle = GetProcessFromWindowHandle(handle);
+
+            if (processFromWindowHandle is null)
+            {
+                return null;
+            }
+
+            return new ProcessWrapper(processFromWindowHandle, handle);
         }
 
-        private static Process GetProcessFromWindowHandle(IntPtr windowHandle)
+        private static Process? GetProcessFromWindowHandle(IntPtr windowHandle)
         {
             NativeMethods.GetWindowThreadProcessId(windowHandle, out var processId);
 
@@ -76,7 +90,7 @@ namespace Snoop.InjectorLauncher
             var modules = NativeMethods.GetModules(process);
 
             var wpfgfx_cor3Found = false;
-            FileVersionInfo hostPolicyVersionInfo = null;
+            FileVersionInfo? hostPolicyVersionInfo = null;
 
             foreach (var module in modules)
             {

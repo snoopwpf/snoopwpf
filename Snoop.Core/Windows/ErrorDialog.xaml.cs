@@ -23,7 +23,7 @@ namespace Snoop.Windows
             this.Loaded += this.ErrorDialog_Loaded;
         }
 
-        public Exception Exception { get; private set; }
+        public Exception? Exception { get; private set; }
 
         public bool ExceptionAlreadyHandled
         {
@@ -45,7 +45,7 @@ namespace Snoop.Windows
         /// Shows a dialog containing the details for <paramref name="exception"/>.
         /// </summary>
         /// <returns><c>true</c> if the exception should be marked handled and <c>false</c> if the exception should NOT be marked as handled.</returns>
-        public static bool ShowDialog(Exception exception, string title = "Error occurred", string caption = "An error has occured", bool exceptionAlreadyHandled = false)
+        public static bool ShowDialog(Exception? exception, string title = "Error occurred", string caption = "An error has occured", bool exceptionAlreadyHandled = false)
         {
             Trace.WriteLine($"Showing error dialog.");
             Trace.WriteLine($"Title:     {title}");
@@ -95,6 +95,11 @@ namespace Snoop.Windows
 
         private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
+            if (this.Exception is null)
+            {
+                return;
+            }
+
             try
             {
                 var body = this.GenerateIssueBody();
@@ -136,7 +141,7 @@ namespace Snoop.Windows
 
         private string GetExceptionMessage()
         {
-            return this.Exception.ToString();
+            return this.Exception?.ToString() ?? string.Empty;
         }
 
         private bool CheckBoxRememberIsChecked()
@@ -146,6 +151,11 @@ namespace Snoop.Windows
 
         private string GenerateIssueBody()
         {
+            if (this.Exception is null)
+            {
+                return string.Empty;
+            }
+            
             var exceptionDetails = this.Exception.ToString();
 
             const int maxExceptionDetailsLength = 4000;

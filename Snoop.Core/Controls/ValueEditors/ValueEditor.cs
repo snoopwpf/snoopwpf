@@ -86,7 +86,7 @@ namespace Snoop.Controls.ValueEditors
             set => this.SetValue(IsSelectedProperty, value);
         }
 
-        public object Value
+        public object? Value
         {
             get => this.GetValue(ValueProperty);
             set => this.SetValue(ValueProperty, value);
@@ -110,7 +110,7 @@ namespace Snoop.Controls.ValueEditors
             set => this.SetValue(IsEditableProperty, value);
         }
 
-        public PropertyInformation PropertyInfo
+        public PropertyInformation? PropertyInfo
         {
             get => (PropertyInformation)this.GetValue(PropertyInfoProperty);
             set => this.SetValue(PropertyInfoProperty, value);
@@ -127,7 +127,7 @@ namespace Snoop.Controls.ValueEditors
             ((ValueEditor)sender).OnValueChanged(e.NewValue);
         }
 
-        protected virtual void OnValueChanged(object newValue)
+        protected virtual void OnValueChanged(object? newValue)
         {
         }
 

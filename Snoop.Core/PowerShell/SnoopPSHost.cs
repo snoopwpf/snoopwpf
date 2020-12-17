@@ -81,7 +81,7 @@ namespace Snoop.PowerShell
 
         public override Version Version
         {
-            get { return Assembly.GetExecutingAssembly().GetName().Version; }
+            get { return Assembly.GetExecutingAssembly()!.GetName()!.Version!; }
         }
 
         public override PSObject PrivateData
@@ -89,7 +89,7 @@ namespace Snoop.PowerShell
             get { return this.privateData; }
         }
 
-        public object this[string name]
+        public object? this[string name]
         {
             get { return this.privateHashtable[name]; }
             set { this.privateHashtable[name] = value; }

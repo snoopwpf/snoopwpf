@@ -9,9 +9,9 @@ namespace Snoop.Infrastructure
 
     public static class ResourceKeyCache
     {
-        private static readonly Dictionary<object, string> keys = new Dictionary<object, string>();
+        private static readonly Dictionary<object, string> keys = new();
 
-        public static string GetKey(object element)
+        public static string? GetKey(object element)
         {
             if (keys.TryGetValue(element, out var key))
             {

@@ -143,7 +143,7 @@ class Build : NukeBuild
         .DependsOn(CleanOutput)
         .DependsOn(Compile)
         .Executes(() => {
-            // Generate ingore files to prevent chocolatey from generating shims for them
+            // Generate ignore files to prevent chocolatey from generating shims for them
             foreach (var launcher in CurrentBuildOutputDirectory.GlobFiles($"{ProjectName}.InjectorLauncher.*.exe"))
             {
                 using var _ = File.Create(launcher + ".ignore");

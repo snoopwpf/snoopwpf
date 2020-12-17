@@ -17,7 +17,7 @@ namespace Snoop.Views.MethodsTab
             this.InitializeComponent();
         }
 
-        public object RootTarget
+        public object? RootTarget
         {
             get { return (object)this.GetValue(RootTargetProperty); }
             set { this.SetValue(RootTargetProperty, value); }
@@ -27,7 +27,7 @@ namespace Snoop.Views.MethodsTab
         public static readonly DependencyProperty RootTargetProperty =
             DependencyProperty.Register(nameof(RootTarget), typeof(object), typeof(ParameterCreator), new UIPropertyMetadata(null));
 
-        public object SelectedTarget
+        public object? SelectedTarget
         {
             get;
             private set;

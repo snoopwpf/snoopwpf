@@ -126,13 +126,18 @@
 
             var behaviorsToAdd = getBehaviorsMethod.Invoke(null, new object[] { dependencyObject }) as IEnumerable;
 
-            if (behaviorsToAdd == null)
+            if (behaviorsToAdd is null)
             {
                 return;
             }
 
             foreach (var behavior in behaviorsToAdd)
             {
+                if (behavior is null)
+                {
+                    continue;
+                }
+
                 this.Behaviors.Add(behavior);
             }
         }

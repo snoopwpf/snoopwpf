@@ -14,8 +14,10 @@ namespace Snoop
         // we have to match "HwndWrapper[{0};{1};{2}]" which is used at https://referencesource.microsoft.com/#WindowsBase/Shared/MS/Win32/HwndWrapper.cs,2a8e13c293bb3f8c
         private static readonly Regex windowClassNameRegex = new Regex(@"^HwndWrapper\[.*;.*;.*\]$", RegexOptions.Compiled);
 
-        private IList<NativeMethods.MODULEENTRY32> modules;
-        private ProcessInfo owningProcessInfo;
+        private IList<NativeMethods.MODULEENTRY32>? modules;
+
+        private ProcessInfo? owningProcessInfo;
+
         private static readonly int snoopProcessId = Process.GetCurrentProcess().Id;
 
         public WindowInfo(IntPtr hwnd)
@@ -121,7 +123,20 @@ namespace Snoop
             }
         }
 
-        public ProcessInfo OwningProcessInfo => this.owningProcessInfo ??= new ProcessInfo(NativeMethods.GetWindowThreadProcess(this.HWnd));
+        public ProcessInfo? OwningProcessInfo
+        {
+            get
+            {
+                var windowThreadProcess = NativeMethods.GetWindowThreadProcess(this.HWnd);
+
+                if (windowThreadProcess is not null)
+                {
+                    return this.owningProcessInfo ??= new ProcessInfo(windowThreadProcess);
+                }
+
+                return null;
+            }
+        }
 
         public IntPtr HWnd { get; }
 
@@ -140,7 +155,7 @@ namespace Snoop
                 {
                     try
                     {
-                        windowTitle = processInfo.Process.MainWindowTitle;
+                        windowTitle = processInfo?.Process.MainWindowTitle;
                     }
                     catch (InvalidOperationException)
                     {
@@ -149,11 +164,11 @@ namespace Snoop
                     }
                 }
 
-                return windowTitle;
+                return windowTitle ?? string.Empty;
             }
         }
 
-        public string ProcessName => this.OwningProcessInfo?.Process?.ProcessName;
+        public string? ProcessName => this.OwningProcessInfo?.Process?.ProcessName;
 
         public int ProcessId => this.OwningProcessInfo?.Process?.Id ?? -1;
 
