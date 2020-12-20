@@ -15,7 +15,7 @@ namespace Snoop.Controls
 
     public class VisualTree3DView : Viewport3D
     {
-        private static readonly Pen outlinePen = new Pen(new SolidColorBrush(Color.FromArgb(128, 255, 0, 0)), 2);
+        private static readonly Pen outlinePen = new(new SolidColorBrush(Color.FromArgb(128, 255, 0, 0)), 2);
 
         private readonly bool drawOutlines = false;
         private readonly bool includeEmptyVisuals = false;

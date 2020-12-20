@@ -22,7 +22,7 @@ namespace Snoop.Infrastructure
         private static EventsListener? current;
         private readonly Visual visual;
 
-        private static readonly Dictionary<Type, Type> registeredTypes = new Dictionary<Type, Type>();
+        private static readonly Dictionary<Type, Type> registeredTypes = new();
 
         public EventsListener(Visual visual)
         {
@@ -52,7 +52,7 @@ namespace Snoop.Infrastructure
             }
         }
 
-        public ObservableCollection<EventInformation> Events { get; } = new ObservableCollection<EventInformation>();
+        public ObservableCollection<EventInformation> Events { get; } = new();
 
         public static string? Filter { get; set; }
 

@@ -12,7 +12,7 @@ namespace Snoop.Views.TriggersTab
 
     public partial class TriggersView
     {
-        private readonly ObservableCollection<TriggerItemBase> triggers = new ObservableCollection<TriggerItemBase>();
+        private readonly ObservableCollection<TriggerItemBase> triggers = new();
 
         public TriggersView()
         {

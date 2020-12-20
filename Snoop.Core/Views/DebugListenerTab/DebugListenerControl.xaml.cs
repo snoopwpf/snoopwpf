@@ -13,8 +13,8 @@
     public partial class DebugListenerControl : IListener
     {
         private readonly FiltersViewModel filtersViewModel; // = new FiltersViewModel();
-        private readonly SnoopDebugListener snoopDebugListener = new SnoopDebugListener();
-        private StringBuilder allText = new StringBuilder();
+        private readonly SnoopDebugListener snoopDebugListener = new();
+        private StringBuilder allText = new();
 
         public DebugListenerControl()
         {

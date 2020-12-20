@@ -12,8 +12,8 @@ namespace Snoop.Data.Tree
 
     public class ResourceDictionaryTreeItem : TreeItem
     {
-        private static readonly SortDescription dictionarySortDescription = new SortDescription(nameof(SortOrder), ListSortDirection.Ascending);
-        private static readonly SortDescription displayNameSortDescription = new SortDescription(nameof(DisplayName), ListSortDirection.Ascending);
+        private static readonly SortDescription dictionarySortDescription = new(nameof(SortOrder), ListSortDirection.Ascending);
+        private static readonly SortDescription displayNameSortDescription = new(nameof(DisplayName), ListSortDirection.Ascending);
 
         private readonly ResourceDictionary dictionary;
 

@@ -6,7 +6,7 @@
 
     public class FilterTypeToIntConverter : IValueConverter
     {
-        public static readonly FilterTypeToIntConverter Default = new FilterTypeToIntConverter();
+        public static readonly FilterTypeToIntConverter Default = new();
 
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {

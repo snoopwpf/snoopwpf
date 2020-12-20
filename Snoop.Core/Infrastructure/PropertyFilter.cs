@@ -148,7 +148,7 @@ namespace Snoop.Infrastructure
             return uncommonTypes.Contains(property.DependencyProperty.OwnerType);
         }
 
-        private static readonly List<Type> uncommonTypes = new List<Type>
+        private static readonly List<Type> uncommonTypes = new()
         {
             typeof(BaseUriHelper),
             typeof(Block),
@@ -176,7 +176,7 @@ namespace Snoop.Infrastructure
             typeof(ComboBoxSettings)
         };
 
-        private static readonly List<string> uncommonPropertyNames = new List<string>
+        private static readonly List<string> uncommonPropertyNames = new()
         {
             "Binding.XmlNamespaceManager"
         };

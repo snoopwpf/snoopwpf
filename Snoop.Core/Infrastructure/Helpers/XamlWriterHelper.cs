@@ -95,7 +95,7 @@
 
         private class XamlSerializationHelper : IDisposable
         {
-            private readonly Dictionary<TypeDescriptionProvider, Type> registrations = new Dictionary<TypeDescriptionProvider, Type>();
+            private readonly Dictionary<TypeDescriptionProvider, Type> registrations = new();
 
             public XamlSerializationHelper ApplyHelpers()
             {

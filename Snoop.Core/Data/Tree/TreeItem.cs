@@ -86,7 +86,7 @@ namespace Snoop.Data.Tree
         /// <summary>
         /// The children of this instance
         /// </summary>
-        public ObservableCollection<TreeItem> Children { get; } = new ObservableCollection<TreeItem>();
+        public ObservableCollection<TreeItem> Children { get; } = new();
 
         public bool IsSelected
         {

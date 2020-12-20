@@ -28,14 +28,14 @@ namespace Snoop.Windows
     {
         #region Public Static Routed Commands
 
-        public static readonly RoutedCommand IntrospectCommand = new RoutedCommand(nameof(IntrospectCommand), typeof(SnoopUI));
-        public static readonly RoutedCommand RefreshCommand = new RoutedCommand(nameof(RefreshCommand), typeof(SnoopUI));
-        public static readonly RoutedCommand HelpCommand = new RoutedCommand(nameof(HelpCommand), typeof(SnoopUI));
-        public static readonly RoutedCommand InspectCommand = new RoutedCommand(nameof(InspectCommand), typeof(SnoopUI));
-        public static readonly RoutedCommand SelectFocusCommand = new RoutedCommand(nameof(SelectFocusCommand), typeof(SnoopUI));
-        public static readonly RoutedCommand SelectFocusScopeCommand = new RoutedCommand(nameof(SelectFocusScopeCommand), typeof(SnoopUI));
-        public static readonly RoutedCommand ClearSearchFilterCommand = new RoutedCommand(nameof(ClearSearchFilterCommand), typeof(SnoopUI));
-        public static readonly RoutedCommand CopyPropertyChangesCommand = new RoutedCommand(nameof(CopyPropertyChangesCommand), typeof(SnoopUI));
+        public static readonly RoutedCommand IntrospectCommand = new(nameof(IntrospectCommand), typeof(SnoopUI));
+        public static readonly RoutedCommand RefreshCommand = new(nameof(RefreshCommand), typeof(SnoopUI));
+        public static readonly RoutedCommand HelpCommand = new(nameof(HelpCommand), typeof(SnoopUI));
+        public static readonly RoutedCommand InspectCommand = new(nameof(InspectCommand), typeof(SnoopUI));
+        public static readonly RoutedCommand SelectFocusCommand = new(nameof(SelectFocusCommand), typeof(SnoopUI));
+        public static readonly RoutedCommand SelectFocusScopeCommand = new(nameof(SelectFocusScopeCommand), typeof(SnoopUI));
+        public static readonly RoutedCommand ClearSearchFilterCommand = new(nameof(ClearSearchFilterCommand), typeof(SnoopUI));
+        public static readonly RoutedCommand CopyPropertyChangesCommand = new(nameof(CopyPropertyChangesCommand), typeof(SnoopUI));
 
         #endregion
 
@@ -120,7 +120,7 @@ namespace Snoop.Windows
         /// <summary>
         /// This is the collection of VisualTreeItem(s) that the visual tree TreeView binds to.
         /// </summary>
-        public ObservableCollection<TreeItem> TreeItems { get; } = new ObservableCollection<TreeItem>();
+        public ObservableCollection<TreeItem> TreeItems { get; } = new();
 
         #endregion
 
@@ -839,10 +839,10 @@ namespace Snoop.Windows
 
     public class EditedPropertiesHelper
     {
-        private static readonly object @lock = new object();
+        private static readonly object @lock = new();
 
         private static readonly Dictionary<Dispatcher, Dictionary<TreeItem, List<PropertyValueInfo>>> itemsWithEditedProperties =
-            new Dictionary<Dispatcher, Dictionary<TreeItem, List<PropertyValueInfo>>>();
+            new();
 
         public static void AddEditedProperty(Dispatcher dispatcher, TreeItem propertyOwner, PropertyInformation propInfo)
         {

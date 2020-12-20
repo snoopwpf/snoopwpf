@@ -16,7 +16,7 @@ namespace Snoop.Infrastructure
     /// </summary>
     public static class SnoopPartsRegistry
     {
-        private static readonly List<WeakReference> registeredSnoopVisualTreeRoots = new List<WeakReference>();
+        private static readonly List<WeakReference> registeredSnoopVisualTreeRoots = new();
 
         /// <summary>
         /// Checks whether given visual is a part of Snoop's visual tree.

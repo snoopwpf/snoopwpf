@@ -21,8 +21,8 @@ namespace Snoop.Windows
     {
         private static string lastSaveDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
-        public static readonly RoutedCommand SaveCommand = new RoutedCommand(nameof(SaveCommand), typeof(ScreenshotDialog));
-        public static readonly RoutedCommand CancelCommand = new RoutedCommand(nameof(CancelCommand), typeof(ScreenshotDialog));
+        public static readonly RoutedCommand SaveCommand = new(nameof(SaveCommand), typeof(ScreenshotDialog));
+        public static readonly RoutedCommand CancelCommand = new(nameof(CancelCommand), typeof(ScreenshotDialog));
 
         public ScreenshotDialog()
         {

@@ -9,10 +9,10 @@ namespace Snoop
 
     public class WindowInfo
     {
-        private static readonly Dictionary<IntPtr, bool> windowHandleToValidityMap = new Dictionary<IntPtr, bool>();
+        private static readonly Dictionary<IntPtr, bool> windowHandleToValidityMap = new();
 
         // we have to match "HwndWrapper[{0};{1};{2}]" which is used at https://referencesource.microsoft.com/#WindowsBase/Shared/MS/Win32/HwndWrapper.cs,2a8e13c293bb3f8c
-        private static readonly Regex windowClassNameRegex = new Regex(@"^HwndWrapper\[.*;.*;.*\]$", RegexOptions.Compiled);
+        private static readonly Regex windowClassNameRegex = new(@"^HwndWrapper\[.*;.*;.*\]$", RegexOptions.Compiled);
 
         private IList<NativeMethods.MODULEENTRY32>? modules;
 

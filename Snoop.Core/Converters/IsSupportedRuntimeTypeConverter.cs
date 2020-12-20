@@ -14,7 +14,7 @@ namespace Snoop.Converters
     /// </summary>
     public class IsSupportedRuntimeTypeConverter : IValueConverter
     {
-        public static readonly IsSupportedRuntimeTypeConverter Default = new IsSupportedRuntimeTypeConverter();
+        public static readonly IsSupportedRuntimeTypeConverter Default = new();
 
         private static readonly string[] ExcludeTypeNames = { "LinearGradientBrush", "RadialGradientBrush", "TileBrush" };
 

@@ -46,7 +46,7 @@
             return attachedProperty;
         }
 
-        private static readonly Dictionary<int, DependencyProperty> attachedDependencyProperties = new Dictionary<int, DependencyProperty>(64);
+        private static readonly Dictionary<int, DependencyProperty> attachedDependencyProperties = new(64);
     }
 
     public class AttachedPropertySlot : IDisposable

@@ -6,7 +6,7 @@
     [Serializable]
     public class SnoopMultipleFilter : SnoopFilter
     {
-        private readonly List<SnoopFilter> singleFilters = new List<SnoopFilter>();
+        private readonly List<SnoopFilter> singleFilters = new();
 
         public override bool FilterMatches(string debugLine)
         {

@@ -7,7 +7,7 @@ namespace Snoop.Data
 
     public sealed class TransientSettingsData
     {
-        private static readonly XmlSerializer serializer = new XmlSerializer(typeof(TransientSettingsData));
+        private static readonly XmlSerializer serializer = new(typeof(TransientSettingsData));
 
         public TransientSettingsData()
         {

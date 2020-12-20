@@ -10,7 +10,7 @@
     [Serializable]
     public class FiltersViewModel : INotifyPropertyChanged
     {
-        private readonly List<SnoopMultipleFilter> multipleFilters = new List<SnoopMultipleFilter>();
+        private readonly List<SnoopMultipleFilter> multipleFilters = new();
         private bool isDirty;
 
         public void ResetDirtyFlag()

@@ -340,7 +340,7 @@ namespace Snoop.Windows
     [ValueConversion(typeof(float), typeof(SolidColorBrush))]
     public sealed class DoubleToWhitenessConverter : IValueConverter
     {
-        public static readonly DoubleToWhitenessConverter Default = new DoubleToWhitenessConverter();
+        public static readonly DoubleToWhitenessConverter Default = new();
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

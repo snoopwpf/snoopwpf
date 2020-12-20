@@ -19,9 +19,9 @@ namespace Snoop.Controls
 
     public partial class PropertyGrid2 : INotifyPropertyChanged
     {
-        public static readonly RoutedCommand ShowBindingErrorsCommand = new RoutedCommand(nameof(ShowBindingErrorsCommand), typeof(PropertyGrid2));
-        public static readonly RoutedCommand ClearCommand = new RoutedCommand(nameof(ClearCommand), typeof(PropertyGrid2));
-        public static readonly RoutedCommand SortCommand = new RoutedCommand(nameof(SortCommand), typeof(PropertyGrid2));
+        public static readonly RoutedCommand ShowBindingErrorsCommand = new(nameof(ShowBindingErrorsCommand), typeof(PropertyGrid2));
+        public static readonly RoutedCommand ClearCommand = new(nameof(ClearCommand), typeof(PropertyGrid2));
+        public static readonly RoutedCommand SortCommand = new(nameof(SortCommand), typeof(PropertyGrid2));
 
         public PropertyGrid2()
         {
@@ -70,9 +70,9 @@ namespace Snoop.Controls
 
         private bool nameValueOnly;
 
-        public ObservableCollection<PropertyInformation> Properties { get; } = new ObservableCollection<PropertyInformation>();
+        public ObservableCollection<PropertyInformation> Properties { get; } = new();
 
-        private readonly ObservableCollection<PropertyInformation> allProperties = new ObservableCollection<PropertyInformation>();
+        private readonly ObservableCollection<PropertyInformation> allProperties = new();
 
         public object? Target
         {

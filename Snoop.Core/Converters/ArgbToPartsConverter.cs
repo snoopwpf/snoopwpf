@@ -11,7 +11,7 @@ namespace Snoop.Converters
 
     public class ArgbToPartsConverter : IValueConverter
     {
-        public static readonly ArgbToPartsConverter Default = new ArgbToPartsConverter();
+        public static readonly ArgbToPartsConverter Default = new();
 
         #region IValueConverter Members
         public object Convert(object? value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

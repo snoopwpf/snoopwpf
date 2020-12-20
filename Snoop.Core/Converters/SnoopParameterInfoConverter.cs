@@ -15,7 +15,7 @@ namespace Snoop.Converters
 
     public class SnoopParameterInfoConverter : IValueConverter
     {
-        public static readonly SnoopParameterInfoConverter Default = new SnoopParameterInfoConverter();
+        public static readonly SnoopParameterInfoConverter Default = new();
 
         #region IValueConverter Members
 
@@ -44,7 +44,7 @@ namespace Snoop.Converters
 
     public class SnoopDependencyPropertiesConverter : IValueConverter
     {
-        public static readonly SnoopDependencyPropertiesConverter Default = new SnoopDependencyPropertiesConverter();
+        public static readonly SnoopDependencyPropertiesConverter Default = new();
 
         #region IValueConverter Members
 
@@ -112,7 +112,7 @@ namespace Snoop.Converters
 
     public class SnoopEnumValuesConverter : IValueConverter
     {
-        public static readonly SnoopEnumValuesConverter Default = new SnoopEnumValuesConverter();
+        public static readonly SnoopEnumValuesConverter Default = new();
 
         #region IValueConverter Members
 

@@ -22,17 +22,17 @@ namespace Snoop.Controls
 
     public partial class PropertyInspector : INotifyPropertyChanged
     {
-        public static readonly RoutedCommand PopTargetCommand = new RoutedCommand(nameof(PopTargetCommand), typeof(PropertyInspector));
+        public static readonly RoutedCommand PopTargetCommand = new(nameof(PopTargetCommand), typeof(PropertyInspector));
 
-        public static readonly RoutedCommand DelveCommand = new RoutedCommand(nameof(DelveCommand), typeof(PropertyInspector));
-        public static readonly RoutedCommand DelveBindingCommand = new RoutedCommand(nameof(DelveBindingCommand), typeof(PropertyInspector));
-        public static readonly RoutedCommand DelveBindingExpressionCommand = new RoutedCommand(nameof(DelveBindingExpressionCommand), typeof(PropertyInspector));
-        public static readonly RoutedCommand CopyResourceNameCommand = new RoutedCommand(nameof(CopyResourceNameCommand), typeof(PropertyInspector));
-        public static readonly RoutedCommand CopyXamlCommand = new RoutedCommand(nameof(CopyXamlCommand), typeof(PropertyInspector));
+        public static readonly RoutedCommand DelveCommand = new(nameof(DelveCommand), typeof(PropertyInspector));
+        public static readonly RoutedCommand DelveBindingCommand = new(nameof(DelveBindingCommand), typeof(PropertyInspector));
+        public static readonly RoutedCommand DelveBindingExpressionCommand = new(nameof(DelveBindingExpressionCommand), typeof(PropertyInspector));
+        public static readonly RoutedCommand CopyResourceNameCommand = new(nameof(CopyResourceNameCommand), typeof(PropertyInspector));
+        public static readonly RoutedCommand CopyXamlCommand = new(nameof(CopyXamlCommand), typeof(PropertyInspector));
 
-        public static readonly RoutedCommand NavigateToAssemblyInExplorerCommand = new RoutedCommand(nameof(NavigateToAssemblyInExplorerCommand), typeof(PropertyInspector));
+        public static readonly RoutedCommand NavigateToAssemblyInExplorerCommand = new(nameof(NavigateToAssemblyInExplorerCommand), typeof(PropertyInspector));
 
-        public static readonly RoutedCommand UpdateBindingErrorCommand = new RoutedCommand(nameof(UpdateBindingErrorCommand), typeof(PropertyInspector));
+        public static readonly RoutedCommand UpdateBindingErrorCommand = new(nameof(UpdateBindingErrorCommand), typeof(PropertyInspector));
 
         private object? target;
 
@@ -467,7 +467,7 @@ namespace Snoop.Controls
             get { return this.propertyFilter; }
         }
 
-        private readonly PropertyFilter propertyFilter = new PropertyFilter(string.Empty, true);
+        private readonly PropertyFilter propertyFilter = new(string.Empty, true);
 
         public string? StringFilter
         {
@@ -693,19 +693,19 @@ namespace Snoop.Controls
             return collection.Where(x => x.IsReadOnly == false).ToArray();
         }
 
-        private readonly List<object> inspectStack = new List<object>();
+        private readonly List<object> inspectStack = new();
         private PropertyFilterSet[]? userFilterSets;
-        private readonly List<PropertyInformation> delvePathList = new List<PropertyInformation>();
+        private readonly List<PropertyInformation> delvePathList = new();
 
         private readonly Inspector inspector;
         private object? lastRootTarget;
-        private readonly Dictionary<object, string> targetToFilter = new Dictionary<object, string>();
+        private readonly Dictionary<object, string> targetToFilter = new();
 
         private PropertyFilterSet[]? allFilterSets;
 
         private readonly PropertyFilterSet[] defaultFilterSets =
         {
-            new PropertyFilterSet
+            new()
             {
                 DisplayName = "Layout",
                 IsReadOnly = true,
@@ -719,7 +719,7 @@ namespace Snoop.Controls
                     "horizontalcontentalignment", "verticalcontentalignment",
                 }
             },
-            new PropertyFilterSet
+            new()
             {
                 DisplayName = "Grid/Dock",
                 IsReadOnly = true,
@@ -728,7 +728,7 @@ namespace Snoop.Controls
                     "grid", "dock"
                 }
             },
-            new PropertyFilterSet
+            new()
             {
                 DisplayName = "Color",
                 IsReadOnly = true,
@@ -737,7 +737,7 @@ namespace Snoop.Controls
                     "color", "background", "foreground", "borderbrush", "fill", "stroke"
                 }
             },
-            new PropertyFilterSet
+            new()
             {
                 DisplayName = "ItemsControl",
                 IsReadOnly = true,

@@ -158,7 +158,7 @@ namespace Snoop.Infrastructure
 
         private object? handledBy;
 
-        public ObservableCollection<EventEntry> Stack { get; } = new ObservableCollection<EventEntry>();
+        public ObservableCollection<EventEntry> Stack { get; } = new();
 
         public void AddEventEntry(EventEntry eventEntry)
         {

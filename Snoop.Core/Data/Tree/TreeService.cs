@@ -102,7 +102,7 @@
 
     public sealed class RawTreeServiceWithoutChildren : TreeService
     {
-        public static readonly RawTreeServiceWithoutChildren DefaultInstance = new RawTreeServiceWithoutChildren();
+        public static readonly RawTreeServiceWithoutChildren DefaultInstance = new();
 
         public override TreeType TreeType { get; } = TreeType.Visual;
 

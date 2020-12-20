@@ -10,7 +10,7 @@ namespace Snoop.Converters
 
     public class CsvStringToArrayConverter : IValueConverter
     {
-        public static readonly CsvStringToArrayConverter Default = new CsvStringToArrayConverter();
+        public static readonly CsvStringToArrayConverter Default = new();
 
         #region IValueConverter Members
         public object Convert(object? value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

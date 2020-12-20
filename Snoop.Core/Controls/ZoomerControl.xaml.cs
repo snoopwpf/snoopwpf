@@ -206,9 +206,9 @@ namespace Snoop.Controls
 
         private Brush? pooSniffer;
 
-        private readonly TranslateTransform translation = new TranslateTransform();
-        private readonly ScaleTransform zoom = new ScaleTransform();
-        private readonly TransformGroup transform = new TransformGroup();
+        private readonly TranslateTransform translation = new();
+        private readonly ScaleTransform zoom = new();
+        private readonly TransformGroup transform = new();
         private Point downPoint;
 
         private const double ZoomFactor = 1.1;

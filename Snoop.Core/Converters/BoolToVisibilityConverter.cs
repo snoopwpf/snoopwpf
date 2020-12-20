@@ -8,7 +8,7 @@
 
     public class BoolToVisibilityConverter : IValueConverter, IMultiValueConverter
     {
-        public static readonly BoolToVisibilityConverter DefaultInstance = new BoolToVisibilityConverter();
+        public static readonly BoolToVisibilityConverter DefaultInstance = new();
 
         #region IValueConverter Members
 

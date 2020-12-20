@@ -24,13 +24,13 @@ namespace Snoop
 
     public partial class AppChooser
     {
-        public static readonly RoutedCommand InspectCommand = new RoutedCommand(nameof(InspectCommand), typeof(AppChooser));
-        public static readonly RoutedCommand RefreshCommand = new RoutedCommand(nameof(RefreshCommand), typeof(AppChooser));
-        public static readonly RoutedCommand MagnifyCommand = new RoutedCommand(nameof(MagnifyCommand), typeof(AppChooser));
-        public static readonly RoutedCommand SettingsCommand = new RoutedCommand(nameof(SettingsCommand), typeof(AppChooser));
-        public static readonly RoutedCommand MinimizeCommand = new RoutedCommand(nameof(MinimizeCommand), typeof(AppChooser));
+        public static readonly RoutedCommand InspectCommand = new(nameof(InspectCommand), typeof(AppChooser));
+        public static readonly RoutedCommand RefreshCommand = new(nameof(RefreshCommand), typeof(AppChooser));
+        public static readonly RoutedCommand MagnifyCommand = new(nameof(MagnifyCommand), typeof(AppChooser));
+        public static readonly RoutedCommand SettingsCommand = new(nameof(SettingsCommand), typeof(AppChooser));
+        public static readonly RoutedCommand MinimizeCommand = new(nameof(MinimizeCommand), typeof(AppChooser));
 
-        private readonly ObservableCollection<WindowInfo> windowInfos = new ObservableCollection<WindowInfo>();
+        private readonly ObservableCollection<WindowInfo> windowInfos = new();
 
         private LowLevelKeyboardHook? keyboardHook;
 

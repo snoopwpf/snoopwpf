@@ -9,7 +9,7 @@
     [ValueConversion(typeof(SystemIcon), typeof(ImageSource))]
     public class SystemIconToImageSourceConverter : IValueConverter
     {
-        public static readonly SystemIconToImageSourceConverter Instance = new SystemIconToImageSourceConverter();
+        public static readonly SystemIconToImageSourceConverter Instance = new();
 
         /// <inheritdoc />
         public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)

@@ -13,8 +13,8 @@ namespace Snoop.Controls
 
     public partial class Previewer
     {
-        public static readonly RoutedCommand MagnifyCommand = new RoutedCommand(nameof(MagnifyCommand), typeof(Previewer));
-        public static readonly RoutedCommand ScreenshotCommand = new RoutedCommand(nameof(ScreenshotCommand), typeof(Previewer));
+        public static readonly RoutedCommand MagnifyCommand = new(nameof(MagnifyCommand), typeof(Previewer));
+        public static readonly RoutedCommand ScreenshotCommand = new(nameof(ScreenshotCommand), typeof(Previewer));
 
         public Previewer()
         {

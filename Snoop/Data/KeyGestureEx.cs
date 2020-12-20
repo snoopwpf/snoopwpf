@@ -11,7 +11,7 @@
     [ValueSerializer(typeof(KeyGestureExValueSerializer))]
     public class KeyGestureEx : KeyGesture
     {
-        private static readonly KeyGestureExConverter converter = new KeyGestureExConverter();
+        private static readonly KeyGestureExConverter converter = new();
 
         public KeyGestureEx()
             : this(Key.None)
@@ -85,8 +85,8 @@
         // ReSharper restore InconsistentNaming
 #pragma warning restore SA1310 // Field names should not contain underscore
 
-        private static readonly KeyConverter keyConverter = new KeyConverter();
-        private static readonly ModifierKeysConverter modifierKeysConverter = new ModifierKeysConverter();
+        private static readonly KeyConverter keyConverter = new();
+        private static readonly ModifierKeysConverter modifierKeysConverter = new();
 
         /// <inheritdoc />
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)

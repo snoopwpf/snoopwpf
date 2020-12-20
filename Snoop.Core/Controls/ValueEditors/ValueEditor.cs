@@ -14,7 +14,7 @@ namespace Snoop.Controls.ValueEditors
 
     public abstract class ValueEditor : ContentControl
     {
-        public static readonly RoutedCommand OpenDetailsEditorCommand = new RoutedCommand(nameof(OpenDetailsEditorCommand), typeof(ValueEditor));
+        public static readonly RoutedCommand OpenDetailsEditorCommand = new(nameof(OpenDetailsEditorCommand), typeof(ValueEditor));
 
         public static readonly DependencyProperty IsSelectedProperty =
             DependencyProperty.Register(

@@ -864,30 +864,30 @@ namespace Snoop.Infrastructure
             if (obj is string
                 || obj.GetType().IsValueType)
             {
-                return new List<PropertyInformation> { new PropertyInformation(obj, null, "ToString", obj, isCopyable: true) };
+                return new List<PropertyInformation> { new(obj, null, "ToString", obj, isCopyable: true) };
             }
 
             if (obj is AutomationPeer automationPeer)
             {
                 var automationProperties = new List<PropertyInformation>
                     {
-                        new PropertyInformation(obj, null, "ClassName", automationPeer.GetClassName(), isCopyable: true),
-                        new PropertyInformation(obj, null, "Name", automationPeer.GetName(), isCopyable: true),
-                        new PropertyInformation(obj, null, "AcceleratorKey", automationPeer.GetAcceleratorKey(), isCopyable: true),
-                        new PropertyInformation(obj, null, "AccessKey", automationPeer.GetAccessKey(), isCopyable: true),
-                        new PropertyInformation(obj, null, "AutomationControlType", automationPeer.GetAutomationControlType(), isCopyable: true),
-                        new PropertyInformation(obj, null, "AutomationId", automationPeer.GetAutomationId(), isCopyable: true),
-                        new PropertyInformation(obj, null, "BoundingRectangle", automationPeer.GetBoundingRectangle(), isCopyable: true),
-                        new PropertyInformation(obj, null, "ClickablePoint", automationPeer.GetClickablePoint(), isCopyable: true),
-                        new PropertyInformation(obj, null, "HelpText", automationPeer.GetHelpText(), isCopyable: true),
-                        new PropertyInformation(obj, null, "ItemStatus", automationPeer.GetItemStatus(), isCopyable: true),
-                        new PropertyInformation(obj, null, "ItemType", automationPeer.GetItemType(), isCopyable: true),
-                        new PropertyInformation(obj, null, "LabeledBy", automationPeer.GetLabeledBy(), isCopyable: true),
+                        new(obj, null, "ClassName", automationPeer.GetClassName(), isCopyable: true),
+                        new(obj, null, "Name", automationPeer.GetName(), isCopyable: true),
+                        new(obj, null, "AcceleratorKey", automationPeer.GetAcceleratorKey(), isCopyable: true),
+                        new(obj, null, "AccessKey", automationPeer.GetAccessKey(), isCopyable: true),
+                        new(obj, null, "AutomationControlType", automationPeer.GetAutomationControlType(), isCopyable: true),
+                        new(obj, null, "AutomationId", automationPeer.GetAutomationId(), isCopyable: true),
+                        new(obj, null, "BoundingRectangle", automationPeer.GetBoundingRectangle(), isCopyable: true),
+                        new(obj, null, "ClickablePoint", automationPeer.GetClickablePoint(), isCopyable: true),
+                        new(obj, null, "HelpText", automationPeer.GetHelpText(), isCopyable: true),
+                        new(obj, null, "ItemStatus", automationPeer.GetItemStatus(), isCopyable: true),
+                        new(obj, null, "ItemType", automationPeer.GetItemType(), isCopyable: true),
+                        new(obj, null, "LabeledBy", automationPeer.GetLabeledBy(), isCopyable: true),
                         #if !NET40
-                        new PropertyInformation(obj, null, "LiveSetting", automationPeer.GetLiveSetting(), isCopyable: true),
+                        new(obj, null, "LiveSetting", automationPeer.GetLiveSetting(), isCopyable: true),
                         #endif
-                        new PropertyInformation(obj, null, "LocalizedControlType", automationPeer.GetLocalizedControlType(), isCopyable: true),
-                        new PropertyInformation(obj, null, "Orientation", automationPeer.GetOrientation(), isCopyable: true),
+                        new(obj, null, "LocalizedControlType", automationPeer.GetLocalizedControlType(), isCopyable: true),
+                        new(obj, null, "Orientation", automationPeer.GetOrientation(), isCopyable: true),
                     };
 
                 var supportedPatterns = new List<string>();

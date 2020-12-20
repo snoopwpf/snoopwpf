@@ -23,7 +23,7 @@ namespace Snoop
 
     public partial class WindowFinder
     {
-        private static readonly Point cursorHotSpot = new Point(16, 20);
+        private static readonly Point cursorHotSpot = new(16, 20);
         private readonly Cursor crosshairsCursor;
         private Point startPoint;
         private WindowInfo? currentWindowInfo;
@@ -44,7 +44,7 @@ namespace Snoop
 
         public WindowFinderType WindowFinderType { get; set; }
 
-        public WindowInfoControl WindowInfoControl { get; } = new WindowInfoControl();
+        public WindowInfoControl WindowInfoControl { get; } = new();
 
         /// <inheritdoc />
         protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)

@@ -11,8 +11,8 @@
     {
         private readonly PresentationSource presentationSource;
 #pragma warning disable SA1310 // Field names should not contain underscore
-        private static readonly IntPtr WM_KEYDOWN = new IntPtr(0x0100);
-        private static readonly IntPtr WM_KEYUP = new IntPtr(0x0101);
+        private static readonly IntPtr WM_KEYDOWN = new(0x0100);
+        private static readonly IntPtr WM_KEYUP = new(0x0101);
 #pragma warning restore SA1310 // Field names should not contain underscore
 
         private IntPtr hookId = IntPtr.Zero;

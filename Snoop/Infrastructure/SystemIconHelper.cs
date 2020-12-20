@@ -22,9 +22,9 @@
         // Negative values reflect a resource id
         public int IconIdOrIndex { get; }
 
-        public static readonly SystemIcon Shield = new SystemIcon(ImageResDll, -78);
+        public static readonly SystemIcon Shield = new(ImageResDll, -78);
 
-        public static readonly SystemIcon Settings = new SystemIcon(ImageResDll, -114);
+        public static readonly SystemIcon Settings = new(ImageResDll, -114);
     }
 
     public static class SystemIconHelper
