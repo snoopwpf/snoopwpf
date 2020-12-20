@@ -18,7 +18,7 @@ namespace Snoop.Converters
             // value (String[]) 
             // return   string      CSV version of the string array
 
-            if (value == null)
+            if (value is null)
             {
                 return string.Empty;
             }
@@ -32,7 +32,7 @@ namespace Snoop.Converters
             // value (string)       CSV version of the string array
             // return (string[])    array of strings split by ","
 
-            if (value == null)
+            if (value is null)
             {
                 return new string[0];
             }

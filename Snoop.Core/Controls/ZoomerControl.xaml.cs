@@ -65,7 +65,7 @@ namespace Snoop.Controls
         {
             this.ResetZoomAndTranslation();
 
-            if (this.pooSniffer == null)
+            if (this.pooSniffer is null)
             {
                 this.pooSniffer = this.TryFindResource("poo_sniffer_xpr") as Brush;
             }
@@ -73,7 +73,7 @@ namespace Snoop.Controls
             this.Cursor = this.Target == this.pooSniffer ? null : Cursors.SizeAll;
 
             var element = this.CreateIfPossible(this.Target);
-            if (element != null)
+            if (element is not null)
             {
                 this.Viewbox.Child = element;
             }
@@ -162,7 +162,7 @@ namespace Snoop.Controls
         //        foreach (object value in ((ResourceDictionary)item).Values)
         //        {
         //            UIElement element = CreateIfPossible(value);
-        //            if (element != null)
+        //            if (element is not null)
         //                stackPanel.Children.Add(element);
         //        }
         //        return stackPanel;
@@ -200,7 +200,7 @@ namespace Snoop.Controls
         {
             get
             {
-                return this.Target != null && this.Target != this.pooSniffer;
+                return this.Target is not null && this.Target != this.pooSniffer;
             }
         }
 

@@ -44,7 +44,7 @@ namespace Snoop.Data
 
         public static TransientSettingsData LoadCurrentIfRequired(string settingsFile)
         {
-            if (Current != null)
+            if (Current is not null)
             {
                 return Current;
             }

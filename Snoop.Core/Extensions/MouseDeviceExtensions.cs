@@ -27,7 +27,7 @@ namespace Snoop
 
             FrameworkElement? directlyOverElement = null;
 
-            if (windowUnderMouse != null)
+            if (windowUnderMouse is not null)
             {
                 VisualTreeHelper.HitTest(windowUnderMouse, FilterCallback, r => ResultCallback(r, ref directlyOverElement), new PointHitTestParameters(Mouse.GetPosition(windowUnderMouse)));
             }
@@ -42,7 +42,7 @@ namespace Snoop
 
         private static HitTestResultBehavior ResultCallback(HitTestResult? result, ref FrameworkElement? directlyOverElement)
         {
-            if (result != null
+            if (result is not null
                 && result.VisualHit is FrameworkElement frameworkElement
                 && frameworkElement.IsVisible
                 && frameworkElement.IsPartOfSnoopVisualTree() == false)

@@ -57,7 +57,7 @@ namespace Snoop
                     }
 
                     var process = this.OwningProcessInfo;
-                    if (process == null)
+                    if (process is null)
                     {
                         return false;
                     }

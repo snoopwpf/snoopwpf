@@ -118,7 +118,7 @@
 
         public override IEnumerable GetChildren(object target)
         {
-            if (!(target is DependencyObject dependencyObject)
+            if (target is not DependencyObject dependencyObject
                 || (target is Visual == false && target is Visual3D == false))
             {
                 yield break;
@@ -140,7 +140,7 @@
 
         public override IEnumerable GetChildren(object target)
         {
-            if (!(target is DependencyObject dependencyObject))
+            if (target is not DependencyObject dependencyObject)
             {
                 yield break;
             }
@@ -158,7 +158,7 @@
 
         public override TreeItem Construct(object target, TreeItem? parent)
         {
-            if (!(target is AutomationPeer automationPeer)
+            if (target is not AutomationPeer automationPeer
                 && target is UIElement element)
             {
                 target = UIElementAutomationPeer.CreatePeerForElement(element);
@@ -169,7 +169,7 @@
 
         public override IEnumerable GetChildren(object target)
         {
-            if (!(target is AutomationPeer automationPeer))
+            if (target is not AutomationPeer automationPeer)
             {
                 yield break;
             }
@@ -196,7 +196,7 @@
 
         public override IEnumerable GetChildren(object target)
         {
-            if (!(target is AutomationElement automationElement))
+            if (target is not AutomationElement automationElement)
             {
                 yield break;
             }
@@ -211,7 +211,7 @@
                 yield break;
             }
 
-            while (child != null)
+            while (child is not null)
             {
                 yield return child;
 

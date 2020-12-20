@@ -33,10 +33,10 @@
                 var instance = this.Instance;
 
                 // todo: why did we need this?
-                if (condition.SourceName != null
+                if (condition.SourceName is not null
                     && this.TriggerSource == TriggerSource.ControlTemplate
                     && this.Instance is Control control
-                    && control.Template != null)
+                    && control.Template is not null)
                 {
                     if (control.Template.FindName(condition.SourceName, control) is DependencyObject source)
                     {
@@ -46,7 +46,7 @@
 
                 var realInstance = TemplateHelper.GetChildFromTemplateIfNeeded(this.source, condition.SourceName) as DependencyObject;
 
-                if (realInstance is null == false)
+                if (realInstance is not null)
                 {
                     yield return new ConditionItem(condition.Property, realInstance, condition.Value)
                     {

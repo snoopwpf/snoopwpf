@@ -81,7 +81,7 @@
                 if (destinationType == typeof(MarkupExtension))
                 {
                     var bindingExpression = value as BindingExpression;
-                    if (bindingExpression == null)
+                    if (bindingExpression is null)
                     {
                         throw new Exception();
                     }

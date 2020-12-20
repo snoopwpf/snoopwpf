@@ -187,7 +187,7 @@
             this.IsDirty = true;
 
             var singleFilter = filter as SnoopSingleFilter;
-            if (singleFilter != null)
+            if (singleFilter is not null)
             {
                 //foreach (var multipeFilter in this.multipleFilters)
                 var index = 0;

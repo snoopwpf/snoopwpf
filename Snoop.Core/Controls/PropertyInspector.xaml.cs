@@ -119,7 +119,7 @@ namespace Snoop.Controls
         private void CanCopyXaml(object sender, CanExecuteRoutedEventArgs e)
         {
             if (e.Parameter is PropertyInformation propertyInformation
-                && propertyInformation.Value != null)
+                && propertyInformation.Value is not null)
             {
                 e.CanExecute = true;
             }
@@ -176,14 +176,14 @@ namespace Snoop.Controls
 
         private static void HandleTargetChanged(PropertyInspector inspector, object? oldValue, object? newValue)
         {
-            if (newValue != null)
+            if (newValue is not null)
             {
                 inspector.inspectStack.Add(newValue);
             }
 
             if (ReferenceEquals(inspector.lastRootTarget, inspector.RootTarget)
-                && oldValue != null
-                && newValue != null
+                && oldValue is not null
+                && newValue is not null
                 && inspector.checkBoxClearAfterDelve.IsChecked.GetValueOrDefault(false))
             {
                 inspector.targetToFilter[oldValue.GetType()] = inspector.PropertiesFilter.Text;
@@ -221,12 +221,12 @@ namespace Snoop.Controls
                 var lastDelveEntry = this.delvePathList.Last();
 
                 if (lastDelveEntry.Value is ISkipDelve skipDelve
-                    && skipDelve.NextValue != null
-                    && skipDelve.NextValueType != null)
+                    && skipDelve.NextValue is not null
+                    && skipDelve.NextValueType is not null)
                 {
                     return skipDelve.NextValueType; //we want to make this "future friendly", so we take into account that the string value of the property type may change.
                 }
-                else if (lastDelveEntry.Value != null)
+                else if (lastDelveEntry.Value is not null)
                 {
                     return lastDelveEntry.Value.GetType();
                 }
@@ -250,7 +250,7 @@ namespace Snoop.Controls
         {
             get
             {
-                if (this.RootTarget == null)
+                if (this.RootTarget is null)
                 {
                     return "object is NULL";
                 }
@@ -266,7 +266,7 @@ namespace Snoop.Controls
         {
             get
             {
-                if (this.RootTarget == null)
+                if (this.RootTarget is null)
                 {
                     return null;
                 }
@@ -280,7 +280,7 @@ namespace Snoop.Controls
         {
             get
             {
-                if (this.Target != null)
+                if (this.Target is not null)
                 {
                     return this.Target.GetType();
                 }
@@ -334,7 +334,7 @@ namespace Snoop.Controls
         private object? GetRealTarget(object? target)
         {
             var skipDelve = target as ISkipDelve;
-            if (skipDelve != null)
+            if (skipDelve is not null)
             {
                 return skipDelve.NextValue;
             }
@@ -380,7 +380,7 @@ namespace Snoop.Controls
         private static void CanDelve(object sender, CanExecuteRoutedEventArgs e)
         {
             if (e.Parameter is PropertyInformation propertyInformation
-                && propertyInformation.Value != null)
+                && propertyInformation.Value is not null)
             {
                 e.CanExecute = true;
             }
@@ -391,7 +391,7 @@ namespace Snoop.Controls
         private static void CanDelveBinding(object sender, CanExecuteRoutedEventArgs e)
         {
             if (e.Parameter is PropertyInformation propertyInformation
-                && propertyInformation.Binding != null)
+                && propertyInformation.Binding is not null)
             {
                 e.CanExecute = true;
             }
@@ -402,7 +402,7 @@ namespace Snoop.Controls
         private static void CanDelveBindingExpression(object sender, CanExecuteRoutedEventArgs e)
         {
             if (e.Parameter is PropertyInformation propertyInformation
-                && propertyInformation.BindingExpression != null)
+                && propertyInformation.BindingExpression is not null)
             {
                 e.CanExecute = true;
             }
@@ -589,7 +589,7 @@ namespace Snoop.Controls
         {
             get
             {
-                if (this.userFilterSets == null)
+                if (this.userFilterSets is null)
                 {
                     var ret = new List<PropertyFilterSet>();
 
@@ -597,7 +597,7 @@ namespace Snoop.Controls
                     {
                         var userFilters = Settings.Default.UserDefinedPropertyFilterSets;
 
-                        if (userFilters != null)
+                        if (userFilters is not null)
                         {
                             ret.AddRange(userFilters);
                         }
@@ -629,7 +629,7 @@ namespace Snoop.Controls
         {
             get
             {
-                if (this.allFilterSets != null)
+                if (this.allFilterSets is not null)
                 {
                     return this.allFilterSets;
                 }

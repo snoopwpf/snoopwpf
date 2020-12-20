@@ -20,7 +20,7 @@ namespace Snoop.Views.MethodsTab
 
             var snoopParameterInfo = item as SnoopParameterInformation;
 
-            if (snoopParameterInfo is null == false)
+            if (snoopParameterInfo is not null)
             {
                 if (snoopParameterInfo.IsEnum 
                     || snoopParameterInfo.ParameterType == typeof(bool))

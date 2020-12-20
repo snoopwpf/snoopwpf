@@ -56,8 +56,8 @@ namespace Snoop.Controls
             set
             {
                 this.nameValueOnly = value;
-                var gridView = this.ListView != null && this.ListView.View != null ? this.ListView.View as GridView : null;
-                if (this.nameValueOnly && gridView != null && gridView.Columns.Count != 2)
+                var gridView = this.ListView is not null && this.ListView.View is not null ? this.ListView.View as GridView : null;
+                if (this.nameValueOnly && gridView is not null && gridView.Columns.Count != 2)
                 {
                     gridView.Columns.RemoveAt(0);
                     while (gridView.Columns.Count > 2)
@@ -127,7 +127,7 @@ namespace Snoop.Controls
         {
             get
             {
-                if (this.target != null)
+                if (this.target is not null)
                 {
                     return this.target.GetType();
                 }
@@ -152,7 +152,7 @@ namespace Snoop.Controls
         {
             var numberToAdd = 10;
 
-            if (this.propertiesToAdd == null)
+            if (this.propertiesToAdd is null)
             {
                 this.propertiesToAdd = PropertyInformation.GetProperties(this.target).GetEnumerator();
 
@@ -248,7 +248,7 @@ namespace Snoop.Controls
 
         private ListSortDirection GetNewSortDirection(GridViewColumnHeader columnHeader)
         {
-            if (!(columnHeader.Tag is ListSortDirection))
+            if (columnHeader.Tag is not ListSortDirection)
             {
                 return (ListSortDirection)(columnHeader.Tag = ListSortDirection.Descending);
             }
@@ -262,13 +262,13 @@ namespace Snoop.Controls
             var headerClicked = (GridViewColumnHeader)args.OriginalSource;
 
             this.direction = this.GetNewSortDirection(headerClicked);
-            if (headerClicked.Column == null)
+            if (headerClicked.Column is null)
             {
                 return;
             }
 
             var columnHeader = headerClicked.Column.Header as TextBlock;
-            if (columnHeader == null)
+            if (columnHeader is null)
             {
                 return;
             }
@@ -396,7 +396,7 @@ namespace Snoop.Controls
                     newTarget = property.Value;
                 }
 
-                if (newTarget != null)
+                if (newTarget is not null)
                 {
                     PropertyInspector.DelveCommand.Execute(property, this);
                 }

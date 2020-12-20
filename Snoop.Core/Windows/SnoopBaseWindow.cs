@@ -23,7 +23,7 @@
             base.OnActivated(e);
 
             var presentationSource = PresentationSource.FromVisual(this);
-            if (presentationSource != null)
+            if (presentationSource is not null)
             {
                 InputManager.Current.PushMenuMode(presentationSource);
             }
@@ -33,7 +33,7 @@
         protected override void OnDeactivated(EventArgs e)
         {
             var presentationSource = PresentationSource.FromVisual(this);
-            if (presentationSource != null)
+            if (presentationSource is not null)
             {
                 InputManager.Current.PopMenuMode(presentationSource);
             }

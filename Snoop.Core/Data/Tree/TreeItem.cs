@@ -34,7 +34,7 @@ namespace Snoop.Data.Tree
             this.Parent = parent;
             this.TreeService = treeService;
 
-            if (parent != null)
+            if (parent is not null)
             {
                 this.Depth = parent.Depth + 1;
             }
@@ -236,7 +236,7 @@ namespace Snoop.Data.Tree
             {
                 var node = child.FindNode(target);
 
-                if (!(node is null))
+                if (node is not null)
                 {
                     return node;
                 }

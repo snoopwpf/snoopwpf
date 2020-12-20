@@ -59,7 +59,7 @@ namespace Snoop.PowerShell
                 var embeddedShellView = (EmbeddedShellView)x;
                 var snoopUi = VisualTreeHelper2.GetAncestor<SnoopUI>(embeddedShellView);
 
-                if (snoopUi is null == false)
+                if (snoopUi is not null)
                 {
                     embeddedShellView.Start(snoopUi);
                 }
@@ -155,7 +155,7 @@ namespace Snoop.PowerShell
 
         private void UnsubscribeSnoopUiEvents()
         {
-            if (this.snoopUi != null)
+            if (this.snoopUi is not null)
             {
                 this.snoopUi.PropertyChanged -= this.OnSnoopUiOnPropertyChanged;
                 this.snoopUi.Tree.SelectedItemChanged -= this.OnSnoopUiSelectedItemChanged;
@@ -194,7 +194,7 @@ namespace Snoop.PowerShell
                 {
                     item.IsSelected = true;
 
-                    if (this.snoopUi is null == false)
+                    if (this.snoopUi is not null)
                     {
                         this.snoopUi.CurrentSelection = item;
                     }
@@ -304,7 +304,7 @@ namespace Snoop.PowerShell
             }
 
             if (string.IsNullOrEmpty(script) == false
-                && this.runspace is null == false)
+                && this.runspace is not null)
             {
                 try
                 {
@@ -353,7 +353,7 @@ namespace Snoop.PowerShell
         private void OutputErrorRecord(ErrorRecord error)
         {
             this.outputTextBox.AppendText(Environment.NewLine);
-            this.outputTextBox.AppendText(string.Format("{0}{1}", error, error.InvocationInfo != null ? error.InvocationInfo.PositionMessage : string.Empty));
+            this.outputTextBox.AppendText(string.Format("{0}{1}", error, error.InvocationInfo is not null ? error.InvocationInfo.PositionMessage : string.Empty));
             this.outputTextBox.AppendText(string.Format("{1}  + CategoryInfo          : {0}", error.CategoryInfo, Environment.NewLine));
             this.outputTextBox.AppendText(string.Format("{1}  + FullyQualifiedErrorId : {0}", error.FullyQualifiedErrorId, Environment.NewLine));
         }
@@ -361,7 +361,7 @@ namespace Snoop.PowerShell
         private void SetCommandTextToHistory(int history)
         {
             var cmd = this.GetHistoryCommand(history);
-            if (cmd != null)
+            if (cmd is not null)
             {
                 this.commandTextBox.Text = cmd;
                 this.commandTextBox.SelectionStart = cmd.Length;

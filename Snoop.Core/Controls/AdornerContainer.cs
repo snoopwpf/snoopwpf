@@ -33,7 +33,7 @@ namespace Snoop.Controls
         protected override Visual? GetVisualChild(int index)
         {
             if (index == 0
-                && this.child != null)
+                && this.child is not null)
             {
                 return this.child;
             }

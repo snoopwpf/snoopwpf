@@ -25,7 +25,7 @@ namespace Snoop.Infrastructure
 
             var ownerWindow = WindowHelper.GetVisibleWindow(TransientSettingsData.Current.TargetWindowHandle, ownedWindow.Dispatcher);
 
-            if (ownerWindow == null
+            if (ownerWindow is null
                 && SnoopModes.MultipleDispatcherMode)
             {
                 foreach (PresentationSource? presentationSource in PresentationSource.CurrentSources)
@@ -45,11 +45,11 @@ namespace Snoop.Infrastructure
                     }
                 }
             }
-            else if (ownerWindow == null
-                     && Application.Current != null
+            else if (ownerWindow is null
+                     && Application.Current is not null
                      && Application.Current.CheckAccess())
             {
-                if (Application.Current.MainWindow != null
+                if (Application.Current.MainWindow is not null
                     && Application.Current.MainWindow.CheckAccess()
                     && Application.Current.MainWindow.Visibility == Visibility.Visible)
                 {
@@ -76,7 +76,7 @@ namespace Snoop.Infrastructure
                 }
             }
 
-            if (ownerWindow == null)
+            if (ownerWindow is null)
             {
                 // third: try and find a visible window in the list of current presentation sources
                 foreach (PresentationSource? presentationSource in PresentationSource.CurrentSources)
@@ -102,7 +102,7 @@ namespace Snoop.Infrastructure
                 return null;
             }
 
-            if (ownerWindow != null
+            if (ownerWindow is not null
                 && ownerWindow.Dispatcher != ownedWindow.Dispatcher)
             {
                 return null;

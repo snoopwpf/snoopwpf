@@ -266,7 +266,7 @@
 
             snoopWindow.Inspect();
 
-            if (targetWindowOnSameDispatcher != null)
+            if (targetWindowOnSameDispatcher is not null)
             {
                 snoopWindow.Target = targetWindowOnSameDispatcher;
             }
@@ -276,7 +276,7 @@
 
         private static string TryGetWindowOrMainWindowTitle(Window? targetWindow)
         {
-            if (targetWindow != null)
+            if (targetWindow is not null)
             {
                 return targetWindow.Title;
             }

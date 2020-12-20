@@ -117,7 +117,7 @@ namespace Snoop.Views
         private void HandleEventHandled(TrackedEvent trackedEvent)
         {
             var visual = trackedEvent.Originator.Handler as Visual;
-            if (visual != null && !visual.IsPartOfSnoopVisualTree())
+            if (visual is not null && !visual.IsPartOfSnoopVisualTree())
             {
                 Action action =
                     () =>
@@ -147,7 +147,7 @@ namespace Snoop.Views
 
         private void EventTree_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            if (e.NewValue != null)
+            if (e.NewValue is not null)
             {
                 if (e.NewValue is EventEntry entry)
                 {

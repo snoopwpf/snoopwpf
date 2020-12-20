@@ -112,14 +112,14 @@
         {
             var interactivityType = Type.GetType(assemblyQualifiedName, false);
 
-            if (interactivityType == null)
+            if (interactivityType is null)
             {
                 return;
             }
 
             var getBehaviorsMethod = interactivityType.GetMethod("GetBehaviors", BindingFlags.Static | BindingFlags.Public);
 
-            if (getBehaviorsMethod == null)
+            if (getBehaviorsMethod is null)
             {
                 return;
             }

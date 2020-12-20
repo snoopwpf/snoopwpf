@@ -100,7 +100,7 @@
 
         private void ComboBoxPresentationTraceLevel_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (this.comboBoxPresentationTraceLevel?.Items == null 
+            if (this.comboBoxPresentationTraceLevel?.Items is null 
                 || this.comboBoxPresentationTraceLevel.Items.Count <= this.comboBoxPresentationTraceLevel.SelectedIndex 
                 || this.comboBoxPresentationTraceLevel.SelectedIndex < 0)
             {

@@ -112,7 +112,7 @@ namespace Snoop.InjectorLauncher
                 }
 
                 if (wpfgfx_cor3Found
-                    && hostPolicyVersionInfo != null)
+                    && hostPolicyVersionInfo is not null)
                 {
                     break;
                 }

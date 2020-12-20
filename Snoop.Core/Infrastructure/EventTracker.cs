@@ -71,7 +71,7 @@ namespace Snoop.Infrastructure
             if (this.isEnabled)
             {
                 var entry = new EventEntry(sender, e.Handled);
-                if (this.currentEvent != null && this.currentEvent.EventArgs == e)
+                if (this.currentEvent is not null && this.currentEvent.EventArgs == e)
                 {
                     this.currentEvent.AddEventEntry(entry);
                 }
@@ -91,7 +91,7 @@ namespace Snoop.Infrastructure
         public int CompareTo(object? obj)
         {
             var otherTracker = obj as EventTracker;
-            if (otherTracker == null)
+            if (otherTracker is null)
             {
                 return 1;
             }

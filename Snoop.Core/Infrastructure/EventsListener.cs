@@ -32,7 +32,7 @@ namespace Snoop.Infrastructure
             var type = visual.GetType();
 
             // Cannot unregister for events once we've registered, so keep the registration simple and only do it once.
-            for (var baseType = type; baseType != null; baseType = baseType.BaseType)
+            for (var baseType = type; baseType is not null; baseType = baseType.BaseType)
             {
                 if (registeredTypes.ContainsKey(baseType))
                 {
@@ -42,7 +42,7 @@ namespace Snoop.Infrastructure
                 registeredTypes[baseType] = baseType;
 
                 var routedEvents = EventManager.GetRoutedEventsForOwner(baseType);
-                if (routedEvents != null)
+                if (routedEvents is not null)
                 {
                     foreach (var routedEvent in routedEvents)
                     {
@@ -63,7 +63,7 @@ namespace Snoop.Infrastructure
 
         private static void HandleEvent(object sender, RoutedEventArgs e)
         {
-            if (current == null
+            if (current is null
                 || ReferenceEquals(sender, current.visual) == false)
             {
                 return;

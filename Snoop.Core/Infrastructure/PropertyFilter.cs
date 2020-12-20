@@ -63,7 +63,7 @@ namespace Snoop.Infrastructure
 
         public PropertyFilterSet? SelectedFilterSet { get; set; }
 
-        public bool IsPropertyFilterSet => this.SelectedFilterSet?.Properties != null;
+        public bool IsPropertyFilterSet => this.SelectedFilterSet?.Properties is not null;
 
         public bool Show(PropertyInformation property)
         {
@@ -75,10 +75,10 @@ namespace Snoop.Infrastructure
 
             // use a regular expression if we have one and we also have a filter string.
             if (this.hasFilterString
-                && this.filterRegex != null)
+                && this.filterRegex is not null)
             {
                 return this.filterRegex.IsMatch(property.DisplayName)
-                       || (property.Property != null && this.filterRegex.IsMatch(property.Property.PropertyType.Name));
+                       || (property.Property is not null && this.filterRegex.IsMatch(property.Property.PropertyType.Name));
             }
 
             // else just check for containment if we don't have a regular expression but we do have a filter string.
@@ -89,7 +89,7 @@ namespace Snoop.Infrastructure
                     return true;
                 }
 
-                if (property.Property != null
+                if (property.Property is not null
                     && property.Property.PropertyType.Name.ContainsIgnoreCase(this.FilterString!))
                 {
                     return true;

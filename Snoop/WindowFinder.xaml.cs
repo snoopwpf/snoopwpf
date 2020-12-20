@@ -80,7 +80,7 @@ namespace Snoop
 
             this.StopSnoopTargetsSearch();
 
-            if (windowInfoToUse != null
+            if (windowInfoToUse is not null
                 && windowInfoToUse.IsValidProcess)
             {
                 if (this.WindowFinderType == WindowFinderType.Snoop)

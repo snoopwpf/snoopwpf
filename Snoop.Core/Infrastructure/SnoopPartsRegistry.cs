@@ -78,7 +78,7 @@ namespace Snoop.Infrastructure
         {
             var toRemove = registeredSnoopVisualTreeRoots.FirstOrDefault(x => x.IsAlive && ReferenceEquals(x.Target, root));
 
-            if (toRemove != null)
+            if (toRemove is not null)
             {
                 registeredSnoopVisualTreeRoots.Remove(toRemove);
             }

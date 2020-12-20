@@ -28,7 +28,7 @@ namespace Snoop.Infrastructure.Helpers
                 }
             }
 
-            while (!(current is null))
+            while (current is not null)
             {
                 current = VisualTreeHelper.GetParent(current);
 

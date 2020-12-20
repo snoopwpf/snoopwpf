@@ -24,7 +24,7 @@ namespace Snoop.Converters
             // value (object)   the runtime value - compare against known incompatible types (use list from config)
             // return (boolean) whether the type is supported or not
 
-            if (value == null)
+            if (value is null)
             {
                 return false;
             }

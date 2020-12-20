@@ -29,7 +29,7 @@ namespace Snoop.Controls.ValueEditors
         {
             var property = (PropertyInformation?)item;
 
-            if (property == null)
+            if (property is null)
             {
                 return null;
             }

@@ -44,7 +44,7 @@ namespace Snoop.Controls
             var item = (TreeItem)curNode.DataContext;
             var selectedItem = this.snoopUI.CurrentSelection;
 
-            if (selectedItem != null
+            if (selectedItem is not null
                 && item.Depth < selectedItem.Depth)
             {
                 item = selectedItem;

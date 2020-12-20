@@ -20,7 +20,7 @@ namespace Snoop.Data.Tree
         {
             var resourceDictionary = this.ResourceDictionary;
 
-            if (resourceDictionary != null
+            if (resourceDictionary is not null
                 && (resourceDictionary.Count != 0 || resourceDictionary.MergedDictionaries.Count > 0))
             {
                 this.Children.Add(this.TreeService.Construct(resourceDictionary, this));

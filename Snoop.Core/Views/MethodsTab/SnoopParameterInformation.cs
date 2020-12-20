@@ -72,7 +72,7 @@ namespace Snoop.Views.MethodsTab
             };
 
             if (this.ParameterValue is null
-                && this.ParameterType is null == false)
+                && this.ParameterType is not null)
             {
                 var typeSelector = GetTypeSelector(this.ParameterType);
                 typeSelector.ShowDialog();

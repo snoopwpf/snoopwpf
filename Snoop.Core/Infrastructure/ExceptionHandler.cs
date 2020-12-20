@@ -12,7 +12,7 @@
 
         public static void AddExceptionHandler(Dispatcher dispatcher)
         {
-            if (dispatcher == null)
+            if (dispatcher is null)
             {
                 return;
             }

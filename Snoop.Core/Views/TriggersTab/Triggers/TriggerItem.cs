@@ -26,7 +26,7 @@
         {
             var realInstance = TemplateHelper.GetChildFromTemplateIfNeeded(this.source, this.trigger.SourceName) as DependencyObject;
 
-            if (realInstance is null == false)
+            if (realInstance is not null)
             {
                 yield return new ConditionItem(this.trigger.Property, realInstance, this.trigger.Value)
                 {

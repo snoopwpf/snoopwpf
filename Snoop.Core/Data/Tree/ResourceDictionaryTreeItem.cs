@@ -75,7 +75,7 @@ namespace Snoop.Data.Tree
                     continue;
                 }
 
-                if (target == null)
+                if (target is null)
                 {
                     // you only get a XamlParseException once. the next time through target just comes back null.
                     // in this case, just continue to the next resource in the dictionary (as before).

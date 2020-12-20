@@ -59,7 +59,7 @@ namespace Snoop.Views.MethodsTab
         private void SetTargetToRootTarget()
         {
             if (this.checkBoxUseDataContext.IsChecked == true
-                && (this.RootTarget as FrameworkElement)?.DataContext != null)
+                && (this.RootTarget as FrameworkElement)?.DataContext is not null)
             {
                 this.Target = ((FrameworkElement)this.RootTarget).DataContext;
             }
@@ -92,7 +92,7 @@ namespace Snoop.Views.MethodsTab
         {
             if (this.IsSelected)
             {
-                this.checkBoxUseDataContext.IsEnabled = (this.RootTarget as FrameworkElement)?.DataContext != null;
+                this.checkBoxUseDataContext.IsEnabled = (this.RootTarget as FrameworkElement)?.DataContext is not null;
                 this.SetTargetToRootTarget();
             }
         }
@@ -123,7 +123,7 @@ namespace Snoop.Views.MethodsTab
                 methodsControl.parametersContainer.Visibility = Visibility.Collapsed;
 
                 //if this target has the previous method info, set it
-                for (var i = 0; i < methodInfos.Count && methodsControl.previousMethodInformation != null; i++)
+                for (var i = 0; i < methodInfos.Count && methodsControl.previousMethodInformation is not null; i++)
                 {
                     var methodInfo = methodInfos[i];
                     if (methodInfo.Equals(methodsControl.previousMethodInformation))
@@ -142,7 +142,7 @@ namespace Snoop.Views.MethodsTab
                 return;
             }
 
-            if ((this.Target as FrameworkElement)?.DataContext == null)
+            if ((this.Target as FrameworkElement)?.DataContext is null)
             {
                 this.checkBoxUseDataContext.IsEnabled = false;
             }
@@ -183,7 +183,7 @@ namespace Snoop.Views.MethodsTab
         public void InvokeMethodClick(object? sender, RoutedEventArgs e)
         {
             var selectedMethod = this.comboBoxMethods.SelectedValue as SnoopMethodInformation;
-            if (selectedMethod == null)
+            if (selectedMethod is null)
             {
                 return;
             }
@@ -242,7 +242,7 @@ namespace Snoop.Views.MethodsTab
             {
                 var returnValue = selectedMethod.MethodInfo.Invoke(this.Target, parameters);
 
-                if (returnValue == null)
+                if (returnValue is null)
                 {
                     this.SetNullReturnType(selectedMethod);
                     return;

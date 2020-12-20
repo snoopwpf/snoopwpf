@@ -129,7 +129,7 @@ namespace Snoop.Windows
             if (root is Application application)
             {
                 // try to use the application's main window (if visible) as the root
-                if (application.MainWindow != null
+                if (application.MainWindow is not null
                     && application.MainWindow.Visibility == Visibility.Visible)
                 {
                     root = application.MainWindow;
@@ -166,7 +166,7 @@ namespace Snoop.Windows
             this.zoom.CenterX = 0;
             this.zoom.CenterY = 0;
 
-            if (this.visualTree3DView != null)
+            if (this.visualTree3DView is not null)
             {
                 this.visualTree3DView = null;
                 this.ZScaleSlider.Value = 0;
@@ -216,7 +216,7 @@ namespace Snoop.Windows
 
         private void HandleSwitchTo2D(object sender, ExecutedRoutedEventArgs args)
         {
-            if (this.visualTree3DView != null)
+            if (this.visualTree3DView is not null)
             {
                 this.Target = this.target;
                 this.visualTree3DView = null;
@@ -227,7 +227,7 @@ namespace Snoop.Windows
         private void HandleSwitchTo3D(object sender, ExecutedRoutedEventArgs args)
         {
             if (this.visualTree3DView is null
-                && this.targetVisual != null)
+                && this.targetVisual is not null)
             {
                 this.CreateAndSetVisualTree3DView(this.targetVisual);
 
@@ -241,7 +241,7 @@ namespace Snoop.Windows
             {
                 Mouse.OverrideCursor = Cursors.Wait;
 
-                if (visual is null == false)
+                if (visual is not null)
                 {
                     this.visualTree3DView = new VisualTree3DView(visual, int.Parse(((TextBlock)((ComboBoxItem)this.dpiBox.SelectedItem).Content).Text));
                 }
@@ -260,7 +260,7 @@ namespace Snoop.Windows
 
         private void CanSwitchTo3D(object sender, CanExecuteRoutedEventArgs args)
         {
-            args.CanExecute = this.targetVisual != null;
+            args.CanExecute = this.targetVisual is not null;
             args.Handled = true;
         }
 
@@ -296,7 +296,7 @@ namespace Snoop.Windows
 
         private void ZScaleSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (this.visualTree3DView != null)
+            if (this.visualTree3DView is not null)
             {
                 this.visualTree3DView.ZScale = Math.Pow(10, e.NewValue);
             }
@@ -321,8 +321,8 @@ namespace Snoop.Windows
 
         private void DpiBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (this.visualTree3DView != null
-                && this.targetVisual != null)
+            if (this.visualTree3DView is not null
+                && this.targetVisual is not null)
             {
                 this.translation.X = 0;
                 this.translation.Y = 0;

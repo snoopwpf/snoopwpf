@@ -83,7 +83,7 @@
             foreach (var item in this.listBoxFilters.SelectedItems)
             {
                 var filter = item as SnoopFilter;
-                if (filter == null)
+                if (filter is null)
                 {
                     continue;
                 }
@@ -136,7 +136,7 @@
             foreach (var filter in filters)
             {
                 var singleFilter = filter as SnoopSingleFilter;
-                if (singleFilter == null)
+                if (singleFilter is null)
                 {
                     continue;
                 }

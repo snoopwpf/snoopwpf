@@ -165,7 +165,7 @@ namespace Snoop.Controls.ValueEditors
 
         public virtual void AcceptValueFromDetailsEditor()
         {
-            if (this.PropertyInfo != null)
+            if (this.PropertyInfo is not null)
             {
                 this.PropertyInfo.IsValueChangedByUser = true;
             }

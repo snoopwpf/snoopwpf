@@ -166,7 +166,7 @@ namespace Snoop
 
         private void HandleCanInspectOrMagnifyCommand(object sender, CanExecuteRoutedEventArgs e)
         {
-            if (this.WindowInfos.CurrentItem != null)
+            if (this.WindowInfos.CurrentItem is not null)
             {
                 e.CanExecute = true;
             }

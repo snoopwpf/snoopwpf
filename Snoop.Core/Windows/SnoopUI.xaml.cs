@@ -173,7 +173,7 @@ namespace Snoop.Windows
                     return;
                 }
 
-                if (this.currentSelection != null)
+                if (this.currentSelection is not null)
                 {
                     this.SaveEditedProperties(this.currentSelection);
                     this.currentSelection.IsSelected = false;
@@ -181,7 +181,7 @@ namespace Snoop.Windows
 
                 this.currentSelection = value;
 
-                if (this.currentSelection != null)
+                if (this.currentSelection is not null)
                 {
                     this.currentSelection.IsSelected = true;
                 }
@@ -196,12 +196,12 @@ namespace Snoop.Windows
                     // in which case reset the filter.
                     var tmp = this.currentSelection;
 
-                    while (tmp != null && !this.TreeItems.Contains(tmp))
+                    while (tmp is not null && !this.TreeItems.Contains(tmp))
                     {
                         tmp = tmp.Parent;
                     }
 
-                    if (tmp == null)
+                    if (tmp is null)
                     {
                         // The selected item is not a descendant of any root.
                         RefreshCommand.Execute(null, this);
@@ -343,7 +343,7 @@ namespace Snoop.Windows
                         () =>
                         {
                             this.TreeItems.Clear();
-                            if (this.reducedDepthRoot is null == false)
+                            if (this.reducedDepthRoot is not null)
                             {
                                 this.TreeItems.Add(this.reducedDepthRoot);
                             }
@@ -444,10 +444,10 @@ namespace Snoop.Windows
 
                 this.Root = this.TreeService.Construct(this.root!, null);
 
-                if (previousTarget != null)
+                if (previousTarget is not null)
                 {
                     var treeItem = this.FindItem(previousTarget);
-                    if (treeItem != null)
+                    if (treeItem is not null)
                     {
                         this.CurrentSelection = treeItem;
                         this.PropertyGrid.PropertyGrid.RefreshPropertyGrid();
@@ -476,15 +476,15 @@ namespace Snoop.Windows
         private void HandleInspect(object sender, ExecutedRoutedEventArgs e)
         {
             var visual = e.Parameter as Visual;
-            if (visual != null)
+            if (visual is not null)
             {
                 var node = this.FindItem(visual);
-                if (node != null)
+                if (node is not null)
                 {
                     this.CurrentSelection = node;
                 }
             }
-            else if (e.Parameter != null)
+            else if (e.Parameter is not null)
             {
                 this.PropertyGrid.SetTarget(e.Parameter);
             }
@@ -511,7 +511,7 @@ namespace Snoop.Windows
 
         private void CopyPropertyChangesHandler(object sender, ExecutedRoutedEventArgs e)
         {
-            if (this.currentSelection != null)
+            if (this.currentSelection is not null)
             {
                 this.SaveEditedProperties(this.currentSelection);
             }
@@ -521,10 +521,10 @@ namespace Snoop.Windows
 
         private void SelectItem(DependencyObject? item)
         {
-            if (item != null)
+            if (item is not null)
             {
                 var node = this.FindItem(item);
-                if (node != null)
+                if (node is not null)
                 {
                     this.CurrentSelection = node;
                 }
@@ -573,7 +573,7 @@ namespace Snoop.Windows
             }
 
             var node = this.FindItem(itemToFind);
-            if (node != null)
+            if (node is not null)
             {
                 this.CurrentSelection = node;
             }
@@ -589,7 +589,7 @@ namespace Snoop.Windows
                 itemToFind = frameworkElement;
             }
 
-            if (!(itemToFind is null))
+            if (itemToFind is not null)
             {
                 var parent = VisualTreeHelper.GetParent(itemToFind) as FrameworkElement;
 
@@ -621,7 +621,7 @@ namespace Snoop.Windows
         /// </summary>
         private TreeItem? FindItem(object? target)
         {
-            if (this.Root == null)
+            if (this.Root is null)
             {
                 return null;
             }
@@ -864,7 +864,7 @@ namespace Snoop.Windows
 
                 // if we already have a property of that name on this object, remove it
                 var existingPropInfo = propInfoList.FirstOrDefault(l => l.PropertyName == propInfo.DisplayName);
-                if (existingPropInfo != null)
+                if (existingPropInfo is not null)
                 {
                     propInfoList.Remove(existingPropInfo);
                 }

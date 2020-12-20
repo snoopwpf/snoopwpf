@@ -50,13 +50,13 @@ namespace Snoop.Data.Tree
                     }
 
                     var dpd = DependencyPropertyDescriptor.FromProperty(property);
-                    if (dpd == null)
+                    if (dpd is null)
                     {
                         continue;
                     }
 
                     var expression = BindingOperations.GetBindingExpressionBase(this.DependencyObject, dpd.DependencyProperty);
-                    if (expression != null
+                    if (expression is not null
                         && (expression.HasError || expression.Status != BindingStatus.Active))
                     {
                         return true;
@@ -76,7 +76,7 @@ namespace Snoop.Data.Tree
             get
             {
                 var brush = VisualCaptureUtil.CreateVisualBrushSafe(this.Visual);
-                if (brush != null)
+                if (brush is not null)
                 {
                     brush.Stretch = Stretch.Uniform;
                 }
@@ -113,11 +113,11 @@ namespace Snoop.Data.Tree
             // Add adorners for the visual this is representing.
             var adornerLayer = AdornerLayer.GetAdornerLayer(this.Visual);
 
-            if (adornerLayer != null
+            if (adornerLayer is not null
                 && this.Visual is UIElement visualElement)
             {
                 if (this.IsSelected
-                    && this.adornerContainer == null)
+                    && this.adornerContainer is null)
                 {
                     var border = new Border
                     {
@@ -138,7 +138,7 @@ namespace Snoop.Data.Tree
                     };
                     adornerLayer.Add(this.adornerContainer);
                 }
-                else if (this.adornerContainer != null)
+                else if (this.adornerContainer is not null)
                 {
                     adornerLayer.Remove(this.adornerContainer);
                     this.adornerContainer.Child = null;

@@ -86,7 +86,7 @@ namespace Snoop.PowerShell
                 {
                     var item = this.GetTreeItem(this.PSDriveInfo.CurrentLocation);
 
-                    if (item != null)
+                    if (item is not null)
                     {
                         var data = (Hashtable)this.Host.PrivateData.BaseObject;
                         var action = (Action<TreeItem>?)data[ShellConstants.LocationChangedActionKey];
@@ -172,7 +172,7 @@ namespace Snoop.PowerShell
 
         private void StartNewOneTimeSyncTimer(int currentTry = 0)
         {
-            if (this.oneTimeSyncTimer != null)
+            if (this.oneTimeSyncTimer is not null)
             {
                 return;
             }
@@ -198,7 +198,7 @@ namespace Snoop.PowerShell
         protected override void GetChildItems(string path, bool recurse)
         {
             var item = this.GetTreeItem(path);
-            if (item != null)
+            if (item is not null)
             {
                 foreach (var c in item.Children.ToList())
                 {
@@ -221,7 +221,7 @@ namespace Snoop.PowerShell
         protected override bool HasChildItems(string path)
         {
             var item = this.GetTreeItem(path);
-            return item != null
+            return item is not null
                    && item.Children.Any();
         }
 
@@ -252,7 +252,7 @@ namespace Snoop.PowerShell
 
         protected override bool ItemExists(string path)
         {
-            return this.GetTreeItem(path) != null;
+            return this.GetTreeItem(path) is not null;
         }
 
         protected override string GetChildName(string path)
@@ -263,7 +263,7 @@ namespace Snoop.PowerShell
         protected override void GetChildNames(string path, ReturnContainers returnContainers)
         {
             var item = this.GetTreeItem(path);
-            if (item != null)
+            if (item is not null)
             {
                 foreach (var child in item.Children.ToList())
                 {
@@ -282,7 +282,7 @@ namespace Snoop.PowerShell
             var parts = new List<string>();
 
             var current = item;
-            while (current.Parent != null)
+            while (current.Parent is not null)
             {
                 var name = current.NodeName();
                 parts.Insert(0, name);
@@ -296,7 +296,7 @@ namespace Snoop.PowerShell
         {
             var name = GetName(item);
 
-            if (item.Parent != null)
+            if (item.Parent is not null)
             {
                 var parent = item.Parent;
                 var similarChildren = parent.Children.ToList()

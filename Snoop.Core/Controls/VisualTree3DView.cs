@@ -33,7 +33,7 @@ namespace Snoop.Controls
             var group = new Model3DGroup();
             group.Children.Add(directionalLight1);
             group.Children.Add(directionalLight2);
-            if (model is null == false)
+            if (model is not null)
             {
                 group.Children.Add(model);
             }
@@ -46,7 +46,7 @@ namespace Snoop.Controls
                 Content = @group
             };
 
-            if (model is null == false)
+            if (model is not null)
             {
                 var bounds = model.Bounds;
                 const double fieldOfView = 45;
@@ -133,7 +133,7 @@ namespace Snoop.Controls
             {
                 var group = new Model3DGroup();
 
-                if (model != null)
+                if (model is not null)
                 {
                     group.Children.Add(model);
                 }
@@ -143,7 +143,7 @@ namespace Snoop.Controls
                     if (VisualTreeHelper.GetChild(visual, i) is Visual childVisual)
                     {
                         var childModel = this.ConvertVisualToModel3D(childVisual, dpi, ref z);
-                        if (childModel != null)
+                        if (childModel is not null)
                         {
                             group.Children.Add(childModel);
                         }
@@ -153,7 +153,7 @@ namespace Snoop.Controls
                 model = group;
             }
 
-            if (model != null)
+            if (model is not null)
             {
                 var transform = VisualTreeHelper.GetTransform(visual);
                 var matrix = transform?.Value ?? Matrix.Identity;
@@ -178,7 +178,7 @@ namespace Snoop.Controls
         {
             var viewport3D = visual as Viewport3D;
 
-            if (viewport3D == null)
+            if (viewport3D is null)
             {
                 Drawing drawing = VisualTreeHelper.GetDrawing(visual);
 

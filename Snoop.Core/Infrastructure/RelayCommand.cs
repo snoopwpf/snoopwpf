@@ -37,7 +37,7 @@ namespace Snoop.Infrastructure
         [DebuggerStepThrough]
         public bool CanExecute(object parameter)
         {
-            return this.canExecute == null ? true : this.canExecute(parameter);
+            return this.canExecute is null ? true : this.canExecute(parameter);
         }
 
         public event EventHandler CanExecuteChanged

@@ -44,7 +44,7 @@ namespace Snoop.Data.Tree
                 }
 
                 // windows which have an owner are added as child items in VisualItem, so we have to skip them here
-                if (window.Owner != null)
+                if (window.Owner is not null)
                 {
                     continue;
                 }

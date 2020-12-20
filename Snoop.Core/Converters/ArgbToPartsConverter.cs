@@ -20,7 +20,7 @@ namespace Snoop.Converters
             // parameter (int)  which "part" to return (0 = alpha, 1 = Red, 2 = Green, 3 = Blue)
             // return (string)  the 2-digit hex value for the requested portion 
 
-            if (value == null || value == DependencyProperty.UnsetValue)
+            if (value is null || value == DependencyProperty.UnsetValue)
             {
                 return Binding.DoNothing;
             }

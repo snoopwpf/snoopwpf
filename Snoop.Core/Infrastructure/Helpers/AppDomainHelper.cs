@@ -55,7 +55,7 @@
                 {
                     runtimeHost.NextDomain(enumHandle, out var domain);
 
-                    if (domain == null)
+                    if (domain is null)
                     {
                         break;
                     }

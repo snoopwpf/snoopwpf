@@ -39,13 +39,13 @@ namespace Snoop.Infrastructure
             this.property = property;
             this.displayName = propertyDisplayName;
 
-            if (property != null)
+            if (property is not null)
             {
                 // create a data binding between the actual property value on the target object
                 // and the Value dependency property on this PropertyInformation object
                 Binding binding;
                 var dp = this.DependencyProperty;
-                if (dp != null)
+                if (dp is not null)
                 {
                     binding = new Binding();
                     binding.Path = new PropertyPath("(0)", new object[] { dp });
@@ -175,7 +175,7 @@ namespace Snoop.Infrastructure
 
                 this.HasChangedRecently = (e.OldValue?.Equals(e.NewValue) ?? e.OldValue == e.NewValue) == false;
 
-                if (this.changeTimer == null)
+                if (this.changeTimer is null)
                 {
                     this.changeTimer = new DispatcherTimer
                     {
@@ -207,7 +207,7 @@ namespace Snoop.Infrastructure
             get
             {
                 var value = this.Value;
-                if (value != null)
+                if (value is not null)
                 {
                     return value.ToString() ?? string.Empty;
                 }
@@ -218,7 +218,7 @@ namespace Snoop.Infrastructure
             set
             {
 #pragma warning disable WPF0036 // Avoid side effects in CLR accessors.
-                if (this.property == null)
+                if (this.property is null)
                 {
                     // if this is a PropertyInformation object constructed for an item in a collection
                     // then just return, since setting the value via a string doesn't make sense.
@@ -265,7 +265,7 @@ namespace Snoop.Infrastructure
                             ResourceKeyCache.Cache(resourceItem, resourceKey);
                         }
 
-                        Debug.Assert(resourceKey != null, "resourceKey != null");
+                        Debug.Assert(resourceKey is not null, "resourceKey is not null");
                     }
                 }
 
@@ -300,7 +300,7 @@ namespace Snoop.Infrastructure
                     {
                         stringValue = string.Format("[{0}]", "DynamicResource");
                     }
-                    else if (this.property != null &&
+                    else if (this.property is not null &&
                              (this.property.PropertyType == typeof(Brush) || this.property.PropertyType == typeof(Style)))
                     {
                         stringValue = string.Format("[{0}]", value.GetType().Name);
@@ -312,7 +312,7 @@ namespace Snoop.Infrastructure
                 }
 
                 // Display #00FFFFFF as Transparent for easier readability
-                if (this.property != null &&
+                if (this.property is not null &&
                     this.property.PropertyType == typeof(Brush) &&
                     stringValue.Equals("#00FFFFFF"))
                 {
@@ -410,7 +410,7 @@ namespace Snoop.Infrastructure
         {
             get
             {
-                if (this.property == null)
+                if (this.property is null)
                 {
                     // if this is a PropertyInformation object constructed for an item in a collection
                     // then this.property will be null, but this.component will contain the collection.
@@ -431,7 +431,7 @@ namespace Snoop.Infrastructure
         {
             get
             {
-                if (this.property == null)
+                if (this.property is null)
                 {
                     // if this is a PropertyInformation object constructed for an item in a collection
                     // just return typeof(object) here, since an item in a collection ... really isn't a property.
@@ -448,7 +448,7 @@ namespace Snoop.Infrastructure
         {
             get
             {
-                if (this.Value != null)
+                if (this.Value is not null)
                 {
                     return this.Value.GetType();
                 }
@@ -500,7 +500,7 @@ namespace Snoop.Infrastructure
         {
             get
             {
-                if (this.property == null)
+                if (this.property is null)
                 {
                     // if this is a PropertyInformation object constructed for an item in a collection
                     //return false;
@@ -558,7 +558,7 @@ namespace Snoop.Infrastructure
             {
                 var dp = this.DependencyProperty;
                 var d = this.Target as DependencyObject;
-                if (dp != null && d != null)
+                if (dp is not null && d is not null)
                 {
                     return BindingOperations.GetBindingBase(d, dp);
                 }
@@ -573,7 +573,7 @@ namespace Snoop.Infrastructure
             {
                 var dp = this.DependencyProperty;
                 var d = this.Target as DependencyObject;
-                if (dp != null && d != null)
+                if (dp is not null && d is not null)
                 {
                     return BindingOperations.GetBindingExpressionBase(d, dp);
                 }
@@ -637,7 +637,7 @@ namespace Snoop.Infrastructure
         public void Clear()
         {
             var dp = this.DependencyProperty;
-            if (dp != null 
+            if (dp is not null 
                 && this.Target is DependencyObject d)
             {
                 d.ClearValue(dp);
@@ -652,13 +652,13 @@ namespace Snoop.Infrastructure
         {
             get
             {
-                if (this.property != null)
+                if (this.property is not null)
                 {
                     // in order to be a DependencyProperty, the object must first be a regular property,
                     // and not an item in a collection.
 
                     var dpd = DependencyPropertyDescriptor.FromProperty(this.property);
-                    if (dpd != null)
+                    if (dpd is not null)
                     {
                         return dpd.DependencyProperty;
                     }
@@ -684,14 +684,14 @@ namespace Snoop.Infrastructure
             var d = this.Target as DependencyObject;
 
             if (SnoopModes.MultipleDispatcherMode
-                && d != null
+                && d is not null
                 && d.Dispatcher != this.Dispatcher)
             {
                 return;
             }
 
-            if (dp != null
-                && d != null)
+            if (dp is not null
+                && d is not null)
             {
                 //Debugger.Launch();
                 if (d.ReadLocalValue(dp) != DependencyProperty.UnsetValue)
@@ -700,7 +700,7 @@ namespace Snoop.Infrastructure
                 }
 
                 var expression = BindingOperations.GetBindingExpressionBase(d, dp);
-                if (expression != null)
+                if (expression is not null)
                 {
                     this.isDatabound = true;
 
@@ -738,7 +738,7 @@ namespace Snoop.Infrastructure
             var d = this.Target as DependencyObject;
 
             if (SnoopModes.MultipleDispatcherMode
-                && d != null
+                && d is not null
                 && d.Dispatcher != this.Dispatcher)
             {
                 return;
@@ -814,7 +814,7 @@ namespace Snoop.Infrastructure
 
             //delve path. also, issue 4919
             var extendedProps = GetExtendedProperties(obj);
-            if (extendedProps != null)
+            if (extendedProps is not null)
             {
                 properties.InsertRange(0, extendedProps);
             }
@@ -922,7 +922,7 @@ namespace Snoop.Infrastructure
             // keep looping until you don't have an AmbiguousMatchException exception
             // and you normally won't have an exception, so the loop will typically execute only once.
             var noException = false;
-            while (!noException && currentObj != null)
+            while (!noException && currentObj is not null)
             {
                 try
                 {
@@ -1002,7 +1002,7 @@ namespace Snoop.Infrastructure
             foreach (var newProperty in newProperties)
             {
                 var newPropertyDescriptor = newProperty as PropertyDescriptor;
-                if (newPropertyDescriptor == null)
+                if (newPropertyDescriptor is null)
                 {
                     continue;
                 }

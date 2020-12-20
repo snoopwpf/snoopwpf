@@ -15,7 +15,7 @@ namespace Snoop.Infrastructure
     {
         public TrackballBehavior(Viewport3D viewport, Point3D lookAtPoint)
         {
-            if (viewport == null)
+            if (viewport is null)
             {
                 throw new ArgumentNullException(nameof(viewport));
             }
@@ -24,7 +24,7 @@ namespace Snoop.Infrastructure
             this.lookAtPoint = lookAtPoint;
 
             var projectionCamera = this.viewport.Camera as ProjectionCamera;
-            if (projectionCamera != null)
+            if (projectionCamera is not null)
             {
                 var offset = projectionCamera.Position - this.lookAtPoint;
                 this.distance = offset.Length;
@@ -85,7 +85,7 @@ namespace Snoop.Infrastructure
         private void UpdateCamera()
         {
             var projectionCamera = this.viewport.Camera as ProjectionCamera;
-            if (projectionCamera != null)
+            if (projectionCamera is not null)
             {
                 var matrix = Matrix3D.Identity;
                 matrix.Rotate(this.orientation);

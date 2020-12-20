@@ -121,7 +121,7 @@ namespace Snoop.Controls
 
         private void HandleCanMagnify(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = this.Target as Visual != null;
+            e.CanExecute = this.Target as Visual is not null;
             e.Handled = true;
         }
 
@@ -134,7 +134,7 @@ namespace Snoop.Controls
 
         private void HandleCanScreenshot(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = this.Target as Visual != null;
+            e.CanExecute = this.Target as Visual is not null;
             e.Handled = true;
         }
 

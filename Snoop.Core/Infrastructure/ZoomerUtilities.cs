@@ -36,7 +36,7 @@ namespace Snoop.Infrastructure
                 foreach (var value in ((ResourceDictionary)item).Values)
                 {
                     var element = CreateIfPossible(value);
-                    if (element != null)
+                    if (element is not null)
                     {
                         stackPanel.Children.Add(element);
                     }
@@ -77,7 +77,7 @@ namespace Snoop.Infrastructure
         private static UIElement? CreateRectangleForFrameworkElement(FrameworkElement uiElement)
         {
             var brush = VisualCaptureUtil.CreateVisualBrushSafe(uiElement);
-            if (brush == null)
+            if (brush is null)
             {
                 return null;
             }

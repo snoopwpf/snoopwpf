@@ -56,7 +56,7 @@ namespace Snoop.Infrastructure
             if (visual is Window)
             {
                 var source = PresentationSource.FromVisual(visual) as HwndSource;
-                return source?.CompositionTarget != null;
+                return source?.CompositionTarget is not null;
             }
 
             return true;
@@ -101,7 +101,7 @@ namespace Snoop.Infrastructure
 
             var renderTargetBitmap = new RenderTargetBitmap((int)Math.Ceiling(scale * bounds.Width), (int)Math.Ceiling(scale * bounds.Height), dpi, dpi, pixelFormat.Value);
 
-            if (viewport3D != null)
+            if (viewport3D is not null)
             {
                 typeof(RenderTargetBitmap)
                     .GetMethod("RenderForBitmapEffect", BindingFlags.Instance | BindingFlags.NonPublic)

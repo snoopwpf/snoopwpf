@@ -14,7 +14,7 @@
             {
                 if (value != this.enumType)
                 {
-                    if (value != null)
+                    if (value is not null)
                     {
                         var enumType = Nullable.GetUnderlyingType(value) ?? value;
 
@@ -40,7 +40,7 @@
 
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
-            if (this.enumType == null)
+            if (this.enumType is null)
             {
                 throw new InvalidOperationException("The EnumType must be specified.");
             }

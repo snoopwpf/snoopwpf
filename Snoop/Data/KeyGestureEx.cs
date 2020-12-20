@@ -35,7 +35,7 @@
 
         public override bool Matches(object? targetElement, InputEventArgs inputEventArgs)
         {
-            if (!(inputEventArgs is KeyEventArgs keyEventArgs))
+            if (inputEventArgs is not KeyEventArgs keyEventArgs)
             {
                 return false;
             }
@@ -149,10 +149,10 @@
 
                 var modifiers = ModifierKeys.None;
                 var resultkey = keyConverter.ConvertFrom(context, culture, keyToken);
-                if (resultkey != null)
+                if (resultkey is not null)
                 {
                     var temp = modifierKeysConverter.ConvertFrom(context, culture, modifiersToken);
-                    if (temp != null)
+                    if (temp is not null)
                     {
                         modifiers = (ModifierKeys)temp;
                     }
@@ -165,16 +165,16 @@
         }
 
         /// <inheritdoc />
-        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object? value, Type destinationType)
         {
-            if (destinationType == null)
+            if (destinationType is null)
             {
                 throw new ArgumentNullException(nameof(destinationType));
             }
 
             if (destinationType == typeof(string))
             {
-                if (value != null)
+                if (value is not null)
                 {
                     if (value is KeyGestureEx keyGesture)
                     {

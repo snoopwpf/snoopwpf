@@ -14,17 +14,17 @@ namespace Snoop.Infrastructure
         {
             var frameworkElement = target as FrameworkElement;
 
-            if (frameworkElement == null)
+            if (frameworkElement is null)
             {
                 return true;
             }
 
             var attachedPropertyForChildren = (AttachedPropertyBrowsableForChildrenAttribute)property.Attributes[typeof(AttachedPropertyBrowsableForChildrenAttribute)];
 
-            if (attachedPropertyForChildren != null)
+            if (attachedPropertyForChildren is not null)
             {
                 var dpd = DependencyPropertyDescriptor.FromProperty(property);
-                if (dpd == null)
+                if (dpd is null)
                 {
                     return false;
                 }
@@ -33,20 +33,20 @@ namespace Snoop.Infrastructure
                 do
                 {
                     currentElement = currentElement.Parent as FrameworkElement;
-                    if (currentElement != null
+                    if (currentElement is not null
                         && dpd.DependencyProperty.OwnerType.IsInstanceOfType(currentElement))
                     {
                         return true;
                     }
                 } 
-                while (attachedPropertyForChildren.IncludeDescendants && currentElement != null);
+                while (attachedPropertyForChildren.IncludeDescendants && currentElement is not null);
 
                 return false;
             }
 
             var attachedPropertyForType = (AttachedPropertyBrowsableForTypeAttribute)property.Attributes[typeof(AttachedPropertyBrowsableForTypeAttribute)];
 
-            if (attachedPropertyForType != null)
+            if (attachedPropertyForType is not null)
             {
                 // when using [AttachedPropertyBrowsableForType(typeof(IMyInterface))] and IMyInterface is not a DependencyObject, Snoop crashes.
                 // see http://snoopwpf.codeplex.com/workitem/6712
@@ -54,7 +54,7 @@ namespace Snoop.Infrastructure
                 if (typeof(DependencyObject).IsAssignableFrom(attachedPropertyForType.TargetType))
                 {
                     var doType = DependencyObjectType.FromSystemType(attachedPropertyForType.TargetType);
-                    if (doType != null
+                    if (doType is not null
                         && doType.IsInstanceOfType(frameworkElement))
                     {
                         return true;
@@ -66,10 +66,10 @@ namespace Snoop.Infrastructure
 
             var attachedPropertyForAttribute = (AttachedPropertyBrowsableWhenAttributePresentAttribute)property.Attributes[typeof(AttachedPropertyBrowsableWhenAttributePresentAttribute)];
 
-            if (attachedPropertyForAttribute != null)
+            if (attachedPropertyForAttribute is not null)
             {
                 var dependentAttribute = TypeDescriptor.GetAttributes(target)[attachedPropertyForAttribute.AttributeType];
-                if (dependentAttribute != null)
+                if (dependentAttribute is not null)
                 {
                     return !dependentAttribute.IsDefaultAttribute();
                 }

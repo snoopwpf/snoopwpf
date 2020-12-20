@@ -54,7 +54,7 @@ namespace Snoop.Views.TriggersTab.Triggers
 
             this.attachedPropertySlot = AttachedPropertyManager.GetAndBindAttachedPropertySlot(this.conditionContainer, this.conditionBinding);
 
-            if (this.attachedPropertySlot is null == false)
+            if (this.attachedPropertySlot is not null)
             {
                 this.BindCurrentValue(conditionContainer, this.attachedPropertySlot.DependencyProperty);
             }
@@ -114,7 +114,7 @@ namespace Snoop.Views.TriggersTab.Triggers
                 }
 
                 var value = this.CurrentValue;
-                if (value != null)
+                if (value is not null)
                 {
                     return value.ToString();
                 }
@@ -130,8 +130,8 @@ namespace Snoop.Views.TriggersTab.Triggers
         {
             get
             {
-                if (this.CurrentValue != null
-                    && this.targetValue != null
+                if (this.CurrentValue is not null
+                    && this.targetValue is not null
                     && this.CurrentValue.GetType() != this.targetValue.GetType())
                 {
                     var converter = TypeDescriptor.GetConverter(this.CurrentValue.GetType());
@@ -148,9 +148,9 @@ namespace Snoop.Views.TriggersTab.Triggers
                     }
                 }
 
-                if (this.targetValue == null)
+                if (this.targetValue is null)
                 {
-                    return this.CurrentValue == null;
+                    return this.CurrentValue is null;
                 }
 
                 return this.targetValue.Equals(this.CurrentValue);
@@ -253,7 +253,7 @@ namespace Snoop.Views.TriggersTab.Triggers
 
         private static string GetDisplayName(DependencyProperty dependencyProperty, DependencyPropertyDescriptor propertyDescriptor)
         {
-            if (propertyDescriptor != null)
+            if (propertyDescriptor is not null)
             {
                 return propertyDescriptor.DisplayName;
             }

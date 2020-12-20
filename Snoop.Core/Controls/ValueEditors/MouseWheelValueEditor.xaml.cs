@@ -29,7 +29,7 @@ namespace Snoop.Controls.ValueEditors
         private void MouseWheelHandler(object sender, MouseWheelEventArgs e)
         {
             var fe = e.OriginalSource as FrameworkElement;
-            if (fe == null)
+            if (fe is null)
             {
                 return;
             }
@@ -56,9 +56,9 @@ namespace Snoop.Controls.ValueEditors
             }
 
             var tb = fe as TextBlock;
-            if (tb != null
-                && tb.Tag is null == false
-                && this.PropertyInfo?.Property is null == false)
+            if (tb is not null
+                && tb.Tag is not null
+                && this.PropertyInfo?.Property is not null)
             {
                 var fieldNum = int.Parse(tb.Tag.ToString()!);
 

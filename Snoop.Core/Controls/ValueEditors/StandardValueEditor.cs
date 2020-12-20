@@ -38,7 +38,7 @@ namespace Snoop.Controls.ValueEditors
                 return;
             }
 
-            if (this.PropertyInfo != null)
+            if (this.PropertyInfo is not null)
             {
                 this.PropertyInfo.IsValueChangedByUser = true;
             }
@@ -53,7 +53,7 @@ namespace Snoop.Controls.ValueEditors
             this.isUpdatingValue = true;
 
             var value = this.Value;
-            if (value != null)
+            if (value is not null)
             {
                 this.StringValue = StringValueConverter.ConvertToString(value.GetType(), value) ?? string.Empty;
             }

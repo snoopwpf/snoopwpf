@@ -32,7 +32,7 @@ namespace Snoop.Infrastructure
         private static void OnIsActiveChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var fe = d as FrameworkElement;
-            if (fe == null)
+            if (fe is null)
             {
                 return;
             }

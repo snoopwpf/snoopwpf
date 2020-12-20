@@ -41,7 +41,7 @@
 
             var binding = this.CreateBinding(targetForPropertyInformation, propertyDescriptor, this.Setter);
 
-            if (binding is null == false)
+            if (binding is not null)
             {
                 var propertyInformation = new PropertyInformation(targetForPropertyInformation, propertyDescriptor, binding, GetDisplayName(this.Setter));
 
@@ -119,12 +119,12 @@
         /// <inheritdoc />
         public void Dispose()
         {
-            if (this.Value != null)
+            if (this.Value is not null)
             {
                 this.Value.Teardown();
             }
 
-            if (this.attachedPropertySlot != null)
+            if (this.attachedPropertySlot is not null)
             {
                 this.attachedPropertySlot.Dispose();
             }

@@ -60,7 +60,7 @@ namespace Snoop.InjectorLauncher
 
                         using (var process = Process.Start(processStartInfo))
                         {
-                            if (process == null)
+                            if (process is null)
                             {
                                 Injector.LogMessage("Failed to start process for redirection.");
                                 return 1;
