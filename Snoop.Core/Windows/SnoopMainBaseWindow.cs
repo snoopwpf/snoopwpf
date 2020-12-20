@@ -78,7 +78,7 @@
                     }
                 }
             }
-            else if (Application.Current != null)
+            else if (Application.Current?.CheckAccess() == true)
             {
                 foundRoot = Application.Current;
             }
@@ -95,8 +95,9 @@
                     {
                         continue;
                     }
-                    
+
                     if (presentationSource.RootVisual is UIElement element
+                        && element.Dispatcher.CheckAccess()
                         && element.Visibility == Visibility.Visible)
                     {
                         foundRoot = presentationSource.RootVisual;

@@ -5,6 +5,7 @@
 - ### Bug fixes
 
   - Fixing window finder cursor display when DPI != 100%
+  - [#203](../../issues/203) - The calling thread cannot access this object because a different thread owns it.
   
 ## 3.0.0
 

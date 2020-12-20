@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Threading;
@@ -81,7 +80,7 @@
             var numberOfAppDomains = appDomains?.Count ?? 1;
             var succeeded = false;
 
-            if (numberOfAppDomains <= 1)
+            if (numberOfAppDomains < 1)
             {
                 Trace.WriteLine("Snoop wasn't able to enumerate app domains or MultipleAppDomainMode was disabled. Trying to run in single app domain mode.");
 
@@ -118,7 +117,7 @@
                 }
 
                 if (shouldUseMultipleAppDomainMode == false
-                    || appDomains == null)
+                    || appDomains is null)
                 {
                     succeeded = this.RunInCurrentAppDomain(settingsData);
                 }
@@ -319,45 +318,36 @@
             var useMultipleDispatcherMode = false;
             if (dispatchers.Count > 0)
             {
-                if (dispatchers.Count == 1
-                    || settingsData.MultipleDispatcherMode == MultipleDispatcherMode.NeverUse)
+                switch (settingsData.MultipleDispatcherMode)
                 {
-                    //var rootVisual = rootVisuals[0];
-                    var dispatcher = dispatchers[0];
+                    case MultipleDispatcherMode.NeverUse:
+                        useMultipleDispatcherMode = false;
+                        break;
 
-                    dispatcher.Invoke((Action)(() =>
+                    // Should we skip the question and always use multiple dispatcher mode?
+                    case MultipleDispatcherMode.AlwaysUse:
+                        useMultipleDispatcherMode = dispatchers.Count > 1;
+                        break;
+
+                    case MultipleDispatcherMode.Ask:
+                    default:
                     {
-                        var snoopInstance = instanceCreator(settingsData, dispatcher);
+                        var result =
+                            MessageBox.Show(
+                                "Snoop has noticed windows running in multiple dispatchers.\n\n" +
+                                "Would you like to enter multiple dispatcher mode, and have a separate Snoop window for each dispatcher?\n\n" +
+                                "Without having a separate Snoop window for each dispatcher, you will not be able to Snoop the windows in the dispatcher threads outside of the main dispatcher. " +
+                                "Also, note, that if you bring up additional windows in additional dispatchers (after snooping), you will need to Snoop again in order to launch Snoop windows for those additional dispatchers.",
+                                "Enter Multiple Dispatcher Mode",
+                                MessageBoxButton.YesNo,
+                                MessageBoxImage.Question);
 
-                        if (snoopInstance.Target is null)
+                        if (result == MessageBoxResult.Yes)
                         {
-                            snoopInstance.Target = GetRootVisual(dispatcher);
+                            useMultipleDispatcherMode = true;
                         }
-                    }));
 
-                    return true;
-                }
-
-                // Should we skip the question and always use multiple dispatcher mode?
-                if (settingsData.MultipleDispatcherMode == MultipleDispatcherMode.AlwaysUse)
-                {
-                    useMultipleDispatcherMode = true;
-                }
-                else
-                {
-                    var result =
-                        MessageBox.Show(
-                            "Snoop has noticed windows running in multiple dispatchers.\n\n" +
-                            "Would you like to enter multiple dispatcher mode, and have a separate Snoop window for each dispatcher?\n\n" +
-                            "Without having a separate Snoop window for each dispatcher, you will not be able to Snoop the windows in the dispatcher threads outside of the main dispatcher. " +
-                            "Also, note, that if you bring up additional windows in additional dispatchers (after snooping), you will need to Snoop again in order to launch Snoop windows for those additional dispatchers.",
-                            "Enter Multiple Dispatcher Mode",
-                            MessageBoxButton.YesNo,
-                            MessageBoxImage.Question);
-
-                    if (result == MessageBoxResult.Yes)
-                    {
-                        useMultipleDispatcherMode = true;
+                        break;
                     }
                 }
 
@@ -371,22 +361,17 @@
                     // todo: check if we really created something
                     return true;
                 }
-                else // User didn't want to enter multiple dispatcher mode.
+
+                var dispatcher = Application.Current?.Dispatcher ?? dispatchers[0];
+
+                dispatcher.Invoke((Action)(() =>
                 {
-                    var dispatcher = Application.Current?.Dispatcher ?? dispatchers[0];
+                    var snoopInstance = instanceCreator(settingsData, dispatcher);
 
-                    dispatcher.Invoke((Action)(() =>
-                    {
-                        var snoopInstance = instanceCreator(settingsData, dispatcher);
+                    snoopInstance.Target ??= GetRootVisual(dispatcher);
+                }));
 
-                        if (snoopInstance.Target is null)
-                        {
-                            snoopInstance.Target = GetRootVisual(dispatcher);
-                        }
-                    }));
-
-                    return true;
-                }
+                return true;
             }
 
             return false;
@@ -412,10 +397,7 @@
                     {
                         var snoopInstance = dispatchOutParameters.InstanceCreator(dispatchOutParameters.SettingsData, dispatcher);
 
-                        if (snoopInstance.Target is null)
-                        {
-                            snoopInstance.Target = GetRootVisual(dispatcher);
-                        }
+                        snoopInstance.Target ??= GetRootVisual(dispatcher);
                     }));
             }
         }
