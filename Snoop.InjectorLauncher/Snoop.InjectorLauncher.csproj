@@ -8,7 +8,6 @@
 
     <ApplicationIcon>..\Artwork\Snoop.ico</ApplicationIcon>
     <ApplicationManifest>../Shared/app.manifest</ApplicationManifest>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup>
