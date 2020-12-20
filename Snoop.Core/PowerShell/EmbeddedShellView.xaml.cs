@@ -57,11 +57,11 @@ namespace Snoop.PowerShell
             view.WhenLoaded(x =>
             {
                 var embeddedShellView = (EmbeddedShellView)x;
-                var snoopUi = VisualTreeHelper2.GetAncestor<SnoopUI>(embeddedShellView);
+                var targetSnoopUi = VisualTreeHelper2.GetAncestor<SnoopUI>(embeddedShellView);
 
-                if (snoopUi is not null)
+                if (targetSnoopUi is not null)
                 {
-                    embeddedShellView.Start(snoopUi);
+                    embeddedShellView.Start(targetSnoopUi);
                 }
             });
         }
@@ -69,7 +69,7 @@ namespace Snoop.PowerShell
         /// <summary>
         /// Initiates the startup routine and configures the runspace for use.
         /// </summary>
-        private void Start(SnoopUI snoopUi)
+        private void Start(SnoopUI targetSnoopUi)
         {
             if (this.isStarted)
             {
@@ -83,7 +83,7 @@ namespace Snoop.PowerShell
 
             this.isStarted = true;
 
-            this.snoopUi = snoopUi;
+            this.snoopUi = targetSnoopUi;
 
             {
                 // ignore execution-policy
@@ -103,13 +103,13 @@ namespace Snoop.PowerShell
             }
 
             {
-                snoopUi.PropertyChanged += this.OnSnoopUiOnPropertyChanged;
+                targetSnoopUi.PropertyChanged += this.OnSnoopUiOnPropertyChanged;
 
                 // allow scripting of the host controls
-                this.SetVariable("snoopui", snoopUi);
+                this.SetVariable("snoopui", targetSnoopUi);
                 this.SetVariable("ui", this);
-                this.SetVariable(ShellConstants.Root, snoopUi.Root);
-                this.SetVariable(ShellConstants.Selected, snoopUi.CurrentSelection);
+                this.SetVariable(ShellConstants.Root, targetSnoopUi.Root);
+                this.SetVariable(ShellConstants.Selected, targetSnoopUi.CurrentSelection);
 
                 // marshall back to the UI thread when the provider notifiers of a location change
                 var action = new Action<TreeItem>(item => this.RunInDispatcherAsync(() => this.ProviderLocationChanged?.Invoke(item)));
@@ -126,16 +126,16 @@ namespace Snoop.PowerShell
 
                 this.FindAndLoadProfile(folder);
 
-                this.NotifySelected(snoopUi.CurrentSelection);
+                this.NotifySelected(targetSnoopUi.CurrentSelection);
             }
 
             {
                 // sync the current location
-                snoopUi.Tree.SelectedItemChanged += this.OnSnoopUiSelectedItemChanged;
+                targetSnoopUi.Tree.SelectedItemChanged += this.OnSnoopUiSelectedItemChanged;
                 this.ProviderLocationChanged += this.OnProviderLocationChanged;
 
                 // clean up garbage!
-                snoopUi.Closed += this.OnSnoopUiClosed;
+                targetSnoopUi.Closed += this.OnSnoopUiClosed;
             }
         }
 

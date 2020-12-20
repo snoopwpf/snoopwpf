@@ -403,18 +403,18 @@ namespace Snoop.Controls
             }
         }
 
-        private void Sort(Comparison<PropertyInformation> comparator, ListSortDirection direction)
+        private void Sort(Comparison<PropertyInformation> comparator, ListSortDirection newDirection)
         {
-            this.Sort(comparator, direction, this.Properties);
-            this.Sort(comparator, direction, this.allProperties);
+            this.Sort(comparator, newDirection, this.Properties);
+            this.Sort(comparator, newDirection, this.allProperties);
         }
 
-        private void Sort(Comparison<PropertyInformation> comparator, ListSortDirection direction, ObservableCollection<PropertyInformation> propertiesToSort)
+        private void Sort(Comparison<PropertyInformation> comparator, ListSortDirection newDirection, ObservableCollection<PropertyInformation> propertiesToSort)
         {
             var sorter = new List<PropertyInformation>(propertiesToSort);
             sorter.Sort(comparator);
 
-            if (direction == ListSortDirection.Descending)
+            if (newDirection == ListSortDirection.Descending)
             {
                 sorter.Reverse();
             }

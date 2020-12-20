@@ -184,16 +184,16 @@ namespace Snoop.Controls
         //    return null;
         //}
 
-        private void Zoom(double zoom, Point offset)
+        private void Zoom(double newZoom, Point offset)
         {
-            var v = new Vector((1 - zoom) * offset.X, (1 - zoom) * offset.Y);
+            var v = new Vector((1 - newZoom) * offset.X, (1 - newZoom) * offset.Y);
 
             var translationVector = v * this.transform.Value;
             this.translation.X += translationVector.X;
             this.translation.Y += translationVector.Y;
 
-            this.zoom.ScaleX *= zoom;
-            this.zoom.ScaleY *= zoom;
+            this.zoom.ScaleX *= newZoom;
+            this.zoom.ScaleY *= newZoom;
         }
 
         private bool IsValidTarget

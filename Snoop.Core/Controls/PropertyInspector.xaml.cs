@@ -289,15 +289,15 @@ namespace Snoop.Controls
             }
         }
 
-        public void PushTarget(object? target)
+        public void PushTarget(object? newTarget)
         {
-            this.Target = target;
+            this.Target = newTarget;
         }
 
-        public void SetTarget(object target)
+        public void SetTarget(object newTarget)
         {
             this.inspectStack.Clear();
-            this.Target = target;
+            this.Target = newTarget;
         }
 
         private void HandlePopTarget(object sender, ExecutedRoutedEventArgs e)
@@ -331,15 +331,14 @@ namespace Snoop.Controls
             }
         }
 
-        private object? GetRealTarget(object? target)
+        private object? GetRealTarget(object? newTarget)
         {
-            var skipDelve = target as ISkipDelve;
-            if (skipDelve is not null)
+            if (newTarget is ISkipDelve skipDelve)
             {
                 return skipDelve.NextValue;
             }
 
-            return target;
+            return newTarget;
         }
 
         private void HandleDelve(object sender, ExecutedRoutedEventArgs e)

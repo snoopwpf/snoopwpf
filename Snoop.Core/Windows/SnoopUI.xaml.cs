@@ -727,17 +727,17 @@ namespace Snoop.Windows
             }
         }
 
-        private void FilterTree(TreeItem node, string filter)
+        private void FilterTree(TreeItem node, string currentFilter)
         {
             foreach (var child in node.Children)
             {
-                if (child.Filter(filter))
+                if (child.Filter(currentFilter))
                 {
                     this.TreeItems.Add(child);
                 }
                 else
                 {
-                    this.FilterTree(child, filter);
+                    this.FilterTree(child, currentFilter);
                 }
             }
         }
