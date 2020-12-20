@@ -58,8 +58,8 @@ namespace Snoop.Controls
             this.MouseDown += this.MouseDownHandler;
             this.KeyDown += this.PropertyInspector_KeyDown;
 
-            this.checkBoxClearAfterDelve.Checked += (s, e) => Settings.Default.ClearAfterDelve = this.checkBoxClearAfterDelve.IsChecked.HasValue && this.checkBoxClearAfterDelve.IsChecked.Value;
-            this.checkBoxClearAfterDelve.Unchecked += (s, e) => Settings.Default.ClearAfterDelve = this.checkBoxClearAfterDelve.IsChecked.HasValue && this.checkBoxClearAfterDelve.IsChecked.Value;
+            this.checkBoxClearAfterDelve.Checked += (_, _) => Settings.Default.ClearAfterDelve = this.checkBoxClearAfterDelve.IsChecked.HasValue && this.checkBoxClearAfterDelve.IsChecked.Value;
+            this.checkBoxClearAfterDelve.Unchecked += (_, _) => Settings.Default.ClearAfterDelve = this.checkBoxClearAfterDelve.IsChecked.HasValue && this.checkBoxClearAfterDelve.IsChecked.Value;
 
             this.checkBoxClearAfterDelve.IsChecked = Settings.Default.ClearAfterDelve;
         }

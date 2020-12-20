@@ -102,7 +102,7 @@ namespace Snoop.Windows
             {
                 Interval = TimeSpan.FromSeconds(0.3)
             };
-            this.filterTimer.Tick += (s, e) =>
+            this.filterTimer.Tick += (_, _) =>
             {
                 this.EnqueueAfterSettingFilter();
                 this.filterTimer.Stop();

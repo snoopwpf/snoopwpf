@@ -13,7 +13,7 @@
             this.InitializeComponent();
 
             this.Behaviors = new ObservableCollection<object>();
-            this.Behaviors.CollectionChanged += (s, e) => this.HasBehaviors = this.Behaviors.Count != 0;
+            this.Behaviors.CollectionChanged += (_, _) => this.HasBehaviors = this.Behaviors.Count != 0;
 
             this.Loaded += this.HandleLoaded;
             this.Unloaded += this.HandleUnloaded;

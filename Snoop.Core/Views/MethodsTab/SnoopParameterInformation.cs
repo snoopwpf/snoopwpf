@@ -30,7 +30,7 @@ namespace Snoop.Views.MethodsTab
         {
             get
             {
-                return this.createCustomParameterCommand ??= new RelayCommand(x => this.CreateCustomParameter());
+                return this.createCustomParameterCommand ??= new RelayCommand(_ => this.CreateCustomParameter());
             }
         }
 
@@ -38,7 +38,7 @@ namespace Snoop.Views.MethodsTab
         {
             get
             {
-                return this.nullOutParameter ??= new RelayCommand(x => this.ParameterValue = null);
+                return this.nullOutParameter ??= new RelayCommand(_ => this.ParameterValue = null);
             }
         }
 

@@ -29,7 +29,7 @@ namespace Snoop.Windows
             this.InitializeComponent();
 
             this.CommandBindings.Add(new CommandBinding(SaveCommand, this.HandleSave, this.HandleCanSave));
-            this.CommandBindings.Add(new CommandBinding(CancelCommand, this.HandleCancel, (x, y) => y.CanExecute = true));
+            this.CommandBindings.Add(new CommandBinding(CancelCommand, this.HandleCancel, (_, y) => y.CanExecute = true));
         }
 
         private void HandleCanSave(object sender, CanExecuteRoutedEventArgs e)

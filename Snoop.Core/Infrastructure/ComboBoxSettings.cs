@@ -50,7 +50,7 @@ namespace Snoop.Infrastructure
         private static void OnRegisterAsSnoopPartChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
         {
             var comboBox = o as ComboBox;
-            comboBox?.WhenLoaded(fe => UpdateSnoopPartSettings(comboBox, (bool)e.NewValue));
+            comboBox?.WhenLoaded(_ => UpdateSnoopPartSettings(comboBox, (bool)e.NewValue));
         }
 
         private static void UpdateSnoopPartSettings(ComboBox comboBox, bool isSnoopPart)

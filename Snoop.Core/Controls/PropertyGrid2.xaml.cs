@@ -37,9 +37,11 @@ namespace Snoop.Controls
             this.CommandBindings.Add(new CommandBinding(ClearCommand, this.HandleClear, this.CanClear));
             this.CommandBindings.Add(new CommandBinding(SortCommand, this.HandleSort));
 
-            this.filterTimer = new DispatcherTimer();
-            this.filterTimer.Interval = TimeSpan.FromSeconds(0.3);
-            this.filterTimer.Tick += (s, e) =>
+            this.filterTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(0.3)
+            };
+            this.filterTimer.Tick += (_, _) =>
             {
                 this.filterCall.Enqueue(this.Dispatcher);
                 this.filterTimer.Stop();

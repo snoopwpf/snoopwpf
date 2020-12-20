@@ -21,7 +21,7 @@ namespace Snoop.Views.TriggersTab
             this.TriggerItems = CollectionViewSource.GetDefaultView(this.triggers);
             this.TriggerItems.GroupDescriptions.Add(new PropertyGroupDescription(nameof(TriggerItemBase.TriggerSource)));
 
-            this.TriggerItems.CollectionChanged += (s, e) => this.HasTriggerItems = this.TriggerItems.IsEmpty;
+            this.TriggerItems.CollectionChanged += (_, _) => this.HasTriggerItems = this.TriggerItems.IsEmpty;
 
             this.Loaded += this.HandleLoaded;
             this.Unloaded += this.HandleUnloaded;
