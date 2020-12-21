@@ -329,7 +329,9 @@
                         useMultipleDispatcherMode = dispatchers.Count > 1;
                         break;
 
-                    case MultipleDispatcherMode.Ask:
+                    case MultipleDispatcherMode.Ask when dispatchers.Count == 1:
+                        useMultipleDispatcherMode = false;
+                        break;
                     default:
                     {
                         var result =
