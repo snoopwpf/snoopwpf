@@ -5,11 +5,13 @@
     using System.Windows;
     using System.Windows.Data;
 
+    [ValueConversion(typeof(object), typeof(object))]
+    [ValueConversion(typeof(object), typeof(Style))]
     public class NullStyleConverter : IValueConverter
     {
         public static readonly NullStyleConverter DefaultInstance = new();
 
-        public object? Convert(object? value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object? value, Type? targetType, object? parameter, CultureInfo? culture)
         {
             if (value is not null)
             {
@@ -32,7 +34,7 @@
             return null;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object ConvertBack(object? value, Type? targetType, object? parameter, CultureInfo? culture)
         {
             return Binding.DoNothing;
         }

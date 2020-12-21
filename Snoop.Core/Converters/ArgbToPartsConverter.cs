@@ -6,15 +6,18 @@
 namespace Snoop.Converters
 {
     using System;
+    using System.Globalization;
     using System.Windows;
     using System.Windows.Data;
 
+    [ValueConversion(typeof(object), typeof(object))]
+    [ValueConversion(typeof(object), typeof(string))]
+    [ValueConversion(typeof(string), typeof(string))]
     public class ArgbToPartsConverter : IValueConverter
     {
         public static readonly ArgbToPartsConverter Default = new();
 
-        #region IValueConverter Members
-        public object Convert(object? value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object Convert(object? value, Type? targetType, object parameter, CultureInfo? culture)
         {
             // value (string)   ARGB text (i.e. #FF102030)
             // parameter (int)  which "part" to return (0 = alpha, 1 = Red, 2 = Green, 3 = Blue)
@@ -42,10 +45,9 @@ namespace Snoop.Converters
             return ret;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object ConvertBack(object? value, Type? targetType, object? parameter, CultureInfo? culture)
         {
             return Binding.DoNothing;
         }
-        #endregion
     }
 }

@@ -8,6 +8,7 @@ namespace Snoop.Converters
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Globalization;
     using System.Reflection;
     using System.Windows;
     using System.Windows.Data;
@@ -19,7 +20,7 @@ namespace Snoop.Converters
 
         #region IValueConverter Members
 
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var paramInfo = value as SnoopParameterInformation;
             if (paramInfo is null)
@@ -34,7 +35,7 @@ namespace Snoop.Converters
             return result;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return Binding.DoNothing;
         }
@@ -48,7 +49,7 @@ namespace Snoop.Converters
 
         #region IValueConverter Members
 
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var paramInfo = (SnoopParameterInformation)value;
             var t = paramInfo.DeclaringType;
@@ -73,7 +74,7 @@ namespace Snoop.Converters
             return dependencyProperties;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return Binding.DoNothing;
         }
@@ -110,13 +111,14 @@ namespace Snoop.Converters
         #endregion
     }
 
+    [ValueConversion(typeof(object), typeof(object))]
+    [ValueConversion(typeof(Enum), typeof(Array))]
+    [ValueConversion(typeof(bool), typeof(object[]))]
     public class SnoopEnumValuesConverter : IValueConverter
     {
         public static readonly SnoopEnumValuesConverter Default = new();
 
-        #region IValueConverter Members
-
-        public object? Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object? Convert(object? value, Type? targetType, object? parameter, CultureInfo? culture)
         {
             if (value is Enum)
             {
@@ -131,11 +133,9 @@ namespace Snoop.Converters
             return null;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return Binding.DoNothing;
         }
-
-        #endregion
     }
 }
