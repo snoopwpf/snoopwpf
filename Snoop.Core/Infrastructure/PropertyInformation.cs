@@ -121,7 +121,8 @@ namespace Snoop.Infrastructure
         /// <param name="target">the item in the collection</param>
         /// <param name="component">the collection</param>
         /// <param name="displayName">the display name that goes in the name column, i.e. this[x]</param>
-        public PropertyInformation(object target, object? component, string displayName, object value, bool isCopyable = false)
+        /// <param name="value">the value</param>
+        public PropertyInformation(object target, object? component, string displayName, object? value, bool isCopyable = false)
             : this(target, null, displayName, displayName)
         {
             this.component = component;
@@ -819,8 +820,40 @@ namespace Snoop.Infrastructure
                 properties.InsertRange(0, extendedProps);
             }
 
-            // if the object is a collection, add the items in the collection as properties
-            if (obj is ICollection collection)
+            if (obj is ResourceDictionary resourceDictionary) // if the object is a ResourceDictionary, add the items in the collection as properties
+            {
+                foreach (var key in resourceDictionary.Keys)
+                {
+                    Exception? exception = null;
+                    object? item = null;
+                    try
+                    {
+                        item = resourceDictionary[key];
+                    }
+                    catch (Exception ex)
+                    {
+                        // Sometimes we can get an exception ... because the xaml you are Snoop(ing) is bad.
+                        // e.g. I got this once when I was Snoop(ing) some xaml that was referring to an image resource that was no longer there.
+                        // Wrong style inheritance like this also cause exceptions here:
+                        // <Style x:Key="BlahStyle" TargetType="{x:Type RichTextBox}"/>
+                        // <Style x:Key="BlahBlahStyle" BasedOn="{StaticResource BlahStyle}" TargetType="{x:Type TextBoxBase}"/>
+
+                        // We only get an exception once. The next time through the value just comes back null.
+
+                        exception = ex;
+                    }
+
+                    if (item is not null
+                        || key is not null)
+                    {
+                        var value = exception?.ToString() ?? item;
+                        var info = new PropertyInformation(item ?? key!, resourceDictionary, "this[" + key + "]", value);
+
+                        properties.Add(info);
+                    }
+                }
+            }
+            else if (obj is ICollection collection) // if the object is a collection, add the items in the collection as properties
             {
                 var index = 0;
                 foreach (var item in collection)
@@ -829,7 +862,7 @@ namespace Snoop.Infrastructure
                     {
                         continue;
                     }
-                    
+
                     var info = new PropertyInformation(item, collection, "this[" + index + "]", item);
 
                     index++;

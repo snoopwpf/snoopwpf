@@ -5,6 +5,7 @@
 
 namespace Snoop.Data.Tree
 {
+    using System;
     using System.ComponentModel;
     using System.Windows;
     using System.Windows.Data;
@@ -60,29 +61,33 @@ namespace Snoop.Data.Tree
                 ++order;
             }
 
-            foreach (var key in this.dictionary.Keys)
+            var resourceDictionary = this.dictionary;
+            foreach (var key in resourceDictionary.Keys)
             {
-                object target;
+                Exception? exception = null;
+                object? item = null;
                 try
                 {
-                    target = this.dictionary[key];
+                    item = resourceDictionary[key];
                 }
-                catch (XamlParseException)
+                catch (Exception ex)
                 {
-                    // sometimes you can get a XamlParseException ... because the xaml you are Snoop(ing) is bad.
+                    // Sometimes we can get an exception ... because the xaml you are Snoop(ing) is bad.
                     // e.g. I got this once when I was Snoop(ing) some xaml that was referring to an image resource that was no longer there.
-                    // in this case, just continue to the next resource in the dictionary.
-                    continue;
+                    // Wrong style inheritance like this also cause exceptions here:
+                    // <Style x:Key="BlahStyle" TargetType="{x:Type RichTextBox}"/>
+                    // <Style x:Key="BlahBlahStyle" BasedOn="{StaticResource BlahStyle}" TargetType="{x:Type TextBoxBase}"/>
+
+                    // We only get an exception once. The next time through the value just comes back null.
+
+                    exception = ex;
                 }
 
-                if (target is null)
+                if (item is not null
+                    || key is not null)
                 {
-                    // you only get a XamlParseException once. the next time through target just comes back null.
-                    // in this case, just continue to the next resource in the dictionary (as before).
-                    continue;
+                    this.Children.Add(new ResourceItem(item ?? exception ?? key!, key!, this, this.TreeService, exception is not null));
                 }
-
-                this.Children.Add(new ResourceItem(target, key, this, this.TreeService));
             }
         }
 
@@ -102,11 +107,13 @@ namespace Snoop.Data.Tree
     public class ResourceItem : TreeItem
     {
         private readonly object? key;
+        private readonly bool hasError;
 
-        public ResourceItem(object target, object? key, TreeItem parent, TreeService treeService)
+        public ResourceItem(object target, object key, TreeItem parent, TreeService treeService, bool hasError)
             : base(target, parent, treeService)
         {
             this.key = key;
+            this.hasError = hasError;
             this.SortOrder = int.MaxValue;
         }
 
@@ -114,7 +121,17 @@ namespace Snoop.Data.Tree
 
         public override string ToString()
         {
-            return $"{this.key} ({this.Target.GetType().Name})";
+            if (this.hasError)
+            {
+                return $"{this.DisplayName} (Invalid resource definition)";
+            }
+
+            if (ReferenceEquals(this.key, this.Target))
+            {
+                return this.DisplayName;
+            }
+
+            return $"{this.DisplayName} ({this.Target.GetType().Name})";
         }
     }
 }

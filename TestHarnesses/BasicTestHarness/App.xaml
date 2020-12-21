@@ -3,6 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              StartupUri="Window1.xaml">
     <Application.Resources>
-         
+         <ResourceDictionary>
+             <Style x:Key="BlahStyle" TargetType="{x:Type RichTextBox}"/>
+             <Style x:Key="BlahBlahStyle" BasedOn="{StaticResource BlahStyle}" TargetType="{x:Type TextBoxBase}"/>
+         </ResourceDictionary>
     </Application.Resources>
 </Application>

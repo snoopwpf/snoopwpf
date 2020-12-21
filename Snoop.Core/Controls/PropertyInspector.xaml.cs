@@ -252,7 +252,7 @@ namespace Snoop.Controls
             {
                 if (this.RootTarget is null)
                 {
-                    return "object is NULL";
+                    return "Target object is NULL";
                 }
 
                 var rootTargetType = this.RootTarget.GetType();

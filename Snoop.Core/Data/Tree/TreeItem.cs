@@ -70,6 +70,7 @@ namespace Snoop.Data.Tree
                     return;
                 }
 
+                // ReSharper disable once ConstantNullCoalescingCondition
                 // ensure that name never is null
                 this.name = value ?? string.Empty;
                 this.nameLower = this.name.ToLower();

@@ -298,7 +298,8 @@ All other rights reserved.
 						</TextBlock.ToolTip>
 					</TextBlock>
 				</TabItem.Header>
-				<controls:PropertyInspector x:Name="DataContextPropertyGrid" RootTarget="{Binding CurrentSelection.Target.DataContext}"/>
+
+				<controls:PropertyInspector x:Name="DataContextPropertyGrid" RootTarget="{Binding CurrentSelection.Target, Converter={x:Static converters:DataContextExtractorConverter.Instance}}"/>
 			</TabItem>
 
 			<TabItem Style="{x:Null}">
@@ -376,10 +377,8 @@ All other rights reserved.
 					</TextBlock>
 				</TabItem.Header>
 
-				<methodsTab:MethodsControl
-					RootTarget="{Binding CurrentSelection.Target}"
-					IsSelected="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}"
-				/>
+				<methodsTab:MethodsControl RootTarget="{Binding CurrentSelection.Target}"
+                                           IsSelected="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}" />
 			</TabItem>
 
 			<TabItem Style="{x:Null}"
@@ -392,8 +391,7 @@ All other rights reserved.
 								<TextBlock
 									Style="{x:Null}"
 									Text="A view which lets you script the Snooped app using PowerShell."
-									TextWrapping="Wrap"
-								/>
+									TextWrapping="Wrap" />
 							</StackPanel>
 						</TextBlock.ToolTip>
 					</TextBlock>
@@ -411,14 +409,13 @@ All other rights reserved.
 								<TextBlock
 									Style="{x:Null}"
 									Text="Shows and filters debug output from the application being Snooped."
-									TextWrapping="Wrap"
-								/>
+									TextWrapping="Wrap" />
 							</StackPanel>
 						</TextBlock.ToolTip>
 					</TextBlock>
 				</TabItem.Header>
 
-				<debugListenerTab:DebugListenerControl/>
+				<debugListenerTab:DebugListenerControl />
 			</TabItem>
 		</TabControl>
 
@@ -430,8 +427,7 @@ All other rights reserved.
 			Height="4"
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Top"
-			Margin="2,0,2,0"
-		/>
+			Margin="2,0,2,0" />
 
 		<!-- Previewer -->
 		<controls:Previewer
@@ -439,8 +435,7 @@ All other rights reserved.
 			Grid.Row="2"
 			Grid.Column="1"
 			Margin="2,4,2,0"
-			Target="{Binding CurrentSelection.Target}"
-		/>
+			Target="{Binding CurrentSelection.Target}" />
 
 		<!-- StatusBar -->
 		<StatusBar Style="{x:Null}" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="0">
@@ -448,11 +443,9 @@ All other rights reserved.
 				<StackPanel Style="{x:Null}" Orientation="Horizontal">
 					<TextBlock Style="{x:Null}" Text="Keyboard.FocusedElement:"/>
 					<TextBlock Style="{x:Null}" Margin="3,0,0,0">
-						<windows:NoFocusHyperlink
-							Focusable="False"
-							Command="{x:Static windows:SnoopUI.SelectFocusCommand}"
-							CommandParameter="{Binding CurrentFocus}"
-						>
+						<windows:NoFocusHyperlink Focusable="False"
+                                                  Command="{x:Static windows:SnoopUI.SelectFocusCommand}"
+							                      CommandParameter="{Binding CurrentFocus}" >
 							<TextBlock Style="{x:Null}" Text="{Binding CurrentFocus, Converter={x:Static converters:ObjectToStringConverter.Instance}}"/>
 						</windows:NoFocusHyperlink>
 					</TextBlock>
