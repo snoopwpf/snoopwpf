@@ -11,7 +11,7 @@
     [ValueSerializer(typeof(KeyGestureExValueSerializer))]
     public class KeyGestureEx : KeyGesture
     {
-        private static readonly KeyGestureExConverter converter = new KeyGestureExConverter();
+        private static readonly KeyGestureExConverter converter = new();
 
         public KeyGestureEx()
             : this(Key.None)
@@ -33,9 +33,9 @@
         {
         }
 
-        public override bool Matches(object targetElement, InputEventArgs inputEventArgs)
+        public override bool Matches(object? targetElement, InputEventArgs inputEventArgs)
         {
-            if (!(inputEventArgs is KeyEventArgs keyEventArgs))
+            if (inputEventArgs is not KeyEventArgs keyEventArgs)
             {
                 return false;
             }
@@ -85,8 +85,8 @@
         // ReSharper restore InconsistentNaming
 #pragma warning restore SA1310 // Field names should not contain underscore
 
-        private static readonly KeyConverter keyConverter = new KeyConverter();
-        private static readonly ModifierKeysConverter modifierKeysConverter = new ModifierKeysConverter();
+        private static readonly KeyConverter keyConverter = new();
+        private static readonly ModifierKeysConverter modifierKeysConverter = new();
 
         /// <inheritdoc />
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
@@ -149,10 +149,10 @@
 
                 var modifiers = ModifierKeys.None;
                 var resultkey = keyConverter.ConvertFrom(context, culture, keyToken);
-                if (resultkey != null)
+                if (resultkey is not null)
                 {
                     var temp = modifierKeysConverter.ConvertFrom(context, culture, modifiersToken);
-                    if (temp != null)
+                    if (temp is not null)
                     {
                         modifiers = (ModifierKeys)temp;
                     }
@@ -165,16 +165,16 @@
         }
 
         /// <inheritdoc />
-        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object? value, Type destinationType)
         {
-            if (destinationType == null)
+            if (destinationType is null)
             {
                 throw new ArgumentNullException(nameof(destinationType));
             }
 
             if (destinationType == typeof(string))
             {
-                if (value != null)
+                if (value is not null)
                 {
                     if (value is KeyGestureEx keyGesture)
                     {

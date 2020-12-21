@@ -19,7 +19,7 @@
         public new double? Width
         {
             get { return base.Width; }
-            set { base.Width = value.Value; }
+            set { base.Width = value.GetValueOrDefault(); }
         }
     }
 }

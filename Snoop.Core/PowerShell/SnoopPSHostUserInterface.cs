@@ -24,15 +24,15 @@ namespace Snoop.PowerShell
             this.rawUI = new SnoopPSHostRawUserInterface(this.outputTextBox);
         }
 
-        public event Action<string> OnVerbose;
+        public event Action<string>? OnVerbose;
 
-        public event Action<string> OnDebug;
+        public event Action<string>? OnDebug;
 
-        public event Action<string> OnWarning;
+        public event Action<string>? OnWarning;
 
-        public event Action<string> OnError;
+        public event Action<string>? OnError;
 
-        public event Action<string> OnWrite;
+        public event Action<string>? OnWrite;
 
         public override string ReadLine()
         {

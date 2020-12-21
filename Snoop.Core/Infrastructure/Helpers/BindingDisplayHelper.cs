@@ -26,7 +26,7 @@
             {
                 var attribute = xaml.Attribute(propertyName);
 
-                if (attribute != null)
+                if (attribute is not null)
                 {
                     propertyValues.Add($"{propertyName}={attribute.Value}");
                 }

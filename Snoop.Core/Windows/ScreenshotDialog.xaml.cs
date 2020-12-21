@@ -21,15 +21,15 @@ namespace Snoop.Windows
     {
         private static string lastSaveDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
-        public static readonly RoutedCommand SaveCommand = new RoutedCommand(nameof(SaveCommand), typeof(ScreenshotDialog));
-        public static readonly RoutedCommand CancelCommand = new RoutedCommand(nameof(CancelCommand), typeof(ScreenshotDialog));
+        public static readonly RoutedCommand SaveCommand = new(nameof(SaveCommand), typeof(ScreenshotDialog));
+        public static readonly RoutedCommand CancelCommand = new(nameof(CancelCommand), typeof(ScreenshotDialog));
 
         public ScreenshotDialog()
         {
             this.InitializeComponent();
 
             this.CommandBindings.Add(new CommandBinding(SaveCommand, this.HandleSave, this.HandleCanSave));
-            this.CommandBindings.Add(new CommandBinding(CancelCommand, this.HandleCancel, (x, y) => y.CanExecute = true));
+            this.CommandBindings.Add(new CommandBinding(CancelCommand, this.HandleCancel, (_, y) => y.CanExecute = true));
         }
 
         private void HandleCanSave(object sender, CanExecuteRoutedEventArgs e)
@@ -66,9 +66,13 @@ namespace Snoop.Windows
                 FilterIndex = 0
             };
 
-            if (fileDialog.ShowDialog(this).Value)
+            if (fileDialog.ShowDialog(this) == true)
             {
-                lastSaveDirectory = Path.GetDirectoryName(fileDialog.FileName);
+                var directoryName = Path.GetDirectoryName(fileDialog.FileName);
+                if (string.IsNullOrEmpty(directoryName) == false)
+                {
+                    lastSaveDirectory = directoryName;
+                }
 
                 VisualCaptureUtil.SaveVisual(this.DataContext as Visual,
                     int.Parse(dpiText),

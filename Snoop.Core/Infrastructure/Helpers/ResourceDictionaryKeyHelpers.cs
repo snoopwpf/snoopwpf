@@ -19,13 +19,13 @@ namespace Snoop.Infrastructure.Helpers
             }
 
             // Walk up the visual tree, looking for the resourceItem in each frameworkElement's resource dictionary.
-            while (dependencyObject != null)
+            while (dependencyObject is not null)
             {
                 var frameworkElement = dependencyObject as FrameworkElement;
-                if (frameworkElement != null)
+                if (frameworkElement is not null)
                 {
                     var resourceKey = GetKeyInResourceDictionary(frameworkElement.Resources, resourceItem);
-                    if (resourceKey != null)
+                    if (resourceKey is not null)
                     {
                         return resourceKey;
                     }
@@ -39,10 +39,10 @@ namespace Snoop.Infrastructure.Helpers
             }
 
             // check the application resources
-            if (Application.Current != null)
+            if (Application.Current is not null)
             {
                 var resourceKey = GetKeyInResourceDictionary(Application.Current.Resources, resourceItem);
-                if (resourceKey != null)
+                if (resourceKey is not null)
                 {
                     return resourceKey;
                 }
@@ -51,17 +51,17 @@ namespace Snoop.Infrastructure.Helpers
             return string.Empty;
         }
 
-        public static string GetKeyInResourceDictionary(ResourceDictionary dictionary, object resourceItem)
+        public static string? GetKeyInResourceDictionary(ResourceDictionary dictionary, object resourceItem)
         {
             foreach (var key in dictionary.Keys)
             {
                 if (dictionary[key] == resourceItem)
                 {
-                    return key.ToString();
+                    return key?.ToString();
                 }
             }
 
-            if (dictionary.MergedDictionaries != null)
+            if (dictionary.MergedDictionaries is not null)
             {
                 foreach (var dic in dictionary.MergedDictionaries)
                 {

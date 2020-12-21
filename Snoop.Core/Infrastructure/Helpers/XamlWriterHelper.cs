@@ -20,8 +20,13 @@
             return XElement.Parse(xaml);
         }
 
-        public static string GetXamlAsString(object obj)
+        public static string GetXamlAsString(object? obj)
         {
+            if (obj is null)
+            {
+                return string.Empty;
+            }
+
             var writerSettings = new XmlWriterSettings
             {
                 Indent = true,
@@ -76,7 +81,7 @@
                 if (destinationType == typeof(MarkupExtension))
                 {
                     var bindingExpression = value as BindingExpression;
-                    if (bindingExpression == null)
+                    if (bindingExpression is null)
                     {
                         throw new Exception();
                     }
@@ -90,7 +95,7 @@
 
         private class XamlSerializationHelper : IDisposable
         {
-            private readonly Dictionary<TypeDescriptionProvider, Type> registrations = new Dictionary<TypeDescriptionProvider, Type>();
+            private readonly Dictionary<TypeDescriptionProvider, Type> registrations = new();
 
             public XamlSerializationHelper ApplyHelpers()
             {

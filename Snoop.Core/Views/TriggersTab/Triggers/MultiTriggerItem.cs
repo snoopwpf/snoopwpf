@@ -31,15 +31,14 @@
             foreach (var condition in this.trigger.Conditions)
             {
                 var instance = this.Instance;
-                var control = this.Instance as Control;
 
-                if (condition.SourceName != null
+                // todo: why did we need this?
+                if (condition.SourceName is not null
                     && this.TriggerSource == TriggerSource.ControlTemplate
-                    && control != null
-                    && control.Template != null)
+                    && this.Instance is Control control
+                    && control.Template is not null)
                 {
-                    var source = control.Template.FindName(condition.SourceName, control) as DependencyObject;
-                    if (source != null)
+                    if (control.Template.FindName(condition.SourceName, control) is DependencyObject source)
                     {
                         instance = source;
                     }
@@ -47,10 +46,13 @@
 
                 var realInstance = TemplateHelper.GetChildFromTemplateIfNeeded(this.source, condition.SourceName) as DependencyObject;
 
-                yield return new ConditionItem(condition.Property, realInstance, condition.Value)
+                if (realInstance is not null)
                 {
-                    SourceName = condition.SourceName
-                };
+                    yield return new ConditionItem(condition.Property, realInstance, condition.Value)
+                    {
+                        SourceName = condition.SourceName
+                    };
+                }
             }
         }
     }

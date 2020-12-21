@@ -19,9 +19,9 @@ namespace Snoop.Controls
 
     public partial class PropertyGrid2 : INotifyPropertyChanged
     {
-        public static readonly RoutedCommand ShowBindingErrorsCommand = new RoutedCommand(nameof(ShowBindingErrorsCommand), typeof(PropertyGrid2));
-        public static readonly RoutedCommand ClearCommand = new RoutedCommand(nameof(ClearCommand), typeof(PropertyGrid2));
-        public static readonly RoutedCommand SortCommand = new RoutedCommand(nameof(SortCommand), typeof(PropertyGrid2));
+        public static readonly RoutedCommand ShowBindingErrorsCommand = new(nameof(ShowBindingErrorsCommand), typeof(PropertyGrid2));
+        public static readonly RoutedCommand ClearCommand = new(nameof(ClearCommand), typeof(PropertyGrid2));
+        public static readonly RoutedCommand SortCommand = new(nameof(SortCommand), typeof(PropertyGrid2));
 
         public PropertyGrid2()
         {
@@ -37,9 +37,11 @@ namespace Snoop.Controls
             this.CommandBindings.Add(new CommandBinding(ClearCommand, this.HandleClear, this.CanClear));
             this.CommandBindings.Add(new CommandBinding(SortCommand, this.HandleSort));
 
-            this.filterTimer = new DispatcherTimer();
-            this.filterTimer.Interval = TimeSpan.FromSeconds(0.3);
-            this.filterTimer.Tick += (s, e) =>
+            this.filterTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(0.3)
+            };
+            this.filterTimer.Tick += (_, _) =>
             {
                 this.filterCall.Enqueue(this.Dispatcher);
                 this.filterTimer.Stop();
@@ -56,8 +58,8 @@ namespace Snoop.Controls
             set
             {
                 this.nameValueOnly = value;
-                var gridView = this.ListView != null && this.ListView.View != null ? this.ListView.View as GridView : null;
-                if (this.nameValueOnly && gridView != null && gridView.Columns.Count != 2)
+                var gridView = this.ListView is not null && this.ListView.View is not null ? this.ListView.View as GridView : null;
+                if (this.nameValueOnly && gridView is not null && gridView.Columns.Count != 2)
                 {
                     gridView.Columns.RemoveAt(0);
                     while (gridView.Columns.Count > 2)
@@ -70,11 +72,11 @@ namespace Snoop.Controls
 
         private bool nameValueOnly;
 
-        public ObservableCollection<PropertyInformation> Properties { get; } = new ObservableCollection<PropertyInformation>();
+        public ObservableCollection<PropertyInformation> Properties { get; } = new();
 
-        private readonly ObservableCollection<PropertyInformation> allProperties = new ObservableCollection<PropertyInformation>();
+        private readonly ObservableCollection<PropertyInformation> allProperties = new();
 
-        public object Target
+        public object? Target
         {
             get { return this.GetValue(TargetProperty); }
             set { this.SetValue(TargetProperty, value); }
@@ -110,7 +112,7 @@ namespace Snoop.Controls
             }
         }
 
-        public PropertyInformation Selection
+        public PropertyInformation? Selection
         {
             get { return this.selection; }
 
@@ -121,13 +123,13 @@ namespace Snoop.Controls
             }
         }
 
-        private PropertyInformation selection;
+        private PropertyInformation? selection;
 
-        public Type Type
+        public Type? Type
         {
             get
             {
-                if (this.target != null)
+                if (this.target is not null)
                 {
                     return this.target.GetType();
                 }
@@ -148,13 +150,11 @@ namespace Snoop.Controls
         /// Delayed loading of the property inspector to avoid creating the entire list of property
         /// editors immediately after selection. Keeps that app running smooth.
         /// </summary>
-        /// <param name="performInitialization"></param>
-        /// <returns></returns>
         private void ProcessIncrementalPropertyAdd()
         {
             var numberToAdd = 10;
 
-            if (this.propertiesToAdd == null)
+            if (this.propertiesToAdd is null)
             {
                 this.propertiesToAdd = PropertyInformation.GetProperties(this.target).GetEnumerator();
 
@@ -250,7 +250,7 @@ namespace Snoop.Controls
 
         private ListSortDirection GetNewSortDirection(GridViewColumnHeader columnHeader)
         {
-            if (!(columnHeader.Tag is ListSortDirection))
+            if (columnHeader.Tag is not ListSortDirection)
             {
                 return (ListSortDirection)(columnHeader.Tag = ListSortDirection.Descending);
             }
@@ -264,13 +264,13 @@ namespace Snoop.Controls
             var headerClicked = (GridViewColumnHeader)args.OriginalSource;
 
             this.direction = this.GetNewSortDirection(headerClicked);
-            if (headerClicked.Column == null)
+            if (headerClicked.Column is null)
             {
                 return;
             }
 
             var columnHeader = headerClicked.Column.Header as TextBlock;
-            if (columnHeader == null)
+            if (columnHeader is null)
             {
                 return;
             }
@@ -383,7 +383,7 @@ namespace Snoop.Controls
             {
                 var property = (PropertyInformation)((FrameworkElement)sender).DataContext;
 
-                object newTarget = null;
+                object? newTarget = null;
 
                 if (Keyboard.Modifiers == ModifierKeys.Shift)
                 {
@@ -398,25 +398,25 @@ namespace Snoop.Controls
                     newTarget = property.Value;
                 }
 
-                if (newTarget != null)
+                if (newTarget is not null)
                 {
                     PropertyInspector.DelveCommand.Execute(property, this);
                 }
             }
         }
 
-        private void Sort(Comparison<PropertyInformation> comparator, ListSortDirection direction)
+        private void Sort(Comparison<PropertyInformation> comparator, ListSortDirection newDirection)
         {
-            this.Sort(comparator, direction, this.Properties);
-            this.Sort(comparator, direction, this.allProperties);
+            this.Sort(comparator, newDirection, this.Properties);
+            this.Sort(comparator, newDirection, this.allProperties);
         }
 
-        private void Sort(Comparison<PropertyInformation> comparator, ListSortDirection direction, ObservableCollection<PropertyInformation> propertiesToSort)
+        private void Sort(Comparison<PropertyInformation> comparator, ListSortDirection newDirection, ObservableCollection<PropertyInformation> propertiesToSort)
         {
             var sorter = new List<PropertyInformation>(propertiesToSort);
             sorter.Sort(comparator);
 
-            if (direction == ListSortDirection.Descending)
+            if (newDirection == ListSortDirection.Descending)
             {
                 sorter.Reverse();
             }
@@ -438,9 +438,9 @@ namespace Snoop.Controls
             this.processIncrementalCall.Enqueue(this.Dispatcher);
         }
 
-        private object target;
+        private object? target;
 
-        private IEnumerator<PropertyInformation> propertiesToAdd;
+        private IEnumerator<PropertyInformation>? propertiesToAdd;
         private readonly DelayedCall processIncrementalCall;
         private readonly DelayedCall filterCall;
         private int visiblePropertyCount;
@@ -467,7 +467,7 @@ namespace Snoop.Controls
         }
 
         #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected void OnPropertyChanged(string propertyName)

@@ -8,7 +8,7 @@
 
     public partial class Clock : ContentControl
     {
-        private DispatcherTimer dayTimer;
+        private DispatcherTimer? dayTimer;
 
         public Clock()
         {
@@ -41,7 +41,7 @@
             // date has changed, update the datacontext to reflect today's date
             DateTime now = DateTime.Now;
             this.DataContext = now.Day.ToString();
-            this.dayTimer.Interval = new TimeSpan(1, 0, 0, 0);
+            this.dayTimer!.Interval = new TimeSpan(1, 0, 0, 0);
         }
     }
 }

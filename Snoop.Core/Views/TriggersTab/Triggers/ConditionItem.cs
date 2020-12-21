@@ -11,18 +11,18 @@ namespace Snoop.Views.TriggersTab.Triggers
     public class ConditionItem : DependencyObject, IDisposable, INotifyPropertyChanged
     {
         private readonly string displayName;
-        private readonly BindingBase conditionBinding;
+        private readonly BindingBase? conditionBinding;
         private readonly DependencyObject conditionContainer;
-        private readonly object targetValue;
+        private readonly object? targetValue;
 
-        private readonly AttachedPropertySlot attachedPropertySlot;
+        private readonly AttachedPropertySlot? attachedPropertySlot;
 
-        private readonly DependencyPropertyDescriptor dependencyPropertyDescriptor;
+        private readonly DependencyPropertyDescriptor? dependencyPropertyDescriptor;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ConditionItem" /> class.
         /// </summary>
-        public ConditionItem(DependencyProperty dependencyProperty, DependencyObject conditionContainer, object targetValue)
+        public ConditionItem(DependencyProperty dependencyProperty, DependencyObject conditionContainer, object? targetValue)
             : this(dependencyProperty, GetDependencyPropertyDescriptor(dependencyProperty, conditionContainer), conditionContainer, targetValue)
         {
         }
@@ -30,12 +30,12 @@ namespace Snoop.Views.TriggersTab.Triggers
         /// <summary>
         ///     Initializes a new instance of the <see cref="ConditionItem" /> class.
         /// </summary>
-        public ConditionItem(DependencyProperty dependencyProperty, DependencyPropertyDescriptor propertyDescriptor, DependencyObject conditionContainer, object targetValue)
+        public ConditionItem(DependencyProperty dependencyProperty, DependencyPropertyDescriptor propertyDescriptor, DependencyObject conditionContainer, object? targetValue)
             : this(conditionContainer, targetValue, GetDisplayName(dependencyProperty, propertyDescriptor))
         {
             this.dependencyPropertyDescriptor = propertyDescriptor;
 
-            if (this.dependencyPropertyDescriptor == null)
+            if (this.dependencyPropertyDescriptor is null)
             {
                 this.HasError = true;
                 this.Error = $"DependencyPropertyDescriptor for '{this.DisplayName}' could not be found.{Environment.NewLine}In case of an attached property this might be caused by a missing \"get\"-method for that property.";
@@ -47,17 +47,20 @@ namespace Snoop.Views.TriggersTab.Triggers
         /// <summary>
         ///     Initializes a new instance of the <see cref="ConditionItem" /> class.
         /// </summary>
-        public ConditionItem(BindingBase conditionBinding, DependencyObject conditionContainer, object targetValue)
+        public ConditionItem(BindingBase conditionBinding, DependencyObject conditionContainer, object? targetValue)
             : this(conditionContainer, targetValue, BindingDisplayHelper.BuildBindingDescriptiveString(conditionBinding))
         {
             this.conditionBinding = conditionBinding;
 
             this.attachedPropertySlot = AttachedPropertyManager.GetAndBindAttachedPropertySlot(this.conditionContainer, this.conditionBinding);
 
-            this.BindCurrentValue(conditionContainer, this.attachedPropertySlot.DependencyProperty);
+            if (this.attachedPropertySlot is not null)
+            {
+                this.BindCurrentValue(conditionContainer, this.attachedPropertySlot.DependencyProperty);
+            }
         }
 
-        public ConditionItem(DependencyObject conditionContainer, object targetValue, string displayName)
+        public ConditionItem(DependencyObject conditionContainer, object? targetValue, string displayName)
         {
             this.conditionContainer = conditionContainer ?? throw new ArgumentNullException(nameof(conditionContainer), "Condition container must not be null.");
             this.targetValue = targetValue;
@@ -67,9 +70,9 @@ namespace Snoop.Views.TriggersTab.Triggers
 
         public bool HasError { get; }
 
-        public string Error { get; }
+        public string? Error { get; }
 
-        public object CurrentValue
+        public object? CurrentValue
         {
             get { return this.GetValue(CurrentValueProperty); }
             set { this.SetValue(CurrentValueProperty, value); }
@@ -99,9 +102,9 @@ namespace Snoop.Views.TriggersTab.Triggers
             this.NotifyStateChanged();
         }
 
-        public string SourceName { get; set; }
+        public string? SourceName { get; set; }
 
-        public string StringValue
+        public string? StringValue
         {
             get
             {
@@ -111,7 +114,7 @@ namespace Snoop.Views.TriggersTab.Triggers
                 }
 
                 var value = this.CurrentValue;
-                if (value != null)
+                if (value is not null)
                 {
                     return value.ToString();
                 }
@@ -127,8 +130,8 @@ namespace Snoop.Views.TriggersTab.Triggers
         {
             get
             {
-                if (this.CurrentValue != null
-                    && this.targetValue != null
+                if (this.CurrentValue is not null
+                    && this.targetValue is not null
                     && this.CurrentValue.GetType() != this.targetValue.GetType())
                 {
                     var converter = TypeDescriptor.GetConverter(this.CurrentValue.GetType());
@@ -145,9 +148,9 @@ namespace Snoop.Views.TriggersTab.Triggers
                     }
                 }
 
-                if (this.targetValue == null)
+                if (this.targetValue is null)
                 {
-                    return this.CurrentValue == null;
+                    return this.CurrentValue is null;
                 }
 
                 return this.targetValue.Equals(this.CurrentValue);
@@ -172,11 +175,11 @@ namespace Snoop.Views.TriggersTab.Triggers
             }
         }
 
-        public string TargetValue
+        public string? TargetValue
         {
             get
             {
-                if (this.targetValue == null)
+                if (this.targetValue is null)
                 {
                     return "null";
                 }
@@ -221,7 +224,7 @@ namespace Snoop.Views.TriggersTab.Triggers
 
         #region INotifyPropertyChanged Members
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected void OnPropertyChanged(string propertyName)
@@ -234,7 +237,7 @@ namespace Snoop.Views.TriggersTab.Triggers
         /// <summary>
         ///     Occurs when the state of the condition changed.
         /// </summary>
-        public event EventHandler StateChanged;
+        public event EventHandler? StateChanged;
 
         #region Private Helpers
 
@@ -250,7 +253,7 @@ namespace Snoop.Views.TriggersTab.Triggers
 
         private static string GetDisplayName(DependencyProperty dependencyProperty, DependencyPropertyDescriptor propertyDescriptor)
         {
-            if (propertyDescriptor != null)
+            if (propertyDescriptor is not null)
             {
                 return propertyDescriptor.DisplayName;
             }

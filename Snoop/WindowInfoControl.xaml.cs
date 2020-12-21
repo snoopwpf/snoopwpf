@@ -13,7 +13,7 @@
 
         private void WindowInfoControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            this.WindowInfoContainer.Visibility = e.NewValue != null
+            this.WindowInfoContainer.Visibility = e.NewValue is not null
                                                       ? Visibility.Visible
                                                       : Visibility.Collapsed;
         }

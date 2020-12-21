@@ -13,7 +13,7 @@
         /// <returns>
         /// <c>null</c> if <paramref name="hwnd"/> or <paramref name="dispatcher"/> are <c>null</c>.
         /// </returns>
-        public static Window GetVisibleWindow(long hwnd, Dispatcher dispatcher)
+        public static Window? GetVisibleWindow(long hwnd, Dispatcher? dispatcher)
         {
             return GetVisibleWindow(new IntPtr(hwnd), dispatcher);
         }
@@ -24,7 +24,7 @@
         /// <returns>
         /// <c>null</c> if <paramref name="hwnd"/> or <paramref name="dispatcher"/> are <c>null</c>.
         /// </returns>
-        public static Window GetVisibleWindow(IntPtr hwnd, Dispatcher dispatcher)
+        public static Window? GetVisibleWindow(IntPtr hwnd, Dispatcher? dispatcher)
         {
             if (hwnd == IntPtr.Zero
                 || dispatcher is null)
@@ -34,7 +34,7 @@
 
             var hwndSource = HwndSource.FromHwnd(hwnd);
 
-            if (hwndSource != null
+            if (hwndSource is not null
                 && (hwndSource.Dispatcher is null || hwndSource.CheckAccess())
                 && hwndSource.RootVisual is Window window
                 && window.Dispatcher == dispatcher

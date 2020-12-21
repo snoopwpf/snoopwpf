@@ -8,7 +8,7 @@
         {
             var ownerWindow = Window.GetWindow(dependencyObject);
 
-            if (ownerWindow != null
+            if (ownerWindow is not null
                 && ReferenceEquals(ownerWindow, window) == false)
             {
                 window.Owner = ownerWindow;

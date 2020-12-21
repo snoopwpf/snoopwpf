@@ -38,13 +38,21 @@
                 {
                     var uid = splittedLine[1];
                     var button = FindByUid<ButtonBase>(Application.Current.MainWindow, uid);
-                    Click(button);
+
+                    if (button is not null)
+                    {
+                        Click(button);
+                    }
                 }
                 else if (scriptLine.StartsWith("Input"))
                 {
                     var uid = splittedLine[1];
                     var button = FindByUid<TextBox>(Application.Current.MainWindow, uid);
-                    Input(button, splittedLine[2]);
+
+                    if (button is not null)
+                    {
+                        Input(button, splittedLine[2]);
+                    }
                 }
 
                 // if you want to observe the real speed of this thing, just remove the next delay line
@@ -57,7 +65,7 @@
         private static void Click(ButtonBase button)
         {
             var clickMethod = button.GetType().GetMethod("OnClick", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-            clickMethod.Invoke(button, null);
+            clickMethod?.Invoke(button, null);
         }
 
         private static void Input(TextBox textBox, string text)
@@ -65,13 +73,13 @@
             textBox.Text = text;
         }
 
-        private static TControlType FindByUid<TControlType>(DependencyObject parent, string uid)
+        private static TControlType? FindByUid<TControlType>(DependencyObject parent, string uid)
             where TControlType : DependencyObject
         {
             return Find<TControlType>(parent, o => AutomationProperties.GetAutomationId(o) == uid || (string)o.GetValue(UIElement.UidProperty) == uid);
         }
 
-        private static TControlType Find<TControlType>(DependencyObject parent, Predicate<TControlType> predicate)
+        private static TControlType? Find<TControlType>(DependencyObject parent, Predicate<TControlType> predicate)
             where TControlType : DependencyObject
         {
             var childrenCount = VisualTreeHelper.GetChildrenCount(parent);

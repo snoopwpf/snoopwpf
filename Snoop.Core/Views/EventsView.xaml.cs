@@ -21,7 +21,7 @@ namespace Snoop.Views
 
     public partial class EventsView : INotifyPropertyChanged
     {
-        public static readonly RoutedCommand ClearCommand = new RoutedCommand(nameof(ClearCommand), typeof(EventsView));
+        public static readonly RoutedCommand ClearCommand = new(nameof(ClearCommand), typeof(EventsView));
 
         public EventsView()
         {
@@ -55,7 +55,7 @@ namespace Snoop.Views
             get { return this.interestingEvents; }
         }
 
-        private readonly ObservableCollection<TrackedEvent> interestingEvents = new ObservableCollection<TrackedEvent>();
+        private readonly ObservableCollection<TrackedEvent> interestingEvents = new();
 
         public int MaxEventsDisplayed
         {
@@ -117,7 +117,7 @@ namespace Snoop.Views
         private void HandleEventHandled(TrackedEvent trackedEvent)
         {
             var visual = trackedEvent.Originator.Handler as Visual;
-            if (visual != null && !visual.IsPartOfSnoopVisualTree())
+            if (visual is not null && !visual.IsPartOfSnoopVisualTree())
             {
                 Action action =
                     () =>
@@ -147,7 +147,7 @@ namespace Snoop.Views
 
         private void EventTree_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            if (e.NewValue != null)
+            if (e.NewValue is not null)
             {
                 if (e.NewValue is EventEntry entry)
                 {
@@ -160,11 +160,11 @@ namespace Snoop.Views
             }
         }
 
-        private readonly ObservableCollection<EventTracker> trackers = new ObservableCollection<EventTracker>();
+        private readonly ObservableCollection<EventTracker> trackers = new();
 
         private static readonly List<RoutedEvent> defaultEvents =
-            new List<RoutedEvent>(
-                new RoutedEvent[]
+            new(
+                new[]
                 {
                     Keyboard.KeyDownEvent,
                     Keyboard.KeyUpEvent,
@@ -176,7 +176,7 @@ namespace Snoop.Views
                 });
 
         #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected void OnPropertyChanged(string propertyName)

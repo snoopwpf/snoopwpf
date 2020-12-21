@@ -22,7 +22,7 @@ namespace Snoop.Controls.ValueEditors
 
         private void CheckBoxClickedHandler(object sender, RoutedEventArgs e)
         {
-            if (this.PropertyInfo != null)
+            if (this.PropertyInfo is not null)
             {
                 this.PropertyInfo.IsValueChangedByUser = true;
             }

@@ -9,8 +9,8 @@ namespace Snoop.Infrastructure
 
     public interface ISkipDelve
     {
-        object NextValue { get; }
+        object? NextValue { get; }
 
-        Type NextValueType { get; }
+        Type? NextValueType { get; }
     }
 }

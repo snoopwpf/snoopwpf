@@ -1,6 +1,7 @@
 ﻿namespace DepthReducer
 {
     using System;
+    using System.Linq;
     using System.Reflection;
     using System.Windows;
     using System.Windows.Controls;
@@ -21,8 +22,9 @@
 
         private void Populate(Border b)
         {
-            PropertyInfo[] info = typeof(Brushes).GetProperties(BindingFlags.Static | BindingFlags.Public | BindingFlags.GetProperty);
-            int count = Math.Min(100, info.Length);
+            var brushes = typeof(Brushes).GetProperties(BindingFlags.Static | BindingFlags.Public | BindingFlags.GetProperty);
+            var info = brushes.Concat(brushes).ToArray();
+            int count = info.Length;
             double w = this.Width / (2 * count);
             double h = this.Height / (2 * count);
             Thickness padding = new Thickness(w, h, w, h);

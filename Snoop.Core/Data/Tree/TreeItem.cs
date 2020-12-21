@@ -24,7 +24,7 @@ namespace Snoop.Data.Tree
         private readonly string typeNameLower;
         private int childItemCount;
 
-        public TreeItem(object target, TreeItem parent, TreeService treeService)
+        public TreeItem(object target, TreeItem? parent, TreeService treeService)
         {
             this.Target = target ?? throw new ArgumentNullException(nameof(target));
             this.TargetType = this.Target.GetType();
@@ -34,7 +34,7 @@ namespace Snoop.Data.Tree
             this.Parent = parent;
             this.TreeService = treeService;
 
-            if (parent != null)
+            if (parent is not null)
             {
                 this.Depth = parent.Depth + 1;
             }
@@ -50,7 +50,7 @@ namespace Snoop.Data.Tree
         /// <summary>
         /// The parent of this instance
         /// </summary>
-        public TreeItem Parent { get; }
+        public TreeItem? Parent { get; }
 
         public TreeService TreeService { get; }
 
@@ -70,6 +70,7 @@ namespace Snoop.Data.Tree
                     return;
                 }
 
+                // ReSharper disable once ConstantNullCoalescingCondition
                 // ensure that name never is null
                 this.name = value ?? string.Empty;
                 this.nameLower = this.name.ToLower();
@@ -86,7 +87,7 @@ namespace Snoop.Data.Tree
         /// <summary>
         /// The children of this instance
         /// </summary>
-        public ObservableCollection<TreeItem> Children { get; } = new ObservableCollection<TreeItem>();
+        public ObservableCollection<TreeItem> Children { get; } = new();
 
         public bool IsSelected
         {
@@ -129,18 +130,18 @@ namespace Snoop.Data.Tree
             }
         }
 
-        public virtual Visual MainVisual => null;
+        public virtual Visual? MainVisual => null;
 
         public virtual Brush TreeBackgroundBrush => new SolidColorBrush(Color.FromArgb(255, 240, 240, 240));
 
-        public virtual Brush VisualBrush => null;
+        public virtual Brush? VisualBrush => null;
 
         /// <summary>
         /// Checks to see if any property on this element has a binding error.
         /// </summary>
         public virtual bool HasBindingError => false;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public override string ToString()
         {
@@ -220,7 +221,7 @@ namespace Snoop.Data.Tree
         {
         }
 
-        public virtual TreeItem FindNode(object target)
+        public virtual TreeItem? FindNode(object? target)
         {
             if (target is null)
             {
@@ -236,7 +237,7 @@ namespace Snoop.Data.Tree
             {
                 var node = child.FindNode(target);
 
-                if (!(node is null))
+                if (node is not null)
                 {
                     return node;
                 }

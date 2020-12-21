@@ -13,7 +13,7 @@
             this.InitializeComponent();
 
             this.Behaviors = new ObservableCollection<object>();
-            this.Behaviors.CollectionChanged += (s, e) => this.HasBehaviors = this.Behaviors.Count != 0;
+            this.Behaviors.CollectionChanged += (_, _) => this.HasBehaviors = this.Behaviors.Count != 0;
 
             this.Loaded += this.HandleLoaded;
             this.Unloaded += this.HandleUnloaded;
@@ -49,15 +49,15 @@
 
         private static readonly DependencyProperty BehaviorsProperty = DependencyProperty.Register(nameof(Behaviors), typeof(ObservableCollection<object>), typeof(BehaviorsView), new PropertyMetadata(default(ObservableCollection<object>)));
 
-        public ObservableCollection<object> Behaviors
+        public ObservableCollection<object>? Behaviors
         {
-            get { return (ObservableCollection<object>)this.GetValue(BehaviorsProperty); }
+            get { return (ObservableCollection<object>?)this.GetValue(BehaviorsProperty); }
             set { this.SetValue(BehaviorsProperty, value); }
         }
 
         private static readonly DependencyProperty SelectedBehaviorProperty = DependencyProperty.Register(nameof(SelectedBehavior), typeof(object), typeof(BehaviorsView), new PropertyMetadata(default(object)));
 
-        public object SelectedBehavior
+        public object? SelectedBehavior
         {
             get { return this.GetValue(SelectedBehaviorProperty); }
             set { this.SetValue(SelectedBehaviorProperty, value); }
@@ -85,7 +85,7 @@
 
         private void Cleanup()
         {
-            this.Behaviors.Clear();
+            this.Behaviors?.Clear();
         }
 
         private void Update()
@@ -112,28 +112,33 @@
         {
             var interactivityType = Type.GetType(assemblyQualifiedName, false);
 
-            if (interactivityType == null)
+            if (interactivityType is null)
             {
                 return;
             }
 
             var getBehaviorsMethod = interactivityType.GetMethod("GetBehaviors", BindingFlags.Static | BindingFlags.Public);
 
-            if (getBehaviorsMethod == null)
+            if (getBehaviorsMethod is null)
             {
                 return;
             }
 
             var behaviorsToAdd = getBehaviorsMethod.Invoke(null, new object[] { dependencyObject }) as IEnumerable;
 
-            if (behaviorsToAdd == null)
+            if (behaviorsToAdd is null)
             {
                 return;
             }
 
             foreach (var behavior in behaviorsToAdd)
             {
-                this.Behaviors.Add(behavior);
+                if (behavior is null)
+                {
+                    continue;
+                }
+
+                this.Behaviors?.Add(behavior);
             }
         }
     }

@@ -9,9 +9,15 @@ namespace Snoop.Views.MethodsTab
 
     public class TypeNamePair : IComparable
     {
-        public string Name { get; set; }
+        public TypeNamePair(Type type)
+        {
+            this.Type = type ?? throw new ArgumentNullException(nameof(type));
+            this.Name = this.Type.Name;
+        }
 
-        public Type Type { get; set; }
+        public Type Type { get; }
+        
+        public string Name { get; }
 
         public override string ToString()
         {
@@ -20,9 +26,9 @@ namespace Snoop.Views.MethodsTab
 
         #region IComparable Members
 
-        public int CompareTo(object obj)
+        public int CompareTo(object? obj)
         {
-            return this.Name.CompareTo(((TypeNamePair)obj).Name);
+            return string.Compare(this.Name, (obj as TypeNamePair)?.Name, StringComparison.Ordinal);
         }
 
         #endregion

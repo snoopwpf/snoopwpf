@@ -16,16 +16,16 @@ namespace Snoop.Infrastructure
     /// </summary>
     public static class SnoopPartsRegistry
     {
-        private static readonly List<WeakReference> registeredSnoopVisualTreeRoots = new List<WeakReference>();
+        private static readonly List<WeakReference> registeredSnoopVisualTreeRoots = new();
 
         /// <summary>
         /// Checks whether given visual is a part of Snoop's visual tree.
         /// </summary>
         /// <param name="visual">Visual under question</param>
         /// <returns><c>true</c> if <paramref name="visual"/> belongs to Snoop's visual tree. <c>false</c> otherwise.</returns>
-        public static bool IsPartOfSnoopVisualTree(this Visual visual)
+        public static bool IsPartOfSnoopVisualTree(this Visual? visual)
         {
-            if (visual == null)
+            if (visual is null)
             {
                 return false;
             }
@@ -43,7 +43,12 @@ namespace Snoop.Infrastructure
                     continue;
                 }
 
-                var snoopVisual = (Visual)registeredSnoopVisual.Target;
+                var snoopVisual = (Visual?)registeredSnoopVisual.Target;
+
+                if (snoopVisual is null)
+                {
+                    continue;
+                }
 
                 if (ReferenceEquals(visual, snoopVisual)
                     || (visual.Dispatcher == snoopVisual.Dispatcher && visual.IsDescendantOf(snoopVisual)))
@@ -73,7 +78,7 @@ namespace Snoop.Infrastructure
         {
             var toRemove = registeredSnoopVisualTreeRoots.FirstOrDefault(x => x.IsAlive && ReferenceEquals(x.Target, root));
 
-            if (toRemove != null)
+            if (toRemove is not null)
             {
                 registeredSnoopVisualTreeRoots.Remove(toRemove);
             }

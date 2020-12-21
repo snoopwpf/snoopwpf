@@ -1,5 +1,13 @@
 ﻿# Changelog for Snoop
 
+## 3.0.1
+
+- ### Bug fixes
+
+  - Fixing window finder cursor display when DPI != 100%
+  - [#203](../../issues/203) - The calling thread cannot access this object because a different thread owns it.
+  - [#207](../../issues/207) - Exception when trying to snoop application with invalid resource definitions inside ResourceDictionary
+  
 ## 3.0.0
 
 - ### Bug fixes
@@ -85,3 +93,4 @@
 - ### Improvements
   
   - Added a new triggers tab to view triggers from ControlTemplates and Styles
+  

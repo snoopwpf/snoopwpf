@@ -31,14 +31,19 @@ namespace Snoop.Controls.ValueEditors
             this.Values.Clear();
 
             var propertyType = this.PropertyType;
-            if (propertyType != null)
+            if (propertyType is not null)
             {
                 var values = Enum.GetValues(propertyType);
                 foreach (var value in values)
                 {
+                    if (value is null)
+                    {
+                        continue;
+                    }
+
                     this.Values.Add(value);
 
-                    if (this.Value != null
+                    if (this.Value is not null
                         && this.Value.Equals(value))
                     {
                         this.valuesView.MoveCurrentTo(value);
@@ -49,7 +54,7 @@ namespace Snoop.Controls.ValueEditors
             this.isValid = true;
         }
 
-        protected override void OnValueChanged(object newValue)
+        protected override void OnValueChanged(object? newValue)
         {
             base.OnValueChanged(newValue);
 
@@ -57,17 +62,17 @@ namespace Snoop.Controls.ValueEditors
 
             // sneaky trick here. only if both are non-null is this a change
             // caused by the user. If so, set the bool to track it.
-            if (this.PropertyInfo != null
-                && newValue != null)
+            if (this.PropertyInfo is not null
+                && newValue is not null)
             {
                 this.PropertyInfo.IsValueChangedByUser = true;
             }
         }
 
-        private void HandleSelectionChanged(object sender, EventArgs e)
+        private void HandleSelectionChanged(object? sender, EventArgs e)
         {
             if (this.isValid
-                && this.Value != null)
+                && this.Value is not null)
             {
                 if (!this.Value.Equals(this.valuesView.CurrentItem))
                 {

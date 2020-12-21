@@ -13,23 +13,23 @@ namespace Snoop.Controls.ValueEditors
 
     public class ValueEditorTemplateSelector : DataTemplateSelector
     {
-        public DataTemplate StandardTemplate { get; set; }
+        public DataTemplate? StandardTemplate { get; set; }
 
-        public DataTemplate EnumTemplate { get; set; }
+        public DataTemplate? EnumTemplate { get; set; }
 
-        public DataTemplate BoolTemplate { get; set; }
+        public DataTemplate? BoolTemplate { get; set; }
 
-        public DataTemplate StringTemplate { get; set; }
+        public DataTemplate? StringTemplate { get; set; }
 
-        public DataTemplate BrushTemplate { get; set; }
+        public DataTemplate? BrushTemplate { get; set; }
 
-        public DataTemplate WithResourceKeyTemplate { get; set; }
+        public DataTemplate? WithResourceKeyTemplate { get; set; }
 
-        public override DataTemplate SelectTemplate(object item, DependencyObject container)
+        public override DataTemplate? SelectTemplate(object? item, DependencyObject container)
         {
-            var property = (PropertyInformation)item;
+            var property = (PropertyInformation?)item;
 
-            if (property == null)
+            if (property is null)
             {
                 return null;
             }

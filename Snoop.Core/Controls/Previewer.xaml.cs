@@ -13,8 +13,8 @@ namespace Snoop.Controls
 
     public partial class Previewer
     {
-        public static readonly RoutedCommand MagnifyCommand = new RoutedCommand(nameof(MagnifyCommand), typeof(Previewer));
-        public static readonly RoutedCommand ScreenshotCommand = new RoutedCommand(nameof(ScreenshotCommand), typeof(Previewer));
+        public static readonly RoutedCommand MagnifyCommand = new(nameof(MagnifyCommand), typeof(Previewer));
+        public static readonly RoutedCommand ScreenshotCommand = new(nameof(ScreenshotCommand), typeof(Previewer));
 
         public Previewer()
         {
@@ -44,7 +44,7 @@ namespace Snoop.Controls
                 typeof(object),
                 typeof(Previewer),
                 new FrameworkPropertyMetadata(
-                    (object)null,
+                    default,
                     OnTargetChanged));
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace Snoop.Controls
 
         private void HandleCanMagnify(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = this.Target as Visual != null;
+            e.CanExecute = this.Target as Visual is not null;
             e.Handled = true;
         }
 
@@ -134,7 +134,7 @@ namespace Snoop.Controls
 
         private void HandleCanScreenshot(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = this.Target as Visual != null;
+            e.CanExecute = this.Target as Visual is not null;
             e.Handled = true;
         }
 

@@ -23,14 +23,14 @@ namespace Snoop
 
     public partial class WindowFinder
     {
-        private static readonly Point cursorHotSpot = new Point(16, 20);
+        private static readonly Point cursorHotSpot = new(16, 20);
         private readonly Cursor crosshairsCursor;
         private Point startPoint;
-        private WindowInfo currentWindowInfo;
+        private WindowInfo? currentWindowInfo;
         private readonly LowLevelMouseHook lowLevelMouseHook;
 
-        private Cursor currentWindowInfoCursor;
-        private Cursor lastWindowInfoCursor;
+        private Cursor? currentWindowInfoCursor;
+        private Cursor? lastWindowInfoCursor;
 
         public WindowFinder()
         {
@@ -44,7 +44,7 @@ namespace Snoop
 
         public WindowFinderType WindowFinderType { get; set; }
 
-        public WindowInfoControl WindowInfoControl { get; } = new WindowInfoControl();
+        public WindowInfoControl WindowInfoControl { get; } = new();
 
         /// <inheritdoc />
         protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
@@ -80,7 +80,7 @@ namespace Snoop
 
             this.StopSnoopTargetsSearch();
 
-            if (windowInfoToUse != null
+            if (windowInfoToUse is not null
                 && windowInfoToUse.IsValidProcess)
             {
                 if (this.WindowFinderType == WindowFinderType.Snoop)
@@ -174,7 +174,7 @@ namespace Snoop
 
         public static void AttachSnoop(WindowInfo windowInfo)
         {
-            var result = windowInfo.OwningProcessInfo.Snoop(windowInfo.HWnd);
+            var result = windowInfo.OwningProcessInfo?.Snoop(windowInfo.HWnd);
 
             if (result?.Success == false)
             {
@@ -184,7 +184,7 @@ namespace Snoop
 
         private static void AttachMagnify(WindowInfo windowInfo)
         {
-            var result = windowInfo.OwningProcessInfo.Magnify(windowInfo.HWnd);
+            var result = windowInfo.OwningProcessInfo?.Magnify(windowInfo.HWnd);
 
             if (result?.Success == false)
             {

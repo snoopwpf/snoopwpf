@@ -47,7 +47,7 @@ namespace Snoop.Controls
                 typeof(object),
                 typeof(ZoomerControl),
                 new FrameworkPropertyMetadata(
-                    (object)null,
+                    default,
                     OnTargetChanged));
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Snoop.Controls
         {
             this.ResetZoomAndTranslation();
 
-            if (this.pooSniffer == null)
+            if (this.pooSniffer is null)
             {
                 this.pooSniffer = this.TryFindResource("poo_sniffer_xpr") as Brush;
             }
@@ -73,7 +73,7 @@ namespace Snoop.Controls
             this.Cursor = this.Target == this.pooSniffer ? null : Cursors.SizeAll;
 
             var element = this.CreateIfPossible(this.Target);
-            if (element != null)
+            if (element is not null)
             {
                 this.Viewbox.Child = element;
             }
@@ -125,7 +125,7 @@ namespace Snoop.Controls
             this.translation.Y = 0.0;
         }
 
-        private UIElement CreateIfPossible(object item)
+        private UIElement? CreateIfPossible(object? item)
         {
             return ZoomerUtilities.CreateIfPossible(item);
         }
@@ -162,7 +162,7 @@ namespace Snoop.Controls
         //        foreach (object value in ((ResourceDictionary)item).Values)
         //        {
         //            UIElement element = CreateIfPossible(value);
-        //            if (element != null)
+        //            if (element is not null)
         //                stackPanel.Children.Add(element);
         //        }
         //        return stackPanel;
@@ -184,31 +184,31 @@ namespace Snoop.Controls
         //    return null;
         //}
 
-        private void Zoom(double zoom, Point offset)
+        private void Zoom(double newZoom, Point offset)
         {
-            var v = new Vector((1 - zoom) * offset.X, (1 - zoom) * offset.Y);
+            var v = new Vector((1 - newZoom) * offset.X, (1 - newZoom) * offset.Y);
 
             var translationVector = v * this.transform.Value;
             this.translation.X += translationVector.X;
             this.translation.Y += translationVector.Y;
 
-            this.zoom.ScaleX *= zoom;
-            this.zoom.ScaleY *= zoom;
+            this.zoom.ScaleX *= newZoom;
+            this.zoom.ScaleY *= newZoom;
         }
 
         private bool IsValidTarget
         {
             get
             {
-                return this.Target != null && this.Target != this.pooSniffer;
+                return this.Target is not null && this.Target != this.pooSniffer;
             }
         }
 
-        private Brush pooSniffer;
+        private Brush? pooSniffer;
 
-        private readonly TranslateTransform translation = new TranslateTransform();
-        private readonly ScaleTransform zoom = new ScaleTransform();
-        private readonly TransformGroup transform = new TransformGroup();
+        private readonly TranslateTransform translation = new();
+        private readonly ScaleTransform zoom = new();
+        private readonly TransformGroup transform = new();
         private Point downPoint;
 
         private const double ZoomFactor = 1.1;

@@ -11,11 +11,11 @@ namespace Snoop.Infrastructure.Helpers
 
     public static class VisualTreeHelper2
     {
-        public delegate HitTestFilterBehavior EnumerateTreeFilterCallback(DependencyObject input, object misc);
+        public delegate HitTestFilterBehavior EnumerateTreeFilterCallback(DependencyObject input, object? misc);
 
-        public delegate HitTestResultBehavior EnumerateTreeResultCallback(DependencyObject input, object misc);
+        public delegate HitTestResultBehavior EnumerateTreeResultCallback(DependencyObject input, object? misc);
 
-        public static T GetAncestor<T>(DependencyObject input, Predicate<T> predicate = null)
+        public static T? GetAncestor<T>(DependencyObject input, Predicate<T>? predicate = null)
             where T : DependencyObject
         {
             var current = input;
@@ -28,7 +28,7 @@ namespace Snoop.Infrastructure.Helpers
                 }
             }
 
-            while (!(current is null))
+            while (current is not null)
             {
                 current = VisualTreeHelper.GetParent(current);
 
@@ -42,7 +42,7 @@ namespace Snoop.Infrastructure.Helpers
             return null;
         }
 
-        public static void EnumerateTree(Visual reference, EnumerateTreeFilterCallback filterCallback, EnumerateTreeResultCallback enumeratorCallback, object misc)
+        public static void EnumerateTree(Visual reference, EnumerateTreeFilterCallback? filterCallback, EnumerateTreeResultCallback? enumeratorCallback, object? misc)
         {
             if (reference is null)
             {
@@ -52,7 +52,7 @@ namespace Snoop.Infrastructure.Helpers
             DoEnumerateTree(reference, filterCallback, enumeratorCallback, misc);
         }
 
-        private static bool DoEnumerateTree(DependencyObject reference, EnumerateTreeFilterCallback filterCallback, EnumerateTreeResultCallback enumeratorCallback, object misc)
+        private static bool DoEnumerateTree(DependencyObject reference, EnumerateTreeFilterCallback? filterCallback, EnumerateTreeResultCallback? enumeratorCallback, object? misc)
         {
             for (var i = 0; i < VisualTreeHelper.GetChildrenCount(reference); ++i)
             {

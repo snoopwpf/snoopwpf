@@ -82,6 +82,6 @@ namespace Snoop.PowerShell
             get { throw new NotImplementedException(); }
         }
 
-        public override string WindowTitle { get; set; }
+        public override string? WindowTitle { get; set; }
     }
 }

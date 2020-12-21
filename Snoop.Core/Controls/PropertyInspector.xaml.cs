@@ -22,19 +22,19 @@ namespace Snoop.Controls
 
     public partial class PropertyInspector : INotifyPropertyChanged
     {
-        public static readonly RoutedCommand PopTargetCommand = new RoutedCommand(nameof(PopTargetCommand), typeof(PropertyInspector));
+        public static readonly RoutedCommand PopTargetCommand = new(nameof(PopTargetCommand), typeof(PropertyInspector));
 
-        public static readonly RoutedCommand DelveCommand = new RoutedCommand(nameof(DelveCommand), typeof(PropertyInspector));
-        public static readonly RoutedCommand DelveBindingCommand = new RoutedCommand(nameof(DelveBindingCommand), typeof(PropertyInspector));
-        public static readonly RoutedCommand DelveBindingExpressionCommand = new RoutedCommand(nameof(DelveBindingExpressionCommand), typeof(PropertyInspector));
-        public static readonly RoutedCommand CopyResourceNameCommand = new RoutedCommand(nameof(CopyResourceNameCommand), typeof(PropertyInspector));
-        public static readonly RoutedCommand CopyXamlCommand = new RoutedCommand(nameof(CopyXamlCommand), typeof(PropertyInspector));
+        public static readonly RoutedCommand DelveCommand = new(nameof(DelveCommand), typeof(PropertyInspector));
+        public static readonly RoutedCommand DelveBindingCommand = new(nameof(DelveBindingCommand), typeof(PropertyInspector));
+        public static readonly RoutedCommand DelveBindingExpressionCommand = new(nameof(DelveBindingExpressionCommand), typeof(PropertyInspector));
+        public static readonly RoutedCommand CopyResourceNameCommand = new(nameof(CopyResourceNameCommand), typeof(PropertyInspector));
+        public static readonly RoutedCommand CopyXamlCommand = new(nameof(CopyXamlCommand), typeof(PropertyInspector));
 
-        public static readonly RoutedCommand NavigateToAssemblyInExplorerCommand = new RoutedCommand(nameof(NavigateToAssemblyInExplorerCommand), typeof(PropertyInspector));
+        public static readonly RoutedCommand NavigateToAssemblyInExplorerCommand = new(nameof(NavigateToAssemblyInExplorerCommand), typeof(PropertyInspector));
 
-        public static readonly RoutedCommand UpdateBindingErrorCommand = new RoutedCommand(nameof(UpdateBindingErrorCommand), typeof(PropertyInspector));
+        public static readonly RoutedCommand UpdateBindingErrorCommand = new(nameof(UpdateBindingErrorCommand), typeof(PropertyInspector));
 
-        private object target;
+        private object? target;
 
         public PropertyInspector()
         {
@@ -58,8 +58,8 @@ namespace Snoop.Controls
             this.MouseDown += this.MouseDownHandler;
             this.KeyDown += this.PropertyInspector_KeyDown;
 
-            this.checkBoxClearAfterDelve.Checked += (s, e) => Settings.Default.ClearAfterDelve = this.checkBoxClearAfterDelve.IsChecked.HasValue && this.checkBoxClearAfterDelve.IsChecked.Value;
-            this.checkBoxClearAfterDelve.Unchecked += (s, e) => Settings.Default.ClearAfterDelve = this.checkBoxClearAfterDelve.IsChecked.HasValue && this.checkBoxClearAfterDelve.IsChecked.Value;
+            this.checkBoxClearAfterDelve.Checked += (_, _) => Settings.Default.ClearAfterDelve = this.checkBoxClearAfterDelve.IsChecked.HasValue && this.checkBoxClearAfterDelve.IsChecked.Value;
+            this.checkBoxClearAfterDelve.Unchecked += (_, _) => Settings.Default.ClearAfterDelve = this.checkBoxClearAfterDelve.IsChecked.HasValue && this.checkBoxClearAfterDelve.IsChecked.Value;
 
             this.checkBoxClearAfterDelve.IsChecked = Settings.Default.ClearAfterDelve;
         }
@@ -83,7 +83,8 @@ namespace Snoop.Controls
         {
             try
             {
-                ClipboardHelper.SetText(((PropertyInformation)e.Parameter).ResourceKey);
+                var resourceKey = ((PropertyInformation?)e.Parameter)?.ResourceKey ?? string.Empty;
+                ClipboardHelper.SetText(resourceKey);
             }
             catch (Exception exception)
             {
@@ -105,7 +106,8 @@ namespace Snoop.Controls
         {
             try
             {
-                var xaml = XamlWriterHelper.GetXamlAsString(((PropertyInformation)e.Parameter).Value);
+                var value = ((PropertyInformation?)e.Parameter)?.Value;
+                var xaml = XamlWriterHelper.GetXamlAsString(value);
                 ClipboardHelper.SetText(xaml);
             }
             catch (Exception exception)
@@ -117,7 +119,7 @@ namespace Snoop.Controls
         private void CanCopyXaml(object sender, CanExecuteRoutedEventArgs e)
         {
             if (e.Parameter is PropertyInformation propertyInformation
-                && propertyInformation.Value != null)
+                && propertyInformation.Value is not null)
             {
                 e.CanExecute = true;
             }
@@ -125,7 +127,7 @@ namespace Snoop.Controls
             e.Handled = true;
         }
 
-        public object RootTarget
+        public object? RootTarget
         {
             get { return this.GetValue(RootTargetProperty); }
             set { this.SetValue(RootTargetProperty, value); }
@@ -152,7 +154,7 @@ namespace Snoop.Controls
             inspector.targetToFilter.Clear();
         }
 
-        public object Target
+        public object? Target
         {
             get => this.target;
             set
@@ -172,16 +174,16 @@ namespace Snoop.Controls
             }
         }
 
-        private static void HandleTargetChanged(PropertyInspector inspector, object oldValue, object newValue)
+        private static void HandleTargetChanged(PropertyInspector inspector, object? oldValue, object? newValue)
         {
-            if (newValue != null)
+            if (newValue is not null)
             {
                 inspector.inspectStack.Add(newValue);
             }
 
             if (ReferenceEquals(inspector.lastRootTarget, inspector.RootTarget)
-                && oldValue != null
-                && newValue != null
+                && oldValue is not null
+                && newValue is not null
                 && inspector.checkBoxClearAfterDelve.IsChecked.GetValueOrDefault(false))
             {
                 inspector.targetToFilter[oldValue.GetType()] = inspector.PropertiesFilter.Text;
@@ -212,19 +214,19 @@ namespace Snoop.Controls
             return delvePath.ToString();
         }
 
-        private Type GetCurrentDelveType(Type rootTargetType)
+        private Type? GetCurrentDelveType(Type rootTargetType)
         {
             if (this.delvePathList.Count > 0)
             {
                 var lastDelveEntry = this.delvePathList.Last();
 
                 if (lastDelveEntry.Value is ISkipDelve skipDelve
-                    && skipDelve.NextValue != null
-                    && skipDelve.NextValueType != null)
+                    && skipDelve.NextValue is not null
+                    && skipDelve.NextValueType is not null)
                 {
                     return skipDelve.NextValueType; //we want to make this "future friendly", so we take into account that the string value of the property type may change.
                 }
-                else if (lastDelveEntry.Value != null)
+                else if (lastDelveEntry.Value is not null)
                 {
                     return lastDelveEntry.Value.GetType();
                 }
@@ -248,9 +250,9 @@ namespace Snoop.Controls
         {
             get
             {
-                if (this.RootTarget == null)
+                if (this.RootTarget is null)
                 {
-                    return "object is NULL";
+                    return "Target object is NULL";
                 }
 
                 var rootTargetType = this.RootTarget.GetType();
@@ -260,11 +262,11 @@ namespace Snoop.Controls
             }
         }
 
-        public Type DelveType
+        public Type? DelveType
         {
             get
             {
-                if (this.RootTarget == null)
+                if (this.RootTarget is null)
                 {
                     return null;
                 }
@@ -274,11 +276,11 @@ namespace Snoop.Controls
             }
         }
 
-        public Type Type
+        public Type? Type
         {
             get
             {
-                if (this.Target != null)
+                if (this.Target is not null)
                 {
                     return this.Target.GetType();
                 }
@@ -287,15 +289,15 @@ namespace Snoop.Controls
             }
         }
 
-        public void PushTarget(object target)
+        public void PushTarget(object? newTarget)
         {
-            this.Target = target;
+            this.Target = newTarget;
         }
 
-        public void SetTarget(object target)
+        public void SetTarget(object newTarget)
         {
             this.inspectStack.Clear();
-            this.Target = target;
+            this.Target = newTarget;
         }
 
         private void HandlePopTarget(object sender, ExecutedRoutedEventArgs e)
@@ -329,15 +331,14 @@ namespace Snoop.Controls
             }
         }
 
-        private object GetRealTarget(object target)
+        private object? GetRealTarget(object? newTarget)
         {
-            var skipDelve = target as ISkipDelve;
-            if (skipDelve != null)
+            if (newTarget is ISkipDelve skipDelve)
             {
                 return skipDelve.NextValue;
             }
 
-            return target;
+            return newTarget;
         }
 
         private void HandleDelve(object sender, ExecutedRoutedEventArgs e)
@@ -378,7 +379,7 @@ namespace Snoop.Controls
         private static void CanDelve(object sender, CanExecuteRoutedEventArgs e)
         {
             if (e.Parameter is PropertyInformation propertyInformation
-                && propertyInformation.Value != null)
+                && propertyInformation.Value is not null)
             {
                 e.CanExecute = true;
             }
@@ -389,7 +390,7 @@ namespace Snoop.Controls
         private static void CanDelveBinding(object sender, CanExecuteRoutedEventArgs e)
         {
             if (e.Parameter is PropertyInformation propertyInformation
-                && propertyInformation.Binding != null)
+                && propertyInformation.Binding is not null)
             {
                 e.CanExecute = true;
             }
@@ -400,7 +401,7 @@ namespace Snoop.Controls
         private static void CanDelveBindingExpression(object sender, CanExecuteRoutedEventArgs e)
         {
             if (e.Parameter is PropertyInformation propertyInformation
-                && propertyInformation.BindingExpression != null)
+                && propertyInformation.BindingExpression is not null)
             {
                 e.CanExecute = true;
             }
@@ -465,9 +466,9 @@ namespace Snoop.Controls
             get { return this.propertyFilter; }
         }
 
-        private readonly PropertyFilter propertyFilter = new PropertyFilter(string.Empty, true);
+        private readonly PropertyFilter propertyFilter = new(string.Empty, true);
 
-        public string StringFilter
+        public string? StringFilter
         {
             get { return this.propertyFilter.FilterString; }
 
@@ -533,7 +534,7 @@ namespace Snoop.Controls
         /// Hold the SelectedFilterSet in the PropertyFilter class, but track it here, so we know
         /// when to "refresh" the filtering with filterCall.Enqueue
         /// </summary>
-        public PropertyFilterSet SelectedFilterSet
+        public PropertyFilterSet? SelectedFilterSet
         {
             get { return this.propertyFilter.SelectedFilterSet ?? this.AllFilterSets[0]; }
 
@@ -542,7 +543,7 @@ namespace Snoop.Controls
                 this.propertyFilter.SelectedFilterSet = value;
                 this.OnPropertyChanged(nameof(this.SelectedFilterSet));
 
-                if (value == null)
+                if (value is null)
                 {
                     return;
                 }
@@ -587,7 +588,7 @@ namespace Snoop.Controls
         {
             get
             {
-                if (this.userFilterSets == null)
+                if (this.userFilterSets is null)
                 {
                     var ret = new List<PropertyFilterSet>();
 
@@ -595,7 +596,7 @@ namespace Snoop.Controls
                     {
                         var userFilters = Settings.Default.UserDefinedPropertyFilterSets;
 
-                        if (userFilters != null)
+                        if (userFilters is not null)
                         {
                             ret.AddRange(userFilters);
                         }
@@ -627,7 +628,7 @@ namespace Snoop.Controls
         {
             get
             {
-                if (this.allFilterSets != null)
+                if (this.allFilterSets is not null)
                 {
                     return this.allFilterSets;
                 }
@@ -672,29 +673,38 @@ namespace Snoop.Controls
         /// Cleanse the property names in each filter in the collection.
         /// This includes removing spaces from each one, and making them all lower case
         /// </summary>
-        private static PropertyFilterSet[] CleanFiltersForUserFilters(ICollection<PropertyFilterSet> collection)
+        private static PropertyFilterSet[] CleanFiltersForUserFilters(ICollection<PropertyFilterSet>? collection)
         {
+            if (collection is null)
+            {
+#if NET40
+                return new PropertyFilterSet[0];
+#else
+                return Array.Empty<PropertyFilterSet>();
+#endif
+            }
+
             foreach (var filterItem in collection)
             {
-                filterItem.Properties = filterItem.Properties.Select(s => s.ToLower().Trim()).ToArray();
+                filterItem.Properties = filterItem.Properties?.Select(s => s.ToLower().Trim()).ToArray();
             }
 
             return collection.Where(x => x.IsReadOnly == false).ToArray();
         }
 
-        private readonly List<object> inspectStack = new List<object>();
-        private PropertyFilterSet[] userFilterSets;
-        private readonly List<PropertyInformation> delvePathList = new List<PropertyInformation>();
+        private readonly List<object> inspectStack = new();
+        private PropertyFilterSet[]? userFilterSets;
+        private readonly List<PropertyInformation> delvePathList = new();
 
         private readonly Inspector inspector;
-        private object lastRootTarget;
-        private readonly Dictionary<object, string> targetToFilter = new Dictionary<object, string>();
+        private object? lastRootTarget;
+        private readonly Dictionary<object, string> targetToFilter = new();
 
-        private PropertyFilterSet[] allFilterSets;
+        private PropertyFilterSet[]? allFilterSets;
 
         private readonly PropertyFilterSet[] defaultFilterSets =
         {
-            new PropertyFilterSet
+            new()
             {
                 DisplayName = "Layout",
                 IsReadOnly = true,
@@ -708,7 +718,7 @@ namespace Snoop.Controls
                     "horizontalcontentalignment", "verticalcontentalignment",
                 }
             },
-            new PropertyFilterSet
+            new()
             {
                 DisplayName = "Grid/Dock",
                 IsReadOnly = true,
@@ -717,7 +727,7 @@ namespace Snoop.Controls
                     "grid", "dock"
                 }
             },
-            new PropertyFilterSet
+            new()
             {
                 DisplayName = "Color",
                 IsReadOnly = true,
@@ -726,7 +736,7 @@ namespace Snoop.Controls
                     "color", "background", "foreground", "borderbrush", "fill", "stroke"
                 }
             },
-            new PropertyFilterSet
+            new()
             {
                 DisplayName = "ItemsControl",
                 IsReadOnly = true,
@@ -738,7 +748,7 @@ namespace Snoop.Controls
         };
 
         #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected void OnPropertyChanged(string propertyName)

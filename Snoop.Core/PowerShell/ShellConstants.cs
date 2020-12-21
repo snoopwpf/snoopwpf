@@ -73,7 +73,7 @@ namespace Snoop.PowerShell
                     }
 
                     var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\PowerShellCore\InstalledVersions\31ab5147-9a97-4452-8443-d9709f0516e1");
-                    if (key != null)
+                    if (key is not null)
                     {
                         var keyValue = key.GetValue("SemanticVersion") as string;
                         if (Version.TryParse(keyValue, out var version)
@@ -86,7 +86,7 @@ namespace Snoop.PowerShell
                     return false;
                 #elif NET40
                     var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\PowerShell\3\PowerShellEngine");
-                    if (key != null)
+                    if (key is not null)
                     {
                         var keyValue = key.GetValue("PowerShellVersion") as string;
                         if (Version.TryParse(keyValue, out var version)

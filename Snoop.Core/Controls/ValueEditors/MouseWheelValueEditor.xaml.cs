@@ -24,12 +24,12 @@ namespace Snoop.Controls.ValueEditors
             this.MouseWheel += this.MouseWheelHandler;
         }
 
-        private PropertyInformation PropertyInfo => this.DataContext as PropertyInformation;
+        private PropertyInformation? PropertyInfo => this.DataContext as PropertyInformation;
 
         private void MouseWheelHandler(object sender, MouseWheelEventArgs e)
         {
             var fe = e.OriginalSource as FrameworkElement;
-            if (fe == null)
+            if (fe is null)
             {
                 return;
             }
@@ -56,9 +56,11 @@ namespace Snoop.Controls.ValueEditors
             }
 
             var tb = fe as TextBlock;
-            if (tb != null)
+            if (tb is not null
+                && tb.Tag is not null
+                && this.PropertyInfo?.Property is not null)
             {
-                var fieldNum = int.Parse(tb.Tag.ToString());
+                var fieldNum = int.Parse(tb.Tag.ToString()!);
 
                 switch (this.PropertyInfo.Property.PropertyType.Name)
                 {
@@ -174,9 +176,9 @@ namespace Snoop.Controls.ValueEditors
 
             value = Math.Min(Enum.GetValues(typeof(T)).Length - 1, Math.Max(0, value));
             // long way around to get the enum typed value from the integer
-            ret = (T)Enum.GetValues(typeof(T)).GetValue(value);
+            ret = (T)Enum.GetValues(typeof(T)).GetValue(value)!;
 
-            return ret.ToString();
+            return ret.ToString()!;
         }
 
         /// <summary>
@@ -200,7 +202,7 @@ namespace Snoop.Controls.ValueEditors
             newVal += change;
 
             var partValue = newVal.ToString();
-            var currentValue = this.PropertyInfo.StringValue;
+            var currentValue = this.PropertyInfo!.StringValue;
 
             // chop the current value up into its parts
             var fields = currentValue.Split(',');
@@ -235,7 +237,7 @@ namespace Snoop.Controls.ValueEditors
             ret = Math.Min(255, Math.Max(0, ret + change));
 
             var partValue = ret.ToString("X2");
-            var currentValue = this.PropertyInfo.StringValue;
+            var currentValue = this.PropertyInfo!.StringValue;
 
             // chop the current value up into its parts
             var fields = new string[4];

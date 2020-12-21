@@ -10,9 +10,15 @@ namespace Snoop.Views.MethodsTab
 
     public class AssemblyNamePair : IComparable
     {
-        public string Name { get; set; }
+        public AssemblyNamePair(Assembly assembly)
+        {
+            this.Assembly = assembly ?? throw new ArgumentNullException(nameof(assembly));
+            this.Name = this.Assembly.FullName!;
+        }
 
-        public Assembly Assembly { get; set; }
+        public Assembly Assembly { get; }
+        
+        public string Name { get; }
 
         public override string ToString()
         {
@@ -21,9 +27,9 @@ namespace Snoop.Views.MethodsTab
 
         #region IComparable Members
 
-        public int CompareTo(object obj)
+        public int CompareTo(object? obj)
         {
-            return this.Name.CompareTo(((AssemblyNamePair)obj).Name);
+            return string.Compare(this.Name, (obj as AssemblyNamePair)?.Name, StringComparison.Ordinal);
         }
 
         #endregion

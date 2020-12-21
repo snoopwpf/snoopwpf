@@ -4,7 +4,7 @@
 
     public static class TriggerItemFactory
     {
-        public static TriggerItemBase GetTriggerItem(TriggerBase trigger, DependencyObject source, TriggerSource triggerSource)
+        public static TriggerItemBase? GetTriggerItem(TriggerBase trigger, DependencyObject source, TriggerSource triggerSource)
         {
             TriggerItemBase triggerItem;
             if (trigger is Trigger)

@@ -11,6 +11,7 @@
   <PropertyGroup>
     <LangVersion>preview</LangVersion>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Nullable>enable</Nullable>
     <NoWarn>$(NoWarn);NU1503</NoWarn>
   </PropertyGroup>
 

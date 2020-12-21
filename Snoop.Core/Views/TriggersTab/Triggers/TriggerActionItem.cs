@@ -16,9 +16,9 @@
 
         public TriggerAction TriggerAction { get; }
 
-        public string DescriptiveValue { get; protected set; }
+        public string? DescriptiveValue { get; protected set; }
 
-        public object ToolTip { get; protected set; }
+        public object? ToolTip { get; protected set; }
 
         public virtual void Initialize()
         {

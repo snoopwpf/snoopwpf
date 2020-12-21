@@ -20,25 +20,25 @@ namespace Snoop.Controls.ValueEditors
 
         private bool isUpdatingValue;
 
-        public string StringValue
+        public string? StringValue
         {
-            get => (string)this.GetValue(StringValueProperty);
+            get => (string?)this.GetValue(StringValueProperty);
             set => this.SetValue(StringValueProperty, value);
         }
 
         private static void OnStringValueChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            ((StandardValueEditor)sender).OnStringValueChanged((string)e.NewValue);
+            ((StandardValueEditor)sender).OnStringValueChanged((string?)e.NewValue);
         }
 
-        protected virtual void OnStringValueChanged(string newValue)
+        protected virtual void OnStringValueChanged(string? newValue)
         {
             if (this.isUpdatingValue)
             {
                 return;
             }
 
-            if (this.PropertyInfo != null)
+            if (this.PropertyInfo is not null)
             {
                 this.PropertyInfo.IsValueChangedByUser = true;
             }
@@ -48,14 +48,14 @@ namespace Snoop.Controls.ValueEditors
             this.Value = StringValueConverter.ConvertFromString(targetType, newValue);
         }
 
-        protected override void OnValueChanged(object newValue)
+        protected override void OnValueChanged(object? newValue)
         {
             this.isUpdatingValue = true;
 
             var value = this.Value;
-            if (value != null)
+            if (value is not null)
             {
-                this.StringValue = StringValueConverter.ConvertToString(value.GetType(), value);
+                this.StringValue = StringValueConverter.ConvertToString(value.GetType(), value) ?? string.Empty;
             }
             else
             {

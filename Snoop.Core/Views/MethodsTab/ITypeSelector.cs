@@ -13,7 +13,7 @@ namespace Snoop.Views.MethodsTab
 
         bool? DialogResult { get; }
 
-        object Instance { get; }
+        object? Instance { get; }
 
         WindowStartupLocation WindowStartupLocation { get; set; }
 

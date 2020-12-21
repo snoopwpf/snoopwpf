@@ -19,13 +19,13 @@ namespace Snoop.Windows
 
     public sealed partial class Zoomer
     {
-        private readonly TranslateTransform translation = new TranslateTransform();
-        private readonly ScaleTransform zoom = new ScaleTransform();
-        private readonly TransformGroup transform = new TransformGroup();
+        private readonly TranslateTransform translation = new();
+        private readonly ScaleTransform zoom = new();
+        private readonly TransformGroup transform = new();
         private Point downPoint;
-        private object target;
-        private Visual targetVisual;
-        private VisualTree3DView visualTree3DView;
+        private object? target;
+        private Visual? targetVisual;
+        private VisualTree3DView? visualTree3DView;
 
         private const double ZoomFactor = 1.1;
 
@@ -80,7 +80,7 @@ namespace Snoop.Windows
             this.Target = root;
         }
 
-        public override object Target
+        public override object? Target
         {
             get => this.target;
 
@@ -122,14 +122,14 @@ namespace Snoop.Windows
         }
 
         /// <inheritdoc />
-        protected override object FindRoot()
+        protected override object? FindRoot()
         {
             var root = base.FindRoot();
 
             if (root is Application application)
             {
                 // try to use the application's main window (if visible) as the root
-                if (application.MainWindow != null
+                if (application.MainWindow is not null
                     && application.MainWindow.Visibility == Visibility.Visible)
                 {
                     root = application.MainWindow;
@@ -137,8 +137,13 @@ namespace Snoop.Windows
                 else
                 {
                     // else search for the first visible window in the list of the application's windows
-                    foreach (Window appWindow in application.Windows)
+                    foreach (Window? appWindow in application.Windows)
                     {
+                        if (appWindow is null)
+                        {
+                            continue;
+                        }
+
                         if (appWindow.CheckAccess()
                             && appWindow.Visibility == Visibility.Visible)
                         {
@@ -161,7 +166,7 @@ namespace Snoop.Windows
             this.zoom.CenterX = 0;
             this.zoom.CenterY = 0;
 
-            if (this.visualTree3DView != null)
+            if (this.visualTree3DView is not null)
             {
                 this.visualTree3DView = null;
                 this.ZScaleSlider.Value = 0;
@@ -211,7 +216,7 @@ namespace Snoop.Windows
 
         private void HandleSwitchTo2D(object sender, ExecutedRoutedEventArgs args)
         {
-            if (this.visualTree3DView != null)
+            if (this.visualTree3DView is not null)
             {
                 this.Target = this.target;
                 this.visualTree3DView = null;
@@ -221,8 +226,8 @@ namespace Snoop.Windows
 
         private void HandleSwitchTo3D(object sender, ExecutedRoutedEventArgs args)
         {
-            if (this.visualTree3DView == null
-                && this.targetVisual != null)
+            if (this.visualTree3DView is null
+                && this.targetVisual is not null)
             {
                 this.CreateAndSetVisualTree3DView(this.targetVisual);
 
@@ -230,13 +235,21 @@ namespace Snoop.Windows
             }
         }
 
-        private void CreateAndSetVisualTree3DView(Visual visual)
+        private void CreateAndSetVisualTree3DView(Visual? visual)
         {
             try
             {
                 Mouse.OverrideCursor = Cursors.Wait;
 
-                this.visualTree3DView = new VisualTree3DView(visual, int.Parse(((TextBlock)((ComboBoxItem)this.dpiBox.SelectedItem).Content).Text));
+                if (visual is not null)
+                {
+                    this.visualTree3DView = new VisualTree3DView(visual, int.Parse(((TextBlock)((ComboBoxItem)this.dpiBox.SelectedItem).Content).Text));
+                }
+                else
+                {
+                    this.visualTree3DView = null;
+                }
+
                 this.Viewbox.Child = this.visualTree3DView;
             }
             finally
@@ -247,7 +260,7 @@ namespace Snoop.Windows
 
         private void CanSwitchTo3D(object sender, CanExecuteRoutedEventArgs args)
         {
-            args.CanExecute = this.targetVisual != null;
+            args.CanExecute = this.targetVisual is not null;
             args.Handled = true;
         }
 
@@ -283,13 +296,13 @@ namespace Snoop.Windows
 
         private void ZScaleSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (this.visualTree3DView != null)
+            if (this.visualTree3DView is not null)
             {
                 this.visualTree3DView.ZScale = Math.Pow(10, e.NewValue);
             }
         }
 
-        private UIElement CreateIfPossible(object item)
+        private UIElement? CreateIfPossible(object? item)
         {
             return ZoomerUtilities.CreateIfPossible(item);
         }
@@ -308,8 +321,8 @@ namespace Snoop.Windows
 
         private void DpiBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (this.visualTree3DView != null
-                && this.targetVisual != null)
+            if (this.visualTree3DView is not null
+                && this.targetVisual is not null)
             {
                 this.translation.X = 0;
                 this.translation.Y = 0;
@@ -327,7 +340,7 @@ namespace Snoop.Windows
     [ValueConversion(typeof(float), typeof(SolidColorBrush))]
     public sealed class DoubleToWhitenessConverter : IValueConverter
     {
-        public static readonly DoubleToWhitenessConverter Default = new DoubleToWhitenessConverter();
+        public static readonly DoubleToWhitenessConverter Default = new();
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -345,7 +358,7 @@ namespace Snoop.Windows
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return null;
+            return Binding.DoNothing;
         }
     }
 }

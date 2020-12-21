@@ -7,7 +7,7 @@ namespace Snoop.Data
 
     public sealed class TransientSettingsData
     {
-        private static readonly XmlSerializer serializer = new XmlSerializer(typeof(TransientSettingsData));
+        private static readonly XmlSerializer serializer = new(typeof(TransientSettingsData));
 
         public TransientSettingsData()
         {
@@ -16,7 +16,7 @@ namespace Snoop.Data
             this.SetWindowOwner = true;
         }
 
-        public static TransientSettingsData Current { get; private set; }
+        public static TransientSettingsData? Current { get; private set; }
 
         public SnoopStartTarget StartTarget { get; set; } = SnoopStartTarget.SnoopUI;
 
@@ -44,7 +44,7 @@ namespace Snoop.Data
 
         public static TransientSettingsData LoadCurrentIfRequired(string settingsFile)
         {
-            if (Current != null)
+            if (Current is not null)
             {
                 return Current;
             }

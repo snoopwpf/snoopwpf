@@ -13,7 +13,7 @@ namespace Snoop.Converters
 
     public class ObjectToStringConverter : IValueConverter
     {
-        public static readonly ObjectToStringConverter Instance = new ObjectToStringConverter();
+        public static readonly ObjectToStringConverter Instance = new();
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

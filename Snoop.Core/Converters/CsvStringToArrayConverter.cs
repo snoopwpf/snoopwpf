@@ -10,15 +10,15 @@ namespace Snoop.Converters
 
     public class CsvStringToArrayConverter : IValueConverter
     {
-        public static readonly CsvStringToArrayConverter Default = new CsvStringToArrayConverter();
+        public static readonly CsvStringToArrayConverter Default = new();
 
         #region IValueConverter Members
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object Convert(object? value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             // value (String[]) 
             // return   string      CSV version of the string array
 
-            if (value == null)
+            if (value is null)
             {
                 return string.Empty;
             }
@@ -27,17 +27,17 @@ namespace Snoop.Converters
             return string.Join(",", val);
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object ConvertBack(object? value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             // value (string)       CSV version of the string array
             // return (string[])    array of strings split by ","
 
-            if (value == null)
+            if (value is null)
             {
                 return new string[0];
             }
 
-            var val = value.ToString().Trim();
+            var val = value.ToString()?.Trim() ?? string.Empty;
             return val.Split(',');
         }
         #endregion

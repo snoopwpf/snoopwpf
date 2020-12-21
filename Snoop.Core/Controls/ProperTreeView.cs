@@ -11,32 +11,27 @@ namespace Snoop.Controls
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
-    using System.Windows.Media;
     using Snoop.Data.Tree;
-    using Snoop.Infrastructure.Helpers;
     using Snoop.Windows;
 
     public class ProperTreeView : TreeView
     {
+        private readonly int maxDepth = 100;
+
+        private SnoopUI? snoopUI;
+
+        // We need this method and what it does because:
+        // If we have a tree with levels greater than 150 then we might get an StackOverflowException during measure/arrange.
+        // To prevent these Exceptions (which immediately crash the program being snooped) we use the item at the current level (minus a few) as the new root node for the tree.
+        // That way we get a "new" tree that is not as deeply nested as before.
         public bool ApplyReduceDepthFilterIfNeeded(ProperTreeViewItem curNode)
         {
-            if (this.pendingRoot != null)
-            {
-                this.OnRootLoaded();
-            }
-
             if (this.maxDepth == 0)
             {
                 return false;
             }
 
-            var rootItem = (TreeItem)this.rootItem.Target;
-            if (rootItem is null)
-            {
-                return false;
-            }
-
-            if (this.snoopUI == null)
+            if (this.snoopUI is null)
             {
                 this.snoopUI = Window.GetWindow(this) as SnoopUI;
 
@@ -48,99 +43,57 @@ namespace Snoop.Controls
 
             var item = (TreeItem)curNode.DataContext;
             var selectedItem = this.snoopUI.CurrentSelection;
-            if (selectedItem != null && item.Depth < selectedItem.Depth)
+
+            if (selectedItem is not null
+                && item.Depth < selectedItem.Depth)
             {
                 item = selectedItem;
             }
 
+            var rootItem = this.GetRootItem();
+
+            if (rootItem is null)
+            {
+                return false;
+            }
+
+            // Do we exceed the current max depth?
             if (item.Depth - rootItem.Depth <= this.maxDepth)
             {
                 return false;
             }
 
-            for (var i = 0; i < this.maxDepth; ++i)
+            if (item.Parent is null)
             {
-                item = item.Parent;
+                return false;
             }
 
-            this.snoopUI.ApplyReduceDepthFilter(item);
+            // Try to show 10 items above new root, that way we can keep a bit of context
+            var newRoot = item.Parent;
+            for (var i = 0; i < 10; ++i)
+            {
+                if (newRoot?.Parent is null)
+                {
+                    break;
+                }
+
+                newRoot = newRoot.Parent;
+            }
+
+            this.snoopUI.ApplyReduceDepthFilter(newRoot!);
+
             return true;
+        }
+
+        private TreeItem? GetRootItem()
+        {
+            return this.Items[0] as TreeItem;
         }
 
         protected override DependencyObject GetContainerForItemOverride()
         {
-            if (this.pendingRoot != null)
-            {
-                this.pendingRoot.Loaded -= this.OnRootLoaded;
-                this.pendingRoot = null;
-            }
-
-            this.pendingRoot = new ProperTreeViewItem(new WeakReference(this));
-            this.pendingRoot.Loaded += this.OnRootLoaded;
-            this.maxDepth = 0;
-            this.rootItem.Target = null;
-            return this.pendingRoot;
+            return new ProperTreeViewItem(new WeakReference(this));
         }
-
-        private void OnRootLoaded(object sender, RoutedEventArgs e)
-        {
-            Debug.Assert(this.pendingRoot == sender, "pendingRoot == sender");
-            this.OnRootLoaded();
-        }
-
-        private void OnRootLoaded()
-        {
-            // The following assumptions are made:
-            // 1. The visual structure of each TreeViewItem is the same regardless of its location.
-            // 2. The control template of a TreeViewItem contains ItemsPresenter.
-            var root = this.pendingRoot;
-
-            this.pendingRoot = null;
-            root.Loaded -= this.OnRootLoaded;
-
-            ItemsPresenter itemsPresenter = null;
-            VisualTreeHelper2.EnumerateTree(root, null,
-                (visual, misc) =>
-                {
-                    itemsPresenter = visual as ItemsPresenter;
-                    if (itemsPresenter != null && itemsPresenter.TemplatedParent == root)
-                    {
-                        return HitTestResultBehavior.Stop;
-                    }
-                    else
-                    {
-                        itemsPresenter = null;
-                        return HitTestResultBehavior.Continue;
-                    }
-                },
-                null);
-
-            if (itemsPresenter != null)
-            {
-                var levelLayoutDepth = 2;
-                DependencyObject tmp = itemsPresenter;
-                while (tmp != root)
-                {
-                    ++levelLayoutDepth;
-                    tmp = VisualTreeHelper.GetParent(tmp);
-                }
-
-                var rootLayoutDepth = 0;
-                while (tmp != null)
-                {
-                    ++rootLayoutDepth;
-                    tmp = VisualTreeHelper.GetParent(tmp);
-                }
-
-                this.maxDepth = (240 - rootLayoutDepth) / levelLayoutDepth;
-                this.rootItem = new WeakReference((TreeItem)root.DataContext);
-            }
-        }
-
-        private int maxDepth;
-        private SnoopUI snoopUI;
-        private ProperTreeViewItem pendingRoot;
-        private WeakReference rootItem = new WeakReference(null);
     }
 
     public class ProperTreeViewItem : TreeViewItem
@@ -172,8 +125,10 @@ namespace Snoop.Controls
 
         protected override DependencyObject GetContainerForItemOverride()
         {
-            var treeViewItem = new ProperTreeViewItem(this.treeView);
-            treeViewItem.Indent = this.Indent + 12;
+            var treeViewItem = new ProperTreeViewItem(this.treeView)
+            {
+                Indent = this.Indent + 12
+            };
             return treeViewItem;
         }
 
@@ -182,14 +137,16 @@ namespace Snoop.Controls
             // Check whether the tree is too deep.
             try
             {
-                var treeView = (ProperTreeView)this.treeView.Target;
-                if (treeView == null || !treeView.ApplyReduceDepthFilterIfNeeded(this))
+                var treeView = (ProperTreeView?)this.treeView.Target;
+                if (treeView is null
+                    || treeView.ApplyReduceDepthFilterIfNeeded(this) == false)
                 {
                     return base.MeasureOverride(constraint);
                 }
             }
-            catch
+            catch (Exception exception)
             {
+                Trace.TraceWarning(exception.ToString());
             }
 
             return new Size(0, 0);
@@ -200,14 +157,16 @@ namespace Snoop.Controls
             // Check whether the tree is too deep.
             try
             {
-                var treeView = (ProperTreeView)this.treeView.Target;
-                if (treeView == null || !treeView.ApplyReduceDepthFilterIfNeeded(this))
+                var treeView = (ProperTreeView?)this.treeView.Target;
+                if (treeView is null
+                    || treeView.ApplyReduceDepthFilterIfNeeded(this) == false)
                 {
                     return base.ArrangeOverride(arrangeBounds);
                 }
             }
-            catch
+            catch (Exception exception)
             {
+                Trace.TraceWarning(exception.ToString());
             }
 
             return new Size(0, 0);
@@ -225,7 +184,7 @@ namespace Snoop.Controls
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return null;
+            return Binding.DoNothing;
         }
     }
 }

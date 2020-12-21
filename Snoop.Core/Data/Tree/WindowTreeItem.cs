@@ -5,7 +5,7 @@
 
     public class WindowTreeItem : DependencyObjectTreeItem
     {
-        public WindowTreeItem(Window target, TreeItem parent, TreeService treeService)
+        public WindowTreeItem(Window target, TreeItem? parent, TreeService treeService)
             : base(target, parent, treeService)
         {
             this.WindowTarget = target;
@@ -15,8 +15,13 @@
 
         protected override void ReloadCore()
         {
-            foreach (Window ownedWindow in this.WindowTarget.OwnedWindows)
+            foreach (Window? ownedWindow in this.WindowTarget.OwnedWindows)
             {
+                if (ownedWindow is null)
+                {
+                    continue;
+                }
+
                 if (ownedWindow.IsInitialized == false
                     || ownedWindow.CheckAccess() == false
                     || ownedWindow.IsPartOfSnoopVisualTree())

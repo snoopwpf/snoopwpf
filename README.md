@@ -23,7 +23,7 @@ It allows you to spy/browse the visual tree of a running application (without th
 
 ## Versions
 
-### [3.0.0](../../tree/develop) (preview)
+### [3.0.0](../../releases/tag/v3.0.0)
 
 You can read the [changelog](Changelog.md) for details on what changed in this version.
 Please note that this version is not yet finished.
@@ -36,7 +36,7 @@ Highlights:
 - Snooping disabled controls when holding CTRL + SHIFT works now
 - Snoop now filters uncommon properties by default
 - Snoop is now able to show `MergedDictionaries` from `ResourceDictionary`
-- Snoop now has two tracking modes. 
+- Snoop now has two tracking modes.
   - Holding CTRL tries to skip template parts
   - Holding CTRL + SHIFT does not skip template parts
 - Drastically improved performance of AppChooser.Refresh() (thanks @mikel785)
@@ -95,8 +95,9 @@ Just open `Snoop.sln` with Visual Studio 2019 (16.7 or later) and build it.
 Please note that you need the Visual Studio 2019 C++ payload and in case you are using a later version you also need the VC++ 142 payload.
 
 Requirements:
-- Visual Studio 2019 16.7 (including C++ payload)
-- .NET Core SDK 3.1.400
+
+- Visual Studio 2019 16.8 (including C++ payload)
+- .NET Core SDK 5.0.100
 
 ## Contributors
 

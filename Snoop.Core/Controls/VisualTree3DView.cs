@@ -15,11 +15,11 @@ namespace Snoop.Controls
 
     public class VisualTree3DView : Viewport3D
     {
-        private static readonly Pen outlinePen = new Pen(new SolidColorBrush(Color.FromArgb(128, 255, 0, 0)), 2);
+        private static readonly Pen outlinePen = new(new SolidColorBrush(Color.FromArgb(128, 255, 0, 0)), 2);
 
         private readonly bool drawOutlines = false;
         private readonly bool includeEmptyVisuals = false;
-        private readonly TrackballBehavior trackballBehavior;
+        private readonly TrackballBehavior? trackballBehavior;
         private readonly ScaleTransform3D zScaleTransform;
 
         public VisualTree3DView(Visual visual, int dpi)
@@ -33,7 +33,11 @@ namespace Snoop.Controls
             var group = new Model3DGroup();
             group.Children.Add(directionalLight1);
             group.Children.Add(directionalLight2);
-            group.Children.Add(model);
+            if (model is not null)
+            {
+                group.Children.Add(model);
+            }
+
             this.zScaleTransform = new ScaleTransform3D();
             group.Transform = this.zScaleTransform;
 
@@ -42,22 +46,25 @@ namespace Snoop.Controls
                 Content = @group
             };
 
-            var bounds = model.Bounds;
-            const double fieldOfView = 45;
-            var lookAtPoint = new Point3D(bounds.X + (bounds.SizeX / 2), bounds.Y + (bounds.SizeY / 2), bounds.Z + (bounds.SizeZ / 2));
-            var cameraDistance = 0.5 * bounds.SizeX / Math.Tan(0.5 * fieldOfView * Math.PI / 180);
-            var position = lookAtPoint - new Vector3D(0, 0, cameraDistance);
-            Camera camera = new PerspectiveCamera(position, new Vector3D(0, 0, 1), new Vector3D(0, -1, 0), fieldOfView);
+            if (model is not null)
+            {
+                var bounds = model.Bounds;
+                const double fieldOfView = 45;
+                var lookAtPoint = new Point3D(bounds.X + (bounds.SizeX / 2), bounds.Y + (bounds.SizeY / 2), bounds.Z + (bounds.SizeZ / 2));
+                var cameraDistance = 0.5 * bounds.SizeX / Math.Tan(0.5 * fieldOfView * Math.PI / 180);
+                var position = lookAtPoint - new Vector3D(0, 0, cameraDistance);
+                Camera camera = new PerspectiveCamera(position, new Vector3D(0, 0, 1), new Vector3D(0, -1, 0), fieldOfView);
 
-            this.zScaleTransform.CenterZ = lookAtPoint.Z;
+                this.zScaleTransform.CenterZ = lookAtPoint.Z;
 
-            this.Children.Add(modelVisual);
-            this.Camera = camera;
+                this.Children.Add(modelVisual);
+                this.Camera = camera;
+                this.trackballBehavior = new TrackballBehavior(this, lookAtPoint);
+            }
+
             this.ClipToBounds = false;
             this.Width = 500;
             this.Height = 500;
-
-            this.trackballBehavior = new TrackballBehavior(this, lookAtPoint);
         }
 
         public double ZScale
@@ -68,13 +75,18 @@ namespace Snoop.Controls
 
         public void Reset()
         {
-            this.trackballBehavior.Reset();
+            this.trackballBehavior?.Reset();
             this.ZScale = 1;
         }
 
-        private Model3D ConvertVisualToModel3D(Visual visual, int dpi, ref double z)
+        private Model3D? ConvertVisualToModel3D(Visual? visual, int dpi, ref double z)
         {
-            Model3D model = null;
+            if (visual is null)
+            {
+                return null;
+            }
+
+            Model3D? model = null;
             var bounds = VisualTreeHelper.GetContentBounds(visual);
 
             if (visual is Viewport3D viewport3D)
@@ -121,7 +133,7 @@ namespace Snoop.Controls
             {
                 var group = new Model3DGroup();
 
-                if (model != null)
+                if (model is not null)
                 {
                     group.Children.Add(model);
                 }
@@ -131,7 +143,7 @@ namespace Snoop.Controls
                     if (VisualTreeHelper.GetChild(visual, i) is Visual childVisual)
                     {
                         var childModel = this.ConvertVisualToModel3D(childVisual, dpi, ref z);
-                        if (childModel != null)
+                        if (childModel is not null)
                         {
                             group.Children.Add(childModel);
                         }
@@ -141,7 +153,7 @@ namespace Snoop.Controls
                 model = group;
             }
 
-            if (model != null)
+            if (model is not null)
             {
                 var transform = VisualTreeHelper.GetTransform(visual);
                 var matrix = transform?.Value ?? Matrix.Identity;
@@ -166,7 +178,7 @@ namespace Snoop.Controls
         {
             var viewport3D = visual as Viewport3D;
 
-            if (viewport3D == null)
+            if (viewport3D is null)
             {
                 Drawing drawing = VisualTreeHelper.GetDrawing(visual);
 

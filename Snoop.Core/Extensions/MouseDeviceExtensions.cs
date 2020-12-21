@@ -11,7 +11,7 @@ namespace Snoop
 
     public static class MouseDeviceExtensions
     {
-        private static readonly PropertyInfo rawDirectlyOverPropertyInfo = typeof(MouseDevice).GetProperty("RawDirectlyOver", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+        private static readonly PropertyInfo? rawDirectlyOverPropertyInfo = typeof(MouseDevice).GetProperty("RawDirectlyOver", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
 
         public static IInputElement GetDirectlyOver(this MouseDevice mouseDevice)
         {
@@ -20,14 +20,14 @@ namespace Snoop
                    ?? mouseDevice.DirectlyOver;
         }
 
-        private static FrameworkElement GetElementAtMousePos(Dispatcher dispatcher)
+        private static FrameworkElement? GetElementAtMousePos(Dispatcher dispatcher)
         {
             var windowHandleUnderMouse = NativeMethods.GetWindowUnderMouse();
             var windowUnderMouse = WindowHelper.GetVisibleWindow(windowHandleUnderMouse, dispatcher);
 
-            FrameworkElement directlyOverElement = null;
+            FrameworkElement? directlyOverElement = null;
 
-            if (windowUnderMouse != null)
+            if (windowUnderMouse is not null)
             {
                 VisualTreeHelper.HitTest(windowUnderMouse, FilterCallback, r => ResultCallback(r, ref directlyOverElement), new PointHitTestParameters(Mouse.GetPosition(windowUnderMouse)));
             }
@@ -40,9 +40,9 @@ namespace Snoop
             return HitTestFilterBehavior.Continue;
         }
 
-        private static HitTestResultBehavior ResultCallback(HitTestResult result, ref FrameworkElement directlyOverElement)
+        private static HitTestResultBehavior ResultCallback(HitTestResult? result, ref FrameworkElement? directlyOverElement)
         {
-            if (result != null
+            if (result is not null
                 && result.VisualHit is FrameworkElement frameworkElement
                 && frameworkElement.IsVisible
                 && frameworkElement.IsPartOfSnoopVisualTree() == false)

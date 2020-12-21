@@ -6,7 +6,7 @@
 
     public class InvertBoolConverter : IValueConverter
     {
-        public static readonly InvertBoolConverter DefaultInstance = new InvertBoolConverter();
+        public static readonly InvertBoolConverter DefaultInstance = new();
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

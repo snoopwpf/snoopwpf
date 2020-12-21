@@ -14,7 +14,7 @@ namespace Snoop.Infrastructure
         #region Fields
 
         private readonly Action<object> execute;
-        private readonly Predicate<object> canExecute;
+        private readonly Predicate<object>? canExecute;
 
         #endregion // Fields
 
@@ -25,14 +25,9 @@ namespace Snoop.Infrastructure
         {
         }
 
-        public RelayCommand(Action<object> execute, Predicate<object> canExecute)
+        public RelayCommand(Action<object> execute, Predicate<object>? canExecute)
         {
-            if (execute == null)
-            {
-                throw new ArgumentNullException(nameof(execute));
-            }
-
-            this.execute = execute;
+            this.execute = execute ?? throw new ArgumentNullException(nameof(execute));
             this.canExecute = canExecute;
         }
         #endregion // Constructors
@@ -42,7 +37,7 @@ namespace Snoop.Infrastructure
         [DebuggerStepThrough]
         public bool CanExecute(object parameter)
         {
-            return this.canExecute == null ? true : this.canExecute(parameter);
+            return this.canExecute is null ? true : this.canExecute(parameter);
         }
 
         public event EventHandler CanExecuteChanged

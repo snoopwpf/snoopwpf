@@ -6,17 +6,21 @@
     using System.Windows;
     using System.Windows.Data;
 
+    [ValueConversion(typeof(object), typeof(object))]
+    [ValueConversion(typeof(bool), typeof(Visibility))]
     public class BoolToVisibilityConverter : IValueConverter, IMultiValueConverter
     {
-        public static readonly BoolToVisibilityConverter DefaultInstance = new BoolToVisibilityConverter();
+        public static readonly BoolToVisibilityConverter DefaultInstance = new();
 
-        #region IValueConverter Members
-
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object Convert(object value, Type? targetType, object? parameter, CultureInfo? culture)
         {
             var invert = false;
 
-            if (parameter is string stringParameter)
+            if (parameter is bool boolParameter)
+            {
+                invert = boolParameter;
+            }
+            else if (parameter is string stringParameter)
             {
                 bool.TryParse(stringParameter, out invert);
             }
@@ -29,20 +33,20 @@
             return value;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object ConvertBack(object? value, Type? targetType, object? parameter, CultureInfo? culture)
         {
             return Binding.DoNothing;
         }
 
-        #endregion
-
-        #region IValueConverter Members
-
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object[] values, Type? targetType, object? parameter, CultureInfo? culture)
         {
             var invert = false;
 
-            if (parameter is string stringParameter)
+            if (parameter is bool boolParameter)
+            {
+                invert = boolParameter;
+            }
+            else if (parameter is string stringParameter)
             {
                 bool.TryParse(stringParameter, out invert);
             }
@@ -52,11 +56,9 @@
             return boolValues.All(x => x) ^ invert ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        public object[] ConvertBack(object? value, Type[]? targetTypes, object? parameter, CultureInfo? culture)
         {
             throw new NotImplementedException();
         }
-
-        #endregion
     }
 }

@@ -6,7 +6,7 @@
 
     public class IsNullOrEmptyStringConverter : IValueConverter
     {
-        public static readonly IsNullOrEmptyStringConverter DefaultInstance = new IsNullOrEmptyStringConverter();
+        public static readonly IsNullOrEmptyStringConverter DefaultInstance = new();
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

@@ -8,11 +8,11 @@
 
     public static class ExceptionHandler
     {
-        private static readonly List<WeakReference> knownDispatchers = new List<WeakReference>();
+        private static readonly List<WeakReference> knownDispatchers = new();
 
         public static void AddExceptionHandler(Dispatcher dispatcher)
         {
-            if (dispatcher == null)
+            if (dispatcher is null)
             {
                 return;
             }

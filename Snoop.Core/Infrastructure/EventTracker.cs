@@ -27,7 +27,7 @@ namespace Snoop.Infrastructure
             this.RoutedEvent = routedEvent;
         }
 
-        public event EventTrackerHandler EventHandled;
+        public event EventTrackerHandler? EventHandled;
 
         public bool IsEnabled
         {
@@ -71,27 +71,27 @@ namespace Snoop.Infrastructure
             if (this.isEnabled)
             {
                 var entry = new EventEntry(sender, e.Handled);
-                if (this.currentEvent != null && this.currentEvent.EventArgs == e)
+                if (this.currentEvent is not null && this.currentEvent.EventArgs == e)
                 {
                     this.currentEvent.AddEventEntry(entry);
                 }
                 else
                 {
                     this.currentEvent = new TrackedEvent(e, entry);
-                    this.EventHandled(this.currentEvent);
+                    this.EventHandled?.Invoke(this.currentEvent);
                 }
             }
         }
 
-        private TrackedEvent currentEvent;
+        private TrackedEvent? currentEvent;
         private bool everEnabled;
         private readonly Type targetType;
 
         #region IComparable Members
-        public int CompareTo(object obj)
+        public int CompareTo(object? obj)
         {
             var otherTracker = obj as EventTracker;
-            if (otherTracker == null)
+            if (otherTracker is null)
             {
                 return 1;
             }
@@ -106,7 +106,7 @@ namespace Snoop.Infrastructure
         #endregion
 
         #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected void OnPropertyChanged(string propertyName)
@@ -145,7 +145,7 @@ namespace Snoop.Infrastructure
 
         private bool handled;
 
-        public object HandledBy
+        public object? HandledBy
         {
             get { return this.handledBy; }
 
@@ -156,9 +156,9 @@ namespace Snoop.Infrastructure
             }
         }
 
-        private object handledBy;
+        private object? handledBy;
 
-        public ObservableCollection<EventEntry> Stack { get; } = new ObservableCollection<EventEntry>();
+        public ObservableCollection<EventEntry> Stack { get; } = new();
 
         public void AddEventEntry(EventEntry eventEntry)
         {
@@ -171,7 +171,7 @@ namespace Snoop.Infrastructure
         }
 
         #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected void OnPropertyChanged(string propertyName)

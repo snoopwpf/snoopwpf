@@ -12,7 +12,7 @@ namespace Snoop.Views.TriggersTab
 
     public partial class TriggersView
     {
-        private readonly ObservableCollection<TriggerItemBase> triggers = new ObservableCollection<TriggerItemBase>();
+        private readonly ObservableCollection<TriggerItemBase> triggers = new();
 
         public TriggersView()
         {
@@ -21,7 +21,7 @@ namespace Snoop.Views.TriggersTab
             this.TriggerItems = CollectionViewSource.GetDefaultView(this.triggers);
             this.TriggerItems.GroupDescriptions.Add(new PropertyGroupDescription(nameof(TriggerItemBase.TriggerSource)));
 
-            this.TriggerItems.CollectionChanged += (s, e) => this.HasTriggerItems = this.TriggerItems.IsEmpty;
+            this.TriggerItems.CollectionChanged += (_, _) => this.HasTriggerItems = this.TriggerItems.IsEmpty;
 
             this.Loaded += this.HandleLoaded;
             this.Unloaded += this.HandleUnloaded;
@@ -62,9 +62,9 @@ namespace Snoop.Views.TriggersTab
 
         public static readonly DependencyProperty TriggerItemsProperty = TriggerItemsPropertyKey.DependencyProperty;
 
-        public ICollectionView TriggerItems
+        public ICollectionView? TriggerItems
         {
-            get { return (ICollectionView)this.GetValue(TriggerItemsProperty); }
+            get { return (ICollectionView?)this.GetValue(TriggerItemsProperty); }
             protected set { this.SetValue(TriggerItemsPropertyKey, value); }
         }
 
@@ -81,9 +81,9 @@ namespace Snoop.Views.TriggersTab
 
         public static readonly DependencyProperty SelectedSetterItemProperty = DependencyProperty.Register(nameof(SelectedSetterItem), typeof(SetterItem), typeof(TriggersView), new PropertyMetadata(default(SetterItem)));
 
-        public SetterItem SelectedSetterItem
+        public SetterItem? SelectedSetterItem
         {
-            get { return (SetterItem)this.GetValue(SelectedSetterItemProperty); }
+            get { return (SetterItem?)this.GetValue(SelectedSetterItemProperty); }
             set { this.SetValue(SelectedSetterItemProperty, value); }
         }
 
@@ -120,7 +120,7 @@ namespace Snoop.Views.TriggersTab
 
         private void UpdateTriggerList(object target)
         {
-            if (target == null)
+            if (target is null)
             {
                 return;
             }
@@ -129,12 +129,12 @@ namespace Snoop.Views.TriggersTab
             {
                 var style = fe.Style;
                 // If the target does not have an explicit style, try to find the default style
-                if (style == null)
+                if (style is null)
                 {
                     style = fe.TryFindResource(fe.GetType()) as Style;
                 }
 
-                if (style != null)
+                if (style is not null)
                 {
                     this.AddTriggers(fe, style, TriggerSource.Style);
                 }
@@ -146,31 +146,31 @@ namespace Snoop.Views.TriggersTab
             {
                 var style = fec.Style;
                 // If the target does not have an explicit style, try to find the default style
-                if (style == null)
+                if (style is null)
                 {
                     style = fec.TryFindResource(fec.GetType()) as Style;
                 }
 
-                if (style != null)
+                if (style is not null)
                 {
                     this.AddTriggers(fec, style, TriggerSource.Style);
                 }
             }
 
             var control = target as Control;
-            if (control != null && control.Template != null)
+            if (control is not null && control.Template is not null)
             {
                 this.AddTriggers(control, control.Template.Triggers, TriggerSource.ControlTemplate);
             }
 
             var contentControl = target as ContentControl;
-            if (contentControl != null && contentControl.ContentTemplate != null)
+            if (contentControl is not null && contentControl.ContentTemplate is not null)
             {
                 this.AddTriggers(contentControl, contentControl.ContentTemplate.Triggers, TriggerSource.DataTemplate);
             }
 
             var contentPresenter = target as ContentPresenter;
-            if (contentPresenter != null && contentPresenter.ContentTemplate != null)
+            if (contentPresenter is not null && contentPresenter.ContentTemplate is not null)
             {
                 this.AddTriggers(contentPresenter, contentPresenter.ContentTemplate.Triggers, TriggerSource.DataTemplate);
             }
@@ -180,7 +180,7 @@ namespace Snoop.Views.TriggersTab
         {
             var currentStyle = style;
 
-            while (currentStyle != null)
+            while (currentStyle is not null)
             {
                 this.AddTriggers(instance, currentStyle.Triggers, source);
 
@@ -193,7 +193,7 @@ namespace Snoop.Views.TriggersTab
             foreach (var trigger in triggersToAdd)
             {
                 var triggerItem = TriggerItemFactory.GetTriggerItem(trigger, instance, source);
-                if (triggerItem != null)
+                if (triggerItem is not null)
                 {
                     this.triggers.Add(triggerItem);
                 }

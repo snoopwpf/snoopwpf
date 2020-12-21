@@ -10,8 +10,8 @@
 
     public partial class SettingsView
     {
-        private static readonly HashSet<string> realSettingsProperties = new HashSet<string>
-                                                                        {
+        private static readonly HashSet<string> realSettingsProperties = new()
+        {
                                                                             nameof(Settings.Default.MultipleAppDomainMode),
                                                                             nameof(Settings.Default.MultipleDispatcherMode),
                                                                             nameof(Settings.Default.SetOwnerWindow),
@@ -30,9 +30,9 @@
                                                                                           .Select(x => new PropertyInformation(Settings.Default, x, x.Name, x.DisplayName)));
         }
 
-        public ObservableCollection<PropertyInformation> Properties
+        public ObservableCollection<PropertyInformation>? Properties
         {
-            get => (ObservableCollection<PropertyInformation>)this.GetValue(PropertiesProperty);
+            get => (ObservableCollection<PropertyInformation>?)this.GetValue(PropertiesProperty);
             set => this.SetValue(PropertiesProperty, value);
         }
 

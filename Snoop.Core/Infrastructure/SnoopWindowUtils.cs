@@ -6,6 +6,7 @@
 namespace Snoop.Infrastructure
 {
     using System;
+    using System.Diagnostics;
     using System.Runtime.InteropServices;
     using System.Windows;
     using System.Windows.Interop;
@@ -15,20 +16,25 @@ namespace Snoop.Infrastructure
 
     public static class SnoopWindowUtils
     {
-        public static Window FindOwnerWindow(Window ownedWindow)
+        public static Window? FindOwnerWindow(Window ownedWindow)
         {
-            if (TransientSettingsData.Current.SetWindowOwner == false)
+            if (TransientSettingsData.Current!.SetWindowOwner == false)
             {
                 return null;
             }
 
             var ownerWindow = WindowHelper.GetVisibleWindow(TransientSettingsData.Current.TargetWindowHandle, ownedWindow.Dispatcher);
 
-            if (ownerWindow == null
+            if (ownerWindow is null
                 && SnoopModes.MultipleDispatcherMode)
             {
-                foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
+                foreach (PresentationSource? presentationSource in PresentationSource.CurrentSources)
                 {
+                    if (presentationSource is null)
+                    {
+                        continue;
+                    }
+
                     if (presentationSource.CheckAccess()
                         && presentationSource.RootVisual is Window window
                         && window.Dispatcher.CheckAccess()
@@ -39,11 +45,11 @@ namespace Snoop.Infrastructure
                     }
                 }
             }
-            else if (ownerWindow == null
-                     && Application.Current != null
+            else if (ownerWindow is null
+                     && Application.Current is not null
                      && Application.Current.CheckAccess())
             {
-                if (Application.Current.MainWindow != null
+                if (Application.Current.MainWindow is not null
                     && Application.Current.MainWindow.CheckAccess()
                     && Application.Current.MainWindow.Visibility == Visibility.Visible)
                 {
@@ -53,8 +59,13 @@ namespace Snoop.Infrastructure
                 else
                 {
                     // second: try and find a visible window in the list of the current application's windows
-                    foreach (Window window in Application.Current.Windows)
+                    foreach (Window? window in Application.Current.Windows)
                     {
+                        if (window is null)
+                        {
+                            continue;
+                        }
+
                         if (window.CheckAccess()
                             && window.Visibility == Visibility.Visible)
                         {
@@ -65,11 +76,16 @@ namespace Snoop.Infrastructure
                 }
             }
 
-            if (ownerWindow == null)
+            if (ownerWindow is null)
             {
                 // third: try and find a visible window in the list of current presentation sources
-                foreach (PresentationSource presentationSource in PresentationSource.CurrentSources)
+                foreach (PresentationSource? presentationSource in PresentationSource.CurrentSources)
                 {
+                    if (presentationSource is null)
+                    {
+                        continue;
+                    }
+
                     if (presentationSource.CheckAccess()
                         && presentationSource.RootVisual is Window window
                         && window.Dispatcher.CheckAccess()
@@ -86,7 +102,7 @@ namespace Snoop.Infrastructure
                 return null;
             }
 
-            if (ownerWindow != null
+            if (ownerWindow is not null
                 && ownerWindow.Dispatcher != ownedWindow.Dispatcher)
             {
                 return null;
@@ -113,8 +129,9 @@ namespace Snoop.Infrastructure
                 var hwnd = new WindowInteropHelper(window).Handle;
                 NativeMethods.SetWindowPlacement(hwnd, ref wp);
             }
-            catch
+            catch (Exception exception)
             {
+                Trace.TraceWarning(exception.ToString());
             }
         }
 

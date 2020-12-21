@@ -19,10 +19,10 @@ namespace Snoop.Infrastructure
     /// </summary>
     public class EventsListener
     {
-        private static EventsListener current;
+        private static EventsListener? current;
         private readonly Visual visual;
 
-        private static readonly Dictionary<Type, Type> registeredTypes = new Dictionary<Type, Type>();
+        private static readonly Dictionary<Type, Type> registeredTypes = new();
 
         public EventsListener(Visual visual)
         {
@@ -32,7 +32,7 @@ namespace Snoop.Infrastructure
             var type = visual.GetType();
 
             // Cannot unregister for events once we've registered, so keep the registration simple and only do it once.
-            for (var baseType = type; baseType != null; baseType = baseType.BaseType)
+            for (var baseType = type; baseType is not null; baseType = baseType.BaseType)
             {
                 if (registeredTypes.ContainsKey(baseType))
                 {
@@ -42,7 +42,7 @@ namespace Snoop.Infrastructure
                 registeredTypes[baseType] = baseType;
 
                 var routedEvents = EventManager.GetRoutedEventsForOwner(baseType);
-                if (routedEvents != null)
+                if (routedEvents is not null)
                 {
                     foreach (var routedEvent in routedEvents)
                     {
@@ -52,9 +52,9 @@ namespace Snoop.Infrastructure
             }
         }
 
-        public ObservableCollection<EventInformation> Events { get; } = new ObservableCollection<EventInformation>();
+        public ObservableCollection<EventInformation> Events { get; } = new();
 
-        public static string Filter { get; set; }
+        public static string? Filter { get; set; }
 
         public static void Stop()
         {
@@ -63,14 +63,14 @@ namespace Snoop.Infrastructure
 
         private static void HandleEvent(object sender, RoutedEventArgs e)
         {
-            if (current == null
+            if (current is null
                 || ReferenceEquals(sender, current.visual) == false)
             {
                 return;
             }
 
             if (string.IsNullOrEmpty(Filter)
-                || e.RoutedEvent.Name.ContainsIgnoreCase(Filter))
+                || e.RoutedEvent.Name.ContainsIgnoreCase(Filter!))
             {
                 current.Events.Add(new EventInformation(e));
 

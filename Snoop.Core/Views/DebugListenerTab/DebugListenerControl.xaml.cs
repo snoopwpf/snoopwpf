@@ -13,8 +13,8 @@
     public partial class DebugListenerControl : IListener
     {
         private readonly FiltersViewModel filtersViewModel; // = new FiltersViewModel();
-        private readonly SnoopDebugListener snoopDebugListener = new SnoopDebugListener();
-        private StringBuilder allText = new StringBuilder();
+        private readonly SnoopDebugListener snoopDebugListener = new();
+        private StringBuilder allText = new();
 
         public DebugListenerControl()
         {
@@ -100,7 +100,7 @@
 
         private void ComboBoxPresentationTraceLevel_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (this.comboBoxPresentationTraceLevel?.Items == null 
+            if (this.comboBoxPresentationTraceLevel?.Items is null 
                 || this.comboBoxPresentationTraceLevel.Items.Count <= this.comboBoxPresentationTraceLevel.SelectedIndex 
                 || this.comboBoxPresentationTraceLevel.SelectedIndex < 0)
             {
@@ -108,12 +108,12 @@
             }
 
             var selectedComboBoxItem = this.comboBoxPresentationTraceLevel.Items[this.comboBoxPresentationTraceLevel.SelectedIndex] as ComboBoxItem;
-            if (selectedComboBoxItem?.Tag == null)
+            if (selectedComboBoxItem?.Tag is null)
             {
                 return;
             }
 
-            var sourceLevel = (SourceLevels)Enum.Parse(typeof(SourceLevels), selectedComboBoxItem.Tag.ToString());
+            var sourceLevel = (SourceLevels)Enum.Parse(typeof(SourceLevels), selectedComboBoxItem.Tag.ToString()!);
             PresentationTraceSources.DataBindingSource.Switch.Level = sourceLevel;
         }
     }

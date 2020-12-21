@@ -63,7 +63,7 @@ namespace Snoop.Infrastructure
             return dsProcRootWindows;
         }
 
-        public static Process GetWindowThreadProcess(IntPtr hwnd)
+        public static Process? GetWindowThreadProcess(IntPtr hwnd)
         {
             int processID;
             GetWindowThreadProcessId(hwnd, out processID);
@@ -82,7 +82,16 @@ namespace Snoop.Infrastructure
 
         private static bool EnumWindowsCallback(IntPtr hwnd, IntPtr lParam)
         {
-            ((List<IntPtr>)((GCHandle)lParam).Target).Add(hwnd);
+            var target = ((GCHandle)lParam).Target;
+            var intPtrs = target as List<IntPtr>;
+
+            if (intPtrs is null)
+            {
+                return false;
+            }
+
+            intPtrs.Add(hwnd);
+
             return true;
         }
 
@@ -335,8 +344,13 @@ namespace Snoop.Infrastructure
         {
             ulong functionOffsetFromBaseAddress = 0;
 
-            foreach (ProcessModule mod in Process.GetCurrentProcess().Modules)
+            foreach (ProcessModule? mod in Process.GetCurrentProcess().Modules)
             {
+                if (mod is null)
+                {
+                    continue;
+                }
+
                 if (mod.ModuleName.Equals(moduleName, StringComparison.OrdinalIgnoreCase)
                     || mod.FileName.Equals(moduleName, StringComparison.OrdinalIgnoreCase))
                 {
@@ -365,8 +379,13 @@ namespace Snoop.Infrastructure
 
         public static IntPtr GetRemoteModuleHandle(Process targetProcess, string moduleName)
         {
-            foreach (ProcessModule mod in targetProcess.Modules)
+            foreach (ProcessModule? mod in targetProcess.Modules)
             {
+                if (mod is null)
+                {
+                    continue;
+                }
+                
                 if (mod.ModuleName.Equals(moduleName, StringComparison.OrdinalIgnoreCase)
                     || mod.FileName.Equals(moduleName, StringComparison.OrdinalIgnoreCase))
                 {

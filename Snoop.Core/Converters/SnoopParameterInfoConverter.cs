@@ -8,6 +8,7 @@ namespace Snoop.Converters
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Globalization;
     using System.Reflection;
     using System.Windows;
     using System.Windows.Data;
@@ -15,14 +16,14 @@ namespace Snoop.Converters
 
     public class SnoopParameterInfoConverter : IValueConverter
     {
-        public static readonly SnoopParameterInfoConverter Default = new SnoopParameterInfoConverter();
+        public static readonly SnoopParameterInfoConverter Default = new();
 
         #region IValueConverter Members
 
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var paramInfo = value as SnoopParameterInformation;
-            if (paramInfo == null)
+            if (paramInfo is null)
             {
                 return value;
             }
@@ -34,9 +35,9 @@ namespace Snoop.Converters
             return result;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            return Binding.DoNothing;
         }
 
         #endregion
@@ -44,11 +45,11 @@ namespace Snoop.Converters
 
     public class SnoopDependencyPropertiesConverter : IValueConverter
     {
-        public static readonly SnoopDependencyPropertiesConverter Default = new SnoopDependencyPropertiesConverter();
+        public static readonly SnoopDependencyPropertiesConverter Default = new();
 
         #region IValueConverter Members
 
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var paramInfo = (SnoopParameterInformation)value;
             var t = paramInfo.DeclaringType;
@@ -64,7 +65,7 @@ namespace Snoop.Converters
             {
                 if (dpType.IsAssignableFrom(field.FieldType))
                 {
-                    dependencyProperties.Add(new DependencyPropertyNameValuePair() { DependencyPropertyName = field.Name, DependencyProperty = (DependencyProperty)field.GetValue(null) });
+                    dependencyProperties.Add(new DependencyPropertyNameValuePair(field.Name, (DependencyProperty?)field.GetValue(null)));
                 }
             }
 
@@ -73,9 +74,9 @@ namespace Snoop.Converters
             return dependencyProperties;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            return Binding.DoNothing;
         }
 
         #endregion
@@ -83,9 +84,15 @@ namespace Snoop.Converters
 
     public class DependencyPropertyNameValuePair : IComparable
     {
-        public string DependencyPropertyName { get; set; }
+        public DependencyPropertyNameValuePair(string dependencyPropertyName, DependencyProperty? dependencyProperty)
+        {
+            this.DependencyPropertyName = dependencyPropertyName;
+            this.DependencyProperty = dependencyProperty;
+        }
 
-        public DependencyProperty DependencyProperty { get; set; }
+        public string DependencyPropertyName { get; }
+
+        public DependencyProperty? DependencyProperty { get; }
 
         public override string ToString()
         {
@@ -94,23 +101,24 @@ namespace Snoop.Converters
 
         #region IComparable Members
 
-        public int CompareTo(object obj)
+        public int CompareTo(object? obj)
         {
-            var toCompareTo = (DependencyPropertyNameValuePair)obj;
+            var toCompareTo = (DependencyPropertyNameValuePair?)obj;
 
-            return this.DependencyPropertyName.CompareTo(toCompareTo.DependencyPropertyName);
+            return string.Compare(this.DependencyPropertyName, toCompareTo?.DependencyPropertyName, StringComparison.Ordinal);
         }
 
         #endregion
     }
 
+    [ValueConversion(typeof(object), typeof(object))]
+    [ValueConversion(typeof(Enum), typeof(Array))]
+    [ValueConversion(typeof(bool), typeof(object[]))]
     public class SnoopEnumValuesConverter : IValueConverter
     {
-        public static readonly SnoopEnumValuesConverter Default = new SnoopEnumValuesConverter();
+        public static readonly SnoopEnumValuesConverter Default = new();
 
-        #region IValueConverter Members
-
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object? Convert(object? value, Type? targetType, object? parameter, CultureInfo? culture)
         {
             if (value is Enum)
             {
@@ -125,11 +133,9 @@ namespace Snoop.Converters
             return null;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            return Binding.DoNothing;
         }
-
-        #endregion
     }
 }

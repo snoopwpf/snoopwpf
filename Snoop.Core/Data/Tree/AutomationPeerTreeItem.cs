@@ -5,30 +5,28 @@
     using System.Windows.Controls;
     using System.Windows.Documents;
     using System.Windows.Media;
-    using JetBrains.Annotations;
     using Snoop.Controls;
 
     public class AutomationPeerTreeItem : TreeItem
     {
-        private AdornerContainer adornerContainer;
+        private AdornerContainer? adornerContainer;
 
-        public AutomationPeerTreeItem(AutomationPeer target, TreeItem parent, TreeService treeService)
+        public AutomationPeerTreeItem(AutomationPeer target, TreeItem? parent, TreeService treeService)
             : base(target, parent, treeService)
         {
             if (this.Target is UIElementAutomationPeer uiElementAutomationPeer
-                && uiElementAutomationPeer.Owner is null == false)
+                && uiElementAutomationPeer.Owner is not null)
             {
                 this.Visual = uiElementAutomationPeer.Owner;
             }
         }
 
-        [CanBeNull]
-        public Visual Visual { get; }
+        public Visual? Visual { get; }
 
         protected override void ReloadCore()
         {
             if (this.Target is UIElementAutomationPeer uiElementAutomationPeer
-                && uiElementAutomationPeer.Owner is null == false)
+                && uiElementAutomationPeer.Owner is not null)
             {
                 this.Children.Add(RawTreeServiceWithoutChildren.DefaultInstance.Construct(uiElementAutomationPeer.Owner, this));
             }
@@ -54,11 +52,11 @@
             // Add adorners for the visual this is representing.
             var adornerLayer = AdornerLayer.GetAdornerLayer(this.Visual);
 
-            if (adornerLayer != null
+            if (adornerLayer is not null
                 && this.Visual is UIElement visualElement)
             {
                 if (this.IsSelected
-                    && this.adornerContainer == null)
+                    && this.adornerContainer is null)
                 {
                     var border = new Border
                     {
@@ -79,7 +77,7 @@
                     };
                     adornerLayer.Add(this.adornerContainer);
                 }
-                else if (this.adornerContainer != null)
+                else if (this.adornerContainer is not null)
                 {
                     adornerLayer.Remove(this.adornerContainer);
                     this.adornerContainer.Child = null;

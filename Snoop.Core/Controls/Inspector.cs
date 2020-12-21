@@ -10,7 +10,7 @@ namespace Snoop.Controls
 
     public class Inspector : Grid
     {
-        public PropertyFilter Filter
+        public PropertyFilter? Filter
         {
             get { return this.filter; }
 
@@ -21,7 +21,7 @@ namespace Snoop.Controls
             }
         }
 
-        private PropertyFilter filter;
+        private PropertyFilter? filter;
 
         protected virtual void OnFilterChanged()
         {

@@ -9,18 +9,18 @@ namespace Snoop.Data.Tree
 
     public abstract class ResourceContainerTreeItem : TreeItem
     {
-        protected ResourceContainerTreeItem(object target, TreeItem parent, TreeService treeService)
+        protected ResourceContainerTreeItem(object target, TreeItem? parent, TreeService treeService)
             : base(target, parent, treeService)
         {
         }
 
-        protected abstract ResourceDictionary ResourceDictionary { get; }
+        protected abstract ResourceDictionary? ResourceDictionary { get; }
 
         protected override void ReloadCore()
         {
             var resourceDictionary = this.ResourceDictionary;
 
-            if (resourceDictionary != null
+            if (resourceDictionary is not null
                 && (resourceDictionary.Count != 0 || resourceDictionary.MergedDictionaries.Count > 0))
             {
                 this.Children.Add(this.TreeService.Construct(resourceDictionary, this));

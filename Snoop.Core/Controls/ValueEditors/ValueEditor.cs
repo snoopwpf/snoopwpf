@@ -14,7 +14,7 @@ namespace Snoop.Controls.ValueEditors
 
     public abstract class ValueEditor : ContentControl
     {
-        public static readonly RoutedCommand OpenDetailsEditorCommand = new RoutedCommand(nameof(OpenDetailsEditorCommand), typeof(ValueEditor));
+        public static readonly RoutedCommand OpenDetailsEditorCommand = new(nameof(OpenDetailsEditorCommand), typeof(ValueEditor));
 
         public static readonly DependencyProperty IsSelectedProperty =
             DependencyProperty.Register(
@@ -74,9 +74,9 @@ namespace Snoop.Controls.ValueEditors
             this.CommandBindings.Add(new CommandBinding(OpenDetailsEditorCommand, this.HandleOpenDetailsEdtiorCommand, this.HandleCanOpenDetailsEditorCommand));
         }
 
-        public DataTemplate DetailsEditorTemplate
+        public DataTemplate? DetailsEditorTemplate
         {
-            get => (DataTemplate)this.GetValue(DetailsEditorTemplateProperty);
+            get => (DataTemplate?)this.GetValue(DetailsEditorTemplateProperty);
             set => this.SetValue(DetailsEditorTemplateProperty, value);
         }
 
@@ -86,21 +86,21 @@ namespace Snoop.Controls.ValueEditors
             set => this.SetValue(IsSelectedProperty, value);
         }
 
-        public object Value
+        public object? Value
         {
             get => this.GetValue(ValueProperty);
             set => this.SetValue(ValueProperty, value);
         }
 
-        public string DescriptiveValue
+        public string? DescriptiveValue
         {
-            get => (string)this.GetValue(DescriptiveValueProperty);
+            get => (string?)this.GetValue(DescriptiveValueProperty);
             set => this.SetValue(DescriptiveValueProperty, value);
         }
 
-        public Type PropertyType
+        public Type? PropertyType
         {
-            get => (Type)this.GetValue(PropertyTypeProperty);
+            get => (Type?)this.GetValue(PropertyTypeProperty);
             set => this.SetValue(PropertyTypeProperty, value);
         }
 
@@ -110,9 +110,9 @@ namespace Snoop.Controls.ValueEditors
             set => this.SetValue(IsEditableProperty, value);
         }
 
-        public PropertyInformation PropertyInfo
+        public PropertyInformation? PropertyInfo
         {
-            get => (PropertyInformation)this.GetValue(PropertyInfoProperty);
+            get => (PropertyInformation?)this.GetValue(PropertyInfoProperty);
             set => this.SetValue(PropertyInfoProperty, value);
         }
 
@@ -127,7 +127,7 @@ namespace Snoop.Controls.ValueEditors
             ((ValueEditor)sender).OnValueChanged(e.NewValue);
         }
 
-        protected virtual void OnValueChanged(object newValue)
+        protected virtual void OnValueChanged(object? newValue)
         {
         }
 
@@ -165,7 +165,7 @@ namespace Snoop.Controls.ValueEditors
 
         public virtual void AcceptValueFromDetailsEditor()
         {
-            if (this.PropertyInfo != null)
+            if (this.PropertyInfo is not null)
             {
                 this.PropertyInfo.IsValueChangedByUser = true;
             }

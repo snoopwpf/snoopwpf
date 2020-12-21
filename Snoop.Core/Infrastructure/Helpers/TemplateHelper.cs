@@ -5,15 +5,14 @@
 
     public class TemplateHelper
     {
-        public static object GetChildFromTemplateIfNeeded(DependencyObject element, string templatePartName)
+        public static object? GetChildFromTemplateIfNeeded(DependencyObject element, string? templatePartName)
         {
             if (string.IsNullOrEmpty(templatePartName))
             {
                 return element;
             }
 
-            if (element is Control control
-                && control.Template != null)
+            if (element is Control { Template: { } } control)
             {
                 return control.Template.FindName(templatePartName, control);
             }

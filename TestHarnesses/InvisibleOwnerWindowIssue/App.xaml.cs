@@ -9,8 +9,8 @@
     /// </summary>
     public partial class App : Application
     {
-        private Window hiddenWindow;
-        private Window shownWindow;
+        private Window? hiddenWindow;
+        private Window? shownWindow;
 
         protected override void OnStartup(StartupEventArgs args)
         {

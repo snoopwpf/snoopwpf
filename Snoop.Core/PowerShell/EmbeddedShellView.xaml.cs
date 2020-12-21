@@ -20,10 +20,10 @@ namespace Snoop.PowerShell
 
     public partial class EmbeddedShellView
     {
-        public event Action<TreeItem> ProviderLocationChanged;
+        public event Action<TreeItem>? ProviderLocationChanged;
 
-        private Runspace runspace;
-        private SnoopPSHost host;
+        private Runspace? runspace;
+        private SnoopPSHost? host;
         private int historyIndex;
 
         private bool isStarted;
@@ -36,7 +36,7 @@ namespace Snoop.PowerShell
         }
 
         public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(EmbeddedShellView), new PropertyMetadata(default(bool), OnIsSelectedChanged));
-        private SnoopUI snoopUi;
+        private SnoopUI? snoopUi;
         private bool isSettingLocationFromLocationProvider;
 
         public bool IsSelected
@@ -54,13 +54,22 @@ namespace Snoop.PowerShell
                 return;
             }
 
-            view.WhenLoaded(x => ((EmbeddedShellView)x).Start(VisualTreeHelper2.GetAncestor<SnoopUI>((EmbeddedShellView)x)));
+            view.WhenLoaded(x =>
+            {
+                var embeddedShellView = (EmbeddedShellView)x;
+                var targetSnoopUi = VisualTreeHelper2.GetAncestor<SnoopUI>(embeddedShellView);
+
+                if (targetSnoopUi is not null)
+                {
+                    embeddedShellView.Start(targetSnoopUi);
+                }
+            });
         }
 
         /// <summary>
         /// Initiates the startup routine and configures the runspace for use.
         /// </summary>
-        private void Start(SnoopUI snoopUi)
+        private void Start(SnoopUI targetSnoopUi)
         {
             if (this.isStarted)
             {
@@ -74,7 +83,7 @@ namespace Snoop.PowerShell
 
             this.isStarted = true;
 
-            this.snoopUi = snoopUi;
+            this.snoopUi = targetSnoopUi;
 
             {
                 // ignore execution-policy
@@ -94,19 +103,19 @@ namespace Snoop.PowerShell
             }
 
             {
-                snoopUi.PropertyChanged += this.OnSnoopUiOnPropertyChanged;
+                targetSnoopUi.PropertyChanged += this.OnSnoopUiOnPropertyChanged;
 
                 // allow scripting of the host controls
-                this.SetVariable("snoopui", snoopUi);
+                this.SetVariable("snoopui", targetSnoopUi);
                 this.SetVariable("ui", this);
-                this.SetVariable(ShellConstants.Root, snoopUi.Root);
-                this.SetVariable(ShellConstants.Selected, snoopUi.CurrentSelection);
+                this.SetVariable(ShellConstants.Root, targetSnoopUi.Root);
+                this.SetVariable(ShellConstants.Selected, targetSnoopUi.CurrentSelection);
 
                 // marshall back to the UI thread when the provider notifiers of a location change
                 var action = new Action<TreeItem>(item => this.RunInDispatcherAsync(() => this.ProviderLocationChanged?.Invoke(item)));
                 this.SetVariable(ShellConstants.LocationChangedActionKey, action);
 
-                var folder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..", "Scripts");
+                var folder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "..", "Scripts");
                 this.Invoke($"import-module \"{Path.Combine(folder, ShellConstants.SnoopModule)}\"");
 
                 this.outputTextBox.Clear();
@@ -117,16 +126,16 @@ namespace Snoop.PowerShell
 
                 this.FindAndLoadProfile(folder);
 
-                this.NotifySelected(snoopUi.CurrentSelection);
+                this.NotifySelected(targetSnoopUi.CurrentSelection);
             }
 
             {
                 // sync the current location
-                snoopUi.Tree.SelectedItemChanged += this.OnSnoopUiSelectedItemChanged;
+                targetSnoopUi.Tree.SelectedItemChanged += this.OnSnoopUiSelectedItemChanged;
                 this.ProviderLocationChanged += this.OnProviderLocationChanged;
 
                 // clean up garbage!
-                snoopUi.Closed += this.OnSnoopUiClosed;
+                targetSnoopUi.Closed += this.OnSnoopUiClosed;
             }
         }
 
@@ -146,7 +155,7 @@ namespace Snoop.PowerShell
 
         private void UnsubscribeSnoopUiEvents()
         {
-            if (this.snoopUi != null)
+            if (this.snoopUi is not null)
             {
                 this.snoopUi.PropertyChanged -= this.OnSnoopUiOnPropertyChanged;
                 this.snoopUi.Tree.SelectedItemChanged -= this.OnSnoopUiSelectedItemChanged;
@@ -154,7 +163,7 @@ namespace Snoop.PowerShell
             }
         }
 
-        private void OnSnoopUiClosed(object sender, EventArgs e)
+        private void OnSnoopUiClosed(object? sender, EventArgs e)
         {
             this.Shutdown();
         }
@@ -175,7 +184,7 @@ namespace Snoop.PowerShell
             }
         }
 
-        private void OnSnoopUiSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => this.NotifySelected(this.snoopUi.CurrentSelection);
+        private void OnSnoopUiSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => this.NotifySelected(this.snoopUi?.CurrentSelection);
 
         private void OnProviderLocationChanged(TreeItem item) =>
             this.Dispatcher.RunInDispatcherAsync(() =>
@@ -184,7 +193,11 @@ namespace Snoop.PowerShell
                 try
                 {
                     item.IsSelected = true;
-                    this.snoopUi.CurrentSelection = item;
+
+                    if (this.snoopUi is not null)
+                    {
+                        this.snoopUi.CurrentSelection = item;
+                    }
                 }
                 finally
                 {
@@ -192,8 +205,13 @@ namespace Snoop.PowerShell
                 }
             });
 
-        public void SetVariable(string name, object instance)
+        public void SetVariable(string name, object? instance)
         {
+            if (this.host is null)
+            {
+                return;
+            }
+
             // add to the host so the provider has access to exposed variables
             this.host[name] = instance;
 
@@ -201,8 +219,13 @@ namespace Snoop.PowerShell
             this.Invoke($"${name} = $host.PrivateData['{name}']");
         }
 
-        public void NotifySelected(TreeItem item)
+        public void NotifySelected(TreeItem? item)
         {
+            if (item is null)
+            {
+                return;
+            }
+
             if (this.autoExpandCheckBox.IsChecked == true)
             {
                 item.IsExpanded = true;
@@ -213,7 +236,7 @@ namespace Snoop.PowerShell
 
         private void FindAndLoadProfile(string scriptFolder)
         {
-            if (this.LoadProfile(Path.Combine(Environment.GetEnvironmentVariable("USERPROFILE"), ShellConstants.SnoopProfile)))
+            if (this.LoadProfile(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ShellConstants.SnoopProfile)))
             {
                 return;
             }
@@ -280,7 +303,8 @@ namespace Snoop.PowerShell
                 this.outputTextBox.AppendText(Environment.NewLine);
             }
 
-            if (string.IsNullOrEmpty(script) == false)
+            if (string.IsNullOrEmpty(script) == false
+                && this.runspace is not null)
             {
                 try
                 {
@@ -329,7 +353,7 @@ namespace Snoop.PowerShell
         private void OutputErrorRecord(ErrorRecord error)
         {
             this.outputTextBox.AppendText(Environment.NewLine);
-            this.outputTextBox.AppendText(string.Format("{0}{1}", error, error.InvocationInfo != null ? error.InvocationInfo.PositionMessage : string.Empty));
+            this.outputTextBox.AppendText(string.Format("{0}{1}", error, error.InvocationInfo is not null ? error.InvocationInfo.PositionMessage : string.Empty));
             this.outputTextBox.AppendText(string.Format("{1}  + CategoryInfo          : {0}", error.CategoryInfo, Environment.NewLine));
             this.outputTextBox.AppendText(string.Format("{1}  + FullyQualifiedErrorId : {0}", error.FullyQualifiedErrorId, Environment.NewLine));
         }
@@ -337,15 +361,20 @@ namespace Snoop.PowerShell
         private void SetCommandTextToHistory(int history)
         {
             var cmd = this.GetHistoryCommand(history);
-            if (cmd != null)
+            if (cmd is not null)
             {
                 this.commandTextBox.Text = cmd;
                 this.commandTextBox.SelectionStart = cmd.Length;
             }
         }
 
-        private string GetHistoryCommand(int history)
+        private string? GetHistoryCommand(int history)
         {
+            if (this.runspace is null)
+            {
+                return null;
+            }
+
             using (var pipe = this.runspace.CreatePipeline("get-history -count " + history, false))
             {
                 var results = pipe.Invoke();

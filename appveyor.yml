@@ -9,7 +9,8 @@ image: Visual Studio 2019
 test: off
 
 install:
-  - cinst dotnetcore-sdk --version 3.1.401
+  - ps: Invoke-WebRequest 'https://dot.net/v1/dotnet-install.ps1' -OutFile 'dotnet-install.ps1'
+  - ps: ./dotnet-install.ps1 -Version 5.0.100 -InstallDir "C:\Program Files\dotnet"
 
 build_script:
   - ps: .\build.ps1 CI -Verbose

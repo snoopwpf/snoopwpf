@@ -29,7 +29,7 @@
             public POINT Point { get; }
         }
 
-        public event EventHandler<LowLevelMouseMoveEventArgs> LowLevelMouseMove;
+        public event EventHandler<LowLevelMouseMoveEventArgs>? LowLevelMouseMove;
 
         public bool IsRunning => this.hookId != IntPtr.Zero;
 

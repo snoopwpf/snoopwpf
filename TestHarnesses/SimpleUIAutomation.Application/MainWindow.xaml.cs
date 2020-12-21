@@ -45,7 +45,7 @@
             File.WriteAllLines(tempFile, scriptLines, Encoding.UTF8);
 
             var automationAssemblyName = "SimpleUIAutomation.dll";
-            var automationAssemblyPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), automationAssemblyName);
+            var automationAssemblyPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, automationAssemblyName);
             var arguments = $"--targetPID {Process.GetCurrentProcess().Id} --assembly \"{automationAssemblyPath}\" --className SimpleUIAutomation.AutomationDriver --methodName StartAutomation --settingsFile \"{tempFile}\"";
 
             var startInfo = new ProcessStartInfo(@"..\..\..\..\bin\debug\Snoop.InjectorLauncher.x64.exe", arguments)
