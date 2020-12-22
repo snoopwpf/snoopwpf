@@ -1,8 +1,11 @@
+#pragma warning disable IDE0051 // Remove unused private members
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
+using JetBrains.Annotations;
 using Nuke.Common;
 using Nuke.Common.Execution;
 using Nuke.Common.Git;
@@ -119,6 +122,7 @@ class Build : NukeBuild
                 .SetVerbosity(DotNetVerbosity.Minimal));
         });
 
+    [PublicAPI]
     Target CompileTestHarnesses => _ => _
         .Executes(() =>
         {
@@ -137,6 +141,15 @@ class Build : NukeBuild
                 .SetAssemblyVersion(GitVersion.AssemblySemVer)
                 .SetInformationalVersion(GitVersion.InformationalVersion)
                 .SetVerbosity(DotNetVerbosity.Minimal));
+        });
+
+    Target Test => _ => _
+        .Executes(() =>
+        {
+            DotNetTest(s => s
+                .SetProjectFile(RootDirectory / "Snoop.Core.Tests" / "Snoop.Core.Tests.csproj")
+                .SetVerbosity(DotNetVerbosity.Normal)
+                .SetNoBuild(true));
         });
 
     Target Pack => _ => _
@@ -194,6 +207,7 @@ class Build : NukeBuild
             CheckSumFiles.Add(outputFile);
         });
 
+    [PublicAPI]
     Target CheckSums => _ => _
         .TriggeredBy(Pack, Setup)
         .Executes(() => {
@@ -209,5 +223,5 @@ class Build : NukeBuild
         });
 
     Target CI => _ => _
-        .DependsOn(Compile, Pack, Setup);
+        .DependsOn(Compile, Test, Pack, Setup);
 }
