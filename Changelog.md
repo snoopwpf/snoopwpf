@@ -8,7 +8,7 @@
 
 - ### Improvements
 
-  - [#38](../../issues/38) - Export tree
+  - [#38](../../issues/38) - Export tree (thanks @amake for the basic idea and starting point)
 
 ## 3.0.1
 
