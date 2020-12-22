@@ -48,7 +48,7 @@ namespace Snoop.Infrastructure
 
                 try
                 {
-                    this.filterRegex = new Regex(this.filterString, RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
+                    this.filterRegex = new Regex(this.filterString, RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
                 }
                 catch
                 {

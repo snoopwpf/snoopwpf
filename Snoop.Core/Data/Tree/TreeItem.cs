@@ -177,7 +177,7 @@ namespace Snoop.Data.Tree
         /// <summary>
         /// Update the view of this visual, rebuild children as necessary
         /// </summary>
-        public void Reload()
+        public TreeItem Reload()
         {
             this.Name = this.GetName();
 
@@ -198,6 +198,8 @@ namespace Snoop.Data.Tree
 
                 this.childItemCount += child.childItemCount;
             }
+
+            return this;
         }
 
         protected virtual string GetName()

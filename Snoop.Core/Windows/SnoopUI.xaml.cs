@@ -10,6 +10,7 @@ namespace Snoop.Windows
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Diagnostics;
+    using System.IO;
     using System.Linq;
     using System.Text;
     using System.Windows;
@@ -30,6 +31,7 @@ namespace Snoop.Windows
 
         public static readonly RoutedCommand IntrospectCommand = new(nameof(IntrospectCommand), typeof(SnoopUI));
         public static readonly RoutedCommand RefreshCommand = new(nameof(RefreshCommand), typeof(SnoopUI));
+        public static readonly RoutedCommand ExportTreeWithFilterCommand = new(nameof(ExportTreeWithFilterCommand), typeof(SnoopUI));
         public static readonly RoutedCommand HelpCommand = new(nameof(HelpCommand), typeof(SnoopUI));
         public static readonly RoutedCommand InspectCommand = new(nameof(InspectCommand), typeof(SnoopUI));
         public static readonly RoutedCommand SelectFocusCommand = new(nameof(SelectFocusCommand), typeof(SnoopUI));
@@ -78,6 +80,7 @@ namespace Snoop.Windows
 
             this.CommandBindings.Add(new CommandBinding(IntrospectCommand, this.HandleIntrospection));
             this.CommandBindings.Add(new CommandBinding(RefreshCommand, this.HandleRefresh));
+            this.CommandBindings.Add(new CommandBinding(ExportTreeWithFilterCommand, this.HandleExport));
             this.CommandBindings.Add(new CommandBinding(HelpCommand, this.HandleHelp));
 
             this.CommandBindings.Add(new CommandBinding(InspectCommand, this.HandleInspect));
@@ -467,6 +470,60 @@ namespace Snoop.Windows
             }
         }
 
+        private void HandleExport(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (this.CurrentSelection is null)
+            {
+                return;
+            }
+
+            Cursor saveCursor = Mouse.OverrideCursor;
+            Mouse.OverrideCursor = Cursors.Wait;
+
+            try
+            {
+                var options = (ExportOptions)e.Parameter;
+                var propertyFilter = options.UseFilter ? this.PropertyGrid.PropertyFilter : null;
+
+                var treeItem = options.TreeItem ?? this.CurrentSelection;
+
+                if (treeItem is null)
+                {
+                    MessageBox.Show("No tree item found for export.", "Tree not exported", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                var targetFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "SnoopTreeExport");
+
+                Directory.CreateDirectory(targetFolder);
+
+                using var proc = Process.GetCurrentProcess();
+                var exportDateTimeText = DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss");
+                var file = Path.Combine(targetFolder, $"{proc.ProcessName} - [{proc.Id}] ({exportDateTimeText}).xml");
+
+                // Append "(n)" suffix to avoid overwriting existing files.
+                for (var i = 1; i < 10000; i++)
+                {
+                    if (File.Exists(file) == false)
+                    {
+                        break;
+                    }
+
+                    file = Path.Combine(targetFolder, $"{proc.ProcessName} - [{proc.Id}] ({exportDateTimeText}) ({i}).xml");
+                }
+
+                using var streamWriter = new StreamWriter(file, false, Encoding.UTF8);
+
+                TreeExporter.Export(treeItem, streamWriter, propertyFilter, options.Recurse);
+
+                MessageBox.Show($"The tree has been exported to \"{file}\".", "Tree exported", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            finally
+            {
+                Mouse.OverrideCursor = saveCursor;
+            }
+        }
+
         private void HandleHelp(object sender, ExecutedRoutedEventArgs e)
         {
             //Help help = new Help();
@@ -778,7 +835,6 @@ namespace Snoop.Windows
         private bool fromTextBox = true;
         private readonly DispatcherTimer filterTimer;
 
-        private string propertyFilter = string.Empty;
         private string eventFilter = string.Empty;
 
         private readonly DelayedCall filterCall;

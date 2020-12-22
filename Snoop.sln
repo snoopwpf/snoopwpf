@@ -37,6 +37,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snoop.Console", "Snoop.Cons
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", ".build\_build.csproj", "{F26BF9F3-A62E-4F0B-B04B-2A8E333FF5FA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snoop.Core.Tests", "Snoop.Core.Tests\Snoop.Core.Tests.csproj", "{7ABD1C31-D98A-43D8-8420-3498C4B51ED3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CI_Debug|Any CPU = CI_Debug|Any CPU
@@ -87,6 +89,14 @@ Global
 		{F26BF9F3-A62E-4F0B-B04B-2A8E333FF5FA}.CI_Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F26BF9F3-A62E-4F0B-B04B-2A8E333FF5FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F26BF9F3-A62E-4F0B-B04B-2A8E333FF5FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7ABD1C31-D98A-43D8-8420-3498C4B51ED3}.CI_Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7ABD1C31-D98A-43D8-8420-3498C4B51ED3}.CI_Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7ABD1C31-D98A-43D8-8420-3498C4B51ED3}.CI_Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7ABD1C31-D98A-43D8-8420-3498C4B51ED3}.CI_Release|Any CPU.Build.0 = Release|Any CPU
+		{7ABD1C31-D98A-43D8-8420-3498C4B51ED3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7ABD1C31-D98A-43D8-8420-3498C4B51ED3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7ABD1C31-D98A-43D8-8420-3498C4B51ED3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7ABD1C31-D98A-43D8-8420-3498C4B51ED3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

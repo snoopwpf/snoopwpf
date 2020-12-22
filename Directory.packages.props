@@ -15,6 +15,15 @@
         <PackageVersion Include="System.Management.Automation" Version="7.0.0" />
     </ItemGroup>
 
+    <ItemGroup Label="Test">
+      <PackageVersion Include="NUnit" Version="3.12.0" />
+      <PackageVersion Include="NUnit3TestAdapter" Version="3.16.1" />
+
+      <PackageVersion Include="Verify.NUnit" Version="8.13.0" />
+
+      <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+    </ItemGroup>
+
     <ItemGroup Label="Build">
         <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.0.0" />
 

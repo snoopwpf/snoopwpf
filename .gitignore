@@ -19,6 +19,9 @@ paket-files/
 *.dll
 *.ncb
 
+# Temp-Files from Verify
+*.received.txt
+
 # ReSharper is a .NET coding add-in
 _ReSharper*/
 *.[Rr]e[Ss]harper

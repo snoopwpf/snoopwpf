@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-16" standalone="yes"?>
+<node name="" displayName="" targetType="System.Windows.Controls.StackPanel">
+  <properties>
+    <property displayName="ActualHeight" value="0" />
+    <property displayName="ExtentHeight" value="0" />
+    <property displayName="Height" value="NaN" />
+    <property displayName="MaxHeight" value="∞" />
+    <property displayName="MinHeight" value="0" />
+    <property displayName="ViewportHeight" value="0" />
+  </properties>
+</node>

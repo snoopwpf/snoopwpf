@@ -218,6 +218,53 @@ All other rights reserved.
 					<Setter Property="Background" Value="{Binding TreeBackgroundBrush}"/>
 					<Setter Property="ToolTip" Value="{Binding VisualBrush}"/>
 
+                    <Setter Property="ContextMenu">
+						<Setter.Value>
+							<ContextMenu Style="{x:Null}">
+								<MenuItem Header="Export"
+                                          Style="{x:Null}">
+                                    <MenuItem Header="Tree (with filter)"
+                                              Style="{x:Null}"
+                                              Command="{x:Static windows:SnoopUI.ExportTreeWithFilterCommand}">
+										<MenuItem.CommandParameter>
+											<infrastructure:ExportOptions TreeItem="{Binding Path=PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                                          Recurse="True"
+                                                                          UseFilter="True" />
+                                        </MenuItem.CommandParameter>
+                                    </MenuItem>
+                                    <MenuItem Header="Tree (without filter)"
+                                              Style="{x:Null}"
+                                              Command="{x:Static windows:SnoopUI.ExportTreeWithFilterCommand}">
+                                        <MenuItem.CommandParameter>
+                                            <infrastructure:ExportOptions TreeItem="{Binding Path=PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                                          Recurse="True" />
+                                        </MenuItem.CommandParameter>
+                                    </MenuItem>
+
+                                    <Separator Style="{x:Null}" />
+
+                                    <MenuItem Header="Element (with filter)"
+                                              Style="{x:Null}"
+                                              Command="{x:Static windows:SnoopUI.ExportTreeWithFilterCommand}">
+                                        <MenuItem.CommandParameter>
+                                            <infrastructure:ExportOptions TreeItem="{Binding Path=PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                                          Recurse="False"
+                                                                          UseFilter="True" />
+                                        </MenuItem.CommandParameter>
+                                    </MenuItem>
+                                    <MenuItem Header="Element (without filter)"
+                                              Style="{x:Null}"
+                                              Command="{x:Static windows:SnoopUI.ExportTreeWithFilterCommand}">
+                                        <MenuItem.CommandParameter>
+                                            <infrastructure:ExportOptions TreeItem="{Binding Path=PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                                          Recurse="False" />
+                                        </MenuItem.CommandParameter>
+                                    </MenuItem>
+                                </MenuItem>
+                            </ContextMenu>
+                        </Setter.Value>
+                    </Setter>
+                    
 					<Style.Resources>
 						<Style TargetType="{x:Type ToolTip}">
 							<Setter Property="Template">

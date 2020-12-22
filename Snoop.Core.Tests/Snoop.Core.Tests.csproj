@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp3.1;netcoreapp3.0;net472</TargetFrameworks>
+    <UseWPF>true</UseWPF>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit3TestAdapter" />
+
+    <PackageReference Include="Verify.NUnit" />
+
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Snoop.Core\Snoop.Core.csproj" />
+  </ItemGroup>
+</Project>

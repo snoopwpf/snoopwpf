@@ -1,5 +1,11 @@
 ﻿# Changelog for Snoop
 
+## 3.1.0
+
+- ### Improvements
+
+  - [#38](../../issues/38) - Export tree
+
 ## 3.0.1
 
 - ### Bug fixes
