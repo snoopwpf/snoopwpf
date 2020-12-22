@@ -150,6 +150,7 @@ class Build : NukeBuild
         {
             DotNetTest(s => s
                 .SetProjectFile(RootDirectory / "Snoop.Core.Tests" / "Snoop.Core.Tests.csproj")
+                .SetConfiguration(Configuration)
                 .SetVerbosity(DotNetVerbosity.Normal)
                 .SetNoBuild(true));
         });
