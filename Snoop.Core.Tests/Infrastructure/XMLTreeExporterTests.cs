@@ -2,6 +2,7 @@ namespace Snoop.Core.Tests.Infrastructure
 {
     using System.IO;
     using System.Threading.Tasks;
+    using System.Windows;
     using System.Windows.Controls;
     using NUnit.Framework;
     using Snoop.Data.Tree;
@@ -11,6 +12,13 @@ namespace Snoop.Core.Tests.Infrastructure
     [TestFixture]
     public class XMLTreeExporterTests
     {
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            // Assert correct expected formatting
+            Assert.That(default(Point).ToString(), Is.EqualTo("0;0"));
+        }
+
         [Test]
         public Task TestTreeWithoutPropertyFilter()
         {
