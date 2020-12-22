@@ -6,6 +6,7 @@ end_of_line=crlf
 
 [*.{cs,xaml,xml}]
 indent_style=tabs
+trim_trailing_whitespace = true
 
 [*.{md,yml}]
 indent_style=space
