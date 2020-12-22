@@ -200,10 +200,9 @@ namespace Snoop.Controls
 
             foreach (var propInfo in this.delvePathList)
             {
-                int collectionIndex;
-                if ((collectionIndex = propInfo.CollectionIndex()) >= 0)
+                if (propInfo.IsCollectionEntry)
                 {
-                    delvePath.Append(string.Format("[{0}]", collectionIndex));
+                    delvePath.Append(string.Format("[{0}]", propInfo.CollectionEntryIndexOrKey));
                 }
                 else
                 {

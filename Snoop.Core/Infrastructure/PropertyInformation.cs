@@ -13,7 +13,6 @@ namespace Snoop.Infrastructure
     using System.IO;
     using System.Linq;
     using System.Text;
-    using System.Text.RegularExpressions;
     using System.Windows;
     using System.Windows.Automation.Peers;
     using System.Windows.Controls;
@@ -26,6 +25,27 @@ namespace Snoop.Infrastructure
 
     public class PropertyInformation : DependencyObject, IComparable, INotifyPropertyChanged
     {
+        private static readonly Attribute[] getAllPropertiesAttributeFilter = { new PropertyFilterAttribute(PropertyFilterOptions.All) };
+
+        private readonly object? component;
+        private readonly bool isCopyable;
+        private bool breakOnChange;
+        private bool hasChangedRecently;
+        private ValueSource valueSource;
+
+        private string bindingError = string.Empty;
+        private readonly PropertyDescriptor? property;
+        private readonly string displayName;
+        private bool isLocallySet;
+
+        private bool isInvalidBinding;
+        private int index;
+
+        private bool isDatabound;
+
+        private bool isRunning;
+        private bool ignoreUpdate;
+
         /// <summary>
         /// Normal constructor used when constructing PropertyInformation objects for properties.
         /// </summary>
@@ -425,9 +445,6 @@ namespace Snoop.Infrastructure
             }
         }
 
-        private readonly object? component;
-        private readonly bool isCopyable;
-
         public Type PropertyType
         {
             get
@@ -465,35 +482,29 @@ namespace Snoop.Infrastructure
             get { return this.bindingError; }
         }
 
-        private string bindingError = string.Empty;
-
         public PropertyDescriptor? Property
         {
             get { return this.property; }
         }
-
-        private readonly PropertyDescriptor? property;
 
         public string DisplayName
         {
             get { return this.displayName; }
         }
 
-        private readonly string displayName;
+        public bool IsCollectionEntry { get; private set; }
+
+        public object? CollectionEntryIndexOrKey { get; private set; }
 
         public bool IsInvalidBinding
         {
             get { return this.isInvalidBinding; }
         }
 
-        private bool isInvalidBinding;
-
         public bool IsLocallySet
         {
             get { return this.isLocallySet; }
         }
-
-        private bool isLocallySet;
 
         public bool IsValueChangedByUser { get; set; }
 
@@ -518,8 +529,6 @@ namespace Snoop.Infrastructure
         {
             get { return this.isDatabound; }
         }
-
-        private bool isDatabound;
 
         public bool IsExpression
         {
@@ -546,8 +555,6 @@ namespace Snoop.Infrastructure
             }
         }
 
-        private int index;
-
         public bool IsOdd
         {
             get { return this.index % 2 == 1; }
@@ -558,8 +565,8 @@ namespace Snoop.Infrastructure
             get
             {
                 var dp = this.DependencyProperty;
-                var d = this.Target as DependencyObject;
-                if (dp is not null && d is not null)
+                if (dp is not null
+                    && this.Target is DependencyObject d)
                 {
                     return BindingOperations.GetBindingBase(d, dp);
                 }
@@ -573,8 +580,8 @@ namespace Snoop.Infrastructure
             get
             {
                 var dp = this.DependencyProperty;
-                var d = this.Target as DependencyObject;
-                if (dp is not null && d is not null)
+                if (dp is not null
+                    && this.Target is DependencyObject d)
                 {
                     return BindingOperations.GetBindingExpressionBase(d, dp);
                 }
@@ -608,8 +615,6 @@ namespace Snoop.Infrastructure
             }
         }
 
-        private bool breakOnChange;
-
         public bool HasChangedRecently
         {
             get { return this.hasChangedRecently; }
@@ -621,14 +626,10 @@ namespace Snoop.Infrastructure
             }
         }
 
-        private bool hasChangedRecently;
-
         public ValueSource ValueSource
         {
             get { return this.valueSource; }
         }
-
-        private ValueSource valueSource;
 
         public bool IsVisible
         {
@@ -638,7 +639,7 @@ namespace Snoop.Infrastructure
         public void Clear()
         {
             var dp = this.DependencyProperty;
-            if (dp is not null 
+            if (dp is not null
                 && this.Target is DependencyObject d)
             {
                 d.ClearValue(dp);
@@ -847,7 +848,11 @@ namespace Snoop.Infrastructure
                         || key is not null)
                     {
                         var value = exception?.ToString() ?? item;
-                        var info = new PropertyInformation(item ?? key!, resourceDictionary, "this[" + key + "]", value);
+                        var info = new PropertyInformation(item ?? key!, resourceDictionary, "this[" + key + "]", value)
+                        {
+                            IsCollectionEntry = true,
+                            CollectionEntryIndexOrKey = key
+                        };
 
                         properties.Add(info);
                     }
@@ -863,7 +868,11 @@ namespace Snoop.Infrastructure
                         continue;
                     }
 
-                    var info = new PropertyInformation(item, collection, "this[" + index + "]", item);
+                    var info = new PropertyInformation(item, collection, "this[" + index + "]", item)
+                    {
+                        IsCollectionEntry = true,
+                        CollectionEntryIndexOrKey = index
+                    };
 
                     index++;
                     properties.Add(info);
@@ -951,7 +960,7 @@ namespace Snoop.Infrastructure
             var propertiesToReturn = new List<PropertyDescriptor>();
 
             object? currentObj = obj;
-            
+
             // keep looping until you don't have an AmbiguousMatchException exception
             // and you normally won't have an exception, so the loop will typically execute only once.
             var noException = false;
@@ -1047,39 +1056,37 @@ namespace Snoop.Infrastructure
             }
         }
 
-        private bool isRunning;
-        private bool ignoreUpdate;
-        private static readonly Attribute[] getAllPropertiesAttributeFilter = { new PropertyFilterAttribute(PropertyFilterOptions.All) };
-
-        public bool IsCollection()
+        private int CollectionIndex()
         {
-            var pattern = "^this\\[\\d+\\]$";
-            return Regex.IsMatch(this.DisplayName, pattern);
-        }
-
-        public int CollectionIndex()
-        {
-            if (this.IsCollection())
+            if (this.IsCollectionEntry
+                && this.CollectionEntryIndexOrKey is int collectionEntryIndex)
             {
-                return int.Parse(this.DisplayName.Substring(5, this.DisplayName.Length - 6));
+                return collectionEntryIndex;
             }
 
             return -1;
         }
 
         #region IComparable Members
+
         public int CompareTo(object? obj)
         {
             var thisIndex = this.CollectionIndex();
             var other = obj as PropertyInformation;
-            var objIndex = other?.CollectionIndex();
-            if (thisIndex >= 0 && objIndex >= 0)
+
+            if (other is not null)
             {
-                return thisIndex.CompareTo(objIndex);
+                var objIndex = other.CollectionIndex();
+                if (thisIndex >= 0
+                    && objIndex >= 0)
+                {
+                    return thisIndex.CompareTo(objIndex);
+                }
             }
 
             return string.Compare(this.DisplayName, other?.DisplayName, StringComparison.Ordinal);
         }
+
         #endregion
 
         #region INotifyPropertyChanged Members
@@ -1091,6 +1098,5 @@ namespace Snoop.Infrastructure
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
-
     }
 }

@@ -2,6 +2,10 @@
 
 ## 3.1.0
 
+- ### Bug fixes
+
+  - Path for entries from `ResourceDictionary` is now displayed correctly when delving 
+
 - ### Improvements
 
   - [#38](../../issues/38) - Export tree
