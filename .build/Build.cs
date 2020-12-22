@@ -144,6 +144,8 @@ class Build : NukeBuild
         });
 
     Target Test => _ => _
+        .After(Compile)
+        .Before(Pack)
         .Executes(() =>
         {
             DotNetTest(s => s
