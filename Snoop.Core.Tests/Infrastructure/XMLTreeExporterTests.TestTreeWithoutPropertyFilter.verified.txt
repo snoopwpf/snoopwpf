@@ -52,7 +52,7 @@
     <property displayName="Cursor" value="null" />
     <property displayName="DataContext" value="null" />
     <property displayName="DependencyObjectType" value="System.Windows.DependencyObjectType" />
-    <property displayName="DesiredSize" value="0;0" />
+    <property displayName="DesiredSize" value="0,0" />
     <property displayName="Dispatcher" value="System.Windows.Threading.Dispatcher" />
     <property displayName="Effect" value="null" />
     <property displayName="ExtentHeight" value="0" />
@@ -127,15 +127,15 @@
     <property displayName="RenderOptions.BitmapScalingMode" value="Unspecified" />
     <property displayName="RenderOptions.ClearTypeHint" value="Auto" />
     <property displayName="RenderOptions.EdgeMode" value="Unspecified" />
-    <property displayName="RenderSize" value="0;0" />
+    <property displayName="RenderSize" value="0,0" />
     <property displayName="RenderTransform" value="Identity" />
-    <property displayName="RenderTransformOrigin" value="0;0" />
+    <property displayName="RenderTransformOrigin" value="0,0" />
     <property displayName="Resources" value="System.Windows.ResourceDictionary" />
     <property displayName="ScrollOwner" value="null" />
     <property displayName="ScrollViewer.CanContentScroll" value="False" />
     <property displayName="ScrollViewer.HorizontalScrollBarVisibility" value="Disabled" />
     <property displayName="ScrollViewer.IsDeferredScrollingEnabled" value="False" />
-    <property displayName="ScrollViewer.PanningDeceleration" value="0,001" />
+    <property displayName="ScrollViewer.PanningDeceleration" value="0.001" />
     <property displayName="ScrollViewer.PanningMode" value="None" />
     <property displayName="ScrollViewer.PanningRatio" value="1" />
     <property displayName="ScrollViewer.VerticalScrollBarVisibility" value="Visible" />
@@ -290,7 +290,7 @@
       <property displayName="Cursor" value="null" />
       <property displayName="DataContext" value="null" />
       <property displayName="DependencyObjectType" value="System.Windows.DependencyObjectType" />
-      <property displayName="DesiredSize" value="0;0" />
+      <property displayName="DesiredSize" value="0,0" />
       <property displayName="Dispatcher" value="System.Windows.Threading.Dispatcher" />
       <property displayName="Effect" value="null" />
       <property displayName="FlowDirection" value="LeftToRight" />
@@ -369,14 +369,14 @@
       <property displayName="RenderOptions.BitmapScalingMode" value="Unspecified" />
       <property displayName="RenderOptions.ClearTypeHint" value="Auto" />
       <property displayName="RenderOptions.EdgeMode" value="Unspecified" />
-      <property displayName="RenderSize" value="0;0" />
+      <property displayName="RenderSize" value="0,0" />
       <property displayName="RenderTransform" value="Identity" />
-      <property displayName="RenderTransformOrigin" value="0;0" />
+      <property displayName="RenderTransformOrigin" value="0,0" />
       <property displayName="Resources" value="System.Windows.ResourceDictionary" />
       <property displayName="ScrollViewer.CanContentScroll" value="False" />
       <property displayName="ScrollViewer.HorizontalScrollBarVisibility" value="Disabled" />
       <property displayName="ScrollViewer.IsDeferredScrollingEnabled" value="False" />
-      <property displayName="ScrollViewer.PanningDeceleration" value="0,001" />
+      <property displayName="ScrollViewer.PanningDeceleration" value="0.001" />
       <property displayName="ScrollViewer.PanningMode" value="None" />
       <property displayName="ScrollViewer.PanningRatio" value="1" />
       <property displayName="ScrollViewer.VerticalScrollBarVisibility" value="Visible" />
@@ -532,7 +532,7 @@
       <property displayName="Cursor" value="null" />
       <property displayName="DataContext" value="null" />
       <property displayName="DependencyObjectType" value="System.Windows.DependencyObjectType" />
-      <property displayName="DesiredSize" value="0;0" />
+      <property displayName="DesiredSize" value="0,0" />
       <property displayName="Dispatcher" value="System.Windows.Threading.Dispatcher" />
       <property displayName="Effect" value="null" />
       <property displayName="FlowDirection" value="LeftToRight" />
@@ -601,14 +601,14 @@
       <property displayName="RenderOptions.BitmapScalingMode" value="Unspecified" />
       <property displayName="RenderOptions.ClearTypeHint" value="Auto" />
       <property displayName="RenderOptions.EdgeMode" value="Unspecified" />
-      <property displayName="RenderSize" value="0;0" />
+      <property displayName="RenderSize" value="0,0" />
       <property displayName="RenderTransform" value="Identity" />
-      <property displayName="RenderTransformOrigin" value="0;0" />
+      <property displayName="RenderTransformOrigin" value="0,0" />
       <property displayName="Resources" value="System.Windows.ResourceDictionary" />
       <property displayName="ScrollViewer.CanContentScroll" value="False" />
       <property displayName="ScrollViewer.HorizontalScrollBarVisibility" value="Disabled" />
       <property displayName="ScrollViewer.IsDeferredScrollingEnabled" value="False" />
-      <property displayName="ScrollViewer.PanningDeceleration" value="0,001" />
+      <property displayName="ScrollViewer.PanningDeceleration" value="0.001" />
       <property displayName="ScrollViewer.PanningMode" value="None" />
       <property displayName="ScrollViewer.PanningRatio" value="1" />
       <property displayName="ScrollViewer.VerticalScrollBarVisibility" value="Visible" />
@@ -769,7 +769,7 @@
         <property displayName="Cursor" value="null" />
         <property displayName="DataContext" value="null" />
         <property displayName="DependencyObjectType" value="System.Windows.DependencyObjectType" />
-        <property displayName="DesiredSize" value="0;0" />
+        <property displayName="DesiredSize" value="0,0" />
         <property displayName="Dispatcher" value="System.Windows.Threading.Dispatcher" />
         <property displayName="Effect" value="null" />
         <property displayName="FlowDirection" value="LeftToRight" />
@@ -848,14 +848,14 @@
         <property displayName="RenderOptions.BitmapScalingMode" value="Unspecified" />
         <property displayName="RenderOptions.ClearTypeHint" value="Auto" />
         <property displayName="RenderOptions.EdgeMode" value="Unspecified" />
-        <property displayName="RenderSize" value="0;0" />
+        <property displayName="RenderSize" value="0,0" />
         <property displayName="RenderTransform" value="Identity" />
-        <property displayName="RenderTransformOrigin" value="0;0" />
+        <property displayName="RenderTransformOrigin" value="0,0" />
         <property displayName="Resources" value="System.Windows.ResourceDictionary" />
         <property displayName="ScrollViewer.CanContentScroll" value="False" />
         <property displayName="ScrollViewer.HorizontalScrollBarVisibility" value="Disabled" />
         <property displayName="ScrollViewer.IsDeferredScrollingEnabled" value="False" />
-        <property displayName="ScrollViewer.PanningDeceleration" value="0,001" />
+        <property displayName="ScrollViewer.PanningDeceleration" value="0.001" />
         <property displayName="ScrollViewer.PanningMode" value="None" />
         <property displayName="ScrollViewer.PanningRatio" value="1" />
         <property displayName="ScrollViewer.VerticalScrollBarVisibility" value="Visible" />

@@ -18,7 +18,7 @@ namespace Snoop.Core.Tests.Infrastructure
         public void OneTimeSetUp()
         {
             // Assert correct expected formatting
-            Assert.That(default(Point).ToString(), Is.EqualTo("0;0"), CultureInfo.CurrentCulture.NativeName);
+            Assert.That(default(Point).ToString(), Is.EqualTo("0,0"), CultureInfo.CurrentCulture.NativeName);
         }
 
         [Test]
