@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using JetBrains.Annotations;
 using Nuke.Common;
+using Nuke.Common.CI;
 using Nuke.Common.Execution;
 using Nuke.Common.Git;
 using Nuke.Common.IO;
@@ -81,6 +82,8 @@ class Build : NukeBuild
     [Parameter]
     readonly AbsolutePath ArtifactsDirectory = RootDirectory / "artifacts";
 
+    AbsolutePath OutputDirectory => RootDirectory / "output";
+
     AbsolutePath ChocolateyDirectory => RootDirectory / "chocolatey";
 
     string CandleExecutable => ToolPathResolver.GetPackageExecutable("wix", "candle.exe");
@@ -143,16 +146,21 @@ class Build : NukeBuild
                 .SetVerbosity(DotNetVerbosity.Minimal));
         });
 
+    AbsolutePath TestResultDirectory => OutputDirectory / "test-results";
+    
     Target Test => _ => _
         .After(Compile)
         .Before(Pack)
+        .Produces(TestResultDirectory / "*.trx")
+        .Produces(TestResultDirectory / "*.xml")
         .Executes(() =>
         {
             DotNetTest(s => s
                 .SetProjectFile(RootDirectory / "Snoop.Core.Tests" / "Snoop.Core.Tests.csproj")
                 .SetConfiguration(Configuration)
                 .SetVerbosity(DotNetVerbosity.Normal)
-                .SetNoBuild(true));
+                .SetNoBuild(InvokedTargets.Contains(Compile))
+                .SetResultsDirectory(TestResultDirectory));
         });
 
     Target Pack => _ => _
