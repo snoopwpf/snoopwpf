@@ -1,0 +1,7 @@
+<SessionState ContinuousTestingMode="0" IsActive="True" Name="XMLTreeExporterTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session">
+  <TestAncestor>
+    <TestId>NUnit3x::7ABD1C31-D98A-43D8-8420-3498C4B51ED3::.NETFramework,Version=v4.7.2::Snoop.Core.Tests.Infrastructure.XMLTreeExporterTests</TestId>
+    <TestId>NUnit3x::7ABD1C31-D98A-43D8-8420-3498C4B51ED3::.NETCoreApp,Version=v3.0::Snoop.Core.Tests.Infrastructure.XMLTreeExporterTests</TestId>
+    <TestId>NUnit3x::7ABD1C31-D98A-43D8-8420-3498C4B51ED3::.NETCoreApp,Version=v3.1::Snoop.Core.Tests.Infrastructure.XMLTreeExporterTests</TestId>
+  </TestAncestor>
+</SessionState>

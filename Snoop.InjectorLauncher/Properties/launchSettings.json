@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "Snoop.InjectorLauncher": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\Users\\Pasik\\AppData\\Local\\Temp",
+      "environmentVariables": {
+        "Klíč": "Hodnota"
+      },
+      "remoteDebugEnabled": false,
+      "sqlDebugging": true,
+      "nativeDebugging": true
+    }
+  }
+}

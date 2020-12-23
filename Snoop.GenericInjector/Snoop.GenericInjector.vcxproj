@@ -34,7 +34,7 @@
     <ProjectGuid>{1E16FD0C-92AA-403D-B949-1F19B96DD3CE}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>SnoopGenericInjector</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
     <ProjectName>Snoop.GenericInjector</ProjectName>
     <BitnessName Condition="'$(Platform)'=='Win32'">x86</BitnessName>
     <BitnessName Condition="'$(Platform)'=='x64'">x64</BitnessName>
@@ -115,12 +115,11 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="version.rc">
-      <PreprocessorDefinitions>VERSION_MAJOR=$(MajorVersion);VERSION_MINOR=$(MinorVersion);VERSION_BUILD=$(BuildVersion);VERSION_REVISION=$(RevisionVersion);InformationalVersion=&quot;$(InformationalVersion)&quot;;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VERSION_MAJOR=$(MajorVersion);VERSION_MINOR=$(MinorVersion);VERSION_BUILD=$(BuildVersion);VERSION_REVISION=$(RevisionVersion);InformationalVersion="$(InformationalVersion)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemGroup>
   <Import Condition="Exists('$(VCTargetsPath)\Microsoft.Cpp.targets')" Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <Target Name="AfterBuild"
-          Condition="'$(RootBuild)' == 'True'">
+  <Target Name="AfterBuild" Condition="'$(RootBuild)' == 'True'">
     <MSBuild Projects="$(MSBuildProjectFile)" Properties="RootBuild=False;Configuration=$(Configuration);Platform=x64;PlatFormTarget=x64" RunEachTargetSeparately="true" />
   </Target>
 </Project>

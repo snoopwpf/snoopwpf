@@ -103,7 +103,7 @@ class Build : NukeBuild
     Target Compile => _ => _
         .DependsOn(Restore)
         .Executes(() => {
-            MSBuild(s => s
+            IReadOnlyCollection<Output> readOnlyCollections = MSBuild(s => s
                 .SetProjectFile(RootDirectory / "Snoop.GenericInjector/Snoop.GenericInjector.vcxproj")
                 .SetConfiguration(Configuration)
                 .SetTargetPlatform(MSBuildTargetPlatform.Win32)
