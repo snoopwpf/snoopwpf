@@ -606,8 +606,7 @@ namespace Snoop.Windows
             var isControlPressed = currentModifiers.HasFlag(ModifierKeys.Control);
             var isShiftPressed = currentModifiers.HasFlag(ModifierKeys.Shift);
 
-            if (isControlPressed == false
-                && isShiftPressed == false)
+            if (isControlPressed == false)
             {
                 return;
             }
