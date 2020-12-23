@@ -159,7 +159,8 @@ class Build : NukeBuild
                 .SetProjectFile(RootDirectory / "Snoop.Core.Tests" / "Snoop.Core.Tests.csproj")
                 .SetConfiguration(Configuration)
                 .SetVerbosity(DotNetVerbosity.Normal)
-                .SetNoBuild(InvokedTargets.Contains(Compile))
+                .SetLogger("trx")
+                .SetNoBuild(true)
                 .SetResultsDirectory(TestResultDirectory));
         });
 
