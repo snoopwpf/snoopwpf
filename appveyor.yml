@@ -13,8 +13,8 @@ install:
   - ps: ./dotnet-install.ps1 -Version 5.0.100 -InstallDir "C:\Program Files\dotnet"
 
 build_script:
-  - ps: dotnet --info
-  - ps: .\build.ps1 CI -Verbose
+  - cmd: dotnet --info
+  - cmd: .\build.cmd CI -Verbose
 
 artifacts:
   - path: \artifacts\*.*
