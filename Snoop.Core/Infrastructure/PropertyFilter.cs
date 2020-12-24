@@ -19,6 +19,7 @@ namespace Snoop.Infrastructure
     using System.Windows.Media;
     using System.Windows.Media.Animation;
     using System.Windows.Navigation;
+    using Snoop.AttachedProperties;
 
     public class PropertyFilter
     {
@@ -173,7 +174,8 @@ namespace Snoop.Infrastructure
             // Snoops own attached properties
             typeof(AttachedPropertyManager),
             typeof(BringIntoViewBehavior),
-            typeof(ComboBoxSettings)
+            typeof(ComboBoxSettings),
+            typeof(SnoopAttachedProperties)
         };
 
         private static readonly List<string> uncommonPropertyNames = new()
