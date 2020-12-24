@@ -5,6 +5,8 @@
 - ### Bug fixes
 
   - Path for entries from `ResourceDictionary` is now displayed correctly when delving 
+  - Detaching Snoop now properly pops the menu mode. Prior to this certain keyboard keys, like DEL or LEFT or RIGHT etc., stopped working.
+  - Detaching Snoop now properly detaches it's exception handler
 
 - ### Improvements
 

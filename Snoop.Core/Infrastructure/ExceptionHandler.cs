@@ -10,7 +10,7 @@
     {
         private static readonly List<WeakReference> knownDispatchers = new();
 
-        public static void AddExceptionHandler(Dispatcher dispatcher)
+        public static void AddExceptionHandler(Dispatcher? dispatcher)
         {
             if (dispatcher is null)
             {
@@ -22,8 +22,33 @@
                 return;
             }
 
-            knownDispatchers.Add(new WeakReference(dispatcher));
+            knownDispatchers.Add(new(dispatcher));
+            dispatcher.UnhandledException -= UnhandledExceptionHandler;
             dispatcher.UnhandledException += UnhandledExceptionHandler;
+        }
+
+        public static void RemoveExceptionHandler(Dispatcher? dispatcher)
+        {
+            if (dispatcher is null)
+            {
+                return;
+            }
+
+            dispatcher.UnhandledException -= UnhandledExceptionHandler;
+
+            var knownDispatcher = knownDispatchers.FirstOrDefault(x => x.IsAlive && ReferenceEquals(x.Target, dispatcher));
+
+            if (knownDispatcher is not null)
+            {
+                knownDispatchers.Remove(knownDispatcher);
+            }
+
+            var deadKnownDispatchers = knownDispatchers.Where(x => x.IsAlive == false).ToList();
+
+            foreach (var deadKnownDispatcher in deadKnownDispatchers)
+            {
+                knownDispatchers.Remove(deadKnownDispatcher);
+            }
         }
 
         private static void UnhandledExceptionHandler(object sender, DispatcherUnhandledExceptionEventArgs e)

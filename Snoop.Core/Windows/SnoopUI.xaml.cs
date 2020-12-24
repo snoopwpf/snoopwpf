@@ -399,10 +399,16 @@ namespace Snoop.Windows
         {
             base.OnClosing(e);
 
+            if (e.Cancel)
+            {
+                return;
+            }
+
             this.CurrentSelection = null;
 
             InputManager.Current.PreProcessInput -= this.HandlePreProcessInput;
             EventsListener.Stop();
+            this.filterTimer.Stop();
 
             // persist the window placement details to the user settings.
             SnoopWindowUtils.SaveWindowPlacement(this, wp => Settings.Default.SnoopUIWindowPlacement = wp);

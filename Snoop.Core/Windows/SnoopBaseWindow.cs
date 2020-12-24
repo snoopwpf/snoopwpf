@@ -1,6 +1,7 @@
 ﻿namespace Snoop.Windows
 {
     using System;
+    using System.ComponentModel;
     using System.Windows;
     using System.Windows.Input;
     using System.Windows.Media.Imaging;
@@ -39,6 +40,29 @@
             }
 
             base.OnDeactivated(e);
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            base.OnClosing(e);
+
+            if (e.Cancel)
+            {
+                return;
+            }
+
+            var presentationSource = PresentationSource.FromVisual(this);
+            if (presentationSource is not null)
+            {
+                try
+                {
+                    InputManager.Current.PopMenuMode(presentationSource);
+                }
+                catch
+                {
+                    // ignored because we might have already popped the menu mode on deactivation
+                }
+            }
         }
     }
 }
