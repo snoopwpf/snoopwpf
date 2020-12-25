@@ -11,6 +11,7 @@
 
 - ### Improvements
 
+  - Added menu items to close the current snoop window, open the folder containing the settings for the currently running application and reset the current settings
   - [#38](../../issues/38) - Export tree (thanks @amake for the basic idea and starting point)
 
 ## 3.0.1

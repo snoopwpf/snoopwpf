@@ -126,12 +126,26 @@ All other rights reserved.
                       ItemsSource="{Binding Source={markup:EnumBindingSource {x:Type tree:TreeType}}}"
                       SelectedItem="{Binding CurrentTreeType, Mode=TwoWay}" />
 			<Menu Style="{x:Null}">
+				<MenuItem Style="{x:Null}"
+                          Header="File">
+                    <MenuItem Style="{x:Null}" Header="Close window" Command="{x:Static ApplicationCommands.Close}" />
+                </MenuItem>
+                <MenuItem Style="{x:Null}"
+                          Header="Settings">
+                    <MenuItem Style="{x:Null}" Header="Open settings folder" Click="HandleOpenSettingsFolder_OnClick" />
+                    <Separator />
+                    <MenuItem Style="{x:Null}" Header="Reset settings and close window" Click="HandleResetSettings_OnClick" />
+                </MenuItem>
                 <MenuItem Style="{x:Null}"
                           Header="_Tracking options">
                     <MenuItem Style="{x:Null}"
-                              Header="Handle _CTRL" IsCheckable="True" IsChecked="{Binding IsHandlingCTRL}" />
+                              Header="Handle _CTRL"
+                              IsCheckable="True"
+                              IsChecked="{Binding IsHandlingCTRL}" />
                     <MenuItem Style="{x:Null}"
-                              Header="Handle CTRL + _SHIFT" IsCheckable="True" IsChecked="{Binding IsHandlingCTRL_SHIFT}" />
+                              Header="Handle CTRL + _SHIFT"
+                              IsCheckable="True"
+                              IsChecked="{Binding IsHandlingCTRL_SHIFT}" />
                 </MenuItem>
 			</Menu>
         </StackPanel>

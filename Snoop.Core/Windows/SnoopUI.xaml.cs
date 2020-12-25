@@ -78,6 +78,8 @@ namespace Snoop.Windows
                 // swallow this exception since you can snoop just fine anyways.
             }
 
+            this.CommandBindings.Add(new(ApplicationCommands.Close, (_, _) => this.Close()));
+
             this.CommandBindings.Add(new CommandBinding(IntrospectCommand, this.HandleIntrospection));
             this.CommandBindings.Add(new CommandBinding(RefreshCommand, this.HandleRefresh));
             this.CommandBindings.Add(new CommandBinding(ExportTreeWithFilterCommand, this.HandleExport));
@@ -410,14 +412,17 @@ namespace Snoop.Windows
             EventsListener.Stop();
             this.filterTimer.Stop();
 
-            // persist the window placement details to the user settings.
-            SnoopWindowUtils.SaveWindowPlacement(this, wp => Settings.Default.SnoopUIWindowPlacement = wp);
+            if (this.isResettingSettings == false)
+            {
+                // persist the window placement details to the user settings.
+                SnoopWindowUtils.SaveWindowPlacement(this, wp => Settings.Default.SnoopUIWindowPlacement = wp);
 
-            // persist whether all properties are shown by default
-            Settings.Default.ShowDefaults = this.PropertyGrid.ShowDefaults;
+                // persist whether all properties are shown by default
+                Settings.Default.ShowDefaults = this.PropertyGrid.ShowDefaults;
 
-            // persist whether the previewer is shown by default
-            Settings.Default.ShowPreviewer = this.PreviewArea?.IsActive == true;
+                // persist whether the previewer is shown by default
+                Settings.Default.ShowPreviewer = this.PreviewArea?.IsActive == true;
+            }
 
             // actually do the persisting
             Settings.Default.Save();
@@ -850,10 +855,12 @@ namespace Snoop.Windows
         private IInputElement? previousFocus;
 
         /// <summary>
-        /// Indicates whether CurrentFocus should retur previously focused element.
+        /// Indicates whether CurrentFocus should return previously focused element.
         /// This fixes problem where Snoop steals the focus from snooped app.
         /// </summary>
         private bool returnPreviousFocus;
+
+        private bool isResettingSettings;
 
         #endregion
 
@@ -868,6 +875,44 @@ namespace Snoop.Windows
         }
 
         #endregion
+
+        private void HandleOpenSettingsFolder_OnClick(object sender, RoutedEventArgs e)
+        {
+            var config = System.Configuration.ConfigurationManager.OpenExeConfiguration(System.Configuration.ConfigurationUserLevel.PerUserRoamingAndLocal);
+
+            if (config is null
+                || string.IsNullOrEmpty(config.FilePath))
+            {
+                return;
+            }
+
+            var directory = Path.GetDirectoryName(config.FilePath);
+
+            if (directory is not null
+                && directory.Length > 0)
+            {
+                using (Process.Start(directory))
+                {
+                }
+            }
+        }
+
+        private void HandleResetSettings_OnClick(object sender, RoutedEventArgs e)
+        {
+            this.isResettingSettings = true;
+
+            Settings.Default.Reset();
+
+            // load whether all properties are shown by default
+            this.PropertyGrid.ShowDefaults = Settings.Default.ShowDefaults;
+
+            // load whether the previewer is shown by default
+            this.PreviewArea.IsActive = Settings.Default.ShowPreviewer;
+
+            this.Close();
+
+            this.isResettingSettings = false;
+        }
     }
 
     #region NoFocusHyperlink
