@@ -982,47 +982,50 @@ namespace Snoop.Windows
 
         public static void DumpObjectsWithEditedProperties()
         {
-            if (itemsWithEditedProperties.Count == 0)
+            lock (@lock)
             {
-                return;
-            }
-
-            var sb = new StringBuilder();
-            sb.AppendFormat(
-                "Snoop dump as of {0}{1}--- OBJECTS WITH EDITED PROPERTIES ---{1}",
-                DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                Environment.NewLine);
-
-            var dispatcherCount = 1;
-
-            foreach (var dispatcherKVP in itemsWithEditedProperties)
-            {
-                if (itemsWithEditedProperties.Count > 1)
+                if (itemsWithEditedProperties.Count == 0)
                 {
-                    sb.AppendFormat("-- Dispatcher #{0} -- {1}", dispatcherCount++, Environment.NewLine);
+                    return;
                 }
 
-                foreach (var objectPropertiesKVP in dispatcherKVP.Value)
+                var sb = new StringBuilder();
+                sb.AppendFormat(
+                    "Snoop dump as of {0:yyyy-MM-dd HH:mm:ss}{1}--- OBJECTS WITH EDITED PROPERTIES ---{1}",
+                    DateTime.Now,
+                    Environment.NewLine);
+
+                var dispatcherCount = 1;
+
+                foreach (var dispatcherKVP in itemsWithEditedProperties)
                 {
-                    sb.AppendFormat("Object: {0}{1}", objectPropertiesKVP.Key, Environment.NewLine);
-                    foreach (var propInfo in objectPropertiesKVP.Value)
+                    if (itemsWithEditedProperties.Count > 1)
                     {
-                        sb.AppendFormat(
-                            "\tProperty: {0}, New Value: {1}{2}",
-                            propInfo.PropertyName,
-                            propInfo.PropertyValue,
-                            Environment.NewLine);
+                        sb.AppendFormat("-- Dispatcher #{0} -- {1}", dispatcherCount++, Environment.NewLine);
+                    }
+
+                    foreach (var objectPropertiesKVP in dispatcherKVP.Value)
+                    {
+                        sb.AppendFormat("Object: {0}{1}", objectPropertiesKVP.Key, Environment.NewLine);
+                        foreach (var propInfo in objectPropertiesKVP.Value)
+                        {
+                            sb.AppendFormat(
+                                "\tProperty: {0}, New Value: {1}{2}",
+                                propInfo.PropertyName,
+                                propInfo.PropertyValue,
+                                Environment.NewLine);
+                        }
+                    }
+
+                    if (itemsWithEditedProperties.Count > 1)
+                    {
+                        sb.AppendLine();
                     }
                 }
 
-                if (itemsWithEditedProperties.Count > 1)
-                {
-                    sb.AppendLine();
-                }
+                Debug.WriteLine(sb.ToString());
+                ClipboardHelper.SetText(sb.ToString());
             }
-
-            Debug.WriteLine(sb.ToString());
-            ClipboardHelper.SetText(sb.ToString());
         }
     }
 }
