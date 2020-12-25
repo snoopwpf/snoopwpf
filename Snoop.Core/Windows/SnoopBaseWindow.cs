@@ -33,11 +33,7 @@
         /// <inheritdoc />
         protected override void OnDeactivated(EventArgs e)
         {
-            var presentationSource = PresentationSource.FromVisual(this);
-            if (presentationSource is not null)
-            {
-                InputManager.Current.PopMenuMode(presentationSource);
-            }
+            this.PopMenuModeSafe();
 
             base.OnDeactivated(e);
         }
@@ -51,6 +47,11 @@
                 return;
             }
 
+            this.PopMenuModeSafe();
+        }
+
+        private void PopMenuModeSafe()
+        {
             var presentationSource = PresentationSource.FromVisual(this);
             if (presentationSource is not null)
             {
@@ -60,7 +61,7 @@
                 }
                 catch
                 {
-                    // ignored because we might have already popped the menu mode on deactivation
+                    // ignored because we might have already popped the menu mode
                 }
             }
         }
