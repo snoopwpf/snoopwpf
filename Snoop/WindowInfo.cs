@@ -9,7 +9,7 @@ namespace Snoop
 
     public class WindowInfo
     {
-        private static readonly Dictionary<IntPtr, bool> windowHandleToValidityMap = new();
+        private static readonly Dictionary<IntPtr, WindowInfo> windowInfoCache = new();
 
         // we have to match "HwndWrapper[{0};{1};{2}]" which is used at https://referencesource.microsoft.com/#WindowsBase/Shared/MS/Win32/HwndWrapper.cs,2a8e13c293bb3f8c
         private static readonly Regex windowClassNameRegex = new(@"^HwndWrapper\[.*;.*;.*\]$", RegexOptions.Compiled);
@@ -20,52 +20,70 @@ namespace Snoop
 
         private static readonly int snoopProcessId = Process.GetCurrentProcess().Id;
 
-        public WindowInfo(IntPtr hwnd)
+        private WindowInfo(IntPtr hwnd)
         {
             this.HWnd = hwnd;
         }
 
-        public WindowInfo(IntPtr hwnd, Process owningProcess)
-        : this(hwnd)
+        private WindowInfo(IntPtr hwnd, Process? owningProcess)
+            : this(hwnd)
         {
-            this.owningProcessInfo = new ProcessInfo(owningProcess);
+            if (owningProcess is not null)
+            {
+                this.owningProcessInfo = new(owningProcess);
+            }
+        }
+
+        public static WindowInfo GetWindowInfo(IntPtr hwnd, Process? owningProcess = null)
+        {
+            if (windowInfoCache.TryGetValue(hwnd, out var windowInfo))
+            {
+                return windowInfo;
+            }
+
+            windowInfo = new(hwnd, owningProcess);
+            windowInfoCache.Add(hwnd, windowInfo);
+            return windowInfo;
         }
 
         public static void ClearCachedWindowHandleInfo()
         {
-            windowHandleToValidityMap.Clear();
+            windowInfoCache.Clear();
         }
 
         public IList<NativeMethods.MODULEENTRY32> Modules => this.modules ??= NativeMethods.GetModulesFromWindowHandle(this.HWnd).ToList();
 
+        private bool? isValidProcess;
+        
         public bool IsValidProcess
         {
             get
             {
-                var isValid = false;
+                if (this.isValidProcess is not null)
+                {
+                    return this.isValidProcess.Value;
+                }
+
+                this.isValidProcess = false;
+
                 try
                 {
                     if (this.HWnd == IntPtr.Zero)
                     {
-                        return false;
-                    }
-
-                    // see if we have cached the process validity previously, if so, return it.
-                    if (windowHandleToValidityMap.TryGetValue(this.HWnd, out isValid))
-                    {
-                        return isValid;
+                        return this.isValidProcess.Value;
                     }
 
                     var process = this.OwningProcessInfo;
                     if (process is null)
                     {
-                        return false;
+                        this.isValidProcess = false;
+                        return this.isValidProcess.Value;
                     }
 
                     // else determine the process validity and cache it.
                     if (process.Process.Id == snoopProcessId)
                     {
-                        isValid = false;
+                        this.isValidProcess = false;
 
                         // the above line stops the user from snooping on snoop, since we assume that ... that isn't their goal.
                         // to get around this, the user can bring up two snoops and use the second snoop ... to snoop the first snoop.
@@ -79,10 +97,10 @@ namespace Snoop
                         // WPF-Windows have a defined class name
                         if (windowClassNameRegex.IsMatch(this.ClassName))
                         {
-                            isValid = true;
+                            this.isValidProcess = true;
                         }
 
-                        if (isValid == false)
+                        if (this.isValidProcess == false)
                         {
                             // a process is valid to snoop if it contains a dependency on PresentationFramework, PresentationCore, or milcore (wpfgfx).
                             // this includes the files:
@@ -105,21 +123,19 @@ namespace Snoop
                                     || module.szModule.StartsWith("PresentationCore", StringComparison.OrdinalIgnoreCase)
                                     || module.szModule.StartsWith("wpfgfx", StringComparison.OrdinalIgnoreCase))
                                 {
-                                    isValid = true;
+                                    this.isValidProcess = true;
                                     break;
                                 }
                             }
                         }
                     }
-
-                    windowHandleToValidityMap[this.HWnd] = isValid;
                 }
                 catch
                 {
                     // ignored
                 }
 
-                return isValid;
+                return this.isValidProcess.Value;
             }
         }
 
@@ -127,11 +143,16 @@ namespace Snoop
         {
             get
             {
+                if (this.owningProcessInfo is not null)
+                {
+                    return this.owningProcessInfo;
+                }
+
                 var windowThreadProcess = NativeMethods.GetWindowThreadProcess(this.HWnd);
 
                 if (windowThreadProcess is not null)
                 {
-                    return this.owningProcessInfo ??= new ProcessInfo(windowThreadProcess);
+                    return this.owningProcessInfo ??= new(windowThreadProcess);
                 }
 
                 return null;

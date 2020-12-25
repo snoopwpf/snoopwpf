@@ -112,7 +112,7 @@ namespace Snoop
             // the window under the cursor has changed
             if (windowUnderCursor != this.currentWindowInfo?.HWnd)
             {
-                this.currentWindowInfo = new WindowInfo(windowUnderCursor);
+                this.currentWindowInfo = WindowInfo.GetWindowInfo(windowUnderCursor);
                 this.WindowInfoControl.DataContext = this.currentWindowInfo;
 
                 Trace.WriteLine($"Window under cursor: {this.currentWindowInfo.TraceInfo}");
