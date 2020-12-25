@@ -262,19 +262,6 @@ namespace Snoop.Windows
         private string filter = string.Empty;
         #endregion
 
-        #region EventFilter
-        public string EventFilter
-        {
-            get { return this.eventFilter; }
-
-            set
-            {
-                this.eventFilter = value;
-                EventsListener.Filter = value;
-            }
-        }
-        #endregion
-
         #region CurrentFocus
         public IInputElement? CurrentFocus
         {
@@ -409,7 +396,7 @@ namespace Snoop.Windows
             this.CurrentSelection = null;
 
             InputManager.Current.PreProcessInput -= this.HandlePreProcessInput;
-            EventsListener.Stop();
+
             this.filterTimer.Stop();
 
             if (this.isResettingSettings == false)
