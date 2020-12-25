@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
+    <Reference Include="System.Configuration" />
     <PackageReference Include="microsoft.powershell.3.referenceassemblies" PrivateAssets="All" />
   </ItemGroup>
 

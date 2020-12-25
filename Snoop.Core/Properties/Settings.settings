@@ -25,5 +25,13 @@
               
             </Value>
     </Setting>
+    <Setting Name="EventTrackers" Type="System.String" Scope="User">
+      <Value Profile="(Default)">
+              
+            </Value>
+    </Setting>
+    <Setting Name="EventTrackers" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

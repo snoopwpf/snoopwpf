@@ -9,6 +9,7 @@
 //------------------------------------------------------------------------------
 
 namespace Snoop.Core.Properties {
+    using System.Collections.ObjectModel;
     using Snoop.Infrastructure;
     using Snoop.Views.DebugListenerTab;
 
@@ -112,6 +113,36 @@ namespace Snoop.Core.Properties {
             set
             {
                 this["SnoopDebugFilters"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public ObservableCollection<EventTrackerSettingsItem> EventTrackers
+        {
+            get
+            {
+                return ((ObservableCollection<EventTrackerSettingsItem>)(this["EventTrackers"]));
+            }
+            set
+            {
+                this["EventTrackers"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public int MaximumTrackedEvents
+        {
+            get
+            {
+                return ((int)(this["MaximumTrackedEvents"]));
+            }
+            set
+            {
+                this["MaximumTrackedEvents"] = value;
             }
         }
     }

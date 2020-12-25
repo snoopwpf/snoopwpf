@@ -14,20 +14,44 @@ namespace Snoop.Infrastructure
 
     public delegate void EventTrackerHandler(TrackedEvent newEvent);
 
+    [DebuggerDisplay("{" + nameof(Id) + "}")]
+    [Serializable]
+    public class EventTrackerSettingsItem
+    {
+        // just for serialization
+        private EventTrackerSettingsItem()
+        {
+            this.Id = string.Empty;
+        }
+
+        public EventTrackerSettingsItem(string id)
+        {
+            this.Id = id;
+        }
+
+        public string Id { get; set; }
+
+        public bool IsEnabled { get; set; }
+    }
+
     /// <summary>
     /// Random class that tries to determine what element handled a specific event.
     /// Doesn't work too well in the end, because the static ClassHandler doesn't get called
     /// in a consistent order.
     /// </summary>
+    [DebuggerDisplay("{" + nameof(Id) + "}")]
     public class EventTracker : INotifyPropertyChanged, IComparable
     {
         public EventTracker(Type targetType, RoutedEvent routedEvent)
         {
             this.targetType = targetType;
             this.RoutedEvent = routedEvent;
+            this.Id = this.RoutedEvent.OwnerType.FullName + ";" + this.RoutedEvent.Name;
         }
 
         public event EventTrackerHandler? EventHandled;
+
+        public string Id { get; }
 
         public bool IsEnabled
         {
@@ -38,7 +62,9 @@ namespace Snoop.Infrastructure
                 if (this.isEnabled != value)
                 {
                     this.isEnabled = value;
-                    if (this.isEnabled && !this.everEnabled)
+
+                    if (this.isEnabled
+                        && this.everEnabled == false)
                     {
                         this.everEnabled = true;
                         EventManager.RegisterClassHandler(this.targetType, this.RoutedEvent, new RoutedEventHandler(this.HandleEvent), true);

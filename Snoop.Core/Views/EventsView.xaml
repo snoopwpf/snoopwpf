@@ -116,12 +116,12 @@ All other rights reserved.
 								Margin="3,4.36166666666667,3.41060513164848E-13,2.36166666666664"
 								Height="13.2766666666667"
 								Foreground="Black"
-								Text="Common events"
+								Text="Change tracked events"
 							/>
 							<ToggleButton
 								x:Name="ToggleButton"
 								Grid.ColumnSpan="3"
-								IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource Mode=TemplatedParent, AncestorType={x:Null}}}"
+								IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
 							>
 								<ToggleButton.Style>
 									<Style TargetType="{x:Type ToggleButton}">
@@ -217,16 +217,36 @@ All other rights reserved.
 					>
 						<Grid
 							x:Name="DropDown"
+                            Style="{x:Null}"
 							MinWidth="{TemplateBinding ActualWidth}"
 							MaxHeight="{TemplateBinding MaxDropDownHeight}"
 						>
 							<Border
 								x:Name="DropDownBorder"
+                                Style="{x:Null}"
 								Background="{TemplateBinding Background}"
 								BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}"
 								BorderThickness="1,1,1,1"
 							/>
-							<ScrollViewer x:Name="ScrollViewer" Style="{x:Null}" Margin="1,1,1,1">
+							<Grid Style="{x:Null}"
+                                  Margin="1,1,1,1">
+								<Grid.RowDefinitions>
+									<RowDefinition Style="{x:Null}" Height="Auto" />
+									<RowDefinition Style="{x:Null}" Height="*" />
+                                </Grid.RowDefinitions>
+                                <Button
+                                    Grid.Row="0"
+                                    Style="{x:Null}"
+                                    Command="{x:Static views:EventsView.ResetEventTrackersToDefaultCommand}">
+                                    <TextBlock Style="{x:Null}">
+                                        Reset to default settings
+                                    </TextBlock>
+                                    <Button.ToolTip>
+                                        <TextBlock Style="{x:Null}" Text="Reset the enabled event trackers."/>
+                                    </Button.ToolTip>
+                                </Button>
+                            
+							<ScrollViewer Grid.Row="1" x:Name="ScrollViewer" Style="{x:Null}" Margin="0 2 0 0">
 								<ItemsControl
 								    Style="{x:Null}"
 									ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource TemplatedParent}}"
@@ -237,6 +257,7 @@ All other rights reserved.
 									</ItemsControl.GroupStyle>
 								</ItemsControl>
 							</ScrollViewer>
+                            </Grid>
 						</Grid>
 					</Popup>
 				</Grid>
@@ -350,6 +371,7 @@ All other rights reserved.
 			</Style>
 		</TreeView.ItemContainerStyle>
 	</TreeView>
+
     <StackPanel Style="{x:Null}" Orientation="Horizontal" Grid.Row="2">
         <TextBlock Style="{x:Null}" Text="Maximum events displayed: "/>
         <TextBox Style="{x:Null}" Text="{Binding ElementName=Events, Path=MaxEventsDisplayed}" MinWidth="64" VerticalAlignment="Stretch" />
