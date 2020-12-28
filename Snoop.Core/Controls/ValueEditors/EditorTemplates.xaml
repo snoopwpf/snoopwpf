@@ -110,8 +110,9 @@ All other rights reserved.
 						<CheckBox
 							x:Name="PART_CheckBox"
 						    Style="{x:Null}"
-							IsChecked="{Binding Value, Mode=TwoWay}"
+                            IsChecked="{Binding Value, Mode=TwoWay}"
 							IsEnabled="{TemplateBinding IsEditable}"
+							IsThreeState="{Binding IsNullableValueType}"
 							VerticalAlignment="Center"
 						/>
 						<TextBlock Style="{x:Null}" 

@@ -477,6 +477,8 @@ namespace Snoop.Infrastructure
             }
         }
 
+        public bool IsNullableValueType => Nullable.GetUnderlyingType(this.PropertyType) is not null;
+
         public string BindingError
         {
             get { return this.bindingError; }
