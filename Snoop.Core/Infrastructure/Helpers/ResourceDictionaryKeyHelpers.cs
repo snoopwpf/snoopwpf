@@ -10,7 +10,7 @@ namespace Snoop.Infrastructure.Helpers
 
     public static class ResourceDictionaryKeyHelpers
     {
-        public static string GetKeyOfResourceItem(DependencyObject dependencyObject, object resourceItem)
+        public static string GetKeyOfResourceItem(DependencyObject? dependencyObject, object? resourceItem)
         {
             if (dependencyObject is null
                 || resourceItem is null)
@@ -21,8 +21,7 @@ namespace Snoop.Infrastructure.Helpers
             // Walk up the visual tree, looking for the resourceItem in each frameworkElement's resource dictionary.
             while (dependencyObject is not null)
             {
-                var frameworkElement = dependencyObject as FrameworkElement;
-                if (frameworkElement is not null)
+                if (dependencyObject is FrameworkElement frameworkElement)
                 {
                     var resourceKey = GetKeyInResourceDictionary(frameworkElement.Resources, resourceItem);
                     if (resourceKey is not null)
@@ -51,11 +50,12 @@ namespace Snoop.Infrastructure.Helpers
             return string.Empty;
         }
 
-        public static string? GetKeyInResourceDictionary(ResourceDictionary dictionary, object resourceItem)
+        public static string? GetKeyInResourceDictionary(ResourceDictionary dictionary, object? resourceItem)
         {
             foreach (var key in dictionary.Keys)
             {
-                if (dictionary[key] == resourceItem)
+                if (dictionary.TryGetValue(key, out var item)
+                    && item == resourceItem)
                 {
                     return key?.ToString();
                 }

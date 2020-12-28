@@ -5,11 +5,9 @@
 
 namespace Snoop.Data.Tree
 {
-    using System;
     using System.ComponentModel;
     using System.Windows;
     using System.Windows.Data;
-    using System.Windows.Markup;
 
     public class ResourceDictionaryTreeItem : TreeItem
     {
@@ -64,24 +62,7 @@ namespace Snoop.Data.Tree
             var resourceDictionary = this.dictionary;
             foreach (var key in resourceDictionary.Keys)
             {
-                Exception? exception = null;
-                object? item = null;
-                try
-                {
-                    item = resourceDictionary[key];
-                }
-                catch (Exception ex)
-                {
-                    // Sometimes we can get an exception ... because the xaml you are Snoop(ing) is bad.
-                    // e.g. I got this once when I was Snoop(ing) some xaml that was referring to an image resource that was no longer there.
-                    // Wrong style inheritance like this also cause exceptions here:
-                    // <Style x:Key="BlahStyle" TargetType="{x:Type RichTextBox}"/>
-                    // <Style x:Key="BlahBlahStyle" BasedOn="{StaticResource BlahStyle}" TargetType="{x:Type TextBoxBase}"/>
-
-                    // We only get an exception once. The next time through the value just comes back null.
-
-                    exception = ex;
-                }
+                resourceDictionary.TryGetValue(key, out var item, out var exception);
 
                 if (item is not null
                     || key is not null)

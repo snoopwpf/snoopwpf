@@ -1,4 +1,4 @@
-﻿# Changelog for Snoop
+# Changelog for Snoop
 
 ## 3.1.0
 
@@ -8,6 +8,7 @@
   - Detaching Snoop now properly pops the menu mode. Prior to this certain keyboard keys, like DEL or LEFT or RIGHT etc., stopped working.
   - Detaching Snoop now properly detaches it's exception handler
   - Fixed a performance regression in the window finder when using mouse cursor drop
+  - Fixed an exception when application contains invalid resource definitons
 
 - ### Improvements
 
