@@ -7,7 +7,7 @@
     {
         private const DispatcherPriority DefaultDispatcherPriority = DispatcherPriority.Normal;
 
-        public static void RunInDispatcherAsync(this DispatcherObject dispatcher, Action action, DispatcherPriority priority = DefaultDispatcherPriority)
+        public static void RunInDispatcherAsync(this DispatcherObject? dispatcher, Action action, DispatcherPriority priority = DefaultDispatcherPriority)
         {
             if (dispatcher is null)
             {
@@ -18,7 +18,7 @@
             dispatcher.Dispatcher.RunInDispatcherAsync(action, priority);
         }
 
-        public static void RunInDispatcherAsync(this Dispatcher dispatcher, Action action, DispatcherPriority priority = DefaultDispatcherPriority)
+        public static void RunInDispatcherAsync(this Dispatcher? dispatcher, Action action, DispatcherPriority priority = DefaultDispatcherPriority)
         {
             if (dispatcher is null)
             {
@@ -30,7 +30,7 @@
             }
         }
 
-        public static void RunInDispatcher(this DispatcherObject dispatcher, Action action, DispatcherPriority priority = DefaultDispatcherPriority)
+        public static void RunInDispatcher(this DispatcherObject? dispatcher, Action action, DispatcherPriority priority = DefaultDispatcherPriority)
         {
             if (dispatcher is null)
             {
@@ -41,7 +41,7 @@
             dispatcher.Dispatcher.RunInDispatcher(action, priority);
         }
 
-        public static void RunInDispatcher(this Dispatcher dispatcher, Action action, DispatcherPriority priority = DefaultDispatcherPriority)
+        public static void RunInDispatcher(this Dispatcher? dispatcher, Action action, DispatcherPriority priority = DefaultDispatcherPriority)
         {
             if (dispatcher is null
                 || dispatcher.CheckAccess())
@@ -54,7 +54,7 @@
             }
         }
 
-        public static T RunInDispatcher<T>(this DispatcherObject dispatcher, Func<T> action, DispatcherPriority priority = DefaultDispatcherPriority)
+        public static T RunInDispatcher<T>(this DispatcherObject? dispatcher, Func<T> action, DispatcherPriority priority = DefaultDispatcherPriority)
         {
             if (dispatcher is null)
             {
@@ -64,7 +64,7 @@
             return dispatcher.Dispatcher.RunInDispatcher(action, priority);
         }
 
-        public static T RunInDispatcher<T>(this Dispatcher dispatcher, Func<T> action, DispatcherPriority priority = DefaultDispatcherPriority)
+        public static T RunInDispatcher<T>(this Dispatcher? dispatcher, Func<T> action, DispatcherPriority priority = DefaultDispatcherPriority)
         {
             if (dispatcher is null
                 || dispatcher.CheckAccess())
