@@ -14,5 +14,6 @@
 			VerticalAlignment="Center"
 		/>
 		<Button Width="200" Height="50" Margin="10" Content="Click to Throw Exception" Click="Button_Click"/>
+        <CheckBox Content="ThreeState" IsThreeState="True" />
 	</StackPanel>
 </Window>
