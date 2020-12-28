@@ -203,8 +203,9 @@ All other rights reserved.
 						<ColumnDefinition Width="48"/>
 						<ColumnDefinition/>
 					</Grid.ColumnDefinitions>
-					<Rectangle Fill="{StaticResource CheckerboardBrush}"/>
-					<Rectangle Fill="{Binding Value}" Stroke="{TemplateBinding TextElement.Foreground}" StrokeThickness="1"/>
+
+					<Rectangle Grid.Column="0" Fill="{StaticResource CheckerboardBrush}"/>
+					<Rectangle Grid.Column="0" Fill="{Binding Value}" Stroke="{TemplateBinding TextElement.Foreground}" StrokeThickness="1"/>
 					<TextBlock Grid.Column="1" Style="{x:Null}" Margin="5,0,0,0" Text="{Binding DescriptiveValue}"/>
 				</Grid>
 			</DataTemplate>
