@@ -22,7 +22,6 @@ All other rights reserved.
     xmlns:behaviorsTab="clr-namespace:Snoop.Views.BehaviorsTab"
     xmlns:methodsTab="clr-namespace:Snoop.Views.MethodsTab"
     xmlns:debugListenerTab="clr-namespace:Snoop.Views.DebugListenerTab"
-    xmlns:markup="clr-namespace:Snoop.Extensions.Markup"
     mc:Ignorable="d"
 	Title="Snoop"
     MinWidth="480"
@@ -123,7 +122,7 @@ All other rights reserved.
             <ComboBox Style="{x:Null}"
                       x:Name="TreeTypeComboBox"
                       Padding="4,2"
-                      ItemsSource="{Binding Source={markup:EnumBindingSource {x:Type tree:TreeType}}}"
+                      ItemsSource="{Binding Source={snoop:EnumBindingSource {x:Type tree:TreeType}}}"
                       SelectedItem="{Binding CurrentTreeType, Mode=TwoWay}" />
 			<Menu Style="{x:Null}">
 				<MenuItem Style="{x:Null}"

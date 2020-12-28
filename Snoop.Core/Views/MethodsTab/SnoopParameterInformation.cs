@@ -11,7 +11,6 @@ namespace Snoop.Views.MethodsTab
     using System.Windows;
     using System.Windows.Input;
     using Snoop.Infrastructure;
-    using Snoop.Infrastructure.Extensions;
 
     public class SnoopParameterInformation : DependencyObject
     {

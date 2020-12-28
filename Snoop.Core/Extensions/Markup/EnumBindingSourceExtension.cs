@@ -1,4 +1,5 @@
-﻿namespace Snoop.Extensions.Markup
+﻿// ReSharper disable once CheckNamespace
+namespace Snoop
 {
     using System;
     using System.Windows.Markup;

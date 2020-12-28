@@ -10,7 +10,6 @@ namespace Snoop.Controls
     using System.Windows.Controls;
     using System.Windows.Media;
     using System.Windows.Media.Media3D;
-    using Snoop.Extensions;
     using Snoop.Infrastructure;
 
     public class VisualTree3DView : Viewport3D

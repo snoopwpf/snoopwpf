@@ -3,7 +3,8 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop.Infrastructure.Extensions
+// ReSharper disable once CheckNamespace
+namespace Snoop
 {
     using System;
     using System.Collections.ObjectModel;

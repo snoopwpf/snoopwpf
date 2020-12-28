@@ -14,7 +14,6 @@ namespace Snoop.Views.MethodsTab
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
     using Snoop.Converters;
-    using Snoop.Infrastructure.Extensions;
     using Snoop.Windows;
 
     public partial class MethodsControl

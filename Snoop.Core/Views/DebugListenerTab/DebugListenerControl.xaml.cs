@@ -8,7 +8,6 @@
     using System.Windows.Threading;
     using Snoop.Core.Properties;
     using Snoop.Infrastructure;
-    using Snoop.Infrastructure.Extensions;
 
     public partial class DebugListenerControl : IListener
     {
