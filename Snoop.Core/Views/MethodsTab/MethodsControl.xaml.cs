@@ -19,7 +19,7 @@ namespace Snoop.Views.MethodsTab
     public partial class MethodsControl
     {
         private SnoopMethodInformation? previousMethodInformation;
-        
+
         public MethodsControl()
         {
             this.InitializeComponent();
@@ -203,8 +203,7 @@ namespace Snoop.Views.MethodsTab
             {
                 for (var index = 0; index < this.itemsControlParameters.Items.Count; index++)
                 {
-                    var paramInfo = this.itemsControlParameters.Items[index] as SnoopParameterInformation;
-                    if (paramInfo is null)
+                    if (this.itemsControlParameters.Items[index] is not SnoopParameterInformation paramInfo)
                     {
                         return false;
                     }
@@ -214,8 +213,8 @@ namespace Snoop.Views.MethodsTab
                         var valuePair = paramInfo.ParameterValue as DependencyPropertyNameValuePair;
                         parameters[index] = valuePair?.DependencyProperty;
                     }
-                    else if (paramInfo.ParameterValue is null 
-                             || paramInfo.ParameterType?.IsInstanceOfType(paramInfo.ParameterValue) == true)
+                    else if (paramInfo.ParameterValue is null
+                             || paramInfo.ParameterType.IsInstanceOfType(paramInfo.ParameterValue))
                     {
                         parameters[index] = paramInfo.ParameterValue;
                     }

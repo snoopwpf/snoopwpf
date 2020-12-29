@@ -179,7 +179,7 @@ namespace Snoop.Controls
 
             if (viewport3D is null)
             {
-                Drawing drawing = VisualTreeHelper.GetDrawing(visual);
+                var drawing = VisualTreeHelper.GetDrawing(visual);
 
                 if (this.drawOutlines)
                 {

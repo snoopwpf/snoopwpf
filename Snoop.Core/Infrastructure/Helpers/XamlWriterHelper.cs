@@ -1,4 +1,4 @@
-﻿namespace Snoop.Infrastructure.Helpers
+namespace Snoop.Infrastructure.Helpers
 {
     using System;
     using System.Collections.Generic;
@@ -76,7 +76,7 @@
                 return true;
             }
 
-            public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
+            public override object? ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
             {
                 if (destinationType == typeof(MarkupExtension))
                 {
