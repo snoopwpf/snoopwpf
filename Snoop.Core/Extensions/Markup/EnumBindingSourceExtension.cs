@@ -4,10 +4,13 @@ namespace Snoop
     using System;
     using System.Windows.Markup;
 
+    // ReSharper disable once UnusedMember.Global
+    [MarkupExtensionReturnType(typeof(Array))]
     public class EnumBindingSourceExtension : MarkupExtension
     {
         private Type? enumType;
 
+        [ConstructorArgument("enumType")]
         public Type? EnumType
         {
             get => this.enumType;
@@ -17,9 +20,9 @@ namespace Snoop
                 {
                     if (value is not null)
                     {
-                        var enumType = Nullable.GetUnderlyingType(value) ?? value;
+                        var underlyingType = Nullable.GetUnderlyingType(value) ?? value;
 
-                        if (!enumType.IsEnum)
+                        if (!underlyingType.IsEnum)
                         {
                             throw new ArgumentException("Type must be for an Enum.");
                         }
