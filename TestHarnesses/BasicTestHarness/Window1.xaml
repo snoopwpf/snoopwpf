@@ -15,5 +15,6 @@
 		/>
 		<Button Width="200" Height="50" Margin="10" Content="Click to Throw Exception" Click="Button_Click"/>
         <CheckBox Content="ThreeState" IsThreeState="True" />
+        <TextBlock Background="{DynamicResource MissingDynamicResource}">Missing DynamicResource</TextBlock>
 	</StackPanel>
 </Window>
