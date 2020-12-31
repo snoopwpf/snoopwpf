@@ -31,7 +31,7 @@
                     continue;
                 }
 
-                this.Children.Add(this.TreeService.Construct(ownedWindow, this));
+                this.AddChild(this.TreeService.Construct(ownedWindow, this));
             }
         }
 

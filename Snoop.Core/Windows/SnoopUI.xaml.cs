@@ -120,7 +120,20 @@ namespace Snoop.Windows
 
         #region Tree
 
-        public TreeService TreeService { get; private set; }
+        public TreeService TreeService
+        {
+            get => this.treeService;
+            private set
+            {
+                if (Equals(value, this.treeService))
+                {
+                    return;
+                }
+
+                this.treeService = value;
+                this.OnPropertyChanged(nameof(this.TreeService));
+            }
+        }
 
         /// <summary>
         /// This is the collection of VisualTreeItem(s) that the visual tree TreeView binds to.
@@ -443,6 +456,7 @@ namespace Snoop.Windows
 
                 this.TreeItems.Clear();
 
+                this.Root?.Dispose();
                 this.Root = this.TreeService.Construct(this.root!, null);
 
                 if (previousTarget is not null)
@@ -815,14 +829,9 @@ namespace Snoop.Windows
         {
             this.root = newRoot;
 
-            this.TreeItems.Clear();
+            this.Refresh();
 
-            this.Root = this.TreeService.Construct(newRoot, null);
             this.CurrentSelection = this.rootTreeItem;
-
-            this.SetFilter(this.filter);
-
-            this.OnPropertyChanged(nameof(this.Root));
         }
 
         #endregion
@@ -848,6 +857,7 @@ namespace Snoop.Windows
         private bool returnPreviousFocus;
 
         private bool isResettingSettings;
+        private TreeService treeService = null!;
 
         #endregion
 

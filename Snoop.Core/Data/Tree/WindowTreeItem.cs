@@ -31,7 +31,7 @@
 
                 var childWindowsTreeItem = new ChildWindowsTreeItem(this.WindowTarget, this, this.TreeService);
                 childWindowsTreeItem.Reload();
-                this.Children.Add(childWindowsTreeItem);
+                this.AddChild(childWindowsTreeItem);
                 break;
             }
 

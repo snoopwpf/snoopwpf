@@ -146,7 +146,7 @@ namespace Snoop.Data.Tree
                 }
             }
         }
-        
+
         protected override void ReloadCore()
         {
             // having the call to base.ReloadCore here ... puts the application resources at the very top of the tree view.
@@ -160,7 +160,7 @@ namespace Snoop.Data.Tree
                     continue;
                 }
 
-                this.Children.Add(this.TreeService.Construct(child, this));
+                this.AddChild(this.TreeService.Construct(child, this));
             }
 
             if (this.Target is Grid grid
@@ -169,12 +169,12 @@ namespace Snoop.Data.Tree
             {
                 foreach (var row in grid.RowDefinitions)
                 {
-                    this.Children.Add(this.TreeService.Construct(row, this));
+                    this.AddChild(this.TreeService.Construct(row, this));
                 }
 
                 foreach (var column in grid.ColumnDefinitions)
                 {
-                    this.Children.Add(this.TreeService.Construct(column, this));
+                    this.AddChild(this.TreeService.Construct(column, this));
                 }
             }
         }

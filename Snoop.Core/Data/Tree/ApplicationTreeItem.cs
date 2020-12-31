@@ -49,7 +49,7 @@ namespace Snoop.Data.Tree
                     continue;
                 }
 
-                this.Children.Add(this.TreeService.Construct(window, this));
+                this.AddChild(this.TreeService.Construct(window, this));
             }
         }
     }

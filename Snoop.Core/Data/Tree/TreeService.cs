@@ -1,7 +1,8 @@
-﻿namespace Snoop.Data.Tree
+namespace Snoop.Data.Tree
 {
     using System;
     using System.Collections;
+    using System.Linq;
     using System.Windows;
     using System.Windows.Automation;
     using System.Windows.Automation.Peers;
@@ -24,12 +25,17 @@
 
         public IEnumerable GetChildren(TreeItem treeItem)
         {
+            if (treeItem.OmitChildren)
+            {
+                return Enumerable.Empty<object>();
+            }
+
             return this.GetChildren(treeItem.Target);
         }
 
         public abstract IEnumerable GetChildren(object target);
 
-        public virtual TreeItem Construct(object target, TreeItem? parent)
+        public virtual TreeItem Construct(object target, TreeItem? parent, bool omitChildren = false)
         {
             TreeItem treeItem;
 
@@ -64,6 +70,8 @@
                     break;
             }
 
+            treeItem.OmitChildren = omitChildren;
+
             treeItem.Reload();
 
             if (parent is null)
@@ -94,21 +102,10 @@
 
                 case TreeType.Automation:
                     return new AutomationPeerTreeService();
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(treeType), treeType, null);
             }
-        }
-    }
-
-    public sealed class RawTreeServiceWithoutChildren : TreeService
-    {
-        public static readonly RawTreeServiceWithoutChildren DefaultInstance = new();
-
-        public override TreeType TreeType { get; } = TreeType.Visual;
-
-        public override IEnumerable GetChildren(object target)
-        {
-            yield break;
         }
     }
 
@@ -156,7 +153,7 @@
     {
         public override TreeType TreeType { get; } = TreeType.Automation;
 
-        public override TreeItem Construct(object target, TreeItem? parent)
+        public override TreeItem Construct(object target, TreeItem? parent, bool omitChildren = false)
         {
             if (target is not AutomationPeer automationPeer
                 && target is UIElement element)
@@ -164,7 +161,7 @@
                 target = UIElementAutomationPeer.CreatePeerForElement(element);
             }
 
-            return base.Construct(target, parent);
+            return base.Construct(target, parent, omitChildren: omitChildren);
         }
 
         public override IEnumerable GetChildren(object target)

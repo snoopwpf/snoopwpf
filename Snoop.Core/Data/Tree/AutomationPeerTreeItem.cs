@@ -14,8 +14,7 @@
         public AutomationPeerTreeItem(AutomationPeer target, TreeItem? parent, TreeService treeService)
             : base(target, parent, treeService)
         {
-            if (this.Target is UIElementAutomationPeer uiElementAutomationPeer
-                && uiElementAutomationPeer.Owner is not null)
+            if (this.Target is UIElementAutomationPeer { Owner: { } } uiElementAutomationPeer)
             {
                 this.Visual = uiElementAutomationPeer.Owner;
             }
@@ -25,10 +24,10 @@
 
         protected override void ReloadCore()
         {
-            if (this.Target is UIElementAutomationPeer uiElementAutomationPeer
-                && uiElementAutomationPeer.Owner is not null)
+            if (this.Visual is not null)
             {
-                this.Children.Add(RawTreeServiceWithoutChildren.DefaultInstance.Construct(uiElementAutomationPeer.Owner, this));
+                // We just want to include the owner as a tree item, but not it's children
+                this.AddChild(this.TreeService.Construct(this.Visual, this, omitChildren: true));
             }
 
             foreach (var child in this.TreeService.GetChildren(this))
@@ -38,7 +37,7 @@
                     continue;
                 }
 
-                this.Children.Add(this.TreeService.Construct(child, this));
+                this.AddChild(this.TreeService.Construct(child, this));
             }
         }
 
