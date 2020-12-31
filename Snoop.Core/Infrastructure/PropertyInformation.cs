@@ -940,14 +940,19 @@ namespace Snoop.Infrastructure
             return null;
         }
 
-        private static List<PropertyDescriptor> GetAllProperties(object obj, Attribute[] attributes)
+        public static List<PropertyDescriptor> GetAllProperties(object obj)
+        {
+            return GetAllProperties(obj, getAllPropertiesAttributeFilter);
+        }
+
+        public static List<PropertyDescriptor> GetAllProperties(object obj, Attribute[] attributes)
         {
             var propertiesToReturn = new List<PropertyDescriptor>();
 
             object? currentObj = obj;
 
             // keep looping until you don't have an AmbiguousMatchException exception
-            // and you normally won't have an exception, so the loop will typically execute only once.
+            // and you normally won't have an exception, so the loop will typically executes only once.
             var noException = false;
             while (!noException && currentObj is not null)
             {
