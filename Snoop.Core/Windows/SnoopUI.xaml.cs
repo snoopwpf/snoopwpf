@@ -841,8 +841,6 @@ namespace Snoop.Windows
         private bool fromTextBox = true;
         private readonly DispatcherTimer filterTimer;
 
-        private string eventFilter = string.Empty;
-
         private readonly DelayedCall filterCall;
 
         private TreeItem? reducedDepthRoot;
