@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1;netcoreapp3.0;net40</TargetFrameworks>
+    <TargetFrameworks>net5.0-windows;netcoreapp3.1;netcoreapp3.0;net40</TargetFrameworks>
 
     <RootNamespace>Snoop</RootNamespace>
 
@@ -34,4 +34,12 @@
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
     <PackageReference Include="System.Management.Automation" PrivateAssets="All" />
   </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0-windows'">
+    <PackageReference Include="System.Management.Automation" PrivateAssets="All" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net5.0-windows'">
+    <DefineConstants>NET50</DefineConstants>
+  </PropertyGroup>
 </Project>

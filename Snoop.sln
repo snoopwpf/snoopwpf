@@ -17,6 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.packages.props = Directory.packages.props
 		global.json = global.json
 		README.md = README.md
+		chocolatey\snoop.nuspec = chocolatey\snoop.nuspec
 		Snoop.ruleset = Snoop.ruleset
 	EndProjectSection
 EndProject
@@ -37,7 +38,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snoop.Console", "Snoop.Cons
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", ".build\_build.csproj", "{F26BF9F3-A62E-4F0B-B04B-2A8E333FF5FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snoop.Core.Tests", "Snoop.Core.Tests\Snoop.Core.Tests.csproj", "{7ABD1C31-D98A-43D8-8420-3498C4B51ED3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snoop.Core.Tests", "Snoop.Core.Tests\Snoop.Core.Tests.csproj", "{7ABD1C31-D98A-43D8-8420-3498C4B51ED3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

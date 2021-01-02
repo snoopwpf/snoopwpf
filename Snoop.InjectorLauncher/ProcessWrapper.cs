@@ -123,8 +123,7 @@ namespace Snoop.InjectorLauncher
                 switch (hostPolicyVersionInfo?.ProductMajorPart)
                 {
                     case 5:
-                        // we currently map from net 5 to netcoreapp 3.1
-                        return "netcoreapp3.1"; //return "net5.0";
+                        return "net5.0-windows";
 
                     case 3 when hostPolicyVersionInfo.ProductMinorPart >= 1:
                         return "netcoreapp3.1";

@@ -50,6 +50,11 @@
     <file src="..\bin\$Configuration$\netcoreapp3.1\Snoop.Core*.pdb" target="tools\netcoreapp3.1\" />
     <file src="..\bin\$Configuration$\netcoreapp3.1\Snoop.Core*.json" target="tools\netcoreapp3.1\" />
 
+    <file src="..\bin\$Configuration$\net5.0-windows\Snoop.Core*.config" target="tools\net5.0-windows\" />
+    <file src="..\bin\$Configuration$\net5.0-windows\Snoop.Core*.dll" target="tools\net5.0-windows\" />
+    <file src="..\bin\$Configuration$\net5.0-windows\Snoop.Core*.pdb" target="tools\net5.0-windows\" />
+    <file src="..\bin\$Configuration$\net5.0-windows\Snoop.Core*.json" target="tools\net5.0-windows\" />
+
     <file src="..\bin\$Configuration$\Snoop.GenericInjector.*.dll" target="tools\" />
     <file src="..\bin\$Configuration$\Snoop.GenericInjector.*.pdb" target="tools\" />
 
