@@ -89,6 +89,8 @@ namespace Snoop.InjectorLauncher
         {
             var modules = NativeMethods.GetModules(process);
 
+            // ReSharper disable once IdentifierTypo
+            // ReSharper disable once InconsistentNaming
             var wpfgfx_cor3Found = false;
             FileVersionInfo? hostPolicyVersionInfo = null;
 

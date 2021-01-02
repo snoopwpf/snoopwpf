@@ -3,6 +3,11 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
+// ReSharper disable InconsistentNaming
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Local
+// ReSharper disable UnusedMember.Global
+// ReSharper disable IdentifierTypo
 #pragma warning disable CA1008
 #pragma warning disable CA1028
 #pragma warning disable CA1045
@@ -28,7 +33,7 @@ namespace Snoop.Infrastructure
     {
         public const int ERROR_ACCESS_DENIED = 5;
 
-        public static IntPtr[] ToplevelWindows
+        public static IntPtr[] TopLevelWindows
         {
             get
             {
@@ -57,7 +62,7 @@ namespace Snoop.Infrastructure
 
         public static List<IntPtr> GetRootWindowsOfProcess(int pid)
         {
-            var rootWindows = ToplevelWindows;
+            var rootWindows = TopLevelWindows;
             var dsProcRootWindows = new List<IntPtr>();
 
             foreach (var hWnd in rootWindows)
@@ -502,7 +507,7 @@ namespace Snoop.Infrastructure
             WriteCombineModifierflag = 0x400
         }
 
-        public enum HookType : int
+        public enum HookType
         {
             WH_JOURNALRECORD = 0,
             WH_JOURNALPLAYBACK = 1,

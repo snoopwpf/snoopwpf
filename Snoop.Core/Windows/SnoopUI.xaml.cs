@@ -207,7 +207,7 @@ namespace Snoop.Windows
                 this.OnPropertyChanged(nameof(this.CurrentSelection));
                 this.OnPropertyChanged(nameof(this.CurrentFocusScope));
 
-                if (this.TreeItems.Count > 1 
+                if (this.TreeItems.Count > 1
                     || (this.TreeItems.Count == 1 && this.TreeItems[0] != this.rootTreeItem))
                 {
                     // Check whether the selected item is filtered out by the filter,
@@ -956,7 +956,7 @@ namespace Snoop.Windows
                     itemsWithEditedProperties.Add(dispatcher, dispatcherList);
                 }
 
-                // now get the property info list for the owning object 
+                // now get the property info list for the owning object
                 if (!dispatcherList.TryGetValue(propertyOwner, out var propInfoList))
                 {
                     propInfoList = new List<PropertyValueInfo>();
@@ -992,17 +992,17 @@ namespace Snoop.Windows
 
                 var dispatcherCount = 1;
 
-                foreach (var dispatcherKVP in itemsWithEditedProperties)
+                foreach (var dispatcherItemPair in itemsWithEditedProperties)
                 {
                     if (itemsWithEditedProperties.Count > 1)
                     {
                         sb.AppendFormat("-- Dispatcher #{0} -- {1}", dispatcherCount++, Environment.NewLine);
                     }
 
-                    foreach (var objectPropertiesKVP in dispatcherKVP.Value)
+                    foreach (var objectPropertiesItemPair in dispatcherItemPair.Value)
                     {
-                        sb.AppendFormat("Object: {0}{1}", objectPropertiesKVP.Key, Environment.NewLine);
-                        foreach (var propInfo in objectPropertiesKVP.Value)
+                        sb.AppendFormat("Object: {0}{1}", objectPropertiesItemPair.Key, Environment.NewLine);
+                        foreach (var propInfo in objectPropertiesItemPair.Value)
                         {
                             sb.AppendFormat(
                                 "\tProperty: {0}, New Value: {1}{2}",
