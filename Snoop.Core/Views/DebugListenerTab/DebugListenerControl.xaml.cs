@@ -37,7 +37,7 @@
             PresentationTraceSources.DataBindingSource.Listeners.Remove(this.snoopDebugListener);
         }
 
-        public void Write(string str)
+        public void Write(string? str)
         {
             this.allText.Append(str + Environment.NewLine);
             if (!this.filtersViewModel.IsSet || this.filtersViewModel.FilterMatches(str))
@@ -46,7 +46,7 @@
             }
         }
 
-        private void DoWrite(string str)
+        private void DoWrite(string? str)
         {
             var shouldScrollToEnd = this.textBoxDebugContent.SelectionLength == 0
                                     && this.textBoxDebugContent.SelectionStart == this.textBoxDebugContent.Text.Length;

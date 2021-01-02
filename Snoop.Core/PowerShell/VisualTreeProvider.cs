@@ -3,6 +3,8 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
+#pragma warning disable CA1001
+
 namespace Snoop.PowerShell
 {
     using System;
@@ -132,7 +134,7 @@ namespace Snoop.PowerShell
         {
             path = GetValidPath(path);
 
-            if (path.Equals("\\"))
+            if (path.Equals("\\", StringComparison.Ordinal))
             {
                 this.StartNewOneTimeSyncTimer();
                 return this.Root;
@@ -300,7 +302,7 @@ namespace Snoop.PowerShell
             {
                 var parent = item.Parent;
                 var similarChildren = parent.Children.ToList()
-                                        .Where(c => GetName(c).Equals(name))
+                                        .Where(c => GetName(c).Equals(name, StringComparison.Ordinal))
                                         .ToList();
                 if (similarChildren.Count > 1)
                 {

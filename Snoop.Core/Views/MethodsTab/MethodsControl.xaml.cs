@@ -179,7 +179,7 @@ namespace Snoop.Views.MethodsTab
         public static readonly DependencyProperty TargetProperty =
             DependencyProperty.Register(nameof(Target), typeof(object), typeof(MethodsControl), new UIPropertyMetadata(OnTargetChanged));
 
-        public void InvokeMethodClick(object? sender, RoutedEventArgs e)
+        private void InvokeMethodClick(object? sender, RoutedEventArgs e)
         {
             var selectedMethod = this.comboBoxMethods.SelectedValue as SnoopMethodInformation;
             if (selectedMethod is null)

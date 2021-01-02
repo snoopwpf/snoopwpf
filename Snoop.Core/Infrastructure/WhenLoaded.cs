@@ -64,7 +64,7 @@ namespace Snoop.Infrastructure
             // * if frameworkElement is already loaded the ctor immediately exectues loadedAction and rests in piece
             // * otherwise framework element's Loaded event will keep the reference to event handler
             //   until it's loaded and and only then let it rest in piece.
-            new WhenLoaded(frameworkElement, loadedAction);
+            _ = new WhenLoaded(frameworkElement, loadedAction);
         }
     }
 }

@@ -306,7 +306,7 @@ namespace Snoop.Infrastructure
 
                 var stringValue = value.ToString() ?? string.Empty;
 
-                if (stringValue.Equals(value.GetType().ToString()))
+                if (stringValue.Equals(value.GetType().ToString(), StringComparison.Ordinal))
                 {
                     // Add brackets around types to distinguish them from values.
                     // Replace long type names with short type names for some specific types, for easier readability.
@@ -335,7 +335,7 @@ namespace Snoop.Infrastructure
                 // Display #00FFFFFF as Transparent for easier readability
                 if (this.property is not null &&
                     this.property.PropertyType == typeof(Brush) &&
-                    stringValue.Equals("#00FFFFFF"))
+                    stringValue.Equals("#00FFFFFF", StringComparison.Ordinal))
                 {
                     stringValue = "Transparent";
                 }

@@ -6,7 +6,7 @@
     using System.Xml;
     using Snoop.Data.Tree;
 
-    public class TreeExporter
+    public static class TreeExporter
     {
         public static void Export(TreeItem treeItem, TextWriter textWriter, PropertyFilter? filter, bool recurse = true)
         {

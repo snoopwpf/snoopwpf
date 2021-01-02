@@ -938,7 +938,7 @@ namespace Snoop.Windows
         public object? PropertyValue { get; }
     }
 
-    public class EditedPropertiesHelper
+    public static class EditedPropertiesHelper
     {
         private static readonly object @lock = new();
 

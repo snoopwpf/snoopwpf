@@ -58,7 +58,7 @@ namespace Snoop.Data
 
             using (var stream = new FileStream(settingsFile, FileMode.Open))
             {
-                return Current = (TransientSettingsData)serializer.Deserialize(stream);
+                return Current = (TransientSettingsData?)serializer.Deserialize(stream) ?? new TransientSettingsData();
             }
         }
     }

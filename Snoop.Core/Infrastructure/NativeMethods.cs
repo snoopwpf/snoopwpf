@@ -3,13 +3,22 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
+#pragma warning disable CA1008
+#pragma warning disable CA1028
+#pragma warning disable CA1045
+#pragma warning disable CA1051
+#pragma warning disable CA1401
+#pragma warning disable CA1806
+#pragma warning disable CA1815
+#pragma warning disable CA1819
+#pragma warning disable CA2101
+
 namespace Snoop.Infrastructure
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
-    using System.Runtime.ConstrainedExecution;
     using System.Runtime.InteropServices;
     using System.Security;
     using System.Text;
@@ -120,7 +129,6 @@ namespace Snoop.Infrastructure
             {
             }
 
-            [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
             protected override bool ReleaseHandle()
             {
                 return CloseHandle(this.handle);
@@ -134,7 +142,6 @@ namespace Snoop.Infrastructure
             {
             }
 
-            [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
             protected override bool ReleaseHandle()
             {
                 return CloseHandle(this.handle);
@@ -338,15 +345,16 @@ namespace Snoop.Infrastructure
         public static extern bool IsWow64Process([In] IntPtr process, [Out] out bool wow64Process);
 
         [DllImport("kernel32", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
-        public static extern UIntPtr GetProcAddress(IntPtr hModule, string procName);
+        public static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
 
-        public static UIntPtr GetRemoteProcAddress(Process targetProcess, string moduleName, string procName)
+        public static IntPtr GetRemoteProcAddress(Process targetProcess, string moduleName, string procName)
         {
-            ulong functionOffsetFromBaseAddress = 0;
+            long functionOffsetFromBaseAddress = 0;
 
             foreach (ProcessModule? mod in Process.GetCurrentProcess().Modules)
             {
-                if (mod is null)
+                if (mod?.ModuleName is null
+                    || mod?.FileName is null)
                 {
                     continue;
                 }
@@ -356,12 +364,12 @@ namespace Snoop.Infrastructure
                 {
                     Trace.WriteLine($"Checking module \"{moduleName}\" with base address \"{mod.BaseAddress}\" for procaddress of \"{procName}\"...");
 
-                    var procAddress = GetProcAddress(mod.BaseAddress, procName).ToUInt64();
+                    var procAddress = GetProcAddress(mod!.BaseAddress, procName).ToInt64();
 
                     if (procAddress != 0)
                     {
                         Trace.WriteLine($"Got proc address in foreign process with \"{procAddress}\".");
-                        functionOffsetFromBaseAddress = procAddress - (ulong)mod.BaseAddress;
+                        functionOffsetFromBaseAddress = procAddress - (long)mod.BaseAddress;
                     }
 
                     break;
@@ -374,23 +382,24 @@ namespace Snoop.Infrastructure
             }
 
             var remoteModuleHandle = GetRemoteModuleHandle(targetProcess, moduleName);
-            return new UIntPtr((ulong)remoteModuleHandle + functionOffsetFromBaseAddress);
+            return new IntPtr((long)remoteModuleHandle + functionOffsetFromBaseAddress);
         }
 
         public static IntPtr GetRemoteModuleHandle(Process targetProcess, string moduleName)
         {
             foreach (ProcessModule? mod in targetProcess.Modules)
             {
-                if (mod is null)
+                if (mod?.ModuleName is null
+                    || mod?.FileName is null)
                 {
                     continue;
                 }
-                
-                if (mod.ModuleName.Equals(moduleName, StringComparison.OrdinalIgnoreCase)
-                    || mod.FileName.Equals(moduleName, StringComparison.OrdinalIgnoreCase))
+
+                if (mod!.ModuleName.Equals(moduleName, StringComparison.OrdinalIgnoreCase)
+                    || mod!.FileName.Equals(moduleName, StringComparison.OrdinalIgnoreCase))
                 {
-                    Trace.WriteLine($"Found module \"{moduleName}\" with base address \"{mod.BaseAddress}\".");
-                    return mod.BaseAddress;
+                    Trace.WriteLine($"Found module \"{moduleName}\" with base address \"{mod!.BaseAddress}\".");
+                    return mod!.BaseAddress;
                 }
             }
 
@@ -547,7 +556,7 @@ namespace Snoop.Infrastructure
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern IntPtr CreateRemoteThread(ProcessHandle handle,
-                                                IntPtr lpThreadAttributes, uint dwStackSize, UIntPtr lpStartAddress,
+                                                IntPtr lpThreadAttributes, uint dwStackSize, IntPtr lpStartAddress,
                                                 IntPtr lpParameter, uint dwCreationFlags, out IntPtr lpThreadId);
 
         [DllImport("kernel32.dll")]

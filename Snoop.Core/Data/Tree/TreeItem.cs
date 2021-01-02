@@ -261,12 +261,12 @@ namespace Snoop.Data.Tree
         /// <returns><c>true</c> if this matches <paramref name="value"/>. Otherwise <c>false</c>.</returns>
         public bool Filter(string value)
         {
-            if (this.typeNameLower.Contains(value))
+            if (this.typeNameLower.Contains(value, StringComparison.Ordinal))
             {
                 return true;
             }
 
-            if (this.nameLower.Contains(value))
+            if (this.nameLower.Contains(value, StringComparison.Ordinal))
             {
                 return true;
             }

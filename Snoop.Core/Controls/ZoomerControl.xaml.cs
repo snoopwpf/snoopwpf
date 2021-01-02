@@ -104,7 +104,9 @@ namespace Snoop.Controls
             this.DocumentRoot.ReleaseMouseCapture();
         }
 
+#pragma warning disable CA2109
         public void DoMouseWheel(object sender, MouseWheelEventArgs e)
+#pragma warning restore CA2109
         {
             if (this.IsValidTarget)
             {

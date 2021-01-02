@@ -14,7 +14,7 @@ namespace Snoop.Infrastructure
     /// Attached behavior that allows Snoop to distinguish its own ComboBoxes 
     /// and ignore routed events from their popups.
     /// </summary>
-    internal sealed class ComboBoxSettings
+    internal static class ComboBoxSettings
     {
         /// <summary>
         /// Indicates whether given ComboBox is a part of the Snoop UI.

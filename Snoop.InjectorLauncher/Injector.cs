@@ -107,7 +107,7 @@ namespace Snoop.InjectorLauncher
                 // (via CreateRemoteThread & LoadLibrary)
                 var procAddress = NativeMethods.GetProcAddress(hLibrary, "LoadLibraryW");
 
-                if (procAddress == UIntPtr.Zero)
+                if (procAddress == IntPtr.Zero)
                 {
                     LogMessage("Could get proc address for LoadLibraryW.");
                     throw new Win32Exception();
@@ -184,7 +184,7 @@ namespace Snoop.InjectorLauncher
 
             var procAddress = NativeMethods.GetProcAddress(hLibrary, "FreeLibraryAndExitThread");
 
-            if (procAddress == UIntPtr.Zero)
+            if (procAddress == IntPtr.Zero)
             {
                 // todo: error handling
             }
@@ -280,7 +280,7 @@ namespace Snoop.InjectorLauncher
                     {
                         var remoteProcAddress = NativeMethods.GetRemoteProcAddress(processWrapper.Process, injectorDllName, "ExecuteInDefaultAppDomain");
 
-                        if (remoteProcAddress == UIntPtr.Zero)
+                        if (remoteProcAddress == IntPtr.Zero)
                         {
                             LogMessage("Could not get proc address for \"ExecuteInDefaultAppDomain\".");
                             return;

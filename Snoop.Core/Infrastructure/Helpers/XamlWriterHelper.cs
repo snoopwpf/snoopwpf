@@ -68,7 +68,9 @@ namespace Snoop.Infrastructure.Helpers
             return xml;
         }
 
+#pragma warning disable CA1812
         private class BindingExpressionConvertor : ExpressionConverter
+#pragma warning restore CA1812
         {
             public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
             {

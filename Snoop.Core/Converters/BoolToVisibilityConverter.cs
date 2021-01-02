@@ -22,7 +22,7 @@
             }
             else if (parameter is string stringParameter)
             {
-                bool.TryParse(stringParameter, out invert);
+                _ = bool.TryParse(stringParameter, out invert);
             }
 
             if (value is bool boolValue)
@@ -48,7 +48,7 @@
             }
             else if (parameter is string stringParameter)
             {
-                bool.TryParse(stringParameter, out invert);
+                _ = bool.TryParse(stringParameter, out invert);
             }
 
             var boolValues = values.OfType<bool>();

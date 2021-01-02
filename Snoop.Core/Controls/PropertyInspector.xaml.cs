@@ -3,6 +3,8 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
+#pragma warning disable CA1819
+
 namespace Snoop.Controls
 {
     using System;
@@ -414,7 +416,7 @@ namespace Snoop.Controls
 
             if (string.IsNullOrEmpty(path))
             {
-                path = assembly.CodeBase;
+                return;
             }
 
             var processStartInfo = new ProcessStartInfo

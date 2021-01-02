@@ -93,7 +93,7 @@ namespace Snoop.Views.MethodsTab
 
         private static bool ParameterInfosEqual(ParameterInfo parm1, ParameterInfo parm2)
         {
-            if (parm1.Name?.Equals(parm2.Name) != true)
+            if (parm1.Name?.Equals(parm2.Name, StringComparison.Ordinal) != true)
             {
                 return false;
             }

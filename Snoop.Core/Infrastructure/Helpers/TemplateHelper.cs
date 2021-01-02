@@ -3,7 +3,7 @@
     using System.Windows;
     using System.Windows.Controls;
 
-    public class TemplateHelper
+    public static class TemplateHelper
     {
         public static object? GetChildFromTemplateIfNeeded(DependencyObject element, string? templatePartName)
         {

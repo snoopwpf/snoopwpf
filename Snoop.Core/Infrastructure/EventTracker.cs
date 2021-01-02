@@ -12,8 +12,6 @@ namespace Snoop.Infrastructure
     using System.Windows;
     using JetBrains.Annotations;
 
-    public delegate void EventTrackerHandler(TrackedEvent newEvent);
-
     [DebuggerDisplay("{" + nameof(Id) + "}")]
     [Serializable]
     public class EventTrackerSettingsItem
@@ -49,7 +47,7 @@ namespace Snoop.Infrastructure
             this.Id = this.RoutedEvent.OwnerType.FullName + ";" + this.RoutedEvent.Name;
         }
 
-        public event EventTrackerHandler? EventHandled;
+        public event EventHandler<TrackedEvent>? EventHandled;
 
         public string Id { get; }
 
@@ -104,7 +102,7 @@ namespace Snoop.Infrastructure
                 else
                 {
                     this.currentEvent = new TrackedEvent(e, entry);
-                    this.EventHandled?.Invoke(this.currentEvent);
+                    this.EventHandled?.Invoke(this, this.currentEvent);
                 }
             }
         }
@@ -143,7 +141,7 @@ namespace Snoop.Infrastructure
     }
 
     [DebuggerDisplay("TrackedEvent: {" + nameof(EventArgs) + "}")]
-    public class TrackedEvent : INotifyPropertyChanged
+    public class TrackedEvent : EventArgs, INotifyPropertyChanged
     {
         public TrackedEvent(RoutedEventArgs routedEventArgs, EventEntry originator)
         {
