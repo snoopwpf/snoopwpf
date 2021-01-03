@@ -93,6 +93,7 @@
         [MethodImpl(MethodImplOptions.NoInlining)]
         private IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
         {
+            // ReSharper disable once InconsistentNaming
             const int HC_ACTION = 0;
             //you need to call CallNextHookEx without further processing
             //and return the value returned by CallNextHookEx
@@ -141,6 +142,7 @@
             LLKHF_ALTDOWN = 0x20,
             LLKHF_UP = 0x80,
         }
+
         // ReSharper restore InconsistentNaming
     }
 }
