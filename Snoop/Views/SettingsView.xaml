@@ -69,7 +69,7 @@
                         </GridViewColumn.Header>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate DataType="snoop:PropertyInformation">
-                                <TextBlock Style="{x:Null}" Text="{Binding DisplayName}" Height="15">
+                                <TextBlock Style="{x:Null}" Text="{Binding DisplayName}">
                                     <TextBlock.ToolTip>
                                         <TextBlock Style="{x:Null}" Text="{Binding DisplayName}" />
                                     </TextBlock.ToolTip>

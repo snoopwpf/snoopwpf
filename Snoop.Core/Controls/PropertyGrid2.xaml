@@ -172,7 +172,8 @@ All other rights reserved.
 					</GridViewColumn.Header>
 					<GridViewColumn.CellTemplate>
 						<DataTemplate DataType="infrastructure:PropertyInformation">
-							<TextBlock Style="{x:Null}" Text="{Binding DisplayName}" Height="15" MouseLeftButtonDown="HandleNameClick">
+							<TextBlock Style="{x:Null}" Text="{Binding DisplayName}"
+							           MouseLeftButtonDown="HandleNameClick">
 								<TextBlock.ToolTip>
 									<TextBlock Style="{x:Null}" Text="{Binding DisplayName}"/>
 								</TextBlock.ToolTip>
