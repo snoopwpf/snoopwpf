@@ -1,7 +1,10 @@
 ﻿namespace BasicTestHarness
 {
     using System;
+    using System.Diagnostics;
     using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Data;
 
     /// <summary>
     /// Interaction logic for Window1.xaml
@@ -13,9 +16,16 @@
             this.InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void ExceptionButton_Click(object sender, RoutedEventArgs e)
         {
             throw new Exception("This is a test exception.");
+        }
+
+        private void BindingErrorButton_Click(object sender, RoutedEventArgs e)
+        {
+            var binding = new Binding("DoesNotExist");
+            PresentationTraceSources.SetTraceLevel(binding, PresentationTraceLevel.High);
+            this.textBlockForBindingError.SetBinding(TextBlock.TextProperty, binding);
         }
     }
 }
