@@ -240,7 +240,7 @@ All other rights reserved.
                                               Style="{x:Null}"
                                               Command="{x:Static windows:SnoopUI.ExportTreeWithFilterCommand}">
 										<MenuItem.CommandParameter>
-											<infrastructure:ExportOptions TreeItem="{Binding Path=PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+											<infrastructure:ExportOptions TreeItem="{Binding}"
                                                                           Recurse="True"
                                                                           UseFilter="True" />
                                         </MenuItem.CommandParameter>
@@ -249,7 +249,7 @@ All other rights reserved.
                                               Style="{x:Null}"
                                               Command="{x:Static windows:SnoopUI.ExportTreeWithFilterCommand}">
                                         <MenuItem.CommandParameter>
-                                            <infrastructure:ExportOptions TreeItem="{Binding Path=PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                            <infrastructure:ExportOptions TreeItem="{Binding}"
                                                                           Recurse="True" />
                                         </MenuItem.CommandParameter>
                                     </MenuItem>
@@ -260,7 +260,7 @@ All other rights reserved.
                                               Style="{x:Null}"
                                               Command="{x:Static windows:SnoopUI.ExportTreeWithFilterCommand}">
                                         <MenuItem.CommandParameter>
-                                            <infrastructure:ExportOptions TreeItem="{Binding Path=PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                            <infrastructure:ExportOptions TreeItem="{Binding}"
                                                                           Recurse="False"
                                                                           UseFilter="True" />
                                         </MenuItem.CommandParameter>
@@ -269,7 +269,7 @@ All other rights reserved.
                                               Style="{x:Null}"
                                               Command="{x:Static windows:SnoopUI.ExportTreeWithFilterCommand}">
                                         <MenuItem.CommandParameter>
-                                            <infrastructure:ExportOptions TreeItem="{Binding Path=PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                            <infrastructure:ExportOptions TreeItem="{Binding}"
                                                                           Recurse="False" />
                                         </MenuItem.CommandParameter>
                                     </MenuItem>
