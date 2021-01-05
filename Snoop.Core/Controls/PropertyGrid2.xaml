@@ -224,23 +224,33 @@ All other rights reserved.
 					</GridViewColumn.Header>
 					<GridViewColumn.CellTemplate>
 						<DataTemplate DataType="infrastructure:PropertyInformation">
-							<StackPanel Orientation="Horizontal" Visibility="{Binding IsInvalidBinding, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}}">
+							<DockPanel LastChildFill="True" Visibility="{Binding IsInvalidBinding, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}}">
                                 <Button Style="{x:Null}" Content="Get error message"
-                                        Command="{x:Static controls:PropertyInspector.UpdateBindingErrorCommand}" CommandParameter="{Binding}">
+                                        Command="{x:Static controls:PropertyInspector.UpdateBindingErrorCommand}" CommandParameter="{Binding}"
+                                        DockPanel.Dock="Left">
 									<Button.Visibility>
 										<MultiBinding Converter="{x:Static converters:BoolToVisibilityConverter.DefaultInstance}">
 											<Binding Path="BindingError" Converter="{x:Static converters:IsNullOrEmptyStringConverter.DefaultInstance}" />
                                         </MultiBinding>
                                     </Button.Visibility>
                                 </Button>
-                                <TextBox Style="{x:Null}" Text="{Binding BindingError, Mode=OneWay}" Height="15"
+                                <TextBox Style="{x:Null}"
+                                         Text="{Binding BindingError, Mode=OneWay}"
+                                         MaxHeight="50"
+                                         VerticalScrollBarVisibility="Auto"
+                                         TextWrapping="Wrap"
                                          IsReadOnly="True"
                                          IsReadOnlyCaretVisible="True">
 								    <TextBox.ToolTip>
 									    <TextBlock Style="{x:Null}" Text="{Binding BindingError}"/>
 								    </TextBox.ToolTip>
+	                                <TextBox.Visibility>
+		                                <MultiBinding Converter="{x:Static converters:BoolToVisibilityConverter.DefaultInstance}" ConverterParameter="true">
+			                                <Binding Path="BindingError" Converter="{x:Static converters:IsNullOrEmptyStringConverter.DefaultInstance}" />
+		                                </MultiBinding>
+	                                </TextBox.Visibility>
 							    </TextBox>
-                            </StackPanel>
+							</DockPanel>
 						</DataTemplate>
 					</GridViewColumn.CellTemplate>
 				</GridViewColumn>
