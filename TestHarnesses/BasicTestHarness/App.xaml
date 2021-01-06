@@ -5,6 +5,7 @@
     <Application.Resources>
          <ResourceDictionary>
              <Style x:Key="BlahStyle" TargetType="{x:Type RichTextBox}"/>
+             <!-- ReSharper disable once Xaml.StyleInvalidTargetType -->
              <Style x:Key="BlahBlahStyle" BasedOn="{StaticResource BlahStyle}" TargetType="{x:Type TextBoxBase}"/>
          </ResourceDictionary>
     </Application.Resources>

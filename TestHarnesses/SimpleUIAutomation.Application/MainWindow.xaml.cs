@@ -16,7 +16,7 @@
 
         private void TestButton_OnClick(object sender, RoutedEventArgs e)
         {
-            this.TestTextBox.AppendText(DateTime.Now.ToLongDateString() + Environment.NewLine);
+            this.testTextBox.AppendText(DateTime.Now.ToLongDateString() + Environment.NewLine);
         }
 
         private void StartAutomation_OnClick(object sender, RoutedEventArgs e)
