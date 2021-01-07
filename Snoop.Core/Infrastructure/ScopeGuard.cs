@@ -1,4 +1,4 @@
-﻿namespace Snoop.Infrastructure.Helpers
+﻿namespace Snoop.Infrastructure
 {
     using System;
 
