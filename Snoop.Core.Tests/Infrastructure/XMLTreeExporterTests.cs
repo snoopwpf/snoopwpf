@@ -78,7 +78,8 @@ namespace Snoop.Core.Tests.Infrastructure
             target.Children.Add(new TextBlock { Text = "test" });
             target.Children.Add(new Border { Child = new CheckBox { Content = "check" } });
 
-            return TreeService.From(TreeType.Visual).Construct(target, null);
+            using var treeService = TreeService.From(TreeType.Visual);
+            return treeService.Construct(target, null);
         }
     }
 }

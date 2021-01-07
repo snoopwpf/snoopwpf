@@ -11,6 +11,8 @@
             : base(target, parent, treeService)
         {
             this.targetWindow = target;
+
+            this.ShouldBeAnalyzed = false;
         }
 
         protected override void ReloadCore()

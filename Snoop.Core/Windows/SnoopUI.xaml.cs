@@ -145,7 +145,7 @@ namespace Snoop.Windows
         #region Root
 
         /// <summary>
-        /// Root element of the visual tree
+        /// Root element of the tree.
         /// </summary>
         public TreeItem? Root
         {
@@ -159,14 +159,15 @@ namespace Snoop.Windows
         }
 
         /// <summary>
-        /// rootVisualTreeItem is the VisualTreeItem for the root you are inspecting.
+        /// Root element of the tree.
         /// </summary>
         private TreeItem? rootTreeItem;
 
         /// <summary>
-        /// root is the object you are inspecting.
+        /// Root is the root object currently being inspected.
         /// </summary>
         private object? root;
+
         #endregion
 
         #region CurrentSelection
@@ -323,6 +324,7 @@ namespace Snoop.Windows
         {
             var control = (SnoopUI)d;
 
+            control.TreeService?.Dispose();
             control.TreeService = TreeService.From((TreeType)e.NewValue);
             control.Refresh();
         }
@@ -408,6 +410,8 @@ namespace Snoop.Windows
 
             this.CurrentSelection = null;
 
+            this.TreeService?.Dispose();
+
             InputManager.Current.PreProcessInput -= this.HandlePreProcessInput;
 
             this.filterTimer.Stop();
@@ -458,6 +462,8 @@ namespace Snoop.Windows
 
                 this.Root?.Dispose();
                 this.Root = this.TreeService.Construct(this.root!, null);
+
+                this.TreeService.DiagnosticContext.AnalyzeTree();
 
                 if (previousTarget is not null)
                 {
@@ -544,8 +550,7 @@ namespace Snoop.Windows
 
         private void HandleInspect(object sender, ExecutedRoutedEventArgs e)
         {
-            var visual = e.Parameter as Visual;
-            if (visual is not null)
+            if (e.Parameter is Visual visual)
             {
                 var node = this.FindItem(visual);
                 if (node is not null)
@@ -722,6 +727,7 @@ namespace Snoop.Windows
                 }
             }
 
+            var newRootSet = false;
             var rootVisual = this.Root.MainVisual;
 
             if (target is Visual visual
@@ -743,14 +749,22 @@ namespace Snoop.Windows
                     }
 
                     this.Root = this.TreeService.Construct(presentationSource.RootVisual, null);
+                    newRootSet = true;
                 }
             }
 
-            this.Root.Reload();
+            // Constructing a new root already reloads it
+            if (newRootSet == false)
+            {
+                this.Root.Reload();
+            }
+
+            this.TreeService.DiagnosticContext.AnalyzeTree();
 
             {
                 var node = this.Root.FindNode(target);
 
+                // Tree items are cleared when filtering
                 this.SetFilter(this.filter);
 
                 return node;

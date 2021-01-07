@@ -1,5 +1,6 @@
-﻿#if !NETCOREAPP
-// ReSharper disable once CheckNamespace
+﻿#pragma warning disable SA1403
+#if !NETCOREAPP
+// ReSharper disable CheckNamespace
 namespace System.Diagnostics.CodeAnalysis
 {
     /// <summary>Specifies that when a method returns <see cref="ReturnValue"/>, the parameter may be null even if the corresponding type disallows it.</summary>
@@ -38,6 +39,14 @@ namespace System.Diagnostics.CodeAnalysis
 
         /// <summary>Gets the return value condition.</summary>
         public bool ReturnValue { get; }
+    }
+}
+
+namespace System.Runtime.CompilerServices
+{
+    [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
+    internal class CallerMemberNameAttribute : Attribute
+    {
     }
 }
 #endif

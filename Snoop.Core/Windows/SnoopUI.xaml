@@ -489,13 +489,49 @@ All other rights reserved.
 			VerticalAlignment="Top"
 			Margin="2,0,2,0" />
 
-		<!-- Previewer -->
-		<controls:Previewer
-			x:Name="PreviewArea"
-			Grid.Row="2"
-			Grid.Column="1"
-			Margin="2,4,2,0"
-			Target="{Binding CurrentSelection.Target}" />
+		<TabControl Style="{x:Null}"
+		            Grid.Row="2"
+		            Grid.Column="1"
+		            Margin="2,4,2,0">
+			<TabItem Style="{x:Null}">
+				<TabItem.Header>
+					<TextBlock Style="{x:Null}" Text="{Binding TreeService.DiagnosticContext.DiagnosticItems.Count, StringFormat={}Diagnostics ({0})}">
+						<TextBlock.ToolTip>
+							<StackPanel Style="{x:Null}" MaxWidth="300">
+								<TextBlock Style="{x:Null}" Text="Diagnostics View"/>
+								<TextBlock
+									Style="{x:Null}"
+									Text="Lists all available diagnostics."
+									TextWrapping="Wrap"
+								/>
+							</StackPanel>
+						</TextBlock.ToolTip>
+					</TextBlock>
+				</TabItem.Header>
+
+				<views:DiagnosticsView DiagnosticContext="{Binding TreeService.DiagnosticContext}" />
+			</TabItem>
+
+			<TabItem Style="{x:Null}">
+				<TabItem.Header>
+					<TextBlock Style="{x:Null}" Text="Preview">
+						<TextBlock.ToolTip>
+							<StackPanel Style="{x:Null}" MaxWidth="300">
+								<TextBlock Style="{x:Null}" Text="Preview area"/>
+								<TextBlock
+									Style="{x:Null}"
+									Text="Previews the currently selected element."
+									TextWrapping="Wrap"
+								/>
+							</StackPanel>
+						</TextBlock.ToolTip>
+					</TextBlock>
+				</TabItem.Header>
+
+				<controls:Previewer x:Name="PreviewArea"
+									Target="{Binding CurrentSelection.Target}" />
+			</TabItem>
+		</TabControl>
 
 		<!-- StatusBar -->
 		<StatusBar Style="{x:Null}" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="0">

@@ -96,6 +96,8 @@ namespace Snoop.Data.Tree
             this.key = key;
             this.hasError = hasError;
             this.SortOrder = int.MaxValue;
+
+            this.ShouldBeAnalyzed = false;
         }
 
         public override string DisplayName => this.key?.ToString() ?? "{x:Null}";

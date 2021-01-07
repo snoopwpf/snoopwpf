@@ -1,14 +1,19 @@
-namespace Snoop.Data.Tree
+﻿namespace Snoop.Data.Tree
 {
     using System;
     using System.Collections;
+    using System.ComponentModel;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Windows;
     using System.Windows.Automation;
     using System.Windows.Automation.Peers;
     using System.Windows.Controls.Primitives;
     using System.Windows.Media;
     using System.Windows.Media.Media3D;
+    using JetBrains.Annotations;
+    using Snoop.Infrastructure;
+    using Snoop.Infrastructure.Diagnostics;
 
     public enum TreeType
     {
@@ -19,9 +24,34 @@ namespace Snoop.Data.Tree
         Automation
     }
 
-    public abstract class TreeService
+    public abstract class TreeService : IDisposable, INotifyPropertyChanged
     {
+        private TreeItem? rootTreeItem;
+
+        public TreeService()
+        {
+            this.DiagnosticContext = new DiagnosticContext(this);
+        }
+
         public abstract TreeType TreeType { get; }
+
+        public TreeItem? RootTreeItem
+        {
+            get => this.rootTreeItem;
+            set
+            {
+                if (Equals(value, this.rootTreeItem))
+                {
+                    return;
+                }
+
+                this.rootTreeItem = value;
+
+                this.OnPropertyChanged();
+            }
+        }
+
+        public DiagnosticContext DiagnosticContext { get; }
 
         public IEnumerable GetChildren(TreeItem treeItem)
         {
@@ -76,6 +106,9 @@ namespace Snoop.Data.Tree
 
             if (parent is null)
             {
+                // If the parent is null this should be our new root element
+                this.RootTreeItem = treeItem;
+
                 foreach (var child in treeItem.Children)
                 {
                     if (child is ResourceDictionaryTreeItem)
@@ -106,6 +139,19 @@ namespace Snoop.Data.Tree
                 default:
                     throw new ArgumentOutOfRangeException(nameof(treeType), treeType, null);
             }
+        }
+
+        public void Dispose()
+        {
+            this.DiagnosticContext.Dispose();
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 

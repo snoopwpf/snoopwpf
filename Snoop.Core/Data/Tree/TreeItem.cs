@@ -45,14 +45,14 @@ namespace Snoop.Data.Tree
         }
 
         /// <summary>
-        /// The WPF object that this instance is wrapping
+        /// The WPF object that this instance is wrapping.
         /// </summary>
         public object Target { get; }
 
         public Type TargetType { get; }
 
         /// <summary>
-        /// The parent of this instance
+        /// The parent of this instance.
         /// </summary>
         public TreeItem? Parent { get; }
 
@@ -62,6 +62,8 @@ namespace Snoop.Data.Tree
         /// The depth (in the visual tree) of this instance
         /// </summary>
         public int Depth { get; }
+
+        public bool ShouldBeAnalyzed { get; protected set; } = true;
 
         public string Name
         {
@@ -305,6 +307,8 @@ namespace Snoop.Data.Tree
 
         public void Dispose()
         {
+            this.TreeService.DiagnosticContext.TreeItemDisposed(this);
+
             foreach (var treeItem in this.Children)
             {
                 treeItem.Dispose();
