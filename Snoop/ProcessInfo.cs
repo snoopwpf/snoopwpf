@@ -81,7 +81,7 @@
 
                 MultipleAppDomainMode = settings.MultipleAppDomainMode,
                 MultipleDispatcherMode = settings.MultipleDispatcherMode,
-                SetWindowOwner = settings.SetOwnerWindow
+                SetOwnerWindow = settings.SetOwnerWindow
             };
         }
     }

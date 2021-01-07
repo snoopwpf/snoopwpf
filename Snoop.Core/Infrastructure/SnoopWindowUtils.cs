@@ -18,7 +18,7 @@ namespace Snoop.Infrastructure
     {
         public static Window? FindOwnerWindow(Window ownedWindow)
         {
-            if (TransientSettingsData.Current!.SetWindowOwner == false)
+            if (TransientSettingsData.Current!.SetOwnerWindow == false)
             {
                 return null;
             }
