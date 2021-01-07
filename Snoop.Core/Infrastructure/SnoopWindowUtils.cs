@@ -18,12 +18,9 @@ namespace Snoop.Infrastructure
     {
         public static Window? FindOwnerWindow(Window ownedWindow)
         {
-            if (TransientSettingsData.Current!.SetOwnerWindow == false)
-            {
-                return null;
-            }
-
-            var ownerWindow = WindowHelper.GetVisibleWindow(TransientSettingsData.Current.TargetWindowHandle, ownedWindow.Dispatcher);
+            var ownerWindow = TransientSettingsData.Current is not null
+                ? WindowHelper.GetVisibleWindow(TransientSettingsData.Current.TargetWindowHandle, ownedWindow.Dispatcher)
+                : null;
 
             if (ownerWindow is null
                 && SnoopModes.MultipleDispatcherMode)

@@ -5,10 +5,13 @@
     using System.Diagnostics;
     using System.Windows;
     using System.Windows.Forms.Integration;
+    using Snoop.Data;
     using Snoop.Infrastructure;
 
     public abstract class SnoopMainBaseWindow : SnoopBaseWindow
     {
+        private Window? ownerWindow;
+
         public abstract object? Target { get; set; }
 
         public bool Inspect()
@@ -47,7 +50,17 @@
 
             this.Load(rootToInspect);
 
-            this.Owner = SnoopWindowUtils.FindOwnerWindow(this);
+            this.ownerWindow = SnoopWindowUtils.FindOwnerWindow(this);
+
+            if (TransientSettingsData.Current?.SetOwnerWindow == true)
+            {
+                this.Owner = this.ownerWindow;
+            }
+            else if (this.ownerWindow is not null)
+            {
+                // if we have an owner window, but the owner should not be set, we still have to close ourself if the potential owner window got closed
+                this.ownerWindow.Closed += (_, _) => this.Close();
+            }
 
             Trace.WriteLine("Showing snoop UI...");
 
