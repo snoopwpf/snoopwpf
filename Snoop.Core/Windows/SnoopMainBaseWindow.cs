@@ -1,5 +1,6 @@
 ﻿namespace Snoop.Windows
 {
+    using System;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Windows;
@@ -56,16 +57,11 @@
             Trace.WriteLine("Shown and activated snoop UI.");
         }
 
-        protected override void OnClosing(CancelEventArgs e)
+        protected override void OnClosed(EventArgs e)
         {
-            base.OnClosing(e);
-
-            if (e.Cancel)
-            {
-                return;
-            }
-
             ExceptionHandler.RemoveExceptionHandler(this.Dispatcher);
+
+            base.OnClosed(e);
         }
 
         protected abstract void Load(object rootToInspect);

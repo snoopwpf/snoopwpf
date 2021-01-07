@@ -38,16 +38,11 @@
             base.OnDeactivated(e);
         }
 
-        protected override void OnClosing(CancelEventArgs e)
+        protected override void OnClosed(EventArgs e)
         {
-            base.OnClosing(e);
-
-            if (e.Cancel)
-            {
-                return;
-            }
-
             this.PopMenuModeSafe();
+
+            base.OnClosed(e);
         }
 
         private void PopMenuModeSafe()

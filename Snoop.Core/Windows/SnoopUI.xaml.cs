@@ -396,18 +396,8 @@ namespace Snoop.Windows
             SnoopWindowUtils.LoadWindowPlacement(this, Settings.Default.SnoopUIWindowPlacement);
         }
 
-        /// <summary>
-        /// Cleanup when closing the window.
-        /// </summary>
-        protected override void OnClosing(CancelEventArgs e)
+        protected override void OnClosed(EventArgs e)
         {
-            base.OnClosing(e);
-
-            if (e.Cancel)
-            {
-                return;
-            }
-
             this.CurrentSelection = null;
 
             this.TreeService?.Dispose();
@@ -430,6 +420,8 @@ namespace Snoop.Windows
 
             // actually do the persisting
             Settings.Default.Save();
+
+            base.OnClosed(e);
         }
 
         #endregion
