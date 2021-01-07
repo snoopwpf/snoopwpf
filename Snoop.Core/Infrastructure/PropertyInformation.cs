@@ -21,6 +21,7 @@ namespace Snoop.Infrastructure
     using System.Windows.Threading;
     using JetBrains.Annotations;
     using Snoop.Converters;
+    using Snoop.Infrastructure.Diagnostics;
     using Snoop.Infrastructure.Helpers;
 
     public class PropertyInformation : DependencyObject, IComparable, INotifyPropertyChanged
@@ -33,7 +34,6 @@ namespace Snoop.Infrastructure
         private bool hasChangedRecently;
         private ValueSource valueSource;
 
-        private string bindingError = string.Empty;
         private readonly PropertyDescriptor? property;
         private readonly string displayName;
         private bool isLocallySet;
@@ -481,7 +481,17 @@ namespace Snoop.Infrastructure
 
         public string BindingError
         {
-            get { return this.bindingError; }
+            get => this.bindingError;
+            private set
+            {
+                if (value == this.bindingError)
+                {
+                    return;
+                }
+
+                this.bindingError = value;
+                this.OnPropertyChanged(nameof(this.BindingError));
+            }
         }
 
         public PropertyDescriptor? Property
@@ -605,6 +615,7 @@ namespace Snoop.Infrastructure
         }
 
         private PropertyFilter? filter;
+        private string bindingError = string.Empty;
 
         public bool BreakOnChange
         {
@@ -681,7 +692,7 @@ namespace Snoop.Infrastructure
 
             this.isLocallySet = false;
             this.isInvalidBinding = false;
-            this.bindingError = string.Empty;
+            this.BindingError = string.Empty;
             this.isDatabound = false;
 
             var dp = this.DependencyProperty;
@@ -761,29 +772,10 @@ namespace Snoop.Infrastructure
                 return;
             }
 
-            var builder = new StringBuilder();
-            var writer = new StringWriter(builder);
-            var tracer = new TextWriterTraceListener(writer);
-            var levelBefore = PresentationTraceSources.DataBindingSource.Switch.Level;
-            PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.All;
-            PresentationTraceSources.DataBindingSource.Listeners.Add(tracer);
-
-            // reset binding to get the error message.
-            this.ignoreUpdate = true;
-            d.ClearValue(dp);
-            BindingOperations.SetBinding(d, dp, expression.ParentBindingBase);
-            this.ignoreUpdate = false;
-
-            // this needs to happen on idle so that we can actually run the binding, which may occur asynchronously.
-            this.RunInDispatcherAsync(
-                () =>
-                {
-                    this.bindingError = builder.ToString();
-                    this.OnPropertyChanged(nameof(this.BindingError));
-                    PresentationTraceSources.DataBindingSource.Listeners.Remove(tracer);
-                    writer.Close();
-                    PresentationTraceSources.DataBindingSource.Switch.Level = levelBefore;
-                }, DispatcherPriority.ApplicationIdle);
+            using (new ScopeGuard(() => this.ignoreUpdate = true, () => this.ignoreUpdate = false).Guard())
+            {
+                BindingDiagnosticHelper.Instance.TrySetBindingError(expression, d, dp, s => this.BindingError = s);
+            }
         }
 
         public static List<PropertyInformation> GetProperties(object? obj)
