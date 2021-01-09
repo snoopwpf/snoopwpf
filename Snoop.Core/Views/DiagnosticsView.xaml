@@ -39,8 +39,7 @@
 								Style="{x:Null}"
 								Grid.Column="1"
 								Grid.ColumnSpan="2"
-								Margin="3,4.36166666666667,3.41060513164848E-13,2.36166666666664"
-								Height="13.2766666666667"
+								Margin="3,4,3,2"
 								Foreground="Black"
 								Text="Change tracked events"
 							/>

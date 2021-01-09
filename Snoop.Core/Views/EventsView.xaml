@@ -5,7 +5,7 @@ Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 All other rights reserved.
 -->
 <Grid
-	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:snoop="clr-namespace:Snoop"
 	xmlns:d="http://schemas.microsoft.com/expression/interactivedesigner/2006"
@@ -113,8 +113,7 @@ All other rights reserved.
 								Style="{x:Null}"
 								Grid.Column="1"
 								Grid.ColumnSpan="2"
-								Margin="3,4.36166666666667,3.41060513164848E-13,2.36166666666664"
-								Height="13.2766666666667"
+								Margin="3,4,3,2"
 								Foreground="Black"
 								Text="Change tracked events"
 							/>
@@ -245,7 +244,7 @@ All other rights reserved.
                                         <TextBlock Style="{x:Null}" Text="Reset the enabled event trackers."/>
                                     </Button.ToolTip>
                                 </Button>
-                            
+
 							<ScrollViewer Grid.Row="1" x:Name="ScrollViewer" Style="{x:Null}" Margin="0 2 0 0">
 								<ItemsControl
 								    Style="{x:Null}"
@@ -298,7 +297,7 @@ All other rights reserved.
 			</ControlTemplate>
 		</ResourceDictionary>
 	</Grid.Resources>
-	
+
 	<Grid.RowDefinitions>
 		<RowDefinition Height="Auto"/>
         <RowDefinition Height="*"/>
