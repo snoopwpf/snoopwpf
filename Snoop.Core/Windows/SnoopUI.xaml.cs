@@ -62,21 +62,7 @@ namespace Snoop.Windows
 
             this.InitializeComponent();
 
-            // wrap the following PresentationTraceSources.Refresh() call in a try/catch
-            // sometimes a NullReferenceException occurs
-            // due to empty <filter> elements in the app.config file of the app you are snooping
-            // see the following for more info:
-            // http://snoopwpf.codeplex.com/discussions/236503
-            // http://snoopwpf.codeplex.com/workitem/6647
-            try
-            {
-                PresentationTraceSources.Refresh();
-                PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.Error;
-            }
-            catch (NullReferenceException)
-            {
-                // swallow this exception since you can snoop just fine anyways.
-            }
+            PresentationTraceSourcesHelper.RefreshAndEnsureInformationLevel();
 
             this.CommandBindings.Add(new(ApplicationCommands.Close, (_, _) => this.Close()));
 

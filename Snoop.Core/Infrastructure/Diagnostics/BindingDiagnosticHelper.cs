@@ -1,6 +1,7 @@
 ﻿namespace Snoop.Infrastructure.Diagnostics
 {
     using System;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -22,7 +23,7 @@
         public static readonly BindingDiagnosticHelper Instance = new BindingDiagnosticHelper();
 
 #if NET50
-        private readonly ObservableCollection<FailedBindingDetails> failedBindings = new();
+        private readonly ObservableCollection<FailedBinding> failedBindings = new();
 #endif
 
         private BindingDiagnosticHelper()
@@ -43,23 +44,10 @@
 
             if (this.IsActive)
             {
-                // to get all failed binding results we have to increase the trace level
-                // todo: when and how should we reset this value?
-                PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.All;
+                // this call, or better the Refresh class inside the method, causes BindingDiagnostics to start working as we set IsEnabled on it via reflection
+                PresentationTraceSourcesHelper.RefreshAndEnsureInformationLevel(forceRefresh: true);
 
-                // this call causes BindingDiagnostics to start working as we set IsEnabled on it via reflection
-                PresentationTraceSources.Refresh();
-
-                // class TraceData
-                //  => _avTrace (AVTrace)
-                //      => _isEnabled
-
-                // 1. AVTrace => _hasBeenRefreshed static field
-                // 2. PresentationTraceSources.TraceRefresh
-                // 3. BindingDiagnostics
-                // 3. ??? VisualDiagnostics.IsEnabled
-
-                // todo: when starting via snoop set env var ENABLE_XAML_DIAGNOSTICS_SOURCE_INFO = true
+                // todo: when starting via snoop maybe we should set env var ENABLE_XAML_DIAGNOSTICS_SOURCE_INFO = true
                 BindingDiagnostics.BindingFailed += this.BindingDiagnostics_BindingFailed;
             }
         #endif
@@ -68,7 +56,7 @@
         public bool IsActive { get; }
 
 #if NET50
-        public ReadOnlyObservableCollection<FailedBindingDetails> FailedBindings { get; }
+        public ReadOnlyObservableCollection<FailedBinding> FailedBindings { get; }
 #endif
 
         public void Dispose()
@@ -90,24 +78,27 @@
                 return;
             }
 
-            if (this.TryGetEntry(e.Binding, out var failedBindingDetails))
+            var bindingExpressionBase = e.Binding;
+
+            if (this.TryGetEntry(bindingExpressionBase, out var failedBinding) == false)
             {
-                this.failedBindings.Remove(failedBindingDetails);
+                var weakReference = new WeakReference<BindingExpressionBase>(bindingExpressionBase);
+                failedBinding = new FailedBinding(weakReference);
+                this.failedBindings.Add(failedBinding);
             }
 
             {
-                var binding = new WeakReference<BindingExpressionBase>(e.Binding);
-                this.failedBindings.Add(new FailedBindingDetails(binding, e.EventType, e.Code, e.Message));
+                failedBinding.AddFailedBindingDetail(new FailedBindingDetail(failedBinding, e.EventType, e.Code, e.Message));
             }
         }
 #endif
 
-        public void TrySetBindingError(BindingExpressionBase binding, DependencyObject dependencyObject, DependencyProperty dependencyProperty, Action<string> errorSetter)
+        public void TrySetBindingError(BindingExpressionBase bindingExpressionBase, DependencyObject dependencyObject, DependencyProperty dependencyProperty, Action<string> errorSetter)
         {
 #if NET50
-            if (this.TryGetEntry(binding, out var failedBindingDetails))
+            if (this.TryGetEntry(bindingExpressionBase, out var failedBinding))
             {
-                errorSetter(failedBindingDetails.Message);
+                errorSetter(failedBinding.Messages);
                 return;
             }
 #endif
@@ -120,20 +111,27 @@
             var scopeGuard = new ScopeGuard(
                 () =>
                 {
-                    PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.Critical | SourceLevels.Error;
+                    PresentationTraceSourcesHelper.EnsureInformationLevel();
                     PresentationTraceSources.DataBindingSource.Listeners.Add(tracer);
+                    //PresentationTraceSources.DataBindingSource.Listeners.Add(new SnoopDebugListener()); // for debugging purposes
                 },
                 () =>
                 {
                     PresentationTraceSources.DataBindingSource.Listeners.Remove(tracer);
                     writer.Dispose();
-                    PresentationTraceSources.DataBindingSource.Switch.Level = levelBefore;
-                })
-                .Guard();
+
+                    if (PresentationTraceSources.DataBindingSource.Switch.Level != levelBefore)
+                    {
+                        PresentationTraceSources.DataBindingSource.Switch.Level = levelBefore;
+                    }
+                });
 
             // reset binding to get the error message.
             dependencyObject.ClearValue(dependencyProperty);
-            BindingOperations.SetBinding(dependencyObject, dependencyProperty, binding.ParentBindingBase);
+            var binding = bindingExpressionBase.ParentBindingBase;
+            BindingOperations.SetBinding(dependencyObject, dependencyProperty, binding);
+
+            scopeGuard.Guard(); // Start listening
 
             // this needs to happen on idle so that we can actually run the binding, which may occur asynchronously.
             dependencyObject.RunInDispatcherAsync(
@@ -145,11 +143,11 @@
         }
 
 #if NET50
-        public bool TryGetEntry(BindingExpressionBase binding, [NotNullWhen(true)] out FailedBindingDetails? bindingFailedDetails)
+        public bool TryGetEntry(BindingExpressionBase bindingExpressionBase, [NotNullWhen(true)] out FailedBinding? bindingFailedDetails)
         {
             bindingFailedDetails = null;
 
-            var entry = this.failedBindings.FirstOrDefault(x => x.Binding.TryGetTarget(out var keyBinding) && ReferenceEquals(keyBinding, binding));
+            var entry = this.failedBindings.FirstOrDefault(x => x.BindingExpressionBase.TryGetTarget(out var keyBindingExpressionBase) && ReferenceEquals(keyBindingExpressionBase, bindingExpressionBase));
 
             if (entry is not null)
             {
@@ -164,18 +162,57 @@
 
 #if NET50
     [PublicAPI]
-    public class FailedBindingDetails
+    public class FailedBinding
     {
-        public FailedBindingDetails(WeakReference<BindingExpressionBase> binding, TraceEventType eventType, int code, string message, params object[]? parameters)
+        private readonly ObservableCollection<FailedBindingDetail> failedBindingDetails;
+        private string? messages;
+
+        public FailedBinding(WeakReference<BindingExpressionBase> bindingExpressionBase)
         {
-            this.Binding = binding;
+            this.BindingExpressionBase = bindingExpressionBase;
+            this.failedBindingDetails = new ObservableCollection<FailedBindingDetail>();
+            this.FailedBindingDetails = new ReadOnlyObservableCollection<FailedBindingDetail>(this.failedBindingDetails);
+        }
+
+        public WeakReference<BindingExpressionBase> BindingExpressionBase { get; }
+
+        public ReadOnlyObservableCollection<FailedBindingDetail> FailedBindingDetails { get; }
+
+        public void AddFailedBindingDetail(FailedBindingDetail failedBindingDetail)
+        {
+            this.messages = null;
+            this.failedBindingDetails.Add(failedBindingDetail);
+        }
+
+        public string Messages => this.messages ??= this.BuildMessages();
+
+        private string BuildMessages()
+        {
+            var sb = new StringBuilder();
+
+            foreach (var failedBindingDetail in this.failedBindingDetails)
+            {
+                sb.AppendFormat("{0} {1}: {2}", failedBindingDetail.EventType, failedBindingDetail.Code, failedBindingDetail.Message);
+                sb.AppendLine();
+            }
+
+            return sb.ToString().TrimEnd();
+        }
+    }
+
+    [PublicAPI]
+    public class FailedBindingDetail
+    {
+        public FailedBindingDetail(FailedBinding failedBinding, TraceEventType eventType, int code, string message, params object[]? parameters)
+        {
+            this.FailedBinding = failedBinding;
             this.EventType = eventType;
             this.Code = code;
             this.Message = message;
             this.Parameters = parameters ?? Array.Empty<object>();
         }
 
-        public WeakReference<BindingExpressionBase> Binding { get; }
+        public FailedBinding FailedBinding { get; }
 
         public TraceEventType EventType { get; }
 

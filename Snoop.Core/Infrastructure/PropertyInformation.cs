@@ -723,6 +723,13 @@ namespace Snoop.Infrastructure
                         || (expression.Status != BindingStatus.Active && !(expression is PriorityBindingExpression)))
                     {
                         this.isInvalidBinding = true;
+
+                        #if NET50
+                        if (BindingDiagnosticHelper.Instance.TryGetEntry(expression, out var failedBinding))
+                        {
+                            this.BindingError = failedBinding.Messages;
+                        }
+                        #endif
                     }
                 }
 
