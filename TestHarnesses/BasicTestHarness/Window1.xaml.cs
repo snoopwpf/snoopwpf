@@ -20,9 +20,8 @@
 
         private void BindingErrorButton_Click(object sender, RoutedEventArgs e)
         {
-            var binding = new Binding("DoesNotExist");
-            PresentationTraceSources.SetTraceLevel(binding, PresentationTraceLevel.High);
-            this.textBlockForBindingError.SetBinding(TextBlock.TextProperty, binding);
+            var binding = new Binding("DoesNotExistInCode");
+            BindingOperations.SetBinding(this.textBlockForBindingError, TextBlock.TextProperty, binding);
         }
     }
 }
