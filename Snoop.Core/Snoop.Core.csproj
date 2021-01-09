@@ -40,6 +40,6 @@
   </ItemGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net5.0-windows'">
-    <DefineConstants>NET50</DefineConstants>
+    <DefineConstants>$(DefineConstants);NET50</DefineConstants>
   </PropertyGroup>
 </Project>
