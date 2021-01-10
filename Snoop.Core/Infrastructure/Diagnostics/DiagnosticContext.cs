@@ -35,9 +35,6 @@
             {
                 diagnosticProvider.PropertyChanged += this.HandleDiagnosticProviderOnPropertyChanged;
             }
-
-            // Ensure the helper is created
-            _ = BindingDiagnosticHelper.Instance;
         }
 
         public TreeService? TreeService { get; }

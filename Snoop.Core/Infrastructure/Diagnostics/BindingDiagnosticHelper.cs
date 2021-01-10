@@ -1,14 +1,12 @@
 ﻿namespace Snoop.Infrastructure.Diagnostics
 {
     using System;
-    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Text;
-    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Data;
 #if NET50
@@ -25,6 +23,7 @@
 #if NET50
         private readonly ObservableCollection<FailedBinding> failedBindings = new();
 #endif
+        private int usageCount;
 
         private BindingDiagnosticHelper()
         {
@@ -41,16 +40,7 @@
                     this.IsActive = true; //WPFDiagnosticsHelper.TrySetField(typeof(DependencyObject).Assembly.GetType("AvTrace"), "_hasBeenRefreshed", true);
                 }
             }
-
-            if (this.IsActive)
-            {
-                // this call, or better the Refresh class inside the method, causes BindingDiagnostics to start working as we set IsEnabled on it via reflection
-                PresentationTraceSourcesHelper.RefreshAndEnsureInformationLevel(forceRefresh: true);
-
-                // todo: when starting via snoop maybe we should set env var ENABLE_XAML_DIAGNOSTICS_SOURCE_INFO = true
-                BindingDiagnostics.BindingFailed += this.BindingDiagnostics_BindingFailed;
-            }
-        #endif
+#endif
         }
 
         public bool IsActive { get; }
@@ -58,6 +48,26 @@
 #if NET50
         public ReadOnlyObservableCollection<FailedBinding> FailedBindings { get; }
 #endif
+
+        public void IncreaseUsageCount()
+        {
+            if (this.usageCount == 0)
+            {
+                this.Activate();
+            }
+
+            ++this.usageCount;
+        }
+
+        public void DecreaseUsageCount()
+        {
+            --this.usageCount;
+
+            if (this.usageCount == 0)
+            {
+                this.Dispose();
+            }
+        }
 
         public void Dispose()
         {
@@ -67,6 +77,20 @@
                 BindingDiagnostics.BindingFailed -= this.BindingDiagnostics_BindingFailed;
 #endif
             }
+        }
+
+        private void Activate()
+        {
+#if NET50
+            if (this.IsActive)
+            {
+                // this call, or better the Refresh class inside the method, causes BindingDiagnostics to start working as we set IsEnabled on it via reflection
+                PresentationTraceSourcesHelper.RefreshAndEnsureInformationLevel(forceRefresh: true);
+
+                // todo: when starting via snoop maybe we should set env var ENABLE_XAML_DIAGNOSTICS_SOURCE_INFO = true
+                BindingDiagnostics.BindingFailed += this.BindingDiagnostics_BindingFailed;
+            }
+#endif
         }
 
 #if NET50

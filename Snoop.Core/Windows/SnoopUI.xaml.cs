@@ -23,6 +23,7 @@ namespace Snoop.Windows
     using Snoop.Core.Properties;
     using Snoop.Data.Tree;
     using Snoop.Infrastructure;
+    using Snoop.Infrastructure.Diagnostics;
     using Snoop.Infrastructure.Helpers;
 
     public sealed partial class SnoopUI : INotifyPropertyChanged
@@ -368,6 +369,8 @@ namespace Snoop.Windows
         {
             base.OnSourceInitialized(e);
 
+            BindingDiagnosticHelper.Instance.IncreaseUsageCount();
+
             // load whether all properties are shown by default
             this.PropertyGrid.ShowDefaults = Settings.Default.ShowDefaults;
 
@@ -385,6 +388,8 @@ namespace Snoop.Windows
             this.TreeService?.Dispose();
 
             this.debugListenerControl?.Dispose();
+
+            BindingDiagnosticHelper.Instance.DecreaseUsageCount();
 
             InputManager.Current.PreProcessInput -= this.HandlePreProcessInput;
 
