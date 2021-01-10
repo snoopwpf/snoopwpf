@@ -388,6 +388,8 @@ namespace Snoop.Windows
 
             this.TreeService?.Dispose();
 
+            this.debugListenerControl?.Dispose();
+
             InputManager.Current.PreProcessInput -= this.HandlePreProcessInput;
 
             this.filterTimer.Stop();

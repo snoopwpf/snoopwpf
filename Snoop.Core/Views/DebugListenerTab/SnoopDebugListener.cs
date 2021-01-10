@@ -22,7 +22,7 @@
 
         public override void WriteLine(string? str)
         {
-            this.SendDataToListeners(str);
+            this.SendDataToListeners(str + Environment.NewLine);
         }
 
         public override void Write(string? str)

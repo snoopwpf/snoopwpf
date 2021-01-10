@@ -475,7 +475,7 @@ All other rights reserved.
 					</TextBlock>
 				</TabItem.Header>
 
-				<debugListenerTab:DebugListenerControl />
+				<debugListenerTab:DebugListenerControl x:Name="debugListenerControl" />
 			</TabItem>
 		</TabControl>
 
