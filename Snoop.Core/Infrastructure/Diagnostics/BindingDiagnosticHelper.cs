@@ -38,6 +38,9 @@
                 if (ReflectionHelper.TrySetProperty(typeof(BindingDiagnostics), "IsEnabled", true))
                 {
                     this.IsActive = true; //WPFDiagnosticsHelper.TrySetField(typeof(DependencyObject).Assembly.GetType("AvTrace"), "_hasBeenRefreshed", true);
+
+                    // this call, or better the Refresh class inside the method, causes BindingDiagnostics to start working as we set IsEnabled on it via reflection
+                    PresentationTraceSourcesHelper.RefreshAndEnsureInformationLevel(forceRefresh: true);
                 }
             }
 #endif
@@ -81,16 +84,13 @@
 
         private void Activate()
         {
-#if NET50
             if (this.IsActive)
             {
-                // this call, or better the Refresh class inside the method, causes BindingDiagnostics to start working as we set IsEnabled on it via reflection
-                PresentationTraceSourcesHelper.RefreshAndEnsureInformationLevel(forceRefresh: true);
-
+#if NET50
                 // todo: when starting via snoop maybe we should set env var ENABLE_XAML_DIAGNOSTICS_SOURCE_INFO = true
                 BindingDiagnostics.BindingFailed += this.BindingDiagnostics_BindingFailed;
-            }
 #endif
+            }
         }
 
 #if NET50
