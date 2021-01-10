@@ -104,12 +104,14 @@ namespace Snoop.Controls
             this.DocumentRoot.ReleaseMouseCapture();
         }
 
-#pragma warning disable CA2109
-        public void DoMouseWheel(object sender, MouseWheelEventArgs e)
-#pragma warning restore CA2109
+        protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
+            base.OnMouseWheel(e);
+
             if (this.IsValidTarget)
             {
+                e.Handled = true;
+
                 var zoom = Math.Pow(ZoomFactor, e.Delta / 120.0);
                 var offset = e.GetPosition(this.Viewbox);
                 this.Zoom(zoom, offset);

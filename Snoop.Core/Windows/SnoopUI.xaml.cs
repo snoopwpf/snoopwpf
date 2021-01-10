@@ -85,10 +85,6 @@ namespace Snoop.Windows
             InputManager.Current.PreProcessInput += this.HandlePreProcessInput;
             this.Tree.SelectedItemChanged += this.HandleTreeSelectedItemChanged;
 
-            // we can't catch the mouse wheel at the ZoomerControl level,
-            // so we catch it here, and relay it to the ZoomerControl.
-            this.MouseWheel += this.SnoopUI_MouseWheel;
-
             this.filterTimer = new DispatcherTimer
             {
                 Interval = TimeSpan.FromSeconds(0.3)
@@ -656,11 +652,6 @@ namespace Snoop.Windows
             }
 
             return itemToFind;
-        }
-
-        private void SnoopUI_MouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            this.PreviewArea.Zoomer.DoMouseWheel(sender, e);
         }
 
         #endregion
