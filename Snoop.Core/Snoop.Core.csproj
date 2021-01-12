@@ -41,5 +41,6 @@
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net5.0-windows'">
     <DefineConstants>$(DefineConstants);NET50</DefineConstants>
+    <DefineConstants>$(DefineConstants);USE_WPF_BINDING_DIAG</DefineConstants>
   </PropertyGroup>
 </Project>

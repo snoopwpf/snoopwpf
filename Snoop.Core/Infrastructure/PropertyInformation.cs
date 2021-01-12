@@ -724,7 +724,7 @@ namespace Snoop.Infrastructure
                     {
                         this.isInvalidBinding = true;
 
-                        #if NET50
+                        #if USE_WPF_BINDING_DIAG
                         if (BindingDiagnosticHelper.Instance.TryGetEntry(expression, out var failedBinding))
                         {
                             this.BindingError = failedBinding.Messages;
