@@ -143,6 +143,8 @@
                 control.DiagnosticsItemsView = null;
             }
 
+            control.DiagnosticProviders = ((DiagnosticContext?)e.NewValue)?.DiagnosticProviders;
+
             if (control.DiagnosticProviders is not null)
             {
                 var newView = new ListCollectionView(control.DiagnosticProviders);
@@ -157,6 +159,10 @@
                 newView.SortDescriptions.Add(new SortDescription(nameof(DiagnosticProvider.Name), ListSortDirection.Ascending));
 
                 control.DiagnosticProvidersView = newView;
+            }
+            else
+            {
+                control.DiagnosticProvidersView = null;
             }
         }
 
