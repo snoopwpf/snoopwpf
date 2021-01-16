@@ -59,7 +59,7 @@
             else if (this.ownerWindow is not null)
             {
                 // if we have an owner window, but the owner should not be set, we still have to close ourself if the potential owner window got closed
-                this.ownerWindow.Closed += (_, _) => this.Close();
+                this.ownerWindow.Closed += this.OnOwnerWindowOnClosed;
             }
 
             Trace.WriteLine("Showing snoop UI...");
@@ -68,6 +68,16 @@
             this.Activate();
 
             Trace.WriteLine("Shown and activated snoop UI.");
+        }
+
+        private void OnOwnerWindowOnClosed(object? o, EventArgs eventArgs)
+        {
+            if (this.ownerWindow is not null)
+            {
+                this.ownerWindow.Closed -= this.OnOwnerWindowOnClosed;
+            }
+
+            this.Close();
         }
 
         protected override void OnClosed(EventArgs e)
