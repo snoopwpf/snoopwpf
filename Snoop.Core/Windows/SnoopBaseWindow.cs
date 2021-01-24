@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.Windows;
     using System.Windows.Input;
     using System.Windows.Media.Imaging;
@@ -16,6 +17,15 @@
             this.Icon = new BitmapImage(new Uri("pack://application:,,,/Snoop.Core;component/Snoop.ico"));
 
             SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
+        }
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+
+            var stylesRD = (ResourceDictionary)Application.LoadComponent(new Uri("/Snoop.Core;component/Styles.xaml", UriKind.Relative));
+            Debug.Assert(stylesRD is not null, "Styles could not be loaded.");
+            this.Resources.MergedDictionaries.Add(stylesRD);
         }
 
         /// <inheritdoc />

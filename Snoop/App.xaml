@@ -14,7 +14,7 @@ All other rights reserved.
 	<Application.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Simple Styles.xaml"/>
+                <ResourceDictionary Source="Styles.xaml"/>
 			</ResourceDictionary.MergedDictionaries>
 
             <!-- appChooserButtonStyle -->

@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:infrastructure="clr-namespace:Snoop.Infrastructure"
              xmlns:diagnostics="clr-namespace:Snoop.Infrastructure.Diagnostics"
+             xmlns:controls="clr-namespace:Snoop.Controls"
              x:Name="self"
              mc:Ignorable="d"
              d:DesignHeight="450"
@@ -19,209 +20,6 @@
 	    <DataTemplate x:Key="CategoryTemplate">
 		    <TextBlock Style="{x:Null}" Text="{Binding Path=Name}" FontWeight="Bold" Margin="2,5,0,0"/>
 	    </DataTemplate>
-
-        <ControlTemplate x:Key="NoSelectionComboBox" TargetType="{x:Type ComboBox}">
-				<Grid x:Name="Grid">
-					<Border
-						x:Name="Border"
-						Background="{x:Null}"
-						BorderBrush="{TemplateBinding BorderBrush}"
-						BorderThickness="{TemplateBinding BorderThickness}"
-					>
-						<Grid Grid.IsSharedSizeScope="True" x:Name="Grid1">
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="1"/>
-								<ColumnDefinition Width="*"/>
-								<ColumnDefinition Width="Auto" SharedSizeGroup="ComboBoxButton"/>
-							</Grid.ColumnDefinitions>
-							<TextBlock
-								x:Name="TextBlock"
-								Style="{x:Null}"
-								Grid.Column="1"
-								Grid.ColumnSpan="2"
-								Margin="3,4,3,2"
-								Foreground="Black"
-								Text="Change tracked events"
-							/>
-							<ToggleButton
-								x:Name="ToggleButton"
-								Grid.ColumnSpan="3"
-								IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-							>
-								<ToggleButton.Style>
-									<Style TargetType="{x:Type ToggleButton}">
-										<Setter Property="MinWidth" Value="0"/>
-										<Setter Property="MinHeight" Value="0"/>
-										<Setter Property="Width" Value="Auto"/>
-										<Setter Property="Height" Value="Auto"/>
-										<Setter Property="Background" Value="#00FFFFFF"/>
-										<Setter Property="Focusable" Value="False"/>
-										<Setter Property="ClickMode" Value="Press"/>
-										<Setter Property="Template">
-											<Setter.Value>
-												<ControlTemplate TargetType="{x:Type ToggleButton}">
-													<Grid Background="{TemplateBinding Background}" x:Name="Grid">
-														<Grid.ColumnDefinitions>
-															<ColumnDefinition Width="*"/>
-															<ColumnDefinition Width="Auto" SharedSizeGroup="ComboBoxButton"/>
-														</Grid.ColumnDefinitions>
-														<Border
-															x:Name="Border"
-															Grid.Column="1"
-															Width="14.6791723969389"
-															HorizontalAlignment="Left"
-															Margin="2,2,2,2"
-															BorderThickness="1,1,1,1"
-															CornerRadius="3,3,3,3"
-														>
-															<Border.BorderBrush>
-																<LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-																	<LinearGradientBrush.RelativeTransform>
-																		<TransformGroup>
-																			<TranslateTransform X="-0.5" Y="-0.5"/>
-																			<ScaleTransform ScaleX="1.2938731180987744" ScaleY="1.2938731180987744"/>
-																			<SkewTransform AngleX="0" AngleY="0"/>
-																			<RotateTransform Angle="137.35598639732007"/>
-																			<TranslateTransform X="0.5" Y="0.5"/>
-																			<TranslateTransform X="-0.052250302263790425" Y="0.061724038623558443"/>
-																		</TransformGroup>
-																	</LinearGradientBrush.RelativeTransform>
-																	<GradientStop Offset="0.41025641025641024" Color="sc#1, 0.0884037539, 0.0884037539, 0.0884037539"/>
-																	<GradientStop Offset="1" Color="sc#1, 0.3278404, 0.3278404, 0.3278404"/>
-																	<GradientStop Offset="0" Color="sc#1, 0.398262918, 0.398262918, 0.398262918"/>
-																</LinearGradientBrush>
-															</Border.BorderBrush>
-															<Canvas x:Name="Canvas" Style="{x:Null}" Width="16" Height="16">
-																<Path
-																	x:Name="Path"
-																	Width="10.0079642791082"
-																	Height="7.69193004565297"
-																	Canvas.Left="1.41917012579142"
-																	Canvas.Top="3.53853164614431"
-																	Fill="{x:Null}"
-																	Stroke="sc#1, 0.102488264, 0.102488264, 0.102488264"
-																	StrokeThickness="2"
-																	StrokeEndLineCap="Round"
-																	StrokeStartLineCap="Round"
-																	StrokeLineJoin="Round"
-																	RenderTransformOrigin="0.5,0.5"
-																	Stretch="Fill"
-																	Data="M1.6594606,3.3776513 L7.9633767,11.712949 14.601148,3.4108349"
-																	d:LastTangent="0,0"
-																>
-																	<Path.RenderTransform>
-																		<TransformGroup>
-																			<TranslateTransform X="0" Y="0"/>
-																			<ScaleTransform ScaleX="1" ScaleY="1"/>
-																			<SkewTransform AngleX="0" AngleY="0"/>
-																			<RotateTransform Angle="0"/>
-																			<TranslateTransform X="0" Y="0"/>
-																			<TranslateTransform X="0" Y="0"/>
-																		</TransformGroup>
-																	</Path.RenderTransform>
-																</Path>
-															</Canvas>
-														</Border>
-													</Grid>
-												</ControlTemplate>
-											</Setter.Value>
-										</Setter>
-									</Style>
-								</ToggleButton.Style>
-							</ToggleButton>
-						</Grid>
-					</Border>
-					<Popup
-						x:Name="PART_Popup"
-					    Style="{x:Null}"
-						IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource Mode=TemplatedParent, AncestorType={x:Null}}}"
-						Focusable="False"
-						Placement="Bottom"
-						PopupAnimation="Slide"
-						AllowsTransparency="True"
-					>
-						<Grid
-							x:Name="DropDown"
-                            Style="{x:Null}"
-							MinWidth="{TemplateBinding ActualWidth}"
-							MaxHeight="{TemplateBinding MaxDropDownHeight}"
-						>
-							<Border
-								x:Name="DropDownBorder"
-                                Style="{x:Null}"
-								Background="{TemplateBinding Background}"
-								BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}"
-								BorderThickness="1,1,1,1"
-							/>
-							<Grid Style="{x:Null}"
-                                  Margin="1,1,1,1">
-								<Grid.RowDefinitions>
-									<RowDefinition Style="{x:Null}" Height="Auto" />
-									<RowDefinition Style="{x:Null}" Height="*" />
-                                </Grid.RowDefinitions>
-								<!-- todo: add reset -->
-                                <!-- <Button -->
-                                <!--     Grid.Row="0" -->
-                                <!--     Style="{x:Null}" -->
-                                <!--     Command="{x:Static views:EventsView.ResetEventTrackersToDefaultCommand}"> -->
-                                <!--     <TextBlock Style="{x:Null}"> -->
-                                <!--         Reset to default settings -->
-                                <!--     </TextBlock> -->
-                                <!--     <Button.ToolTip> -->
-                                <!--         <TextBlock Style="{x:Null}" Text="Reset the active diagnostic providers."/> -->
-                                <!--     </Button.ToolTip> -->
-                                <!-- </Button> -->
-
-							<ScrollViewer Grid.Row="1" x:Name="ScrollViewer" Style="{x:Null}" Margin="0 2 0 0">
-								<ItemsControl
-								    Style="{x:Null}"
-									ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource TemplatedParent}}"
-									KeyboardNavigation.DirectionalNavigation="Contained"
-								>
-									<ItemsControl.GroupStyle>
-										<GroupStyle HeaderTemplate="{StaticResource CategoryTemplate}"/>
-									</ItemsControl.GroupStyle>
-								</ItemsControl>
-							</ScrollViewer>
-                            </Grid>
-						</Grid>
-					</Popup>
-				</Grid>
-				<ControlTemplate.Triggers>
-					<MultiTrigger>
-						<MultiTrigger.Conditions>
-							<Condition Property="IsKeyboardFocusWithin" Value="True"/>
-							<Condition Property="IsDropDownOpen" Value="False"/>
-						</MultiTrigger.Conditions>
-						<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}"/>
-					</MultiTrigger>
-					<Trigger Property="Popup.HasDropShadow" SourceName="PART_Popup" Value="True">
-						<Setter Property="Margin" Value="0,0,3,3" TargetName="DropDown"/>
-						<Setter Property="SnapsToDevicePixels" Value="True" TargetName="DropDown"/>
-						<Setter Property="BitmapEffect" TargetName="DropDownBorder">
-							<Setter.Value>
-								<DropShadowBitmapEffect ShadowDepth="1.5" Softness="0.15"/>
-							</Setter.Value>
-						</Setter>
-					</Trigger>
-					<Trigger Property="HasItems" Value="False">
-						<Setter Property="MinHeight" Value="95" TargetName="DropDownBorder"/>
-					</Trigger>
-					<Trigger Property="IsEnabled" Value="False">
-						<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
-						<Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
-					</Trigger>
-					<Trigger Property="IsGrouping" Value="True">
-						<Setter Property="ScrollViewer.CanContentScroll" Value="False"/>
-					</Trigger>
-					<Trigger Property="Width" Value="Auto">
-						<Setter Property="MinWidth" Value="150"/>
-					</Trigger>
-					<Trigger Property="Height" Value="Auto">
-						<Setter Property="MinHeight" Value="20"/>
-					</Trigger>
-				</ControlTemplate.Triggers>
-			</ControlTemplate>
     </UserControl.Resources>
 
     <Grid Style="{x:Null}">
@@ -231,44 +29,41 @@
         </Grid.RowDefinitions>
 
         <StackPanel Margin="8,4,0,4" Orientation="Horizontal" HorizontalAlignment="Left">
-            <ToggleButton Margin="0,0,4,0" IsChecked="{Binding ElementName=self, Path=ShowErrors, Mode=TwoWay}" HorizontalContentAlignment="Left" >
+            <ToggleButton Margin="0,0,4,0" Padding="2 0" IsChecked="{Binding ElementName=self, Path=ShowErrors, Mode=TwoWay}" HorizontalContentAlignment="Left" >
                 <StackPanel Orientation="Horizontal">
                     <Image Source="/Inspector;component/Images/error.png" Height="14" />
                     <TextBlock Margin="4,0,0,0" Text="{Binding ElementName=self, Path=ErrorCount}" />
                     <TextBlock Margin="4,0,0,0" Text="Errors" />
                 </StackPanel>
             </ToggleButton>
-            <ToggleButton Margin="0,0,4,0" IsChecked="{Binding ElementName=self, Path=ShowWarnings, Mode=TwoWay}" HorizontalContentAlignment="Left" >
+            <ToggleButton Margin="0,0,4,0" Padding="2 0" IsChecked="{Binding ElementName=self, Path=ShowWarnings, Mode=TwoWay}" HorizontalContentAlignment="Left" >
                 <StackPanel Orientation="Horizontal">
                     <Image Source="{DynamicResource warningDrawingImage}" Height="14" />
                     <TextBlock Margin="4,0,0,0" Text="{Binding ElementName=self, Path=WarningCount}" />
                     <TextBlock Margin="4,0,0,0" Text="Warnings" />
                 </StackPanel>
             </ToggleButton>
-            <ToggleButton Margin="0,0,4,0" IsChecked="{Binding ElementName=self, Path=ShowInformations, Mode=TwoWay}" HorizontalContentAlignment="Left" >
+            <ToggleButton Margin="0,0,4,0" Padding="2 0" IsChecked="{Binding ElementName=self, Path=ShowInformations, Mode=TwoWay}" HorizontalContentAlignment="Left" >
                 <StackPanel Orientation="Horizontal">
                     <Image Source="/Inspector;component/Images/information.png" Height="14" />
                     <TextBlock Margin="4,0,0,0" Text="{Binding ElementName=self, Path=InformationCount}" />
                     <TextBlock Margin="4,0,0,0" Text="Informations" />
                 </StackPanel>
             </ToggleButton>
-            <!-- <Button Margin="16,0,0,0" Command="{Binding ElementName=self, Path=ConfigureDiagnosticProvidersCommand}"  > -->
-            <!--     <TextBlock Text="Configure rules..." /> -->
-            <!-- </Button> -->
 
-	        <ComboBox
-		        Style="{x:Null}"
+            <controls:NoSelectionComboBox
 		        infrastructure:ComboBoxSettings.RegisterAsSnoopPart="True"
 		        HorizontalAlignment="Stretch"
 		        VerticalAlignment="Stretch"
 		        Margin="10,0,20,0"
-		        Template="{StaticResource NoSelectionComboBox}"
 		        ItemsSource="{Binding ElementName=self, Path=DiagnosticProvidersView}"
-		        IsSynchronizedWithCurrentItem="True">
-		        <ComboBox.ToolTip>
+		        IsSynchronizedWithCurrentItem="True"
+		        Header="Change active diagnostic providers"
+		        GroupHeaderTemplate="{StaticResource CategoryTemplate}">
+		        <controls:NoSelectionComboBox.ToolTip>
 			        <TextBlock Style="{x:Null}" Text="Select which diagnostic providers should be active."/>
-		        </ComboBox.ToolTip>
-	        </ComboBox>
+		        </controls:NoSelectionComboBox.ToolTip>
+	        </controls:NoSelectionComboBox>
         </StackPanel>
 
         <ListView Style="{x:Null}"
