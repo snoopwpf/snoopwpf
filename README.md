@@ -37,7 +37,7 @@ Highlights:
 - Snoop now filters uncommon properties by default
 - Snoop is now able to show `MergedDictionaries` from `ResourceDictionary`
 - Snoop now has two tracking modes.
-  - Holding CTRL tries to skip template parts
+  - Holding CTRL tries to skip template parts => this is changed to CTRL + ALT in newer versions
   - Holding CTRL + SHIFT does not skip template parts
 - Drastically improved performance of AppChooser.Refresh() (thanks @mikel785)
 - Usability improvements for process dropdown (thanks @mikel785)

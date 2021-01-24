@@ -1,4 +1,4 @@
-# Changelog for Snoop
+﻿# Changelog for Snoop
 
 ## 3.1.0
 
@@ -15,6 +15,7 @@
   - Maximum displayed events in events viewer are now persisted in settings
   - Added menu items to close the current snoop window, open the folder containing the settings for the currently running application and reset the current settings
   - Added support for `ThreeState` bool values in the properties grid
+  - Tracking mode change: Holding CTRL is changed to CTRL + ALT, as only CTRL was triggered all the time when copying text, switching tabs etc.. 
   - [#38](../../issues/38) - Export tree (thanks @amake for the basic idea and starting point)
   - [#103](../../issues/103) - Feature Request: Persist Tracked Events Settings
 

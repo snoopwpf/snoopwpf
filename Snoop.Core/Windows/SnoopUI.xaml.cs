@@ -298,7 +298,7 @@ namespace Snoop.Windows
         public bool IsHandlingCTRL_SHIFT { get; set; } = true;
 
         // ReSharper disable once InconsistentNaming
-        public bool IsHandlingCTRL { get; set; } = true;
+        public bool IsHandlingCTRL_ALT { get; set; } = false;
 
         /// <summary>Identifies the <see cref="CurrentTreeType"/> dependency property.</summary>
         public static readonly DependencyProperty CurrentTreeTypeProperty = DependencyProperty.Register(nameof(CurrentTreeType), typeof(TreeType), typeof(SnoopUI), new PropertyMetadata(TreeType.Visual, OnCurrentTreeTypeChanged));
@@ -593,7 +593,7 @@ namespace Snoop.Windows
         {
             this.OnPropertyChanged(nameof(this.CurrentFocus));
 
-            if (this.IsHandlingCTRL == false
+            if (this.IsHandlingCTRL_ALT == false
                 && this.IsHandlingCTRL_SHIFT == false)
             {
                 return;
@@ -603,6 +603,7 @@ namespace Snoop.Windows
 
             var isControlPressed = currentModifiers.HasFlag(ModifierKeys.Control);
             var isShiftPressed = currentModifiers.HasFlag(ModifierKeys.Shift);
+            var isAltPressed = currentModifiers.HasFlag(ModifierKeys.Alt);
 
             if (isControlPressed == false)
             {
@@ -619,8 +620,9 @@ namespace Snoop.Windows
             }
 
             // If Shift is not pressed search up the tree of templated parents.
-            if (this.IsHandlingCTRL
+            if (this.IsHandlingCTRL_ALT
                 && isShiftPressed == false
+                && isAltPressed
                 && itemToFind is FrameworkElement frameworkElement)
             {
                 itemToFind = GetItemToFindAndSkipTemplateParts(frameworkElement);
