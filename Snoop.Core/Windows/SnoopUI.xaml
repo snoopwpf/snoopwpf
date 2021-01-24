@@ -485,7 +485,7 @@ All other rights reserved.
 			</TabItem>
 		</TabControl>
 
-		<!-- Horizontal GridSplitter (between the tab control (with the property grid/events view) and the previewer) -->
+		<!-- Horizontal GridSplitter (between the tab control (with the property grid/events view) and the diagnostics/previewer) -->
 		<GridSplitter
 		    Style="{x:Null}"
 			Grid.Row="2"
@@ -504,7 +504,7 @@ All other rights reserved.
 					<TextBlock Style="{x:Null}" Text="{Binding TreeService.DiagnosticContext.DiagnosticItems.Count, StringFormat={}Diagnostics ({0})}">
 						<TextBlock.ToolTip>
 							<StackPanel Style="{x:Null}" MaxWidth="300">
-								<TextBlock Style="{x:Null}" Text="Diagnostics View"/>
+								<TextBlock Style="{x:Null}" Text="Diagnostics"/>
 								<TextBlock
 									Style="{x:Null}"
 									Text="Lists all available diagnostics."
@@ -523,7 +523,7 @@ All other rights reserved.
 					<TextBlock Style="{x:Null}" Text="Preview">
 						<TextBlock.ToolTip>
 							<StackPanel Style="{x:Null}" MaxWidth="300">
-								<TextBlock Style="{x:Null}" Text="Preview area"/>
+								<TextBlock Style="{x:Null}" Text="Preview"/>
 								<TextBlock
 									Style="{x:Null}"
 									Text="Previews the currently selected element."
