@@ -148,6 +148,11 @@ All other rights reserved.
                               IsCheckable="True"
                               IsChecked="{Binding IsHandlingCTRL_SHIFT}" />
                 </MenuItem>
+				<MenuItem Style="{x:Null}"
+				          Header="_Debug">
+					<MenuItem Style="{x:Null}" Header="Launch debugger" Click="HandleLaunchDebugger_OnClick" />
+					<MenuItem Style="{x:Null}" Header="Snoop Snoop" Click="HandleSnoopSnoop_OnClick" />
+				</MenuItem>
 			</Menu>
         </StackPanel>
 

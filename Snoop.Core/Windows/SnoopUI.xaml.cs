@@ -900,9 +900,20 @@ namespace Snoop.Windows
 
             this.isResettingSettings = false;
         }
+
+        private void HandleLaunchDebugger_OnClick(object sender, RoutedEventArgs e)
+        {
+            Debugger.Launch();
+        }
+
+        private void HandleSnoopSnoop_OnClick(object sender, RoutedEventArgs e)
+        {
+            new SnoopUI().Inspect(this);
+        }
     }
 
     #region NoFocusHyperlink
+
     public class NoFocusHyperlink : Hyperlink
     {
         protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
@@ -915,6 +926,7 @@ namespace Snoop.Windows
             e.Handled = true;
         }
     }
+
     #endregion
 
     public class PropertyValueInfo
@@ -1010,7 +1022,7 @@ namespace Snoop.Windows
                     }
                 }
 
-                Debug.WriteLine(sb.ToString());
+                Trace.WriteLine(sb.ToString());
                 ClipboardHelper.SetText(sb.ToString());
             }
         }
