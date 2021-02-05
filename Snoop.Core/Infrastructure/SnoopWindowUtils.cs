@@ -7,11 +7,14 @@ namespace Snoop.Infrastructure
 {
     using System;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Runtime.InteropServices;
     using System.Windows;
+    using System.Windows.Forms;
     using System.Windows.Interop;
     using Snoop.Data;
     using Snoop.Infrastructure.Helpers;
+    using Application = System.Windows.Application;
     using Rectangle = System.Drawing.Rectangle;
 
     public static class SnoopWindowUtils
@@ -111,20 +114,25 @@ namespace Snoop.Infrastructure
         public static void LoadWindowPlacement(Window window, WINDOWPLACEMENT? windowPlacement)
         {
             if (windowPlacement.HasValue == false
-                || IsVisibleOnAnyScreen(windowPlacement.Value.NormalPosition) == false)
+                || IsVisibleOnAnyScreen(windowPlacement.Value.NormalPosition, out var screen) == false)
             {
                 return;
             }
 
             try
             {
-                // load the window placement details from the user settings.
-                var wp = windowPlacement.Value;
-                wp.Length = Marshal.SizeOf(typeof(WINDOWPLACEMENT));
-                wp.Flags = 0;
-                wp.ShowCmd = wp.ShowCmd == NativeMethods.SW_SHOWMINIMIZED ? NativeMethods.SW_SHOWNORMAL : wp.ShowCmd;
-                var hwnd = new WindowInteropHelper(window).Handle;
-                NativeMethods.SetWindowPlacement(hwnd, ref wp);
+                if (windowPlacement.Value.ShowCmd == NativeMethods.SW_SHOWMAXIMIZED)
+                {
+                    window.WindowState = WindowState.Maximized;
+                }
+                else
+                {
+                    var screenContainsPosition = screen.Bounds.Contains(windowPlacement.Value.NormalPosition.Left, windowPlacement.Value.NormalPosition.Top);
+                    window.Top = screenContainsPosition ? windowPlacement.Value.NormalPosition.Top : screen.Bounds.Top;
+                    window.Left = screenContainsPosition ? windowPlacement.Value.NormalPosition.Left : screen.Bounds.Left;
+                    window.Width = Math.Max(100, Math.Min(screen.Bounds.Width, windowPlacement.Value.NormalPosition.Width));
+                    window.Height = Math.Max(26, Math.Min(screen.Bounds.Height, windowPlacement.Value.NormalPosition.Height));
+                }
             }
             catch (Exception exception)
             {
@@ -134,25 +142,43 @@ namespace Snoop.Infrastructure
 
         public static void SaveWindowPlacement(Window window, Action<WINDOWPLACEMENT> saveAction)
         {
-            WINDOWPLACEMENT windowPlacement;
             var hwnd = new WindowInteropHelper(window).Handle;
-            NativeMethods.GetWindowPlacement(hwnd, out windowPlacement);
+            NativeMethods.GetWindowPlacement(hwnd, out var windowPlacement);
 
             saveAction(windowPlacement);
         }
 
-        private static bool IsVisibleOnAnyScreen(RECT rect)
+        private static bool IsVisibleOnAnyScreen(RECT rect, [NotNullWhen(true)] out Screen? screenResult)
         {
             var rectangle = new Rectangle(rect.Left, rect.Top, rect.Width, rect.Height);
 
-            foreach (var screen in System.Windows.Forms.Screen.AllScreens)
+            foreach (var screen in Screen.AllScreens)
             {
-                if (screen.WorkingArea.IntersectsWith(rectangle))
+                if (screen.Bounds.Contains(rectangle))
                 {
+                    screenResult = screen;
                     return true;
                 }
             }
 
+            var largestIntersectRectAndScreen = new Tuple<Rectangle, Screen?>(Rectangle.Empty, null);
+
+            foreach (var screen in Screen.AllScreens)
+            {
+                var intersectRect = Rectangle.Intersect(screen.Bounds, rectangle);
+                if ((intersectRect.Width * intersectRect.Height) > (largestIntersectRectAndScreen.Item1.Width * largestIntersectRectAndScreen.Item1.Height))
+                {
+                    largestIntersectRectAndScreen = new Tuple<Rectangle, Screen?>(intersectRect, screen);
+                }
+            }
+
+            if (largestIntersectRectAndScreen.Item2 is not null)
+            {
+                screenResult = largestIntersectRectAndScreen.Item2;
+                return true;
+            }
+
+            screenResult = null;
             return false;
         }
     }
