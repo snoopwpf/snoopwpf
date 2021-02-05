@@ -155,7 +155,7 @@ namespace Snoop.Windows
             {
                 return string.Empty;
             }
-            
+
             var exceptionDetails = this.Exception.ToString();
 
             const int maxExceptionDetailsLength = 4000;
