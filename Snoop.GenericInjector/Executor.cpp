@@ -6,7 +6,9 @@
 #include <comdef.h>
 
 #include "NetCoreApp3_0Executor.h"
+#ifndef NO_FULL_FRAMEWORK
 #include "NetFull4_0Executor.h"
+#endif
 
 bool icase_wchar_cmp(const wchar_t a, const wchar_t b)
 {
@@ -53,10 +55,12 @@ std::unique_ptr<FrameworkExecutor> GetExecutor(const std::wstring& framework)
 		return std::make_unique<NetCoreApp3_0Executor>();
 	}
 
+#ifndef NO_FULL_FRAMEWORK
 	if (icase_cmp(framework, L"net40"))
 	{
 		return std::make_unique<NetFull4_0Executor>();
 	}
+#endif
 
 	OutputDebugStringEx(L"Framework '%s' is not supported.", framework.c_str());
 	
