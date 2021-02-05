@@ -2,6 +2,6 @@
 {
     public interface IListener
     {
-        void Write(string str);
+        void Write(string? str);
     }
 }

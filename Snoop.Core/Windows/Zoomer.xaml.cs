@@ -111,14 +111,14 @@ namespace Snoop.Windows
             SnoopWindowUtils.LoadWindowPlacement(this, Settings.Default.ZoomerWindowPlacement);
         }
 
-        protected override void OnClosing(CancelEventArgs e)
+        protected override void OnClosed(EventArgs e)
         {
-            base.OnClosing(e);
-
             this.Viewbox.Child = null;
 
             // persist the window placement details to the user settings.
             SnoopWindowUtils.SaveWindowPlacement(this, wp => Settings.Default.ZoomerWindowPlacement = wp);
+
+            base.OnClosed(e);
         }
 
         /// <inheritdoc />
@@ -289,9 +289,9 @@ namespace Snoop.Windows
 
         private void Content_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            var zoom = Math.Pow(ZoomFactor, e.Delta / 120.0);
+            var newZoom = Math.Pow(ZoomFactor, e.Delta / 120.0);
             var offset = e.GetPosition(this.Viewbox);
-            this.Zoom(zoom, offset);
+            this.Zoom(newZoom, offset);
         }
 
         private void ZScaleSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

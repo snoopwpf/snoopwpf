@@ -12,10 +12,7 @@ namespace Snoop.Controls
     using System.Windows.Media;
     using Snoop.Infrastructure;
 
-    /// <summary>
-    /// Interaction logic for ZoomerControl.xaml
-    /// </summary>
-    public partial class ZoomerControl : UserControl
+    public partial class ZoomerControl
     {
         public ZoomerControl()
         {
@@ -32,9 +29,9 @@ namespace Snoop.Controls
         /// <summary>
         /// Gets or sets the Target property.
         /// </summary>
-        public object Target
+        public object? Target
         {
-            get { return (object)this.GetValue(TargetProperty); }
+            get { return (object?)this.GetValue(TargetProperty); }
             set { this.SetValue(TargetProperty, value); }
         }
 
@@ -47,7 +44,7 @@ namespace Snoop.Controls
                 typeof(object),
                 typeof(ZoomerControl),
                 new FrameworkPropertyMetadata(
-                    default,
+                    null,
                     OnTargetChanged));
 
         /// <summary>
@@ -70,7 +67,7 @@ namespace Snoop.Controls
                 this.pooSniffer = this.TryFindResource("poo_sniffer_xpr") as Brush;
             }
 
-            this.Cursor = this.Target == this.pooSniffer ? null : Cursors.SizeAll;
+            this.Cursor = ReferenceEquals(this.Target, this.pooSniffer) ? null : Cursors.SizeAll;
 
             var element = this.CreateIfPossible(this.Target);
             if (element is not null)
@@ -89,7 +86,8 @@ namespace Snoop.Controls
 
         private void Content_MouseMove(object sender, MouseEventArgs e)
         {
-            if (this.IsValidTarget && this.DocumentRoot.IsMouseCaptured)
+            if (this.IsValidTarget
+                && this.DocumentRoot.IsMouseCaptured)
             {
                 var delta = e.GetPosition(this.DocumentRoot) - this.downPoint;
                 this.translation.X += delta.X;
@@ -104,12 +102,17 @@ namespace Snoop.Controls
             this.DocumentRoot.ReleaseMouseCapture();
         }
 
-        public void DoMouseWheel(object sender, MouseWheelEventArgs e)
+        protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
+            base.OnMouseWheel(e);
+
             if (this.IsValidTarget)
             {
+                e.Handled = true;
+
                 var zoom = Math.Pow(ZoomFactor, e.Delta / 120.0);
                 var offset = e.GetPosition(this.Viewbox);
+
                 this.Zoom(zoom, offset);
             }
         }
@@ -130,60 +133,6 @@ namespace Snoop.Controls
             return ZoomerUtilities.CreateIfPossible(item);
         }
 
-        //private UIElement CreateIfPossible(object item)
-        //{
-        //    if (item is Window && VisualTreeHelper.GetChildrenCount((Visual)item) == 1)
-        //        item = VisualTreeHelper.GetChild((Visual)item, 0);
-
-        //    if (item is FrameworkElement)
-        //    {
-        //        FrameworkElement uiElement = (FrameworkElement)item;
-        //        VisualBrush brush = new VisualBrush(uiElement);
-        //        brush.Stretch = Stretch.Uniform;
-        //        Rectangle rect = new Rectangle();
-        //        rect.Fill = brush;
-        //        if (uiElement.ActualHeight == 0 && uiElement.ActualWidth == 0)//sometimes the actual size might be 0 despite there being a rendered visual with a size greater than 0. This happens often on a custom panel (http://snoopwpf.codeplex.com/workitem/7217). Having a fixed size visual brush remedies the problem.
-        //        {
-        //            rect.Width = 50;
-        //            rect.Height = 50;
-        //        }
-        //        else
-        //        {
-        //            rect.Width = uiElement.ActualWidth;
-        //            rect.Height = uiElement.ActualHeight;
-        //        }
-        //        return rect;
-        //    }
-
-        //    else if (item is ResourceDictionary)
-        //    {
-        //        StackPanel stackPanel = new StackPanel();
-
-        //        foreach (object value in ((ResourceDictionary)item).Values)
-        //        {
-        //            UIElement element = CreateIfPossible(value);
-        //            if (element is not null)
-        //                stackPanel.Children.Add(element);
-        //        }
-        //        return stackPanel;
-        //    }
-        //    else if (item is Brush)
-        //    {
-        //        Rectangle rect = new Rectangle();
-        //        rect.Width = 10;
-        //        rect.Height = 10;
-        //        rect.Fill = (Brush)item;
-        //        return rect;
-        //    }
-        //    else if (item is ImageSource)
-        //    {
-        //        Image image = new Image();
-        //        image.Source = (ImageSource)item;
-        //        return image;
-        //    }
-        //    return null;
-        //}
-
         private void Zoom(double newZoom, Point offset)
         {
             var v = new Vector((1 - newZoom) * offset.X, (1 - newZoom) * offset.Y);
@@ -196,13 +145,8 @@ namespace Snoop.Controls
             this.zoom.ScaleY *= newZoom;
         }
 
-        private bool IsValidTarget
-        {
-            get
-            {
-                return this.Target is not null && this.Target != this.pooSniffer;
-            }
-        }
+        private bool IsValidTarget => this.Target is not null
+                                      && ReferenceEquals(this.Target, this.pooSniffer) == false;
 
         private Brush? pooSniffer;
 

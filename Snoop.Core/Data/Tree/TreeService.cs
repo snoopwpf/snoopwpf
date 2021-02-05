@@ -2,12 +2,18 @@
 {
     using System;
     using System.Collections;
+    using System.ComponentModel;
+    using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Windows;
     using System.Windows.Automation;
     using System.Windows.Automation.Peers;
     using System.Windows.Controls.Primitives;
     using System.Windows.Media;
     using System.Windows.Media.Media3D;
+    using JetBrains.Annotations;
+    using Snoop.Infrastructure;
+    using Snoop.Infrastructure.Diagnostics;
 
     public enum TreeType
     {
@@ -18,18 +24,48 @@
         Automation
     }
 
-    public abstract class TreeService
+    public abstract class TreeService : IDisposable, INotifyPropertyChanged
     {
+        private TreeItem? rootTreeItem;
+
+        public TreeService()
+        {
+            this.DiagnosticContext = new DiagnosticContext(this);
+        }
+
         public abstract TreeType TreeType { get; }
+
+        public TreeItem? RootTreeItem
+        {
+            get => this.rootTreeItem;
+            set
+            {
+                if (Equals(value, this.rootTreeItem))
+                {
+                    return;
+                }
+
+                this.rootTreeItem = value;
+
+                this.OnPropertyChanged();
+            }
+        }
+
+        public DiagnosticContext DiagnosticContext { get; }
 
         public IEnumerable GetChildren(TreeItem treeItem)
         {
+            if (treeItem.OmitChildren)
+            {
+                return Enumerable.Empty<object>();
+            }
+
             return this.GetChildren(treeItem.Target);
         }
 
         public abstract IEnumerable GetChildren(object target);
 
-        public virtual TreeItem Construct(object target, TreeItem? parent)
+        public virtual TreeItem Construct(object target, TreeItem? parent, bool omitChildren = false)
         {
             TreeItem treeItem;
 
@@ -64,10 +100,15 @@
                     break;
             }
 
+            treeItem.OmitChildren = omitChildren;
+
             treeItem.Reload();
 
             if (parent is null)
             {
+                // If the parent is null this should be our new root element
+                this.RootTreeItem = treeItem;
+
                 foreach (var child in treeItem.Children)
                 {
                     if (child is ResourceDictionaryTreeItem)
@@ -94,21 +135,23 @@
 
                 case TreeType.Automation:
                     return new AutomationPeerTreeService();
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(treeType), treeType, null);
             }
         }
-    }
 
-    public sealed class RawTreeServiceWithoutChildren : TreeService
-    {
-        public static readonly RawTreeServiceWithoutChildren DefaultInstance = new();
-
-        public override TreeType TreeType { get; } = TreeType.Visual;
-
-        public override IEnumerable GetChildren(object target)
+        public void Dispose()
         {
-            yield break;
+            this.DiagnosticContext.Dispose();
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 
@@ -156,7 +199,7 @@
     {
         public override TreeType TreeType { get; } = TreeType.Automation;
 
-        public override TreeItem Construct(object target, TreeItem? parent)
+        public override TreeItem Construct(object target, TreeItem? parent, bool omitChildren = false)
         {
             if (target is not AutomationPeer automationPeer
                 && target is UIElement element)
@@ -164,7 +207,7 @@
                 target = UIElementAutomationPeer.CreatePeerForElement(element);
             }
 
-            return base.Construct(target, parent);
+            return base.Construct(target, parent, omitChildren: omitChildren);
         }
 
         public override IEnumerable GetChildren(object target)

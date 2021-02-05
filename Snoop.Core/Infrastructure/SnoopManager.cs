@@ -222,7 +222,7 @@
                 return Assembly.GetExecutingAssembly();
             }
 
-#if NETCOREAPP3_1
+#if NETCOREAPP3_1 || NET50
             if (args.Name?.StartsWith("System.Management.Automation,") == true)
             {
                 return Assembly.LoadFrom(Snoop.PowerShell.ShellConstants.GetPowerShellAssemblyPath());

@@ -12,7 +12,6 @@
 			<RowDefinition Height=".5*"/>
 		</Grid.RowDefinitions>
 		<Button
-			x:Name="dispatcherLaunchButton"
 			Grid.Row="0"
 			Content="Launch New Window (on a new Dispatcher)"
 			Width="300"
@@ -20,7 +19,6 @@
 			Click="DispatcherLaunchButton_Click"
 		/>
 		<Button
-			x:Name="noDispatcherLaunchButton"
 			Grid.Row="1"
 			Content="Launch New Window (on current Dispatcher)"
 			Width="300"

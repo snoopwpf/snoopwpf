@@ -13,7 +13,7 @@ namespace Snoop.Data
         {
             this.MultipleAppDomainMode = MultipleAppDomainMode.Ask;
             this.MultipleDispatcherMode = MultipleDispatcherMode.Ask;
-            this.SetWindowOwner = true;
+            this.SetOwnerWindow = true;
         }
 
         public static TransientSettingsData? Current { get; private set; }
@@ -24,7 +24,7 @@ namespace Snoop.Data
 
         public MultipleDispatcherMode MultipleDispatcherMode { get; set; }
 
-        public bool SetWindowOwner { get; set; }
+        public bool SetOwnerWindow { get; set; }
 
         public long TargetWindowHandle { get; set; }
 
@@ -58,7 +58,7 @@ namespace Snoop.Data
 
             using (var stream = new FileStream(settingsFile, FileMode.Open))
             {
-                return Current = (TransientSettingsData)serializer.Deserialize(stream);
+                return Current = (TransientSettingsData?)serializer.Deserialize(stream) ?? new TransientSettingsData();
             }
         }
     }

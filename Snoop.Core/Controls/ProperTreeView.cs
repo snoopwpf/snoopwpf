@@ -137,9 +137,9 @@ namespace Snoop.Controls
             // Check whether the tree is too deep.
             try
             {
-                var treeView = (ProperTreeView?)this.treeView.Target;
-                if (treeView is null
-                    || treeView.ApplyReduceDepthFilterIfNeeded(this) == false)
+                var targetTreeView = (ProperTreeView?)this.treeView.Target;
+                if (targetTreeView is null
+                    || targetTreeView.ApplyReduceDepthFilterIfNeeded(this) == false)
                 {
                     return base.MeasureOverride(constraint);
                 }
@@ -157,9 +157,9 @@ namespace Snoop.Controls
             // Check whether the tree is too deep.
             try
             {
-                var treeView = (ProperTreeView?)this.treeView.Target;
-                if (treeView is null
-                    || treeView.ApplyReduceDepthFilterIfNeeded(this) == false)
+                var targetTreeView = (ProperTreeView?)this.treeView.Target;
+                if (targetTreeView is null
+                    || targetTreeView.ApplyReduceDepthFilterIfNeeded(this) == false)
                 {
                     return base.ArrangeOverride(arrangeBounds);
                 }

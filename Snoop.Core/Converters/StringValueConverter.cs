@@ -4,7 +4,7 @@
     using System.ComponentModel;
     using Snoop.Infrastructure;
 
-    public class StringValueConverter
+    public static class StringValueConverter
     {
         public static object? ConvertFromString(Type? targetType, string? value)
         {

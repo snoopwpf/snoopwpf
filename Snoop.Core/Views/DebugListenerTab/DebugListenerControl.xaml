@@ -2,8 +2,8 @@
 	x:Class="Snoop.Views.DebugListenerTab.DebugListenerControl"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	mc:Ignorable="d"
 >
 	<Grid>
@@ -28,7 +28,7 @@
 
 			<StackPanel Orientation="Horizontal" Grid.Column="1">
 				<TextBlock Style="{x:Null}" Text="WPF Trace Level: " VerticalAlignment="Center" Margin="0,0,10,0"/>
-				<ComboBox Name="comboBoxPresentationTraceLevel" Style="{x:Null}" Width="100" Height="25" SelectedIndex="2" SelectionChanged="ComboBoxPresentationTraceLevel_SelectionChanged">
+				<ComboBox Name="comboBoxPresentationTraceLevel" Style="{x:Null}" Width="110" Height="25" SelectedIndex="2" SelectionChanged="ComboBoxPresentationTraceLevel_SelectionChanged">
 					<ComboBoxItem Style="{x:Null}" Tag="Off">
 						<TextBlock Style="{x:Null}" Text="Off"/>
 					</ComboBoxItem>

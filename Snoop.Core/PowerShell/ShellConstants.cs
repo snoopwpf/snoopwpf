@@ -66,7 +66,7 @@ namespace Snoop.PowerShell
             {
                 #if NETCOREAPP3_0
                     return false;
-                #elif NETCOREAPP3_1
+                #elif NETCOREAPP3_1 || NET50
                     if (File.Exists(GetPowerShellAssemblyPath()))
                     {
                         return true;
@@ -103,7 +103,7 @@ namespace Snoop.PowerShell
             }
         }
 
-#if NETCOREAPP3_1
+#if NETCOREAPP3_1 || NET50
         public static string GetPowerShellAssemblyPath()
         {
             var rootPath = Environment.Is64BitProcess

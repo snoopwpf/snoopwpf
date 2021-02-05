@@ -54,7 +54,7 @@ namespace Snoop.Data.Tree
                 };
                 resourceDictionaryItem.Reload();
 
-                this.Children.Add(resourceDictionaryItem);
+                this.AddChild(resourceDictionaryItem);
 
                 ++order;
             }
@@ -67,7 +67,7 @@ namespace Snoop.Data.Tree
                 if (item is not null
                     || key is not null)
                 {
-                    this.Children.Add(new ResourceItem(item ?? exception ?? key!, key!, this, this.TreeService, exception is not null));
+                    this.AddChild(new ResourceItem(item ?? exception ?? key!, key!, this, this.TreeService, exception is not null));
                 }
             }
         }
@@ -96,6 +96,8 @@ namespace Snoop.Data.Tree
             this.key = key;
             this.hasError = hasError;
             this.SortOrder = int.MaxValue;
+
+            this.ShouldBeAnalyzed = false;
         }
 
         public override string DisplayName => this.key?.ToString() ?? "{x:Null}";

@@ -3,9 +3,8 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	Title="Window1"
-	Height="300"
-	Width="300"
->
+	Width="480"
+	Height="320">
 	<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
 		<TextBlock
 			Text="Hello World"
@@ -13,7 +12,18 @@
 			HorizontalAlignment="Center"
 			VerticalAlignment="Center"
 		/>
-		<Button Width="200" Height="50" Margin="10" Content="Click to Throw Exception" Click="Button_Click"/>
-        <CheckBox Content="ThreeState" IsThreeState="True" />
+		<Button Width="200" Height="50" Margin="10" Content="Click to throw exception" Click="ExceptionButton_Click"/>
+		<CheckBox Content="ThreeState-CheckBox" IsThreeState="True" />
+        <TextBlock Background="{DynamicResource MissingDynamicResource}" Text="Missing DynamicResource" />
+
+		<StackPanel Orientation="Horizontal">
+			<Button Content="Click to create binding error -> " Click="BindingErrorButton_Click"/>
+			<TextBlock x:Name="textBlockForBindingError" Width="100" Height="18" Background="Gray" />
+		</StackPanel>
+
+		<StackPanel Orientation="Horizontal">
+			<Label Content="Binding error in XAML" />
+			<TextBlock Width="100" Height="18" Background="Gray" Text="{Binding DoesNotExistInXAML}" />
+		</StackPanel>
 	</StackPanel>
 </Window>

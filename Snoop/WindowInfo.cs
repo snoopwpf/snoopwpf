@@ -54,7 +54,7 @@ namespace Snoop
         public IList<NativeMethods.MODULEENTRY32> Modules => this.modules ??= NativeMethods.GetModulesFromWindowHandle(this.HWnd).ToList();
 
         private bool? isValidProcess;
-        
+
         public bool IsValidProcess
         {
             get
@@ -109,6 +109,8 @@ namespace Snoop
                             // wpfgfx_v0300.dll (WPF 3.0/3.5 Full)
                             // wpfgrx_v0400.dll (WPF 4.0 Full)
                             // wpfgfx_cor3.dll (WPF 3.0/3.1 Core)
+                            // wpfgfx_cor3.dll (WPF 5.0 Core)
+                            // wpfgfx_net6.dll (WPF 6.0 Core)
 
                             // note: sometimes PresentationFramework.dll doesn't show up in the list of modules.
                             // so, it makes sense to also check for the unmanaged milcore component (wpfgfx_vxxxx.dll).

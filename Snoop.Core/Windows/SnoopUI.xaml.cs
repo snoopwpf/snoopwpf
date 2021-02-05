@@ -23,6 +23,7 @@ namespace Snoop.Windows
     using Snoop.Core.Properties;
     using Snoop.Data.Tree;
     using Snoop.Infrastructure;
+    using Snoop.Infrastructure.Diagnostics;
     using Snoop.Infrastructure.Helpers;
 
     public sealed partial class SnoopUI : INotifyPropertyChanged
@@ -62,21 +63,7 @@ namespace Snoop.Windows
 
             this.InitializeComponent();
 
-            // wrap the following PresentationTraceSources.Refresh() call in a try/catch
-            // sometimes a NullReferenceException occurs
-            // due to empty <filter> elements in the app.config file of the app you are snooping
-            // see the following for more info:
-            // http://snoopwpf.codeplex.com/discussions/236503
-            // http://snoopwpf.codeplex.com/workitem/6647
-            try
-            {
-                PresentationTraceSources.Refresh();
-                PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.Error;
-            }
-            catch (NullReferenceException)
-            {
-                // swallow this exception since you can snoop just fine anyways.
-            }
+            PresentationTraceSourcesHelper.RefreshAndEnsureInformationLevel();
 
             this.CommandBindings.Add(new(ApplicationCommands.Close, (_, _) => this.Close()));
 
@@ -99,10 +86,6 @@ namespace Snoop.Windows
             InputManager.Current.PreProcessInput += this.HandlePreProcessInput;
             this.Tree.SelectedItemChanged += this.HandleTreeSelectedItemChanged;
 
-            // we can't catch the mouse wheel at the ZoomerControl level,
-            // so we catch it here, and relay it to the ZoomerControl.
-            this.MouseWheel += this.SnoopUI_MouseWheel;
-
             this.filterTimer = new DispatcherTimer
             {
                 Interval = TimeSpan.FromSeconds(0.3)
@@ -120,7 +103,20 @@ namespace Snoop.Windows
 
         #region Tree
 
-        public TreeService TreeService { get; private set; }
+        public TreeService TreeService
+        {
+            get => this.treeService;
+            private set
+            {
+                if (Equals(value, this.treeService))
+                {
+                    return;
+                }
+
+                this.treeService = value;
+                this.OnPropertyChanged(nameof(this.TreeService));
+            }
+        }
 
         /// <summary>
         /// This is the collection of VisualTreeItem(s) that the visual tree TreeView binds to.
@@ -132,7 +128,7 @@ namespace Snoop.Windows
         #region Root
 
         /// <summary>
-        /// Root element of the visual tree
+        /// Root element of the tree.
         /// </summary>
         public TreeItem? Root
         {
@@ -146,14 +142,15 @@ namespace Snoop.Windows
         }
 
         /// <summary>
-        /// rootVisualTreeItem is the VisualTreeItem for the root you are inspecting.
+        /// Root element of the tree.
         /// </summary>
         private TreeItem? rootTreeItem;
 
         /// <summary>
-        /// root is the object you are inspecting.
+        /// Root is the root object currently being inspected.
         /// </summary>
         private object? root;
+
         #endregion
 
         #region CurrentSelection
@@ -194,7 +191,7 @@ namespace Snoop.Windows
                 this.OnPropertyChanged(nameof(this.CurrentSelection));
                 this.OnPropertyChanged(nameof(this.CurrentFocusScope));
 
-                if (this.TreeItems.Count > 1 
+                if (this.TreeItems.Count > 1
                     || (this.TreeItems.Count == 1 && this.TreeItems[0] != this.rootTreeItem))
                 {
                     // Check whether the selected item is filtered out by the filter,
@@ -301,7 +298,7 @@ namespace Snoop.Windows
         public bool IsHandlingCTRL_SHIFT { get; set; } = true;
 
         // ReSharper disable once InconsistentNaming
-        public bool IsHandlingCTRL { get; set; } = true;
+        public bool IsHandlingCTRL_ALT { get; set; } = false;
 
         /// <summary>Identifies the <see cref="CurrentTreeType"/> dependency property.</summary>
         public static readonly DependencyProperty CurrentTreeTypeProperty = DependencyProperty.Register(nameof(CurrentTreeType), typeof(TreeType), typeof(SnoopUI), new PropertyMetadata(TreeType.Visual, OnCurrentTreeTypeChanged));
@@ -310,6 +307,7 @@ namespace Snoop.Windows
         {
             var control = (SnoopUI)d;
 
+            control.TreeService?.Dispose();
             control.TreeService = TreeService.From((TreeType)e.NewValue);
             control.Refresh();
         }
@@ -371,6 +369,8 @@ namespace Snoop.Windows
         {
             base.OnSourceInitialized(e);
 
+            BindingDiagnosticHelper.Instance.IncreaseUsageCount();
+
             // load whether all properties are shown by default
             this.PropertyGrid.ShowDefaults = Settings.Default.ShowDefaults;
 
@@ -381,19 +381,15 @@ namespace Snoop.Windows
             SnoopWindowUtils.LoadWindowPlacement(this, Settings.Default.SnoopUIWindowPlacement);
         }
 
-        /// <summary>
-        /// Cleanup when closing the window.
-        /// </summary>
-        protected override void OnClosing(CancelEventArgs e)
+        protected override void OnClosed(EventArgs e)
         {
-            base.OnClosing(e);
-
-            if (e.Cancel)
-            {
-                return;
-            }
-
             this.CurrentSelection = null;
+
+            this.TreeService?.Dispose();
+
+            this.debugListenerControl?.Dispose();
+
+            BindingDiagnosticHelper.Instance.DecreaseUsageCount();
 
             InputManager.Current.PreProcessInput -= this.HandlePreProcessInput;
 
@@ -413,6 +409,8 @@ namespace Snoop.Windows
 
             // actually do the persisting
             Settings.Default.Save();
+
+            base.OnClosed(e);
         }
 
         #endregion
@@ -443,7 +441,10 @@ namespace Snoop.Windows
 
                 this.TreeItems.Clear();
 
+                this.Root?.Dispose();
                 this.Root = this.TreeService.Construct(this.root!, null);
+
+                this.TreeService.DiagnosticContext.AnalyzeTree();
 
                 if (previousTarget is not null)
                 {
@@ -530,8 +531,7 @@ namespace Snoop.Windows
 
         private void HandleInspect(object sender, ExecutedRoutedEventArgs e)
         {
-            var visual = e.Parameter as Visual;
-            if (visual is not null)
+            if (e.Parameter is Visual visual)
             {
                 var node = this.FindItem(visual);
                 if (node is not null)
@@ -593,7 +593,7 @@ namespace Snoop.Windows
         {
             this.OnPropertyChanged(nameof(this.CurrentFocus));
 
-            if (this.IsHandlingCTRL == false
+            if (this.IsHandlingCTRL_ALT == false
                 && this.IsHandlingCTRL_SHIFT == false)
             {
                 return;
@@ -603,6 +603,7 @@ namespace Snoop.Windows
 
             var isControlPressed = currentModifiers.HasFlag(ModifierKeys.Control);
             var isShiftPressed = currentModifiers.HasFlag(ModifierKeys.Shift);
+            var isAltPressed = currentModifiers.HasFlag(ModifierKeys.Alt);
 
             if (isControlPressed == false)
             {
@@ -619,8 +620,9 @@ namespace Snoop.Windows
             }
 
             // If Shift is not pressed search up the tree of templated parents.
-            if (this.IsHandlingCTRL
+            if (this.IsHandlingCTRL_ALT
                 && isShiftPressed == false
+                && isAltPressed
                 && itemToFind is FrameworkElement frameworkElement)
             {
                 itemToFind = GetItemToFindAndSkipTemplateParts(frameworkElement);
@@ -657,11 +659,6 @@ namespace Snoop.Windows
             }
 
             return itemToFind;
-        }
-
-        private void SnoopUI_MouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            this.PreviewArea.Zoomer.DoMouseWheel(sender, e);
         }
 
         #endregion
@@ -708,6 +705,7 @@ namespace Snoop.Windows
                 }
             }
 
+            var newRootSet = false;
             var rootVisual = this.Root.MainVisual;
 
             if (target is Visual visual
@@ -729,14 +727,22 @@ namespace Snoop.Windows
                     }
 
                     this.Root = this.TreeService.Construct(presentationSource.RootVisual, null);
+                    newRootSet = true;
                 }
             }
 
-            this.Root.Reload();
+            // Constructing a new root already reloads it
+            if (newRootSet == false)
+            {
+                this.Root.Reload();
+            }
+
+            this.TreeService.DiagnosticContext.AnalyzeTree();
 
             {
                 var node = this.Root.FindNode(target);
 
+                // Tree items are cleared when filtering
                 this.SetFilter(this.filter);
 
                 return node;
@@ -815,14 +821,9 @@ namespace Snoop.Windows
         {
             this.root = newRoot;
 
-            this.TreeItems.Clear();
+            this.Refresh();
 
-            this.Root = this.TreeService.Construct(newRoot, null);
             this.CurrentSelection = this.rootTreeItem;
-
-            this.SetFilter(this.filter);
-
-            this.OnPropertyChanged(nameof(this.Root));
         }
 
         #endregion
@@ -831,8 +832,6 @@ namespace Snoop.Windows
 
         private bool fromTextBox = true;
         private readonly DispatcherTimer filterTimer;
-
-        private string eventFilter = string.Empty;
 
         private readonly DelayedCall filterCall;
 
@@ -848,6 +847,7 @@ namespace Snoop.Windows
         private bool returnPreviousFocus;
 
         private bool isResettingSettings;
+        private TreeService treeService = null!;
 
         #endregion
 
@@ -900,9 +900,20 @@ namespace Snoop.Windows
 
             this.isResettingSettings = false;
         }
+
+        private void HandleLaunchDebugger_OnClick(object sender, RoutedEventArgs e)
+        {
+            Debugger.Launch();
+        }
+
+        private void HandleSnoopSnoop_OnClick(object sender, RoutedEventArgs e)
+        {
+            new SnoopUI().Inspect(this);
+        }
     }
 
     #region NoFocusHyperlink
+
     public class NoFocusHyperlink : Hyperlink
     {
         protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
@@ -915,6 +926,7 @@ namespace Snoop.Windows
             e.Handled = true;
         }
     }
+
     #endregion
 
     public class PropertyValueInfo
@@ -930,7 +942,7 @@ namespace Snoop.Windows
         public object? PropertyValue { get; }
     }
 
-    public class EditedPropertiesHelper
+    public static class EditedPropertiesHelper
     {
         private static readonly object @lock = new();
 
@@ -948,7 +960,7 @@ namespace Snoop.Windows
                     itemsWithEditedProperties.Add(dispatcher, dispatcherList);
                 }
 
-                // now get the property info list for the owning object 
+                // now get the property info list for the owning object
                 if (!dispatcherList.TryGetValue(propertyOwner, out var propInfoList))
                 {
                     propInfoList = new List<PropertyValueInfo>();
@@ -984,17 +996,17 @@ namespace Snoop.Windows
 
                 var dispatcherCount = 1;
 
-                foreach (var dispatcherKVP in itemsWithEditedProperties)
+                foreach (var dispatcherItemPair in itemsWithEditedProperties)
                 {
                     if (itemsWithEditedProperties.Count > 1)
                     {
                         sb.AppendFormat("-- Dispatcher #{0} -- {1}", dispatcherCount++, Environment.NewLine);
                     }
 
-                    foreach (var objectPropertiesKVP in dispatcherKVP.Value)
+                    foreach (var objectPropertiesItemPair in dispatcherItemPair.Value)
                     {
-                        sb.AppendFormat("Object: {0}{1}", objectPropertiesKVP.Key, Environment.NewLine);
-                        foreach (var propInfo in objectPropertiesKVP.Value)
+                        sb.AppendFormat("Object: {0}{1}", objectPropertiesItemPair.Key, Environment.NewLine);
+                        foreach (var propInfo in objectPropertiesItemPair.Value)
                         {
                             sb.AppendFormat(
                                 "\tProperty: {0}, New Value: {1}{2}",
@@ -1010,7 +1022,7 @@ namespace Snoop.Windows
                     }
                 }
 
-                Debug.WriteLine(sb.ToString());
+                Trace.WriteLine(sb.ToString());
                 ClipboardHelper.SetText(sb.ToString());
             }
         }

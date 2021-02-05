@@ -155,7 +155,7 @@ namespace Snoop.Windows
             {
                 return string.Empty;
             }
-            
+
             var exceptionDetails = this.Exception.ToString();
 
             const int maxExceptionDetailsLength = 4000;
@@ -184,13 +184,18 @@ Exception details:
             {
                 using (var registryKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion"))
                 {
-                    return (string)registryKey.GetValue("CurrentVersion") + "." + (string)registryKey.GetValue("CurrentBuild");
+                    if (registryKey is not null)
+                    {
+                        return (string?)registryKey.GetValue("CurrentVersion") + "." + (string?)registryKey.GetValue("CurrentBuild");
+                    }
                 }
             }
             catch (Exception)
             {
-                return Environment.OSVersion.Version + " " + Environment.OSVersion.ServicePack;
+                // ignored
             }
+
+            return Environment.OSVersion.Version + " " + Environment.OSVersion.ServicePack;
         }
     }
 }

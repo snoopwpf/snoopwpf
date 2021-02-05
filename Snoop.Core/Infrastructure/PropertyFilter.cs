@@ -3,6 +3,8 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
+#pragma warning disable CA1819
+
 namespace Snoop.Infrastructure
 {
     using System;
@@ -49,7 +51,7 @@ namespace Snoop.Infrastructure
 
                 try
                 {
-                    this.filterRegex = new Regex(this.filterString, RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
+                    this.filterRegex = new Regex(this.filterString!, RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
                 }
                 catch
                 {

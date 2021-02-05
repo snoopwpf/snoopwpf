@@ -13,9 +13,8 @@ namespace Snoop.Infrastructure
     using System.Windows.Interop;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
-    using JetBrains.Annotations;
 
-    public class VisualCaptureUtil
+    public static class VisualCaptureUtil
     {
         private const double BaseDpi = 96;
 

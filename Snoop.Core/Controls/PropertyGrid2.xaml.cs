@@ -458,12 +458,12 @@ namespace Snoop.Controls
 
         private static int CompareValues(PropertyInformation one, PropertyInformation two)
         {
-            return string.Compare(one.StringValue, two.StringValue);
+            return string.Compare(one.StringValue, two.StringValue, StringComparison.Ordinal);
         }
 
         private static int CompareValueSources(PropertyInformation one, PropertyInformation two)
         {
-            return string.Compare(one.ValueSource.BaseValueSource.ToString(), two.ValueSource.BaseValueSource.ToString());
+            return string.Compare(one.ValueSource.BaseValueSource.ToString(), two.ValueSource.BaseValueSource.ToString(), StringComparison.Ordinal);
         }
 
         #region INotifyPropertyChanged Members

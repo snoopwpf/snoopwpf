@@ -21,6 +21,7 @@ namespace Snoop.Infrastructure
     using System.Windows.Threading;
     using JetBrains.Annotations;
     using Snoop.Converters;
+    using Snoop.Infrastructure.Diagnostics;
     using Snoop.Infrastructure.Helpers;
 
     public class PropertyInformation : DependencyObject, IComparable, INotifyPropertyChanged
@@ -33,7 +34,6 @@ namespace Snoop.Infrastructure
         private bool hasChangedRecently;
         private ValueSource valueSource;
 
-        private string bindingError = string.Empty;
         private readonly PropertyDescriptor? property;
         private readonly string displayName;
         private bool isLocallySet;
@@ -275,7 +275,7 @@ namespace Snoop.Infrastructure
                 if (this.Target is DependencyObject dependencyObject)
                 {
                     // Cache the resource key for this item if not cached already. This could be done for more types, but would need to optimize perf.
-                    if (this.TypeMightHaveResourceKey(this.property.PropertyType))
+                    if (TypeMightHaveResourceKey(this.property.PropertyType))
                     {
                         var resourceItem = value;
                         resourceKey = ResourceKeyCache.GetKey(resourceItem);
@@ -306,18 +306,12 @@ namespace Snoop.Infrastructure
 
                 var stringValue = value.ToString() ?? string.Empty;
 
-                if (stringValue.Equals(value.GetType().ToString()))
+                if (stringValue.Equals(value.GetType().ToString(), StringComparison.Ordinal))
                 {
                     // Add brackets around types to distinguish them from values.
                     // Replace long type names with short type names for some specific types, for easier readability.
                     // FUTURE: This could be extended to other types.
-                    if (value is BindingBase)
-                    {
-#pragma warning disable INPC013
-                        stringValue = string.Format("[{0}]", "Binding");
-#pragma warning restore INPC013
-                    }
-                    else if (value is DynamicResourceExtension)
+                    if (value is DynamicResourceExtension)
                     {
                         stringValue = string.Format("[{0}]", "DynamicResource");
                     }
@@ -335,7 +329,7 @@ namespace Snoop.Infrastructure
                 // Display #00FFFFFF as Transparent for easier readability
                 if (this.property is not null &&
                     this.property.PropertyType == typeof(Brush) &&
-                    stringValue.Equals("#00FFFFFF"))
+                    stringValue.Equals("#00FFFFFF", StringComparison.Ordinal))
                 {
                     stringValue = "Transparent";
                 }
@@ -350,22 +344,29 @@ namespace Snoop.Infrastructure
 
                     // if the value comes from a Binding, show the path in [] brackets
                     if (this.IsExpression
-                        && this.Binding is Binding)
+                        && this.Binding is BindingBase)
                     {
-                        stringValue = string.Format("{0} {1}", stringValue, this.BuildBindingDescriptiveString((Binding)this.Binding, true));
+                        return string.Format("[Binding] {0}", BindingDisplayHelper.BuildBindingDescriptiveString(this.Binding));
+                    }
+                }
+
+                if (value is Setter setter)
+                {
+                    stringValue = "Setter ";
+
+                    if (setter.Property is not null)
+                    {
+                        stringValue += "Property: " + setter.Property.Name;
+
+                        if (string.IsNullOrEmpty(setter.TargetName) == false)
+                        {
+                            stringValue += "; ";
+                        }
                     }
 
-                    // if the value comes from a MultiBinding, show the binding paths separated by , in [] brackets
-                    else if (this.IsExpression
-                        && this.Binding is MultiBinding)
+                    if (string.IsNullOrEmpty(setter.TargetName) == false)
                     {
-                        stringValue += this.BuildMultiBindingDescriptiveString(((MultiBinding)this.Binding).Bindings.OfType<Binding>().ToArray());
-                    }
-
-                    // if the value comes from a PriorityBinding, show the binding paths separated by , in [] brackets
-                    else if (this.IsExpression && this.Binding is PriorityBinding)
-                    {
-                        stringValue += this.BuildMultiBindingDescriptiveString(((PriorityBinding)this.Binding).Bindings.OfType<Binding>().ToArray());
+                        stringValue += "Target: " + setter.TargetName;
                     }
                 }
 
@@ -373,58 +374,13 @@ namespace Snoop.Infrastructure
             }
         }
 
-        private bool TypeMightHaveResourceKey(Type type)
+        private static bool TypeMightHaveResourceKey(Type type)
         {
-            return type == typeof(Style)
-                   || type == typeof(ControlTemplate)
-                   || type == typeof(Color)
-                   || type == typeof(Brush);
-        }
-
-        /// <summary>
-        /// Build up a string of Paths for a MultiBinding separated by ;
-        /// </summary>
-        private string BuildMultiBindingDescriptiveString(IEnumerable<Binding> bindings)
-        {
-            var ret = " {Paths=";
-            foreach (var binding in bindings)
-            {
-                ret += this.BuildBindingDescriptiveString(binding, false);
-                ret += ";";
-            }
-
-            ret = ret.Substring(0, ret.Length - 1); // remove trailing ,
-            ret += "}";
-
-            return ret;
-        }
-
-        /// <summary>
-        /// Build up a string describing the Binding.  Path and ElementName (if present)
-        /// </summary>
-        private string BuildBindingDescriptiveString(Binding binding, bool isSinglePath)
-        {
-            var sb = new StringBuilder();
-            var bindingPath = binding.Path.Path;
-            var elementName = binding.ElementName;
-
-            if (isSinglePath)
-            {
-                sb.Append("{Path=");
-            }
-
-            sb.Append(bindingPath);
-            if (!string.IsNullOrEmpty(elementName))
-            {
-                sb.AppendFormat(", ElementName={0}", elementName);
-            }
-
-            if (isSinglePath)
-            {
-                sb.Append("}");
-            }
-
-            return sb.ToString();
+            return typeof(Style).IsAssignableFrom(type)
+                   || typeof(ControlTemplate).IsAssignableFrom(type)
+                   || typeof(Color).IsAssignableFrom(type)
+                   || typeof(Brush).IsAssignableFrom(type)
+                   || typeof(DrawingImage).IsAssignableFrom(type);
         }
 
         public Type? ComponentType
@@ -481,7 +437,17 @@ namespace Snoop.Infrastructure
 
         public string BindingError
         {
-            get { return this.bindingError; }
+            get => this.bindingError;
+            private set
+            {
+                if (value == this.bindingError)
+                {
+                    return;
+                }
+
+                this.bindingError = value;
+                this.OnPropertyChanged(nameof(this.BindingError));
+            }
         }
 
         public PropertyDescriptor? Property
@@ -605,6 +571,7 @@ namespace Snoop.Infrastructure
         }
 
         private PropertyFilter? filter;
+        private string bindingError = string.Empty;
 
         public bool BreakOnChange
         {
@@ -681,7 +648,7 @@ namespace Snoop.Infrastructure
 
             this.isLocallySet = false;
             this.isInvalidBinding = false;
-            this.bindingError = string.Empty;
+            this.BindingError = string.Empty;
             this.isDatabound = false;
 
             var dp = this.DependencyProperty;
@@ -712,6 +679,13 @@ namespace Snoop.Infrastructure
                         || (expression.Status != BindingStatus.Active && !(expression is PriorityBindingExpression)))
                     {
                         this.isInvalidBinding = true;
+
+                        #if USE_WPF_BINDING_DIAG
+                        if (BindingDiagnosticHelper.Instance.TryGetEntry(expression, out var failedBinding))
+                        {
+                            this.BindingError = failedBinding.Messages;
+                        }
+                        #endif
                     }
                 }
 
@@ -761,29 +735,10 @@ namespace Snoop.Infrastructure
                 return;
             }
 
-            var builder = new StringBuilder();
-            var writer = new StringWriter(builder);
-            var tracer = new TextWriterTraceListener(writer);
-            var levelBefore = PresentationTraceSources.DataBindingSource.Switch.Level;
-            PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.All;
-            PresentationTraceSources.DataBindingSource.Listeners.Add(tracer);
-
-            // reset binding to get the error message.
-            this.ignoreUpdate = true;
-            d.ClearValue(dp);
-            BindingOperations.SetBinding(d, dp, expression.ParentBindingBase);
-            this.ignoreUpdate = false;
-
-            // this needs to happen on idle so that we can actually run the binding, which may occur asynchronously.
-            this.RunInDispatcherAsync(
-                () =>
-                {
-                    this.bindingError = builder.ToString();
-                    this.OnPropertyChanged(nameof(this.BindingError));
-                    PresentationTraceSources.DataBindingSource.Listeners.Remove(tracer);
-                    writer.Close();
-                    PresentationTraceSources.DataBindingSource.Switch.Level = levelBefore;
-                }, DispatcherPriority.ApplicationIdle);
+            using (new ScopeGuard(() => this.ignoreUpdate = true, () => this.ignoreUpdate = false).Guard())
+            {
+                BindingDiagnosticHelper.Instance.TrySetBindingError(expression, d, dp, s => this.BindingError = s);
+            }
         }
 
         public static List<PropertyInformation> GetProperties(object? obj)
@@ -940,14 +895,19 @@ namespace Snoop.Infrastructure
             return null;
         }
 
-        private static List<PropertyDescriptor> GetAllProperties(object obj, Attribute[] attributes)
+        public static List<PropertyDescriptor> GetAllProperties(object obj)
+        {
+            return GetAllProperties(obj, getAllPropertiesAttributeFilter);
+        }
+
+        public static List<PropertyDescriptor> GetAllProperties(object obj, Attribute[] attributes)
         {
             var propertiesToReturn = new List<PropertyDescriptor>();
 
             object? currentObj = obj;
 
             // keep looping until you don't have an AmbiguousMatchException exception
-            // and you normally won't have an exception, so the loop will typically execute only once.
+            // and you normally won't have an exception, so the loop will typically executes only once.
             var noException = false;
             while (!noException && currentObj is not null)
             {

@@ -1,7 +1,9 @@
 ﻿namespace Snoop.InjectorLauncher
 {
     using CommandLine;
+    using JetBrains.Annotations;
 
+    [PublicAPI]
     public class InjectorLauncherCommandLineOptions
     {
         [Option('t', "targetPID", Required = true, HelpText = "The target process id.")]

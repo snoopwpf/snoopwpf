@@ -8,8 +8,9 @@ All other rights reserved.
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	x:Class="Snoop.Controls.PropertyGrid2"
-	xmlns:snoop="urn:snoopwpf"
 	xmlns:controls="clr-namespace:Snoop.Controls"
+	xmlns:infrastructure="clr-namespace:Snoop.Infrastructure"
+	xmlns:converters="clr-namespace:Snoop.Converters"
 	x:Name="PropertyGrid"
 	MinHeight="0"
 	MinWidth="0"
@@ -61,7 +62,7 @@ All other rights reserved.
 			<Style TargetType="{x:Type GridViewColumnHeader}">
 				<Setter Property="Command" Value="{x:Static controls:PropertyGrid2.SortCommand}"/>
 			</Style>
-			
+
 			<ControlTemplate x:Key="BreakpointTemplate" TargetType="{x:Type CheckBox}">
 				<Grid>
 					<Image Name="Icon" Style="{x:Null}" Source="{DynamicResource noBreakpointDrawingImage}" Width="12" Height="12"/>
@@ -73,7 +74,7 @@ All other rights reserved.
 				</ControlTemplate.Triggers>
 			</ControlTemplate>
 
-			<DataTemplate x:Key="ValueSourceTemplate" DataType="snoop:PropertyInformation">
+			<DataTemplate x:Key="ValueSourceTemplate" DataType="infrastructure:PropertyInformation">
 				<TextBlock Style="{x:Null}" Text="{Binding ValueSource.BaseValueSource}" Height="16">
 					<TextBlock.ToolTip>
 						<TextBlock Style="{x:Null}" Text="{Binding ValueSource.BaseValueSource}"/>
@@ -121,7 +122,7 @@ All other rights reserved.
                     <Trigger Property="ItemsControl.AlternationIndex" Value="1">
                         <Setter Property="Background" Value="#FFEAEAEA" />
                     </Trigger>
-                    
+
                     <DataTrigger Binding="{Binding IsLocallySet}" Value="False">
 						<Setter Property="Foreground" Value="Gray"/>
 					</DataTrigger>
@@ -151,7 +152,7 @@ All other rights reserved.
 			<GridView>
 				<GridViewColumn Width="25">
 					<GridViewColumn.CellTemplate>
-						<DataTemplate DataType="snoop:PropertyInformation">
+						<DataTemplate DataType="infrastructure:PropertyInformation">
 							<CheckBox Style="{x:Null}" IsChecked="{Binding BreakOnChange}" Template="{StaticResource BreakpointTemplate}">
 								<CheckBox.ToolTip>
 									<TextBlock Style="{x:Null}" Text="Click here to toggle a debug breakpoint on and off."/>
@@ -170,8 +171,9 @@ All other rights reserved.
 						</TextBlock>
 					</GridViewColumn.Header>
 					<GridViewColumn.CellTemplate>
-						<DataTemplate DataType="snoop:PropertyInformation">
-							<TextBlock Style="{x:Null}" Text="{Binding DisplayName}" Height="15" MouseLeftButtonDown="HandleNameClick">
+						<DataTemplate DataType="infrastructure:PropertyInformation">
+							<TextBlock Style="{x:Null}" Text="{Binding DisplayName}"
+							           MouseLeftButtonDown="HandleNameClick">
 								<TextBlock.ToolTip>
 									<TextBlock Style="{x:Null}" Text="{Binding DisplayName}"/>
 								</TextBlock.ToolTip>
@@ -221,24 +223,34 @@ All other rights reserved.
 						</TextBlock>
 					</GridViewColumn.Header>
 					<GridViewColumn.CellTemplate>
-						<DataTemplate DataType="snoop:PropertyInformation">
-							<StackPanel Orientation="Horizontal" Visibility="{Binding IsInvalidBinding, Converter={x:Static snoop:BoolToVisibilityConverter.DefaultInstance}}">
-                                <Button Style="{x:Null}" Content="Get error message" 
-                                        Command="{x:Static controls:PropertyInspector.UpdateBindingErrorCommand}" CommandParameter="{Binding}">
+						<DataTemplate DataType="infrastructure:PropertyInformation">
+							<DockPanel LastChildFill="True" Visibility="{Binding IsInvalidBinding, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}}">
+                                <Button Style="{x:Null}" Content="Get error message"
+                                        Command="{x:Static controls:PropertyInspector.UpdateBindingErrorCommand}" CommandParameter="{Binding}"
+                                        DockPanel.Dock="Left">
 									<Button.Visibility>
-										<MultiBinding Converter="{x:Static snoop:BoolToVisibilityConverter.DefaultInstance}">
-											<Binding Path="BindingError" Converter="{x:Static snoop:IsNullOrEmptyStringConverter.DefaultInstance}" />
+										<MultiBinding Converter="{x:Static converters:BoolToVisibilityConverter.DefaultInstance}">
+											<Binding Path="BindingError" Converter="{x:Static converters:IsNullOrEmptyStringConverter.DefaultInstance}" />
                                         </MultiBinding>
                                     </Button.Visibility>
                                 </Button>
-                                <TextBox Style="{x:Null}" Text="{Binding BindingError, Mode=OneWay}" Height="15"
+                                <TextBox Style="{x:Null}"
+                                         Text="{Binding BindingError, Mode=OneWay}"
+                                         MaxHeight="50"
+                                         VerticalScrollBarVisibility="Auto"
+                                         TextWrapping="Wrap"
                                          IsReadOnly="True"
                                          IsReadOnlyCaretVisible="True">
 								    <TextBox.ToolTip>
 									    <TextBlock Style="{x:Null}" Text="{Binding BindingError}"/>
 								    </TextBox.ToolTip>
+	                                <TextBox.Visibility>
+		                                <MultiBinding Converter="{x:Static converters:BoolToVisibilityConverter.DefaultInstance}" ConverterParameter="true">
+			                                <Binding Path="BindingError" Converter="{x:Static converters:IsNullOrEmptyStringConverter.DefaultInstance}" />
+		                                </MultiBinding>
+	                                </TextBox.Visibility>
 							    </TextBox>
-                            </StackPanel>
+							</DockPanel>
 						</DataTemplate>
 					</GridViewColumn.CellTemplate>
 				</GridViewColumn>

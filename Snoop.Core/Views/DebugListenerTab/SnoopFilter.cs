@@ -32,7 +32,7 @@
             }
         }
 
-        public abstract bool FilterMatches(string debugLine);
+        public abstract bool FilterMatches(string? debugLine);
 
         public virtual bool SupportsGrouping
         {

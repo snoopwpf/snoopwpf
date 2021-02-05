@@ -15,6 +15,10 @@
         <PackageVersion Include="System.Management.Automation" Version="7.0.0" />
     </ItemGroup>
 
+    <ItemGroup Condition="'$(TargetFramework)' == 'net5.0-windows'">
+      <PackageVersion Include="System.Management.Automation" Version="7.1.0" />
+    </ItemGroup>
+
     <ItemGroup Label="Test">
       <PackageVersion Include="NUnit" Version="3.12.0" />
       <PackageVersion Include="NUnit3TestAdapter" Version="3.17.0" />

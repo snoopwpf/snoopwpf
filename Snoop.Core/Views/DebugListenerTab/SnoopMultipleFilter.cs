@@ -8,7 +8,7 @@
     {
         private readonly List<SnoopFilter> singleFilters = new();
 
-        public override bool FilterMatches(string debugLine)
+        public override bool FilterMatches(string? debugLine)
         {
             foreach (var filter in this.singleFilters)
             {

@@ -4,10 +4,7 @@
     using System.Windows.Media;
     using System.Windows.Shapes;
 
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
-    public partial class App : Application
+    public partial class App
     {
         private Window? hiddenWindow;
         private Window? shownWindow;
@@ -30,7 +27,7 @@
             rectangle.VerticalAlignment = VerticalAlignment.Center;
             rectangle.Fill = new SolidColorBrush(Colors.DarkRed);
             this.shownWindow.Content = rectangle;
-            this.shownWindow.Closing += (sender, e) =>
+            this.shownWindow.Closing += (_, _) =>
             {
                 this.hiddenWindow.Close();
             };

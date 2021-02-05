@@ -19,7 +19,7 @@ namespace Snoop.Infrastructure
                 return true;
             }
 
-            var attachedPropertyForChildren = (AttachedPropertyBrowsableForChildrenAttribute)property.Attributes[typeof(AttachedPropertyBrowsableForChildrenAttribute)];
+            var attachedPropertyForChildren = (AttachedPropertyBrowsableForChildrenAttribute?)property.Attributes[typeof(AttachedPropertyBrowsableForChildrenAttribute)];
 
             if (attachedPropertyForChildren is not null)
             {
@@ -38,13 +38,13 @@ namespace Snoop.Infrastructure
                     {
                         return true;
                     }
-                } 
+                }
                 while (attachedPropertyForChildren.IncludeDescendants && currentElement is not null);
 
                 return false;
             }
 
-            var attachedPropertyForType = (AttachedPropertyBrowsableForTypeAttribute)property.Attributes[typeof(AttachedPropertyBrowsableForTypeAttribute)];
+            var attachedPropertyForType = (AttachedPropertyBrowsableForTypeAttribute?)property.Attributes[typeof(AttachedPropertyBrowsableForTypeAttribute)];
 
             if (attachedPropertyForType is not null)
             {
@@ -64,7 +64,7 @@ namespace Snoop.Infrastructure
                 return false;
             }
 
-            var attachedPropertyForAttribute = (AttachedPropertyBrowsableWhenAttributePresentAttribute)property.Attributes[typeof(AttachedPropertyBrowsableWhenAttributePresentAttribute)];
+            var attachedPropertyForAttribute = (AttachedPropertyBrowsableWhenAttributePresentAttribute?)property.Attributes[typeof(AttachedPropertyBrowsableWhenAttributePresentAttribute)];
 
             if (attachedPropertyForAttribute is not null)
             {

@@ -8,13 +8,14 @@ namespace Snoop.Data.Tree
     using System;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Linq;
     using System.Text;
     using System.Windows;
     using System.Windows.Automation;
     using System.Windows.Media;
     using JetBrains.Annotations;
 
-    public class TreeItem : INotifyPropertyChanged
+    public class TreeItem : INotifyPropertyChanged, IDisposable
     {
         private bool isExpanded;
         private bool isSelected;
@@ -23,6 +24,7 @@ namespace Snoop.Data.Tree
         private string nameLower = string.Empty;
         private readonly string typeNameLower;
         private int childItemCount;
+        private readonly ObservableCollection<TreeItem> children = new();
 
         public TreeItem(object target, TreeItem? parent, TreeService treeService)
         {
@@ -34,6 +36,8 @@ namespace Snoop.Data.Tree
             this.Parent = parent;
             this.TreeService = treeService;
 
+            this.Children = new(this.children);
+
             if (parent is not null)
             {
                 this.Depth = parent.Depth + 1;
@@ -41,14 +45,14 @@ namespace Snoop.Data.Tree
         }
 
         /// <summary>
-        /// The WPF object that this instance is wrapping
+        /// The WPF object that this instance is wrapping.
         /// </summary>
         public object Target { get; }
 
         public Type TargetType { get; }
 
         /// <summary>
-        /// The parent of this instance
+        /// The parent of this instance.
         /// </summary>
         public TreeItem? Parent { get; }
 
@@ -58,6 +62,8 @@ namespace Snoop.Data.Tree
         /// The depth (in the visual tree) of this instance
         /// </summary>
         public int Depth { get; }
+
+        public bool ShouldBeAnalyzed { get; protected set; } = true;
 
         public string Name
         {
@@ -87,7 +93,7 @@ namespace Snoop.Data.Tree
         /// <summary>
         /// The children of this instance
         /// </summary>
-        public ObservableCollection<TreeItem> Children { get; } = new();
+        public ReadOnlyObservableCollection<TreeItem> Children { get; }
 
         public bool IsSelected
         {
@@ -141,6 +147,8 @@ namespace Snoop.Data.Tree
         /// </summary>
         public virtual bool HasBindingError => false;
 
+        public bool OmitChildren { get; set; }
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public override string ToString()
@@ -181,7 +189,7 @@ namespace Snoop.Data.Tree
         {
             this.Name = this.GetName();
 
-            this.Children.Clear();
+            this.RemoveAllChildren();
 
             this.ReloadCore();
 
@@ -255,12 +263,12 @@ namespace Snoop.Data.Tree
         /// <returns><c>true</c> if this matches <paramref name="value"/>. Otherwise <c>false</c>.</returns>
         public bool Filter(string value)
         {
-            if (this.typeNameLower.Contains(value))
+            if (this.typeNameLower.Contains(value, StringComparison.Ordinal))
             {
                 return true;
             }
 
-            if (this.nameLower.Contains(value))
+            if (this.nameLower.Contains(value, StringComparison.Ordinal))
             {
                 return true;
             }
@@ -274,10 +282,37 @@ namespace Snoop.Data.Tree
             return false;
         }
 
+        protected void AddChild(TreeItem item)
+        {
+            this.children.Add(item);
+        }
+
         protected void RemoveChild(TreeItem item)
         {
             item.IsSelected = false;
-            this.Children.Remove(item);
+            this.children.Remove(item);
+            item.Dispose();
+        }
+
+        protected void RemoveAllChildren()
+        {
+            foreach (var item in this.children.ToList())
+            {
+                item.IsSelected = false;
+                item.Dispose();
+            }
+
+            this.children.Clear();
+        }
+
+        public void Dispose()
+        {
+            this.TreeService.DiagnosticContext.TreeItemDisposed(this);
+
+            foreach (var treeItem in this.Children)
+            {
+                treeItem.Dispose();
+            }
         }
 
         [NotifyPropertyChangedInvocator]

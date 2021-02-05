@@ -9,11 +9,14 @@
     using Snoop.Core.Properties;
     using Snoop.Infrastructure;
 
-    public partial class DebugListenerControl : IListener
+    public partial class DebugListenerControl : IListener, IDisposable
     {
-        private readonly FiltersViewModel filtersViewModel; // = new FiltersViewModel();
+        private readonly FiltersViewModel filtersViewModel;
+#pragma warning disable CA2213
         private readonly SnoopDebugListener snoopDebugListener = new();
+#pragma warning restore CA2213
         private StringBuilder allText = new();
+        private bool ignoreWrites;
 
         public DebugListenerControl()
         {
@@ -23,6 +26,10 @@
             this.InitializeComponent();
 
             this.snoopDebugListener.RegisterListener(this);
+
+            PresentationTraceSources.SetTraceLevel(this, PresentationTraceLevel.None);
+            PresentationTraceSources.SetTraceLevel(this.textBlockStatus, PresentationTraceLevel.None);
+            PresentationTraceSources.SetTraceLevel(this.textBoxDebugContent, PresentationTraceLevel.None);
         }
 
         private void CheckBoxStartListening_Checked(object sender, RoutedEventArgs e)
@@ -33,30 +40,40 @@
 
         private void CheckBoxStartListening_Unchecked(object sender, RoutedEventArgs e)
         {
-            Trace.Listeners.Remove(SnoopDebugListener.ListenerName);
-            PresentationTraceSources.DataBindingSource.Listeners.Remove(this.snoopDebugListener);
+            this.CleanupListeners();
         }
 
-        public void Write(string str)
+        public void Write(string? str)
         {
-            this.allText.Append(str + Environment.NewLine);
+            this.allText.Append(str);
+
             if (!this.filtersViewModel.IsSet || this.filtersViewModel.FilterMatches(str))
             {
-                this.Dispatcher.RunInDispatcherAsync(() => this.DoWrite(str), DispatcherPriority.Render);
+                this.Dispatcher.RunInDispatcherAsync(() => this.DoWrite(str), DispatcherPriority.Send);
             }
         }
 
-        private void DoWrite(string str)
+        private void DoWrite(string? str)
         {
+            // prevent reentrancy
+            if (this.ignoreWrites)
+            {
+                return;
+            }
+
+            this.ignoreWrites = true;
+
             var shouldScrollToEnd = this.textBoxDebugContent.SelectionLength == 0
                                     && this.textBoxDebugContent.SelectionStart == this.textBoxDebugContent.Text.Length;
-            this.textBoxDebugContent.AppendText(str + Environment.NewLine);
+            this.textBoxDebugContent.AppendText(str);
 
             if (shouldScrollToEnd)
             {
                 this.textBoxDebugContent.ScrollToEnd();
                 this.textBoxDebugContent.SelectionStart = this.textBoxDebugContent.Text.Length;
             }
+
+            this.ignoreWrites = false;
         }
 
         private void ButtonClear_Click(object sender, RoutedEventArgs e)
@@ -99,8 +116,8 @@
 
         private void ComboBoxPresentationTraceLevel_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (this.comboBoxPresentationTraceLevel?.Items is null 
-                || this.comboBoxPresentationTraceLevel.Items.Count <= this.comboBoxPresentationTraceLevel.SelectedIndex 
+            if (this.comboBoxPresentationTraceLevel?.Items is null
+                || this.comboBoxPresentationTraceLevel.Items.Count <= this.comboBoxPresentationTraceLevel.SelectedIndex
                 || this.comboBoxPresentationTraceLevel.SelectedIndex < 0)
             {
                 return;
@@ -114,6 +131,18 @@
 
             var sourceLevel = (SourceLevels)Enum.Parse(typeof(SourceLevels), selectedComboBoxItem.Tag.ToString()!);
             PresentationTraceSources.DataBindingSource.Switch.Level = sourceLevel;
+        }
+
+        private void CleanupListeners()
+        {
+            Trace.Listeners.Remove(SnoopDebugListener.ListenerName);
+            PresentationTraceSources.DataBindingSource.Listeners.Remove(this.snoopDebugListener);
+        }
+
+        public void Dispose()
+        {
+            this.snoopDebugListener.Dispose();
+            this.CleanupListeners();
         }
     }
 }

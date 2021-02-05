@@ -2,7 +2,6 @@ namespace Snoop.Core.Tests.Infrastructure
 {
     using System.Globalization;
     using System.IO;
-    using System.Threading;
     using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
@@ -79,7 +78,8 @@ namespace Snoop.Core.Tests.Infrastructure
             target.Children.Add(new TextBlock { Text = "test" });
             target.Children.Add(new Border { Child = new CheckBox { Content = "check" } });
 
-            return TreeService.From(TreeType.Visual).Construct(target, null);
+            using var treeService = TreeService.From(TreeType.Visual);
+            return treeService.Construct(target, null);
         }
     }
 }

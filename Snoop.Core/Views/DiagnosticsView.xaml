@@ -1,0 +1,176 @@
+﻿<UserControl x:Class="Snoop.Views.DiagnosticsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:infrastructure="clr-namespace:Snoop.Infrastructure"
+             xmlns:diagnostics="clr-namespace:Snoop.Infrastructure.Diagnostics"
+             xmlns:controls="clr-namespace:Snoop.Controls"
+             x:Name="self"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800">
+    <UserControl.Resources>
+        <DataTemplate DataType="{x:Type diagnostics:DiagnosticProvider}">
+            <CheckBox Style="{x:Null}" IsChecked="{Binding IsActive}">
+                <TextBlock Style="{x:Null}" Text="{Binding Name}"/>
+            </CheckBox>
+        </DataTemplate>
+
+	    <DataTemplate x:Key="CategoryTemplate">
+		    <TextBlock Style="{x:Null}" Text="{Binding Path=Name}" FontWeight="Bold" Margin="2,5,0,0"/>
+	    </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid Style="{x:Null}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Margin="8,4,0,4" Orientation="Horizontal" HorizontalAlignment="Left">
+            <ToggleButton Margin="0,0,4,0" Padding="2 0" IsChecked="{Binding ElementName=self, Path=ShowErrors, Mode=TwoWay}" HorizontalContentAlignment="Left" >
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/Inspector;component/Images/error.png" Height="14" />
+                    <TextBlock Margin="4,0,0,0" Text="{Binding ElementName=self, Path=ErrorCount}" />
+                    <TextBlock Margin="4,0,0,0" Text="Errors" />
+                </StackPanel>
+            </ToggleButton>
+            <ToggleButton Margin="0,0,4,0" Padding="2 0" IsChecked="{Binding ElementName=self, Path=ShowWarnings, Mode=TwoWay}" HorizontalContentAlignment="Left" >
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="{DynamicResource warningDrawingImage}" Height="14" />
+                    <TextBlock Margin="4,0,0,0" Text="{Binding ElementName=self, Path=WarningCount}" />
+                    <TextBlock Margin="4,0,0,0" Text="Warnings" />
+                </StackPanel>
+            </ToggleButton>
+            <ToggleButton Margin="0,0,4,0" Padding="2 0" IsChecked="{Binding ElementName=self, Path=ShowInformations, Mode=TwoWay}" HorizontalContentAlignment="Left" >
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/Inspector;component/Images/information.png" Height="14" />
+                    <TextBlock Margin="4,0,0,0" Text="{Binding ElementName=self, Path=InformationCount}" />
+                    <TextBlock Margin="4,0,0,0" Text="Informations" />
+                </StackPanel>
+            </ToggleButton>
+
+            <controls:NoSelectionComboBox
+		        infrastructure:ComboBoxSettings.RegisterAsSnoopPart="True"
+		        HorizontalAlignment="Stretch"
+		        VerticalAlignment="Stretch"
+		        Margin="10,0,20,0"
+		        ItemsSource="{Binding ElementName=self, Path=DiagnosticProvidersView}"
+		        IsSynchronizedWithCurrentItem="True"
+		        Header="Change active diagnostic providers"
+		        GroupHeaderTemplate="{StaticResource CategoryTemplate}">
+		        <controls:NoSelectionComboBox.ToolTip>
+			        <TextBlock Style="{x:Null}" Text="Select which diagnostic providers should be active."/>
+		        </controls:NoSelectionComboBox.ToolTip>
+	        </controls:NoSelectionComboBox>
+        </StackPanel>
+
+        <ListView Style="{x:Null}"
+                  x:Name="diagnostics"
+                  Grid.Row="1"
+                  ItemsSource="{Binding ElementName=self, Path=DiagnosticsItemsView}"
+                  MouseDoubleClick="Control_OnMouseDoubleClick"
+                  KeyUp="Diagnostics_OnKeyUp">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="50">
+                        <GridViewColumn.Header>
+                            <TextBlock Style="{x:Null}" Text="Level">
+                                <TextBlock.ToolTip>
+                                    <StackPanel>
+                                        <TextBlock Style="{x:Null}"
+                                                   Text="This column shows the level of the diagnostic." />
+                                    </StackPanel>
+                                </TextBlock.ToolTip>
+                            </TextBlock>
+                        </GridViewColumn.Header>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate DataType="diagnostics:DiagnosticItem">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Style="{x:Null}" Text="{Binding Level, Mode=OneWay}">
+                                        <TextBlock.ToolTip>
+                                            <TextBlock Style="{x:Null}" Text="{Binding Level}" />
+                                        </TextBlock.ToolTip>
+                                    </TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Width="120">
+                        <GridViewColumn.Header>
+                            <TextBlock Style="{x:Null}" Text="Name">
+                                <TextBlock.ToolTip>
+                                    <StackPanel>
+                                        <TextBlock Style="{x:Null}"
+                                                   Text="This column shows the name of the diagnostic." />
+                                    </StackPanel>
+                                </TextBlock.ToolTip>
+                            </TextBlock>
+                        </GridViewColumn.Header>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate DataType="diagnostics:DiagnosticItem">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Style="{x:Null}" Text="{Binding Name, Mode=OneWay}">
+                                        <TextBlock.ToolTip>
+                                            <TextBlock Style="{x:Null}" Text="{Binding Name}" />
+                                        </TextBlock.ToolTip>
+                                    </TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Width="300">
+                        <GridViewColumn.Header>
+                            <TextBlock Style="{x:Null}" Text="Description">
+                                <TextBlock.ToolTip>
+                                    <StackPanel>
+                                        <TextBlock Style="{x:Null}"
+                                                   Text="This column gives additional info on any diagnostic." />
+                                    </StackPanel>
+                                </TextBlock.ToolTip>
+                            </TextBlock>
+                        </GridViewColumn.Header>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate DataType="diagnostics:DiagnosticItem">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Style="{x:Null}" Text="{Binding Description, Mode=OneWay}">
+                                        <TextBlock.ToolTip>
+                                            <TextBlock Style="{x:Null}" Text="{Binding Description}" />
+                                        </TextBlock.ToolTip>
+                                    </TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Width="70">
+                        <GridViewColumn.Header>
+                            <TextBlock Style="{x:Null}" Text="Area">
+                                <TextBlock.ToolTip>
+                                    <StackPanel>
+                                        <TextBlock Style="{x:Null}"
+                                                   Text="This column shows the area of the diagnostic." />
+                                    </StackPanel>
+                                </TextBlock.ToolTip>
+                            </TextBlock>
+                        </GridViewColumn.Header>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate DataType="diagnostics:DiagnosticItem">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Style="{x:Null}" Text="{Binding Area, Mode=OneWay}">
+                                        <TextBlock.ToolTip>
+                                            <TextBlock Style="{x:Null}" Text="{Binding Area}" />
+                                        </TextBlock.ToolTip>
+                                    </TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</UserControl>

@@ -81,6 +81,8 @@
 
         [PublicAPI]
         [StructLayout(LayoutKind.Sequential)]
+        // ReSharper disable once InconsistentNaming
+        // ReSharper disable once IdentifierTypo
         private struct MSLLHOOKSTRUCT
         {
             public readonly POINT Point;

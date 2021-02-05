@@ -114,7 +114,7 @@ namespace Snoop.Views
             }
         }
 
-        private void HandleEventHandled(TrackedEvent trackedEvent)
+        private void HandleEventHandled(object? sender, TrackedEvent trackedEvent)
         {
             if (trackedEvent.Originator.Handler is Visual visual
                 && visual.IsPartOfSnoopVisualTree() == false)
@@ -140,10 +140,10 @@ namespace Snoop.Views
             }
         }
 
-        private void HandleTrackerOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void HandleTrackerOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            var tracker = (EventTracker)sender;
-            if (e.PropertyName == nameof(EventTracker.IsEnabled))
+            if (sender is EventTracker tracker
+                && e.PropertyName == nameof(EventTracker.IsEnabled))
             {
                 var savedTrackedEvent = Settings.Default.EventTrackers.FirstOrDefault(x => x.Id == tracker.Id);
 

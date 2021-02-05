@@ -18,6 +18,7 @@ paket-files/
 *.pdb
 *.dll
 *.ncb
+.idea/
 
 # Temp-Files from Verify
 *.received.txt
