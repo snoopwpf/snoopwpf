@@ -31,8 +31,6 @@
             }
         }
 
-        public bool IsGlobal { get; protected set; }
-
         public IEnumerable<DiagnosticItem> GetDiagnosticItems(TreeItem treeItem)
         {
             return this.IsActive == false || treeItem.ShouldBeAnalyzed == false

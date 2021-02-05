@@ -30,6 +30,7 @@
             this.diagnosticProviders.Add(new LocalResourceDefinitionsDiagnosticProvider());
             this.diagnosticProviders.Add(new NonVirtualizedListsDiagnosticProvider());
             this.diagnosticProviders.Add(new UnresolvedDynamicResourceDiagnosticProvider());
+            this.diagnosticProviders.Add(new BindingLeakDiagnosticProvider());
 
             foreach (var diagnosticProvider in this.diagnosticProviders)
             {
@@ -87,10 +88,29 @@
                 return;
             }
 
+            // Only add global Diagnostics if with we should analyze the whole tree
+            foreach (var diagnosticProvider in this.DiagnosticProviders)
+            {
+                this.AddRange(diagnosticProvider.GetGlobalDiagnosticItems());
+            }
+
             this.AnalyzeTree(this.TreeService.RootTreeItem);
         }
 
-        public void AnalyzeTree(TreeItem item)
+        public void AnalyzeTree(DiagnosticProvider diagnosticProvider)
+        {
+            if (this.TreeService?.RootTreeItem is null)
+            {
+                return;
+            }
+
+            // Only add global Diagnostics if with we should analyze the whole tree
+            this.AddRange(diagnosticProvider.GetGlobalDiagnosticItems());
+
+            this.AnalyzeTree(this.TreeService.RootTreeItem);
+        }
+
+        private void AnalyzeTree(TreeItem item)
         {
             this.Analyze(item);
 
@@ -103,7 +123,7 @@
             }
         }
 
-        public void AnalyzeTree(TreeItem item, DiagnosticProvider diagnosticProvider)
+        private void AnalyzeTree(TreeItem item, DiagnosticProvider diagnosticProvider)
         {
             this.Analyze(item, diagnosticProvider);
 
@@ -127,10 +147,9 @@
                     this.diagnosticItems.Remove(diagnosticItem);
                 }
 
-                if (diagnosticProvider.IsActive
-                    && this.TreeService?.RootTreeItem is not null)
+                if (diagnosticProvider.IsActive)
                 {
-                    this.AnalyzeTree(this.TreeService.RootTreeItem, diagnosticProvider);
+                    this.AnalyzeTree(diagnosticProvider);
                 }
             }
         }
