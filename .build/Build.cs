@@ -29,14 +29,16 @@ using static Nuke.Common.Tools.MSBuild.MSBuildTasks;
     "deployment",
     GitHubActionsImage.WindowsLatest,
     OnPushBranches = new[] { MasterBranch, ReleaseBranchPrefix + "/*" },
-    InvokedTargets = new[] { nameof(CI) }
+    InvokedTargets = new[] { nameof(CI) },
+    AutoGenerate = false
 )]
 [GitHubActions(
     "continuous",
     GitHubActionsImage.WindowsLatest,
     OnPushBranchesIgnore = new[] { MasterBranch, ReleaseBranchPrefix + "/*" },
     OnPullRequestBranches = new[] { DevelopBranch },
-    InvokedTargets = new[] { nameof(CI) }
+    InvokedTargets = new[] { nameof(CI) },
+    AutoGenerate = false
 )]
 [CheckBuildProjectConfigurations]
 [UnsetVisualStudioEnvironmentVariables]
