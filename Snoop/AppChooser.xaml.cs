@@ -135,10 +135,10 @@ namespace Snoop
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            base.OnClosing(e);
-
             // persist the window placement details to the user settings.
             SnoopWindowUtils.SaveWindowPlacement(this, wp => Settings.Default.AppChooserWindowPlacement = wp);
+
+            base.OnClosing(e);
 
             Settings.Default.Save();
         }

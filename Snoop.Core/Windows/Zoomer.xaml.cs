@@ -111,12 +111,17 @@ namespace Snoop.Windows
             SnoopWindowUtils.LoadWindowPlacement(this, Settings.Default.ZoomerWindowPlacement);
         }
 
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            // persist the window placement details to the user settings.
+            SnoopWindowUtils.SaveWindowPlacement(this, wp => Settings.Default.ZoomerWindowPlacement = wp);
+
+            base.OnClosing(e);
+        }
+
         protected override void OnClosed(EventArgs e)
         {
             this.Viewbox.Child = null;
-
-            // persist the window placement details to the user settings.
-            SnoopWindowUtils.SaveWindowPlacement(this, wp => Settings.Default.ZoomerWindowPlacement = wp);
 
             base.OnClosed(e);
         }

@@ -381,6 +381,17 @@ namespace Snoop.Windows
             SnoopWindowUtils.LoadWindowPlacement(this, Settings.Default.SnoopUIWindowPlacement);
         }
 
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            if (this.isResettingSettings == false)
+            {
+                // persist the window placement details to the user settings.
+                SnoopWindowUtils.SaveWindowPlacement(this, wp => Settings.Default.SnoopUIWindowPlacement = wp);
+            }
+
+            base.OnClosing(e);
+        }
+
         protected override void OnClosed(EventArgs e)
         {
             this.CurrentSelection = null;
@@ -397,9 +408,6 @@ namespace Snoop.Windows
 
             if (this.isResettingSettings == false)
             {
-                // persist the window placement details to the user settings.
-                SnoopWindowUtils.SaveWindowPlacement(this, wp => Settings.Default.SnoopUIWindowPlacement = wp);
-
                 // persist whether all properties are shown by default
                 Settings.Default.ShowDefaults = this.PropertyGrid.ShowDefaults;
 
