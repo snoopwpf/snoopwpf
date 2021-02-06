@@ -121,8 +121,10 @@ namespace Snoop.Infrastructure
             public readonly IntPtr modBaseAddr;
             public uint modBaseSize;
             public readonly IntPtr hModule;
+
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
             public string szModule;
+
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
             public string szExePath;
         }
@@ -165,12 +167,16 @@ namespace Snoop.Infrastructure
             All = 0x0000001F
         }
 
-        private const int IMAGE_FILE_MACHINE_I386 = 0x14C;
-        private const int IMAGE_FILE_MACHINE_AMD64 = 0x8664;
-        private const int IMAGE_FILE_MACHINE_ARM64 = 0xAA64;
+        private enum ImageFileMachine : ushort
+        {
+            I386 = 0x14C,
+            AMD64 = 0x8664,
+            ARM = 0x1c0,
+            ARM64 = 0xAA64,
+        }
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern bool IsWow64Process2(IntPtr process, out ushort processMachine, out ushort nativeMachine);
+        private static extern bool IsWow64Process2(IntPtr process, out ImageFileMachine processMachine, out ImageFileMachine nativeMachine);
 
         public static string GetArchitectureWithoutException(Process process)
         {
@@ -203,15 +209,22 @@ namespace Snoop.Infrastructure
                     throw new Win32Exception();
                 }
 
-                switch (processMachine)
+                var arch = processMachine == 0
+                    ? nativeMachine
+                    : processMachine;
+
+                switch (arch)
                 {
-                    case IMAGE_FILE_MACHINE_I386:
+                    case ImageFileMachine.I386:
                         return "x86";
 
-                    case IMAGE_FILE_MACHINE_AMD64:
+                    case ImageFileMachine.AMD64:
                         return "x64";
 
-                    case IMAGE_FILE_MACHINE_ARM64:
+                    case ImageFileMachine.ARM:
+                        return "ARM";
+
+                    case ImageFileMachine.ARM64:
                         return "ARM64";
 
                     default:

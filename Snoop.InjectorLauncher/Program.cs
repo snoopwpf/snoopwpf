@@ -46,7 +46,7 @@ namespace Snoop.InjectorLauncher
                 // If they don't match we redirect everything to the appropriate injector launcher.
                 {
                     var currentProcess = Process.GetCurrentProcess();
-                    var currentProcessArchitecture = NativeMethods.GetArchitecture(currentProcess);
+                    var currentProcessArchitecture = NativeMethods.GetArchitectureWithoutException(currentProcess);
                     if (processWrapper.Architecture.Equals(currentProcessArchitecture) == false)
                     {
                         Injector.LogMessage("Target process and injector process have different architectures, trying to redirect to secondary process...");

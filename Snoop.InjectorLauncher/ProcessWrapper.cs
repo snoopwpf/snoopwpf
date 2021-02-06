@@ -13,7 +13,7 @@ namespace Snoop.InjectorLauncher
             this.Handle = NativeMethods.OpenProcess(NativeMethods.ProcessAccessFlags.All, false, process.Id);
             this.WindowHandle = windowHandle;
 
-            this.Architecture = NativeMethods.GetArchitecture(this.Process);
+            this.Architecture = NativeMethods.GetArchitectureWithoutException(this.Process);
 
             this.SupportedFrameworkName = GetSupportedTargetFramework(process);
         }

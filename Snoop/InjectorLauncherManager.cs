@@ -36,7 +36,7 @@ namespace Snoop
                 var location = Assembly.GetExecutingAssembly().Location;
                 var directory = Path.GetDirectoryName(location) ?? string.Empty;
                 // If we get the architecture wrong here the InjectorLauncher will fix this by starting a secondary instance.
-                var architecture = NativeMethods.GetArchitecture(processInfo.Process);
+                var architecture = NativeMethods.GetArchitectureWithoutException(processInfo.Process);
                 var injectorLauncherExe = Path.Combine(directory, $"Snoop.InjectorLauncher.{architecture}.exe");
 
                 if (File.Exists(injectorLauncherExe) == false)
