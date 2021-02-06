@@ -20,6 +20,9 @@
   - Support for ARM/ARM64
   - [#38](../../issues/38) - Export tree (thanks @amake for the basic idea and starting point)
   - [#103](../../issues/103) - Feature Request: Persist Tracked Events Settings
+  - [#210](../../issues/210) - Add dedicated "Diagnostics" view
+  - [#212](../../issues/212) - Add binding diagnostics
+  - [#213](../../issues/213) - Add DynamicResource diagnostics
   - [#226](../../issues/226) - Add support for ARM/ARM64
   - [#227](../../issues/227) - Add support for .NET 6
 
