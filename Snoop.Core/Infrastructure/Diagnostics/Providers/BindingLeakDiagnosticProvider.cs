@@ -22,7 +22,14 @@
 
         protected override IEnumerable<DiagnosticItem> GetGlobalDiagnosticItemsInternal()
         {
-            foreach (var descriptorInfo in GetReflectPropertyDescriptorInfo()!)
+            var reflectPropertyDescriptorInfos = GetReflectPropertyDescriptorInfo();
+
+            if (reflectPropertyDescriptorInfos is null)
+            {
+                yield break;
+            }
+
+            foreach (var descriptorInfo in reflectPropertyDescriptorInfos)
             {
                 yield return
                     new DiagnosticItem(this,
