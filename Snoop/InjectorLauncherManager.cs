@@ -11,6 +11,7 @@ namespace Snoop
     using System.Reflection;
     using CommandLine;
     using Snoop.Data;
+    using Snoop.Infrastructure;
     using Snoop.InjectorLauncher;
 
     /// <summary>
@@ -18,18 +19,6 @@ namespace Snoop
     /// </summary>
     public static class InjectorLauncherManager
     {
-        // This method has to work without exceptions.
-        // If we get the architecture wrong here the InjectorLauncher will fix this by starting a secondary instance.
-        // IsProcess64BitWithoutException will return false in case of a failure, this way we ensure that the x86 InjectorLauncher is run, which should be able to run on every system.
-        private static string GetArchitectureSuffix(ProcessInfo processInfo)
-        {
-            var bitness = processInfo.IsProcess64Bit
-                ? "x64"
-                : "x86";
-
-            return bitness;
-        }
-
         public static void Launch(ProcessInfo processInfo, IntPtr targetHwnd, MethodInfo methodInfo, TransientSettingsData transientSettingsData)
         {
             Launch(processInfo, targetHwnd, methodInfo.DeclaringType.Assembly.GetName().Name, methodInfo.DeclaringType.FullName, methodInfo.Name, transientSettingsData.WriteToFile());
@@ -46,7 +35,9 @@ namespace Snoop
             {
                 var location = Assembly.GetExecutingAssembly().Location;
                 var directory = Path.GetDirectoryName(location) ?? string.Empty;
-                var injectorLauncherExe = Path.Combine(directory, $"Snoop.InjectorLauncher.{GetArchitectureSuffix(processInfo)}.exe");
+                // If we get the architecture wrong here the InjectorLauncher will fix this by starting a secondary instance.
+                var architecture = NativeMethods.GetArchitecture(processInfo.Process);
+                var injectorLauncherExe = Path.Combine(directory, $"Snoop.InjectorLauncher.{architecture}.exe");
 
                 if (File.Exists(injectorLauncherExe) == false)
                 {

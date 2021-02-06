@@ -11,6 +11,7 @@ namespace Snoop.InjectorLauncher
     using System.Reflection;
     using CommandLine;
     using Snoop.Data;
+    using Snoop.Infrastructure;
 
     public static class Program
     {
@@ -41,18 +42,18 @@ namespace Snoop.InjectorLauncher
                     return 1;
                 }
 
-                // Check for target process and our bitness.
+                // Check for target process and our architecture.
                 // If they don't match we redirect everything to the appropriate injector launcher.
                 {
                     var currentProcess = Process.GetCurrentProcess();
-                    var currentProcessBitness = ProcessWrapper.GetBitnessAsString(currentProcess);
-                    if (processWrapper.Bitness.Equals(currentProcessBitness) == false)
+                    var currentProcessArchitecture = NativeMethods.GetArchitecture(currentProcess);
+                    if (processWrapper.Architecture.Equals(currentProcessArchitecture) == false)
                     {
-                        Injector.LogMessage("Target process and injector process have different bitness, trying to redirect to secondary process...");
+                        Injector.LogMessage("Target process and injector process have different architectures, trying to redirect to secondary process...");
 
                         var originalProcessFileName = currentProcess.MainModule.ModuleName;
-                        var correctBitnessFileName = originalProcessFileName.Replace(currentProcessBitness, processWrapper.Bitness);
-                        var processStartInfo = new ProcessStartInfo(currentProcess.MainModule.FileName.Replace(originalProcessFileName, correctBitnessFileName), Parser.Default.FormatCommandLine(commandLineOptions))
+                        var correctArchitectureFileName = originalProcessFileName.Replace(currentProcessArchitecture, processWrapper.Architecture);
+                        var processStartInfo = new ProcessStartInfo(currentProcess.MainModule.FileName.Replace(originalProcessFileName, correctArchitectureFileName), Parser.Default.FormatCommandLine(commandLineOptions))
                         {
                             CreateNoWindow = true,
                             WorkingDirectory = currentProcess.StartInfo.WorkingDirectory

@@ -52,9 +52,9 @@
     <RootNamespace>SnoopGenericInjector</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>Snoop.GenericInjector</ProjectName>
-    <BitnessName>$(Platform)</BitnessName>
-    <BitnessName Condition="'$(Platform)'=='Win32'">x86</BitnessName>
-    <TargetName>$(ProjectName).$(BitnessName)</TargetName>
+    <ArchitectureName>$(Platform)</ArchitectureName>
+    <ArchitectureName Condition="'$(Platform)'=='Win32'">x86</ArchitectureName>
+    <TargetName>$(ProjectName).$(ArchitectureName)</TargetName>
     <IntDir>obj\$(Configuration)\$(Platform)\</IntDir>
     <OutDir>..\bin\$(Configuration)\</OutDir>
     <OutputPath>..\bin\$(Configuration)\</OutputPath>

@@ -13,16 +13,9 @@ namespace Snoop.InjectorLauncher
             this.Handle = NativeMethods.OpenProcess(NativeMethods.ProcessAccessFlags.All, false, process.Id);
             this.WindowHandle = windowHandle;
 
-            this.Bitness = GetBitnessAsString(this.Process);
+            this.Architecture = NativeMethods.GetArchitecture(this.Process);
 
             this.SupportedFrameworkName = GetSupportedTargetFramework(process);
-        }
-
-        public static string GetBitnessAsString(Process process)
-        {
-            return NativeMethods.IsProcess64Bit(process)
-                ? "x64"
-                : "x86";
         }
 
         public Process Process { get; }
@@ -33,7 +26,7 @@ namespace Snoop.InjectorLauncher
 
         public IntPtr WindowHandle { get; }
 
-        public string Bitness { get; }
+        public string Architecture { get; }
 
         public string SupportedFrameworkName { get; }
 
