@@ -12,9 +12,13 @@
 
     public class BindingLeakDiagnosticProvider : DiagnosticProvider
     {
-        private static readonly FieldInfo? propertyCacheFieldInfo = typeof(TypeDescriptionProvider).Module.GetType("System.ComponentModel.ReflectTypeDescriptionProvider")?.GetField("_propertyCache", BindingFlags.Static | BindingFlags.NonPublic);
+        private static readonly Type? reflectTypeDescriptionProviderType = typeof(TypeDescriptionProvider).Module.GetType("System.ComponentModel.ReflectTypeDescriptionProvider");
 
-        private static readonly FieldInfo? valueChangedHandlersFieldInfo = typeof(PropertyDescriptor).GetField("valueChangedHandlers", BindingFlags.Instance | BindingFlags.NonPublic);
+        private static readonly FieldInfo? propertyCacheFieldInfo = reflectTypeDescriptionProviderType?.GetField("_propertyCache", BindingFlags.Static | BindingFlags.NonPublic)
+            ?? reflectTypeDescriptionProviderType?.GetField("s_propertyCache", BindingFlags.Static | BindingFlags.NonPublic);
+
+        private static readonly FieldInfo? valueChangedHandlersFieldInfo = typeof(PropertyDescriptor).GetField("valueChangedHandlers", BindingFlags.Instance | BindingFlags.NonPublic)
+            ?? typeof(PropertyDescriptor).GetField("_valueChangedHandlers", BindingFlags.Instance | BindingFlags.NonPublic);
 
         public override string Name { get; } = "Binding leak";
 
