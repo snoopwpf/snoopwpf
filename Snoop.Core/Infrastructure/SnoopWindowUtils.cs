@@ -114,6 +114,8 @@ namespace Snoop.Infrastructure
         public static void LoadWindowPlacement(Window window, WINDOWPLACEMENT? windowPlacement)
         {
             if (windowPlacement.HasValue == false
+                || windowPlacement.Value.NormalPosition.Width == 0
+                || windowPlacement.Value.NormalPosition.Height == 0
                 || IsVisibleOnAnyScreen(windowPlacement.Value.NormalPosition, out var screen) == false)
             {
                 return;
