@@ -19,6 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 		chocolatey\snoop.nuspec = chocolatey\snoop.nuspec
 		Snoop.ruleset = Snoop.ruleset
+		.vsconfig = .vsconfig
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snoop.Core", "Snoop.Core\Snoop.Core.csproj", "{883A18A9-A386-4342-AC95-9AFC34913FCA}"

@@ -218,7 +218,7 @@ namespace Snoop.InjectorLauncher
 
         private static void InjectSnoop(ProcessWrapper processWrapper, InjectorData injectorData)
         {
-            var injectorDllName = $"Snoop.GenericInjector.{processWrapper.Bitness}.dll";
+            var injectorDllName = $"Snoop.GenericInjector.{processWrapper.Architecture}.dll";
             var pathToInjectorDll = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), injectorDllName);
 
             LogMessage($"Trying to load \"{pathToInjectorDll}\"...");

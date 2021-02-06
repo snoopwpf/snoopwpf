@@ -121,8 +121,10 @@ namespace Snoop.Infrastructure
             public readonly IntPtr modBaseAddr;
             public uint modBaseSize;
             public readonly IntPtr hModule;
+
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
             public string szModule;
+
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
             public string szExePath;
         }
@@ -165,28 +167,36 @@ namespace Snoop.Infrastructure
             All = 0x0000001F
         }
 
-        public static bool IsProcess64BitWithoutException(Process process)
+        private enum ImageFileMachine : ushort
+        {
+            I386 = 0x14C,
+            AMD64 = 0x8664,
+            ARM = 0x1c0,
+            ARM64 = 0xAA64,
+        }
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern bool IsWow64Process2(IntPtr process, out ImageFileMachine processMachine, out ImageFileMachine nativeMachine);
+
+        public static string GetArchitectureWithoutException(Process process)
         {
             try
             {
-                return IsProcess64Bit(process);
+                return GetArchitecture(process);
             }
             catch (Exception e)
             {
-                Trace.WriteLine(e);
-                return false;
+                Trace.TraceError(e.ToString());
+                return "x86";
             }
         }
 
-        // see https://msdn.microsoft.com/en-us/library/windows/desktop/ms684139%28v=vs.85%29.aspx
-        public static bool IsProcess64Bit(Process process)
+        public static string GetArchitecture(Process process)
         {
-            if (Environment.Is64BitOperatingSystem == false)
-            {
-                return false;
-            }
+            // return IsProcess64BitWithoutException(process)
+            //     ? "x64"
+            //     : "x86";
 
-            // if this method is not available in your version of .NET, use GetNativeSystemInfo via P/Invoke instead
             using (var processHandle = OpenProcess(process, ProcessAccessFlags.QueryLimitedInformation))
             {
                 if (processHandle.IsInvalid)
@@ -194,12 +204,32 @@ namespace Snoop.Infrastructure
                     throw new Exception("Could not query process information.");
                 }
 
-                if (IsWow64Process(processHandle.DangerousGetHandle(), out var isWow64) == false)
+                if (IsWow64Process2(processHandle.DangerousGetHandle(), out var processMachine, out var nativeMachine) == false)
                 {
                     throw new Win32Exception();
                 }
 
-                return isWow64 == false;
+                var arch = processMachine == 0
+                    ? nativeMachine
+                    : processMachine;
+
+                switch (arch)
+                {
+                    case ImageFileMachine.I386:
+                        return "x86";
+
+                    case ImageFileMachine.AMD64:
+                        return "x64";
+
+                    case ImageFileMachine.ARM:
+                        return "ARM";
+
+                    case ImageFileMachine.ARM64:
+                        return "ARM64";
+
+                    default:
+                        return "x86";
+                }
             }
         }
 
