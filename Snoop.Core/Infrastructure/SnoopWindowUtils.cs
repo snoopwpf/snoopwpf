@@ -123,7 +123,6 @@ namespace Snoop.Infrastructure
 
             try
             {
-                Debugger.Launch();
                 if (windowPlacement.Value.ShowCmd == NativeMethods.SW_SHOWMAXIMIZED)
                 {
                     window.WindowState = WindowState.Maximized;
