@@ -11,12 +11,12 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <RootBuild Condition="'$(RootBuild)' == ''">True</RootBuild>
     <TargetName>$(AssemblyName).$(PlatformTarget)</TargetName>
   </PropertyGroup>
 
   <PropertyGroup>
-    <DefaultItemExcludes Condition="'$(PlatformTarget)' == 'x86'">$(DefaultItemExcludes);obj/x64/**/*</DefaultItemExcludes>
-    <DefaultItemExcludes Condition="'$(PlatformTarget)' == 'x64'">$(DefaultItemExcludes);obj/x86/**/*</DefaultItemExcludes>
+    <DefaultItemExcludes>$(DefaultItemExcludes);obj/**/*</DefaultItemExcludes>
   </PropertyGroup>
   
   <ItemGroup>
@@ -31,8 +31,14 @@
     <PackageReference Include="CommandLineParser" />
   </ItemGroup>
    
-  <Target Name="Compilex64" AfterTargets="Build" Condition="'$(PlatformTarget)' == 'x86'">
+  <Target Name="CompileOtherArches" 
+          AfterTargets="Build" 
+          Condition="'$(RootBuild)' == 'True'">
     <Message Text="Building injector launcher for x64..." Importance="High" />
-    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Restore;Build" Properties="Configuration=$(Configuration);PlatformTarget=x64" RunEachTargetSeparately="false" />
+    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Restore;Build" Properties="RootBuild=False;Configuration=$(Configuration);PlatformTarget=x64" RunEachTargetSeparately="false" />
+    <Message Text="Building injector launcher for ARM..." Importance="High" />
+    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Restore;Build" Properties="RootBuild=False;Configuration=$(Configuration);PlatformTarget=ARM" RunEachTargetSeparately="false" />
+    <Message Text="Building injector launcher for ARM64..." Importance="High" />
+    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Restore;Build" Properties="RootBuild=False;Configuration=$(Configuration);PlatformTarget=ARM64" RunEachTargetSeparately="false" />
   </Target>
 </Project>
