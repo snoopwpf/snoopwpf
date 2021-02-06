@@ -30,11 +30,12 @@ jobs:
       - uses: actions/checkout@v1
       - name: Run './build.cmd CI'
         run: ./build.cmd CI
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v2
         with:
           name: test-results
           path: output/test-results
-      - uses: actions/upload-artifact@v1
+        if: ${{ always() }}
+      - uses: actions/upload-artifact@v2
         with:
           name: artifacts
           path: artifacts
