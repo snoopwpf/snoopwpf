@@ -187,16 +187,14 @@ namespace Snoop.Infrastructure
             catch (Exception e)
             {
                 Trace.TraceError(e.ToString());
-                return "x86";
+                return Environment.Is64BitOperatingSystem
+                    ? "x64"
+                    : "x86";
             }
         }
 
         public static string GetArchitecture(Process process)
         {
-            // return IsProcess64BitWithoutException(process)
-            //     ? "x64"
-            //     : "x86";
-
             using (var processHandle = OpenProcess(process, ProcessAccessFlags.QueryLimitedInformation))
             {
                 if (processHandle.IsInvalid)
@@ -204,32 +202,79 @@ namespace Snoop.Infrastructure
                     throw new Exception("Could not query process information.");
                 }
 
-                if (IsWow64Process2(processHandle.DangerousGetHandle(), out var processMachine, out var nativeMachine) == false)
+                try
+                {
+                    if (IsWow64Process2(processHandle.DangerousGetHandle(), out var processMachine, out var nativeMachine) == false)
+                    {
+                        throw new Win32Exception();
+                    }
+
+                    var arch = processMachine == 0
+                        ? nativeMachine
+                        : processMachine;
+
+                    switch (arch)
+                    {
+                        case ImageFileMachine.I386:
+                            return "x86";
+
+                        case ImageFileMachine.AMD64:
+                            return "x64";
+
+                        case ImageFileMachine.ARM:
+                            return "ARM";
+
+                        case ImageFileMachine.ARM64:
+                            return "ARM64";
+
+                        default:
+                            return "x86";
+                    }
+                }
+                catch (EntryPointNotFoundException)
+                {
+                    if (IsWow64Process(processHandle.DangerousGetHandle(), out var isWow64) == false)
+                    {
+                        throw new Win32Exception();
+                    }
+
+                    switch (isWow64)
+                    {
+                        case true when Environment.Is64BitOperatingSystem:
+                            return "x86";
+
+                        case false when Environment.Is64BitOperatingSystem:
+                            return "x64";
+
+                        default:
+                            return "x86";
+                    }
+                }
+            }
+        }
+
+        // see https://msdn.microsoft.com/en-us/library/windows/desktop/ms684139%28v=vs.85%29.aspx
+        private static bool IsWow64Process(Process process)
+        {
+            if (Environment.Is64BitOperatingSystem == false)
+            {
+                return false;
+            }
+
+            // if this method is not available in your version of .NET, use GetNativeSystemInfo via P/Invoke instead
+            using (var processHandle = OpenProcess(process, ProcessAccessFlags.QueryLimitedInformation))
+            {
+                if (processHandle.IsInvalid)
+                {
+                    throw new Exception("Could not query process information.");
+                }
+
+                if (IsWow64Process(processHandle.DangerousGetHandle(), out var isWow64) == false)
                 {
                     throw new Win32Exception();
                 }
 
-                var arch = processMachine == 0
-                    ? nativeMachine
-                    : processMachine;
-
-                switch (arch)
-                {
-                    case ImageFileMachine.I386:
-                        return "x86";
-
-                    case ImageFileMachine.AMD64:
-                        return "x64";
-
-                    case ImageFileMachine.ARM:
-                        return "ARM";
-
-                    case ImageFileMachine.ARM64:
-                        return "ARM64";
-
-                    default:
-                        return "x86";
-                }
+                return isWow64 == false;
             }
         }
 
