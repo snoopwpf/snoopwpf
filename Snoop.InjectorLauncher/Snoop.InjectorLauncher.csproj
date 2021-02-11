@@ -37,8 +37,8 @@
     <Message Text="Building injector launcher for x64..." Importance="High" />
     <MSBuild Projects="$(MSBuildProjectFile)" Targets="Restore;Build" Properties="RootBuild=False;Configuration=$(Configuration);PlatformTarget=x64" RunEachTargetSeparately="false" />
     <Message Text="Building injector launcher for ARM..." Importance="High" />
-    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Restore;Build" Properties="RootBuild=False;Configuration=$(Configuration);PlatformTarget=ARM" RunEachTargetSeparately="false" />
+    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Restore;Build" Properties="RootBuild=False;Configuration=$(Configuration);PlatformTarget=ARM;TargetFramework=net5.0-windows" RunEachTargetSeparately="false" />
     <Message Text="Building injector launcher for ARM64..." Importance="High" />
-    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Restore;Build" Properties="RootBuild=False;Configuration=$(Configuration);PlatformTarget=ARM64" RunEachTargetSeparately="false" />
+    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Restore;Build" Properties="RootBuild=False;Configuration=$(Configuration);PlatformTarget=ARM64;TargetFramework=net5.0-windows" RunEachTargetSeparately="false" />
   </Target>
 </Project>
