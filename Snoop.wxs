@@ -104,6 +104,8 @@
                               Source="SourceDir\Snoop.InjectorLauncher.ARM.dll"/>
                         <File Id="Snoop.InjectorLauncher.ARM.deps.json"
                               Source="SourceDir\Snoop.InjectorLauncher.ARM.deps.json"/>
+                        <File Id="Snoop.InjectorLauncher.ARM.deps.json"
+                              Source="SourceDir\Snoop.InjectorLauncher.ARM.runtimeconfig.json"/>
                         <File Id="Snoop.InjectorLauncher.ARM.dll.config"
                               Source="SourceDir\Snoop.InjectorLauncher.ARM.dll.config"/>
                         <File Id="Snoop.InjectorLauncher.ARM.pdb" Source="SourceDir\Snoop.InjectorLauncher.ARM.pdb"/>
@@ -115,6 +117,8 @@
                               Source="SourceDir\Snoop.InjectorLauncher.ARM64.dll"/>
                         <File Id="Snoop.InjectorLauncher.ARM64.deps.json"
                               Source="SourceDir\Snoop.InjectorLauncher.ARM64.deps.json"/>
+                        <File Id="Snoop.InjectorLauncher.ARM64.deps.json"
+                              Source="SourceDir\Snoop.InjectorLauncher.ARM64.runtimeconfig.json"/>
                         <File Id="Snoop.InjectorLauncher.ARM64.dll.config"
                               Source="SourceDir\Snoop.InjectorLauncher.ARM64.dll.config"/>
                         <File Id="Snoop.InjectorLauncher.ARM64.pdb" Source="SourceDir\Snoop.InjectorLauncher.ARM64.pdb"/>
