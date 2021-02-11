@@ -98,7 +98,7 @@ namespace Snoop.InjectorLauncher
                 if (writeProcessMemoryResult == false
                     || bytesWritten == 0)
                 {
-                    throw Marshal.GetExceptionForHR(Marshal.GetLastWin32Error());
+                    throw Marshal.GetExceptionForHR(Marshal.GetLastWin32Error()) ?? new Exception("Unknown error while trying to write to foreign process memory.");
                 }
 
                 var hLibrary = NativeMethods.GetModuleHandle("kernel32");
@@ -219,7 +219,7 @@ namespace Snoop.InjectorLauncher
         private static void InjectSnoop(ProcessWrapper processWrapper, InjectorData injectorData)
         {
             var injectorDllName = $"Snoop.GenericInjector.{processWrapper.Architecture}.dll";
-            var pathToInjectorDll = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), injectorDllName);
+            var pathToInjectorDll = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, injectorDllName);
 
             LogMessage($"Trying to load \"{pathToInjectorDll}\"...");
 
@@ -263,7 +263,7 @@ namespace Snoop.InjectorLauncher
                 if (writeProcessMemoryResult == false
                     || bytesWritten == 0)
                 {
-                    throw Marshal.GetExceptionForHR(Marshal.GetLastWin32Error());
+                    throw Marshal.GetExceptionForHR(Marshal.GetLastWin32Error()) ?? new Exception("Unknown error while trying to write to foreign process.");
                 }
 
                 var hLibrary = IntPtr.Zero;
@@ -305,7 +305,7 @@ namespace Snoop.InjectorLauncher
 
                             if (resultFromExecuteInDefaultAppDomain != IntPtr.Zero)
                             {
-                                throw Marshal.GetExceptionForHR((int)resultFromExecuteInDefaultAppDomain.ToInt64());
+                                throw Marshal.GetExceptionForHR((int)resultFromExecuteInDefaultAppDomain.ToInt64()) ?? new Exception("Unknown error while executing in foreign process.");
                             }
                         }
                         finally
