@@ -59,7 +59,7 @@ namespace Snoop.InjectorLauncher
 
         private static Process? GetProcessFromWindowHandle(IntPtr windowHandle)
         {
-            NativeMethods.GetWindowThreadProcessId(windowHandle, out var processId);
+            _ = NativeMethods.GetWindowThreadProcessId(windowHandle, out var processId);
 
             if (processId == 0)
             {

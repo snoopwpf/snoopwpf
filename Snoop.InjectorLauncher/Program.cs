@@ -45,15 +45,16 @@ namespace Snoop.InjectorLauncher
                 // Check for target process and our architecture.
                 // If they don't match we redirect everything to the appropriate injector launcher.
                 {
-                    var currentProcess = Process.GetCurrentProcess();
+                    using var currentProcess = Process.GetCurrentProcess();
                     var currentProcessArchitecture = NativeMethods.GetArchitectureWithoutException(currentProcess);
-                    if (processWrapper.Architecture.Equals(currentProcessArchitecture) == false)
+                    if (processWrapper.Architecture.Equals(currentProcessArchitecture, StringComparison.Ordinal) == false)
                     {
                         Injector.LogMessage("Target process and injector process have different architectures, trying to redirect to secondary process...");
 
-                        var originalProcessFileName = currentProcess.MainModule.ModuleName;
+                        var originalProcessFileName = currentProcess.MainModule!.ModuleName!;
+                        #pragma warning disable CA1307
                         var correctArchitectureFileName = originalProcessFileName.Replace(currentProcessArchitecture, processWrapper.Architecture);
-                        var processStartInfo = new ProcessStartInfo(currentProcess.MainModule.FileName.Replace(originalProcessFileName, correctArchitectureFileName), Parser.Default.FormatCommandLine(commandLineOptions))
+                        var processStartInfo = new ProcessStartInfo(currentProcess!.MainModule!.FileName!.Replace(originalProcessFileName, correctArchitectureFileName), Parser.Default.FormatCommandLine(commandLineOptions))
                         {
                             CreateNoWindow = true,
                             WorkingDirectory = currentProcess.StartInfo.WorkingDirectory
@@ -125,7 +126,7 @@ namespace Snoop.InjectorLauncher
             }
 
             var thisAssemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            return Path.Combine(thisAssemblyDirectory, processWrapper.SupportedFrameworkName, $"{assemblyNameOrFullPath}.dll");
+            return Path.Combine(thisAssemblyDirectory!, processWrapper.SupportedFrameworkName, $"{assemblyNameOrFullPath}.dll");
         }
     }
 }
