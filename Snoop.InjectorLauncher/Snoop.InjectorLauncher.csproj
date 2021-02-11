@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net40</TargetFramework>
-    <PlatformTarget>x86</PlatformTarget>
+    <OutputType>exe</OutputType>
+    <TargetFramework Condition="'$(TargetFramework)' == ''">net40</TargetFramework>
+    <PlatformTarget Condition="'$(PlatformTarget)' == ''">x86</PlatformTarget>
     <ApplicationIcon>..\Artwork\Snoop.ico</ApplicationIcon>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 
@@ -12,7 +12,8 @@
 
   <PropertyGroup>
     <RootBuild Condition="'$(RootBuild)' == ''">True</RootBuild>
-    <TargetName>$(AssemblyName).$(PlatformTarget)</TargetName>
+    <AssemblyName>$(AssemblyName).$(PlatformTarget)</AssemblyName>
+    <TargetName>$(AssemblyName)</TargetName>
   </PropertyGroup>
 
   <PropertyGroup>
