@@ -1030,7 +1030,7 @@ namespace Snoop.Windows
                     }
                 }
 
-                Trace.WriteLine(sb.ToString());
+                LogHelper.WriteLine(sb.ToString());
                 ClipboardHelper.SetText(sb.ToString());
             }
         }

@@ -17,6 +17,8 @@ namespace Snoop.InjectorLauncher
     {
         public static int Main(string[] args)
         {
+            ConsoleHelper.AttachConsoleToParentProcessOrAllocateNewOne();
+
             var runResult = Parser.Default.ParseArguments<InjectorLauncherCommandLineOptions>(args)
                 .MapResult(Run, _ => 1);
 

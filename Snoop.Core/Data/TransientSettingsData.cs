@@ -4,6 +4,7 @@ namespace Snoop.Data
     using System.Diagnostics;
     using System.IO;
     using System.Xml.Serialization;
+    using Snoop.Infrastructure;
 
     public sealed class TransientSettingsData
     {
@@ -32,7 +33,7 @@ namespace Snoop.Data
         {
             var settingsFile = Path.GetTempFileName();
 
-            Trace.WriteLine($"Writing transient settings file to \"{settingsFile}\"");
+            LogHelper.WriteLine($"Writing transient settings file to \"{settingsFile}\"");
 
             using (var stream = new FileStream(settingsFile, FileMode.Create))
             {
@@ -54,7 +55,7 @@ namespace Snoop.Data
 
         public static TransientSettingsData LoadCurrent(string settingsFile)
         {
-            Trace.WriteLine($"Loading transient settings file from \"{settingsFile}\"");
+            LogHelper.WriteLine($"Loading transient settings file from \"{settingsFile}\"");
 
             using (var stream = new FileStream(settingsFile, FileMode.Open))
             {

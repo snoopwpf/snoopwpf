@@ -66,9 +66,9 @@
 
                 return result;
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                Trace.WriteLine(e.ToString());
+                LogHelper.WriteWarning(exception);
                 return null;
             }
             finally

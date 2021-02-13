@@ -23,7 +23,7 @@
             catch (Exception exception)
             {
                 // swallow all exceptions since you can snoop just fine anyways and we don't want the process to crash
-                Trace.WriteLine(exception);
+                LogHelper.WriteLine(exception);
             }
             finally
             {

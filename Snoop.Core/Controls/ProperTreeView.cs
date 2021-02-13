@@ -12,6 +12,7 @@ namespace Snoop.Controls
     using System.Windows.Controls;
     using System.Windows.Data;
     using Snoop.Data.Tree;
+    using Snoop.Infrastructure;
     using Snoop.Windows;
 
     public class ProperTreeView : TreeView
@@ -146,7 +147,7 @@ namespace Snoop.Controls
             }
             catch (Exception exception)
             {
-                Trace.TraceWarning(exception.ToString());
+                LogHelper.WriteWarning(exception);
             }
 
             return new Size(0, 0);
@@ -166,7 +167,7 @@ namespace Snoop.Controls
             }
             catch (Exception exception)
             {
-                Trace.TraceWarning(exception.ToString());
+                LogHelper.WriteWarning(exception);
             }
 
             return new Size(0, 0);

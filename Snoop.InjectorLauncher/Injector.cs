@@ -18,8 +18,7 @@ namespace Snoop.InjectorLauncher
         {
             var logMessage = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss") + ": " + message;
 
-            Trace.WriteLine(logMessage);
-            Console.WriteLine(logMessage);
+            LogHelper.WriteLine(message);
 
             var applicationDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             applicationDataPath += "\\Snoop";
@@ -77,7 +76,7 @@ namespace Snoop.InjectorLauncher
 
             var stringForRemoteProcess = pathToDll;
 
-            Trace.WriteLine(Marshal.GetLastWin32Error());
+            LogHelper.WriteLine(Marshal.GetLastWin32Error().ToString());
 
             var bufLen = (stringForRemoteProcess.Length + 1) * Marshal.SizeOf(typeof(char));
             var remoteAddress = NativeMethods.VirtualAllocEx(processWrapper.Handle, IntPtr.Zero, (uint)bufLen, NativeMethods.AllocationType.Commit, NativeMethods.MemoryProtection.ReadWrite);
@@ -242,7 +241,7 @@ namespace Snoop.InjectorLauncher
             var bufLen = (stringForRemoteProcess.Length + 1) * Marshal.SizeOf(typeof(char));
 
             LogMessage($"Trying to allocate {bufLen} bytes in foreign process...");
-            Trace.WriteLine(Marshal.GetLastWin32Error());
+            LogHelper.WriteLine(Marshal.GetLastWin32Error().ToString());
 
             var remoteAddress = NativeMethods.VirtualAllocEx(processWrapper.Handle, IntPtr.Zero, (uint)bufLen, NativeMethods.AllocationType.Commit | NativeMethods.AllocationType.Reserve, NativeMethods.MemoryProtection.ReadWrite);
 

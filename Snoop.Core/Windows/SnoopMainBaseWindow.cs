@@ -33,7 +33,7 @@
 
                 // This path should only be hit if we don't find a root in some dispatcher or app domain.
                 // This is not really critical as not every dispatcher/app domain must meet this requirement.
-                Trace.WriteLine("Can't find a current application or a PresentationSource root visual.");
+                LogHelper.WriteLine("Can't find a current application or a PresentationSource root visual.");
 
                 return false;
             }
@@ -61,12 +61,12 @@
                 this.ownerWindow.Closed += this.OnOwnerWindowOnClosed;
             }
 
-            Trace.WriteLine("Showing snoop UI...");
+            LogHelper.WriteLine("Showing snoop UI...");
 
             this.Show();
             this.Activate();
 
-            Trace.WriteLine("Shown and activated snoop UI.");
+            LogHelper.WriteLine("Shown and activated snoop UI.");
         }
 
         private void OnOwnerWindowOnClosed(object? o, EventArgs eventArgs)

@@ -59,14 +59,14 @@
             }
             catch (Exception exception)
             {
-                Trace.WriteLine(exception);
+                LogHelper.WriteError(exception);
                 return 1;
             }
         }
 
         private bool StartSnoopInstance(string settingsFile)
         {
-            Trace.WriteLine("Starting snoop...");
+            LogHelper.WriteLine("Starting snoop...");
 
             var settingsData = TransientSettingsData.LoadCurrent(settingsFile);
 
@@ -82,19 +82,19 @@
 
             if (numberOfAppDomains < 1)
             {
-                Trace.WriteLine("Snoop wasn't able to enumerate app domains or MultipleAppDomainMode was disabled. Trying to run in single app domain mode.");
+                LogHelper.WriteLine("Snoop wasn't able to enumerate app domains or MultipleAppDomainMode was disabled. Trying to run in single app domain mode.");
 
                 succeeded = this.RunInCurrentAppDomain(settingsData);
             }
             else if (numberOfAppDomains == 1)
             {
-                Trace.WriteLine("Only found one app domain. Running in single app domain mode.");
+                LogHelper.WriteLine("Only found one app domain. Running in single app domain mode.");
 
                 succeeded = this.RunInCurrentAppDomain(settingsData);
             }
             else
             {
-                Trace.WriteLine($"Found {numberOfAppDomains} app domains. Running in multiple app domain mode.");
+                LogHelper.WriteLine($"Found {numberOfAppDomains} app domains. Running in multiple app domain mode.");
 
                 var shouldUseMultipleAppDomainMode = settingsData.MultipleAppDomainMode == MultipleAppDomainMode.Ask
                                                      || settingsData.MultipleAppDomainMode == MultipleAppDomainMode.AlwaysUse;
@@ -133,7 +133,7 @@
 
                     foreach (var appDomain in appDomains)
                     {
-                        Trace.WriteLine($"Trying to create Snoop instance in app domain \"{appDomain.FriendlyName}\"...");
+                        LogHelper.WriteLine($"Trying to create Snoop instance in app domain \"{appDomain.FriendlyName}\"...");
 
                         try
                         {
@@ -146,12 +146,12 @@
                             var appDomainSucceeded = true;
                             succeeded = succeeded || appDomainSucceeded;
 
-                            Trace.WriteLine($"Successfully created Snoop instance in app domain \"{appDomain.FriendlyName}\".");
+                            LogHelper.WriteLine($"Successfully created Snoop instance in app domain \"{appDomain.FriendlyName}\".");
                         }
                         catch (Exception exception)
                         {
-                            Trace.WriteLine($"Failed to create Snoop instance in app domain \"{appDomain.FriendlyName}\".");
-                            Trace.WriteLine(exception);
+                            LogHelper.WriteLine($"Failed to create Snoop instance in app domain \"{appDomain.FriendlyName}\".");
+                            LogHelper.WriteError(exception);
                         }
                     }
                 }
@@ -170,7 +170,7 @@
 
         public bool RunInCurrentAppDomain(TransientSettingsData settingsData)
         {
-            Trace.WriteLine($"Trying to run Snoop in app domain \"{AppDomain.CurrentDomain.FriendlyName}\"...");
+            LogHelper.WriteLine($"Trying to run Snoop in app domain \"{AppDomain.CurrentDomain.FriendlyName}\"...");
 
             try
             {
@@ -180,18 +180,18 @@
 
                 var result = InjectSnoopIntoDispatchers(settingsData, (data, dispatcher) => CreateSnoopWindow(data, dispatcher, instanceCreator));
 
-                Trace.WriteLine($"Successfully running Snoop in app domain \"{AppDomain.CurrentDomain.FriendlyName}\".");
+                LogHelper.WriteLine($"Successfully running Snoop in app domain \"{AppDomain.CurrentDomain.FriendlyName}\".");
 
                 return result;
             }
             catch (Exception exception)
             {
-                Trace.WriteLine($"Failed to to run Snoop in app domain \"{AppDomain.CurrentDomain.FriendlyName}\".");
+                LogHelper.WriteLine($"Failed to to run Snoop in app domain \"{AppDomain.CurrentDomain.FriendlyName}\".");
 
                 if (SnoopModes.MultipleAppDomainMode)
                 {
-                    Trace.WriteLine($"Could not snoop a specific app domain with friendly name of \"{AppDomain.CurrentDomain.FriendlyName}\" in multiple app domain mode.");
-                    Trace.WriteLine(exception);
+                    LogHelper.WriteLine($"Could not snoop a specific app domain with friendly name of \"{AppDomain.CurrentDomain.FriendlyName}\" in multiple app domain mode.");
+                    LogHelper.WriteError(exception);
                 }
                 else
                 {
@@ -210,8 +210,8 @@
             }
             catch (Exception exception)
             {
-                Trace.TraceError("Could not attach assembly resolver. Loading snoop assemblies might fail.");
-                Trace.TraceError(exception.ToString());
+                LogHelper.WriteError("Could not attach assembly resolver. Loading snoop assemblies might fail.");
+                LogHelper.WriteError(exception);
             }
         }
 

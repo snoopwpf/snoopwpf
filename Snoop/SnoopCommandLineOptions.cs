@@ -36,5 +36,8 @@
     {
         [Option('d', "debug")]
         public bool Debug { get; set; }
+
+        [Option("attachConsole")]
+        public bool AttachConsole { get; set; }
     }
 }

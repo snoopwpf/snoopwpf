@@ -38,9 +38,9 @@ namespace Snoop.InjectorLauncher
 
                 return new ProcessWrapper(processFromId, windowHandle);
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                Trace.TraceError(e.ToString());
+                LogHelper.WriteError(exception);
                 return null;
             }
         }
@@ -93,10 +93,10 @@ namespace Snoop.InjectorLauncher
             foreach (var module in modules)
             {
 #if DEBUG
-                Trace.WriteLine(module.szExePath);
+                LogHelper.WriteLine(module.szExePath);
                 var fileVersionInfo = FileVersionInfo.GetVersionInfo(module.szExePath);
-                Trace.WriteLine($"File: {fileVersionInfo.FileMajorPart}.{fileVersionInfo.FileMinorPart}");
-                Trace.WriteLine($"Prod: {fileVersionInfo.ProductMajorPart}.{fileVersionInfo.ProductMinorPart}");
+                LogHelper.WriteLine($"File: {fileVersionInfo.FileMajorPart}.{fileVersionInfo.FileMinorPart}");
+                LogHelper.WriteLine($"Prod: {fileVersionInfo.ProductMajorPart}.{fileVersionInfo.ProductMinorPart}");
 #endif
 
                 if (module.szModule.StartsWith("hostpolicy.dll", StringComparison.OrdinalIgnoreCase))

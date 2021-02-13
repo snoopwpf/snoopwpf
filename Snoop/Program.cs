@@ -7,6 +7,7 @@
     using System.Runtime.InteropServices;
     using System.Windows;
     using CommandLine;
+    using Snoop.Infrastructure;
 
     public static class Program
     {
@@ -53,6 +54,11 @@
         private static int Run(SnoopCommandLineOptions options)
         {
             Debug = options.Debug;
+
+            if (options.AttachConsole)
+            {
+                NativeMethods.AllocConsole();
+            }
 
             var app = new App();
             return app.Run();

@@ -115,7 +115,7 @@ namespace Snoop
                 this.currentWindowInfo = WindowInfo.GetWindowInfo(windowUnderCursor);
                 this.WindowInfoControl.DataContext = this.currentWindowInfo;
 
-                Trace.WriteLine($"Window under cursor: {this.currentWindowInfo.TraceInfo}");
+                LogHelper.WriteLine($"Window under cursor: {this.currentWindowInfo.TraceInfo}");
 
                 this.UpdateCursor();
             }

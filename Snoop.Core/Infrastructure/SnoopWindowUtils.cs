@@ -138,7 +138,7 @@ namespace Snoop.Infrastructure
             }
             catch (Exception exception)
             {
-                Trace.TraceWarning(exception.ToString());
+                LogHelper.WriteWarning(exception);
             }
         }
 
