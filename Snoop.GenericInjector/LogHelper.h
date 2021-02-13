@@ -10,7 +10,5 @@ public:
     	const auto output = string_format(format, args...);
     	OutputDebugString(output.c_str());
     	std::wcout << output << std::endl;
-
-    	std::wostream xx(;
     }
 };
