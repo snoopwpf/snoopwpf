@@ -774,6 +774,10 @@ namespace Snoop.Infrastructure
                 {
                     Trace.WriteLine($"Could not attach to parent process console. Error = {Marshal.GetLastWin32Error()}");
                 }
+                else
+                {
+                    Trace.WriteLine("Console attached to parent process.");
+                }
             }
             else
             {

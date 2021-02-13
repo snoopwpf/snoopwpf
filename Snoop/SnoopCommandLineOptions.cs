@@ -37,7 +37,7 @@
         [Option('d', "debug")]
         public bool Debug { get; set; }
 
-        [Option("attachConsole")]
-        public bool AttachConsole { get; set; }
+        [Option("showConsole", HelpText = "Shows the console even when the application is running with a GUI.")]
+        public bool ShowConsole { get; set; }
     }
 }
