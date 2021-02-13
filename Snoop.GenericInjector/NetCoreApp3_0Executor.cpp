@@ -9,7 +9,7 @@ typedef HRESULT(STDAPICALLTYPE* FnGetNETCoreCLRRuntimeHost)(REFIID riid, IUnknow
 ICLRRuntimeHost* NetCoreApp3_0Executor::GetNETCoreCLRRuntimeHost()
 {
 	this->Log(L"Getting handle for coreclr.dll...");
-	const auto coreCLRModule = ::GetModuleHandle(L"coreclr.dll");
+	auto* const coreCLRModule = ::GetModuleHandle(L"coreclr.dll");
 
 	if (!coreCLRModule)
 	{
@@ -21,7 +21,7 @@ ICLRRuntimeHost* NetCoreApp3_0Executor::GetNETCoreCLRRuntimeHost()
 
 	this->Log(L"Getting handle for GetCLRRuntimeHost...");
 
-	const auto pfnGetCLRRuntimeHost = FnGetNETCoreCLRRuntimeHost(::GetProcAddress(coreCLRModule, "GetCLRRuntimeHost"));
+	const auto pfnGetCLRRuntimeHost = reinterpret_cast<FnGetNETCoreCLRRuntimeHost>(::GetProcAddress(coreCLRModule, "GetCLRRuntimeHost"));
 	if (!pfnGetCLRRuntimeHost)
 	{
 		this->Log(L"Could not get handle for GetCLRRuntimeHost.");
@@ -48,14 +48,14 @@ ICLRRuntimeHost* NetCoreApp3_0Executor::GetNETCoreCLRRuntimeHost()
 
 int NetCoreApp3_0Executor::Execute(LPCWSTR pwzAssemblyPath, LPCWSTR pwzTypeName, LPCWSTR pwzMethodName,	LPCWSTR pwzArgument, DWORD* pReturnValue)
 {
-	auto host = GetNETCoreCLRRuntimeHost();
+	auto* host = GetNETCoreCLRRuntimeHost();
 
 	if (!host)
 	{
 		return E_FAIL;
 	}
 
-	this->Log(L"Trying to ExecuteInDefaultAppDomain...");
+	this->Log(L"Trying to run ExecuteInDefaultAppDomain...");
 
 	const auto hr = host->ExecuteInDefaultAppDomain(pwzAssemblyPath, pwzTypeName, pwzMethodName, pwzArgument, pReturnValue);
 

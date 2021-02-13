@@ -123,6 +123,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Executor.cpp" />
+    <ClCompile Include="LogHelper.cpp" />
     <ClCompile Include="NetCoreApp3_0Executor.cpp" />
     <ClCompile Condition="'$(Platform)' != 'ARM' And '$(Platform)' != 'ARM64'" Include="NetFull4_0Executor.cpp" />
     <ClCompile Include="dllmain.cpp" />

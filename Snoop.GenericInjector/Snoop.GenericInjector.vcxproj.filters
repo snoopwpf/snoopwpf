@@ -56,6 +56,9 @@
     <ClCompile Include="NetFull4_0Executor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LogHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="version.rc">

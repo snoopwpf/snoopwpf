@@ -93,10 +93,10 @@ namespace Snoop.InjectorLauncher
             foreach (var module in modules)
             {
 #if DEBUG
-                LogHelper.WriteLine(module.szExePath);
-                var fileVersionInfo = FileVersionInfo.GetVersionInfo(module.szExePath);
-                LogHelper.WriteLine($"File: {fileVersionInfo.FileMajorPart}.{fileVersionInfo.FileMinorPart}");
-                LogHelper.WriteLine($"Prod: {fileVersionInfo.ProductMajorPart}.{fileVersionInfo.ProductMinorPart}");
+                //LogHelper.WriteLine(module.szExePath);
+                //var fileVersionInfo = FileVersionInfo.GetVersionInfo(module.szExePath);
+                //LogHelper.WriteLine($"File: {fileVersionInfo.FileMajorPart}.{fileVersionInfo.FileMinorPart}");
+                //LogHelper.WriteLine($"Prod: {fileVersionInfo.ProductMajorPart}.{fileVersionInfo.ProductMinorPart}");
 #endif
 
                 if (module.szModule.StartsWith("hostpolicy.dll", StringComparison.OrdinalIgnoreCase))

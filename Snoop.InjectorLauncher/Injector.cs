@@ -2,7 +2,6 @@ namespace Snoop.InjectorLauncher
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.IO;
     using System.Reflection;
     using System.Runtime.InteropServices;
@@ -225,13 +224,16 @@ namespace Snoop.InjectorLauncher
                 throw new FileNotFoundException("Could not find injector dll.", pathToInjectorDll);
             }
 
+            var tempLogFile = Path.GetTempFileName();
+
             var parameters = new[]
             {
                 processWrapper.SupportedFrameworkName,
                 injectorData.FullAssemblyPath,
                 injectorData.ClassName,
                 injectorData.MethodName,
-                injectorData.SettingsFile
+                injectorData.SettingsFile,
+                tempLogFile
             };
 
             var stringForRemoteProcess = string.Join("<|>", parameters);
@@ -244,6 +246,7 @@ namespace Snoop.InjectorLauncher
 
             if (remoteAddress == IntPtr.Zero)
             {
+                File.Delete(tempLogFile);
                 throw new Win32Exception();
             }
 
@@ -259,6 +262,7 @@ namespace Snoop.InjectorLauncher
                 if (writeProcessMemoryResult == false
                     || bytesWritten == 0)
                 {
+                    File.Delete(tempLogFile);
                     throw Marshal.GetExceptionForHR(Marshal.GetLastWin32Error()) ?? new Exception("Unknown error while trying to write to foreign process.");
                 }
 
@@ -278,18 +282,21 @@ namespace Snoop.InjectorLauncher
 
                         if (remoteProcAddress == IntPtr.Zero)
                         {
+                            File.Delete(tempLogFile);
                             LogMessage("Could not get proc address for \"ExecuteInDefaultAppDomain\".");
                             return;
                         }
 
                         LogMessage($"Calling \"ExecuteInDefaultAppDomain\" on injector component...");
                         LogMessage($"Args = {stringForRemoteProcess}");
+
                         var remoteThread = NativeMethods.CreateRemoteThread(processWrapper.Handle, IntPtr.Zero, 0, remoteProcAddress, remoteAddress, 0, out _);
 
                         try
                         {
                             if (remoteThread == IntPtr.Zero)
                             {
+                                File.Delete(tempLogFile);
                                 LogMessage("Could not create remote thread.");
                                 throw new Win32Exception();
                             }
@@ -300,6 +307,12 @@ namespace Snoop.InjectorLauncher
                             NativeMethods.GetExitCodeThread(remoteThread, out var resultFromExecuteInDefaultAppDomain);
 
                             LogMessage($"Received \"{resultFromExecuteInDefaultAppDomain}\" from injector component.");
+
+                            LogMessage("##############################################");
+                            LogMessage("Log from injector component:");
+                            LogMessage("##############################################");
+                            LogMessage(File.ReadAllText(tempLogFile));
+                            LogMessage("##############################################");
 
                             if (resultFromExecuteInDefaultAppDomain != IntPtr.Zero)
                             {
@@ -335,6 +348,8 @@ namespace Snoop.InjectorLauncher
             }
             finally
             {
+                File.Delete(tempLogFile);
+
                 Marshal.FreeHGlobal(address);
             }
         }

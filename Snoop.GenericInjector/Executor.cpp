@@ -39,7 +39,7 @@ extern "C" __declspec(dllexport) int STDMETHODVCALLTYPE ExecuteInDefaultAppDomai
 		LogHelper::WriteLine(input);
 		const auto parts = split(input, L"<|>");
 
-		if (parts.size() != 5)
+		if (parts.size() < 6)
 		{
 			LogHelper::WriteLine(L"Not enough parameters.");
 			return E_INVALIDARG;
@@ -50,7 +50,11 @@ extern "C" __declspec(dllexport) int STDMETHODVCALLTYPE ExecuteInDefaultAppDomai
 		const auto& className = parts.at(2);
 		const auto& method = parts.at(3);
 		const auto& parameter = parts.at(4);
+		const auto& logFile = parts.at(5);
 
+		LogHelper::SetLogFile(logFile);
+		LogHelper::WriteLine(input);
+		
 		const auto executor = GetExecutor(framework);
 
 		if (!executor)
