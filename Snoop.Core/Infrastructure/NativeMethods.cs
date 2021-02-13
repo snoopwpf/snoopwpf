@@ -757,8 +757,6 @@ namespace Snoop.Infrastructure
         /// </summary>
         public static void AttachConsoleToParentProcessOrAllocateNewOne()
         {
-            _ = Debugger.Launch();
-
             if (NativeMethods.AttachConsole(NativeMethods.ATTACH_PARENT_PROCESS) == false
                 && Marshal.GetLastWin32Error() == NativeMethods.ERROR_ACCESS_DENIED)
             {
