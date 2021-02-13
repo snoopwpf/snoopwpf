@@ -76,8 +76,6 @@ namespace Snoop.InjectorLauncher
 
             var stringForRemoteProcess = pathToDll;
 
-            LogHelper.WriteLine(Marshal.GetLastWin32Error().ToString());
-
             var bufLen = (stringForRemoteProcess.Length + 1) * Marshal.SizeOf(typeof(char));
             var remoteAddress = NativeMethods.VirtualAllocEx(processWrapper.Handle, IntPtr.Zero, (uint)bufLen, NativeMethods.AllocationType.Commit, NativeMethods.MemoryProtection.ReadWrite);
 
@@ -241,7 +239,6 @@ namespace Snoop.InjectorLauncher
             var bufLen = (stringForRemoteProcess.Length + 1) * Marshal.SizeOf(typeof(char));
 
             LogMessage($"Trying to allocate {bufLen} bytes in foreign process...");
-            LogHelper.WriteLine(Marshal.GetLastWin32Error().ToString());
 
             var remoteAddress = NativeMethods.VirtualAllocEx(processWrapper.Handle, IntPtr.Zero, (uint)bufLen, NativeMethods.AllocationType.Commit | NativeMethods.AllocationType.Reserve, NativeMethods.MemoryProtection.ReadWrite);
 
@@ -285,6 +282,8 @@ namespace Snoop.InjectorLauncher
                             return;
                         }
 
+                        LogMessage($"Calling \"ExecuteInDefaultAppDomain\" on injector component...");
+                        LogMessage($"Args = {stringForRemoteProcess}");
                         var remoteThread = NativeMethods.CreateRemoteThread(processWrapper.Handle, IntPtr.Zero, 0, remoteProcAddress, remoteAddress, 0, out _);
 
                         try
