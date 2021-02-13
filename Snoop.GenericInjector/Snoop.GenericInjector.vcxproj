@@ -114,8 +114,9 @@
   <ItemGroup>
     <ClInclude Include="FrameworkExecutor.h" />
     <ClInclude Include="NetCoreApp3_0Executor.h" />
-    <ClInclude Condition="'$(Platform)' != 'ARM64'" Include="NetFull4_0Executor.h" />
+    <ClInclude Condition="'$(Platform)' != 'ARM' And '$(Platform)' != 'ARM64'" Include="NetFull4_0Executor.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="LogHelper.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="version.h" />
@@ -123,18 +124,17 @@
   <ItemGroup>
     <ClCompile Include="Executor.cpp" />
     <ClCompile Include="NetCoreApp3_0Executor.cpp" />
-    <ClCompile Condition="'$(Platform)' != 'ARM64'" Include="NetFull4_0Executor.cpp" />
+    <ClCompile Condition="'$(Platform)' != 'ARM' And '$(Platform)' != 'ARM64'" Include="NetFull4_0Executor.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="pch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="version.rc">
-      <PreprocessorDefinitions>VERSION_MAJOR=$(MajorVersion);VERSION_MINOR=$(MinorVersion);VERSION_BUILD=$(BuildVersion);VERSION_REVISION=$(RevisionVersion);InformationalVersion=&quot;$(InformationalVersion)&quot;;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VERSION_MAJOR=$(MajorVersion);VERSION_MINOR=$(MinorVersion);VERSION_BUILD=$(BuildVersion);VERSION_REVISION=$(RevisionVersion);InformationalVersion="$(InformationalVersion)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemGroup>
   <Import Condition="Exists('$(VCTargetsPath)\Microsoft.Cpp.targets')" Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <Target Name="AfterBuild"
-          Condition="'$(RootBuild)' == 'True'">
+  <Target Name="AfterBuild" Condition="'$(RootBuild)' == 'True'">
     <MSBuild Projects="$(MSBuildProjectFile)" Properties="RootBuild=False;Configuration=$(Configuration);Platform=x64;PlatFormTarget=x64" RunEachTargetSeparately="true" />
     <MSBuild Projects="$(MSBuildProjectFile)" Properties="RootBuild=False;Configuration=$(Configuration);Platform=ARM;PlatFormTarget=ARM" RunEachTargetSeparately="true" />
     <MSBuild Projects="$(MSBuildProjectFile)" Properties="RootBuild=False;Configuration=$(Configuration);Platform=ARM64;PlatFormTarget=ARM64" RunEachTargetSeparately="true" />

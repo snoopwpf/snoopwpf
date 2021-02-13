@@ -1,5 +1,6 @@
 #pragma once
 #include "pch.h"
+#include "LogHelper.h"
 
 class FrameworkExecutor
 {
@@ -18,7 +19,7 @@ protected:
 	void Log(const std::wstring& format, Args ... args)
 	{
 		const auto output = string_format(this->logPrefix + format, args...);
-		OutputDebugStringEx(output);
+		LogHelper::WriteLine(output);
 	}
 	
 	std::wstring name;

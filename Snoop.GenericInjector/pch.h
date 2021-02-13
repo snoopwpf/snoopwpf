@@ -10,9 +10,45 @@
 #include <locale>
 #include <memory>
 #include <string>
+#include <array>
+#include <vector>
+#include <iostream>
 #include <stdexcept>
 
 #include "framework.h"
+
+static bool icase_wchar_cmp(const wchar_t a, const wchar_t b)
+{
+	return std::tolower(a) == std::tolower(b);
+}
+
+static bool icase_cmp(std::wstring const& s1, std::wstring const& s2)
+{
+	return s1.size() == s2.size()
+		   && std::equal(s1.begin(), s1.end(), s2.begin(), icase_wchar_cmp);
+}
+
+static std::vector<std::wstring> split(const std::wstring& input, const std::wstring& delimiter)
+{
+	std::vector<std::wstring> parts;
+	std::wstring::size_type startIndex = 0;
+	std::wstring::size_type endIndex;
+	
+	while ((endIndex = input.find(delimiter, startIndex)) < input.size())
+	{
+		auto val = input.substr(startIndex, endIndex - startIndex);
+		parts.push_back(val);
+		startIndex = endIndex + delimiter.size();
+	}
+	
+	if (startIndex < input.size())
+	{
+		const auto val = input.substr(startIndex);
+		parts.push_back(val);
+	}
+	
+	return parts;
+}
 
 static std::wstring to_wstring(const std::string& input)
 {
@@ -26,7 +62,7 @@ static std::wstring string_format(const std::wstring& format, Args ... args)
 {
 	const size_t size = swprintf(nullptr, 0, format.c_str(), args...) + 1; // Extra space for '\0'
 	
-    if( size <= 0 )
+    if (size <= 0)
     {
 	    throw std::runtime_error("Error during formatting.");
     }
@@ -34,11 +70,4 @@ static std::wstring string_format(const std::wstring& format, Args ... args)
     const std::unique_ptr<wchar_t[]> buf(new wchar_t[size]);
     swprintf(buf.get(), size, format.c_str(), args...);
     return std::wstring(buf.get(), buf.get() + size - 1); // We don't want the '\0' inside
-}
-
-template<typename ... Args>
-static void OutputDebugStringEx(const std::wstring& format, Args ... args)
-{
-	const auto output = string_format(format, args...);
-	OutputDebugString(output.c_str());
 }
