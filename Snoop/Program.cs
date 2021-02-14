@@ -1,4 +1,4 @@
-﻿namespace Snoop
+namespace Snoop
 {
     using System;
     using System.Collections.Generic;
@@ -68,9 +68,14 @@
         private static int ErrorHandler(string[] args, IList<Error> errors, StringWriter helpWriter)
         {
             if (errors.Count == 1
-                && errors.All(x => x is NoVerbSelectedError))
+                && errors.All(x => x is NoVerbSelectedError || x is BadVerbSelectedError))
             {
-                return Run(new SnoopCommandLineOptions());
+                var localHelpWriter = new StringWriter();
+                var parser = new Parser(x => x.HelpWriter = localHelpWriter);
+
+                return parser.ParseArguments<SnoopCommandLineOptions>(args).MapResult(
+                    Run,
+                    errs => ErrorHandler(args, errs.ToList(), localHelpWriter));
             }
 
             if (IsConsoleApp)
