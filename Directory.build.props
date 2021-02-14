@@ -2,6 +2,7 @@
   <PropertyGroup>
     <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <DisableWinExeOutputInference>true</DisableWinExeOutputInference>
   </PropertyGroup>
 
   <PropertyGroup>
