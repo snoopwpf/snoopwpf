@@ -55,7 +55,8 @@
         {
             Debug = options.Debug;
 
-            if (options.ShowConsole)
+            if (IsConsoleApp == false
+                && options.ShowConsole)
             {
                 NativeMethods.AllocConsole();
             }

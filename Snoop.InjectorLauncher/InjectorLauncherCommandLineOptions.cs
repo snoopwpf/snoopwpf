@@ -29,5 +29,8 @@
 
         [Option('d', "debug")]
         public bool Debug { get; set; }
+
+        [Option("attachConsoleToParent")]
+        public bool AttachConsoleToParent { get; set; }
     }
 }

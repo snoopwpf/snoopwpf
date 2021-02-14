@@ -17,8 +17,6 @@ namespace Snoop.InjectorLauncher
     {
         public static int Main(string[] args)
         {
-            ConsoleHelper.AttachConsoleToParentProcessOrAllocateNewOne();
-
             var runResult = Parser.Default.ParseArguments<InjectorLauncherCommandLineOptions>(args)
                 .MapResult(Run, _ => 1);
 
@@ -27,15 +25,20 @@ namespace Snoop.InjectorLauncher
 
         private static int Run(InjectorLauncherCommandLineOptions commandLineOptions)
         {
+            if (commandLineOptions.Debug)
+            {
+                Debugger.Launch();
+            }
+
+            if (commandLineOptions.AttachConsoleToParent)
+            {
+                ConsoleHelper.AttachConsoleToParentProcessOrAllocateNewOne();
+            }
+
             Injector.LogMessage("Starting the injection process...", false);
 
             try
             {
-                if (commandLineOptions.Debug)
-                {
-                    Debugger.Launch();
-                }
-
                 var processWrapper = ProcessWrapper.From(commandLineOptions.TargetPID, new IntPtr(commandLineOptions.TargetHwnd));
 
                 if (processWrapper is null)

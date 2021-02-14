@@ -56,7 +56,8 @@ Snoop requires this component, which is part of the Snoop project, to do it's jo
                     ClassName = className,
                     MethodName = methodName,
                     SettingsFile = transientSettingsFile,
-                    Debug = Program.Debug
+                    Debug = Program.Debug,
+                    AttachConsoleToParent = true
                 };
 
                 var commandLine = Parser.Default.FormatCommandLine(injectorLauncherCommandLineOptions);
