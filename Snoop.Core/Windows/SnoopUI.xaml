@@ -384,7 +384,7 @@ All other rights reserved.
 					</TextBlock>
 				</TabItem.Header>
 
-				<views:EventsView/>
+				<views:EventsView x:Name="eventsView" />
 			</TabItem>
 
 		    <TabItem Style="{x:Null}">

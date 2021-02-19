@@ -10,6 +10,7 @@
   - Fixed a performance regression in the window finder when using mouse cursor drop
   - Fixed an exception when application contains invalid resource definitions
   - [#221](../../issues/221) - DPI aware Issue?
+  - [#232](../../issues/232) - System.NotSupportedException
 
 - ### Improvements
 

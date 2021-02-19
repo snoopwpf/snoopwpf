@@ -10,6 +10,7 @@ namespace Snoop.Infrastructure
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Windows;
+    using System.Windows.Threading;
     using JetBrains.Annotations;
 
     [DebuggerDisplay("{" + nameof(Id) + "}")]
@@ -38,7 +39,7 @@ namespace Snoop.Infrastructure
     /// in a consistent order.
     /// </summary>
     [DebuggerDisplay("{" + nameof(Id) + "}")]
-    public class EventTracker : INotifyPropertyChanged, IComparable
+    public class EventTracker : INotifyPropertyChanged, IComparable, IDisposable
     {
         public EventTracker(Type targetType, RoutedEvent routedEvent)
         {
@@ -65,7 +66,7 @@ namespace Snoop.Infrastructure
                         && this.everEnabled == false)
                     {
                         this.everEnabled = true;
-                        EventManager.RegisterClassHandler(this.targetType, this.RoutedEvent, new RoutedEventHandler(this.HandleEvent), true);
+                        this.eventRegistration = EventManagerWrapper.Instance.RegisterClassHandler(Dispatcher.CurrentDispatcher, this.targetType, this.RoutedEvent, this.HandleEvent, true);
                     }
 
                     this.OnPropertyChanged(nameof(this.IsEnabled));
@@ -91,25 +92,28 @@ namespace Snoop.Infrastructure
 
         private void HandleEvent(object sender, RoutedEventArgs e)
         {
-            // Try to figure out what element handled the event. Not precise.
-            if (this.isEnabled)
+            if (this.isEnabled == false)
             {
-                var entry = new EventEntry(sender, e.Handled);
-                if (this.currentEvent is not null && this.currentEvent.EventArgs == e)
-                {
-                    this.currentEvent.AddEventEntry(entry);
-                }
-                else
-                {
-                    this.currentEvent = new TrackedEvent(e, entry);
-                    this.EventHandled?.Invoke(this, this.currentEvent);
-                }
+                return;
+            }
+
+            // Try to figure out what element handled the event. Not precise.
+            var entry = new EventEntry(sender, e.Handled);
+            if (this.currentEvent is not null && this.currentEvent.EventArgs == e)
+            {
+                this.currentEvent.AddEventEntry(entry);
+            }
+            else
+            {
+                this.currentEvent = new TrackedEvent(e, entry);
+                this.EventHandled?.Invoke(this, this.currentEvent);
             }
         }
 
         private TrackedEvent? currentEvent;
         private bool everEnabled;
         private readonly Type targetType;
+        private EventManagerWrapper.EventRegistration? eventRegistration;
 
         #region IComparable Members
         public int CompareTo(object? obj)
@@ -138,6 +142,16 @@ namespace Snoop.Infrastructure
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
+
+        public void Dispose()
+        {
+            if (this.eventRegistration is not null)
+            {
+                EventManagerWrapper.Instance.RemoveClassHandler(this.eventRegistration);
+            }
+
+            this.eventRegistration = null;
+        }
     }
 
     [DebuggerDisplay("TrackedEvent: {" + nameof(EventArgs) + "}")]

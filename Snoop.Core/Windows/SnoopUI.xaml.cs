@@ -398,6 +398,7 @@ namespace Snoop.Windows
 
             this.TreeService?.Dispose();
 
+            this.eventsView?.Dispose();
             this.debugListenerControl?.Dispose();
 
             BindingDiagnosticHelper.Instance.DecreaseUsageCount();
