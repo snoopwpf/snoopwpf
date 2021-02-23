@@ -96,7 +96,8 @@ Please note that you need the Visual Studio 2019 C++ payload and in case you are
 
 Requirements:
 
-- Visual Studio 2019 16.8 (including C++ payload)
+- Visual Studio 2019 16.8 (including C++ payloads (x86/x64/ARM/ARM64))
+  - You can import the ".vsconfig" file from the Visual Studio installer to let it install all required components
 - .NET Core SDK 5.0.100
 
 ## Contributors
