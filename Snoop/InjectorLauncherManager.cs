@@ -71,6 +71,9 @@ Snoop requires this component, which is part of the Snoop project, to do it's jo
                                                : null
                 };
 
+                LogHelper.WriteLine($"Launching injector \"{startInfo.FileName}\".");
+                LogHelper.WriteLine($"Arguments: {commandLine}.");
+
                 using var process = Process.Start(startInfo);
                 process?.WaitForExit();
             }
