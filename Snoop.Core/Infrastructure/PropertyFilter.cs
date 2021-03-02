@@ -167,7 +167,7 @@ namespace Snoop.Infrastructure
             typeof(TextSearch),
             typeof(Timeline),
             typeof(ToolBar),
-            typeof(ToolTipService),
+            //typeof(ToolTipService),
             typeof(Typography),
             typeof(VirtualizingPanel),
             typeof(VisualStateManager),
