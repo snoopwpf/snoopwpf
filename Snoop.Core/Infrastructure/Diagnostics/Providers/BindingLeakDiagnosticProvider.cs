@@ -38,7 +38,7 @@
                 yield return
                     new DiagnosticItem(this,
                         "Binding leak",
-                        $"Property '{descriptorInfo.PropertyName}' from type '{descriptorInfo.TypeName}' is bound {descriptorInfo.ValueChangedHandlers} times causing binding leaks.",
+                        $"Property '{descriptorInfo.PropertyName}' from type '{descriptorInfo.TypeName}' is bound {descriptorInfo.ValueChangedHandlers.Count} times causing binding leaks.",
                         DiagnosticArea.Binding,
                         DiagnosticLevel.Warning);
             }
