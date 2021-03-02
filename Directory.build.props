@@ -3,6 +3,11 @@
     <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <DisableWinExeOutputInference>true</DisableWinExeOutputInference>
+    <!-- 
+    Turns off reference assembly generation 
+    See: https://docs.microsoft.com/en-us/dotnet/standard/assembly/reference-assemblies
+    -->
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
   </PropertyGroup>
 
   <PropertyGroup>
