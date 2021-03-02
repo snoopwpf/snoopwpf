@@ -6,6 +6,8 @@
     <ApplicationIcon>..\Artwork\Snoop.ico</ApplicationIcon>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 
+    <RollForward>Major</RollForward> <!-- can be removed as soon as we build with net6.0 -->
+    
     <ApplicationIcon>..\Artwork\Snoop.ico</ApplicationIcon>
     <ApplicationManifest>../Shared/app.manifest</ApplicationManifest>
   </PropertyGroup>
