@@ -10,6 +10,7 @@
     <MinorVersion>$([System.Version]::Parse($(AssemblyVersion)).Minor)</MinorVersion>
     <BuildVersion>$([System.Version]::Parse($(AssemblyVersion)).Build)</BuildVersion>
     <RevisionVersion>$([System.Version]::Parse($(AssemblyVersion)).Revision)</RevisionVersion>
+    <ResolveNuGetPackages>false</ResolveNuGetPackages>
   </PropertyGroup>
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
