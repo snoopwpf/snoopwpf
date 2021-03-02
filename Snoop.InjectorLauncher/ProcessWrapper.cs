@@ -122,7 +122,7 @@ namespace Snoop.InjectorLauncher
                 switch (hostPolicyVersionInfo?.ProductMajorPart)
                 {
                     case 6:
-                        return "net6.0-windows";
+                        return "net5.0-windows";
 
                     case 5:
                         return "net5.0-windows";
