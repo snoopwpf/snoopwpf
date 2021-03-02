@@ -51,7 +51,7 @@ namespace Snoop.Infrastructure
 
                 try
                 {
-                    this.filterRegex = new Regex(this.filterString!, RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
+                    this.filterRegex = new Regex(this.FilterString!, RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
                 }
                 catch
                 {
@@ -87,13 +87,13 @@ namespace Snoop.Infrastructure
             // else just check for containment if we don't have a regular expression but we do have a filter string.
             else if (this.hasFilterString)
             {
-                if (property.DisplayName.ContainsIgnoreCase(this.FilterString!))
+                if (property.DisplayName.ContainsIgnoreCase(this.FilterString))
                 {
                     return true;
                 }
 
                 if (property.Property is not null
-                    && property.Property.PropertyType.Name.ContainsIgnoreCase(this.FilterString!))
+                    && property.Property.PropertyType.Name.ContainsIgnoreCase(this.FilterString))
                 {
                     return true;
                 }
