@@ -11,6 +11,7 @@ namespace Snoop.Infrastructure
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
+    using System.Runtime.CompilerServices;
     using System.Runtime.Serialization;
     using System.Text.RegularExpressions;
     using System.Windows;
@@ -21,6 +22,7 @@ namespace Snoop.Infrastructure
     using System.Windows.Media;
     using System.Windows.Media.Animation;
     using System.Windows.Navigation;
+    using JetBrains.Annotations;
     using Snoop.AttachedProperties;
 
     public class PropertyFilter
@@ -188,18 +190,70 @@ namespace Snoop.Infrastructure
 
     [DebuggerDisplay("{" + nameof(DisplayName) + "}")]
     [Serializable]
-    public class PropertyFilterSet
+    public class PropertyFilterSet : INotifyPropertyChanged
     {
-        public string? DisplayName { get; set; }
+        private string? displayName;
+        private bool isDefault;
+        private bool isEditCommand;
+        private bool isReadOnly;
+        private string[]? properties;
 
-        public bool IsDefault { get; set; }
+        public string? DisplayName
+        {
+            get => this.displayName;
+            set
+            {
+                if (value == this.displayName) return;
+                this.displayName = value;
+                this.OnPropertyChanged();
+            }
+        }
 
-        public bool IsEditCommand { get; set; }
+        public bool IsDefault
+        {
+            get => this.isDefault;
+            set
+            {
+                if (value == this.isDefault) return;
+                this.isDefault = value;
+                this.OnPropertyChanged();
+            }
+        }
+
+        public bool IsEditCommand
+        {
+            get => this.isEditCommand;
+            set
+            {
+                if (value == this.isEditCommand) return;
+                this.isEditCommand = value;
+                this.OnPropertyChanged();
+            }
+        }
 
         [IgnoreDataMember]
-        public bool IsReadOnly { get; set; }
+        public bool IsReadOnly
+        {
+            get => this.isReadOnly;
+            set
+            {
+                if (value == this.isReadOnly) return;
+                this.isReadOnly = value;
+                this.OnPropertyChanged();
+            }
+        }
 
-        public string[]? Properties { get; set; }
+        public string[]? Properties
+        {
+            get => this.properties;
+            set
+            {
+                if (Equals(value, this.properties)) return;
+                this.properties = value;
+                this.OnPropertyChanged();
+                this.OnPropertyChanged(nameof(PropertyFilter.IsPropertyFilterSet));
+            }
+        }
 
         public bool IsPropertyInFilter(string property)
         {
@@ -230,6 +284,14 @@ namespace Snoop.Infrastructure
                 IsReadOnly = src.IsReadOnly,
                 Properties = (string[]?)src.Properties?.Clone()
             };
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
