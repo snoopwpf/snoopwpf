@@ -27,9 +27,43 @@ namespace Snoop.Infrastructure
 
     public class PropertyFilter
     {
+        private static readonly List<Type> uncommonTypes = new()
+        {
+            typeof(BaseUriHelper),
+            typeof(Block),
+            typeof(ContextMenuService),
+            typeof(DesignerProperties),
+            typeof(InputLanguageManager),
+            typeof(InputMethod),
+            typeof(NameScope),
+            typeof(NavigationService),
+            typeof(NumberSubstitution),
+            typeof(SpellCheck),
+            typeof(Stylus),
+            typeof(TextSearch),
+            typeof(Timeline),
+            typeof(ToolBar),
+            //typeof(ToolTipService),
+            typeof(Typography),
+            typeof(VirtualizingPanel),
+            typeof(VisualStateManager),
+            typeof(XmlAttributeProperties),
+
+            // Snoops own attached properties
+            typeof(AttachedPropertyManager),
+            typeof(BringIntoViewBehavior),
+            typeof(ComboBoxSettings),
+            typeof(SnoopAttachedProperties)
+        };
+
+        private static readonly List<string> uncommonPropertyNames = new()
+        {
+            "Binding.XmlNamespaceManager"
+        };
+
+        private Regex? filterRegex;
         private string? filterString;
         private bool hasFilterString;
-        private Regex? filterRegex;
 
         public PropertyFilter(string filterString, bool showDefaults)
         {
@@ -87,7 +121,8 @@ namespace Snoop.Infrastructure
             }
 
             // else just check for containment if we don't have a regular expression but we do have a filter string.
-            else if (this.hasFilterString)
+
+            if (this.hasFilterString)
             {
                 if (property.DisplayName.ContainsIgnoreCase(this.FilterString))
                 {
@@ -104,33 +139,28 @@ namespace Snoop.Infrastructure
             }
 
             // else use the filter set if we have one of those.
-            else if (this.IsPropertyFilterSet)
+
+            if (this.IsPropertyFilterSet)
             {
                 if (this.SelectedFilterSet!.IsPropertyInFilter(property.DisplayName))
                 {
                     return true;
                 }
-                else
-                {
-                    return false;
-                }
+
+                return false;
             }
 
             // finally, if none of the above applies
             // just check to see if we're not showing properties at their default values
             // and this property is actually set to its default value
-            else
+
+            if (this.ShowDefaults == false
+                && property.ValueSource.BaseValueSource == BaseValueSource.Default)
             {
-                if (this.ShowDefaults == false
-                    && property.ValueSource.BaseValueSource == BaseValueSource.Default)
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
+                return false;
             }
+
+            return true;
         }
 
         private static bool IsUncommonProperty(PropertyInformation property)
@@ -152,40 +182,6 @@ namespace Snoop.Infrastructure
 
             return uncommonTypes.Contains(property.DependencyProperty.OwnerType);
         }
-
-        private static readonly List<Type> uncommonTypes = new()
-        {
-            typeof(BaseUriHelper),
-            typeof(Block),
-            typeof(ContextMenuService),
-            typeof(DesignerProperties),
-            typeof(InputLanguageManager),
-            typeof(InputMethod),
-            typeof(NameScope),
-            typeof(NavigationService),
-            typeof(NumberSubstitution),
-            typeof(SpellCheck),
-            typeof(Stylus),
-            typeof(TextSearch),
-            typeof(Timeline),
-            typeof(ToolBar),
-            //typeof(ToolTipService),
-            typeof(Typography),
-            typeof(VirtualizingPanel),
-            typeof(VisualStateManager),
-            typeof(XmlAttributeProperties),
-
-            // Snoops own attached properties
-            typeof(AttachedPropertyManager),
-            typeof(BringIntoViewBehavior),
-            typeof(ComboBoxSettings),
-            typeof(SnoopAttachedProperties)
-        };
-
-        private static readonly List<string> uncommonPropertyNames = new()
-        {
-            "Binding.XmlNamespaceManager"
-        };
     }
 
     [DebuggerDisplay("{" + nameof(DisplayName) + "}")]
@@ -203,7 +199,11 @@ namespace Snoop.Infrastructure
             get => this.displayName;
             set
             {
-                if (value == this.displayName) return;
+                if (value == this.displayName)
+                {
+                    return;
+                }
+
                 this.displayName = value;
                 this.OnPropertyChanged();
             }
@@ -214,7 +214,11 @@ namespace Snoop.Infrastructure
             get => this.isDefault;
             set
             {
-                if (value == this.isDefault) return;
+                if (value == this.isDefault)
+                {
+                    return;
+                }
+
                 this.isDefault = value;
                 this.OnPropertyChanged();
             }
@@ -225,7 +229,11 @@ namespace Snoop.Infrastructure
             get => this.isEditCommand;
             set
             {
-                if (value == this.isEditCommand) return;
+                if (value == this.isEditCommand)
+                {
+                    return;
+                }
+
                 this.isEditCommand = value;
                 this.OnPropertyChanged();
             }
@@ -237,7 +245,11 @@ namespace Snoop.Infrastructure
             get => this.isReadOnly;
             set
             {
-                if (value == this.isReadOnly) return;
+                if (value == this.isReadOnly)
+                {
+                    return;
+                }
+
                 this.isReadOnly = value;
                 this.OnPropertyChanged();
             }
@@ -248,12 +260,18 @@ namespace Snoop.Infrastructure
             get => this.properties;
             set
             {
-                if (Equals(value, this.properties)) return;
+                if (Equals(value, this.properties))
+                {
+                    return;
+                }
+
                 this.properties = value;
                 this.OnPropertyChanged();
                 this.OnPropertyChanged(nameof(PropertyFilter.IsPropertyFilterSet));
             }
         }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public bool IsPropertyInFilter(string property)
         {
@@ -285,8 +303,6 @@ namespace Snoop.Infrastructure
                 Properties = (string[]?)src.Properties?.Clone()
             };
         }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
