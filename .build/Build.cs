@@ -3,14 +3,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using JetBrains.Annotations;
 using Nuke.Common;
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
-using Nuke.Common.Git;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
@@ -18,10 +15,7 @@ using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Tools.MSBuild;
 using Nuke.Common.Tools.NuGet;
-using Nuke.Common.Utilities.Collections;
-using static Nuke.Common.EnvironmentInfo;
 using static Nuke.Common.IO.FileSystemTasks;
-using static Nuke.Common.IO.PathConstruction;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 using static Nuke.Common.Tools.MSBuild.MSBuildTasks;
 
@@ -63,12 +57,19 @@ class Build : NukeBuild
         ProcessTasks.DefaultLogInvocation = true;
         ProcessTasks.DefaultLogOutput = true;
 
+        if (GitVersion is null
+            && IsLocalBuild == false)
+        {
+            throw new Exception("Could not initialize GitVersion.");
+        }
+
         Console.WriteLine("IsLocalBuild           : {0}", IsLocalBuild.ToString());
-        Console.WriteLine("Informational   Version: {0}", GitVersion.InformationalVersion);
-        Console.WriteLine("SemVer          Version: {0}", GitVersion.SemVer);
-        Console.WriteLine("AssemblySemVer  Version: {0}", GitVersion.AssemblySemVer);
-        Console.WriteLine("MajorMinorPatch Version: {0}", GitVersion.MajorMinorPatch);
-        Console.WriteLine("NuGet           Version: {0}", GitVersion.NuGetVersion);
+
+        Console.WriteLine("Informational   Version: {0}", InformationalVersion);
+        Console.WriteLine("SemVer          Version: {0}", SemVer);
+        Console.WriteLine("AssemblySemVer  Version: {0}", AssemblySemVer);
+        Console.WriteLine("MajorMinorPatch Version: {0}", MajorMinorPatch);
+        Console.WriteLine("NuGet           Version: {0}", NuGetVersion);
     }
 
     string ProjectName = "Snoop";
@@ -76,13 +77,17 @@ class Build : NukeBuild
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
-    [Solution] readonly Solution Solution;
+    [Solution] readonly Solution Solution = null!;
 
-    [GitRepository] readonly GitRepository GitRepository;
+    [GitVersion(Framework = "netcoreapp3.1")] readonly GitVersion? GitVersion;
 
-    [GitVersion(Framework = "netcoreapp3.1")] readonly GitVersion GitVersion;
+    string AssemblySemVer => GitVersion?.AssemblySemVer ?? "1.0.0";
+    string SemVer => GitVersion?.SemVer ?? "1.0.0";
+    string InformationalVersion => GitVersion?.InformationalVersion ?? "1.0.0";
+    string NuGetVersion => GitVersion?.NuGetVersion ?? "1.0.0";
+    string MajorMinorPatch => GitVersion?.MajorMinorPatch ?? "1.0.0";
 
-    [CI] readonly GitHubActions GitHubActions;
+    [CI] readonly GitHubActions? GitHubActions;
 
     readonly List<string> CheckSumFiles = new();
 
@@ -121,17 +126,17 @@ class Build : NukeBuild
                 .SetProjectFile(RootDirectory / "Snoop.GenericInjector/Snoop.GenericInjector.vcxproj")
                 .SetConfiguration(Configuration)
                 .SetTargetPlatform(MSBuildTargetPlatform.Win32)
-                .SetAssemblyVersion(GitVersion.AssemblySemVer)
-                .SetInformationalVersion(GitVersion.InformationalVersion)
+                .SetAssemblyVersion(AssemblySemVer)
+                .SetInformationalVersion(InformationalVersion)
                 .DisableRestore()
                 .SetVerbosity(MSBuildVerbosity.Minimal));
 
             DotNetBuild(s => s
                 .SetProjectFile(Solution)
                 .SetConfiguration("CI_" + Configuration)
-                .SetAssemblyVersion(GitVersion.AssemblySemVer)
-                .SetFileVersion(GitVersion.AssemblySemVer)
-                .SetInformationalVersion(GitVersion.InformationalVersion)
+                .SetAssemblyVersion(AssemblySemVer)
+                .SetFileVersion(AssemblySemVer)
+                .SetInformationalVersion(InformationalVersion)
 
                 .SetVerbosity(DotNetVerbosity.Minimal));
         });
@@ -144,16 +149,16 @@ class Build : NukeBuild
                 .SetProjectFile(RootDirectory / "TestHarnesses/Win32ToWPFInterop/Win32Clock/win32clock.vcxproj")
                 .SetConfiguration(Configuration)
                 .SetTargetPlatform(MSBuildTargetPlatform.Win32)
-                .SetAssemblyVersion(GitVersion.AssemblySemVer)
-                .SetInformationalVersion(GitVersion.InformationalVersion)
+                .SetAssemblyVersion(AssemblySemVer)
+                .SetInformationalVersion(InformationalVersion)
                 .DisableRestore()
                 .SetVerbosity(MSBuildVerbosity.Minimal));
 
             DotNetBuild(s => s
                 .SetProjectFile(RootDirectory / "TestHarnesses/TestHarnesses.sln")
                 .SetConfiguration(Configuration)
-                .SetAssemblyVersion(GitVersion.AssemblySemVer)
-                .SetInformationalVersion(GitVersion.InformationalVersion)
+                .SetAssemblyVersion(AssemblySemVer)
+                .SetInformationalVersion(InformationalVersion)
                 .SetVerbosity(DotNetVerbosity.Minimal));
         });
 
@@ -188,7 +193,7 @@ class Build : NukeBuild
 
             NuGetTasks.NuGetPack(s => s
                 .SetTargetPath(ChocolateyDirectory / $"{ProjectName}.nuspec")
-                .SetVersion(GitVersion.NuGetVersion)
+                .SetVersion(NuGetVersion)
                 .SetConfiguration(Configuration)
                 .SetOutputDirectory(ArtifactsDirectory)
                 .SetNoPackageAnalysis(true));
@@ -197,14 +202,14 @@ class Build : NukeBuild
 
             EnsureCleanDirectory(tempDirectory);
 
-            var nupkg = ArtifactsDirectory / $"{ProjectName}.{GitVersion.NuGetVersion}.nupkg";
+            var nupkg = ArtifactsDirectory / $"{ProjectName}.{NuGetVersion}.nupkg";
 
             CheckSumFiles.Add(nupkg);
 
             {
                 CompressionTasks.UncompressZip(nupkg, tempDirectory);
 
-                var outputFile = ArtifactsDirectory / $"{ProjectName}.{GitVersion.NuGetVersion}.zip";
+                var outputFile = ArtifactsDirectory / $"{ProjectName}.{NuGetVersion}.zip";
                 CompressionTasks.Compress(tempDirectory / "tools",  outputFile, info => info.Name.Contains("chocolatey") == false && info.Name != "VERIFICATION.txt");
                 CheckSumFiles.Add(outputFile);
             }
@@ -221,12 +226,12 @@ class Build : NukeBuild
             EnsureCleanDirectory(tempDirectory);
 
             var candleProcess = ProcessTasks.StartProcess(CandleExecutable,
-                $"{ProjectName}.wxs -ext WixUIExtension -o \"{tempDirectory / $"{ProjectName}.wixobj"}\" -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -nologo");
+                $"{ProjectName}.wxs -ext WixUIExtension -o \"{tempDirectory / $"{ProjectName}.wixobj"}\" -dProductVersion=\"{MajorMinorPatch}\" -nologo");
             candleProcess.AssertZeroExitCode();
 
-            var outputFile = $"{ArtifactsDirectory / $"{ProjectName}.{GitVersion.NuGetVersion}.msi"}";
+            var outputFile = $"{ArtifactsDirectory / $"{ProjectName}.{NuGetVersion}.msi"}";
             var lightProcess = ProcessTasks.StartProcess(LightExecutable,
-                $"-out \"{outputFile}\" -b \"{CurrentBuildOutputDirectory}\" \"{tempDirectory / $"{ProjectName}.wixobj"}\" -ext WixUIExtension -dProductVersion=\"{GitVersion.MajorMinorPatch}\" -pdbout \"{tempDirectory / $"{ProjectName}.wixpdb"}\" -nologo -sice:ICE61");
+                $"-out \"{outputFile}\" -b \"{CurrentBuildOutputDirectory}\" \"{tempDirectory / $"{ProjectName}.wixobj"}\" -ext WixUIExtension -dProductVersion=\"{MajorMinorPatch}\" -pdbout \"{tempDirectory / $"{ProjectName}.wixpdb"}\" -nologo -sice:ICE61");
             lightProcess.AssertZeroExitCode();
 
             CheckSumFiles.Add(outputFile);
