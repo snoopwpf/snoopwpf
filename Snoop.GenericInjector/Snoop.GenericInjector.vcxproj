@@ -12,6 +12,7 @@
     <RevisionVersion>$([System.Version]::Parse($(AssemblyVersion)).Revision)</RevisionVersion>
     <ResolveNuGetPackages>false</ResolveNuGetPackages>
   </PropertyGroup>
+  <Target Name="Build" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
