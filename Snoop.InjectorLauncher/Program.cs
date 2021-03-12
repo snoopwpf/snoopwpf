@@ -125,7 +125,8 @@ namespace Snoop.InjectorLauncher
 
         private static string GetAssemblyPath(ProcessWrapper processWrapper, string assemblyNameOrFullPath)
         {
-            if (File.Exists(assemblyNameOrFullPath))
+            if (File.Exists(assemblyNameOrFullPath)
+                || Path.IsPathRooted(assemblyNameOrFullPath))
             {
                 return assemblyNameOrFullPath;
             }
