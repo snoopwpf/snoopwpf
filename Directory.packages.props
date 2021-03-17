@@ -23,7 +23,7 @@
       <PackageVersion Include="NUnit" Version="3.13.1" />
       <PackageVersion Include="NUnit3TestAdapter" Version="3.17.0" />
 
-      <PackageVersion Include="Verify.NUnit" Version="10.9.1" />
+      <PackageVersion Include="Verify.NUnit" Version="11.0.2" />
 
       <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
     </ItemGroup>
