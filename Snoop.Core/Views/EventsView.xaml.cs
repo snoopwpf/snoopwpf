@@ -168,10 +168,7 @@ namespace Snoop.Views
 
             foreach (var eventTracker in this.trackers)
             {
-                if (defaultEvents.Contains(eventTracker.RoutedEvent))
-                {
-                    eventTracker.IsEnabled = true;
-                }
+                eventTracker.IsEnabled = defaultEvents.Contains(eventTracker.RoutedEvent);
             }
         }
 
