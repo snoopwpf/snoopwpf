@@ -71,7 +71,7 @@
                 && this.GroupHeaderTemplate is not null)
             {
                 this.itemsControl.GroupStyle.Clear();
-                this.itemsControl.GroupStyle.Add(new GroupStyle { HeaderTemplate = this.GroupHeaderTemplate });
+                this.itemsControl.GroupStyle.Add(new GroupStyle { HeaderTemplate = this.GroupHeaderTemplate }); //, Panel = new ItemsPanelTemplate(new FrameworkElementFactory(typeof(WrapPanel))) });
             }
         }
     }
