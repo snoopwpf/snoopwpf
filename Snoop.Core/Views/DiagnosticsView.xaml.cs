@@ -46,9 +46,13 @@
         public static readonly DependencyProperty InformationCountProperty = DependencyProperty.Register(
             nameof(InformationCount), typeof(int), typeof(DiagnosticsView), new PropertyMetadata(default(int)));
 
+        public static readonly RoutedCommand ResetEnabledDiagnosticsToDefaultCommand = new(nameof(ResetEnabledDiagnosticsToDefaultCommand), typeof(DiagnosticsView));
+
         public DiagnosticsView()
         {
             this.InitializeComponent();
+
+            this.CommandBindings.Add(new CommandBinding(ResetEnabledDiagnosticsToDefaultCommand, this.HandleResetResetEnabledDiagnosticsToDefault));
         }
 
         public ReadOnlyObservableCollection<DiagnosticProvider>? DiagnosticProviders
@@ -115,6 +119,19 @@
         {
             get => (bool)this.GetValue(ShowInformationsProperty);
             set => this.SetValue(ShowInformationsProperty, value);
+        }
+
+        private void HandleResetResetEnabledDiagnosticsToDefault(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (this.DiagnosticProviders is null)
+            {
+                return;
+            }
+
+            foreach (var diagnosticProvider in this.DiagnosticProviders)
+            {
+                diagnosticProvider.IsActive = true;
+            }
         }
 
         private static void OnDiagnosticContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
