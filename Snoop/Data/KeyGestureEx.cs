@@ -5,7 +5,6 @@
     using System.Globalization;
     using System.Windows.Input;
     using System.Windows.Markup;
-    using JetBrains.Annotations;
 
     [TypeConverter(typeof(KeyGestureExConverter))]
     [ValueSerializer(typeof(KeyGestureExValueSerializer))]
@@ -28,7 +27,7 @@
         {
         }
 
-        public KeyGestureEx(Key key, ModifierKeys modifiers, [NotNull] string displayString)
+        public KeyGestureEx(Key key, ModifierKeys modifiers, string displayString)
             : base(key, modifiers, displayString)
         {
         }
