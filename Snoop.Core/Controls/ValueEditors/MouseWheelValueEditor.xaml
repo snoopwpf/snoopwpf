@@ -63,34 +63,34 @@ All other rights reserved.
 					-->
 					<Setter Property="ContentTemplate" Value="{StaticResource DefaultEmptyTemplate}"/>
 					<Style.Triggers>
-						<DataTrigger Binding="{Binding Path=Property.PropertyType.Name}" Value="Int32">
+						<DataTrigger Binding="{Binding Path=PropertyType.Name}" Value="Int32">
 							<Setter Property="ContentTemplate" Value="{StaticResource CustomEditSingleField}"/>
 						</DataTrigger>
-						<DataTrigger Binding="{Binding Path=Property.PropertyType.Name}" Value="Int16">
+						<DataTrigger Binding="{Binding Path=PropertyType.Name}" Value="Int16">
 							<Setter Property="ContentTemplate" Value="{StaticResource CustomEditSingleField}"/>
 						</DataTrigger>
-						<DataTrigger Binding="{Binding Path=Property.PropertyType.Name}" Value="Double">
+						<DataTrigger Binding="{Binding Path=PropertyType.Name}" Value="Double">
 							<Setter Property="ContentTemplate" Value="{StaticResource CustomEditSingleField}"/>
 						</DataTrigger>
-						<DataTrigger Binding="{Binding Path=Property.PropertyType.Name}" Value="Boolean">
+						<DataTrigger Binding="{Binding Path=PropertyType.Name}" Value="Boolean">
 							<Setter Property="ContentTemplate" Value="{StaticResource CustomEditSingleField}"/>
 						</DataTrigger>
-						<DataTrigger Binding="{Binding Path=Property.PropertyType.Name}" Value="Visibility">
+						<DataTrigger Binding="{Binding Path=PropertyType.Name}" Value="Visibility">
 							<Setter Property="ContentTemplate" Value="{StaticResource CustomEditSingleField}"/>
 						</DataTrigger>
-						<DataTrigger Binding="{Binding Path=Property.PropertyType.Name}" Value="HorizontalAlignment">
+						<DataTrigger Binding="{Binding Path=PropertyType.Name}" Value="HorizontalAlignment">
 							<Setter Property="ContentTemplate" Value="{StaticResource CustomEditSingleField}"/>
 						</DataTrigger>
-						<DataTrigger Binding="{Binding Path=Property.PropertyType.Name}" Value="VerticalAlignment">
+						<DataTrigger Binding="{Binding Path=PropertyType.Name}" Value="VerticalAlignment">
 							<Setter Property="ContentTemplate" Value="{StaticResource CustomEditSingleField}"/>
 						</DataTrigger>
-						<DataTrigger Binding="{Binding Path=Property.PropertyType.Name}" Value="Thickness">
+						<DataTrigger Binding="{Binding Path=PropertyType.Name}" Value="Thickness">
 							<Setter Property="ContentTemplate" Value="{StaticResource CustomEditThickness}"/>
 						</DataTrigger>
-						<DataTrigger Binding="{Binding Path=Property.PropertyType.Name}" Value="Brush">
+						<DataTrigger Binding="{Binding Path=PropertyType.Name}" Value="Brush">
 							<Setter Property="ContentTemplate" Value="{StaticResource CustomEditBrush}"/>
 						</DataTrigger>
-						<DataTrigger Binding="{Binding Path=Property.PropertyType.Name}" Value="Color">
+						<DataTrigger Binding="{Binding Path=PropertyType.Name}" Value="Color">
 							<Setter Property="ContentTemplate" Value="{StaticResource CustomEditBrush}"/>
 						</DataTrigger>
 
@@ -98,7 +98,7 @@ All other rights reserved.
 						Catch all to prevent editing data types (based on runtime type) that we cant support (i.e. GradientBrush)
 						and use the empty template.  The binding here is to the runtime Value of the property, not the PropertyInfo.
 						The PropertyInfo (on Border.Background for example) might say a property is of type Brush, but at runtime
-						a LinearGradientBrush is provided, so we use the converter to detect that and return false, not suppored.
+						a LinearGradientBrush is provided, so we use the converter to detect that and return false, not supported.
 						Since this is last in the list, this will override any satisfying trigger above here
 						-->
 						<DataTrigger Binding="{Binding Path=Value, Converter={x:Static converters:IsSupportedRuntimeTypeConverter.Default}}" Value="False">

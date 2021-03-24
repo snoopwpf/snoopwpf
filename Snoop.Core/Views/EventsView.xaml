@@ -31,7 +31,7 @@ All other rights reserved.
 			</DataTemplate>
 
 			<DataTemplate DataType="{x:Type RoutedEventArgs}">
-				<TextBlock Style="{x:Null}" Text="{Binding RoutedEvent.Name}"/>
+				<TextBlock Style="{x:Null}" Text="{Binding RoutedEvent.Name}" />
 			</DataTemplate>
 
 			<DataTemplate DataType="{x:Type ExecutedRoutedEventArgs}">

@@ -39,19 +39,19 @@ namespace Snoop.Controls.ValueEditors
                 return this.EnumTemplate;
             }
 
-            if (property.PropertyType == typeof(bool)
+            if (property.PropertyType.Type == typeof(bool)
                 || (property.PropertyType.IsGenericType
-                    && Nullable.GetUnderlyingType(property.PropertyType) == typeof(bool)))
+                    && Nullable.GetUnderlyingType(property.PropertyType.Type) == typeof(bool)))
             {
                 return this.BoolTemplate;
             }
 
-            if (property.PropertyType == typeof(string))
+            if (property.PropertyType.Type == typeof(string))
             {
                 return this.StringTemplate;
             }
 
-            if (typeof(Brush).IsAssignableFrom(property.PropertyType))
+            if (typeof(Brush).IsAssignableFrom(property.PropertyType.Type))
             {
                 return this.BrushTemplate;
             }

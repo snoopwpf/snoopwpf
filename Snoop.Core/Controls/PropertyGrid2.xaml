@@ -75,9 +75,9 @@ All other rights reserved.
 			</ControlTemplate>
 
 			<DataTemplate x:Key="ValueSourceTemplate" DataType="infrastructure:PropertyInformation">
-				<TextBlock Style="{x:Null}" Text="{Binding ValueSource.BaseValueSource}" Height="16">
+				<TextBlock Style="{x:Null}" Text="{Binding ValueSourceBaseValueSource}" Height="16">
 					<TextBlock.ToolTip>
-						<TextBlock Style="{x:Null}" Text="{Binding ValueSource.BaseValueSource}"/>
+						<TextBlock Style="{x:Null}" Text="{Binding ValueSourceBaseValueSource}"/>
 					</TextBlock.ToolTip>
 				</TextBlock>
 			</DataTemplate>

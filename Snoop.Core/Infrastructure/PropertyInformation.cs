@@ -10,9 +10,6 @@ namespace Snoop.Infrastructure
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
     using System.Windows;
     using System.Windows.Automation.Peers;
     using System.Windows.Controls;
@@ -383,7 +380,7 @@ namespace Snoop.Infrastructure
                    || typeof(DrawingImage).IsAssignableFrom(type);
         }
 
-        public Type? ComponentType
+        public BindableType? ComponentType
         {
             get
             {
@@ -401,7 +398,7 @@ namespace Snoop.Infrastructure
             }
         }
 
-        public Type PropertyType
+        public BindableType PropertyType
         {
             get
             {
@@ -414,21 +411,6 @@ namespace Snoop.Infrastructure
                 else
                 {
                     return this.property.PropertyType;
-                }
-            }
-        }
-
-        public Type ValueType
-        {
-            get
-            {
-                if (this.Value is not null)
-                {
-                    return this.Value.GetType();
-                }
-                else
-                {
-                    return typeof(object);
                 }
             }
         }
@@ -595,10 +577,10 @@ namespace Snoop.Infrastructure
             }
         }
 
-        public ValueSource ValueSource
-        {
-            get { return this.valueSource; }
-        }
+        public ValueSource ValueSource => this.valueSource;
+
+        // Required to prevent binding leaks
+        public BaseValueSource ValueSourceBaseValueSource => this.ValueSource.BaseValueSource;
 
         public bool IsVisible
         {

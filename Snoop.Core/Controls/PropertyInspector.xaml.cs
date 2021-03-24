@@ -17,6 +17,7 @@ namespace Snoop.Controls
     using System.Windows.Input;
     using JetBrains.Annotations;
     using Snoop.Core.Properties;
+    using Snoop.Data;
     using Snoop.Infrastructure;
     using Snoop.Infrastructure.Helpers;
     using Snoop.Windows;
@@ -214,7 +215,7 @@ namespace Snoop.Controls
             return delvePath.ToString();
         }
 
-        private Type? GetCurrentDelveType(Type rootTargetType)
+        private BindableType? GetCurrentDelveType(Type rootTargetType)
         {
             if (this.delvePathList.Count > 0)
             {
@@ -262,7 +263,7 @@ namespace Snoop.Controls
             }
         }
 
-        public Type? DelveType
+        public BindableType? DelveType
         {
             get
             {
@@ -276,7 +277,7 @@ namespace Snoop.Controls
             }
         }
 
-        public Type? Type
+        public BindableType? Type
         {
             get
             {

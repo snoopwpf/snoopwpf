@@ -38,7 +38,7 @@ namespace Snoop.Controls.ValueEditors
         public static readonly DependencyProperty PropertyTypeProperty =
             DependencyProperty.Register(
                 nameof(PropertyType),
-                typeof(Type),
+                typeof(BindableType),
                 typeof(ValueEditor),
                 new PropertyMetadata(OnPropertyTypeChanged));
 
@@ -98,9 +98,9 @@ namespace Snoop.Controls.ValueEditors
             set => this.SetValue(DescriptiveValueProperty, value);
         }
 
-        public Type? PropertyType
+        public BindableType? PropertyType
         {
-            get => (Type?)this.GetValue(PropertyTypeProperty);
+            get => (BindableType?)this.GetValue(PropertyTypeProperty);
             set => this.SetValue(PropertyTypeProperty, value);
         }
 

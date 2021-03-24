@@ -15,6 +15,7 @@ namespace Snoop.Controls
     using System.Windows.Input;
     using System.Windows.Threading;
     using JetBrains.Annotations;
+    using Snoop.Data;
     using Snoop.Infrastructure;
 
     public partial class PropertyGrid2 : INotifyPropertyChanged
@@ -125,7 +126,7 @@ namespace Snoop.Controls
 
         private PropertyInformation? selection;
 
-        public Type? Type
+        public BindableType? Type
         {
             get
             {

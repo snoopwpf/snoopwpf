@@ -49,7 +49,7 @@ namespace Snoop.Data.Tree
         /// </summary>
         public object Target { get; }
 
-        public Type TargetType { get; }
+        public BindableType TargetType { get; }
 
         /// <summary>
         /// The parent of this instance.
