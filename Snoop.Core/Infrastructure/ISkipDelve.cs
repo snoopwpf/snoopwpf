@@ -5,9 +5,6 @@
 
 namespace Snoop.Infrastructure
 {
-    using System;
-    using Snoop.Data;
-
     public interface ISkipDelve
     {
         object? NextValue { get; }

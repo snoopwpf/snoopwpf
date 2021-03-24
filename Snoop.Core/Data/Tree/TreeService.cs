@@ -12,7 +12,6 @@
     using System.Windows.Media;
     using System.Windows.Media.Media3D;
     using JetBrains.Annotations;
-    using Snoop.Infrastructure;
     using Snoop.Infrastructure.Diagnostics;
 
     public enum TreeType

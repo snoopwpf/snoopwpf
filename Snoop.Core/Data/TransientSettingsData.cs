@@ -1,7 +1,6 @@
 // ReSharper disable once CheckNamespace
 namespace Snoop.Data
 {
-    using System.Diagnostics;
     using System.IO;
     using System.Xml.Serialization;
     using Snoop.Infrastructure;

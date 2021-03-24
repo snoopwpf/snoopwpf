@@ -17,7 +17,6 @@ namespace Snoop.Controls
     using System.Windows.Input;
     using JetBrains.Annotations;
     using Snoop.Core.Properties;
-    using Snoop.Data;
     using Snoop.Infrastructure;
     using Snoop.Infrastructure.Helpers;
     using Snoop.Windows;

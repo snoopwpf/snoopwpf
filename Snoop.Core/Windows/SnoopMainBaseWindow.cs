@@ -1,7 +1,6 @@
 ﻿namespace Snoop.Windows
 {
     using System;
-    using System.Diagnostics;
     using System.Windows;
     using System.Windows.Forms.Integration;
     using Snoop.Data;

@@ -2,7 +2,6 @@ namespace Snoop.Infrastructure
 {
     using System;
     using System.Collections.Concurrent;
-    using System.Linq;
     using System.Windows;
     using System.Windows.Threading;
 

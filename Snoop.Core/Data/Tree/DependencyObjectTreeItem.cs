@@ -12,7 +12,6 @@ namespace Snoop.Data.Tree
     using System.Windows.Data;
     using System.Windows.Documents;
     using System.Windows.Media;
-    using JetBrains.Annotations;
     using Snoop.Controls;
     using Snoop.Infrastructure;
 
