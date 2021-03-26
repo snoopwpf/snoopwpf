@@ -11,7 +11,7 @@ namespace Snoop
         private Type? enumType;
 
         [ConstructorArgument("enumType")]
-        public Type? EnumType
+        public BindableType? EnumType
         {
             get => this.enumType;
             set

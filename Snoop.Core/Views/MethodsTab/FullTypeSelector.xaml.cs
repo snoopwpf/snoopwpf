@@ -93,46 +93,4 @@ namespace Snoop.Views.MethodsTab
             this.Close();
         }
     }
-
-    //public class TypeNamePair : IComparable
-    //{
-    //    public string Name { get; set; }
-
-    //    public Type Type { get; set; }
-
-    //    public override string ToString()
-    //    {
-    //        return Name;
-    //    }
-
-    //    #region IComparable Members
-
-    //    public int CompareTo(object obj)
-    //    {
-    //        return Name.CompareTo(((TypeNamePair)obj).Name);
-    //    }
-
-    //    #endregion
-    //}
-
-    //public class AssemblyNamePair : IComparable
-    //{
-    //    public string Name { get; set; }
-
-    //    public Assembly Assembly { get; set; }
-
-    //    public override string ToString()
-    //    {
-    //        return Name;
-    //    }
-
-    //    #region IComparable Members
-
-    //    public int CompareTo(object obj)
-    //    {
-    //        return Name.CompareTo(((AssemblyNamePair)obj).Name);
-    //    }
-
-    //    #endregion
-    //}
 }

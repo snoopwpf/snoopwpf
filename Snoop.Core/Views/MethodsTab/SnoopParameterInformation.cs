@@ -19,7 +19,7 @@ namespace Snoop.Views.MethodsTab
 
         public TypeConverter? TypeConverter { get; }
 
-        public Type DeclaringType { get; }
+        public BindableType DeclaringType { get; }
 
         public bool IsCustom => !this.IsEnum && this.TypeConverter?.GetType() == typeof(TypeConverter);
 
@@ -112,7 +112,7 @@ namespace Snoop.Views.MethodsTab
 
         public string ParameterName { get; }
 
-        public Type ParameterType { get; }
+        public BindableType ParameterType { get; }
 
         public object? ParameterValue
         {

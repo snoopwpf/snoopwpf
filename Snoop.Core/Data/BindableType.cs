@@ -38,6 +38,8 @@
 
         public bool IsGenericType => this.Type.IsGenericType;
 
+        public bool IsValueType => this.Type.IsValueType;
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         [return: NotNullIfNotNull("type")]

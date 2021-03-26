@@ -34,6 +34,8 @@ namespace Snoop.Views
         {
             this.InitializeComponent();
 
+            this.InterestingEvents = new(this.interestingEvents);
+
             var sorter = new List<EventTracker>();
 
             foreach (var routedEvent in EventManager.GetRoutedEvents())
@@ -68,7 +70,7 @@ namespace Snoop.Views
             this.CommandBindings.Add(new CommandBinding(ResetEventTrackersToDefaultCommand, this.HandleResetEventTrackersToDefault));
         }
 
-        public IEnumerable InterestingEvents => this.interestingEvents;
+        public ReadOnlyObservableCollection<TrackedEvent> InterestingEvents { get; }
 
         private readonly ObservableCollection<TrackedEvent> interestingEvents = new();
 

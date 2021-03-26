@@ -6,7 +6,7 @@
 namespace Snoop.Controls.ValueEditors
 {
     using System;
-    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Windows.Data;
 
     public class EnumValueEditor : ValueEditor
@@ -20,7 +20,7 @@ namespace Snoop.Controls.ValueEditors
             this.valuesView.CurrentChanged += this.HandleSelectionChanged;
         }
 
-        public IList<object> Values { get; } = new List<object>();
+        public ObservableCollection<object> Values { get; } = new();
 
         protected override void OnPropertyTypeChanged()
         {

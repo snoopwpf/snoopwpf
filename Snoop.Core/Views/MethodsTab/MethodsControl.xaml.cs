@@ -214,7 +214,7 @@ namespace Snoop.Views.MethodsTab
                         parameters[index] = valuePair?.DependencyProperty;
                     }
                     else if (paramInfo.ParameterValue is null
-                             || paramInfo.ParameterType.IsInstanceOfType(paramInfo.ParameterValue))
+                             || paramInfo.ParameterType.Type.IsInstanceOfType(paramInfo.ParameterValue))
                     {
                         parameters[index] = paramInfo.ParameterValue;
                     }
