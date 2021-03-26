@@ -23,50 +23,50 @@ namespace Snoop.Infrastructure
             switch (item)
             {
                 case FrameworkElement element:
-                {
-                    return CreateRectangleForFrameworkElement(element);
-                }
-
-                case Visual visual:
-                {
-                    return CreateRectangleForVisual(visual);
-                }
-
-                case ResourceDictionary resourceDictionary:
-                {
-                    var stackPanel = new StackPanel();
-
-                    foreach (var value in resourceDictionary.Values)
                     {
-                        var element = CreateIfPossible(value);
-                        if (element is not null)
-                        {
-                            stackPanel.Children.Add(element);
-                        }
+                        return CreateRectangleForFrameworkElement(element);
                     }
 
-                    return stackPanel;
-                }
+                case Visual visual:
+                    {
+                        return CreateRectangleForVisual(visual);
+                    }
+
+                case ResourceDictionary resourceDictionary:
+                    {
+                        var stackPanel = new StackPanel();
+
+                        foreach (var value in resourceDictionary.Values)
+                        {
+                            var element = CreateIfPossible(value);
+                            if (element is not null)
+                            {
+                                stackPanel.Children.Add(element);
+                            }
+                        }
+
+                        return stackPanel;
+                    }
 
                 case Brush brush:
-                {
-                    var rect = new Rectangle
                     {
-                        Width = 10,
-                        Height = 10,
-                        Fill = brush
-                    };
-                    return rect;
-                }
+                        var rect = new Rectangle
+                        {
+                            Width = 10,
+                            Height = 10,
+                            Fill = brush
+                        };
+                        return rect;
+                    }
 
                 case ImageSource imageSource:
-                {
-                    var image = new Image
                     {
-                        Source = imageSource
-                    };
-                    return image;
-                }
+                        var image = new Image
+                        {
+                            Source = imageSource
+                        };
+                        return image;
+                    }
             }
 
             return null;

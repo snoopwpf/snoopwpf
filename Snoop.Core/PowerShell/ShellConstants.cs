@@ -64,42 +64,42 @@ namespace Snoop.PowerShell
         {
             get
             {
-                #if NETCOREAPP3_0
-                    return false;
-                #elif NETCOREAPP3_1 || NET50 || NET5_0_OR_GREATER
-                    if (File.Exists(GetPowerShellAssemblyPath()))
+#if NETCOREAPP3_0
+                return false;
+#elif NETCOREAPP3_1 || NET50 || NET5_0_OR_GREATER
+                if (File.Exists(GetPowerShellAssemblyPath()))
+                {
+                    return true;
+                }
+
+                var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\PowerShellCore\InstalledVersions\31ab5147-9a97-4452-8443-d9709f0516e1");
+                if (key is not null)
+                {
+                    var keyValue = key.GetValue("SemanticVersion") as string;
+                    if (Version.TryParse(keyValue, out var version)
+                        && version >= new Version(7, 0))
                     {
                         return true;
                     }
+                }
 
-                    var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\PowerShellCore\InstalledVersions\31ab5147-9a97-4452-8443-d9709f0516e1");
-                    if (key is not null)
+                return false;
+#elif NET40
+                var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\PowerShell\3\PowerShellEngine");
+                if (key is not null)
+                {
+                    var keyValue = key.GetValue("PowerShellVersion") as string;
+                    if (Version.TryParse(keyValue, out var version)
+                        && version >= new Version(3, 0))
                     {
-                        var keyValue = key.GetValue("SemanticVersion") as string;
-                        if (Version.TryParse(keyValue, out var version)
-                            && version >= new Version(7, 0))
-                        {
-                            return true;
-                        }
+                        return true;
                     }
+                }
 
-                    return false;
-                #elif NET40
-                    var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\PowerShell\3\PowerShellEngine");
-                    if (key is not null)
-                    {
-                        var keyValue = key.GetValue("PowerShellVersion") as string;
-                        if (Version.TryParse(keyValue, out var version)
-                            && version >= new Version(3, 0))
-                        {
-                            return true;
-                        }
-                    }
-
-                    return false;
-                #else
+                return false;
+#else
                     invalid target framework
-                #endif
+#endif
             }
         }
 

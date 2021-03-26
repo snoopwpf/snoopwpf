@@ -27,7 +27,7 @@
 
             protected set
             {
-                this.isDirty = value; 
+                this.isDirty = value;
                 this.RaisePropertyChanged(nameof(this.IsDirty));
             }
         }

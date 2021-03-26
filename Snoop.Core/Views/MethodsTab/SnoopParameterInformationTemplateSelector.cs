@@ -22,7 +22,7 @@ namespace Snoop.Views.MethodsTab
 
             if (snoopParameterInfo is not null)
             {
-                if (snoopParameterInfo.IsEnum 
+                if (snoopParameterInfo.IsEnum
                     || snoopParameterInfo.ParameterType == typeof(bool))
                 {
                     return element.FindResource("EnumParameterTemplate") as DataTemplate;

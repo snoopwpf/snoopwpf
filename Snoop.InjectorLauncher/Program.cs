@@ -57,7 +57,7 @@ namespace Snoop.InjectorLauncher
                         Injector.LogMessage("Target process and injector process have different architectures, trying to redirect to secondary process...");
 
                         var originalProcessFileName = currentProcess.MainModule!.ModuleName!;
-                        #pragma warning disable CA1307
+#pragma warning disable CA1307
                         var correctArchitectureFileName = originalProcessFileName.Replace(currentProcessArchitecture, processWrapper.Architecture);
                         var processStartInfo = new ProcessStartInfo(currentProcess!.MainModule!.FileName!.Replace(originalProcessFileName, correctArchitectureFileName), Parser.Default.FormatCommandLine(commandLineOptions))
                         {

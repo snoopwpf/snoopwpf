@@ -654,7 +654,7 @@ namespace Snoop.Infrastructure
         /// <returns>If the function succeeds, the return value is nonzero.
         /// If the function fails, the return value is zero.
         /// To get extended error information, call Marshal.GetLastWin32Error.</returns>
-        [DllImport("kernel32",SetLastError=true)]
+        [DllImport("kernel32", SetLastError = true)]
         public static extern bool AllocConsole();
 
         /// <summary>
@@ -673,7 +673,7 @@ namespace Snoop.Infrastructure
         /// <returns>If the function succeeds, the return value is nonzero.
         /// If the function fails, the return value is zero.
         /// To get extended error information, call Marshal.GetLastWin32Error.</returns>
-        [DllImport("kernel32.dll", SetLastError=true)]
+        [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool AttachConsole(uint dwProcessId);
 
         /// <summary>Identifies the console of the parent of the current process as the console to be attached.

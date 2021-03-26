@@ -97,7 +97,7 @@ namespace Snoop.Windows
             {
                 return;
             }
-            
+
             if (this.filterSetList.SelectedItem is PropertyFilterSet selected)
             {
                 this.ItemsSource.Remove(selected);
@@ -110,7 +110,7 @@ namespace Snoop.Windows
             {
                 return;
             }
-            
+
             var index = this.filterSetList.SelectedIndex;
             if (index <= 0)
             {
@@ -131,7 +131,7 @@ namespace Snoop.Windows
             {
                 return;
             }
-            
+
             var index = this.filterSetList.SelectedIndex;
             if (index >= this.ItemsSource.Count - 1)
             {

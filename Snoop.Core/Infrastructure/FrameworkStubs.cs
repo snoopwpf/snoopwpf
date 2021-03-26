@@ -55,7 +55,7 @@ namespace System.Diagnostics.CodeAnalysis
         /// The associated parameter name.  The output will be non-null if the argument to the parameter specified is non-null.
         /// </param>
         public NotNullIfNotNullAttribute(string parameterName) => this.ParameterName = parameterName;
- 
+
         /// <summary>Gets the associated parameter name.</summary>
         public string ParameterName { get; }
     }

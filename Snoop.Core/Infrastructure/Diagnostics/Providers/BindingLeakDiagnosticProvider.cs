@@ -45,53 +45,53 @@
 
         //protected override IEnumerable<DiagnosticItem> GetDiagnosticItemsInternal(TreeItem treeItem)
         //{
-            // if (valueChangedHandlersFieldInfo is null)
-            // {
-            //     yield break;
-            // }
-            //
-            // if (treeItem.Target is not DependencyObject dependencyObject)
-            // {
-            //     yield break;
-            // }
-            //
-            // foreach (PropertyDescriptor? property in TypeDescriptor.GetProperties(dependencyObject.GetType()))
-            // {
-            //     if (property is null)
-            //     {
-            //         continue;
-            //     }
-            //
-            //     var dpd = DependencyPropertyDescriptor.FromProperty(property);
-            //
-            //     if (dpd is null)
-            //     {
-            //         continue;
-            //     }
-            //
-            //     if (BindingOperations.IsDataBound(dependencyObject, dpd.DependencyProperty) == false)
-            //     {
-            //         continue;
-            //     }
-            //
-            //     var valueChangedHandlers = (Hashtable?)valueChangedHandlersFieldInfo.GetValue(property);
-            //
-            //     if (valueChangedHandlers is not null
-            //         && valueChangedHandlers.Count > 0)
-            //     {
-            //         yield return
-            //             new DiagnosticItem(this,
-            //                 "Binding leak",
-            //                 $"Property '{dpd.DisplayName}' is bound to ??? which causes a binding leak.",
-            //                 DiagnosticArea.Binding,
-            //                 DiagnosticLevel.Warning)
-            //             {
-            //                 TreeItem = treeItem,
-            //                 Dispatcher = dependencyObject.Dispatcher,
-            //                 SourceObject = dependencyObject
-            //             };
-            //     }
-            // }
+        // if (valueChangedHandlersFieldInfo is null)
+        // {
+        //     yield break;
+        // }
+        //
+        // if (treeItem.Target is not DependencyObject dependencyObject)
+        // {
+        //     yield break;
+        // }
+        //
+        // foreach (PropertyDescriptor? property in TypeDescriptor.GetProperties(dependencyObject.GetType()))
+        // {
+        //     if (property is null)
+        //     {
+        //         continue;
+        //     }
+        //
+        //     var dpd = DependencyPropertyDescriptor.FromProperty(property);
+        //
+        //     if (dpd is null)
+        //     {
+        //         continue;
+        //     }
+        //
+        //     if (BindingOperations.IsDataBound(dependencyObject, dpd.DependencyProperty) == false)
+        //     {
+        //         continue;
+        //     }
+        //
+        //     var valueChangedHandlers = (Hashtable?)valueChangedHandlersFieldInfo.GetValue(property);
+        //
+        //     if (valueChangedHandlers is not null
+        //         && valueChangedHandlers.Count > 0)
+        //     {
+        //         yield return
+        //             new DiagnosticItem(this,
+        //                 "Binding leak",
+        //                 $"Property '{dpd.DisplayName}' is bound to ??? which causes a binding leak.",
+        //                 DiagnosticArea.Binding,
+        //                 DiagnosticLevel.Warning)
+        //             {
+        //                 TreeItem = treeItem,
+        //                 Dispatcher = dependencyObject.Dispatcher,
+        //                 SourceObject = dependencyObject
+        //             };
+        //     }
+        // }
         //}
 
         // Code idea, for looking into ReflectTypeDescriptionProvider, taken from https://faithlife.codes/blog/2008/10/detecting_bindings_that_should_be_onetime/

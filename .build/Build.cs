@@ -109,19 +109,22 @@ class Build : NukeBuild
     readonly string FenceOutput = "".PadLeft(30, '#');
 
     Target CleanOutput => _ => _
-        .Executes(() => {
+        .Executes(() =>
+        {
             EnsureCleanDirectory(ArtifactsDirectory);
         });
 
     Target Restore => _ => _
-        .Executes(() => {
+        .Executes(() =>
+        {
             DotNetRestore(s => s
                 .SetProjectFile(Solution));
         });
 
     Target Compile => _ => _
         .DependsOn(Restore)
-        .Executes(() => {
+        .Executes(() =>
+        {
             MSBuild(s => s
                 .SetProjectFile(RootDirectory / "Snoop.GenericInjector/Snoop.GenericInjector.vcxproj")
                 .SetConfiguration(Configuration)
@@ -184,7 +187,8 @@ class Build : NukeBuild
         .DependsOn(CleanOutput)
         .DependsOn(Compile)
         .Produces(ArtifactsDirectory / "*.nupkg", ArtifactsDirectory / "*.zip")
-        .Executes(() => {
+        .Executes(() =>
+        {
             // Generate ignore files to prevent chocolatey from generating shims for them
             foreach (var launcher in CurrentBuildOutputDirectory.GlobFiles($"{ProjectName}.InjectorLauncher.*.exe"))
             {
@@ -210,7 +214,7 @@ class Build : NukeBuild
                 CompressionTasks.UncompressZip(nupkg, tempDirectory);
 
                 var outputFile = ArtifactsDirectory / $"{ProjectName}.{NuGetVersion}.zip";
-                CompressionTasks.Compress(tempDirectory / "tools",  outputFile, info => info.Name.Contains("chocolatey") == false && info.Name != "VERIFICATION.txt");
+                CompressionTasks.Compress(tempDirectory / "tools", outputFile, info => info.Name.Contains("chocolatey") == false && info.Name != "VERIFICATION.txt");
                 CheckSumFiles.Add(outputFile);
             }
         });
@@ -220,7 +224,8 @@ class Build : NukeBuild
         .DependsOn(Compile)
         .After(Pack)
         .Produces(ArtifactsDirectory / "*.msi")
-        .Executes(() => {
+        .Executes(() =>
+        {
             var tempDirectory = TemporaryDirectory / $"{ProjectName}{nameof(Setup)}";
 
             EnsureCleanDirectory(tempDirectory);
@@ -241,7 +246,8 @@ class Build : NukeBuild
     Target CheckSums => _ => _
         .TriggeredBy(Pack, Setup)
         .Produces(ArtifactsDirectory / "*.sha256")
-        .Executes(() => {
+        .Executes(() =>
+        {
             foreach (var item in CheckSumFiles)
             {
                 var checkSum = FileHelper.SHA256CheckSum(item);

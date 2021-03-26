@@ -85,7 +85,7 @@ namespace Snoop.Controls
                 new FrameworkPropertyMetadata(
                     (bool)true,
                     OnIsActiveChanged));
-    
+
         /// <summary>
         /// Handles changes to the IsActive property.
         /// </summary>

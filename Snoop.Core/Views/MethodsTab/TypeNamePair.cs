@@ -16,7 +16,7 @@ namespace Snoop.Views.MethodsTab
         }
 
         public Type Type { get; }
-        
+
         public string Name { get; }
 
         public override string ToString()

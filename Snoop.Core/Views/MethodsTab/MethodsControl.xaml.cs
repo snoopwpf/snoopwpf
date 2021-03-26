@@ -45,8 +45,8 @@ namespace Snoop.Views.MethodsTab
 
         private void ProcessCheckedProperty()
         {
-            if (!this.IsSelected 
-                || !this.checkBoxUseDataContext.IsChecked.HasValue 
+            if (!this.IsSelected
+                || !this.checkBoxUseDataContext.IsChecked.HasValue
                 || !(this.RootTarget is FrameworkElement))
             {
                 return;
@@ -154,7 +154,7 @@ namespace Snoop.Views.MethodsTab
         private void ComboBoxMethodChanged(object? sender, EventArgs e)
         {
             var selectedMethod = this.comboBoxMethods.SelectedValue as SnoopMethodInformation;
-            if (selectedMethod is null 
+            if (selectedMethod is null
                 || this.Target is null)
             {
                 return;

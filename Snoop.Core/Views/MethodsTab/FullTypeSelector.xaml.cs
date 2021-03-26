@@ -45,7 +45,7 @@ namespace Snoop.Views.MethodsTab
 
             foreach (var type in types)
             {
-                if (!type.IsPublic 
+                if (!type.IsPublic
                     || type.IsAbstract)
                 {
                     continue;

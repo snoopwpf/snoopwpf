@@ -12,11 +12,11 @@
     {
         private static readonly HashSet<string> realSettingsProperties = new()
         {
-                                                                            nameof(Settings.Default.MultipleAppDomainMode),
-                                                                            nameof(Settings.Default.MultipleDispatcherMode),
-                                                                            nameof(Settings.Default.SetOwnerWindow),
-                                                                            nameof(Settings.Default.GlobalHotKey)
-                                                                        };
+            nameof(Settings.Default.MultipleAppDomainMode),
+            nameof(Settings.Default.MultipleDispatcherMode),
+            nameof(Settings.Default.SetOwnerWindow),
+            nameof(Settings.Default.GlobalHotKey)
+        };
 
         public static readonly DependencyProperty PropertiesProperty = DependencyProperty.Register(nameof(Properties), typeof(ObservableCollection<PropertyInformation>), typeof(SettingsView), new PropertyMetadata(default(ObservableCollection<PropertyInformation>)));
 
