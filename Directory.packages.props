@@ -34,8 +34,9 @@
         <PackageVersion Include="JetBrains.Annotations" Version="2020.3.0" />
         
         <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" version="3.9.0" />
-        <PackageVersion Include="StyleCop.Analyzers" version="1.2.0-beta.312" />
+        <PackageVersion Include="StyleCop.Analyzers" version="1.2.0-beta.333" />
 
         <PackageVersion Include="WpfAnalyzers" version="3.5.4" />
+        <PackageVersion Include="PropertyChangedAnalyzers" Version="3.2.2" />
     </ItemGroup>
 </Project>

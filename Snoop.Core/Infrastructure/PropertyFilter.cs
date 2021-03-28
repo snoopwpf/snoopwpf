@@ -267,7 +267,6 @@ namespace Snoop.Infrastructure
 
                 this.properties = value;
                 this.OnPropertyChanged();
-                this.OnPropertyChanged(nameof(PropertyFilter.IsPropertyFilterSet));
             }
         }
 
