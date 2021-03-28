@@ -43,7 +43,7 @@
 
     <PackageReference Include="StyleCop.Analyzers" PrivateAssets="all" IncludeAssets="build;analyzers" />
     <PackageReference Include="WpfAnalyzers" PrivateAssets="all" IncludeAssets="build;analyzers" />
-    <PackageReference Include="PropertyChangedAnalyzers" PrivateAssets="all" IncludeAssets="build;analyzers" />
+    <!--<PackageReference Include="PropertyChangedAnalyzers" PrivateAssets="all" IncludeAssets="build;analyzers" />-->
   </ItemGroup>
 
   <Target Name="ForceRestore" BeforeTargets="ResolvePackageAssets" DependsOnTargets="Restore" />
