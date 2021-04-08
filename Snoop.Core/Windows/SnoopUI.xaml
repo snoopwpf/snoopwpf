@@ -37,7 +37,6 @@ All other rights reserved.
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
 				<ResourceDictionary Source="../Controls/ProperTreeViewResources.xaml"/>
-				<ResourceDictionary Source="../Icons.xaml"/>
 			</ResourceDictionary.MergedDictionaries>
 
 			<Style x:Key="refreshButton" TargetType="{x:Type Button}">
@@ -199,7 +198,7 @@ All other rights reserved.
 			Margin="0,2,2,2"
 			Command="{x:Static windows:SnoopUI.RefreshCommand}"
 		>
-			<Image Source="{StaticResource reloadDrawingImage}"/>
+			<Image Source="{DynamicResource reloadDrawingImage}"/>
 			<Button.ToolTip>
 				<TextBlock Style="{x:Null}" Text="Refresh the tree view"/>
 			</Button.ToolTip>

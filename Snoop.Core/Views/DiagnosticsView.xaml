@@ -13,10 +13,6 @@
              d:DesignWidth="800">
     <UserControl.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Icons.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-
             <DataTemplate DataType="{x:Type diagnostics:DiagnosticProvider}">
                 <CheckBox Style="{x:Null}" IsChecked="{Binding IsActive}">
                     <TextBlock Style="{x:Null}" Text="{Binding Name}"/>

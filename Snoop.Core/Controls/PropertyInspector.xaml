@@ -17,7 +17,6 @@ All other rights reserved.
     <Grid.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Icons.xaml" />
                 <ResourceDictionary Source="ValueEditors\EditorTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
@@ -78,7 +77,7 @@ All other rights reserved.
                         </Style.Triggers>
                     </Style>
                 </Button.Style>
-                <Image Style="{x:Null}" Source="{StaticResource scopeUpDrawingImage}" Margin="3" />
+                <Image Style="{x:Null}" Source="{DynamicResource scopeUpDrawingImage}" Margin="3" />
                 <Button.ToolTip>
                     <StackPanel>
                         <TextBlock Style="{x:Null}" Text="Click this button to pop up 1 level in scope" />

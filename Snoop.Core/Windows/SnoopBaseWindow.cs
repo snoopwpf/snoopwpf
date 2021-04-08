@@ -22,9 +22,17 @@
         {
             base.OnSourceInitialized(e);
 
-            var stylesRD = (ResourceDictionary)Application.LoadComponent(new Uri("/Snoop.Core;component/Styles.xaml", UriKind.Relative));
-            Debug.Assert(stylesRD is not null, "Styles could not be loaded.");
-            this.Resources.MergedDictionaries.Add(stylesRD);
+            {
+                var resourceDictionary = (ResourceDictionary)Application.LoadComponent(new Uri("/Snoop.Core;component/Icons.xaml", UriKind.Relative));
+                Debug.Assert(resourceDictionary is not null, "Icons could not be loaded.");
+                this.Resources.MergedDictionaries.Add(resourceDictionary);
+            }
+
+            {
+                var resourceDictionary = (ResourceDictionary)Application.LoadComponent(new Uri("/Snoop.Core;component/Styles.xaml", UriKind.Relative));
+                Debug.Assert(resourceDictionary is not null, "Styles could not be loaded.");
+                this.Resources.MergedDictionaries.Add(resourceDictionary);
+            }
         }
 
         /// <inheritdoc />

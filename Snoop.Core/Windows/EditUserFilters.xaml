@@ -14,22 +14,14 @@ All other rights reserved.
 	Width="500"
 	Height="300"
     x:Name="editUserFilters">
-	<Window.Resources>
-		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="../Icons.xaml"/>
-			</ResourceDictionary.MergedDictionaries>
-		</ResourceDictionary>
-	</Window.Resources>
-	
-	<Grid Margin="4">
+    <Grid Margin="4">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
-		
+
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="75"/>
 			<ColumnDefinition Width="*"/>
@@ -84,7 +76,7 @@ All other rights reserved.
 				</DataTemplate>
 			</ListBox.ItemTemplate>
 		</ListBox>
-		
+
 		<StackPanel
 			Grid.Row="3"
 			Grid.Column="1"
@@ -125,7 +117,7 @@ All other rights reserved.
 				Height="20"
 				Click="UpHandler"
 			>
-				<Image Style="{x:Null}" Source="{StaticResource scopeUpDrawingImage}" Margin="3"/>
+				<Image Style="{x:Null}" Source="{DynamicResource scopeUpDrawingImage}" Margin="3"/>
 			</Button>
 			<Button
 				x:Name="MoveDown"
@@ -135,7 +127,7 @@ All other rights reserved.
 				Margin="0,5,0,0"
 				Click="DownHandler"
 			>
-				<Image Style="{x:Null}" Source="{StaticResource scopeUpDrawingImage}" Margin="3" RenderTransformOrigin="0.5,0.5">
+				<Image Style="{x:Null}" Source="{DynamicResource scopeUpDrawingImage}" Margin="3" RenderTransformOrigin="0.5,0.5">
 					<Image.RenderTransform>
 						<RotateTransform Angle="180"/>
 					</Image.RenderTransform>
