@@ -1,4 +1,5 @@
 {
   "$schema": "./build.schema.json",
-  "Solution": "Snoop.sln"
+  "Solution": "Snoop.sln",
+  "TestHarnessSolution": "TestHarnesses/TestHarnesses.sln"
 }

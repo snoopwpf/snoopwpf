@@ -77,7 +77,8 @@ class Build : NukeBuild
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
-    [Solution] readonly Solution Solution = null!;
+    [Solution(GenerateProjects = true)] readonly Solution Solution = null!;
+    [Solution(GenerateProjects = true)] readonly TestHarnessSolution TestHarnessSolution = null!;
 
     [GitVersion(Framework = "netcoreapp3.1")] readonly GitVersion? GitVersion;
 
@@ -126,7 +127,7 @@ class Build : NukeBuild
         .Executes(() =>
         {
             MSBuild(s => s
-                .SetProjectFile(RootDirectory / "Snoop.GenericInjector/Snoop.GenericInjector.vcxproj")
+                .SetProjectFile(Solution.Snoop_GenericInjector)
                 .SetConfiguration(Configuration)
                 .SetTargetPlatform(MSBuildTargetPlatform.Win32)
                 .SetAssemblyVersion(AssemblySemVer)
@@ -149,7 +150,7 @@ class Build : NukeBuild
         .Executes(() =>
         {
             MSBuild(s => s
-                .SetProjectFile(RootDirectory / "TestHarnesses/Win32ToWPFInterop/Win32Clock/win32clock.vcxproj")
+                .SetProjectFile(TestHarnessSolution.Win32ToWPFInterop.win32clock)
                 .SetConfiguration(Configuration)
                 .SetTargetPlatform(MSBuildTargetPlatform.Win32)
                 .SetAssemblyVersion(AssemblySemVer)
@@ -158,7 +159,7 @@ class Build : NukeBuild
                 .SetVerbosity(MSBuildVerbosity.Minimal));
 
             DotNetBuild(s => s
-                .SetProjectFile(RootDirectory / "TestHarnesses/TestHarnesses.sln")
+                .SetProjectFile(TestHarnessSolution)
                 .SetConfiguration(Configuration)
                 .SetAssemblyVersion(AssemblySemVer)
                 .SetInformationalVersion(InformationalVersion)
@@ -175,7 +176,7 @@ class Build : NukeBuild
         .Executes(() =>
         {
             DotNetTest(s => s
-                .SetProjectFile(RootDirectory / "Snoop.Core.Tests" / "Snoop.Core.Tests.csproj")
+                .SetProjectFile(Solution.Snoop_Core_Tests)
                 .SetConfiguration(Configuration)
                 .SetVerbosity(DotNetVerbosity.Normal)
                 .SetLogger("trx")
