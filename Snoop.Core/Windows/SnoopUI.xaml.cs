@@ -322,7 +322,7 @@ namespace Snoop.Windows
 
         #region Public Methods
 
-        public void ApplyReduceDepthFilter(TreeItem newRoot)
+        public void ApplyReduceDepthFilter(TreeItem? newRoot)
         {
             if (this.reducedDepthRoot != newRoot)
             {
@@ -333,6 +333,7 @@ namespace Snoop.Windows
                         () =>
                         {
                             this.TreeItems.Clear();
+
                             if (this.reducedDepthRoot is not null)
                             {
                                 this.TreeItems.Add(this.reducedDepthRoot);
