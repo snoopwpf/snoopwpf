@@ -12,10 +12,13 @@ namespace Snoop.Infrastructure
     /// Executes action on framework element when it's loaded.
     /// </summary>
     /// <remarks>
-    /// Action is execued only once, no matter how many times Loaded event is fired.
+    /// Action is executed only once, no matter how many times Loaded event is fired.
     /// </remarks>
     public class WhenLoaded
     {
+        private readonly FrameworkElement target;
+        private readonly Action<FrameworkElement> loadedAction;
+
         public WhenLoaded(FrameworkElement target, Action<FrameworkElement> loadedAction)
         {
             this.target = target;
@@ -41,9 +44,6 @@ namespace Snoop.Infrastructure
             this.target.Loaded -= this.TargetLoaded;
             this.loadedAction(this.target);
         }
-
-        private readonly FrameworkElement target;
-        private readonly Action<FrameworkElement> loadedAction;
     }
 
     /// <summary>
@@ -61,7 +61,7 @@ namespace Snoop.Infrastructure
         public static void WhenLoaded(this FrameworkElement frameworkElement, Action<FrameworkElement> loadedAction)
         {
             // The following object will not be GCed before its time.
-            // * if frameworkElement is already loaded the ctor immediately exectues loadedAction and rests in piece
+            // * if frameworkElement is already loaded the ctor immediately executes loadedAction and rests in piece.
             // * otherwise framework element's Loaded event will keep the reference to event handler
             //   until it's loaded and and only then let it rest in piece.
             _ = new WhenLoaded(frameworkElement, loadedAction);
