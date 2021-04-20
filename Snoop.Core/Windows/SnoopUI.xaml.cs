@@ -620,6 +620,12 @@ namespace Snoop.Windows
                 return;
             }
 
+            if (isShiftPressed == false
+                && isAltPressed == false)
+            {
+                return;
+            }
+
             var itemToFind = Mouse.PrimaryDevice.GetDirectlyOver() as Visual;
 
             if (itemToFind is null
