@@ -324,27 +324,29 @@ namespace Snoop.Windows
 
         public void ApplyReduceDepthFilter(TreeItem? newRoot)
         {
-            if (this.reducedDepthRoot != newRoot)
+            if (this.reducedDepthRoot == newRoot)
             {
-                // Check if we already have a scheduled reduce in progress
-                if (this.reducedDepthRoot is null)
-                {
-                    this.RunInDispatcherAsync(
-                        () =>
-                        {
-                            this.TreeItems.Clear();
-
-                            if (this.reducedDepthRoot is not null)
-                            {
-                                this.TreeItems.Add(this.reducedDepthRoot);
-                            }
-
-                            this.reducedDepthRoot = null;
-                        }, DispatcherPriority.Background);
-                }
-
-                this.reducedDepthRoot = newRoot;
+                return;
             }
+
+            // Check if we already have a scheduled reduce in progress
+            if (this.reducedDepthRoot is null)
+            {
+                this.RunInDispatcherAsync(
+                    () =>
+                    {
+                        this.TreeItems.Clear();
+
+                        if (this.reducedDepthRoot is not null)
+                        {
+                            this.TreeItems.Add(this.reducedDepthRoot);
+                        }
+
+                        this.reducedDepthRoot = null;
+                    }, DispatcherPriority.Background);
+            }
+
+            this.reducedDepthRoot = newRoot;
         }
 
         /// <summary>
