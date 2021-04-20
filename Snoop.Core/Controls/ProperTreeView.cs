@@ -17,7 +17,6 @@ namespace Snoop.Controls
     public class ProperTreeView : TreeView
     {
         private const int MaxExtentWidth = 1200;
-        private const int ItemsToShowAboveNewRoot = 10;
 
         private SnoopUI? snoopUI;
         private ScrollViewer? scrollViewer;
@@ -29,12 +28,6 @@ namespace Snoop.Controls
         // If the currently selected item is the top most item in the current tree, we revert some of the reduction and
         public bool ApplyReduceDepthFilterIfNeeded(ProperTreeViewItem curNode)
         {
-            if (MaxExtentWidth == 0
-                || curNode.IsSelected == false)
-            {
-                return false;
-            }
-
             if (this.snoopUI is null)
             {
                 this.snoopUI = Window.GetWindow(this) as SnoopUI;
@@ -45,12 +38,21 @@ namespace Snoop.Controls
                 }
             }
 
-            if (curNode is null)
+            if (this.snoopUI.IsReduceInProgress)
             {
-                return false;
+                return true;
             }
 
-            var item = (TreeItem)curNode.DataContext;
+            var curItem = (TreeItem)curNode.DataContext;
+            var item = curItem;
+
+            var selectedItem = this.snoopUI.CurrentSelection;
+
+            if (selectedItem is not null
+                && item.Depth < selectedItem.Depth)
+            {
+                item = selectedItem;
+            }
 
             if (item.Parent is null)
             {
@@ -64,8 +66,8 @@ namespace Snoop.Controls
                 return false;
             }
 
-            var shouldReduce = this.scrollViewer is { ExtentWidth: >= MaxExtentWidth };
-            var shouldWiden = shouldReduce == false && item == rootItem;
+            var shouldReduce = this.scrollViewer is { ExtentWidth: >= MaxExtentWidth } || (item.Depth - rootItem.Depth) > 100;
+            var shouldWiden = shouldReduce == false && curNode.IsSelected && curItem == rootItem;
 
             if (shouldReduce == false
                 && shouldWiden == false)
@@ -74,9 +76,12 @@ namespace Snoop.Controls
             }
 
             // Try to show some items above new root, that way we can keep a bit of context
-            var newRoot = item.Parent;
+            var newRoot = shouldWiden ? curItem.Parent : item.Parent;
+            var itemsToShowAboveNewRoot = shouldReduce
+                ? 10
+                : 20;
 
-            for (var i = 0; i < ItemsToShowAboveNewRoot; ++i)
+            for (var i = 0; i < itemsToShowAboveNewRoot; ++i)
             {
                 if (newRoot?.Parent is null)
                 {
@@ -84,6 +89,11 @@ namespace Snoop.Controls
                 }
 
                 newRoot = newRoot.Parent;
+            }
+
+            if (rootItem == newRoot)
+            {
+                return false;
             }
 
             this.snoopUI.ApplyReduceDepthFilter(newRoot);
