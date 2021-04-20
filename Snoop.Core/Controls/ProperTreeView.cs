@@ -16,17 +16,21 @@ namespace Snoop.Controls
 
     public class ProperTreeView : TreeView
     {
-        private readonly int maxDepth = 100;
+        private const int MaxExtentWidth = 1200;
+        private const int ItemsToShowAboveNewRoot = 10;
 
         private SnoopUI? snoopUI;
+        private ScrollViewer? scrollViewer;
 
         // We need this method and what it does because:
-        // If we have a tree with levels greater than 150 then we might get an StackOverflowException during measure/arrange.
-        // To prevent these Exceptions (which immediately crash the program being snooped) we use the item at the current level (minus a few) as the new root node for the tree.
-        // That way we get a "new" tree that is not as deeply nested as before.
+        // If we have a tree which causes the scroll viewer to exceed a certain extent width we might get an StackOverflowException during measure/arrange.
+        // To prevent these Exceptions (which immediately crash the program being snooped) we use the currently selected item, minus a few, as the new root node for the tree.
+        // That way we get a "new" tree that is not as deeply nested as before, thus reducing the extent width of the scroll viewer.
+        // If the currently selected item is the top most item in the current tree, we revert some of the reduction and
         public bool ApplyReduceDepthFilterIfNeeded(ProperTreeViewItem curNode)
         {
-            if (this.maxDepth == 0)
+            if (MaxExtentWidth == 0
+                || curNode.IsSelected == false)
             {
                 return false;
             }
@@ -41,13 +45,16 @@ namespace Snoop.Controls
                 }
             }
 
-            var item = (TreeItem)curNode.DataContext;
-            var selectedItem = this.snoopUI.CurrentSelection;
-
-            if (selectedItem is not null
-                && item.Depth < selectedItem.Depth)
+            if (curNode is null)
             {
-                item = selectedItem;
+                return false;
+            }
+
+            var item = (TreeItem)curNode.DataContext;
+
+            if (item.Parent is null)
+            {
+                return false;
             }
 
             var rootItem = this.GetRootItem();
@@ -57,20 +64,19 @@ namespace Snoop.Controls
                 return false;
             }
 
-            // Do we exceed the current max depth?
-            if (item.Depth - rootItem.Depth <= this.maxDepth)
+            var shouldReduce = this.scrollViewer is { ExtentWidth: >= MaxExtentWidth };
+            var shouldWiden = shouldReduce == false && item == rootItem;
+
+            if (shouldReduce == false
+                && shouldWiden == false)
             {
                 return false;
             }
 
-            if (item.Parent is null)
-            {
-                return false;
-            }
-
-            // Try to show 10 items above new root, that way we can keep a bit of context
+            // Try to show some items above new root, that way we can keep a bit of context
             var newRoot = item.Parent;
-            for (var i = 0; i < 10; ++i)
+
+            for (var i = 0; i < ItemsToShowAboveNewRoot; ++i)
             {
                 if (newRoot?.Parent is null)
                 {
@@ -80,7 +86,7 @@ namespace Snoop.Controls
                 newRoot = newRoot.Parent;
             }
 
-            this.snoopUI.ApplyReduceDepthFilter(newRoot!);
+            this.snoopUI.ApplyReduceDepthFilter(newRoot);
 
             return true;
         }
@@ -94,10 +100,19 @@ namespace Snoop.Controls
         {
             return new ProperTreeViewItem(new WeakReference(this));
         }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            this.scrollViewer = this.Template.FindName("_tv_scrollviewer_", this) as ScrollViewer;
+        }
     }
 
     public class ProperTreeViewItem : TreeViewItem
     {
+        private readonly WeakReference treeView;
+
         public ProperTreeViewItem(WeakReference treeView)
         {
             this.treeView = treeView;
@@ -105,23 +120,16 @@ namespace Snoop.Controls
 
         public double Indent
         {
-            get { return (double)this.GetValue(IndentProperty); }
-            set { this.SetValue(IndentProperty, value); }
+            get => (double)this.GetValue(IndentProperty);
+            set => this.SetValue(IndentProperty, value);
         }
 
+        /// <summary>Identifies the <see cref="Indent"/> dependency property.</summary>
         public static readonly DependencyProperty IndentProperty =
             DependencyProperty.Register(
                 nameof(Indent),
                 typeof(double),
                 typeof(ProperTreeViewItem));
-
-        protected override void OnSelected(RoutedEventArgs e)
-        {
-            // scroll the selection into view
-            this.BringIntoView();
-
-            base.OnSelected(e);
-        }
 
         protected override DependencyObject GetContainerForItemOverride()
         {
@@ -149,7 +157,7 @@ namespace Snoop.Controls
                 LogHelper.WriteWarning(exception);
             }
 
-            return new Size(0, 0);
+            return Size.Empty;
         }
 
         protected override Size ArrangeOverride(Size arrangeBounds)
@@ -169,10 +177,8 @@ namespace Snoop.Controls
                 LogHelper.WriteWarning(exception);
             }
 
-            return new Size(0, 0);
+            return Size.Empty;
         }
-
-        private readonly WeakReference treeView;
     }
 
     public class IndentToMarginConverter : IValueConverter
