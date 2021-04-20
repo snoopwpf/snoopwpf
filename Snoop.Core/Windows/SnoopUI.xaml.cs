@@ -330,7 +330,7 @@ namespace Snoop.Windows
             }
 
             // Check if we already have a scheduled reduce in progress
-            if (this.reducedDepthRoot is null)
+            if (this.IsReduceInProgress == false)
             {
                 this.RunInDispatcherAsync(
                     () =>
@@ -348,6 +348,8 @@ namespace Snoop.Windows
 
             this.reducedDepthRoot = newRoot;
         }
+
+        public bool IsReduceInProgress => this.reducedDepthRoot is not null;
 
         /// <summary>
         /// Loop through the properties in the current PropertyGrid and save away any properties
