@@ -157,7 +157,7 @@ namespace Snoop.Controls
                 LogHelper.WriteWarning(exception);
             }
 
-            return Size.Empty;
+            return default;
         }
 
         protected override Size ArrangeOverride(Size arrangeBounds)
@@ -177,7 +177,7 @@ namespace Snoop.Controls
                 LogHelper.WriteWarning(exception);
             }
 
-            return Size.Empty;
+            return default;
         }
     }
 
