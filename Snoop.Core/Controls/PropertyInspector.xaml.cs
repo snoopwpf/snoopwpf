@@ -411,7 +411,7 @@ namespace Snoop.Controls
 
         private void HandleNavigateToAssemblyInExplorer(object sender, ExecutedRoutedEventArgs e)
         {
-            var assembly = ((Type)e.Parameter).Assembly;
+            var assembly = (e.Parameter as Type)?.Assembly ?? ((BindableType)e.Parameter).Assembly;
             var path = assembly.Location;
 
             if (string.IsNullOrEmpty(path))
@@ -441,7 +441,7 @@ namespace Snoop.Controls
 
         private void CanNavigateToAssemblyInExplorer(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = e.Parameter is Type;
+            e.CanExecute = e.Parameter is System.Type or BindableType;
         }
 
         private void CanUpdateBindingError(object sender, CanExecuteRoutedEventArgs e)
@@ -581,7 +581,7 @@ namespace Snoop.Controls
         }
 
         /// <summary>
-        /// Get or Set the collection of User filter sets.  These are the filters that are configurable by 
+        /// Get or Set the collection of User filter sets.  These are the filters that are configurable by
         /// the user, and serialized to/from app Settings.
         /// </summary>
         public PropertyFilterSet[] UserFilterSets
@@ -620,9 +620,9 @@ namespace Snoop.Controls
         }
 
         /// <summary>
-        /// Get the collection of "all" filter sets.  This is the UserFilterSets wrapped with 
+        /// Get the collection of "all" filter sets.  This is the UserFilterSets wrapped with
         /// (Default) at the start and "Edit Filters..." at the end of the collection.
-        /// This is the collection bound to in the UI 
+        /// This is the collection bound to in the UI
         /// </summary>
         public PropertyFilterSet[] AllFilterSets
         {
