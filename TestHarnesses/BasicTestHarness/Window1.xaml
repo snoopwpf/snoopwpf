@@ -18,12 +18,25 @@
 
 		<StackPanel Orientation="Horizontal">
 			<Button Content="Click to create binding error -> " Click="BindingErrorButton_Click"/>
-			<TextBlock x:Name="textBlockForBindingError" Width="100" Height="18" Background="Gray" />
+			<TextBlock x:Name="textBlockForBindingError" Width="100" Height="18" />
 		</StackPanel>
 
 		<StackPanel Orientation="Horizontal">
 			<Label Content="Binding error in XAML" />
-			<TextBlock Width="100" Height="18" Background="Gray" Text="{Binding DoesNotExistInXAML}" />
+			<TextBlock Width="100" Height="18" Text="{Binding DoesNotExistInXAML}" />
 		</StackPanel>
+
+        <StackPanel Orientation="Horizontal">
+            <Label Content="Local Brush" />
+            <TextBlock Width="100" Height="18" Background="Gray" />
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal">
+            <Label Content="Freezable">
+                <Label.Resources>
+                    <SolidColorBrush x:Key="NonFrozenResource" />
+                </Label.Resources>
+            </Label>
+        </StackPanel>
 	</StackPanel>
 </Window>
