@@ -1,4 +1,4 @@
-﻿namespace Snoop.Infrastructure.Diagnostics
+namespace Snoop.Infrastructure.Diagnostics
 {
     using System;
     using System.Collections.Generic;
@@ -131,7 +131,7 @@
             {
                 foreach (var child in item.Children)
                 {
-                    this.Analyze(child, diagnosticProvider);
+                    this.AnalyzeTree(child, diagnosticProvider);
                 }
             }
         }
