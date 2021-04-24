@@ -1,4 +1,4 @@
-namespace Snoop.Infrastructure.Diagnostics
+﻿namespace Snoop.Infrastructure.Diagnostics
 {
     using System;
     using System.Collections.Generic;
@@ -37,7 +37,7 @@ namespace Snoop.Infrastructure.Diagnostics
 
             foreach (var diagnosticProvider in this.diagnosticProviders)
             {
-                diagnosticProvider.PropertyChanged += this.HandleDiagnosticProviderOnPropertyChanged;
+                diagnosticProvider.PropertyChanged += this.HandleDiagnosticProviderPropertyChanged;
             }
         }
 
@@ -139,7 +139,7 @@ namespace Snoop.Infrastructure.Diagnostics
             }
         }
 
-        private void HandleDiagnosticProviderOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        private void HandleDiagnosticProviderPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName?.Equals(nameof(DiagnosticProvider.IsActive), StringComparison.Ordinal) == true
                 && sender is DiagnosticProvider diagnosticProvider)
