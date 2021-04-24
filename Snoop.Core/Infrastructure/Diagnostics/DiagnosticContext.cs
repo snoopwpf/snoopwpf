@@ -31,6 +31,9 @@ namespace Snoop.Infrastructure.Diagnostics
             this.diagnosticProviders.Add(new NonVirtualizedListsDiagnosticProvider());
             this.diagnosticProviders.Add(new UnresolvedDynamicResourceDiagnosticProvider());
             this.diagnosticProviders.Add(new BindingLeakDiagnosticProvider());
+#if USE_WPF_BINDING_DIAG
+            //this.diagnosticProviders.Add(new BindingDiagnosticProvider());
+#endif
 
             foreach (var diagnosticProvider in this.diagnosticProviders)
             {
