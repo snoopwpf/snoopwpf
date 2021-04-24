@@ -103,6 +103,8 @@ class Build : NukeBuild
 
     AbsolutePath ChocolateyDirectory => RootDirectory / "chocolatey";
 
+    AbsolutePath TestResultDirectory => OutputDirectory / "test-results";
+
     string CandleExecutable => ToolPathResolver.GetPackageExecutable("wix", "candle.exe");
 
     string LightExecutable => ToolPathResolver.GetPackageExecutable("wix", "light.exe");
@@ -165,8 +167,6 @@ class Build : NukeBuild
                 .SetInformationalVersion(InformationalVersion)
                 .SetVerbosity(DotNetVerbosity.Minimal));
         });
-
-    AbsolutePath TestResultDirectory => OutputDirectory / "test-results";
 
     Target Test => _ => _
         .After(Compile)
