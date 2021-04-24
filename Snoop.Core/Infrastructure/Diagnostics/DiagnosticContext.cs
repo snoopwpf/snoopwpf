@@ -118,7 +118,7 @@
             {
                 foreach (var child in item.Children)
                 {
-                    this.Analyze(child);
+                    this.AnalyzeTree(child);
                 }
             }
         }
