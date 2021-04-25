@@ -347,7 +347,7 @@ All other rights reserved.
 		>
 			<Image Style="{x:Null}" Margin="1" Source="{DynamicResource cameraDrawingImage}"/>
 			<Button.ToolTip>
-				<TextBlock Style="{x:Null}" Text="Save the current preview as bitmap."/>
+				<TextBlock Style="{x:Null}" Text="Save the current preview to a file."/>
 			</Button.ToolTip>
 		</Button>
 	</Grid>
