@@ -1,9 +1,12 @@
 ﻿namespace Snoop.Infrastructure.Diagnostics
 {
+    using System.ComponentModel;
+    using System.Runtime.CompilerServices;
     using System.Windows.Threading;
+    using JetBrains.Annotations;
     using Snoop.Data.Tree;
 
-    public class DiagnosticItem
+    public class DiagnosticItem : INotifyPropertyChanged
     {
         public DiagnosticItem(DiagnosticProvider diagnosticProvider)
         {
@@ -41,21 +44,13 @@
         public TreeItem? TreeItem { get; set; }
 
         public Dispatcher? Dispatcher { get; set; }
-    }
 
-    public enum DiagnosticLevel
-    {
-        Info,
-        Warning,
-        Error,
-        Critical
-    }
+        public event PropertyChangedEventHandler? PropertyChanged;
 
-    public enum DiagnosticArea
-    {
-        Binding,
-        Resource,
-        Performance,
-        Maintainability
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }
