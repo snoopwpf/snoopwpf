@@ -48,7 +48,7 @@
                             case Brush brush when brush != Brushes.Transparent:
                                 yield return
                                     new(this,
-                                        "LocalBrush",
+                                        "Local brush",
                                         $"Property '{dpd.DisplayName}' contains the local brush '{localValue}'. Prevent local brushes to keep the design maintainable.",
                                         DiagnosticArea.Maintainability,
                                         DiagnosticLevel.Info)
@@ -62,7 +62,7 @@
                             case Color color when color != Colors.Transparent:
                                 yield return
                                     new(this,
-                                        "LocalColor",
+                                        "Local color",
                                         $"Property '{dpd.DisplayName}' contains the local color '{localValue}'. Prevent local colors to keep the design maintainable.",
                                         DiagnosticArea.Maintainability,
                                         DiagnosticLevel.Info)
