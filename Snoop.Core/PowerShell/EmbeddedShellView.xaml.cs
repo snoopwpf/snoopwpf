@@ -1,4 +1,4 @@
-// (c) Copyright Bailey Ling.
+﻿// (c) Copyright Bailey Ling.
 // This source is subject to the Microsoft Public License (Ms-PL).
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
@@ -63,7 +63,14 @@ namespace Snoop.PowerShell
 
                 if (targetSnoopUi is not null)
                 {
-                    embeddedShellView.Start(targetSnoopUi);
+                    try
+                    {
+                        embeddedShellView.Start(targetSnoopUi);
+                    }
+                    catch (Exception exception)
+                    {
+                        embeddedShellView.outputTextBox.AppendText(exception.ToString());
+                    }
                 }
             });
         }
