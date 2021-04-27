@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Threading;
@@ -221,10 +222,11 @@
                 return Assembly.GetExecutingAssembly();
             }
 
-#if NETCOREAPP3_1 || NET50
-            if (args.Name?.StartsWith("System.Management.Automation,") == true)
+#if NETCOREAPP3_1 || NET5_0_OR_GREATER
+            if (args.Name?.StartsWith("System.Management.Automation,") == true
+                && Snoop.PowerShell.ShellConstants.TryGetPowerShellCoreInstallPath(out var powershellCoreInstallPath))
             {
-                return Assembly.LoadFrom(Snoop.PowerShell.ShellConstants.GetPowerShellAssemblyPath());
+                return Assembly.LoadFrom(Path.Combine(powershellCoreInstallPath, "System.Management.Automation.dll"));
             }
 #endif
 

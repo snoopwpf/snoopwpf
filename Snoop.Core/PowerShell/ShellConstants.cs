@@ -6,6 +6,7 @@
 namespace Snoop.PowerShell
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using Microsoft.Win32;
     using Snoop.Data.Tree;
@@ -66,21 +67,10 @@ namespace Snoop.PowerShell
             {
 #if NETCOREAPP3_0
                 return false;
-#elif NETCOREAPP3_1 || NET50 || NET5_0_OR_GREATER
-                if (File.Exists(GetPowerShellAssemblyPath()))
+#elif NETCOREAPP3_1 || NET5_0_OR_GREATER
+                if (TryGetPowerShellCoreInstallPath(out _))
                 {
                     return true;
-                }
-
-                var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\PowerShellCore\InstalledVersions\31ab5147-9a97-4452-8443-d9709f0516e1");
-                if (key is not null)
-                {
-                    var keyValue = key.GetValue("SemanticVersion") as string;
-                    if (Version.TryParse(keyValue, out var version)
-                        && version >= new Version(7, 0))
-                    {
-                        return true;
-                    }
                 }
 
                 return false;
@@ -98,18 +88,52 @@ namespace Snoop.PowerShell
 
                 return false;
 #else
-                    invalid target framework
+                invalid target framework
 #endif
             }
         }
 
-#if NETCOREAPP3_1 || NET50 || NET5_0_OR_GREATER
-        public static string GetPowerShellAssemblyPath()
+#if NETCOREAPP3_1 || NET5_0_OR_GREATER
+        public static bool TryGetPowerShellCoreInstallPath([NotNullWhen(true)] out string? path)
         {
-            var rootPath = Environment.Is64BitProcess
-                ? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)
-                : Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
-            return Path.Combine(rootPath, @"PowerShell\7\System.Management.Automation.dll");
+#if NETCOREAPP3_1
+            var powerShellVersion = new Version(6, 0);
+#elif NET5_0_OR_GREATER
+            var powerShellVersion = new Version(7, 0);
+#endif
+            return TryGetPowerShellCoreInstallPath(powerShellVersion, out path);
+        }
+
+        public static bool TryGetPowerShellCoreInstallPath(Version version, [NotNullWhen(true)] out string? path)
+        {
+            path = null;
+
+            using var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\PowerShellCore\InstalledVersions");
+            if (key is not null)
+            {
+                foreach (var subKeyName in key.GetSubKeyNames())
+                {
+                    using var subKey = key.OpenSubKey(subKeyName);
+
+                    var semanticVersionString = subKey?.GetValue("SemanticVersion") as string;
+
+                    if (string.IsNullOrEmpty(semanticVersionString) == false
+                        && Version.TryParse(semanticVersionString.Split('-', StringSplitOptions.RemoveEmptyEntries)[0], out var semanticVersion)
+                        && semanticVersion >= version)
+                    {
+                        var installDir = subKey?.GetValue("InstallDir") as string;
+
+                        if (string.IsNullOrEmpty(installDir) == false
+                            && Directory.Exists(installDir))
+                        {
+                            path = installDir;
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
         }
 #endif
     }
