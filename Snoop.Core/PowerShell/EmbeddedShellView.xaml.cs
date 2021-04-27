@@ -1,4 +1,4 @@
-﻿// (c) Copyright Bailey Ling.
+// (c) Copyright Bailey Ling.
 // This source is subject to the Microsoft Public License (Ms-PL).
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
@@ -172,18 +172,21 @@ namespace Snoop.PowerShell
 
         private void OnSnoopUiOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (sender is SnoopUI snoopUi)
+            if (sender is not SnoopUI snoopUi
+                || this.host is null)
             {
-                switch (e.PropertyName)
-                {
-                    case nameof(SnoopUI.CurrentSelection):
-                        this.SetVariable(ShellConstants.Selected, snoopUi.CurrentSelection);
-                        break;
+                return;
+            }
 
-                    case nameof(SnoopUI.Root):
-                        this.SetVariable(ShellConstants.Root, snoopUi.Root);
-                        break;
-                }
+            switch (e.PropertyName)
+            {
+                case nameof(SnoopUI.CurrentSelection):
+                    this.SetVariable(ShellConstants.Selected, snoopUi.CurrentSelection);
+                    break;
+
+                case nameof(SnoopUI.Root):
+                    this.SetVariable(ShellConstants.Root, snoopUi.Root);
+                    break;
             }
         }
 
