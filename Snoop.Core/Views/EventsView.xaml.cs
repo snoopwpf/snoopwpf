@@ -32,9 +32,9 @@ namespace Snoop.Views
 
         public EventsView()
         {
-            this.InitializeComponent();
-
             this.InterestingEvents = new(this.interestingEvents);
+
+            this.InitializeComponent();
 
             var sorter = new List<EventTracker>();
 
