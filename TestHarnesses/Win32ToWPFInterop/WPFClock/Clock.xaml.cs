@@ -30,7 +30,7 @@
 
             // finally, seek the timeline, which assumes a beginning at midnight, to the appropriate
             // offset
-            Storyboard sb = (Storyboard)this.podClock.FindResource("sb");
+            Storyboard sb = (Storyboard)this.podClock.FindResource("Storyboard");
             sb.Begin(this.podClock, HandoffBehavior.SnapshotAndReplace, true);
             sb.Seek(this.podClock, now.TimeOfDay, TimeSeekOrigin.BeginTime);
         }

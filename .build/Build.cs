@@ -122,6 +122,9 @@ class Build : NukeBuild
         {
             DotNetRestore(s => s
                 .SetProjectFile(Solution));
+
+            DotNetRestore(s => s
+                .SetProjectFile(TestHarnessSolution));
         });
 
     Target Compile => _ => _
@@ -143,14 +146,22 @@ class Build : NukeBuild
                 .SetAssemblyVersion(AssemblySemVer)
                 .SetFileVersion(AssemblySemVer)
                 .SetInformationalVersion(InformationalVersion)
-
                 .SetVerbosity(DotNetVerbosity.Minimal));
         });
 
     [PublicAPI]
     Target CompileTestHarnesses => _ => _
+        .DependsOn(Restore)
         .Executes(() =>
         {
+            DotNetBuild(s => s
+                .SetProjectFile(TestHarnessSolution)
+                .SetConfiguration(Configuration)
+                .SetAssemblyVersion(AssemblySemVer)
+                .SetInformationalVersion(InformationalVersion)
+                .SetNoRestore(true)
+                .SetVerbosity(DotNetVerbosity.Minimal));
+
             MSBuild(s => s
                 .SetProjectFile(TestHarnessSolution.Win32ToWPFInterop.win32clock)
                 .SetConfiguration(Configuration)
@@ -159,13 +170,6 @@ class Build : NukeBuild
                 .SetInformationalVersion(InformationalVersion)
                 .DisableRestore()
                 .SetVerbosity(MSBuildVerbosity.Minimal));
-
-            DotNetBuild(s => s
-                .SetProjectFile(TestHarnessSolution)
-                .SetConfiguration(Configuration)
-                .SetAssemblyVersion(AssemblySemVer)
-                .SetInformationalVersion(InformationalVersion)
-                .SetVerbosity(DotNetVerbosity.Minimal));
         });
 
     Target Test => _ => _

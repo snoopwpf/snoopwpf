@@ -1,8 +1,10 @@
+
 Build/
 Intermediate/
 bin/
 obj/
 output/
+temp/
 artifacts/
 Debug/
 Release/
@@ -30,3 +32,4 @@ _ReSharper*/
 
 # Designer
 FAML.Designer.settings
+.nuke/build.schema.json
