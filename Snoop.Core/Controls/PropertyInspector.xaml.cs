@@ -11,6 +11,7 @@ namespace Snoop.Controls
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
+    using System.IO;
     using System.Linq;
     using System.Text;
     using System.Windows;
@@ -32,6 +33,7 @@ namespace Snoop.Controls
         public static readonly RoutedCommand CopyXamlCommand = new(nameof(CopyXamlCommand), typeof(PropertyInspector));
 
         public static readonly RoutedCommand NavigateToAssemblyInExplorerCommand = new(nameof(NavigateToAssemblyInExplorerCommand), typeof(PropertyInspector));
+        public static readonly RoutedCommand OpenTypeInILSpyCommand = new(nameof(OpenTypeInILSpyCommand), typeof(PropertyInspector));
 
         public static readonly RoutedCommand UpdateBindingErrorCommand = new(nameof(UpdateBindingErrorCommand), typeof(PropertyInspector));
 
@@ -53,6 +55,7 @@ namespace Snoop.Controls
             this.CommandBindings.Add(new CommandBinding(CopyXamlCommand, this.HandleCopyXaml, this.CanCopyXaml));
 
             this.CommandBindings.Add(new CommandBinding(NavigateToAssemblyInExplorerCommand, this.HandleNavigateToAssemblyInExplorer, this.CanNavigateToAssemblyInExplorer));
+            this.CommandBindings.Add(new CommandBinding(OpenTypeInILSpyCommand, this.HandleOpenTypeInILSpy, this.CanOpenTypeInILSpy));
             this.CommandBindings.Add(new CommandBinding(UpdateBindingErrorCommand, this.HandleUpdateBindingError, this.CanUpdateBindingError));
 
             // watch for mouse "back" button
@@ -442,6 +445,45 @@ namespace Snoop.Controls
         private void CanNavigateToAssemblyInExplorer(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = e.Parameter is System.Type or BindableType;
+        }
+
+        private void HandleOpenTypeInILSpy(object sender, ExecutedRoutedEventArgs e)
+        {
+            var type = (e.Parameter as Type) ?? (BindableType)e.Parameter;
+            var assembly = type.Assembly;
+            var assemblyLocation = assembly.Location;
+
+            if (string.IsNullOrEmpty(assemblyLocation)
+                || PathHelper.TryFindPathOnPath("ilspy.exe", out var ilspyPath) == false)
+            {
+                return;
+            }
+
+            var processStartInfo = new ProcessStartInfo
+            {
+                FileName = ilspyPath,
+                UseShellExecute = true,
+                WindowStyle = ProcessWindowStyle.Normal,
+                // https://github.com/icsharpcode/ILSpy/blob/master/doc/Command%20Line.txt
+                Arguments = $"\"{assemblyLocation}\" /navigateTo:T:{type.FullName}"
+            };
+
+            try
+            {
+                using (Process.Start(processStartInfo))
+                {
+                }
+            }
+            catch
+            {
+                // ignored
+            }
+        }
+
+        private void CanOpenTypeInILSpy(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = e.Parameter is System.Type or BindableType
+                && PathHelper.TryFindPathOnPath("ilspy.exe", out _);
         }
 
         private void CanUpdateBindingError(object sender, CanExecuteRoutedEventArgs e)

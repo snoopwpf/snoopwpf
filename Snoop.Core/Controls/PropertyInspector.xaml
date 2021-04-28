@@ -41,17 +41,28 @@ All other rights reserved.
         </TextBox.ToolTip>
     </TextBox>
 
-    <TextBlock Grid.Row="1" Margin="2" Style="{x:Null}" Background="Transparent" TextWrapping="Wrap">
-        <Hyperlink Style="{x:Null}"
-                   Command="{x:Static controls:PropertyInspector.NavigateToAssemblyInExplorerCommand}"
-                   CommandParameter="{Binding ElementName=propertyInspector, Path=DelveType, Mode=OneWay}">
+    <StackPanel Grid.Row="1" Margin="2"
+                Orientation="Horizontal">
+        <TextBlock Style="{x:Null}" Background="Transparent" TextWrapping="Wrap">
+            <Hyperlink Style="{x:Null}"
+                       Command="{x:Static controls:PropertyInspector.NavigateToAssemblyInExplorerCommand}"
+                       CommandParameter="{Binding ElementName=propertyInspector, Path=DelveType, Mode=OneWay}">
+                <TextBlock Style="{x:Null}"
+                           Text="{Binding ElementName=propertyInspector, Path=DelveType.FullName, Mode=OneWay}" />
+            </Hyperlink>
+
+            <TextBlock.ToolTip>
+                <TextBlock Style="{x:Null}" Text="This is the type of the currently selected object" />
+            </TextBlock.ToolTip>
+        </TextBlock>
+
+        <Button Style="{x:Null}"
+                Command="{x:Static controls:PropertyInspector.OpenTypeInILSpyCommand}"
+                CommandParameter="{Binding ElementName=propertyInspector, Path=DelveType, Mode=OneWay}">
             <TextBlock Style="{x:Null}"
-                       Text="{Binding ElementName=propertyInspector, Path=DelveType.FullName, Mode=OneWay}" />
-        </Hyperlink>
-        <TextBlock.ToolTip>
-            <TextBlock Style="{x:Null}" Text="This is the type of the currently selected object" />
-        </TextBlock.ToolTip>
-    </TextBlock>
+                       Text="ILSpy" />
+        </Button>
+    </StackPanel>
 
     <DockPanel Grid.Row="2"
                LastChildFill="True"
