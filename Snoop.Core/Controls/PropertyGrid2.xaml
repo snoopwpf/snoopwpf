@@ -124,7 +124,7 @@ All other rights reserved.
                     </Trigger>
 
                     <DataTrigger Binding="{Binding IsLocallySet}" Value="False">
-						<Setter Property="Foreground" Value="Gray"/>
+						<Setter Property="Foreground" Value="Black"/>
 					</DataTrigger>
 					<!--<DataTrigger Binding="{Binding IsOdd}" Value="False">
 						<Setter Property="Background" Value="#FFEAEAEA"/>
