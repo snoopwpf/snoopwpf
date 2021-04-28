@@ -200,7 +200,8 @@
 
         public override TreeItem Construct(object target, TreeItem? parent, bool omitChildren = false)
         {
-            if (target is not AutomationPeer automationPeer
+            if (omitChildren == false
+                && target is not AutomationPeer
                 && target is UIElement element)
             {
                 target = UIElementAutomationPeer.CreatePeerForElement(element);
