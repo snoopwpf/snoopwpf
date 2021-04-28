@@ -1,8 +1,8 @@
-﻿<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Snoop.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="AppChooserWindowPlacement" Type="System.String" Scope="User">
+    <Setting Name="AppChooserWindowPlacement" Type="Snoop.Infrastructure.WINDOWPLACEMENT" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="SetOwnerWindow" Type="System.Boolean" Scope="User">
@@ -14,8 +14,12 @@
     <Setting Name="MultipleDispatcherMode" Type="Snoop.Data.MultipleDispatcherMode" Scope="User">
       <Value Profile="(Default)">Ask</Value>
     </Setting>
-    <Setting Name="GlobalHotKey" Type="System.String" Scope="User">
+    <Setting Name="GlobalHotKey" Type="Snoop.Data.KeyGestureEx" Scope="User">
       <Value Profile="(Default)">CTRL + WIN + ALT + F12</Value>
+    </Setting>
+    <Setting Name="ILSpyPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">%path%</Value>
     </Setting>
   </Settings>
 </SettingsFile>
+

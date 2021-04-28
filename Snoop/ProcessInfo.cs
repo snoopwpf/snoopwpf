@@ -76,7 +76,8 @@
 
                 MultipleAppDomainMode = settings.MultipleAppDomainMode,
                 MultipleDispatcherMode = settings.MultipleDispatcherMode,
-                SetOwnerWindow = settings.SetOwnerWindow
+                SetOwnerWindow = settings.SetOwnerWindow,
+                ILSpyPath = settings.ILSpyPath
             };
         }
     }

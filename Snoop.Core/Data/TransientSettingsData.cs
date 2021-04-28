@@ -14,6 +14,7 @@ namespace Snoop.Data
             this.MultipleAppDomainMode = MultipleAppDomainMode.Ask;
             this.MultipleDispatcherMode = MultipleDispatcherMode.Ask;
             this.SetOwnerWindow = true;
+            this.ILSpyPath = "%path%";
         }
 
         public static TransientSettingsData? Current { get; private set; }
@@ -27,6 +28,8 @@ namespace Snoop.Data
         public bool SetOwnerWindow { get; set; }
 
         public long TargetWindowHandle { get; set; }
+
+        public string ILSpyPath { get; set; }
 
         public string WriteToFile()
         {

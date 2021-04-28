@@ -8,27 +8,47 @@ namespace Snoop.Infrastructure.Helpers
     {
         public static bool TryFindPathOnPath(string fileName, [NotNullWhen(true)] out string? foundFullPath)
         {
-            foundFullPath = FindPathOnPath(fileName);
+            return TryFindPathOnPath(Environment.GetEnvironmentVariable("PATH")!, fileName, out foundFullPath);
+        }
+
+        public static bool TryFindPathOnPath(string? path, string fileName, [NotNullWhen(true)] out string? foundFullPath)
+        {
+            foundFullPath = FindPathOnPath(path, fileName);
             return string.IsNullOrEmpty(foundFullPath) == false;
         }
 
         public static string? FindPathOnPath(string fileName)
+        {
+            return FindPathOnPath(Environment.GetEnvironmentVariable("PATH")!, fileName);
+        }
+
+        public static string? FindPathOnPath(string? path, string fileName)
         {
             if (File.Exists(fileName))
             {
                 return Path.GetFullPath(fileName);
             }
 
-            var pathEnv = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
-
-            foreach (var path in pathEnv.Split(Path.PathSeparator))
+            if (string.IsNullOrEmpty(path))
             {
-                if (string.IsNullOrEmpty(path))
+                return null;
+            }
+
+            path = Environment.ExpandEnvironmentVariables(path);
+
+            if (File.Exists(path))
+            {
+                return Path.GetFullPath(path);
+            }
+
+            foreach (var pathPart in path.Split(Path.PathSeparator))
+            {
+                if (string.IsNullOrEmpty(pathPart))
                 {
                     continue;
                 }
 
-                var fullPath = Path.Combine(path, fileName);
+                var fullPath = Path.Combine(pathPart, fileName);
                 if (File.Exists(fullPath))
                 {
                     return fullPath;

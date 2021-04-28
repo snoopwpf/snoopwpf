@@ -15,7 +15,8 @@
             nameof(Settings.Default.MultipleAppDomainMode),
             nameof(Settings.Default.MultipleDispatcherMode),
             nameof(Settings.Default.SetOwnerWindow),
-            nameof(Settings.Default.GlobalHotKey)
+            nameof(Settings.Default.GlobalHotKey),
+            nameof(Settings.Default.ILSpyPath),
         };
 
         public static readonly DependencyProperty PropertiesProperty = DependencyProperty.Register(nameof(Properties), typeof(ObservableCollection<PropertyInformation>), typeof(SettingsView), new PropertyMetadata(default(ObservableCollection<PropertyInformation>)));

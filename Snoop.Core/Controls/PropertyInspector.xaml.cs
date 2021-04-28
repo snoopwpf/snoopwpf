@@ -11,13 +11,13 @@ namespace Snoop.Controls
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
-    using System.IO;
     using System.Linq;
     using System.Text;
     using System.Windows;
     using System.Windows.Input;
     using JetBrains.Annotations;
     using Snoop.Core.Properties;
+    using Snoop.Data;
     using Snoop.Infrastructure;
     using Snoop.Infrastructure.Helpers;
     using Snoop.Windows;
@@ -42,6 +42,8 @@ namespace Snoop.Controls
         public PropertyInspector()
         {
             this.InitializeComponent();
+
+            this.delveTypeContextMenu.DataContext = this;
 
             this.inspector = this.PropertyGrid;
             this.inspector.Filter = this.propertyFilter;
@@ -454,7 +456,7 @@ namespace Snoop.Controls
             var assemblyLocation = assembly.Location;
 
             if (string.IsNullOrEmpty(assemblyLocation)
-                || PathHelper.TryFindPathOnPath("ilspy.exe", out var ilspyPath) == false)
+                || PathHelper.TryFindPathOnPath(TransientSettingsData.Current?.ILSpyPath, "ilspy.exe", out var ilspyPath) == false)
             {
                 return;
             }
@@ -483,7 +485,7 @@ namespace Snoop.Controls
         private void CanOpenTypeInILSpy(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = e.Parameter is System.Type or BindableType
-                && PathHelper.TryFindPathOnPath("ilspy.exe", out _);
+                && PathHelper.TryFindPathOnPath(TransientSettingsData.Current?.ILSpyPath, "ilspy.exe", out _);
         }
 
         private void CanUpdateBindingError(object sender, CanExecuteRoutedEventArgs e)
