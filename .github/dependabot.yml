@@ -1,0 +1,33 @@
+version: 2
+updates:
+- package-ecosystem: nuget
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: System.Management.Automation
+    versions:
+    - "> 6.2.3, < 7"
+  - dependency-name: System.Management.Automation
+    versions:
+    - ">= 7.a, < 8"
+  - dependency-name: Verify.NUnit
+    versions:
+    - "> 11.0.3"
+  - dependency-name: Verify.NUnit
+    versions:
+    - 10.0.0
+    - 10.5.1
+    - 10.7.0
+    - 10.8.0
+    - 10.9.0
+    - 11.0.0
+    - 11.0.1
+    - 11.0.2
+  - dependency-name: Microsoft.CodeAnalysis.CSharp
+    versions:
+    - 3.9.0
+  - dependency-name: NUnit
+    versions:
+    - 3.13.0
