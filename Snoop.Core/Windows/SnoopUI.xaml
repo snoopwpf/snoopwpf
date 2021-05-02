@@ -160,7 +160,7 @@ All other rights reserved.
         <Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="5*"/>
-			<RowDefinition Height="1*" MinHeight="100"/>
+			<RowDefinition Height="1.5*" MinHeight="100"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
