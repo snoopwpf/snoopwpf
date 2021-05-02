@@ -23,7 +23,7 @@ namespace Snoop
     public partial class WindowFinder
     {
         private static readonly Point cursorHotSpot = new(16, 20);
-        private readonly Cursor crosshairsCursor;
+        private Cursor? crosshairsCursor;
         private Point startPoint;
         private WindowInfo? currentWindowInfo;
         private readonly LowLevelMouseHook lowLevelMouseHook;
@@ -35,7 +35,7 @@ namespace Snoop
         {
             this.InitializeComponent();
 
-            this.crosshairsCursor = ConvertToCursor(this.WindowInfoControl, cursorHotSpot);
+            this.Loaded += (_, _) => this.crosshairsCursor = this.ConvertToCursor(this.WindowInfoControl, cursorHotSpot);
 
             this.lowLevelMouseHook = new LowLevelMouseHook();
             this.lowLevelMouseHook.LowLevelMouseMove += this.LowLevelMouseMove;
@@ -155,7 +155,7 @@ namespace Snoop
             {
                 this.lastWindowInfoCursor = this.currentWindowInfoCursor;
 
-                this.currentWindowInfoCursor = ConvertToCursor(this.WindowInfoControl, cursorHotSpot);
+                this.currentWindowInfoCursor = this.ConvertToCursor(this.WindowInfoControl, cursorHotSpot);
                 this.Cursor = this.currentWindowInfoCursor;
             }
             else if (this.lowLevelMouseHook.IsRunning)
@@ -192,7 +192,7 @@ namespace Snoop
         }
 
         // https://stackoverflow.com/a/27077188/122048
-        private static Cursor ConvertToCursor(UIElement control, Point hotSpot = default)
+        private Cursor ConvertToCursor(UIElement control, Point hotSpot = default)
         {
             // convert FrameworkElement to PNG stream
             using (var pngStream = new MemoryStream())
@@ -206,7 +206,8 @@ namespace Snoop
                 control.Arrange(rect);
                 control.UpdateLayout();
 
-                var rtb = VisualCaptureUtil.RenderVisual(control, new Size(control.DesiredSize.Width, control.DesiredSize.Height), 96, PixelFormats.Pbgra32);
+                var dpiScale = PresentationSource.FromVisual(this).CompositionTarget.TransformToDevice;
+                var rtb = VisualCaptureUtil.RenderVisual(control, new Size(control.DesiredSize.Width, control.DesiredSize.Height), (int)Math.Ceiling(dpiScale.M11 * 96), (int)Math.Ceiling(dpiScale.M22 * 96));
 
                 var encoder = new PngBitmapEncoder();
                 encoder.Frames.Add(BitmapFrame.Create(rtb));

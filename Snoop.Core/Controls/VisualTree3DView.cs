@@ -208,7 +208,7 @@ namespace Snoop.Controls
                 visual = drawingVisual;
             }
 
-            var renderTargetBitmap = VisualCaptureUtil.RenderVisual(visual, bounds.Size, dpi, viewport3D: viewport3D);
+            var renderTargetBitmap = VisualCaptureUtil.RenderVisual(visual, bounds.Size, dpi, dpi, viewport3D: viewport3D);
             renderTargetBitmap.FreezeIfPossible();
             var imageBrush = new ImageBrush(renderTargetBitmap);
             imageBrush.FreezeIfPossible();
