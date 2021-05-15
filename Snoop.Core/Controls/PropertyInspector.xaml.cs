@@ -754,8 +754,8 @@ namespace Snoop.Controls
                 IsReadOnly = true,
                 Properties = new[]
                 {
-                    "width", "height", "actualwidth", "actualheight",
-                    "desiredsize",
+                    "width", "height", "minwidth", "minheight", "actualwidth", "actualheight",
+                    "desiredsize", "rendersize",
                     "margin", "padding",
                     "left", "top",
                     "horizontalalignment", "verticalalignment",
