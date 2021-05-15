@@ -1007,16 +1007,17 @@ namespace Snoop.Infrastructure
 
         public int CompareTo(object? obj)
         {
-            var thisIndex = this.CollectionIndex();
             var other = obj as PropertyInformation;
 
             if (other is not null)
             {
-                var objIndex = other.CollectionIndex();
+                var thisIndex = this.CollectionIndex();
+                var otherIndex = other.CollectionIndex();
+
                 if (thisIndex >= 0
-                    && objIndex >= 0)
+                    && otherIndex >= 0)
                 {
-                    return thisIndex.CompareTo(objIndex);
+                    return thisIndex.CompareTo(otherIndex);
                 }
             }
 
