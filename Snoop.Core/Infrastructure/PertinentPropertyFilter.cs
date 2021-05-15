@@ -6,15 +6,14 @@
 namespace Snoop.Infrastructure
 {
     using System.ComponentModel;
+    using System.Linq;
     using System.Windows;
 
     public static class PertinentPropertyFilter
     {
         public static bool Filter(object target, PropertyDescriptor property)
         {
-            var frameworkElement = target as FrameworkElement;
-
-            if (frameworkElement is null)
+            if (target is not DependencyObject dependencyObject)
             {
                 return true;
             }
@@ -29,10 +28,10 @@ namespace Snoop.Infrastructure
                     return false;
                 }
 
-                var currentElement = frameworkElement;
+                var currentElement = dependencyObject;
                 do
                 {
-                    currentElement = currentElement.Parent as FrameworkElement;
+                    currentElement = LogicalTreeHelper.GetParent(currentElement);
                     if (currentElement is not null
                         && dpd.DependencyProperty.OwnerType.IsInstanceOfType(currentElement))
                     {
@@ -44,24 +43,24 @@ namespace Snoop.Infrastructure
                 return false;
             }
 
-            var attachedPropertyForType = (AttachedPropertyBrowsableForTypeAttribute?)property.Attributes[typeof(AttachedPropertyBrowsableForTypeAttribute)];
+            var browsableForTypeAttributes = property.Attributes.OfType<AttachedPropertyBrowsableForTypeAttribute>();
 
-            if (attachedPropertyForType is not null)
             {
-                // when using [AttachedPropertyBrowsableForType(typeof(IMyInterface))] and IMyInterface is not a DependencyObject, Snoop crashes.
-                // see http://snoopwpf.codeplex.com/workitem/6712
-
-                if (typeof(DependencyObject).IsAssignableFrom(attachedPropertyForType.TargetType))
+                var hadAttribute = false;
+                foreach (var attachedPropertyForType in browsableForTypeAttributes)
                 {
-                    var doType = DependencyObjectType.FromSystemType(attachedPropertyForType.TargetType);
-                    if (doType is not null
-                        && doType.IsInstanceOfType(frameworkElement))
+                    hadAttribute = true;
+
+                    if (attachedPropertyForType.TargetType.IsInstanceOfType(target))
                     {
                         return true;
                     }
                 }
 
-                return false;
+                if (hadAttribute)
+                {
+                    return false;
+                }
             }
 
             var attachedPropertyForAttribute = (AttachedPropertyBrowsableWhenAttributePresentAttribute?)property.Attributes[typeof(AttachedPropertyBrowsableWhenAttributePresentAttribute)];
