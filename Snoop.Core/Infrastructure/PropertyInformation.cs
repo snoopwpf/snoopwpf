@@ -303,7 +303,9 @@ namespace Snoop.Infrastructure
 
                 var stringValue = value.ToString() ?? string.Empty;
 
-                if (stringValue.Equals(value.GetType().ToString(), StringComparison.Ordinal))
+                var stringValueIsTypeToString = stringValue.Equals(value.GetType().ToString(), StringComparison.Ordinal);
+
+                if (stringValueIsTypeToString)
                 {
                     // Add brackets around types to distinguish them from values.
                     // Replace long type names with short type names for some specific types, for easier readability.
@@ -336,14 +338,21 @@ namespace Snoop.Infrastructure
                     // Display both the value and the resource key, if there's a key for this property.
                     if (string.IsNullOrEmpty(this.ResourceKey) == false)
                     {
-                        return string.Format("{0} {1}", this.ResourceKey, stringValue);
+                        return string.Format("{0} [{1}]", stringValue, this.ResourceKey);
                     }
 
-                    // if the value comes from a Binding, show the path in [] brackets
+                    // if the value comes from a Binding, show the binding details in [] brackets
                     if (this.IsExpression
-                        && this.Binding is BindingBase)
+                        && this.Binding is { } binding)
                     {
-                        return string.Format("[Binding] {0}", BindingDisplayHelper.BuildBindingDescriptiveString(this.Binding));
+                        var bindingDescriptiveString = BindingDisplayHelper.BuildBindingDescriptiveString(binding);
+
+                        if (stringValueIsTypeToString)
+                        {
+                            return string.Format("[Binding] {0}", bindingDescriptiveString);
+                        }
+
+                        return string.Format("{0} [Binding] {1}", stringValue, bindingDescriptiveString);
                     }
                 }
 
