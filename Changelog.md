@@ -11,6 +11,7 @@
   - Fixed an exception when application contains invalid resource definitions
   - [#221](../../issues/221) - DPI aware Issue?
   - [#232](../../issues/232) - System.NotSupportedException
+  - [#252](../../issues/252) - Display Scaling
 
 - ### Improvements
 
