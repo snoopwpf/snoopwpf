@@ -886,11 +886,6 @@ namespace Snoop.Infrastructure
             return null;
         }
 
-        public static List<PropertyDescriptor> GetAllProperties(object obj)
-        {
-            return GetAllProperties(obj, getAllPropertiesAttributeFilter);
-        }
-
         public static List<PropertyDescriptor> GetAllProperties(object obj, Attribute[] attributes)
         {
             var propertiesToReturn = new List<PropertyDescriptor>();
@@ -936,7 +931,7 @@ namespace Snoop.Infrastructure
                         break;
                     }
 
-                    currentObj = Activator.CreateInstance(nextBaseTypeWithDefaultConstructor)!;
+                    currentObj = Activator.CreateInstance(nextBaseTypeWithDefaultConstructor);
                 }
             }
 
