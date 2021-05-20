@@ -1,4 +1,4 @@
-﻿namespace Snoop.Infrastructure
+namespace Snoop.Infrastructure
 {
     using System;
     using System.Collections.Generic;
@@ -333,6 +333,7 @@
                     case MultipleDispatcherMode.Ask when dispatchers.Count == 1:
                         useMultipleDispatcherMode = false;
                         break;
+
                     default:
                         {
                             var result =
@@ -358,7 +359,10 @@
                 {
                     SnoopModes.MultipleDispatcherMode = true;
 
-                    var thread = new Thread(DispatchOut);
+                    var thread = new Thread(DispatchOut)
+                        {
+                            Name = "Snoop_DisptachOut_Thread"
+                        };
                     thread.Start(new DispatchOutParameters(settingsData, instanceCreator, dispatchers));
 
                     // todo: check if we really created something

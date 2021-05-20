@@ -25,7 +25,10 @@
 
         public IList<AppDomain>? GetAppDomains()
         {
-            var staThread = new Thread(this.EnumAppDomains);
+            var staThread = new Thread(this.EnumAppDomains)
+                {
+                    Name = "Snoop_EnumAppDomains_Thread"
+                };
             staThread.SetApartmentState(ApartmentState.STA); //STA is required when enumerating app domains
             this.autoResetEvent = new AutoResetEvent(false);
             staThread.Start();

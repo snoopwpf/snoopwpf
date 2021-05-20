@@ -112,7 +112,10 @@ namespace Snoop
         {
             if (Settings.Default.GlobalHotKey.Matches(null, e))
             {
-                var thread = new Thread(AttachToForegroundWindow);
+                var thread = new Thread(AttachToForegroundWindow)
+                    {
+                        Name = "Snoop_AttachToForegroundWindow_Thread"
+                    };
                 thread.SetApartmentState(ApartmentState.STA);
                 thread.Start();
             }
