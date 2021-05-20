@@ -35,7 +35,7 @@ namespace Snoop.Infrastructure
 
                     if (presentationSource.CheckAccess()
                         && presentationSource.RootVisual is Window window
-                        && window.Dispatcher.CheckAccess()
+                        && window.CheckAccess()
                         && window.Visibility == Visibility.Visible)
                     {
                         ownerWindow = window;
@@ -86,7 +86,7 @@ namespace Snoop.Infrastructure
 
                     if (presentationSource.CheckAccess()
                         && presentationSource.RootVisual is Window window
-                        && window.Dispatcher.CheckAccess()
+                        && window.CheckAccess()
                         && window.Visibility == Visibility.Visible)
                     {
                         ownerWindow = window;
