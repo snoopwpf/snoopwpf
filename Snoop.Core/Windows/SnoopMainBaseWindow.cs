@@ -100,8 +100,9 @@
                         continue;
                     }
 
-                    if (presentationSource.RootVisual is UIElement element
-                        && element.Dispatcher.CheckAccess())
+                    if (presentationSource.CheckAccess()
+                        && presentationSource.RootVisual is UIElement rootVisual
+                        && rootVisual.CheckAccess())
                     {
                         foundRoot = presentationSource.RootVisual;
                         break;
@@ -126,9 +127,9 @@
                         continue;
                     }
 
-                    if (presentationSource.RootVisual is UIElement element
-                        && element.Dispatcher.CheckAccess()
-                        && element.Visibility == Visibility.Visible)
+                    if (presentationSource.CheckAccess()
+                        && presentationSource.RootVisual is UIElement rootVisual
+                        && rootVisual.CheckAccess())
                     {
                         foundRoot = presentationSource.RootVisual;
                         break;

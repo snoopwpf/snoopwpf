@@ -12,6 +12,7 @@
   - [#221](../../issues/221) - DPI aware Issue?
   - [#232](../../issues/232) - System.NotSupportedException
   - [#252](../../issues/252) - Display Scaling
+  - [#254](../../issues/254) - Exception at SnoopMainBaseWindow.FindRoot() with background dispatcher hosted visual
 
 - ### Improvements
 

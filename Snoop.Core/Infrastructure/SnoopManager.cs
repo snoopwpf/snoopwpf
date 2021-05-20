@@ -1,4 +1,4 @@
-namespace Snoop.Infrastructure
+﻿namespace Snoop.Infrastructure
 {
     using System;
     using System.Collections.Generic;
@@ -388,7 +388,8 @@ namespace Snoop.Infrastructure
         {
             return PresentationSource.CurrentSources
                 .OfType<PresentationSource>()
-                .FirstOrDefault(x => x.Dispatcher == dispatcher)
+                .Where(x => x.Dispatcher == dispatcher)
+                .FirstOrDefault(x => x.RootVisual?.Dispatcher == dispatcher)
                 ?.RootVisual;
         }
 
