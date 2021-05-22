@@ -17,6 +17,7 @@ namespace Snoop.Controls
     public class ProperTreeView : TreeView
     {
         private const int MaxExtentWidth = 1200;
+        private const int MaxDepth = 70;
 
         private SnoopUI? snoopUI;
         private ScrollViewer? scrollViewer;
@@ -66,7 +67,7 @@ namespace Snoop.Controls
                 return false;
             }
 
-            var shouldReduce = this.scrollViewer is { ExtentWidth: >= MaxExtentWidth } || (item.Depth - rootItem.Depth) > 100;
+            var shouldReduce = this.scrollViewer is { ExtentWidth: >= MaxExtentWidth } || (item.Depth - rootItem.Depth) > MaxDepth;
             var shouldWiden = shouldReduce == false && curNode.IsSelected && curItem == rootItem;
 
             if (shouldReduce == false
