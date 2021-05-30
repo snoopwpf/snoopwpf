@@ -77,6 +77,35 @@ namespace Snoop.Windows
 
         protected override void Load(object root)
         {
+            if (root is Application application
+                && application.CheckAccess())
+            {
+                // try to use the application's main window (if visible) as the root
+                if (application.MainWindow is not null
+                    && application.MainWindow.Visibility == Visibility.Visible)
+                {
+                    root = application.MainWindow;
+                }
+                else
+                {
+                    // else search for the first visible window in the list of the application's windows
+                    foreach (Window? appWindow in application.Windows)
+                    {
+                        if (appWindow is null)
+                        {
+                            continue;
+                        }
+
+                        if (appWindow.CheckAccess()
+                            && appWindow.Visibility == Visibility.Visible)
+                        {
+                            root = appWindow;
+                            break;
+                        }
+                    }
+                }
+            }
+
             this.Target = root;
         }
 
@@ -124,42 +153,6 @@ namespace Snoop.Windows
             this.Viewbox.Child = null;
 
             base.OnClosed(e);
-        }
-
-        /// <inheritdoc />
-        protected override object? FindRoot()
-        {
-            var root = base.FindRoot();
-
-            if (root is Application application)
-            {
-                // try to use the application's main window (if visible) as the root
-                if (application.MainWindow is not null
-                    && application.MainWindow.Visibility == Visibility.Visible)
-                {
-                    root = application.MainWindow;
-                }
-                else
-                {
-                    // else search for the first visible window in the list of the application's windows
-                    foreach (Window? appWindow in application.Windows)
-                    {
-                        if (appWindow is null)
-                        {
-                            continue;
-                        }
-
-                        if (appWindow.CheckAccess()
-                            && appWindow.Visibility == Visibility.Visible)
-                        {
-                            root = appWindow;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            return root;
         }
 
         private void HandleReset(object sender, ExecutedRoutedEventArgs args)

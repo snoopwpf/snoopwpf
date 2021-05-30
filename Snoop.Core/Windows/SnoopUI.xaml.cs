@@ -146,11 +146,6 @@ namespace Snoop.Windows
         /// </summary>
         private TreeItem? rootTreeItem;
 
-        /// <summary>
-        /// Root is the root object currently being inspected.
-        /// </summary>
-        private object? root;
-
         #endregion
 
         #region CurrentSelection
@@ -456,7 +451,7 @@ namespace Snoop.Windows
                 this.TreeItems.Clear();
 
                 this.Root?.Dispose();
-                this.Root = this.TreeService.Construct(this.root!, null);
+                this.Root = this.TreeService.Construct(this.RootObject!, null);
 
                 this.TreeService.DiagnosticContext.AnalyzeTree();
 
@@ -839,8 +834,6 @@ namespace Snoop.Windows
 
         protected override void Load(object newRoot)
         {
-            this.root = newRoot;
-
             this.Refresh();
 
             this.CurrentSelection = this.rootTreeItem;
