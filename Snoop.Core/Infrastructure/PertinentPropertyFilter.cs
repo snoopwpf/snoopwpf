@@ -8,6 +8,7 @@ namespace Snoop.Infrastructure
     using System.ComponentModel;
     using System.Linq;
     using System.Windows;
+    using System.Windows.Media;
 
     public static class PertinentPropertyFilter
     {
@@ -28,17 +29,35 @@ namespace Snoop.Infrastructure
                     return false;
                 }
 
-                var currentElement = dependencyObject;
-                do
+                // Check logical tree
                 {
-                    currentElement = LogicalTreeHelper.GetParent(currentElement);
-                    if (currentElement is not null
-                        && dpd.DependencyProperty.OwnerType.IsInstanceOfType(currentElement))
+                    var currentElement = dependencyObject;
+                    do
                     {
-                        return true;
+                        currentElement = LogicalTreeHelper.GetParent(currentElement);
+                        if (currentElement is not null
+                            && dpd.DependencyProperty.OwnerType.IsInstanceOfType(currentElement))
+                        {
+                            return true;
+                        }
                     }
+                    while (attachedPropertyForChildren.IncludeDescendants && currentElement is not null);
                 }
-                while (attachedPropertyForChildren.IncludeDescendants && currentElement is not null);
+
+                // Check visual tree
+                {
+                    var currentElement = dependencyObject;
+                    do
+                    {
+                        currentElement = VisualTreeHelper.GetParent(currentElement);
+                        if (currentElement is not null
+                            && dpd.DependencyProperty.OwnerType.IsInstanceOfType(currentElement))
+                        {
+                            return true;
+                        }
+                    }
+                    while (attachedPropertyForChildren.IncludeDescendants && currentElement is not null);
+                }
 
                 return false;
             }
