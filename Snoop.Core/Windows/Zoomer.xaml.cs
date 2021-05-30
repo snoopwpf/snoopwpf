@@ -339,6 +339,14 @@ namespace Snoop.Windows
                 this.CreateAndSetVisualTree3DView(this.targetVisual);
             }
         }
+
+        private void FixTextFormattingModeButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (this.targetVisual is not null)
+            {
+                TextOptions.SetTextFormattingMode(this.targetVisual, TextFormattingMode.Ideal);
+            }
+        }
     }
 
     [ValueConversion(typeof(double), typeof(SolidColorBrush))]

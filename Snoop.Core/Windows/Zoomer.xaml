@@ -9,6 +9,7 @@ All other rights reserved.
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:snoop="clr-namespace:Snoop"
     xmlns:windows="clr-namespace:Snoop.Windows"
+    xmlns:converters="clr-namespace:Snoop.Converters"
     x:Class="Snoop.Windows.Zoomer"
     Title="Zoomer"
     Width="640"
@@ -81,6 +82,22 @@ All other rights reserved.
             </RadioButton>
         </StackPanel>
 
+        <StackPanel Orientation="Horizontal"
+                    VerticalAlignment="Bottom"
+                    Visibility="{Binding Path=Target.(TextOptions.TextFormattingMode), RelativeSource={RelativeSource AncestorType=windows:Zoomer}, Converter={x:Static converters:EqualsToVisibilityConverter.DefaultInstance}, ConverterParameter=Display}">
+            <Image Source="{DynamicResource warningDrawingImage}" Height="14" />
+            <TextBlock Style="{x:Null}"
+                       Foreground="DarkOrange"
+                       VerticalAlignment="Center"
+                       Text="&quot;TextOptions.TextFormattingMode&quot; is set to &quot;Display&quot; which causes fonts to render blurry." />
+            <Button x:Name="fixTextFormattingModeButton"
+                    Click="FixTextFormattingModeButton_OnClick"
+                    Content="Fix"
+                    Cursor="Arrow"
+                    Padding="2"
+                    Margin="2 0 0 0" />
+        </StackPanel>
+
         <Slider x:Name="ColorSlider"
                 Style="{x:Null}"
                 Width="100"
@@ -124,7 +141,7 @@ All other rights reserved.
                     <TextBlock Style="{x:Null}" Text="600" />
                 </ComboBoxItem>
             </ComboBox>
-            <TextBlock Style="{x:Null}" 
+            <TextBlock Style="{x:Null}"
                        Margin="0,0,5,0"
                        VerticalAlignment="Center" Text="DPI" />
 
