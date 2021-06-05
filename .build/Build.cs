@@ -6,6 +6,7 @@ using System.IO;
 using JetBrains.Annotations;
 using Nuke.Common;
 using Nuke.Common.CI;
+using Nuke.Common.CI.AppVeyor;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
 using Nuke.Common.IO;
@@ -275,12 +276,16 @@ class Build : NukeBuild
     [Parameter]
     string? SignPathOrganizationId;
 
-    Target CI => _ => _
+    Target SignArtifacts => _ => _
         .Requires(() => SignPathAuthToken)
-        .DependsOn(Compile, Test, Pack, Setup)
+        .OnlyWhenDynamic(() => AppVeyor.Instance != null)
+        .After(Setup)
         .Executes(() =>
         {
             ProcessTasks.StartProcess("powershell", $"./.build/SignPath.ps1 {SignPathAuthToken} {SignPathOrganizationId} {SignPathProjectSlug} {SignPathSigningPolicySlug}")
                 .AssertWaitForExit();
         });
+
+    Target CI => _ => _
+        .DependsOn(Compile, Test, Pack, Setup, SignArtifacts);
 }
