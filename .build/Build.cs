@@ -216,6 +216,7 @@ class Build : NukeBuild
             var nupkg = ArtifactsDirectory / $"{ProjectName}.{NuGetVersion}.nupkg";
 
             CheckSumFiles.Add(nupkg);
+            AppVeyor.Instance?.PushArtifact(nupkg);
 
             {
                 CompressionTasks.UncompressZip(nupkg, tempDirectory);
@@ -223,6 +224,7 @@ class Build : NukeBuild
                 var outputFile = ArtifactsDirectory / $"{ProjectName}.{NuGetVersion}.zip";
                 CompressionTasks.Compress(tempDirectory / "tools", outputFile, info => info.Name.Contains("chocolatey") == false && info.Name != "VERIFICATION.txt");
                 CheckSumFiles.Add(outputFile);
+                AppVeyor.Instance?.PushArtifact(outputFile);
             }
         });
 
@@ -247,6 +249,7 @@ class Build : NukeBuild
             lightProcess.AssertZeroExitCode();
 
             CheckSumFiles.Add(outputFile);
+            AppVeyor.Instance?.PushArtifact(outputFile);
         });
 
     [PublicAPI]
@@ -261,17 +264,10 @@ class Build : NukeBuild
                 Logger.Info(FenceOutput);
                 Logger.Info($"CheckSum for \"{item}\".");
                 Logger.Info($"SHA256 \"{checkSum}\".");
-                File.WriteAllText(item + ".sha256", checkSum);
+                var checkSumFile = item + ".sha256";
+                File.WriteAllText(checkSumFile, checkSum);
+                AppVeyor.Instance?.PushArtifact(checkSumFile);
                 Logger.Info(FenceOutput);
-            }
-
-            if (AppVeyor.Instance is not null)
-            {
-                foreach (var file in CheckSumFiles)
-                {
-                    AppVeyor.Instance.PushArtifact(file);
-                    AppVeyor.Instance.PushArtifact(file + ".sha256");
-                }
             }
         });
 
