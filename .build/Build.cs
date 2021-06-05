@@ -294,5 +294,5 @@ class Build : NukeBuild
         });
 
     Target CI => _ => _
-        .DependsOn(Compile, Test, Pack, Setup /*, SignArtifacts*/);
+        .DependsOn(Compile, Test, Pack, Setup, SignArtifacts);
 }
