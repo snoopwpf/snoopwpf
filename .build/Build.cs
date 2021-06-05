@@ -15,6 +15,7 @@ using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Tools.MSBuild;
 using Nuke.Common.Tools.NuGet;
+using Nuke.Common.Tools.SignPath;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 using static Nuke.Common.Tools.MSBuild.MSBuildTasks;
@@ -264,6 +265,22 @@ class Build : NukeBuild
             }
         });
 
+    [Secret]
+    [Parameter]
+    string? SignPathAuthToken;
+    [Parameter]
+    string? SignPathSigningPolicySlug;
+    [Parameter]
+    string? SignPathProjectSlug;
+    [Parameter]
+    string? SignPathOrganizationId;
+
     Target CI => _ => _
-        .DependsOn(Compile, Test, Pack, Setup);
+        .Requires(() => SignPathAuthToken)
+        .DependsOn(Compile, Test, Pack, Setup)
+        .Executes(() =>
+        {
+            ProcessTasks.StartProcess("powershell", $"./.build/SignPath.ps1 {SignPathAuthToken} {SignPathOrganizationId} {SignPathProjectSlug} {SignPathSigningPolicySlug}")
+                .AssertWaitForExit();
+        });
 }

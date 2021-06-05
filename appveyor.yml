@@ -8,6 +8,10 @@ branches:
 image: Visual Studio 2019
 test: off
 
+environment:
+  SignPathAuthToken:
+    secure: obZYJASPzLn/jagKd1s0MudX/USRVm21taJzZ5cyQZadBF1TF5zXkuDt7hVkU9QM
+
 install:
   - ps: Invoke-WebRequest 'https://dot.net/v1/dotnet-install.ps1' -OutFile 'dotnet-install.ps1'
   - ps: ./dotnet-install.ps1 -Version 5.0.100 -InstallDir "C:\Program Files\dotnet"
