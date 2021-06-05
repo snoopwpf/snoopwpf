@@ -283,7 +283,7 @@ class Build : NukeBuild
 
     Target SignArtifacts => _ => _
         .Requires(() => SignPathAuthToken)
-        .OnlyWhenDynamic(() => AppVeyor.Instance != null)
+        .OnlyWhenStatic(() => AppVeyor.Instance != null)
         .After(Setup)
         .Executes(async () =>
         {
