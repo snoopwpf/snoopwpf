@@ -29,3 +29,9 @@ nuget:
 skip_commits:
   files:
     - '**/*.md'
+
+deploy:
+  - provider: Webhook
+    url: https://app.signpath.io/API/v1/622164c8-36db-41ab-b5fd-7967c501ce93/Integrations/AppVeyor?ProjectSlug=snoopwpf&SigningPolicySlug=test-signing
+    authorization:
+      secure: obZYJASPzLn/jagKd1s0MudX/USRVm21taJzZ5cyQZadBF1TF5zXkuDt7hVkU9QM
