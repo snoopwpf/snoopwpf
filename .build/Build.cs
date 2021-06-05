@@ -280,10 +280,12 @@ class Build : NukeBuild
         .Requires(() => SignPathAuthToken)
         .OnlyWhenDynamic(() => AppVeyor.Instance != null)
         .After(Setup)
-        .Executes(() =>
+        .Executes(async () =>
         {
-            ProcessTasks.StartProcess("powershell", $"./.build/SignPath.ps1 {SignPathAuthToken} {SignPathOrganizationId} {SignPathProjectSlug} {SignPathSigningPolicySlug}")
-                .AssertWaitForExit();
+            // ProcessTasks.StartProcess("powershell", $"./.build/SignPath.ps1 {SignPathAuthToken} {SignPathOrganizationId} {SignPathProjectSlug} {SignPathSigningPolicySlug}")
+            //     .AssertWaitForExit();
+            var result = await SignPathTasks.GetSigningRequestUrlViaAppVeyor(SignPathAuthToken, SignPathOrganizationId, SignPathProjectSlug, SignPathSigningPolicySlug);
+            Logger.Info(result);
         });
 
     Target CI => _ => _
