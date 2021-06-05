@@ -23,9 +23,6 @@ build_script:
 after_build:
   - ps: gci -Filter *.trx -Path .\output\test-results\ | % { (New-Object 'System.Net.WebClient').UploadFile("https://ci.appveyor.com/api/testresults/mstest/$($env:APPVEYOR_JOB_ID)", (Resolve-Path $_.FullName)) }
 
-artifacts:
-  - path: \artifacts\*.*
-
 nuget:
   disable_publish_on_pr: true
 

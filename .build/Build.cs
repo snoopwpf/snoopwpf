@@ -264,6 +264,15 @@ class Build : NukeBuild
                 File.WriteAllText(item + ".sha256", checkSum);
                 Logger.Info(FenceOutput);
             }
+
+            if (AppVeyor.Instance is not null)
+            {
+                foreach (var file in CheckSumFiles)
+                {
+                    AppVeyor.Instance.PushArtifact(file);
+                    AppVeyor.Instance.PushArtifact(file + ".sha256");
+                }
+            }
         });
 
     [Secret]
