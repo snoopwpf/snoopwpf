@@ -70,7 +70,7 @@ namespace Snoop.Controls.ValueEditors
 
         public ValueEditor()
         {
-            this.CommandBindings.Add(new CommandBinding(OpenDetailsEditorCommand, this.HandleOpenDetailsEdtiorCommand, this.HandleCanOpenDetailsEditorCommand));
+            this.CommandBindings.Add(new CommandBinding(OpenDetailsEditorCommand, this.HandleOpenDetailsEditorCommand, this.HandleCanOpenDetailsEditorCommand));
         }
 
         public DataTemplate? DetailsEditorTemplate
@@ -153,7 +153,7 @@ namespace Snoop.Controls.ValueEditors
             e.CanExecute = this.SupportsDetailsEditor;
         }
 
-        private void HandleOpenDetailsEdtiorCommand(object sender, ExecutedRoutedEventArgs e)
+        private void HandleOpenDetailsEditorCommand(object sender, ExecutedRoutedEventArgs e)
         {
             ValueEditorDetailsWindow.ShowDialog(this);
         }
