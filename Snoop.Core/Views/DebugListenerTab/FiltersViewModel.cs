@@ -189,7 +189,7 @@
             var singleFilter = filter as SnoopSingleFilter;
             if (singleFilter is not null)
             {
-                //foreach (var multipeFilter in this.multipleFilters)
+                //foreach (var multipleFilter in this.multipleFilters)
                 var index = 0;
                 while (index < this.multipleFilters.Count)
                 {

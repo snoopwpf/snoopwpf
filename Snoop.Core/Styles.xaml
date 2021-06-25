@@ -14,7 +14,7 @@ All other rights reserved.
     <!-- SimpleStyles.XAML defines a set of control styles which are simplified starting points for creating your own controls -->
 
     <!-- Brushes : These are used to define the color for background, foreground, selection, enabled etc of all controls
-	If you want to change the color of a control you can just chnage the brush; if you want to add a new shape or change arrangement then also edit the template -->
+	If you want to change the color of a control you can just change the brush; if you want to add a new shape or change arrangement then also edit the template -->
 
     <!-- NormalBrush is used as the Background for SimpleButton, SimpleRepeatButton -->
     <LinearGradientBrush x:Key="NormalBrush" EndPoint="0,1" StartPoint="0,0">
@@ -486,7 +486,7 @@ All other rights reserved.
                         <ScrollViewer Margin="1" Style="{DynamicResource SimpleScrollViewer}" Focusable="false"
                                       Background="{TemplateBinding Background}">
 
-                            <!-- The StackPanel is used to display the children by setting IsItemsHost to be Trus -->
+                            <!-- The StackPanel is used to display the children by setting IsItemsHost to be True -->
                             <StackPanel Margin="2" IsItemsHost="true" />
 
                         </ScrollViewer>
@@ -1210,7 +1210,7 @@ All other rights reserved.
     </Style>
 
     <!--Simple Simple Slider
-	Similiar to ScrollBar this template uses Track to layout the draggable Thumb which has an up and down repeat button
+	Similar to ScrollBar this template uses Track to layout the draggable Thumb which has an up and down repeat button
 	It uses Simple SliderThumb and SimpleScrollRepeatButtonStyle for the page up and down repeat buttons -->
     <Style x:Key="SimpleSlider" TargetType="{x:Type Slider}">
         <Setter Property="Background" Value="{DynamicResource LightBrush}" />
