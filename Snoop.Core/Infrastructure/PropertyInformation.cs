@@ -10,6 +10,7 @@ namespace Snoop.Infrastructure
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
+    using System.Linq;
     using System.Windows;
     using System.Windows.Automation.Peers;
     using System.Windows.Controls;
@@ -865,16 +866,11 @@ namespace Snoop.Infrastructure
 
                 var supportedPatterns = new List<string>();
 
-                foreach (PatternInterface? patternInterface in Enum.GetValues(typeof(PatternInterface)))
+                foreach (var patternInterface in Enum.GetValues(typeof(PatternInterface)).Cast<PatternInterface>())
                 {
-                    if (patternInterface is null)
+                    if (automationPeer.GetPattern(patternInterface) is not null)
                     {
-                        continue;
-                    }
-
-                    if (automationPeer.GetPattern(patternInterface.Value) is not null)
-                    {
-                        supportedPatterns.Add(patternInterface.Value.ToString());
+                        supportedPatterns.Add(patternInterface.ToString());
                     }
                 }
 

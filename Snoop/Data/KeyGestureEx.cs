@@ -146,18 +146,10 @@
                     keyToken = fullName;
                 }
 
-                var modifiers = ModifierKeys.None;
-                var resultkey = keyConverter.ConvertFrom(context, culture, keyToken);
-                if (resultkey is not null)
-                {
-                    var temp = modifierKeysConverter.ConvertFrom(context, culture, modifiersToken);
-                    if (temp is not null)
-                    {
-                        modifiers = (ModifierKeys)temp;
-                    }
+                var resultKey = keyConverter.ConvertFrom(context, culture, keyToken);
+                var modifiers = (ModifierKeys)modifierKeysConverter.ConvertFrom(context, culture, modifiersToken);
 
-                    return new KeyGestureEx((Key)resultkey, modifiers, displayString);
-                }
+                return new KeyGestureEx((Key)resultKey, modifiers, displayString);
             }
 
             throw this.GetConvertFromException(source);

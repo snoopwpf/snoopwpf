@@ -251,7 +251,7 @@ namespace Snoop.Views.TriggersTab.Triggers
             return DependencyPropertyDescriptor.FromProperty(dependencyProperty, targetType.GetType());
         }
 
-        private static string GetDisplayName(DependencyProperty dependencyProperty, DependencyPropertyDescriptor propertyDescriptor)
+        private static string GetDisplayName(DependencyProperty dependencyProperty, DependencyPropertyDescriptor? propertyDescriptor)
         {
             if (propertyDescriptor is not null)
             {
