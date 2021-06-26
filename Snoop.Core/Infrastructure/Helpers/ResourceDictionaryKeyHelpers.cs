@@ -61,15 +61,12 @@ namespace Snoop.Infrastructure.Helpers
                 }
             }
 
-            if (dictionary.MergedDictionaries is not null)
+            foreach (var dic in dictionary.MergedDictionaries)
             {
-                foreach (var dic in dictionary.MergedDictionaries)
+                var name = GetKeyInResourceDictionary(dic, resourceItem);
+                if (!string.IsNullOrEmpty(name))
                 {
-                    var name = GetKeyInResourceDictionary(dic, resourceItem);
-                    if (!string.IsNullOrEmpty(name))
-                    {
-                        return name;
-                    }
+                    return name;
                 }
             }
 

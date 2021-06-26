@@ -880,8 +880,7 @@ namespace Snoop.Windows
         {
             var config = System.Configuration.ConfigurationManager.OpenExeConfiguration(System.Configuration.ConfigurationUserLevel.PerUserRoamingAndLocal);
 
-            if (config is null
-                || string.IsNullOrEmpty(config.FilePath))
+            if (string.IsNullOrEmpty(config.FilePath))
             {
                 return;
             }

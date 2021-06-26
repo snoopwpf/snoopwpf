@@ -19,7 +19,7 @@ namespace Snoop.Converters
         private static readonly string[] ExcludeTypeNames = { "LinearGradientBrush", "RadialGradientBrush", "TileBrush" };
 
         #region IValueConverter Members
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object Convert(object? value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             // value (object)   the runtime value - compare against known incompatible types (use list from config)
             // return (boolean) whether the type is supported or not
