@@ -60,14 +60,21 @@ static std::wstring to_wstring(const std::string& input)
 template<typename ... Args>
 static std::wstring string_format(const std::wstring& format, Args ... args)
 {
-	const size_t size = swprintf(nullptr, 0, format.c_str(), args...) + 1; // Extra space for '\0'
+	if (format.empty())
+	{
+		return std::wstring();
+	}
+
+	const int size = swprintf(nullptr, 0, format.c_str(), args...);
 	
     if (size <= 0)
     {
 	    throw std::runtime_error("Error during formatting.");
     }
 
-    const std::unique_ptr<wchar_t[]> buf(new wchar_t[size]);
-    swprintf(buf.get(), size, format.c_str(), args...);
-    return std::wstring(buf.get(), buf.get() + size - 1); // We don't want the '\0' inside
+	const int adjustedSize = size + 1; // Extra space for '\0'
+
+    const std::unique_ptr<wchar_t[]> buf(new wchar_t[adjustedSize]);
+    swprintf(buf.get(), adjustedSize, format.c_str(), args...);
+    return std::wstring(buf.get(), buf.get() + adjustedSize - 1); // We don't want the '\0' inside
 }
