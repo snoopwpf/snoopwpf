@@ -92,7 +92,7 @@ All other rights reserved.
 						<GeometryDrawing.Pen>
 							<Pen Thickness="6.66667" LineJoin="Round">
 								<Pen.Brush>
-									<!-- Metalic_Gel -->
+									<!-- Metallic_Gel -->
 									<RadialGradientBrush RadiusX="0.704077" RadiusY="0.704077" Center="0.327626,0.333783" GradientOrigin="0.327626,0.333783">
 										<RadialGradientBrush.GradientStops>
 											<GradientStop Color="#FFF2F2F2" Offset="0.139648"/>
@@ -137,7 +137,7 @@ All other rights reserved.
 						<GeometryDrawing.Pen>
 							<Pen Thickness="14.6667" LineJoin="Round">
 								<Pen.Brush>
-									<!-- Metalic_Gel -->
+									<!-- Metallic_Gel -->
 									<RadialGradientBrush RadiusX="0.833262" RadiusY="0.833262" Center="0.312845,0.384143" GradientOrigin="0.312845,0.384143">
 										<RadialGradientBrush.GradientStops>
 											<GradientStop Color="#FFF2F2F2" Offset="0.139648"/>
@@ -153,7 +153,7 @@ All other rights reserved.
 							</Pen>
 						</GeometryDrawing.Pen>
 						<GeometryDrawing.Brush>
-							<!-- Metalic_Gel -->
+							<!-- Metallic_Gel -->
 							<RadialGradientBrush RadiusX="0.833262" RadiusY="0.833262" Center="0.312845,0.384143" GradientOrigin="0.312845,0.384143">
 								<RadialGradientBrush.GradientStops>
 									<GradientStop Color="#FFF2F2F2" Offset="0.139648"/>
@@ -299,7 +299,7 @@ All other rights reserved.
                         <GeometryDrawing.Pen>
                             <Pen Thickness="6.66667" LineJoin="Round">
                                 <Pen.Brush>
-                                    <!-- Metalic_Gel -->
+                                    <!-- Metallic_Gel -->
                                     <RadialGradientBrush RadiusX="0.704077" RadiusY="0.704077" Center="0.327626,0.333783" GradientOrigin="0.327626,0.333783">
                                         <RadialGradientBrush.GradientStops>
                                             <GradientStop Color="#FFF2F2F2" Offset="0.139648"/>
@@ -344,7 +344,7 @@ All other rights reserved.
                         <GeometryDrawing.Pen>
                             <Pen Thickness="14.6667" LineJoin="Round">
                                 <Pen.Brush>
-                                    <!-- Metalic_Gel -->
+                                    <!-- Metallic_Gel -->
                                     <RadialGradientBrush RadiusX="0.833262" RadiusY="0.833262" Center="0.312845,0.384143" GradientOrigin="0.312845,0.384143">
                                         <RadialGradientBrush.GradientStops>
                                             <GradientStop Color="#FFF2F2F2" Offset="0.139648"/>
@@ -360,7 +360,7 @@ All other rights reserved.
                             </Pen>
                         </GeometryDrawing.Pen>
                         <GeometryDrawing.Brush>
-                            <!-- Metalic_Gel -->
+                            <!-- Metallic_Gel -->
                             <RadialGradientBrush RadiusX="0.833262" RadiusY="0.833262" Center="0.312845,0.384143" GradientOrigin="0.312845,0.384143">
                                 <RadialGradientBrush.GradientStops>
                                     <GradientStop Color="#FFF2F2F2" Offset="0.139648"/>

@@ -35,7 +35,7 @@
             {
                 yield return
                     new(this,
-                        "Virualize ItemsControl",
+                        "Virtualize ItemsControl",
                         $"ItemsControl with {itemsControl.Items.Count} items should be virtualized.",
                         DiagnosticArea.Performance,
                         DiagnosticLevel.Warning)
