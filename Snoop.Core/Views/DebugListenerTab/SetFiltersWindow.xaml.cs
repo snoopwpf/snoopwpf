@@ -49,12 +49,9 @@
 
         private void ButtonRemoveFilter_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is FrameworkElement frameworkElement)
+            if (sender is FrameworkElement { DataContext: SnoopFilter filter })
             {
-                if (frameworkElement.DataContext is SnoopFilter filter)
-                {
-                    this.ViewModel.RemoveFilter(filter);
-                }
+                this.ViewModel.RemoveFilter(filter);
             }
         }
 

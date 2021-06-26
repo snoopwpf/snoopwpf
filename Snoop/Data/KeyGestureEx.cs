@@ -68,7 +68,7 @@
 
         private static bool IsDefinedKey(Key key)
         {
-            return key >= Key.None && key <= Key.OemClear;
+            return key is >= Key.None and <= Key.OemClear;
         }
     }
 
@@ -207,7 +207,7 @@
         // Check for Valid enum, as any int can be casted to the enum.
         internal static bool IsDefinedKey(Key key)
         {
-            return key >= Key.None && key <= Key.OemClear;
+            return key is >= Key.None and <= Key.OemClear;
         }
     }
 

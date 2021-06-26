@@ -42,10 +42,9 @@ namespace Snoop
 
         private static HitTestResultBehavior ResultCallback(HitTestResult? result, ref FrameworkElement? directlyOverElement)
         {
-            if (result is not null
-                && result.VisualHit is FrameworkElement frameworkElement
-                && frameworkElement.IsVisible
-                && frameworkElement.IsPartOfSnoopVisualTree() == false)
+            if (result is not null &&
+                result.VisualHit is FrameworkElement { IsVisible: true } frameworkElement &&
+                frameworkElement.IsPartOfSnoopVisualTree() == false)
             {
                 directlyOverElement = frameworkElement;
                 return HitTestResultBehavior.Stop;

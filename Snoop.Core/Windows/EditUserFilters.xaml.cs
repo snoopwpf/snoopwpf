@@ -157,8 +157,7 @@ namespace Snoop.Windows
             this.MoveDown.IsEnabled = false;
             this.DeleteItem.IsEnabled = false;
 
-            if (this.filterSetList.SelectedItem is PropertyFilterSet selectedFilterSet
-                && selectedFilterSet.IsReadOnly)
+            if (this.filterSetList.SelectedItem is PropertyFilterSet { IsReadOnly: true })
             {
                 return;
             }
