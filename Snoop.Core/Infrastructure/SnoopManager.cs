@@ -31,7 +31,7 @@
 
         private void RunInCurrentAppDomain(string settingsFile)
         {
-            var settingsData = TransientSettingsData.LoadCurrent(settingsFile);
+            var settingsData = TransientSettingsData.LoadCurrentIfRequired(settingsFile);
             new SnoopManager().RunInCurrentAppDomain(settingsData);
         }
     }
@@ -66,7 +66,7 @@
         {
             LogHelper.WriteLine("Starting snoop...");
 
-            var settingsData = TransientSettingsData.LoadCurrent(settingsFile);
+            var settingsData = TransientSettingsData.LoadCurrentIfRequired(settingsFile);
 
             IList<AppDomain>? appDomains = null;
 

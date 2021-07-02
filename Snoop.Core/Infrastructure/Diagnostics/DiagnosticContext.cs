@@ -7,6 +7,7 @@
     using System.Linq;
     using System.Runtime.CompilerServices;
     using JetBrains.Annotations;
+    using Snoop.Data;
     using Snoop.Data.Tree;
     using Snoop.Infrastructure.Diagnostics.Providers;
 
@@ -37,6 +38,7 @@
 
             foreach (var diagnosticProvider in this.diagnosticProviders)
             {
+                diagnosticProvider.IsActive = TransientSettingsData.Current?.EnableDiagnostics ?? true;
                 diagnosticProvider.PropertyChanged += this.HandleDiagnosticProviderPropertyChanged;
             }
         }

@@ -93,5 +93,17 @@ namespace Snoop.Properties {
                 this["ILSpyPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool EnableDiagnostics {
+            get {
+                return ((bool)(this["EnableDiagnostics"]));
+            }
+            set {
+                this["EnableDiagnostics"] = value;
+            }
+        }
     }
 }

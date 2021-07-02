@@ -3,8 +3,10 @@ namespace Snoop.Data
 {
     using System.IO;
     using System.Xml.Serialization;
+    using JetBrains.Annotations;
     using Snoop.Infrastructure;
 
+    [PublicAPI]
     public sealed class TransientSettingsData
     {
         private static readonly XmlSerializer serializer = new(typeof(TransientSettingsData));
@@ -15,6 +17,7 @@ namespace Snoop.Data
             this.MultipleDispatcherMode = MultipleDispatcherMode.Ask;
             this.SetOwnerWindow = true;
             this.ILSpyPath = "%path%";
+            this.EnableDiagnostics = true;
         }
 
         public static TransientSettingsData? Current { get; private set; }
@@ -30,6 +33,8 @@ namespace Snoop.Data
         public long TargetWindowHandle { get; set; }
 
         public string ILSpyPath { get; set; }
+
+        public bool EnableDiagnostics { get; set; }
 
         public string WriteToFile()
         {
@@ -66,6 +71,7 @@ namespace Snoop.Data
         }
     }
 
+    [PublicAPI]
     public enum MultipleAppDomainMode
     {
         Ask = 0,
@@ -73,6 +79,7 @@ namespace Snoop.Data
         NeverUse = 2
     }
 
+    [PublicAPI]
     public enum MultipleDispatcherMode
     {
         Ask = 0,
@@ -80,6 +87,7 @@ namespace Snoop.Data
         NeverUse = 2
     }
 
+    [PublicAPI]
     public enum SnoopStartTarget
     {
         SnoopUI = 0,

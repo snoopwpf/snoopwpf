@@ -20,6 +20,9 @@
     <Setting Name="ILSpyPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">%path%</Value>
     </Setting>
+    <Setting Name="EnableDiagnostics" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
 
