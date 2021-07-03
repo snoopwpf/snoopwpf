@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<artifact-configuration xmlns="http://signpath.io/artifact-configuration/v1">
+    <zip-file>
+        <msi-file path="Snoop.*.msi">
+            <pe-file-set>
+                <include path="**/Snoop*.com"/>
+                <include path="**/Snoop*.dll" min-matches="1" max-matches="unbounded"/>
+                <include path="**/Snoop*.exe" min-matches="1" max-matches="unbounded"/>
+                <for-each>
+                    <authenticode-sign/>
+                </for-each>
+            </pe-file-set>
+
+            <powershell-file path="**/Snoop.psm1">
+                <authenticode-sign/>
+            </powershell-file>
+
+            <authenticode-sign/>
+        </msi-file>
+        <nupkg-file path="snoop.*.nupkg">
+            <pe-file-set>
+                <include path="**/Snoop*.com"/>
+                <include path="**/Snoop*.dll" min-matches="1" max-matches="unbounded"/>
+                <include path="**/Snoop*.exe" min-matches="1" max-matches="unbounded"/>
+                <for-each>
+                    <authenticode-sign/>
+                </for-each>
+            </pe-file-set>
+
+            <powershell-file path="**/Snoop.psm1">
+                <authenticode-sign/>
+            </powershell-file>
+
+            <nuget-sign/>
+        </nupkg-file>
+        <zip-file path="Snoop.*.zip">
+            <pe-file-set>
+                <include path="**/Snoop*.com"/>
+                <include path="**/Snoop*.dll" min-matches="1" max-matches="unbounded"/>
+                <include path="**/Snoop*.exe" min-matches="1" max-matches="unbounded"/>
+                <for-each>
+                    <authenticode-sign/>
+                </for-each>
+            </pe-file-set>
+
+            <powershell-file path="**/Snoop.psm1">
+                <authenticode-sign/>
+            </powershell-file>
+
+            <jar-sign/>
+        </zip-file>
+    </zip-file>
+</artifact-configuration>

@@ -1,0 +1,924 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="artifact-configuration"
+           targetNamespace="http://signpath.io/artifact-configuration/v1"
+           elementFormDefault="qualified"
+           xmlns="http://signpath.io/artifact-configuration/v1"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:ac="http://signpath.io/artifact-configuration/v1">
+
+  <xs:element name="artifact-configuration" type="ArtifactConfiguration" />
+
+  <xs:complexType name="ArtifactConfiguration">
+    <xs:complexContent>
+      <xs:extension base="ArtifactConfigurationElementBase">
+        <xs:sequence>
+          <xs:element ref="parameters" minOccurs="0" maxOccurs="1" />
+          <xs:choice>
+            <xs:element name="pe-file" type="RootPeFile" />
+            <xs:element name="appx-file" type="RootAppxFile" />
+            <xs:element name="powershell-file" type="RootPowerShellFile" />
+            <xs:element name="zip-file" type="RootZipFile" />
+            <xs:element name="msi-file" type="RootMsiFile" />
+            <xs:element name="cab-file" type="RootCabFile" />
+            <xs:element name="opc-file" type="RootOpcFile" />
+            <xs:element name="nupkg-file" type="RootNuPkgFile" />
+            <xs:element name="jar-file" type="RootJarFile" />
+            <xs:element name="docker-signing-data-file" type="RootDockerSigningDataFile" />
+            <xs:element name="catalog-file" type="RootCatalogFile" />
+            <xs:element name="hash-signing-data-file" type="RootHashSigningDataFile" />
+          </xs:choice>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Parameters -->
+  <xs:element name="parameters">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="parameter" type="Parameter" minOccurs="0" maxOccurs="20" />
+      </xs:sequence>
+    </xs:complexType>
+
+    <xs:unique name="parameterNames">
+      <xs:selector xpath="ac:parameter" />
+      <xs:field xpath="@name" />
+    </xs:unique>
+  </xs:element>
+
+  <xs:complexType name="Parameter">
+    <xs:attribute name="name" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <!-- When changing this pattern also change the allowed characters in ArtifactConfigurationParameterPropertyDefinitions -->
+          <xs:pattern value="[a-zA-Z0-9.\-_]+" />
+          <xs:maxLength value="100" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="description" use="optional">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5000" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="required" type="xs:boolean" use="optional" default="true" />
+    <xs:attribute name="default-value" use="optional">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="^[^\s](.*[^\s])?$" />
+          <xs:minLength value="1" />
+          <xs:maxLength value="5000" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:simpleType name="argumentReference">
+    <xs:restriction base="xs:string">
+      <!-- When changing this pattern also change the allowed characters in ArtifactConfigurationParameterPropertyDefinitions -->
+      <xs:pattern value="\$\{[a-zA-Z0-9.\-_]+\}" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- PE -->
+  <xs:complexType name="RootPeFile">
+    <xs:complexContent>
+      <xs:extension base="RootItemBase">
+        <xs:sequence>
+          <xs:element ref="authenticode-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attributeGroup ref="peConstraints" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="PeFile">
+    <xs:complexContent>
+      <xs:extension base="ContentItemWithPathBase">
+        <xs:sequence>
+          <xs:element ref="authenticode-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attributeGroup ref="peConstraints" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="PeFileSet">
+    <xs:complexContent>
+      <xs:extension base="SetBase">
+        <xs:sequence>
+          <xs:element name="include" type="PeFileInclude" minOccurs="1" maxOccurs="unbounded" />
+          <xs:element name="for-each" type="PeFileSetForEach" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+        <xs:attributeGroup ref="peConstraints" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="PeFileSetForEach">
+    <xs:complexContent>
+      <xs:extension base="SetForEachBase">
+        <xs:sequence>
+          <xs:element ref="authenticode-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="PeFileInclude">
+    <xs:complexContent>
+      <xs:extension base="IncludeBase">
+        <xs:attributeGroup ref="peConstraints" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:attributeGroup name="peConstraints">
+    <xs:attribute name="productName" type="xs:string" use="optional" />
+    <xs:attribute name="productVersion" type="xs:string" use="optional" />
+  </xs:attributeGroup>
+
+  <!-- APPX -->
+  <xs:complexType name="RootAppxFile">
+    <xs:complexContent>
+      <xs:extension base="ContainerRootItemBase">
+        <xs:sequence>
+          <xs:element ref="authenticode-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="AppxFile">
+    <xs:complexContent>
+      <xs:extension base="ContainerContentItemBase">
+        <xs:sequence>
+          <xs:element ref="authenticode-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="AppxFileSet">
+    <xs:complexContent>
+      <xs:extension base="SetBase">
+        <xs:sequence>
+          <xs:element name="include" type="AppxFileInclude" minOccurs="1" maxOccurs="unbounded" />
+          <xs:element name="for-each" type="AppxFileSetForEach" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="AppxFileSetForEach">
+    <xs:complexContent>
+      <xs:extension base="ContainerSetForEachBase">
+        <xs:sequence>
+          <xs:element ref="authenticode-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="AppxFileInclude">
+    <xs:complexContent>
+      <xs:extension base="IncludeBase" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- PowerShell -->
+  <xs:complexType name="RootPowerShellFile">
+    <xs:complexContent>
+      <xs:extension base="RootItemBase">
+        <xs:sequence>
+          <xs:element ref="authenticode-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="PowerShellFile">
+    <xs:complexContent>
+      <xs:extension base="ContentItemWithPathBase">
+        <xs:sequence>
+          <xs:element ref="authenticode-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="PowerShellFileSet">
+    <xs:complexContent>
+      <xs:extension base="SetBase">
+        <xs:sequence>
+          <xs:element name="include" type="PowerShellFileInclude" minOccurs="1" maxOccurs="unbounded" />
+          <xs:element name="for-each" type="PowerShellFileSetForEach" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="PowerShellFileSetForEach">
+    <xs:complexContent>
+      <xs:extension base="SetForEachBase">
+        <xs:sequence>
+          <xs:element ref="authenticode-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="PowerShellFileInclude">
+    <xs:complexContent>
+      <xs:extension base="IncludeBase" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- NUPKG -->
+  <xs:complexType name="RootNuPkgFile">
+    <xs:complexContent>
+      <xs:extension base="ContainerRootItemBase">
+        <xs:sequence>
+          <xs:element ref="nuget-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="NuPkgFile">
+    <xs:complexContent>
+      <xs:extension base="ContainerContentItemBase">
+        <xs:sequence>
+          <xs:element ref="nuget-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="NuPkgFileSet">
+    <xs:complexContent>
+      <xs:extension base="SetBase">
+        <xs:sequence>
+          <xs:element name="include" type="NuPkgFileInclude" minOccurs="1" maxOccurs="unbounded" />
+          <xs:element name="for-each" type="NuPkgFileSetForEach" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="NuPkgFileSetForEach">
+    <xs:complexContent>
+      <xs:extension base="ContainerSetForEachBase">
+        <xs:sequence>
+          <xs:element ref="nuget-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="NuPkgFileInclude">
+    <xs:complexContent>
+      <xs:extension base="IncludeBase" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- ZIP -->
+  <xs:complexType name="RootZipFile">
+    <xs:complexContent>
+      <xs:extension base="ContainerRootItemBase">
+        <xs:sequence>
+          <xs:element ref="jar-sign" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="ZipFile">
+    <xs:complexContent>
+      <xs:extension base="ContainerContentItemBase">
+        <xs:sequence>
+          <xs:element ref="jar-sign" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="ZipFileSet">
+    <xs:complexContent>
+      <xs:extension base="SetBase">
+        <xs:sequence>
+          <xs:element name="include" type="ZipFileInclude" minOccurs="1" maxOccurs="unbounded" />
+          <xs:element name="for-each" type="ZipFileSetForEach" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="ZipFileSetForEach">
+    <xs:complexContent>
+      <xs:extension base="ContainerSetForEachBase">
+        <xs:sequence>
+          <xs:element ref="jar-sign" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="ZipFileInclude">
+    <xs:complexContent>
+      <xs:extension base="IncludeBase" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- MSI  -->
+  <xs:complexType name="RootMsiFile">
+    <xs:complexContent>
+      <xs:extension base="ContainerRootItemBase">
+        <xs:sequence>
+          <xs:element ref="authenticode-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="MsiFile">
+    <xs:complexContent>
+      <xs:extension base="ContainerContentItemBase">
+        <xs:sequence>
+          <xs:element ref="authenticode-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="MsiFileSet">
+    <xs:complexContent>
+      <xs:extension base="SetBase">
+        <xs:sequence>
+          <xs:element name="include" type="MsiFileInclude" minOccurs="1" maxOccurs="unbounded" />
+          <xs:element name="for-each" type="MsiFileSetForEach" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="MsiFileSetForEach">
+    <xs:complexContent>
+      <xs:extension base="ContainerSetForEachBase">
+        <xs:sequence>
+          <xs:element ref="authenticode-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="MsiFileInclude">
+    <xs:complexContent>
+      <xs:extension base="IncludeBase" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- CAB  -->
+  <xs:complexType name="RootCabFile">
+    <xs:complexContent>
+      <xs:extension base="ContainerRootItemBase">
+        <xs:sequence>
+          <xs:element ref="authenticode-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="CabFile">
+    <xs:complexContent>
+      <xs:extension base="ContainerContentItemBase">
+        <xs:sequence>
+          <xs:element ref="authenticode-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="CabFileSet">
+    <xs:complexContent>
+      <xs:extension base="SetBase">
+        <xs:sequence>
+          <xs:element name="include" type="CabFileInclude" minOccurs="1" maxOccurs="unbounded" />
+          <xs:element name="for-each" type="CabFileSetForEach" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="CabFileSetForEach">
+    <xs:complexContent>
+      <xs:extension base="ContainerSetForEachBase">
+        <xs:sequence>
+          <xs:element ref="authenticode-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="CabFileInclude">
+    <xs:complexContent>
+      <xs:extension base="IncludeBase" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- OPC  -->
+  <xs:complexType name="RootOpcFile">
+    <xs:complexContent>
+      <xs:extension base="ContainerRootItemBase">
+        <xs:sequence>
+          <xs:element ref="opc-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="OpcFile">
+    <xs:complexContent>
+      <xs:extension base="ContainerContentItemBase">
+        <xs:sequence>
+          <xs:element ref="opc-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="OpcFileSet">
+    <xs:complexContent>
+      <xs:extension base="SetBase">
+        <xs:sequence>
+          <xs:element name="include" type="OpcFileInclude" minOccurs="1" maxOccurs="unbounded" />
+          <xs:element name="for-each" type="OpcFileSetForEach" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="OpcFileSetForEach">
+    <xs:complexContent>
+      <xs:extension base="ContainerSetForEachBase">
+        <xs:sequence>
+          <xs:element ref="opc-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="OpcFileInclude">
+    <xs:complexContent>
+      <xs:extension base="IncludeBase" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- JAR -->
+  <xs:complexType name="RootJarFile">
+    <xs:complexContent>
+      <xs:extension base="ContainerRootItemBase">
+        <xs:sequence>
+          <xs:element ref="jar-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="JarFile">
+    <xs:complexContent>
+      <xs:extension base="ContainerContentItemBase">
+        <xs:sequence>
+          <xs:element ref="jar-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="JarFileSet">
+    <xs:complexContent>
+      <xs:extension base="SetBase">
+        <xs:sequence>
+          <xs:element name="include" type="JarFileInclude" minOccurs="1" maxOccurs="unbounded" />
+          <xs:element name="for-each" type="JarFileSetForEach" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="JarFileSetForEach">
+    <xs:complexContent>
+      <xs:extension base="ContainerSetForEachBase">
+        <xs:sequence>
+          <xs:element ref="jar-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="JarFileInclude">
+    <xs:complexContent>
+      <xs:extension base="IncludeBase" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Docker signing data files -->
+  <xs:complexType name="RootDockerSigningDataFile">
+    <xs:complexContent>
+      <xs:extension base="RootItemBase">
+        <xs:sequence>
+          <xs:element ref="docker-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="DockerSigningDataFile">
+    <xs:complexContent>
+      <xs:extension base="ContentItemWithPathBase">
+        <xs:sequence>
+          <xs:element ref="docker-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="DockerSigningDataFileSet">
+    <xs:complexContent>
+      <xs:extension base="SetBase">
+        <xs:sequence>
+          <xs:element name="include" type="DockerSigningDataFileInclude" minOccurs="1" maxOccurs="unbounded" />
+          <xs:element name="for-each" type="DockerSigningDataFileSetForEach" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="DockerSigningDataFileSetForEach">
+    <xs:complexContent>
+      <xs:extension base="SetForEachBase">
+        <xs:sequence>
+          <xs:element ref="docker-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="DockerSigningDataFileInclude">
+    <xs:complexContent>
+      <xs:extension base="IncludeBase" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Catalog -->
+  <xs:complexType name="RootCatalogFile">
+    <xs:complexContent>
+      <xs:extension base="RootItemBase">
+        <xs:sequence>
+          <xs:element ref="authenticode-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="CatalogFile">
+    <xs:complexContent>
+      <xs:extension base="ContentItemWithPathBase">
+        <xs:sequence>
+          <xs:element ref="authenticode-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="CatalogFileSet">
+    <xs:complexContent>
+      <xs:extension base="SetBase">
+        <xs:sequence>
+          <xs:element name="include" type="CatalogFileInclude" minOccurs="1" maxOccurs="unbounded" />
+          <xs:element name="for-each" type="CatalogFileSetForEach" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="CatalogFileSetForEach">
+    <xs:complexContent>
+      <xs:extension base="SetForEachBase">
+        <xs:sequence>
+          <xs:element ref="authenticode-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="CatalogFileInclude">
+    <xs:complexContent>
+      <xs:extension base="IncludeBase" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Hash signing -->
+  <xs:complexType name="RootHashSigningDataFile">
+    <xs:complexContent>
+      <xs:extension base="RootItemBase">
+        <xs:sequence>
+          <xs:element ref="hash-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="HashSigningDataFile">
+    <xs:complexContent>
+      <xs:extension base="ContentItemWithPathBase">
+        <xs:sequence>
+          <xs:element ref="hash-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="HashSigningDataFileSet">
+    <xs:complexContent>
+      <xs:extension base="SetBase">
+        <xs:sequence>
+          <xs:element name="include" type="HashSigningDataFileInclude" minOccurs="1" maxOccurs="unbounded" />
+          <xs:element name="for-each" type="HashSigningDataFileSetForEach" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="HashSigningDataFileSetForEach">
+    <xs:complexContent>
+      <xs:extension base="SetForEachBase">
+        <xs:sequence>
+          <xs:element ref="hash-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="HashSigningDataFileInclude">
+    <xs:complexContent>
+      <xs:extension base="IncludeBase" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Directory -->
+  <xs:complexType name="Directory">
+    <xs:complexContent>
+      <xs:extension base="ContainerContentItemBase">
+        <xs:sequence>
+          <xs:element ref="clickonce-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="DirectorySet">
+    <xs:complexContent>
+      <xs:extension base="SetBase">
+        <xs:sequence>
+          <xs:element name="include" type="DirectoryInclude" minOccurs="1" maxOccurs="unbounded" />
+          <xs:element name="for-each" type="DirectorySetForEach" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="DirectorySetForEach">
+    <xs:complexContent>
+      <xs:extension base="ContainerSetForEachBase">
+        <xs:sequence>
+          <xs:element ref="clickonce-sign" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="DirectoryInclude">
+    <xs:complexContent>
+      <xs:extension base="IncludeBase" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Signing Types -->
+  <xs:complexType name="SigningDirectiveBase" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="ArtifactConfigurationElementBase" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:element name="authenticode-sign" type="AuthenticodeSign" />
+  <xs:complexType name="AuthenticodeSign">
+    <xs:complexContent>
+      <xs:extension base="SigningDirectiveBase">
+        <xs:attribute name="add-certificate" default="none" use="optional" type="addCertificateModeOrArgumentReference" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:simpleType name="addCertificateModeOrArgumentReference">
+    <xs:union memberTypes="addCertificateMode argumentReference" />
+  </xs:simpleType>
+
+  <xs:simpleType name="addCertificateMode">
+    <xs:restriction base="xs:string">
+      <!-- When adding a new possible value do not forget to adapt the AddCertificateModeParser -->
+      <xs:enumeration value="none" />
+      <xs:enumeration value="kernel-mode-cross-certificate" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="docker-sign" type="DockerSign" />
+  <xs:complexType name="DockerSign">
+    <xs:complexContent>
+      <xs:extension base="SigningDirectiveBase" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:element name="nuget-sign" type="NuGetSign" />
+  <xs:complexType name="NuGetSign">
+    <xs:complexContent>
+      <xs:extension base="SigningDirectiveBase" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:element name="opc-sign" type="OpcSign" />
+  <xs:complexType name="OpcSign">
+    <xs:complexContent>
+      <xs:extension base="SigningDirectiveBase" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:element name="clickonce-sign" type="ClickOnceSign" />
+  <xs:complexType name="ClickOnceSign">
+    <xs:complexContent>
+      <xs:extension base="SigningDirectiveBase" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:element name="jar-sign" type="JarSign" />
+  <xs:complexType name="JarSign">
+    <xs:complexContent>
+      <xs:extension base="SigningDirectiveBase" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:element name="hash-sign" type="HashSign" />
+  <xs:complexType name="HashSign">
+    <xs:complexContent>
+      <xs:extension base="SigningDirectiveBase" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Base classes -->
+  <xs:complexType name="ArtifactConfigurationElementBase" abstract="true">
+    <!-- Exists to have a base class for every element to store the element's line number/position in the generated C# code -->
+  </xs:complexType>
+
+  <xs:complexType name="ItemBase" abstract="true">
+    <!-- Base class for all items (files, containers, directories) -->
+    <xs:complexContent>
+      <xs:extension base="ArtifactConfigurationElementBase" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="RootItemBase" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="ItemBase">
+        <xs:attributeGroup ref="optionalPath" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="ContainerRootItemBase" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="RootItemBase">
+        <xs:group ref="containerItem" minOccurs="1" maxOccurs="unbounded" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="ContentItemBase" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="ItemBase" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="ContentItemWithPathBase" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="ContentItemBase">
+        <xs:attributeGroup ref="pathAndMatches" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="ContainerContentItemBase" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="ContentItemWithPathBase">
+        <xs:group ref="containerItem" minOccurs="1" maxOccurs="unbounded" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="IncludeBase" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="ItemBase">
+        <xs:attributeGroup ref ="pathAndMatches" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="SetBase" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="ContentItemBase" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:attributeGroup name="pathAndMatches">
+    <xs:attribute name="path" type="xs:string" use="required" />
+    <xs:attribute name="min-matches" type="positiveIntOrArgumentReference" default="1" use="optional" />
+    <xs:attribute name="max-matches" type="positiveIntUnboundedOrArgumentReference" default="1" use="optional" />
+  </xs:attributeGroup>
+
+  <xs:attributeGroup name="optionalPath">
+    <xs:attribute name="path" type="xs:string" use="optional" />
+  </xs:attributeGroup>
+
+  <xs:group name="containerItem">
+    <xs:choice>
+      <xs:element name="pe-file" type="PeFile" minOccurs="0" maxOccurs="1" />
+      <xs:element name="pe-file-set" type="PeFileSet" minOccurs="0" maxOccurs="1" />
+      <xs:element name="appx-file" type="AppxFile" minOccurs="0" maxOccurs="1" />
+      <xs:element name="appx-file-set" type="AppxFileSet" minOccurs="0" maxOccurs="1" />
+      <xs:element name="powershell-file" type="PowerShellFile" minOccurs="0" maxOccurs="1" />
+      <xs:element name="powershell-file-set" type="PowerShellFileSet" minOccurs="0" maxOccurs="1" />
+      <xs:element name="nupkg-file" type="NuPkgFile" minOccurs="0" maxOccurs="1" />
+      <xs:element name="nupkg-file-set" type="NuPkgFileSet" minOccurs="0" maxOccurs="1" />
+      <xs:element name="zip-file" type="ZipFile" minOccurs="0" maxOccurs="1" />
+      <xs:element name="zip-file-set" type="ZipFileSet" minOccurs="0" maxOccurs="1" />
+      <xs:element name="msi-file" type="MsiFile" minOccurs="0" maxOccurs="1" />
+      <xs:element name="msi-file-set" type="MsiFileSet" minOccurs="0" maxOccurs="1" />
+      <xs:element name="cab-file" type="CabFile" minOccurs="0" maxOccurs="1" />
+      <xs:element name="cab-file-set" type="CabFileSet" minOccurs="0" maxOccurs="1" />
+      <xs:element name="opc-file" type="OpcFile" minOccurs="0" maxOccurs="1" />
+      <xs:element name="opc-file-set" type="OpcFileSet" minOccurs="0" maxOccurs="1" />
+      <xs:element name="jar-file" type="JarFile" minOccurs="0" maxOccurs="1" />
+      <xs:element name="jar-file-set" type="JarFileSet" minOccurs="0" maxOccurs="1" />
+      <xs:element name="docker-signing-data-file" type="DockerSigningDataFile" minOccurs="0" maxOccurs="1" />
+      <xs:element name="docker-signing-data-file-set" type="DockerSigningDataFileSet" minOccurs="0" maxOccurs="1" />
+      <xs:element name="hash-signing-data-file" type="HashSigningDataFile" minOccurs="0" maxOccurs="1" />
+      <xs:element name="hash-signing-data-file-set" type="HashSigningDataFileSet" minOccurs="0" maxOccurs="1" />
+      <xs:element name="catalog-file" type="CatalogFile" minOccurs="0" maxOccurs="1" />
+      <xs:element name="catalog-file-set" type="CatalogFileSet" minOccurs="0" maxOccurs="1" />
+      <xs:element name="directory" type="Directory" minOccurs="0" maxOccurs="1" />
+      <xs:element name="directory-set" type="DirectorySet" minOccurs="0" maxOccurs="1" />
+    </xs:choice>
+  </xs:group>
+
+  <xs:complexType name="SetForEachBase" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="ArtifactConfigurationElementBase" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="ContainerSetForEachBase" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="SetForEachBase">
+        <xs:group ref="containerItem" minOccurs="1" maxOccurs="unbounded" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:simpleType name="positiveIntOrArgumentReference">
+    <xs:union memberTypes="positiveInt argumentReference" />
+  </xs:simpleType>
+
+  <xs:simpleType name="positiveInt">
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="0" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="positiveIntUnboundedOrArgumentReference">
+    <xs:union memberTypes="positiveIntUnbounded argumentReference" />
+  </xs:simpleType>
+
+  <xs:simpleType name="positiveIntUnbounded">
+    <xs:annotation>
+      <xs:documentation>for maxOccurs</xs:documentation>
+    </xs:annotation>
+    <xs:union memberTypes="positiveInt">
+      <xs:simpleType>
+        <xs:restriction base="xs:NMTOKEN">
+          <xs:enumeration value="unbounded" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+</xs:schema>
