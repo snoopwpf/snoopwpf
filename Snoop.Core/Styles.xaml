@@ -762,7 +762,9 @@ All other rights reserved.
                         <TextBox Visibility="Hidden" Template="{DynamicResource ComboBoxTextBox}"
                                  HorizontalAlignment="Left" Margin="3,3,23,3" x:Name="PART_EditableTextBox"
                                  Style="{x:Null}" VerticalAlignment="Center" Focusable="True" Background="Transparent"
-                                 IsReadOnly="{TemplateBinding IsReadOnly}" FontSize="12" Foreground="#FF97E2CD" />
+                                 IsReadOnly="{TemplateBinding IsReadOnly}"
+                                 IsReadOnlyCaretVisible="True"
+                                 FontSize="12" Foreground="#FF97E2CD" />
 
                         <!-- The Popup shows the list of items in the ComboBox. IsOpen is databound to IsDropDownOpen which is toggled via the ComboBoxToggleButton -->
                         <Popup IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" x:Name="Popup"

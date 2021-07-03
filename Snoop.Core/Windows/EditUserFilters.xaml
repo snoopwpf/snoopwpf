@@ -41,6 +41,7 @@ All other rights reserved.
 		    Style="{x:Null}"
 			VerticalAlignment="Center"
             IsReadOnly="{Binding Path=SelectedItem.IsReadOnly, ElementName=filterSetList}"
+            IsReadOnlyCaretVisible="True"
 			Text="{Binding Path=SelectedItem.DisplayName, ElementName=filterSetList}"
 		/>
 		<TextBlock
@@ -58,6 +59,7 @@ All other rights reserved.
 			VerticalAlignment="Center"
 			Margin="0,4,0,0"
             IsReadOnly="{Binding Path=SelectedItem.IsReadOnly, ElementName=filterSetList}"
+            IsReadOnlyCaretVisible="True"
 			Text="{Binding Path=SelectedItem.Properties, ElementName=filterSetList, Converter={x:Static converters:CsvStringToArrayConverter.Default}}"
 		/>
 

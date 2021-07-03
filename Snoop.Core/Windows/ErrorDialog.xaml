@@ -45,6 +45,7 @@ All other rights reserved.
 			x:Name="_textBlockException"
 			AcceptsReturn="True"
             IsReadOnly="True"
+            IsReadOnlyCaretVisible="True"
 			TextWrapping="NoWrap"
 			HorizontalScrollBarVisibility="Auto"
 			VerticalScrollBarVisibility="Auto"

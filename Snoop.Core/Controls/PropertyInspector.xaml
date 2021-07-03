@@ -35,7 +35,10 @@ All other rights reserved.
 
     <TextBox Grid.Row="0" Margin="2" Style="{x:Null}" BorderThickness="0"
              Text="{Binding ElementName=propertyInspector, Path=DelvePath, Mode=OneWay}" Background="Transparent"
-             TextWrapping="Wrap" AcceptsReturn="False" IsReadOnly="True">
+             TextWrapping="Wrap"
+             AcceptsReturn="False"
+             IsReadOnly="True"
+             IsReadOnlyCaretVisible="True">
         <TextBox.ToolTip>
             <TextBlock Style="{x:Null}" Text="This is the delve path of the currently selected object" />
         </TextBox.ToolTip>
