@@ -6,6 +6,7 @@
 namespace Snoop.Data.Tree
 {
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.Windows;
     using System.Windows.Data;
 
@@ -47,6 +48,8 @@ namespace Snoop.Data.Tree
 
         protected override void ReloadCore()
         {
+            Trace.WriteLine($"{this.dictionary.Source?.ToString() ?? "Runtime Dictionary"}, Merged: {this.dictionary.MergedDictionaries.Count}, Keys: {this.dictionary.Keys.Count}");
+
             var order = 0;
             foreach (var mergedDictionary in this.dictionary.MergedDictionaries)
             {
