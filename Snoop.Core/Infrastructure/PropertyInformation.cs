@@ -273,27 +273,40 @@ namespace Snoop.Infrastructure
                     return null;
                 }
 
-                string? resourceKey = null;
-
-                if (this.Target is DependencyObject dependencyObject)
+                switch (value)
                 {
-                    // Cache the resource key for this item if not cached already. This could be done for more types, but would need to optimize perf.
-                    if (TypeMightHaveResourceKey(this.property.PropertyType))
-                    {
-                        var resourceItem = value;
-                        resourceKey = ResourceKeyCache.GetKey(resourceItem);
+                    case DynamicResourceExtension { ResourceKey: { } } dynamicResourceExtension:
+                        return dynamicResourceExtension.ResourceKey.ToString();
 
-                        if (string.IsNullOrEmpty(resourceKey))
+                    case StaticResourceExtension { ResourceKey: { } } staticResourceExtension:
+                        return staticResourceExtension.ResourceKey.ToString();
+
+                    default:
+                    {
+                        if (this.Target is DependencyObject dependencyObject)
                         {
-                            resourceKey = ResourceDictionaryKeyHelpers.GetKeyOfResourceItem(dependencyObject, resourceItem);
-                            ResourceKeyCache.Cache(resourceItem, resourceKey);
+                            // Cache the resource key for this item if not cached already. This could be done for more types, but would need to optimize perf.
+                            if (TypeMightHaveResourceKey(this.property.PropertyType))
+                            {
+                                var resourceKey = ResourceKeyCache.GetKey(value);
+
+                                if (string.IsNullOrEmpty(resourceKey))
+                                {
+                                    resourceKey = ResourceDictionaryKeyHelpers.GetKeyOfResourceItem(dependencyObject, value);
+                                    ResourceKeyCache.Cache(value, resourceKey);
+                                }
+
+                                Debug.Assert(resourceKey is not null, "resourceKey is not null");
+
+                                return resourceKey;
+                            }
                         }
 
-                        Debug.Assert(resourceKey is not null, "resourceKey is not null");
+                        break;
                     }
                 }
 
-                return resourceKey;
+                return null;
             }
         }
 
