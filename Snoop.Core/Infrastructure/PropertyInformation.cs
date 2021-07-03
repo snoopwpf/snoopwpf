@@ -44,6 +44,9 @@ namespace Snoop.Infrastructure
         private bool isRunning;
         private bool ignoreUpdate;
 
+        private PropertyFilter? filter;
+        private string bindingError = string.Empty;
+
         /// <summary>
         /// Normal constructor used when constructing PropertyInformation objects for properties.
         /// </summary>
@@ -65,8 +68,10 @@ namespace Snoop.Infrastructure
                 var dp = this.DependencyProperty;
                 if (dp is not null)
                 {
-                    binding = new Binding();
-                    binding.Path = new PropertyPath("(0)", new object[] { dp });
+                    binding = new Binding
+                    {
+                        Path = new PropertyPath("(0)", dp)
+                    };
 
                     if (dp == FrameworkElement.StyleProperty
                         || dp == FrameworkContentElement.StyleProperty)
@@ -160,8 +165,8 @@ namespace Snoop.Infrastructure
 
         public object? Value
         {
-            get { return this.GetValue(ValueProperty); }
-            set { this.SetValue(ValueProperty, value); }
+            get => this.GetValue(ValueProperty);
+            set => this.SetValue(ValueProperty, value);
         }
 
         public static readonly DependencyProperty ValueProperty =
@@ -318,11 +323,11 @@ namespace Snoop.Infrastructure
                     else if (this.property is not null &&
                              (this.property.PropertyType == typeof(Brush) || this.property.PropertyType == typeof(Style)))
                     {
-                        stringValue = string.Format("[{0}]", value.GetType().Name);
+                        stringValue = $"[{value.GetType().Name}]";
                     }
                     else
                     {
-                        stringValue = string.Format("[{0}]", stringValue);
+                        stringValue = $"[{stringValue}]";
                     }
                 }
 
@@ -339,7 +344,7 @@ namespace Snoop.Infrastructure
                     // Display both the value and the resource key, if there's a key for this property.
                     if (string.IsNullOrEmpty(this.ResourceKey) == false)
                     {
-                        return string.Format("{0} [{1}]", stringValue, this.ResourceKey);
+                        return $"{stringValue} [{this.ResourceKey}]";
                     }
 
                     // if the value comes from a Binding, show the binding details in [] brackets
@@ -350,10 +355,10 @@ namespace Snoop.Infrastructure
 
                         if (stringValueIsTypeToString)
                         {
-                            return string.Format("[Binding] {0}", bindingDescriptiveString);
+                            return $"[Binding] {bindingDescriptiveString}";
                         }
 
-                        return string.Format("{0} [Binding] {1}", stringValue, bindingDescriptiveString);
+                        return $"{stringValue} [Binding] {bindingDescriptiveString}";
                     }
                 }
 
@@ -363,7 +368,7 @@ namespace Snoop.Infrastructure
 
                     if (setter.Property is not null)
                     {
-                        stringValue += "Property: " + setter.Property.Name;
+                        stringValue += $"Property: {setter.Property.Name}";
 
                         if (string.IsNullOrEmpty(setter.TargetName) == false)
                         {
@@ -373,7 +378,7 @@ namespace Snoop.Infrastructure
 
                     if (string.IsNullOrEmpty(setter.TargetName) == false)
                     {
-                        stringValue += "Target: " + setter.TargetName;
+                        stringValue += $"Target: {setter.TargetName}";
                     }
                 }
 
@@ -401,10 +406,8 @@ namespace Snoop.Infrastructure
                     // use this object to return the type of the collection for the ComponentType.
                     return this.component?.GetType();
                 }
-                else
-                {
-                    return this.property.ComponentType;
-                }
+
+                return this.property.ComponentType;
             }
         }
 
@@ -418,10 +421,8 @@ namespace Snoop.Infrastructure
                     // just return typeof(object) here, since an item in a collection ... really isn't a property.
                     return typeof(object);
                 }
-                else
-                {
-                    return this.property.PropertyType;
-                }
+
+                return this.property.PropertyType;
             }
         }
 
@@ -442,29 +443,17 @@ namespace Snoop.Infrastructure
             }
         }
 
-        public PropertyDescriptor? Property
-        {
-            get { return this.property; }
-        }
+        public PropertyDescriptor? Property => this.property;
 
-        public string DisplayName
-        {
-            get { return this.displayName; }
-        }
+        public string DisplayName => this.displayName;
 
         public bool IsCollectionEntry { get; private set; }
 
         public object? CollectionEntryIndexOrKey { get; private set; }
 
-        public bool IsInvalidBinding
-        {
-            get { return this.isInvalidBinding; }
-        }
+        public bool IsInvalidBinding => this.isInvalidBinding;
 
-        public bool IsLocallySet
-        {
-            get { return this.isLocallySet; }
-        }
+        public bool IsLocallySet => this.isLocallySet;
 
         public bool IsValueChangedByUser { get; set; }
 
@@ -478,31 +467,20 @@ namespace Snoop.Infrastructure
                     //return false;
                     return this.isCopyable;
                 }
-                else
-                {
-                    return !this.property.IsReadOnly;
-                }
+
+                return this.property.IsReadOnly == false;
             }
         }
 
-        public bool IsDatabound
-        {
-            get { return this.isDatabound; }
-        }
+        public bool IsDatabound => this.isDatabound;
 
-        public bool IsExpression
-        {
-            get { return this.valueSource.IsExpression; }
-        }
+        public bool IsExpression => this.valueSource.IsExpression;
 
-        public bool IsAnimated
-        {
-            get { return this.valueSource.IsAnimated; }
-        }
+        public bool IsAnimated => this.valueSource.IsAnimated;
 
         public int Index
         {
-            get { return this.index; }
+            get => this.index;
 
             set
             {
@@ -515,10 +493,7 @@ namespace Snoop.Infrastructure
             }
         }
 
-        public bool IsOdd
-        {
-            get { return this.index % 2 == 1; }
-        }
+        public bool IsOdd => this.index % 2 == 1;
 
         public BindingBase? Binding
         {
@@ -552,7 +527,7 @@ namespace Snoop.Infrastructure
 
         public PropertyFilter? Filter
         {
-            get { return this.filter; }
+            get => this.filter;
 
             set
             {
@@ -562,12 +537,9 @@ namespace Snoop.Infrastructure
             }
         }
 
-        private PropertyFilter? filter;
-        private string bindingError = string.Empty;
-
         public bool BreakOnChange
         {
-            get { return this.breakOnChange; }
+            get => this.breakOnChange;
 
             set
             {
@@ -578,7 +550,7 @@ namespace Snoop.Infrastructure
 
         public bool HasChangedRecently
         {
-            get { return this.hasChangedRecently; }
+            get => this.hasChangedRecently;
 
             set
             {
@@ -592,10 +564,7 @@ namespace Snoop.Infrastructure
         // Required to prevent binding leaks
         public BaseValueSource ValueSourceBaseValueSource => this.ValueSource.BaseValueSource;
 
-        public bool IsVisible
-        {
-            get { return this.filter?.Show(this) != false; }
-        }
+        public bool IsVisible => this.filter?.Show(this) != false;
 
         public void Clear()
         {
