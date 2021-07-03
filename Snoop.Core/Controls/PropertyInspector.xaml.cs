@@ -628,7 +628,7 @@ namespace Snoop.Controls
         /// Get or Set the collection of User filter sets.  These are the filters that are configurable by
         /// the user, and serialized to/from app Settings.
         /// </summary>
-        public PropertyFilterSet[] UserFilterSets
+        public List<PropertyFilterSet> UserFilterSets
         {
             get
             {
@@ -651,7 +651,7 @@ namespace Snoop.Controls
                         ret.Clear();
                     }
 
-                    this.userFilterSets = ret.ToArray();
+                    this.userFilterSets = ret;
                 }
 
                 return this.userFilterSets;
@@ -717,15 +717,11 @@ namespace Snoop.Controls
         /// Cleanse the property names in each filter in the collection.
         /// This includes removing spaces from each one, and making them all lower case
         /// </summary>
-        private static PropertyFilterSet[] CleanFiltersForUserFilters(ICollection<PropertyFilterSet>? collection)
+        private static List<PropertyFilterSet> CleanFiltersForUserFilters(ICollection<PropertyFilterSet>? collection)
         {
             if (collection is null)
             {
-#if NET40
-                return new PropertyFilterSet[0];
-#else
-                return Array.Empty<PropertyFilterSet>();
-#endif
+                return new List<PropertyFilterSet>();
             }
 
             foreach (var filterItem in collection)
@@ -733,11 +729,11 @@ namespace Snoop.Controls
                 filterItem.Properties = filterItem.Properties?.Select(s => s.ToLower().Trim()).ToArray();
             }
 
-            return collection.Where(x => x.IsReadOnly == false).ToArray();
+            return collection.Where(x => x.IsReadOnly == false).ToList();
         }
 
         private readonly List<object> inspectStack = new();
-        private PropertyFilterSet[]? userFilterSets;
+        private List<PropertyFilterSet>? userFilterSets;
         private readonly List<PropertyInformation> delvePathList = new();
 
         private readonly Inspector inspector;
