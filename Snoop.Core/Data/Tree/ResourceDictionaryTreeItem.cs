@@ -15,6 +15,8 @@ namespace Snoop.Data.Tree
         private static readonly SortDescription displayNameSortDescription = new(nameof(DisplayName), ListSortDirection.Ascending);
 
         private readonly ResourceDictionary dictionary;
+        private bool resourceEntriesLoaded;
+        private TreeItem? placeholderResourceEntryChild;
 
         public ResourceDictionaryTreeItem(ResourceDictionary dictionary, TreeItem? parent, TreeService treeService)
             : base(dictionary, parent, treeService)
@@ -59,29 +61,64 @@ namespace Snoop.Data.Tree
                 ++order;
             }
 
+            if (this.IsExpanded)
+            {
+                this.resourceEntriesLoaded = false;
+                this.LoadAllResourceEntries();
+            }
+            else if (this.dictionary.Keys.Count > 0)
+            {
+                this.placeholderResourceEntryChild = new ResourceItem("Placeholder", "Placeholder", this, this.TreeService, false);
+                this.AddChild(this.placeholderResourceEntryChild);
+            }
+        }
+
+        private void LoadAllResourceEntries()
+        {
+            if (this.resourceEntriesLoaded)
+            {
+                return;
+            }
+
+            this.resourceEntriesLoaded = true;
+
+            if (this.placeholderResourceEntryChild is not null)
+            {
+                this.RemoveChild(this.placeholderResourceEntryChild);
+            }
+
             var resourceDictionary = this.dictionary;
             foreach (var key in resourceDictionary.Keys)
             {
                 resourceDictionary.TryGetValue(key, out var item, out var exception);
 
                 if (item is not null
+                    || exception is not null
                     || key is not null)
                 {
-                    this.AddChild(new ResourceItem(item ?? exception ?? key!, key!, this, this.TreeService, exception is not null));
+                    this.AddChild(new ResourceItem(item ?? exception ?? key!, key, this, this.TreeService, exception is not null));
                 }
+            }
+        }
+
+        protected override void OnPropertyChanged(string propertyName)
+        {
+            base.OnPropertyChanged(propertyName);
+
+            if (propertyName is nameof(this.IsExpanded)
+                && this.IsExpanded)
+            {
+                this.LoadAllResourceEntries();
             }
         }
 
         public override string ToString()
         {
-            var source = this.dictionary.Source?.ToString();
+            var source = this.dictionary.Source?.ToString() ?? "Runtime Dictionary";
 
-            if (string.IsNullOrEmpty(source))
-            {
-                return $"{this.Children.Count} resources";
-            }
+            var childrenCount = this.dictionary.MergedDictionaries.Count + this.dictionary.Keys.Count;
 
-            return $"{this.Children.Count} resources ({source})";
+            return $"{childrenCount} resources ({source})";
         }
     }
 
@@ -90,7 +127,7 @@ namespace Snoop.Data.Tree
         private readonly object? key;
         private readonly bool hasError;
 
-        public ResourceItem(object target, object key, TreeItem parent, TreeService treeService, bool hasError)
+        public ResourceItem(object target, object? key, TreeItem parent, TreeService treeService, bool hasError)
             : base(target, parent, treeService)
         {
             this.key = key;
