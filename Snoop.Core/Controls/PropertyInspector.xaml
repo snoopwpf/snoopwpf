@@ -91,7 +91,7 @@ All other rights reserved.
                         </Style.Triggers>
                     </Style>
                 </Button.Style>
-                <Image Style="{x:Null}" Source="{DynamicResource scopeUpDrawingImage}" Margin="3" />
+                <Image Style="{x:Null}" Source="{DynamicResource upDrawingImage}" Margin="3" />
                 <Button.ToolTip>
                     <StackPanel>
                         <TextBlock Style="{x:Null}" Text="Click this button to pop up 1 level in scope" />
