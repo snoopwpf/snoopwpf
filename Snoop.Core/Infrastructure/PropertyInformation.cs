@@ -324,28 +324,27 @@ namespace Snoop.Infrastructure
 
                 var stringValueIsTypeToString = stringValue.Equals(value.GetType().ToString(), StringComparison.Ordinal);
 
+                // Add brackets around types to distinguish them from values.
+                // Replace long type names with short type names for some specific types, for easier readability.
+                // FUTURE: This could be extended to other types.
                 if (stringValueIsTypeToString)
                 {
-                    // Add brackets around types to distinguish them from values.
-                    // Replace long type names with short type names for some specific types, for easier readability.
-                    // FUTURE: This could be extended to other types.
-                    if (value is DynamicResourceExtension dynamicResourceExtension)
+                    switch (value)
                     {
-                        stringValue = $"[DynamicResource]"; // {dynamicResourceExtension.ResourceKey}";
+                        case DynamicResourceExtension dynamicResourceExtension:
+                            return $"[DynamicResource] {dynamicResourceExtension.ResourceKey}";
+
+                        case StaticResourceExtension staticResourceExtension:
+                            return $"[StaticResource] {staticResourceExtension.ResourceKey}";
+
+                        case ResourceDictionary { Source: { } } rd:
+                            return $"[ResourceDictionary] {rd.Source}";
                     }
-                    else if (value is ResourceDictionary { Source: { } } rd)
-                    {
-                        return rd.Source.ToString();
-                    }
-                    else if (this.property is not null &&
-                             (this.property.PropertyType == typeof(Brush) || this.property.PropertyType == typeof(Style)))
-                    {
-                        stringValue = $"[{value.GetType().Name}]";
-                    }
-                    else
-                    {
-                        stringValue = $"[{stringValue}]";
-                    }
+
+                    // Try to use a short type name
+                    stringValue = ShouldWeDisplayShortTypeName(value.GetType())
+                        ? $"[{value.GetType().Name}]"
+                        : $"[{stringValue}]";
                 }
 
                 // Display #00FFFFFF as Transparent for easier readability
@@ -401,6 +400,11 @@ namespace Snoop.Infrastructure
 
                 return stringValue;
             }
+        }
+
+        private static bool ShouldWeDisplayShortTypeName(Type type)
+        {
+            return TypeMightHaveResourceKey(type);
         }
 
         private static bool TypeMightHaveResourceKey(Type type)
