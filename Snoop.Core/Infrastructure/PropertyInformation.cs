@@ -316,9 +316,13 @@ namespace Snoop.Infrastructure
                     // Add brackets around types to distinguish them from values.
                     // Replace long type names with short type names for some specific types, for easier readability.
                     // FUTURE: This could be extended to other types.
-                    if (value is DynamicResourceExtension)
+                    if (value is DynamicResourceExtension dynamicResourceExtension)
                     {
-                        stringValue = string.Format("[{0}]", "DynamicResource");
+                        stringValue = $"[DynamicResource]"; // {dynamicResourceExtension.ResourceKey}";
+                    }
+                    else if (value is ResourceDictionary { Source: { } } rd)
+                    {
+                        return rd.Source.ToString();
                     }
                     else if (this.property is not null &&
                              (this.property.PropertyType == typeof(Brush) || this.property.PropertyType == typeof(Style)))
