@@ -212,22 +212,42 @@ All other rights reserved.
 		</DrawingImage.Drawing>
 	</DrawingImage>
 
-	<!-- scopeUpDrawingImage -->
-	<DrawingImage x:Key="scopeUpDrawingImage"
+	<!-- upDrawingImage -->
+	<DrawingImage x:Key="upDrawingImage"
                   options:Freeze="True">
 		<DrawingImage.Drawing>
 			<DrawingGroup>
 				<DrawingGroup.Children>
 					<GeometryDrawing Brush="#FF000000" Geometry="F1 M 288,384L 384,240L 480,384L 384,336L 288,384 Z ">
-						<GeometryDrawing.Pen>
+                        <GeometryDrawing.Pen>
 							<Pen Thickness="13.3333" LineJoin="Round" Brush="#FF000000"/>
 						</GeometryDrawing.Pen>
 					</GeometryDrawing>
-
-				</DrawingGroup.Children>
+                </DrawingGroup.Children>
 			</DrawingGroup>
 		</DrawingImage.Drawing>
 	</DrawingImage>
+
+    <!-- downDrawingImage -->
+    <DrawingImage x:Key="downDrawingImage"
+                  options:Freeze="True">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <DrawingGroup.Transform>
+                    <TransformGroup>
+                        <RotateTransform Angle="180" />
+                    </TransformGroup>
+                </DrawingGroup.Transform>
+                <DrawingGroup.Children>
+                    <GeometryDrawing Brush="#FF000000" Geometry="F1 M 288,384L 384,240L 480,384L 384,336L 288,384 Z ">
+                        <GeometryDrawing.Pen>
+                            <Pen Thickness="13.3333" LineJoin="Round" Brush="#FF000000"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                </DrawingGroup.Children>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
 
 	<!-- reloadDrawingImage -->
 	<DrawingImage x:Key="reloadDrawingImage"

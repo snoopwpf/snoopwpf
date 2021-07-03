@@ -28,7 +28,7 @@
             nameof(ResetSettingsCommand), typeof(ICommand), typeof(NoSelectionComboBox), new PropertyMetadata(default(ICommand)));
 
         public static readonly DependencyProperty ResetSettingsToolTipProperty = DependencyProperty.Register(
-            nameof(ResetSettingsToolTip), typeof(string), typeof(NoSelectionComboBox), new PropertyMetadata(default(string)));
+            nameof(ResetSettingsToolTip), typeof(string), typeof(NoSelectionComboBox), new PropertyMetadata("Reset to default settings"));
 
         private ItemsControl? itemsControl;
 
@@ -50,9 +50,9 @@
             set => this.SetValue(ResetSettingsCommandProperty, value);
         }
 
-        public string? ResetSettingsToolTip
+        public string ResetSettingsToolTip
         {
-            get => (string?)this.GetValue(ResetSettingsToolTipProperty);
+            get => (string)this.GetValue(ResetSettingsToolTipProperty);
             set => this.SetValue(ResetSettingsToolTipProperty, value);
         }
 

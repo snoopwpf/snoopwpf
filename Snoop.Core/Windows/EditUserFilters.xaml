@@ -117,7 +117,7 @@ All other rights reserved.
 				Height="20"
 				Click="UpHandler"
 			>
-				<Image Style="{x:Null}" Source="{DynamicResource scopeUpDrawingImage}" Margin="3"/>
+				<Image Style="{x:Null}" Source="{DynamicResource upDrawingImage}" Margin="3"/>
 			</Button>
 			<Button
 				x:Name="MoveDown"
@@ -127,11 +127,7 @@ All other rights reserved.
 				Margin="0,5,0,0"
 				Click="DownHandler"
 			>
-				<Image Style="{x:Null}" Source="{DynamicResource scopeUpDrawingImage}" Margin="3" RenderTransformOrigin="0.5,0.5">
-					<Image.RenderTransform>
-						<RotateTransform Angle="180"/>
-					</Image.RenderTransform>
-				</Image>
+				<Image Style="{x:Null}" Source="{DynamicResource downDrawingImage}" Margin="3" />
 			</Button>
 			<Button
 			    Style="{x:Null}"
