@@ -287,11 +287,13 @@ namespace Snoop.Data.Tree
             this.children.Add(item);
         }
 
-        protected void RemoveChild(TreeItem item)
+        protected bool RemoveChild(TreeItem item)
         {
             item.IsSelected = false;
-            this.children.Remove(item);
+            var result = this.children.Remove(item);
             item.Dispose();
+
+            return result;
         }
 
         protected void RemoveAllChildren()
