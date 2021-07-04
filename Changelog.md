@@ -14,6 +14,7 @@
   - [#232](../../issues/232) - System.NotSupportedException
   - [#252](../../issues/252) - Display Scaling
   - [#254](../../issues/254) - Exception at SnoopMainBaseWindow.FindRoot() with background dispatcher hosted visual
+  - [#266](../../issues/266) - Out of memory exception in snoop after target app was converted from .NET 4.8 to .NET 5
 
 - ### Improvements
 
