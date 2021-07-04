@@ -6,7 +6,6 @@
 namespace Snoop.Data.Tree
 {
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Windows;
     using System.Windows.Data;
 
@@ -16,8 +15,7 @@ namespace Snoop.Data.Tree
         private static readonly SortDescription displayNameSortDescription = new(nameof(DisplayName), ListSortDirection.Ascending);
 
         private readonly ResourceDictionary dictionary;
-        private bool resourceEntriesLoaded;
-        private TreeItem? placeholderResourceEntryChild;
+        private TreeItem? placeholderChild;
 
         public ResourceDictionaryTreeItem(ResourceDictionary dictionary, TreeItem? parent, TreeService treeService)
             : base(dictionary, parent, treeService)
@@ -48,10 +46,31 @@ namespace Snoop.Data.Tree
 
         protected override void ReloadCore()
         {
-            Trace.WriteLine($"{this.dictionary.Source?.ToString() ?? "Runtime Dictionary"}, Merged: {this.dictionary.MergedDictionaries.Count}, Keys: {this.dictionary.Keys.Count}");
+            if (this.IsExpanded)
+            {
+                this.ReallyLoadChildren();
+                return;
+            }
+
+            if (this.dictionary.MergedDictionaries.Count > 0
+                || this.dictionary.Keys.Count > 0)
+            {
+                this.placeholderChild = new ResourceItem("Placeholder", "Placeholder", this, this.TreeService, false);
+                this.AddChild(this.placeholderChild);
+            }
+        }
+
+        private void ReallyLoadChildren()
+        {
+            if (this.placeholderChild is not null)
+            {
+                this.RemoveChild(this.placeholderChild);
+            }
 
             var order = 0;
-            foreach (var mergedDictionary in this.dictionary.MergedDictionaries)
+            var resourceDictionary = this.dictionary;
+
+            foreach (var mergedDictionary in resourceDictionary.MergedDictionaries)
             {
                 var resourceDictionaryItem = new ResourceDictionaryTreeItem(mergedDictionary, this, this.TreeService)
                 {
@@ -64,33 +83,6 @@ namespace Snoop.Data.Tree
                 ++order;
             }
 
-            if (this.IsExpanded)
-            {
-                this.resourceEntriesLoaded = false;
-                this.LoadAllResourceEntries();
-            }
-            else if (this.dictionary.Keys.Count > 0)
-            {
-                this.placeholderResourceEntryChild = new ResourceItem("Placeholder", "Placeholder", this, this.TreeService, false);
-                this.AddChild(this.placeholderResourceEntryChild);
-            }
-        }
-
-        private void LoadAllResourceEntries()
-        {
-            if (this.resourceEntriesLoaded)
-            {
-                return;
-            }
-
-            this.resourceEntriesLoaded = true;
-
-            if (this.placeholderResourceEntryChild is not null)
-            {
-                this.RemoveChild(this.placeholderResourceEntryChild);
-            }
-
-            var resourceDictionary = this.dictionary;
             foreach (var key in resourceDictionary.Keys)
             {
                 resourceDictionary.TryGetValue(key, out var item, out var exception);
@@ -111,7 +103,7 @@ namespace Snoop.Data.Tree
             if (propertyName is nameof(this.IsExpanded)
                 && this.IsExpanded)
             {
-                this.LoadAllResourceEntries();
+                this.ReallyLoadChildren();
             }
         }
 
