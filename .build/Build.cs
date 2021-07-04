@@ -285,9 +285,7 @@ class Build : NukeBuild
 
     Target SignArtifacts => _ => _
         .Requires(() => SignPathAuthToken)
-        .OnlyWhenStatic(() => AppVeyor.Instance != null)
-        .OnlyWhenStatic(() => string.IsNullOrEmpty(SignPathAuthToken) == false)
-        .OnlyWhenStatic(() => GitRepository != null && (GitRepository.IsOnMasterBranch() || GitRepository.IsOnReleaseBranch()))
+        .OnlyWhenStatic(() => ShouldSign())
         .After(Setup)
         .Executes(async () =>
         {
@@ -296,6 +294,21 @@ class Build : NukeBuild
             var result = await SignPathTasks.GetSigningRequestUrlViaAppVeyor(SignPathAuthToken, SignPathOrganizationId, SignPathProjectSlug, SignPathSigningPolicySlug);
             Logger.Info(result);
         });
+
+    bool ShouldSign()
+    {
+        if (AppVeyor.Instance is null
+            || GitRepository is null
+            || GitVersion is null
+            || string.IsNullOrEmpty(SignPathAuthToken))
+        {
+            return false;
+        }
+
+        return GitRepository.IsOnMainOrMasterBranch()
+               // Pre-Release or not?
+               || GitVersion.NuGetVersion.Contains("-") == false;
+    }
 
     Target CI => _ => _
         .DependsOn(Compile, Test, Pack, Setup, SignArtifacts);
