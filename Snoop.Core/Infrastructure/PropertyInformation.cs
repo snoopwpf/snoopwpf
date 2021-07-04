@@ -348,9 +348,9 @@ namespace Snoop.Infrastructure
                 }
 
                 // Display #00FFFFFF as Transparent for easier readability
-                if (this.property is not null &&
-                    this.property.PropertyType == typeof(Brush) &&
-                    stringValue.Equals("#00FFFFFF", StringComparison.Ordinal))
+                if (this.property is not null
+                    && this.property.PropertyType == typeof(Brush)
+                    && stringValue.Equals("#00FFFFFF", StringComparison.Ordinal))
                 {
                     stringValue = "Transparent";
                 }

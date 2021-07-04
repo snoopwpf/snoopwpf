@@ -58,7 +58,8 @@ All other rights reserved.
 
     <!-- DataContext: PropertyInformation -->
 
-    <ContentControl Content="{Binding}" VerticalAlignment="Center"
+    <ContentControl Content="{Binding}"
+                    VerticalAlignment="Center"
                     d:DataContext="{d:DesignInstance infrastructure:PropertyInformation}">
         <ContentControl.Style>
             <Style TargetType="{x:Type ContentControl}">
