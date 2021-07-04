@@ -86,7 +86,7 @@ namespace Snoop.Infrastructure
                 }
 
                 binding.Source = target;
-                binding.Mode = property.IsReadOnly ? BindingMode.OneWay : BindingMode.TwoWay;
+                binding.Mode = GetBindingMode();
 
                 try
                 {
@@ -103,6 +103,16 @@ namespace Snoop.Infrastructure
             this.Update();
 
             this.isRunning = true;
+
+            BindingMode GetBindingMode()
+            {
+                if (target is INotifyPropertyChanged == false)
+                {
+                    return BindingMode.OneTime;
+                }
+
+                return property.IsReadOnly ? BindingMode.OneWay : BindingMode.TwoWay;
+            }
         }
 
         /// <summary>
