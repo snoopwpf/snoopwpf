@@ -9,6 +9,7 @@ using Nuke.Common.CI;
 using Nuke.Common.CI.AppVeyor;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
+using Nuke.Common.Git;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
@@ -82,6 +83,7 @@ class Build : NukeBuild
     [Solution(GenerateProjects = true)] readonly Solution Solution = null!;
     [Solution(GenerateProjects = true)] readonly TestHarnessSolution TestHarnessSolution = null!;
 
+    [GitRepository] GitRepository? GitRepository;
     [GitVersion(Framework = "netcoreapp3.1", NoFetch = true, NoCache = true)] readonly GitVersion? GitVersion;
 
     string AssemblySemVer => GitVersion?.AssemblySemVer ?? "1.0.0";
@@ -284,6 +286,8 @@ class Build : NukeBuild
     Target SignArtifacts => _ => _
         .Requires(() => SignPathAuthToken)
         .OnlyWhenStatic(() => AppVeyor.Instance != null)
+        .OnlyWhenStatic(() => string.IsNullOrEmpty(SignPathAuthToken) == false)
+        .OnlyWhenStatic(() => GitRepository != null && (GitRepository.IsOnMasterBranch() || GitRepository.IsOnReleaseBranch()))
         .After(Setup)
         .Executes(async () =>
         {
@@ -294,5 +298,5 @@ class Build : NukeBuild
         });
 
     Target CI => _ => _
-        .DependsOn(Compile, Test, Pack, Setup /*, SignArtifacts*/);
+        .DependsOn(Compile, Test, Pack, Setup, SignArtifacts);
 }
