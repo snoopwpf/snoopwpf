@@ -18,6 +18,7 @@ namespace Snoop.Windows
     using System.Windows.Documents;
     using System.Windows.Input;
     using System.Windows.Media;
+    using System.Windows.Media.Media3D;
     using System.Windows.Threading;
     using JetBrains.Annotations;
     using Snoop.Core.Properties;
@@ -702,8 +703,8 @@ namespace Snoop.Windows
             }
 
             // Not every visual element is in the logical or the automation tree, so try the visual tree
-            if ((this.TreeService.TreeType == TreeType.Logical || this.TreeService.TreeType == TreeType.Automation)
-                && target is DependencyObject dependencyObject)
+            if (this.TreeService.TreeType is TreeType.Logical or TreeType.Automation
+                && target is DependencyObject dependencyObject and (Visual or Visual3D))
             {
                 var parent = VisualTreeHelper.GetParent(dependencyObject);
 

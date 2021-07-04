@@ -9,6 +9,7 @@ namespace Snoop.Infrastructure
     using System.Linq;
     using System.Windows;
     using System.Windows.Media;
+    using System.Windows.Media.Media3D;
 
     public static class PertinentPropertyFilter
     {
@@ -45,6 +46,7 @@ namespace Snoop.Infrastructure
                 }
 
                 // Check visual tree
+                if (dependencyObject is Visual or Visual3D)
                 {
                     var currentElement = dependencyObject;
                     do
