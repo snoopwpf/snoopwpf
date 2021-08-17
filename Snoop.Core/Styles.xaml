@@ -1512,7 +1512,7 @@ All other rights reserved.
 
     <Style TargetType="{x:Type controls:NoSelectionComboBox}"
            x:Key="{x:Type controls:NoSelectionComboBox}"
-           BasedOn="{StaticResource {x:Type ComboBox}}">
+           BasedOn="{x:Null}">
         <Setter Property="Template"
                 Value="{StaticResource Snoop.Templates.NoSelectionComboBox}" />
     </Style>
