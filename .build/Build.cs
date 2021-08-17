@@ -187,7 +187,7 @@ class Build : NukeBuild
                 .SetProjectFile(Solution.Snoop_Core_Tests)
                 .SetConfiguration(Configuration)
                 .SetVerbosity(DotNetVerbosity.Normal)
-                .SetLogger("trx")
+                .AddLoggers("trx")
                 .SetNoBuild(true)
                 .SetResultsDirectory(TestResultDirectory));
         });
