@@ -1,4 +1,4 @@
-﻿namespace Snoop.Views.DebugListenerTab
+namespace Snoop.Views.DebugListenerTab
 {
     using System;
     using System.Diagnostics;
