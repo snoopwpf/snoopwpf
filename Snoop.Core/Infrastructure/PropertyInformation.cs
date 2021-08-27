@@ -106,11 +106,6 @@ namespace Snoop.Infrastructure
 
             BindingMode GetBindingMode()
             {
-                if (target is INotifyPropertyChanged == false)
-                {
-                    return BindingMode.OneTime;
-                }
-
                 return property.IsReadOnly ? BindingMode.OneWay : BindingMode.TwoWay;
             }
         }
@@ -262,7 +257,7 @@ namespace Snoop.Infrastructure
 
                 var targetType = this.property.PropertyType;
 
-                try
+                try 
                 {
                     this.property.SetValue(this.Target, StringValueConverter.ConvertFromString(targetType, value));
                 }
