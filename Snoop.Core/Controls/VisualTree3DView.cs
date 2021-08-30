@@ -10,7 +10,6 @@ namespace Snoop.Controls
     using System.Windows.Controls;
     using System.Windows.Media;
     using System.Windows.Media.Media3D;
-    using Snoop.Extensions;
     using Snoop.Infrastructure;
 
     public class VisualTree3DView : Viewport3D
@@ -180,7 +179,7 @@ namespace Snoop.Controls
 
             if (viewport3D is null)
             {
-                Drawing drawing = VisualTreeHelper.GetDrawing(visual);
+                var drawing = VisualTreeHelper.GetDrawing(visual);
 
                 if (this.drawOutlines)
                 {
@@ -209,7 +208,7 @@ namespace Snoop.Controls
                 visual = drawingVisual;
             }
 
-            var renderTargetBitmap = VisualCaptureUtil.RenderVisual(visual, bounds.Size, dpi, viewport3D: viewport3D);
+            var renderTargetBitmap = VisualCaptureUtil.RenderVisual(visual, bounds.Size, dpi, dpi, viewport3D: viewport3D);
             renderTargetBitmap.FreezeIfPossible();
             var imageBrush = new ImageBrush(renderTargetBitmap);
             imageBrush.FreezeIfPossible();

@@ -62,7 +62,7 @@ namespace Snoop.Controls.ValueEditors
             {
                 var fieldNum = int.Parse(tb.Tag.ToString()!);
 
-                switch (this.PropertyInfo.Property.PropertyType.Name)
+                switch (this.PropertyInfo.PropertyType.Name)
                 {
                     case "Double":
                         this.PropertyInfo.StringValue = ChangeDoubleValue(tb.Text, increment, largeIncrement, tinyIncrement);

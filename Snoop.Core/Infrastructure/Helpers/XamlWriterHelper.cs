@@ -1,4 +1,4 @@
-﻿namespace Snoop.Infrastructure.Helpers
+namespace Snoop.Infrastructure.Helpers
 {
     using System;
     using System.Collections.Generic;
@@ -68,7 +68,9 @@
             return xml;
         }
 
+#pragma warning disable CA1812
         private class BindingExpressionConvertor : ExpressionConverter
+#pragma warning restore CA1812
         {
             public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
             {
@@ -76,7 +78,7 @@
                 return true;
             }
 
-            public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
+            public override object? ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
             {
                 if (destinationType == typeof(MarkupExtension))
                 {

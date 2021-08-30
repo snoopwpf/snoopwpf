@@ -15,14 +15,28 @@
         <PackageVersion Include="System.Management.Automation" Version="7.0.0" />
     </ItemGroup>
 
+    <ItemGroup Condition="'$(TargetFramework)' == 'net5.0-windows'">
+      <PackageVersion Include="System.Management.Automation" Version="7.1.0" />
+    </ItemGroup>
+
+    <ItemGroup Label="Test">
+      <PackageVersion Include="NUnit" Version="3.13.2" />
+      <PackageVersion Include="NUnit3TestAdapter" Version="4.0.0" />
+
+      <PackageVersion Include="Verify.NUnit" Version="11.0.3" />
+
+      <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+    </ItemGroup>
+
     <ItemGroup Label="Build">
         <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.0.0" />
 
-        <PackageVersion Include="JetBrains.Annotations" Version="2020.3.0" />
+        <PackageVersion Include="JetBrains.Annotations" Version="2021.2.0" />
         
-        <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" version="3.8.0" />
-        <PackageVersion Include="StyleCop.Analyzers" version="1.2.0-beta.312" />
+        <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" version="3.11.0" />
+        <PackageVersion Include="StyleCop.Analyzers" version="1.2.0-beta.333" />
 
-        <PackageVersion Include="WpfAnalyzers" version="3.5.2" />
+        <PackageVersion Include="WpfAnalyzers" version="3.5.4" />
+        <PackageVersion Include="PropertyChangedAnalyzers" Version="3.2.3" />
     </ItemGroup>
 </Project>

@@ -1,22 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net40</TargetFramework>
-    <PlatformTarget>x86</PlatformTarget>
+    <OutputType>exe</OutputType>
+    <TargetFramework Condition="'$(TargetFramework)' == ''">net40</TargetFramework>
+    <PlatformTarget Condition="'$(PlatformTarget)' == ''">x86</PlatformTarget>
     <ApplicationIcon>..\Artwork\Snoop.ico</ApplicationIcon>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 
+    <RollForward>Major</RollForward> <!-- can be removed as soon as we build with net6.0 -->
+    
     <ApplicationIcon>..\Artwork\Snoop.ico</ApplicationIcon>
     <ApplicationManifest>../Shared/app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetName>$(AssemblyName).$(PlatformTarget)</TargetName>
+    <RootBuild Condition="'$(RootBuild)' == ''">True</RootBuild>
+    <AssemblyName>$(AssemblyName).$(PlatformTarget)</AssemblyName>
+    <TargetName>$(AssemblyName)</TargetName>
   </PropertyGroup>
 
   <PropertyGroup>
-    <DefaultItemExcludes Condition="'$(PlatformTarget)' == 'x86'">$(DefaultItemExcludes);obj/x64/**/*</DefaultItemExcludes>
-    <DefaultItemExcludes Condition="'$(PlatformTarget)' == 'x64'">$(DefaultItemExcludes);obj/x86/**/*</DefaultItemExcludes>
+    <DefaultItemExcludes>$(DefaultItemExcludes);obj/**/*</DefaultItemExcludes>
   </PropertyGroup>
   
   <ItemGroup>
@@ -31,8 +34,14 @@
     <PackageReference Include="CommandLineParser" />
   </ItemGroup>
    
-  <Target Name="Compilex64" AfterTargets="Build" Condition="'$(PlatformTarget)' == 'x86'">
+  <Target Name="CompileOtherArches" 
+          AfterTargets="Build" 
+          Condition="'$(RootBuild)' == 'True'">
     <Message Text="Building injector launcher for x64..." Importance="High" />
-    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Restore;Build" Properties="Configuration=$(Configuration);PlatformTarget=x64" RunEachTargetSeparately="false" />
+    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Restore;Build" Properties="RootBuild=False;Configuration=$(Configuration);PlatformTarget=x64" RunEachTargetSeparately="false" />
+    <Message Text="Building injector launcher for ARM..." Importance="High" />
+    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Restore;Build" Properties="RootBuild=False;Configuration=$(Configuration);PlatformTarget=ARM;TargetFramework=net5.0-windows" RunEachTargetSeparately="false" />
+    <Message Text="Building injector launcher for ARM64..." Importance="High" />
+    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Restore;Build" Properties="RootBuild=False;Configuration=$(Configuration);PlatformTarget=ARM64;TargetFramework=net5.0-windows" RunEachTargetSeparately="false" />
   </Target>
 </Project>

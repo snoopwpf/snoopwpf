@@ -1,8 +1,10 @@
+
 Build/
 Intermediate/
 bin/
 obj/
 output/
+temp/
 artifacts/
 Debug/
 Release/
@@ -18,6 +20,10 @@ paket-files/
 *.pdb
 *.dll
 *.ncb
+.idea/
+
+# Temp-Files from Verify
+*.received.txt
 
 # ReSharper is a .NET coding add-in
 _ReSharper*/
@@ -26,3 +32,4 @@ _ReSharper*/
 
 # Designer
 FAML.Designer.settings
+.nuke/build.schema.json

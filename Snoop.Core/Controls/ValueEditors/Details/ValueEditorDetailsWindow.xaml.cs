@@ -1,7 +1,6 @@
 ﻿namespace Snoop.Controls.ValueEditors.Details
 {
     using System.Windows;
-    using Snoop.Infrastructure.Extensions;
 
     public partial class ValueEditorDetailsWindow
     {

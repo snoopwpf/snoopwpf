@@ -1,4 +1,4 @@
-﻿// (c) Copyright Cory Plotts.
+// (c) Copyright Cory Plotts.
 // This source is subject to the Microsoft Public License (Ms-PL).
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
@@ -17,7 +17,7 @@ namespace Snoop.Views.MethodsTab
         }
 
         public Assembly Assembly { get; }
-        
+
         public string Name { get; }
 
         public override string ToString()

@@ -54,8 +54,7 @@ namespace Snoop.Converters
             var paramInfo = (SnoopParameterInformation)value;
             var t = paramInfo.DeclaringType;
 
-            //var fields = t.GetFields(System.Reflection.BindingFlags.FlattenHierarchy);
-            var fields = t.GetFields(BindingFlags.FlattenHierarchy | BindingFlags.Public | BindingFlags.Static);
+            var fields = t.Type.GetFields(BindingFlags.FlattenHierarchy | BindingFlags.Public | BindingFlags.Static);
 
             var dpType = typeof(DependencyProperty);
 

@@ -15,8 +15,8 @@ namespace Snoop.Views.MethodsTab
             this.Name = this.Type.Name;
         }
 
-        public Type Type { get; }
-        
+        public BindableType Type { get; }
+
         public string Name { get; }
 
         public override string ToString()

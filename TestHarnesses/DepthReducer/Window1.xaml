@@ -12,7 +12,7 @@
 			<ColumnDefinition Width="*"/>
 		</Grid.ColumnDefinitions>
 
-		<Border Name="_left"/>
-		<Border Name="_right" Grid.Column="1"/>
+		<Border Name="left"/>
+		<Border Name="right" Grid.Column="1"/>
 	</Grid>
 </Window>

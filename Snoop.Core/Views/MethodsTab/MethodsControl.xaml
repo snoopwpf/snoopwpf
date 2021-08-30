@@ -255,6 +255,7 @@ All other rights reserved.
 				Grid.Row="3"
 				VerticalAlignment="Center"
 				IsReadOnly="True"
+                IsReadOnlyCaretVisible="True"
 			/>
 		</StackPanel>
 

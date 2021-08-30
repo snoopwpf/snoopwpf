@@ -1,110 +1,40 @@
 ﻿namespace Snoop.Windows
 {
-    using System.Diagnostics;
+    using System;
     using System.Windows;
     using System.Windows.Forms.Integration;
+    using Snoop.Data;
     using Snoop.Infrastructure;
 
     public abstract class SnoopMainBaseWindow : SnoopBaseWindow
     {
+        private Window? ownerWindow;
+
+        public object? RootObject { get; private set; }
+
         public abstract object? Target { get; set; }
 
-        public bool Inspect()
-        {
-            var foundRoot = this.FindRoot();
-            if (foundRoot is null)
-            {
-                if (SnoopModes.MultipleDispatcherMode == false
-                    && SnoopModes.MultipleAppDomainMode == false)
-                {
-                    //SnoopModes.MultipleDispatcherMode is always false for all scenarios except for cases where we are running multiple dispatchers.
-                    //If SnoopModes.MultipleDispatcherMode was set to true, then there definitely was a root visual found in another dispatcher, so
-                    //the message below would be wrong.
-                    MessageBox.Show(
-                         "Can't find a current application or a PresentationSource root visual.",
-                         "Can't Snoop",
-                         MessageBoxButton.OK,
-                         MessageBoxImage.Exclamation);
-                }
-
-                // This path should only be hit if we don't find a root in some dispatcher or app domain.
-                // This is not really critical as not every dispatcher/app domain must meet this requirement.
-                Trace.WriteLine("Can't find a current application or a PresentationSource root visual.");
-
-                return false;
-            }
-
-            this.Inspect(foundRoot);
-
-            return true;
-        }
-
-        public void Inspect(object rootToInspect)
+        public void Inspect(object rootObject)
         {
             ExceptionHandler.AddExceptionHandler(this.Dispatcher);
 
-            this.Load(rootToInspect);
+            this.RootObject = rootObject;
 
-            this.Owner = SnoopWindowUtils.FindOwnerWindow(this);
+            this.Load(rootObject);
 
-            Trace.WriteLine("Showing snoop UI...");
+            this.ownerWindow = SnoopWindowUtils.FindOwnerWindow(this);
 
-            this.Show();
-            this.Activate();
-
-            Trace.WriteLine("Shown and activated snoop UI.");
-        }
-
-        protected abstract void Load(object rootToInspect);
-
-        protected virtual object? FindRoot()
-        {
-            object? foundRoot = null;
-
-            if (SnoopModes.MultipleDispatcherMode)
+            if (TransientSettingsData.Current?.SetOwnerWindow == true)
             {
-                foreach (PresentationSource? presentationSource in PresentationSource.CurrentSources)
-                {
-                    if (presentationSource is null)
-                    {
-                        continue;
-                    }
-
-                    if (presentationSource.RootVisual is UIElement element
-                        && element.Dispatcher.CheckAccess())
-                    {
-                        foundRoot = presentationSource.RootVisual;
-                        break;
-                    }
-                }
+                this.Owner = this.ownerWindow;
             }
-            else if (Application.Current?.CheckAccess() == true)
+            else if (this.ownerWindow is not null)
             {
-                foundRoot = Application.Current;
+                // if we have an owner window, but the owner should not be set, we still have to close ourself if the potential owner window got closed
+                this.ownerWindow.Closed += this.OnOwnerWindowOnClosed;
             }
-            else
-            {
-                // if we don't have a current application,
-                // then we must be in an interop scenario (win32 -> wpf or windows forms -> wpf).
 
-                // in this case, let's iterate over PresentationSource.CurrentSources,
-                // and use the first non-null, visible RootVisual we find as root to inspect.
-                foreach (PresentationSource? presentationSource in PresentationSource.CurrentSources)
-                {
-                    if (presentationSource is null)
-                    {
-                        continue;
-                    }
-
-                    if (presentationSource.RootVisual is UIElement element
-                        && element.Dispatcher.CheckAccess()
-                        && element.Visibility == Visibility.Visible)
-                    {
-                        foundRoot = presentationSource.RootVisual;
-                        break;
-                    }
-                }
-            }
+            LogHelper.WriteLine("Showing snoop UI...");
 
             if (System.Windows.Forms.Application.OpenForms.Count > 0)
             {
@@ -116,7 +46,29 @@
                 ElementHost.EnableModelessKeyboardInterop(this);
             }
 
-            return foundRoot;
+            this.Show();
+            this.Activate();
+
+            LogHelper.WriteLine("Shown and activated snoop UI.");
         }
+
+        private void OnOwnerWindowOnClosed(object? o, EventArgs eventArgs)
+        {
+            if (this.ownerWindow is not null)
+            {
+                this.ownerWindow.Closed -= this.OnOwnerWindowOnClosed;
+            }
+
+            this.Close();
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            ExceptionHandler.RemoveExceptionHandler(this.Dispatcher);
+
+            base.OnClosed(e);
+        }
+
+        protected abstract void Load(object rootToInspect);
     }
 }

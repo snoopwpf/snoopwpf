@@ -8,7 +8,6 @@ namespace Snoop.Controls
     using System.Windows;
     using System.Windows.Input;
     using System.Windows.Media;
-    using Snoop.Infrastructure.Extensions;
     using Snoop.Windows;
 
     public partial class Previewer
@@ -86,7 +85,7 @@ namespace Snoop.Controls
                 new FrameworkPropertyMetadata(
                     (bool)true,
                     OnIsActiveChanged));
-    
+
         /// <summary>
         /// Handles changes to the IsActive property.
         /// </summary>

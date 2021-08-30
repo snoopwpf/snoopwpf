@@ -43,21 +43,21 @@
             }
         }
 
-        public override bool FilterMatches(string debugLine)
+        public override bool FilterMatches(string? debugLine)
         {
-            debugLine = debugLine.ToLower();
+            debugLine = debugLine?.ToLower() ?? string.Empty;
             var lowerText = this.Text.ToLower();
             var filterMatches = false;
             switch (this.FilterType)
             {
                 case FilterType.Contains:
-                    filterMatches = debugLine.Contains(lowerText);
+                    filterMatches = debugLine.Contains(lowerText, StringComparison.Ordinal);
                     break;
                 case FilterType.StartsWith:
-                    filterMatches = debugLine.StartsWith(lowerText);
+                    filterMatches = debugLine.StartsWith(lowerText, StringComparison.Ordinal);
                     break;
                 case FilterType.EndsWith:
-                    filterMatches = debugLine.EndsWith(lowerText);
+                    filterMatches = debugLine.EndsWith(lowerText, StringComparison.Ordinal);
                     break;
                 case FilterType.RegularExpression:
                     filterMatches = TryMatch(debugLine, lowerText);

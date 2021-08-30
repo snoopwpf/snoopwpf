@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1;netcoreapp3.0;net40</TargetFrameworks>
+    <TargetFrameworks>net5.0-windows;netcoreapp3.1;netcoreapp3.0;net40</TargetFrameworks>
 
     <RootNamespace>Snoop</RootNamespace>
 
@@ -14,8 +14,6 @@
     <Content Include="Scripts\*.psm1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-
-    <None Include="VisualTreeItem.cd" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,14 +21,15 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
+    <Reference Include="System.Configuration" />
     <PackageReference Include="microsoft.powershell.3.referenceassemblies" PrivateAssets="All" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+  <ItemGroup Condition="'$(TargetFramework)' != 'net40'">
     <PackageReference Include="System.Management.Automation" PrivateAssets="All" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
-    <PackageReference Include="System.Management.Automation" PrivateAssets="All" />
-  </ItemGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net5.0-windows'">
+    <DefineConstants>$(DefineConstants);USE_WPF_BINDING_DIAG</DefineConstants>
+  </PropertyGroup>
 </Project>

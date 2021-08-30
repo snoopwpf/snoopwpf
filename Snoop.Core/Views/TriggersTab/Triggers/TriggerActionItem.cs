@@ -20,6 +20,8 @@
 
         public object? ToolTip { get; protected set; }
 
+        public TriggerSource TriggerSource { get; set; }
+
         public virtual void Initialize()
         {
             var xaml = XamlWriterHelper.GetXamlAsXElement(this.TriggerAction).RemoveNamespaces();

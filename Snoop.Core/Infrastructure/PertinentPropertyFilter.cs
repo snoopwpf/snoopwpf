@@ -6,20 +6,21 @@
 namespace Snoop.Infrastructure
 {
     using System.ComponentModel;
+    using System.Linq;
     using System.Windows;
+    using System.Windows.Media;
+    using System.Windows.Media.Media3D;
 
     public static class PertinentPropertyFilter
     {
         public static bool Filter(object target, PropertyDescriptor property)
         {
-            var frameworkElement = target as FrameworkElement;
-
-            if (frameworkElement is null)
+            if (target is not DependencyObject dependencyObject)
             {
                 return true;
             }
 
-            var attachedPropertyForChildren = (AttachedPropertyBrowsableForChildrenAttribute)property.Attributes[typeof(AttachedPropertyBrowsableForChildrenAttribute)];
+            var attachedPropertyForChildren = (AttachedPropertyBrowsableForChildrenAttribute?)property.Attributes[typeof(AttachedPropertyBrowsableForChildrenAttribute)];
 
             if (attachedPropertyForChildren is not null)
             {
@@ -29,42 +30,61 @@ namespace Snoop.Infrastructure
                     return false;
                 }
 
-                var currentElement = frameworkElement;
-                do
+                // Check logical tree
                 {
-                    currentElement = currentElement.Parent as FrameworkElement;
-                    if (currentElement is not null
-                        && dpd.DependencyProperty.OwnerType.IsInstanceOfType(currentElement))
+                    var currentElement = dependencyObject;
+                    do
                     {
-                        return true;
+                        currentElement = LogicalTreeHelper.GetParent(currentElement);
+                        if (currentElement is not null
+                            && dpd.DependencyProperty.OwnerType.IsInstanceOfType(currentElement))
+                        {
+                            return true;
+                        }
                     }
-                } 
-                while (attachedPropertyForChildren.IncludeDescendants && currentElement is not null);
+                    while (attachedPropertyForChildren.IncludeDescendants && currentElement is not null);
+                }
 
-                return false;
-            }
-
-            var attachedPropertyForType = (AttachedPropertyBrowsableForTypeAttribute)property.Attributes[typeof(AttachedPropertyBrowsableForTypeAttribute)];
-
-            if (attachedPropertyForType is not null)
-            {
-                // when using [AttachedPropertyBrowsableForType(typeof(IMyInterface))] and IMyInterface is not a DependencyObject, Snoop crashes.
-                // see http://snoopwpf.codeplex.com/workitem/6712
-
-                if (typeof(DependencyObject).IsAssignableFrom(attachedPropertyForType.TargetType))
+                // Check visual tree
+                if (dependencyObject is Visual or Visual3D)
                 {
-                    var doType = DependencyObjectType.FromSystemType(attachedPropertyForType.TargetType);
-                    if (doType is not null
-                        && doType.IsInstanceOfType(frameworkElement))
+                    var currentElement = dependencyObject;
+                    do
                     {
-                        return true;
+                        currentElement = VisualTreeHelper.GetParent(currentElement);
+                        if (currentElement is not null
+                            && dpd.DependencyProperty.OwnerType.IsInstanceOfType(currentElement))
+                        {
+                            return true;
+                        }
                     }
+                    while (attachedPropertyForChildren.IncludeDescendants && currentElement is not null);
                 }
 
                 return false;
             }
 
-            var attachedPropertyForAttribute = (AttachedPropertyBrowsableWhenAttributePresentAttribute)property.Attributes[typeof(AttachedPropertyBrowsableWhenAttributePresentAttribute)];
+            var browsableForTypeAttributes = property.Attributes.OfType<AttachedPropertyBrowsableForTypeAttribute>();
+
+            {
+                var hadAttribute = false;
+                foreach (var attachedPropertyForType in browsableForTypeAttributes)
+                {
+                    hadAttribute = true;
+
+                    if (attachedPropertyForType.TargetType.IsInstanceOfType(target))
+                    {
+                        return true;
+                    }
+                }
+
+                if (hadAttribute)
+                {
+                    return false;
+                }
+            }
+
+            var attachedPropertyForAttribute = (AttachedPropertyBrowsableWhenAttributePresentAttribute?)property.Attributes[typeof(AttachedPropertyBrowsableWhenAttributePresentAttribute)];
 
             if (attachedPropertyForAttribute is not null)
             {

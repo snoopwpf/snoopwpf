@@ -4,8 +4,8 @@ This source is subject to the Microsoft Public License (Ms-PL).
 Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 All other rights reserved.
 -->
-<ResourceDictionary 
-	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:snoop="clr-namespace:Snoop"
 	xmlns:converters="clr-namespace:Snoop.Converters" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -48,15 +48,23 @@ All other rights reserved.
 			</DataTemplate>
 
 			<DataTemplate x:Key="SelectedValueTemplate" DataType="valueEditors:StandardValueEditor">
-				<controls:EditTextBox Height="Auto" IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}" Text="{Binding StringValue}" HorizontalAlignment="Stretch" Padding="1" BorderThickness="0" Background="White" VerticalContentAlignment="Center"/>
+				<controls:EditTextBox Height="Auto"
+                                      IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}"
+                                      IsReadOnlyCaretVisible="True"
+                                      Text="{Binding StringValue}"
+                                      HorizontalAlignment="Stretch"
+                                      Padding="1"
+                                      BorderThickness="0"
+                                      Background="White"
+                                      VerticalContentAlignment="Center"/>
 			</DataTemplate>
         </Style.Resources>
-		
+
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type valueEditors:StandardValueEditor}">
 					<StackPanel Orientation="Horizontal">
-						<Button Style="{x:Null}" 
+						<Button Style="{x:Null}"
 								x:Name="OpenDetailsEditor"
 								DockPanel.Dock="Left"
                                 Visibility="Collapsed"
@@ -65,9 +73,9 @@ All other rights reserved.
                             <Button.ToolTip>
                                 <TextBlock Style="{x:Null}">
                                     Opens an editor window where you can see and edit the full value.
-                                    <LineBreak Style="{x:Null}" /> 
+                                    <LineBreak Style="{x:Null}" />
                                     Editing is only possible if the property is not read only.
-                                </TextBlock> 
+                                </TextBlock>
                             </Button.ToolTip>
                         </Button>
 
@@ -101,7 +109,7 @@ All other rights reserved.
 			</Setter.Value>
 		</Setter>
 	</Style>
-	
+
 	<Style TargetType="{x:Type valueEditors:BoolValueEditor}">
         <Setter Property="Template">
 			<Setter.Value>
@@ -110,12 +118,13 @@ All other rights reserved.
 						<CheckBox
 							x:Name="PART_CheckBox"
 						    Style="{x:Null}"
-							IsChecked="{Binding Value, Mode=TwoWay}"
+                            IsChecked="{Binding Value, Mode=TwoWay}"
 							IsEnabled="{TemplateBinding IsEditable}"
+							IsThreeState="{Binding IsNullableValueType}"
 							VerticalAlignment="Center"
 						/>
-						<TextBlock Style="{x:Null}" 
-						           Margin="3,0" 
+						<TextBlock Style="{x:Null}"
+						           Margin="3,0"
 											 Text="{Binding Path=DescriptiveValue}"
 											 Visibility="{Binding Path=IsExpression, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}}"
 											 VerticalAlignment="Center"
@@ -145,7 +154,7 @@ All other rights reserved.
             </Setter>
         </Style.Setters>
     </Style>
-	
+
 	<Style TargetType="{x:Type valueEditors:BrushValueEditor}"
            BasedOn="{StaticResource {x:Type valueEditors:StandardValueEditor}}">
 		<Style.Resources>
@@ -162,7 +171,7 @@ All other rights reserved.
 				<Grid Height="Auto" HorizontalAlignment="Left">
                     <Grid.ToolTip>
                         <ToolTip Style="{x:Null}">
-                            <ListBox Style="{x:Null}" ItemsSource="{Binding Value, Converter={x:Static converters:BrushStopsConverter.DefaultInstance}}" 
+                            <ListBox Style="{x:Null}" ItemsSource="{Binding Value, Converter={x:Static converters:BrushStopsConverter.DefaultInstance}}"
                                         Height="200"
                                         Width="200">
                                 <ItemsControl.ItemTemplate>
@@ -174,17 +183,17 @@ All other rights reserved.
                                                 <ColumnDefinition Width="40" />
                                             </Grid.ColumnDefinitions>
                                             <TextBlock Style="{x:Null}"
-                                                       Grid.Column="0" 
+                                                       Grid.Column="0"
                                                        Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
-                                                       Text="{Binding Offset}" 
+                                                       Text="{Binding Offset}"
                                                        Margin="4" />
                                             <TextBlock Style="{x:Null}"
-                                                       Grid.Column="1" 
+                                                       Grid.Column="1"
                                                        Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
-                                                       Text="{Binding ColorText}" 
+                                                       Text="{Binding ColorText}"
                                                        Margin="4" />
                                             <Border Grid.Column="2"
-                                                    BorderBrush="{DynamicResource SolidBorderBrush}" 
+                                                    BorderBrush="{DynamicResource SolidBorderBrush}"
                                                     BorderThickness="1"
                                                     VerticalAlignment="Stretch"
                                                     HorizontalAlignment="Stretch">
@@ -202,20 +211,29 @@ All other rights reserved.
 						<ColumnDefinition Width="48"/>
 						<ColumnDefinition/>
 					</Grid.ColumnDefinitions>
-					<Rectangle Fill="{StaticResource CheckerboardBrush}"/>
-					<Rectangle Fill="{Binding Value}" Stroke="{TemplateBinding TextElement.Foreground}" StrokeThickness="1"/>
+
+					<Rectangle Grid.Column="0" Fill="{StaticResource CheckerboardBrush}"/>
+					<Rectangle Grid.Column="0" Fill="{Binding Value}" Stroke="{TemplateBinding TextElement.Foreground}" StrokeThickness="1"/>
 					<TextBlock Grid.Column="1" Style="{x:Null}" Margin="5,0,0,0" Text="{Binding DescriptiveValue}"/>
 				</Grid>
 			</DataTemplate>
 
 			<DataTemplate x:Key="SelectedValueTemplate" DataType="valueEditors:BrushValueEditor">
-				<controls:EditTextBox Height="Auto" IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}" Text="{Binding StringValue}" HorizontalAlignment="Stretch" Padding="1" BorderThickness="0" Background="White" VerticalContentAlignment="Center"/>
+				<controls:EditTextBox Height="Auto"
+                                      IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}"
+                                      IsReadOnlyCaretVisible="True"
+                                      Text="{Binding StringValue}"
+                                      HorizontalAlignment="Stretch"
+                                      Padding="1"
+                                      BorderThickness="0"
+                                      Background="White"
+                                      VerticalContentAlignment="Center"/>
 			</DataTemplate>
 
 			<DataTemplate x:Key="EmptyValueTemplate"/>
 		</Style.Resources>
     </Style>
-	
+
 	<Style TargetType="{x:Type valueEditors:EnumValueEditor}">
 		<Style.Resources>
 			<DataTemplate x:Key="UnselectedValueTemplate" DataType="valueEditors:ValueEditor">
@@ -223,7 +241,9 @@ All other rights reserved.
 			</DataTemplate>
 
 			<DataTemplate x:Key="SelectedValueTemplate" DataType="valueEditors:EnumValueEditor">
-				<ComboBox Style="{x:Null}" Height="16" Padding="2,-2,2,0" IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}" ItemsSource="{Binding Values}" IsSynchronizedWithCurrentItem="True" />
+				<ComboBox Style="{x:Null}" Height="16" Padding="2,-2,2,0"
+                          IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}"
+                          ItemsSource="{Binding Values}" IsSynchronizedWithCurrentItem="True" />
 			</DataTemplate>
 		</Style.Resources>
 

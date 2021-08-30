@@ -13,16 +13,9 @@ namespace Snoop.InjectorLauncher
             this.Handle = NativeMethods.OpenProcess(NativeMethods.ProcessAccessFlags.All, false, process.Id);
             this.WindowHandle = windowHandle;
 
-            this.Bitness = GetBitnessAsString(this.Process);
+            this.Architecture = NativeMethods.GetArchitectureWithoutException(this.Process);
 
             this.SupportedFrameworkName = GetSupportedTargetFramework(process);
-        }
-
-        public static string GetBitnessAsString(Process process)
-        {
-            return NativeMethods.IsProcess64Bit(process)
-                ? "x64"
-                : "x86";
         }
 
         public Process Process { get; }
@@ -31,22 +24,25 @@ namespace Snoop.InjectorLauncher
 
         public NativeMethods.ProcessHandle Handle { get; }
 
-        public IntPtr WindowHandle { get; set; }
+        public IntPtr WindowHandle { get; }
 
-        public string Bitness { get; }
+        public string Architecture { get; }
 
         public string SupportedFrameworkName { get; }
 
         public static ProcessWrapper? From(int processId, IntPtr windowHandle)
         {
-            var processFromId = Process.GetProcessById(processId);
-
-            if (processFromId is null)
+            try
             {
+                var processFromId = Process.GetProcessById(processId);
+
+                return new ProcessWrapper(processFromId, windowHandle);
+            }
+            catch (Exception exception)
+            {
+                LogHelper.WriteError(exception);
                 return null;
             }
-
-            return new ProcessWrapper(processFromId, windowHandle);
         }
 
         public static ProcessWrapper? FromWindowHandle(IntPtr handle)
@@ -63,7 +59,7 @@ namespace Snoop.InjectorLauncher
 
         private static Process? GetProcessFromWindowHandle(IntPtr windowHandle)
         {
-            NativeMethods.GetWindowThreadProcessId(windowHandle, out var processId);
+            _ = NativeMethods.GetWindowThreadProcessId(windowHandle, out var processId);
 
             if (processId == 0)
             {
@@ -89,16 +85,18 @@ namespace Snoop.InjectorLauncher
         {
             var modules = NativeMethods.GetModules(process);
 
-            var wpfgfx_cor3Found = false;
+            // ReSharper disable once IdentifierTypo
+            // ReSharper disable once InconsistentNaming
+            var wpfGfxForCoreFrameworkFound = false;
             FileVersionInfo? hostPolicyVersionInfo = null;
 
             foreach (var module in modules)
             {
 #if DEBUG
-                Trace.WriteLine(module.szExePath);
-                var fileVersionInfo = FileVersionInfo.GetVersionInfo(module.szExePath);
-                Trace.WriteLine($"File: {fileVersionInfo.FileMajorPart}.{fileVersionInfo.FileMinorPart}");
-                Trace.WriteLine($"Prod: {fileVersionInfo.ProductMajorPart}.{fileVersionInfo.ProductMinorPart}");
+                //LogHelper.WriteLine(module.szExePath);
+                //var fileVersionInfo = FileVersionInfo.GetVersionInfo(module.szExePath);
+                //LogHelper.WriteLine($"File: {fileVersionInfo.FileMajorPart}.{fileVersionInfo.FileMinorPart}");
+                //LogHelper.WriteLine($"Prod: {fileVersionInfo.ProductMajorPart}.{fileVersionInfo.ProductMinorPart}");
 #endif
 
                 if (module.szModule.StartsWith("hostpolicy.dll", StringComparison.OrdinalIgnoreCase))
@@ -106,25 +104,28 @@ namespace Snoop.InjectorLauncher
                     hostPolicyVersionInfo = FileVersionInfo.GetVersionInfo(module.szExePath);
                 }
 
-                if (module.szModule.StartsWith("wpfgfx_cor3.dll", StringComparison.OrdinalIgnoreCase))
+                if (module.szModule.StartsWith("wpfgfx_cor3.dll", StringComparison.OrdinalIgnoreCase)
+                    || module.szModule.StartsWith("wpfgfx_net6.dll", StringComparison.OrdinalIgnoreCase))
                 {
-                    wpfgfx_cor3Found = true;
+                    wpfGfxForCoreFrameworkFound = true;
                 }
 
-                if (wpfgfx_cor3Found
+                if (wpfGfxForCoreFrameworkFound
                     && hostPolicyVersionInfo is not null)
                 {
                     break;
                 }
             }
 
-            if (wpfgfx_cor3Found)
+            if (wpfGfxForCoreFrameworkFound)
             {
                 switch (hostPolicyVersionInfo?.ProductMajorPart)
                 {
+                    case 6:
+                        return "net5.0-windows";
+
                     case 5:
-                        // we currently map from net 5 to netcoreapp 3.1
-                        return "netcoreapp3.1"; //return "net5.0";
+                        return "net5.0-windows";
 
                     case 3 when hostPolicyVersionInfo.ProductMinorPart >= 1:
                         return "netcoreapp3.1";

@@ -5,7 +5,6 @@
 
 namespace Snoop.Controls.ValueEditors
 {
-    using System;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
@@ -38,7 +37,7 @@ namespace Snoop.Controls.ValueEditors
         public static readonly DependencyProperty PropertyTypeProperty =
             DependencyProperty.Register(
                 nameof(PropertyType),
-                typeof(Type),
+                typeof(BindableType),
                 typeof(ValueEditor),
                 new PropertyMetadata(OnPropertyTypeChanged));
 
@@ -71,7 +70,7 @@ namespace Snoop.Controls.ValueEditors
 
         public ValueEditor()
         {
-            this.CommandBindings.Add(new CommandBinding(OpenDetailsEditorCommand, this.HandleOpenDetailsEdtiorCommand, this.HandleCanOpenDetailsEditorCommand));
+            this.CommandBindings.Add(new CommandBinding(OpenDetailsEditorCommand, this.HandleOpenDetailsEditorCommand, this.HandleCanOpenDetailsEditorCommand));
         }
 
         public DataTemplate? DetailsEditorTemplate
@@ -98,9 +97,9 @@ namespace Snoop.Controls.ValueEditors
             set => this.SetValue(DescriptiveValueProperty, value);
         }
 
-        public Type? PropertyType
+        public BindableType? PropertyType
         {
-            get => (Type?)this.GetValue(PropertyTypeProperty);
+            get => (BindableType?)this.GetValue(PropertyTypeProperty);
             set => this.SetValue(PropertyTypeProperty, value);
         }
 
@@ -154,7 +153,7 @@ namespace Snoop.Controls.ValueEditors
             e.CanExecute = this.SupportsDetailsEditor;
         }
 
-        private void HandleOpenDetailsEdtiorCommand(object sender, ExecutedRoutedEventArgs e)
+        private void HandleOpenDetailsEditorCommand(object sender, ExecutedRoutedEventArgs e)
         {
             ValueEditorDetailsWindow.ShowDialog(this);
         }

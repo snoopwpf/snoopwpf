@@ -31,8 +31,7 @@ namespace Snoop.Infrastructure
 
         private static void OnIsActiveChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var fe = d as FrameworkElement;
-            if (fe is null)
+            if (d is not FrameworkElement fe)
             {
                 return;
             }
@@ -45,7 +44,7 @@ namespace Snoop.Infrastructure
                     {
                         if (GetIsActive(element))
                         {
-                            element.BringIntoView();
+                            element.RunInDispatcherAsync(() => element.BringIntoView());
                         }
                     });
             }

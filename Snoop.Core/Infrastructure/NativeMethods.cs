@@ -3,13 +3,27 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
+// ReSharper disable InconsistentNaming
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Local
+// ReSharper disable UnusedMember.Global
+// ReSharper disable IdentifierTypo
+#pragma warning disable CA1008
+#pragma warning disable CA1028
+#pragma warning disable CA1045
+#pragma warning disable CA1051
+#pragma warning disable CA1401
+#pragma warning disable CA1806
+#pragma warning disable CA1815
+#pragma warning disable CA1819
+#pragma warning disable CA2101
+
 namespace Snoop.Infrastructure
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
-    using System.Runtime.ConstrainedExecution;
     using System.Runtime.InteropServices;
     using System.Security;
     using System.Text;
@@ -19,7 +33,7 @@ namespace Snoop.Infrastructure
     {
         public const int ERROR_ACCESS_DENIED = 5;
 
-        public static IntPtr[] ToplevelWindows
+        public static IntPtr[] TopLevelWindows
         {
             get
             {
@@ -48,7 +62,7 @@ namespace Snoop.Infrastructure
 
         public static List<IntPtr> GetRootWindowsOfProcess(int pid)
         {
-            var rootWindows = ToplevelWindows;
+            var rootWindows = TopLevelWindows;
             var dsProcRootWindows = new List<IntPtr>();
 
             foreach (var hWnd in rootWindows)
@@ -107,8 +121,10 @@ namespace Snoop.Infrastructure
             public readonly IntPtr modBaseAddr;
             public uint modBaseSize;
             public readonly IntPtr hModule;
+
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
             public string szModule;
+
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
             public string szExePath;
         }
@@ -120,7 +136,6 @@ namespace Snoop.Infrastructure
             {
             }
 
-            [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
             protected override bool ReleaseHandle()
             {
                 return CloseHandle(this.handle);
@@ -134,7 +149,6 @@ namespace Snoop.Infrastructure
             {
             }
 
-            [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
             protected override bool ReleaseHandle()
             {
                 return CloseHandle(this.handle);
@@ -153,21 +167,94 @@ namespace Snoop.Infrastructure
             All = 0x0000001F
         }
 
-        public static bool IsProcess64BitWithoutException(Process process)
+        private enum ImageFileMachine : ushort
+        {
+            I386 = 0x14C,
+            AMD64 = 0x8664,
+            ARM = 0x1c0,
+            ARM64 = 0xAA64,
+        }
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern bool IsWow64Process2(IntPtr process, out ImageFileMachine processMachine, out ImageFileMachine nativeMachine);
+
+        public static string GetArchitectureWithoutException(Process process)
         {
             try
             {
-                return IsProcess64Bit(process);
+                return GetArchitecture(process);
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                Trace.WriteLine(e);
-                return false;
+                LogHelper.WriteError(exception);
+                return Environment.Is64BitOperatingSystem
+                    ? "x64"
+                    : "x86";
+            }
+        }
+
+        public static string GetArchitecture(Process process)
+        {
+            using (var processHandle = OpenProcess(process, ProcessAccessFlags.QueryLimitedInformation))
+            {
+                if (processHandle.IsInvalid)
+                {
+                    throw new Exception("Could not query process information.");
+                }
+
+                try
+                {
+                    if (IsWow64Process2(processHandle.DangerousGetHandle(), out var processMachine, out var nativeMachine) == false)
+                    {
+                        throw new Win32Exception();
+                    }
+
+                    var arch = processMachine == 0
+                        ? nativeMachine
+                        : processMachine;
+
+                    switch (arch)
+                    {
+                        case ImageFileMachine.I386:
+                            return "x86";
+
+                        case ImageFileMachine.AMD64:
+                            return "x64";
+
+                        case ImageFileMachine.ARM:
+                            return "ARM";
+
+                        case ImageFileMachine.ARM64:
+                            return "ARM64";
+
+                        default:
+                            return "x86";
+                    }
+                }
+                catch (EntryPointNotFoundException)
+                {
+                    if (IsWow64Process(processHandle.DangerousGetHandle(), out var isWow64) == false)
+                    {
+                        throw new Win32Exception();
+                    }
+
+                    switch (isWow64)
+                    {
+                        case true when Environment.Is64BitOperatingSystem:
+                            return "x86";
+
+                        case false when Environment.Is64BitOperatingSystem:
+                            return "x64";
+
+                        default:
+                            return "x86";
+                    }
+                }
             }
         }
 
         // see https://msdn.microsoft.com/en-us/library/windows/desktop/ms684139%28v=vs.85%29.aspx
-        public static bool IsProcess64Bit(Process process)
+        private static bool IsWow64Process(Process process)
         {
             if (Environment.Is64BitOperatingSystem == false)
             {
@@ -338,15 +425,16 @@ namespace Snoop.Infrastructure
         public static extern bool IsWow64Process([In] IntPtr process, [Out] out bool wow64Process);
 
         [DllImport("kernel32", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
-        public static extern UIntPtr GetProcAddress(IntPtr hModule, string procName);
+        public static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
 
-        public static UIntPtr GetRemoteProcAddress(Process targetProcess, string moduleName, string procName)
+        public static IntPtr GetRemoteProcAddress(Process targetProcess, string moduleName, string procName)
         {
-            ulong functionOffsetFromBaseAddress = 0;
+            long functionOffsetFromBaseAddress = 0;
 
             foreach (ProcessModule? mod in Process.GetCurrentProcess().Modules)
             {
-                if (mod is null)
+                if (mod?.ModuleName is null
+                    || mod?.FileName is null)
                 {
                     continue;
                 }
@@ -354,14 +442,14 @@ namespace Snoop.Infrastructure
                 if (mod.ModuleName.Equals(moduleName, StringComparison.OrdinalIgnoreCase)
                     || mod.FileName.Equals(moduleName, StringComparison.OrdinalIgnoreCase))
                 {
-                    Trace.WriteLine($"Checking module \"{moduleName}\" with base address \"{mod.BaseAddress}\" for procaddress of \"{procName}\"...");
+                    LogHelper.WriteLine($"Checking module \"{moduleName}\" with base address \"{mod.BaseAddress}\" for procaddress of \"{procName}\"...");
 
-                    var procAddress = GetProcAddress(mod.BaseAddress, procName).ToUInt64();
+                    var procAddress = GetProcAddress(mod!.BaseAddress, procName).ToInt64();
 
                     if (procAddress != 0)
                     {
-                        Trace.WriteLine($"Got proc address in foreign process with \"{procAddress}\".");
-                        functionOffsetFromBaseAddress = procAddress - (ulong)mod.BaseAddress;
+                        LogHelper.WriteLine($"Got proc address in foreign process with \"{procAddress}\".");
+                        functionOffsetFromBaseAddress = procAddress - (long)mod.BaseAddress;
                     }
 
                     break;
@@ -374,23 +462,24 @@ namespace Snoop.Infrastructure
             }
 
             var remoteModuleHandle = GetRemoteModuleHandle(targetProcess, moduleName);
-            return new UIntPtr((ulong)remoteModuleHandle + functionOffsetFromBaseAddress);
+            return new IntPtr((long)remoteModuleHandle + functionOffsetFromBaseAddress);
         }
 
         public static IntPtr GetRemoteModuleHandle(Process targetProcess, string moduleName)
         {
             foreach (ProcessModule? mod in targetProcess.Modules)
             {
-                if (mod is null)
+                if (mod?.ModuleName is null
+                    || mod?.FileName is null)
                 {
                     continue;
                 }
-                
-                if (mod.ModuleName.Equals(moduleName, StringComparison.OrdinalIgnoreCase)
-                    || mod.FileName.Equals(moduleName, StringComparison.OrdinalIgnoreCase))
+
+                if (mod!.ModuleName.Equals(moduleName, StringComparison.OrdinalIgnoreCase)
+                    || mod!.FileName.Equals(moduleName, StringComparison.OrdinalIgnoreCase))
                 {
-                    Trace.WriteLine($"Found module \"{moduleName}\" with base address \"{mod.BaseAddress}\".");
-                    return mod.BaseAddress;
+                    LogHelper.WriteLine($"Found module \"{moduleName}\" with base address \"{mod!.BaseAddress}\".");
+                    return mod!.BaseAddress;
                 }
             }
 
@@ -462,6 +551,7 @@ namespace Snoop.Infrastructure
 
         public const int SW_SHOWNORMAL = 1;
         public const int SW_SHOWMINIMIZED = 2;
+        public const int SW_SHOWMAXIMIZED = 3;
 
         [Flags]
         public enum AllocationType
@@ -493,7 +583,7 @@ namespace Snoop.Infrastructure
             WriteCombineModifierflag = 0x400
         }
 
-        public enum HookType : int
+        public enum HookType
         {
             WH_JOURNALRECORD = 0,
             WH_JOURNALPLAYBACK = 1,
@@ -547,7 +637,7 @@ namespace Snoop.Infrastructure
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern IntPtr CreateRemoteThread(ProcessHandle handle,
-                                                IntPtr lpThreadAttributes, uint dwStackSize, UIntPtr lpStartAddress,
+                                                IntPtr lpThreadAttributes, uint dwStackSize, IntPtr lpStartAddress,
                                                 IntPtr lpParameter, uint dwCreationFlags, out IntPtr lpThreadId);
 
         [DllImport("kernel32.dll")]
@@ -555,6 +645,43 @@ namespace Snoop.Infrastructure
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern WaitResult WaitForSingleObject(IntPtr handle, uint timeoutInMilliseconds = 0xFFFFFFFF);
+
+        #region Console
+
+        /// <summary>
+        /// allocates a new console for the calling process.
+        /// </summary>
+        /// <returns>If the function succeeds, the return value is nonzero.
+        /// If the function fails, the return value is zero.
+        /// To get extended error information, call Marshal.GetLastWin32Error.</returns>
+        [DllImport("kernel32", SetLastError = true)]
+        public static extern bool AllocConsole();
+
+        /// <summary>
+        /// Detaches the calling process from its console
+        /// </summary>
+        /// <returns>If the function succeeds, the return value is nonzero.
+        /// If the function fails, the return value is zero.
+        /// To get extended error information, call Marshal.GetLastWin32Error.</returns>
+        [DllImport("kernel32", SetLastError = true)]
+        public static extern bool FreeConsole();
+
+        /// <summary>
+        /// Attaches the calling process to the console of the specified process.
+        /// </summary>
+        /// <param name="dwProcessId">[in] Identifier of the process, usually will be ATTACH_PARENT_PROCESS</param>
+        /// <returns>If the function succeeds, the return value is nonzero.
+        /// If the function fails, the return value is zero.
+        /// To get extended error information, call Marshal.GetLastWin32Error.</returns>
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool AttachConsole(uint dwProcessId);
+
+        /// <summary>Identifies the console of the parent of the current process as the console to be attached.
+        /// always pass this with AttachConsole in .NET for stability reasons and mainly because
+        /// I have NOT tested interprocess attaching in .NET so don't blame me if it doesn't work! </summary>
+        public const uint ATTACH_PARENT_PROCESS = 0x0ffffffff;
+
+        #endregion
     }
 
     // RECT structure required by WINDOWPLACEMENT structure
@@ -619,5 +746,85 @@ namespace Snoop.Infrastructure
         WAIT_OBJECT_0 = 0x00,
         WAIT_TIMEOUT = 0x102,
         WAIT_FAILED = -1
+    }
+
+    public static class ConsoleHelper
+    {
+        /// <summary>
+        /// Allocate a console if application started from within windows GUI.
+        /// Detects the presence of an existing console associated with the application and
+        /// attaches itself to it if available.
+        /// </summary>
+        public static void AttachConsoleToParentProcessOrAllocateNewOne()
+        {
+            if (NativeMethods.AttachConsole(NativeMethods.ATTACH_PARENT_PROCESS) == false
+                && Marshal.GetLastWin32Error() == NativeMethods.ERROR_ACCESS_DENIED)
+            {
+                // A console was not allocated, so we need to make one.
+                if (NativeMethods.FreeConsole() == false)
+                {
+                    Trace.WriteLine("Console could not be freed.");
+                }
+                else
+                {
+                    Trace.WriteLine("Console freed.");
+                }
+
+                if (NativeMethods.AttachConsole(NativeMethods.ATTACH_PARENT_PROCESS) == false)
+                {
+                    Trace.WriteLine($"Could not attach to parent process console. Error = {Marshal.GetLastWin32Error()}");
+                }
+                else
+                {
+                    Trace.WriteLine("Console attached to parent process.");
+                }
+            }
+            else
+            {
+                Trace.WriteLine("Console attached to parent process or process is a standalone console application.");
+            }
+        }
+    }
+
+    public static class LogHelper
+    {
+        public static string WriteLine(Exception exception)
+        {
+            return WriteLine(exception.ToString());
+        }
+
+        public static string WriteLine(string message)
+        {
+            Trace.WriteLine(message);
+            Console.WriteLine(message);
+
+            return message;
+        }
+
+        public static string WriteWarning(Exception exception)
+        {
+            return WriteWarning(exception.ToString());
+        }
+
+        public static string WriteWarning(string message)
+        {
+            Trace.TraceWarning(message);
+            Console.WriteLine(message);
+
+            return message;
+        }
+
+        public static string WriteError(Exception exception)
+        {
+            return WriteError(exception.ToString());
+        }
+
+        public static string WriteError(string message)
+        {
+            Trace.TraceError(message);
+            Console.Error.WriteLine(message);
+
+            return message;
+        }
     }
 }

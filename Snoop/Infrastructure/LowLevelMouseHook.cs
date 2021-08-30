@@ -4,7 +4,6 @@
     using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
-    using JetBrains.Annotations;
 
     public class LowLevelMouseHook
     {
@@ -79,8 +78,9 @@
             return NativeMethods.CallNextHookEx(this.hookId, nCode, wParam, lParam);
         }
 
-        [PublicAPI]
         [StructLayout(LayoutKind.Sequential)]
+        // ReSharper disable once InconsistentNaming
+        // ReSharper disable once IdentifierTypo
         private struct MSLLHOOKSTRUCT
         {
             public readonly POINT Point;

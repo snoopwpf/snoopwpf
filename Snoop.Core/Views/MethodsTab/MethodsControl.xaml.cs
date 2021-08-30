@@ -14,13 +14,12 @@ namespace Snoop.Views.MethodsTab
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
     using Snoop.Converters;
-    using Snoop.Infrastructure.Extensions;
     using Snoop.Windows;
 
     public partial class MethodsControl
     {
         private SnoopMethodInformation? previousMethodInformation;
-        
+
         public MethodsControl()
         {
             this.InitializeComponent();
@@ -46,8 +45,8 @@ namespace Snoop.Views.MethodsTab
 
         private void ProcessCheckedProperty()
         {
-            if (!this.IsSelected 
-                || !this.checkBoxUseDataContext.IsChecked.HasValue 
+            if (!this.IsSelected
+                || !this.checkBoxUseDataContext.IsChecked.HasValue
                 || !(this.RootTarget is FrameworkElement))
             {
                 return;
@@ -155,7 +154,7 @@ namespace Snoop.Views.MethodsTab
         private void ComboBoxMethodChanged(object? sender, EventArgs e)
         {
             var selectedMethod = this.comboBoxMethods.SelectedValue as SnoopMethodInformation;
-            if (selectedMethod is null 
+            if (selectedMethod is null
                 || this.Target is null)
             {
                 return;
@@ -180,7 +179,7 @@ namespace Snoop.Views.MethodsTab
         public static readonly DependencyProperty TargetProperty =
             DependencyProperty.Register(nameof(Target), typeof(object), typeof(MethodsControl), new UIPropertyMetadata(OnTargetChanged));
 
-        public void InvokeMethodClick(object? sender, RoutedEventArgs e)
+        private void InvokeMethodClick(object? sender, RoutedEventArgs e)
         {
             var selectedMethod = this.comboBoxMethods.SelectedValue as SnoopMethodInformation;
             if (selectedMethod is null)
@@ -204,8 +203,7 @@ namespace Snoop.Views.MethodsTab
             {
                 for (var index = 0; index < this.itemsControlParameters.Items.Count; index++)
                 {
-                    var paramInfo = this.itemsControlParameters.Items[index] as SnoopParameterInformation;
-                    if (paramInfo is null)
+                    if (this.itemsControlParameters.Items[index] is not SnoopParameterInformation paramInfo)
                     {
                         return false;
                     }
@@ -215,8 +213,8 @@ namespace Snoop.Views.MethodsTab
                         var valuePair = paramInfo.ParameterValue as DependencyPropertyNameValuePair;
                         parameters[index] = valuePair?.DependencyProperty;
                     }
-                    else if (paramInfo.ParameterValue is null 
-                             || paramInfo.ParameterType?.IsInstanceOfType(paramInfo.ParameterValue) == true)
+                    else if (paramInfo.ParameterValue is null
+                             || paramInfo.ParameterType.Type.IsInstanceOfType(paramInfo.ParameterValue))
                     {
                         parameters[index] = paramInfo.ParameterValue;
                     }

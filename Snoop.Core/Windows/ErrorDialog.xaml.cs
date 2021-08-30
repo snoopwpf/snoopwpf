@@ -45,12 +45,12 @@ namespace Snoop.Windows
         /// Shows a dialog containing the details for <paramref name="exception"/>.
         /// </summary>
         /// <returns><c>true</c> if the exception should be marked handled and <c>false</c> if the exception should NOT be marked as handled.</returns>
-        public static bool ShowDialog(Exception? exception, string title = "Error occurred", string caption = "An error has occured", bool exceptionAlreadyHandled = false)
+        public static bool ShowDialog(Exception? exception, string title = "Error occurred", string caption = "An error has occurred", bool exceptionAlreadyHandled = false)
         {
-            Trace.WriteLine($"Showing error dialog.");
-            Trace.WriteLine($"Title:     {title}");
-            Trace.WriteLine($"Caption:   {caption}");
-            Trace.WriteLine($"Exception: {exception}");
+            LogHelper.WriteLine($"Showing error dialog.");
+            LogHelper.WriteLine($"Title:     {title}");
+            LogHelper.WriteLine($"Caption:   {caption}");
+            LogHelper.WriteLine($"Exception: {exception}");
 
             if (Thread.CurrentThread.GetApartmentState() != ApartmentState.STA)
             {
@@ -155,7 +155,7 @@ namespace Snoop.Windows
             {
                 return string.Empty;
             }
-            
+
             var exceptionDetails = this.Exception.ToString();
 
             const int maxExceptionDetailsLength = 4000;
@@ -184,13 +184,18 @@ Exception details:
             {
                 using (var registryKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion"))
                 {
-                    return (string)registryKey.GetValue("CurrentVersion") + "." + (string)registryKey.GetValue("CurrentBuild");
+                    if (registryKey is not null)
+                    {
+                        return (string?)registryKey.GetValue("CurrentVersion") + "." + (string?)registryKey.GetValue("CurrentBuild");
+                    }
                 }
             }
             catch (Exception)
             {
-                return Environment.OSVersion.Version + " " + Environment.OSVersion.ServicePack;
+                // ignored
             }
+
+            return Environment.OSVersion.Version + " " + Environment.OSVersion.ServicePack;
         }
     }
 }

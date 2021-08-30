@@ -7,6 +7,7 @@ namespace Snoop.Views.MethodsTab
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
 
     public partial class TypeSelector : ITypeSelector
     {
@@ -43,7 +44,7 @@ namespace Snoop.Views.MethodsTab
             return typesAssignable;
         }
 
-        public List<Type>? DerivedTypes { get; private set; }
+        public ObservableCollection<Type>? DerivedTypes { get; private set; }
 
         private void TypeSelector_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
@@ -54,13 +55,13 @@ namespace Snoop.Views.MethodsTab
 
             if (this.DerivedTypes is null)
             {
-                this.DerivedTypes = GetDerivedTypes(this.BaseType);
+                this.DerivedTypes = new(GetDerivedTypes(this.BaseType));
             }
 
             this.comboBoxTypes.ItemsSource = this.DerivedTypes;
         }
 
-        public Type? BaseType { get; set; }
+        public BindableType? BaseType { get; set; }
 
         public object? Instance
         {

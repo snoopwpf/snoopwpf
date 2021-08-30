@@ -10,21 +10,30 @@ namespace Snoop.Views
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
     using System.Windows.Input;
     using System.Windows.Media;
     using JetBrains.Annotations;
+    using Snoop.Core.Properties;
     using Snoop.Infrastructure;
     using Snoop.Windows;
 
-    public partial class EventsView : INotifyPropertyChanged
+    public partial class EventsView : INotifyPropertyChanged, IDisposable
     {
         public static readonly RoutedCommand ClearCommand = new(nameof(ClearCommand), typeof(EventsView));
+        public static readonly RoutedCommand ResetEventTrackersToDefaultCommand = new(nameof(ResetEventTrackersToDefaultCommand), typeof(EventsView));
+
+        private int maxEventsDisplayed = 100;
+
+        private ICollectionView? availableEvents;
 
         public EventsView()
         {
+            this.InterestingEvents = new(this.interestingEvents);
+
             this.InitializeComponent();
 
             var sorter = new List<EventTracker>();
@@ -33,33 +42,41 @@ namespace Snoop.Views
             {
                 var tracker = new EventTracker(typeof(UIElement), routedEvent);
                 tracker.EventHandled += this.HandleEventHandled;
+
                 sorter.Add(tracker);
 
-                if (defaultEvents.Contains(routedEvent))
+                var savedTrackedEvent = Settings.Default.EventTrackers.FirstOrDefault(x => x.Id == tracker.Id);
+
+                if (savedTrackedEvent is not null)
+                {
+                    tracker.IsEnabled = savedTrackedEvent.IsEnabled;
+                }
+                else if (defaultEvents.Contains(routedEvent))
                 {
                     tracker.IsEnabled = true;
                 }
+
+                tracker.PropertyChanged += this.HandleTrackerOnPropertyChanged;
             }
 
             sorter.Sort();
+
             foreach (var tracker in sorter)
             {
                 this.trackers.Add(tracker);
             }
 
             this.CommandBindings.Add(new CommandBinding(ClearCommand, this.HandleClear));
+            this.CommandBindings.Add(new CommandBinding(ResetEventTrackersToDefaultCommand, this.HandleResetEventTrackersToDefault));
         }
 
-        public IEnumerable InterestingEvents
-        {
-            get { return this.interestingEvents; }
-        }
+        public ReadOnlyObservableCollection<TrackedEvent> InterestingEvents { get; }
 
         private readonly ObservableCollection<TrackedEvent> interestingEvents = new();
 
         public int MaxEventsDisplayed
         {
-            get { return this.maxEventsDisplayed; }
+            get => this.maxEventsDisplayed;
 
             set
             {
@@ -69,6 +86,7 @@ namespace Snoop.Views
                 }
 
                 this.maxEventsDisplayed = value;
+                Settings.Default.MaximumTrackedEvents = value;
                 this.OnPropertyChanged(nameof(this.MaxEventsDisplayed));
 
                 if (this.maxEventsDisplayed == 0)
@@ -82,8 +100,6 @@ namespace Snoop.Views
             }
         }
 
-        private int maxEventsDisplayed = 100;
-
         private void EnforceInterestingEventsLimit()
         {
             while (this.interestingEvents.Count > this.maxEventsDisplayed)
@@ -92,32 +108,18 @@ namespace Snoop.Views
             }
         }
 
-        public object AvailableEvents
+        public ICollectionView AvailableEvents
         {
             get
             {
-                var pgd = new PropertyGroupDescription
-                {
-                    PropertyName = nameof(EventTracker.Category),
-                    StringComparison = StringComparison.OrdinalIgnoreCase
-                };
-
-                var cvs = new CollectionViewSource();
-                cvs.SortDescriptions.Add(new SortDescription(nameof(EventTracker.Category), ListSortDirection.Ascending));
-                cvs.SortDescriptions.Add(new SortDescription(nameof(EventTracker.Name), ListSortDirection.Ascending));
-                cvs.GroupDescriptions.Add(pgd);
-
-                cvs.Source = this.trackers;
-
-                cvs.View.Refresh();
-                return cvs.View;
+                return this.availableEvents ??= CreateCollectionViewForAvailableEvents(this.trackers);
             }
         }
 
-        private void HandleEventHandled(TrackedEvent trackedEvent)
+        private void HandleEventHandled(object? sender, TrackedEvent trackedEvent)
         {
-            var visual = trackedEvent.Originator.Handler as Visual;
-            if (visual is not null && !visual.IsPartOfSnoopVisualTree())
+            if (trackedEvent.Originator.Handler is Visual visual
+                && visual.IsPartOfSnoopVisualTree() == false)
             {
                 Action action =
                     () =>
@@ -125,7 +127,7 @@ namespace Snoop.Views
                         this.interestingEvents.Add(trackedEvent);
                         this.EnforceInterestingEventsLimit();
 
-                        var tvi = (TreeViewItem)this.EventTree.ItemContainerGenerator.ContainerFromItem(trackedEvent);
+                        var tvi = (TreeViewItem?)this.EventTree.ItemContainerGenerator.ContainerFromItem(trackedEvent);
                         tvi?.BringIntoView();
                     };
 
@@ -140,9 +142,36 @@ namespace Snoop.Views
             }
         }
 
+        private void HandleTrackerOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (sender is EventTracker tracker
+                && e.PropertyName == nameof(EventTracker.IsEnabled))
+            {
+                var savedTrackedEvent = Settings.Default.EventTrackers.FirstOrDefault(x => x.Id == tracker.Id);
+
+                if (savedTrackedEvent is null)
+                {
+                    savedTrackedEvent = new(tracker.Id);
+                    Settings.Default.EventTrackers.Add(savedTrackedEvent);
+                }
+
+                savedTrackedEvent.IsEnabled = tracker.IsEnabled;
+            }
+        }
+
         private void HandleClear(object sender, ExecutedRoutedEventArgs e)
         {
             this.interestingEvents.Clear();
+        }
+
+        private void HandleResetEventTrackersToDefault(object sender, ExecutedRoutedEventArgs e)
+        {
+            Settings.Default.EventTrackers.Clear();
+
+            foreach (var eventTracker in this.trackers)
+            {
+                eventTracker.IsEnabled = defaultEvents.Contains(eventTracker.RoutedEvent);
+            }
         }
 
         private void EventTree_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
@@ -184,5 +213,32 @@ namespace Snoop.Views
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
+
+        private static ICollectionView CreateCollectionViewForAvailableEvents(ObservableCollection<EventTracker> trackers)
+        {
+            var pgd = new PropertyGroupDescription
+            {
+                PropertyName = nameof(EventTracker.Category),
+                StringComparison = StringComparison.OrdinalIgnoreCase
+            };
+
+            var cvs = new CollectionViewSource();
+            cvs.SortDescriptions.Add(new SortDescription(nameof(EventTracker.Category), ListSortDirection.Ascending));
+            cvs.SortDescriptions.Add(new SortDescription(nameof(EventTracker.Name), ListSortDirection.Ascending));
+            cvs.GroupDescriptions.Add(pgd);
+
+            cvs.Source = trackers;
+
+            cvs.View.Refresh();
+            return cvs.View;
+        }
+
+        public void Dispose()
+        {
+            foreach (var tracker in this.trackers)
+            {
+                tracker.Dispose();
+            }
+        }
     }
 }

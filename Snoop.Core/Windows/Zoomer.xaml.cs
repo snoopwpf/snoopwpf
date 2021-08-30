@@ -77,6 +77,35 @@ namespace Snoop.Windows
 
         protected override void Load(object root)
         {
+            if (root is Application application
+                && application.CheckAccess())
+            {
+                // try to use the application's main window (if visible) as the root
+                if (application.MainWindow is not null
+                    && application.MainWindow.Visibility == Visibility.Visible)
+                {
+                    root = application.MainWindow;
+                }
+                else
+                {
+                    // else search for the first visible window in the list of the application's windows
+                    foreach (Window? appWindow in application.Windows)
+                    {
+                        if (appWindow is null)
+                        {
+                            continue;
+                        }
+
+                        if (appWindow.CheckAccess()
+                            && appWindow.Visibility == Visibility.Visible)
+                        {
+                            root = appWindow;
+                            break;
+                        }
+                    }
+                }
+            }
+
             this.Target = root;
         }
 
@@ -113,48 +142,17 @@ namespace Snoop.Windows
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            base.OnClosing(e);
-
-            this.Viewbox.Child = null;
-
             // persist the window placement details to the user settings.
             SnoopWindowUtils.SaveWindowPlacement(this, wp => Settings.Default.ZoomerWindowPlacement = wp);
+
+            base.OnClosing(e);
         }
 
-        /// <inheritdoc />
-        protected override object? FindRoot()
+        protected override void OnClosed(EventArgs e)
         {
-            var root = base.FindRoot();
+            this.Viewbox.Child = null;
 
-            if (root is Application application)
-            {
-                // try to use the application's main window (if visible) as the root
-                if (application.MainWindow is not null
-                    && application.MainWindow.Visibility == Visibility.Visible)
-                {
-                    root = application.MainWindow;
-                }
-                else
-                {
-                    // else search for the first visible window in the list of the application's windows
-                    foreach (Window? appWindow in application.Windows)
-                    {
-                        if (appWindow is null)
-                        {
-                            continue;
-                        }
-
-                        if (appWindow.CheckAccess()
-                            && appWindow.Visibility == Visibility.Visible)
-                        {
-                            root = appWindow;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            return root;
+            base.OnClosed(e);
         }
 
         private void HandleReset(object sender, ExecutedRoutedEventArgs args)
@@ -289,9 +287,9 @@ namespace Snoop.Windows
 
         private void Content_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            var zoom = Math.Pow(ZoomFactor, e.Delta / 120.0);
+            var newZoom = Math.Pow(ZoomFactor, e.Delta / 120.0);
             var offset = e.GetPosition(this.Viewbox);
-            this.Zoom(zoom, offset);
+            this.Zoom(newZoom, offset);
         }
 
         private void ZScaleSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -332,6 +330,14 @@ namespace Snoop.Windows
                 this.zoom.CenterY = 0;
 
                 this.CreateAndSetVisualTree3DView(this.targetVisual);
+            }
+        }
+
+        private void FixTextFormattingModeButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (this.targetVisual is not null)
+            {
+                TextOptions.SetTextFormattingMode(this.targetVisual, TextFormattingMode.Ideal);
             }
         }
     }

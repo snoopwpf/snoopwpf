@@ -114,7 +114,7 @@
             this.IsSet = false;
         }
 
-        public bool FilterMatches(string str)
+        public bool FilterMatches(string? str)
         {
             foreach (var filter in this.Filters)
             {
@@ -158,7 +158,7 @@
         {
             foreach (var filter in this.multipleFilters)
             {
-                if (groupID.Equals(filter.GroupId))
+                if (groupID.Equals(filter.GroupId, StringComparison.Ordinal))
                 {
                     return true;
                 }
@@ -189,7 +189,7 @@
             var singleFilter = filter as SnoopSingleFilter;
             if (singleFilter is not null)
             {
-                //foreach (var multipeFilter in this.multipleFilters)
+                //foreach (var multipleFilter in this.multipleFilters)
                 var index = 0;
                 while (index < this.multipleFilters.Count)
                 {

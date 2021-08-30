@@ -27,12 +27,12 @@
 
             protected set
             {
-                this.isDirty = value; 
+                this.isDirty = value;
                 this.RaisePropertyChanged(nameof(this.IsDirty));
             }
         }
 
-        public abstract bool FilterMatches(string debugLine);
+        public abstract bool FilterMatches(string? debugLine);
 
         public virtual bool SupportsGrouping
         {

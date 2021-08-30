@@ -10,10 +10,7 @@ namespace Snoop.Infrastructure
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
-    using System.IO;
     using System.Linq;
-    using System.Text;
-    using System.Text.RegularExpressions;
     using System.Windows;
     using System.Windows.Automation.Peers;
     using System.Windows.Controls;
@@ -22,10 +19,34 @@ namespace Snoop.Infrastructure
     using System.Windows.Threading;
     using JetBrains.Annotations;
     using Snoop.Converters;
+    using Snoop.Infrastructure.Diagnostics;
     using Snoop.Infrastructure.Helpers;
 
     public class PropertyInformation : DependencyObject, IComparable, INotifyPropertyChanged
     {
+        private static readonly Attribute[] getAllPropertiesAttributeFilter = { new PropertyFilterAttribute(PropertyFilterOptions.All) };
+
+        private readonly object? component;
+        private readonly bool isCopyable;
+        private bool breakOnChange;
+        private bool hasChangedRecently;
+        private ValueSource valueSource;
+
+        private readonly PropertyDescriptor? property;
+        private readonly string displayName;
+        private bool isLocallySet;
+
+        private bool isInvalidBinding;
+        private int index;
+
+        private bool isDatabound;
+
+        private bool isRunning;
+        private bool ignoreUpdate;
+
+        private PropertyFilter? filter;
+        private string bindingError = string.Empty;
+
         /// <summary>
         /// Normal constructor used when constructing PropertyInformation objects for properties.
         /// </summary>
@@ -47,8 +68,10 @@ namespace Snoop.Infrastructure
                 var dp = this.DependencyProperty;
                 if (dp is not null)
                 {
-                    binding = new Binding();
-                    binding.Path = new PropertyPath("(0)", new object[] { dp });
+                    binding = new Binding
+                    {
+                        Path = new PropertyPath("(0)", dp)
+                    };
 
                     if (dp == FrameworkElement.StyleProperty
                         || dp == FrameworkContentElement.StyleProperty)
@@ -63,7 +86,7 @@ namespace Snoop.Infrastructure
                 }
 
                 binding.Source = target;
-                binding.Mode = property.IsReadOnly ? BindingMode.OneWay : BindingMode.TwoWay;
+                binding.Mode = GetBindingMode();
 
                 try
                 {
@@ -80,6 +103,11 @@ namespace Snoop.Infrastructure
             this.Update();
 
             this.isRunning = true;
+
+            BindingMode GetBindingMode()
+            {
+                return property.IsReadOnly ? BindingMode.OneWay : BindingMode.TwoWay;
+            }
         }
 
         /// <summary>
@@ -142,8 +170,8 @@ namespace Snoop.Infrastructure
 
         public object? Value
         {
-            get { return this.GetValue(ValueProperty); }
-            set { this.SetValue(ValueProperty, value); }
+            get => this.GetValue(ValueProperty);
+            set => this.SetValue(ValueProperty, value);
         }
 
         public static readonly DependencyProperty ValueProperty =
@@ -229,7 +257,7 @@ namespace Snoop.Infrastructure
 
                 var targetType = this.property.PropertyType;
 
-                try
+                try 
                 {
                     this.property.SetValue(this.Target, StringValueConverter.ConvertFromString(targetType, value));
                 }
@@ -250,27 +278,40 @@ namespace Snoop.Infrastructure
                     return null;
                 }
 
-                string? resourceKey = null;
-
-                if (this.Target is DependencyObject dependencyObject)
+                switch (value)
                 {
-                    // Cache the resource key for this item if not cached already. This could be done for more types, but would need to optimize perf.
-                    if (this.TypeMightHaveResourceKey(this.property.PropertyType))
-                    {
-                        var resourceItem = value;
-                        resourceKey = ResourceKeyCache.GetKey(resourceItem);
+                    case DynamicResourceExtension { ResourceKey: { } } dynamicResourceExtension:
+                        return dynamicResourceExtension.ResourceKey.ToString();
 
-                        if (string.IsNullOrEmpty(resourceKey))
+                    case StaticResourceExtension { ResourceKey: { } } staticResourceExtension:
+                        return staticResourceExtension.ResourceKey.ToString();
+
+                    default:
+                    {
+                        if (this.Target is DependencyObject dependencyObject)
                         {
-                            resourceKey = ResourceDictionaryKeyHelpers.GetKeyOfResourceItem(dependencyObject, resourceItem);
-                            ResourceKeyCache.Cache(resourceItem, resourceKey);
+                            // Cache the resource key for this item if not cached already. This could be done for more types, but would need to optimize perf.
+                            if (TypeMightHaveResourceKey(this.property.PropertyType))
+                            {
+                                var resourceKey = ResourceKeyCache.GetKey(value);
+
+                                if (string.IsNullOrEmpty(resourceKey))
+                                {
+                                    resourceKey = ResourceDictionaryKeyHelpers.GetKeyOfResourceItem(dependencyObject, value);
+                                    ResourceKeyCache.Cache(value, resourceKey);
+                                }
+
+                                Debug.Assert(resourceKey is not null, "resourceKey is not null");
+
+                                return resourceKey;
+                            }
                         }
 
-                        Debug.Assert(resourceKey is not null, "resourceKey is not null");
+                        break;
                     }
                 }
 
-                return resourceKey;
+                return null;
             }
         }
 
@@ -286,36 +327,35 @@ namespace Snoop.Infrastructure
 
                 var stringValue = value.ToString() ?? string.Empty;
 
-                if (stringValue.Equals(value.GetType().ToString()))
+                var stringValueIsTypeToString = stringValue.Equals(value.GetType().ToString(), StringComparison.Ordinal);
+
+                // Add brackets around types to distinguish them from values.
+                // Replace long type names with short type names for some specific types, for easier readability.
+                // FUTURE: This could be extended to other types.
+                if (stringValueIsTypeToString)
                 {
-                    // Add brackets around types to distinguish them from values.
-                    // Replace long type names with short type names for some specific types, for easier readability.
-                    // FUTURE: This could be extended to other types.
-                    if (value is BindingBase)
+                    switch (value)
                     {
-#pragma warning disable INPC013
-                        stringValue = string.Format("[{0}]", "Binding");
-#pragma warning restore INPC013
+                        case DynamicResourceExtension dynamicResourceExtension:
+                            return $"[DynamicResource] {dynamicResourceExtension.ResourceKey}";
+
+                        case StaticResourceExtension staticResourceExtension:
+                            return $"[StaticResource] {staticResourceExtension.ResourceKey}";
+
+                        case ResourceDictionary { Source: { } } rd:
+                            return $"[ResourceDictionary] {rd.Source}";
                     }
-                    else if (value is DynamicResourceExtension)
-                    {
-                        stringValue = string.Format("[{0}]", "DynamicResource");
-                    }
-                    else if (this.property is not null &&
-                             (this.property.PropertyType == typeof(Brush) || this.property.PropertyType == typeof(Style)))
-                    {
-                        stringValue = string.Format("[{0}]", value.GetType().Name);
-                    }
-                    else
-                    {
-                        stringValue = string.Format("[{0}]", stringValue);
-                    }
+
+                    // Try to use a short type name
+                    stringValue = ShouldWeDisplayShortTypeName(value.GetType())
+                        ? $"[{value.GetType().Name}]"
+                        : $"[{stringValue}]";
                 }
 
                 // Display #00FFFFFF as Transparent for easier readability
-                if (this.property is not null &&
-                    this.property.PropertyType == typeof(Brush) &&
-                    stringValue.Equals("#00FFFFFF"))
+                if (this.property is not null
+                    && this.property.PropertyType == typeof(Brush)
+                    && stringValue.Equals("#00FFFFFF", StringComparison.Ordinal))
                 {
                     stringValue = "Transparent";
                 }
@@ -325,27 +365,41 @@ namespace Snoop.Infrastructure
                     // Display both the value and the resource key, if there's a key for this property.
                     if (string.IsNullOrEmpty(this.ResourceKey) == false)
                     {
-                        return string.Format("{0} {1}", this.ResourceKey, stringValue);
+                        return $"{stringValue} [{this.ResourceKey}]";
                     }
 
-                    // if the value comes from a Binding, show the path in [] brackets
+                    // if the value comes from a Binding, show the binding details in [] brackets
                     if (this.IsExpression
-                        && this.Binding is Binding)
+                        && this.Binding is { } binding)
                     {
-                        stringValue = string.Format("{0} {1}", stringValue, this.BuildBindingDescriptiveString((Binding)this.Binding, true));
+                        var bindingDescriptiveString = BindingDisplayHelper.BuildBindingDescriptiveString(binding);
+
+                        if (stringValueIsTypeToString)
+                        {
+                            return $"[Binding] {bindingDescriptiveString}";
+                        }
+
+                        return $"{stringValue} [Binding] {bindingDescriptiveString}";
+                    }
+                }
+
+                if (value is Setter setter)
+                {
+                    stringValue = "Setter ";
+
+                    if (setter.Property is not null)
+                    {
+                        stringValue += $"Property: {setter.Property.Name}";
+
+                        if (string.IsNullOrEmpty(setter.TargetName) == false)
+                        {
+                            stringValue += "; ";
+                        }
                     }
 
-                    // if the value comes from a MultiBinding, show the binding paths separated by , in [] brackets
-                    else if (this.IsExpression
-                        && this.Binding is MultiBinding)
+                    if (string.IsNullOrEmpty(setter.TargetName) == false)
                     {
-                        stringValue += this.BuildMultiBindingDescriptiveString(((MultiBinding)this.Binding).Bindings.OfType<Binding>().ToArray());
-                    }
-
-                    // if the value comes from a PriorityBinding, show the binding paths separated by , in [] brackets
-                    else if (this.IsExpression && this.Binding is PriorityBinding)
-                    {
-                        stringValue += this.BuildMultiBindingDescriptiveString(((PriorityBinding)this.Binding).Bindings.OfType<Binding>().ToArray());
+                        stringValue += $"Target: {setter.TargetName}";
                     }
                 }
 
@@ -353,61 +407,21 @@ namespace Snoop.Infrastructure
             }
         }
 
-        private bool TypeMightHaveResourceKey(Type type)
+        private static bool ShouldWeDisplayShortTypeName(Type type)
         {
-            return type == typeof(Style)
-                   || type == typeof(ControlTemplate)
-                   || type == typeof(Color)
-                   || type == typeof(Brush);
+            return TypeMightHaveResourceKey(type);
         }
 
-        /// <summary>
-        /// Build up a string of Paths for a MultiBinding separated by ;
-        /// </summary>
-        private string BuildMultiBindingDescriptiveString(IEnumerable<Binding> bindings)
+        private static bool TypeMightHaveResourceKey(Type type)
         {
-            var ret = " {Paths=";
-            foreach (var binding in bindings)
-            {
-                ret += this.BuildBindingDescriptiveString(binding, false);
-                ret += ";";
-            }
-
-            ret = ret.Substring(0, ret.Length - 1); // remove trailing ,
-            ret += "}";
-
-            return ret;
+            return typeof(Style).IsAssignableFrom(type)
+                   || typeof(ControlTemplate).IsAssignableFrom(type)
+                   || typeof(Color).IsAssignableFrom(type)
+                   || typeof(Brush).IsAssignableFrom(type)
+                   || typeof(DrawingImage).IsAssignableFrom(type);
         }
 
-        /// <summary>
-        /// Build up a string describing the Binding.  Path and ElementName (if present)
-        /// </summary>
-        private string BuildBindingDescriptiveString(Binding binding, bool isSinglePath)
-        {
-            var sb = new StringBuilder();
-            var bindingPath = binding.Path.Path;
-            var elementName = binding.ElementName;
-
-            if (isSinglePath)
-            {
-                sb.Append("{Path=");
-            }
-
-            sb.Append(bindingPath);
-            if (!string.IsNullOrEmpty(elementName))
-            {
-                sb.AppendFormat(", ElementName={0}", elementName);
-            }
-
-            if (isSinglePath)
-            {
-                sb.Append("}");
-            }
-
-            return sb.ToString();
-        }
-
-        public Type? ComponentType
+        public BindableType? ComponentType
         {
             get
             {
@@ -418,17 +432,12 @@ namespace Snoop.Infrastructure
                     // use this object to return the type of the collection for the ComponentType.
                     return this.component?.GetType();
                 }
-                else
-                {
-                    return this.property.ComponentType;
-                }
+
+                return this.property.ComponentType;
             }
         }
 
-        private readonly object? component;
-        private readonly bool isCopyable;
-
-        public Type PropertyType
+        public BindableType PropertyType
         {
             get
             {
@@ -438,62 +447,39 @@ namespace Snoop.Infrastructure
                     // just return typeof(object) here, since an item in a collection ... really isn't a property.
                     return typeof(object);
                 }
-                else
-                {
-                    return this.property.PropertyType;
-                }
+
+                return this.property.PropertyType;
             }
         }
 
-        public Type ValueType
-        {
-            get
-            {
-                if (this.Value is not null)
-                {
-                    return this.Value.GetType();
-                }
-                else
-                {
-                    return typeof(object);
-                }
-            }
-        }
+        public bool IsNullableValueType => Nullable.GetUnderlyingType(this.PropertyType) is not null;
 
         public string BindingError
         {
-            get { return this.bindingError; }
+            get => this.bindingError;
+            private set
+            {
+                if (value == this.bindingError)
+                {
+                    return;
+                }
+
+                this.bindingError = value;
+                this.OnPropertyChanged(nameof(this.BindingError));
+            }
         }
 
-        private string bindingError = string.Empty;
+        public PropertyDescriptor? Property => this.property;
 
-        public PropertyDescriptor? Property
-        {
-            get { return this.property; }
-        }
+        public string DisplayName => this.displayName;
 
-        private readonly PropertyDescriptor? property;
+        public bool IsCollectionEntry { get; private set; }
 
-        public string DisplayName
-        {
-            get { return this.displayName; }
-        }
+        public object? CollectionEntryIndexOrKey { get; private set; }
 
-        private readonly string displayName;
+        public bool IsInvalidBinding => this.isInvalidBinding;
 
-        public bool IsInvalidBinding
-        {
-            get { return this.isInvalidBinding; }
-        }
-
-        private bool isInvalidBinding;
-
-        public bool IsLocallySet
-        {
-            get { return this.isLocallySet; }
-        }
-
-        private bool isLocallySet;
+        public bool IsLocallySet => this.isLocallySet;
 
         public bool IsValueChangedByUser { get; set; }
 
@@ -507,33 +493,20 @@ namespace Snoop.Infrastructure
                     //return false;
                     return this.isCopyable;
                 }
-                else
-                {
-                    return !this.property.IsReadOnly;
-                }
+
+                return this.property.IsReadOnly == false;
             }
         }
 
-        public bool IsDatabound
-        {
-            get { return this.isDatabound; }
-        }
+        public bool IsDatabound => this.isDatabound;
 
-        private bool isDatabound;
+        public bool IsExpression => this.valueSource.IsExpression;
 
-        public bool IsExpression
-        {
-            get { return this.valueSource.IsExpression; }
-        }
-
-        public bool IsAnimated
-        {
-            get { return this.valueSource.IsAnimated; }
-        }
+        public bool IsAnimated => this.valueSource.IsAnimated;
 
         public int Index
         {
-            get { return this.index; }
+            get => this.index;
 
             set
             {
@@ -546,20 +519,15 @@ namespace Snoop.Infrastructure
             }
         }
 
-        private int index;
-
-        public bool IsOdd
-        {
-            get { return this.index % 2 == 1; }
-        }
+        public bool IsOdd => this.index % 2 == 1;
 
         public BindingBase? Binding
         {
             get
             {
                 var dp = this.DependencyProperty;
-                var d = this.Target as DependencyObject;
-                if (dp is not null && d is not null)
+                if (dp is not null
+                    && this.Target is DependencyObject d)
                 {
                     return BindingOperations.GetBindingBase(d, dp);
                 }
@@ -573,8 +541,8 @@ namespace Snoop.Infrastructure
             get
             {
                 var dp = this.DependencyProperty;
-                var d = this.Target as DependencyObject;
-                if (dp is not null && d is not null)
+                if (dp is not null
+                    && this.Target is DependencyObject d)
                 {
                     return BindingOperations.GetBindingExpressionBase(d, dp);
                 }
@@ -585,7 +553,7 @@ namespace Snoop.Infrastructure
 
         public PropertyFilter? Filter
         {
-            get { return this.filter; }
+            get => this.filter;
 
             set
             {
@@ -595,11 +563,9 @@ namespace Snoop.Infrastructure
             }
         }
 
-        private PropertyFilter? filter;
-
         public bool BreakOnChange
         {
-            get { return this.breakOnChange; }
+            get => this.breakOnChange;
 
             set
             {
@@ -608,11 +574,9 @@ namespace Snoop.Infrastructure
             }
         }
 
-        private bool breakOnChange;
-
         public bool HasChangedRecently
         {
-            get { return this.hasChangedRecently; }
+            get => this.hasChangedRecently;
 
             set
             {
@@ -621,24 +585,17 @@ namespace Snoop.Infrastructure
             }
         }
 
-        private bool hasChangedRecently;
+        public ValueSource ValueSource => this.valueSource;
 
-        public ValueSource ValueSource
-        {
-            get { return this.valueSource; }
-        }
+        // Required to prevent binding leaks
+        public BaseValueSource ValueSourceBaseValueSource => this.ValueSource.BaseValueSource;
 
-        private ValueSource valueSource;
-
-        public bool IsVisible
-        {
-            get { return this.filter?.Show(this) != false; }
-        }
+        public bool IsVisible => this.filter?.Show(this) != false;
 
         public void Clear()
         {
             var dp = this.DependencyProperty;
-            if (dp is not null 
+            if (dp is not null
                 && this.Target is DependencyObject d)
             {
                 d.ClearValue(dp);
@@ -678,7 +635,7 @@ namespace Snoop.Infrastructure
 
             this.isLocallySet = false;
             this.isInvalidBinding = false;
-            this.bindingError = string.Empty;
+            this.BindingError = string.Empty;
             this.isDatabound = false;
 
             var dp = this.DependencyProperty;
@@ -709,6 +666,13 @@ namespace Snoop.Infrastructure
                         || (expression.Status != BindingStatus.Active && !(expression is PriorityBindingExpression)))
                     {
                         this.isInvalidBinding = true;
+
+#if USE_WPF_BINDING_DIAG
+                        if (BindingDiagnosticHelper.Instance.TryGetEntry(expression, out var failedBinding))
+                        {
+                            this.BindingError = failedBinding.Messages;
+                        }
+#endif
                     }
                 }
 
@@ -758,29 +722,10 @@ namespace Snoop.Infrastructure
                 return;
             }
 
-            var builder = new StringBuilder();
-            var writer = new StringWriter(builder);
-            var tracer = new TextWriterTraceListener(writer);
-            var levelBefore = PresentationTraceSources.DataBindingSource.Switch.Level;
-            PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.All;
-            PresentationTraceSources.DataBindingSource.Listeners.Add(tracer);
-
-            // reset binding to get the error message.
-            this.ignoreUpdate = true;
-            d.ClearValue(dp);
-            BindingOperations.SetBinding(d, dp, expression.ParentBindingBase);
-            this.ignoreUpdate = false;
-
-            // this needs to happen on idle so that we can actually run the binding, which may occur asynchronously.
-            this.RunInDispatcherAsync(
-                () =>
-                {
-                    this.bindingError = builder.ToString();
-                    this.OnPropertyChanged(nameof(this.BindingError));
-                    PresentationTraceSources.DataBindingSource.Listeners.Remove(tracer);
-                    writer.Close();
-                    PresentationTraceSources.DataBindingSource.Switch.Level = levelBefore;
-                }, DispatcherPriority.ApplicationIdle);
+            using (new ScopeGuard(() => this.ignoreUpdate = true, () => this.ignoreUpdate = false).Guard())
+            {
+                BindingDiagnosticHelper.Instance.TrySetBindingError(expression, d, dp, s => this.BindingError = s);
+            }
         }
 
         public static List<PropertyInformation> GetProperties(object? obj)
@@ -824,30 +769,17 @@ namespace Snoop.Infrastructure
             {
                 foreach (var key in resourceDictionary.Keys)
                 {
-                    Exception? exception = null;
-                    object? item = null;
-                    try
-                    {
-                        item = resourceDictionary[key];
-                    }
-                    catch (Exception ex)
-                    {
-                        // Sometimes we can get an exception ... because the xaml you are Snoop(ing) is bad.
-                        // e.g. I got this once when I was Snoop(ing) some xaml that was referring to an image resource that was no longer there.
-                        // Wrong style inheritance like this also cause exceptions here:
-                        // <Style x:Key="BlahStyle" TargetType="{x:Type RichTextBox}"/>
-                        // <Style x:Key="BlahBlahStyle" BasedOn="{StaticResource BlahStyle}" TargetType="{x:Type TextBoxBase}"/>
-
-                        // We only get an exception once. The next time through the value just comes back null.
-
-                        exception = ex;
-                    }
+                    resourceDictionary.TryGetValue(key, out var item, out var exception);
 
                     if (item is not null
                         || key is not null)
                     {
                         var value = exception?.ToString() ?? item;
-                        var info = new PropertyInformation(item ?? key!, resourceDictionary, "this[" + key + "]", value);
+                        var info = new PropertyInformation(value ?? key!, resourceDictionary, "this[" + key + "]", value)
+                        {
+                            IsCollectionEntry = true,
+                            CollectionEntryIndexOrKey = key
+                        };
 
                         properties.Add(info);
                     }
@@ -863,7 +795,11 @@ namespace Snoop.Infrastructure
                         continue;
                     }
 
-                    var info = new PropertyInformation(item, collection, "this[" + index + "]", item);
+                    var info = new PropertyInformation(item, collection, "this[" + index + "]", item)
+                    {
+                        IsCollectionEntry = true,
+                        CollectionEntryIndexOrKey = index
+                    };
 
                     index++;
                     properties.Add(info);
@@ -925,16 +861,11 @@ namespace Snoop.Infrastructure
 
                 var supportedPatterns = new List<string>();
 
-                foreach (PatternInterface? patternInterface in Enum.GetValues(typeof(PatternInterface)))
+                foreach (var patternInterface in Enum.GetValues(typeof(PatternInterface)).Cast<PatternInterface>())
                 {
-                    if (patternInterface is null)
+                    if (automationPeer.GetPattern(patternInterface) is not null)
                     {
-                        continue;
-                    }
-
-                    if (automationPeer.GetPattern(patternInterface.Value) is not null)
-                    {
-                        supportedPatterns.Add(patternInterface.Value.ToString());
+                        supportedPatterns.Add(patternInterface.ToString());
                     }
                 }
 
@@ -946,14 +877,14 @@ namespace Snoop.Infrastructure
             return null;
         }
 
-        private static List<PropertyDescriptor> GetAllProperties(object obj, Attribute[] attributes)
+        public static List<PropertyDescriptor> GetAllProperties(object obj, Attribute[] attributes)
         {
             var propertiesToReturn = new List<PropertyDescriptor>();
 
             object? currentObj = obj;
-            
+
             // keep looping until you don't have an AmbiguousMatchException exception
-            // and you normally won't have an exception, so the loop will typically execute only once.
+            // and you normally won't have an exception, so the loop will typically executes only once.
             var noException = false;
             while (!noException && currentObj is not null)
             {
@@ -991,7 +922,7 @@ namespace Snoop.Infrastructure
                         break;
                     }
 
-                    currentObj = Activator.CreateInstance(nextBaseTypeWithDefaultConstructor)!;
+                    currentObj = Activator.CreateInstance(nextBaseTypeWithDefaultConstructor);
                 }
             }
 
@@ -1047,39 +978,38 @@ namespace Snoop.Infrastructure
             }
         }
 
-        private bool isRunning;
-        private bool ignoreUpdate;
-        private static readonly Attribute[] getAllPropertiesAttributeFilter = { new PropertyFilterAttribute(PropertyFilterOptions.All) };
-
-        public bool IsCollection()
+        private int CollectionIndex()
         {
-            var pattern = "^this\\[\\d+\\]$";
-            return Regex.IsMatch(this.DisplayName, pattern);
-        }
-
-        public int CollectionIndex()
-        {
-            if (this.IsCollection())
+            if (this.IsCollectionEntry
+                && this.CollectionEntryIndexOrKey is int collectionEntryIndex)
             {
-                return int.Parse(this.DisplayName.Substring(5, this.DisplayName.Length - 6));
+                return collectionEntryIndex;
             }
 
             return -1;
         }
 
         #region IComparable Members
+
         public int CompareTo(object? obj)
         {
-            var thisIndex = this.CollectionIndex();
             var other = obj as PropertyInformation;
-            var objIndex = other?.CollectionIndex();
-            if (thisIndex >= 0 && objIndex >= 0)
+
+            if (other is not null)
             {
-                return thisIndex.CompareTo(objIndex);
+                var thisIndex = this.CollectionIndex();
+                var otherIndex = other.CollectionIndex();
+
+                if (thisIndex >= 0
+                    && otherIndex >= 0)
+                {
+                    return thisIndex.CompareTo(otherIndex);
+                }
             }
 
             return string.Compare(this.DisplayName, other?.DisplayName, StringComparison.Ordinal);
         }
+
         #endregion
 
         #region INotifyPropertyChanged Members
@@ -1091,6 +1021,5 @@ namespace Snoop.Infrastructure
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
-
     }
 }

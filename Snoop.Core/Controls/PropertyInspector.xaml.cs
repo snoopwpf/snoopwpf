@@ -3,6 +3,8 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
+#pragma warning disable CA1819
+
 namespace Snoop.Controls
 {
     using System;
@@ -15,8 +17,8 @@ namespace Snoop.Controls
     using System.Windows.Input;
     using JetBrains.Annotations;
     using Snoop.Core.Properties;
+    using Snoop.Data;
     using Snoop.Infrastructure;
-    using Snoop.Infrastructure.Extensions;
     using Snoop.Infrastructure.Helpers;
     using Snoop.Windows;
 
@@ -31,6 +33,7 @@ namespace Snoop.Controls
         public static readonly RoutedCommand CopyXamlCommand = new(nameof(CopyXamlCommand), typeof(PropertyInspector));
 
         public static readonly RoutedCommand NavigateToAssemblyInExplorerCommand = new(nameof(NavigateToAssemblyInExplorerCommand), typeof(PropertyInspector));
+        public static readonly RoutedCommand OpenTypeInILSpyCommand = new(nameof(OpenTypeInILSpyCommand), typeof(PropertyInspector));
 
         public static readonly RoutedCommand UpdateBindingErrorCommand = new(nameof(UpdateBindingErrorCommand), typeof(PropertyInspector));
 
@@ -39,6 +42,8 @@ namespace Snoop.Controls
         public PropertyInspector()
         {
             this.InitializeComponent();
+
+            this.delveTypeContextMenu.DataContext = this;
 
             this.inspector = this.PropertyGrid;
             this.inspector.Filter = this.propertyFilter;
@@ -52,8 +57,9 @@ namespace Snoop.Controls
             this.CommandBindings.Add(new CommandBinding(CopyXamlCommand, this.HandleCopyXaml, this.CanCopyXaml));
 
             this.CommandBindings.Add(new CommandBinding(NavigateToAssemblyInExplorerCommand, this.HandleNavigateToAssemblyInExplorer, this.CanNavigateToAssemblyInExplorer));
+            this.CommandBindings.Add(new CommandBinding(OpenTypeInILSpyCommand, this.HandleOpenTypeInILSpy, this.CanOpenTypeInILSpy));
             this.CommandBindings.Add(new CommandBinding(UpdateBindingErrorCommand, this.HandleUpdateBindingError, this.CanUpdateBindingError));
-            
+
             // watch for mouse "back" button
             this.MouseDown += this.MouseDownHandler;
             this.KeyDown += this.PropertyInspector_KeyDown;
@@ -200,10 +206,9 @@ namespace Snoop.Controls
 
             foreach (var propInfo in this.delvePathList)
             {
-                int collectionIndex;
-                if ((collectionIndex = propInfo.CollectionIndex()) >= 0)
+                if (propInfo.IsCollectionEntry)
                 {
-                    delvePath.Append(string.Format("[{0}]", collectionIndex));
+                    delvePath.Append(string.Format("[{0}]", propInfo.CollectionEntryIndexOrKey));
                 }
                 else
                 {
@@ -214,7 +219,7 @@ namespace Snoop.Controls
             return delvePath.ToString();
         }
 
-        private Type? GetCurrentDelveType(Type rootTargetType)
+        private BindableType? GetCurrentDelveType(Type rootTargetType)
         {
             if (this.delvePathList.Count > 0)
             {
@@ -262,7 +267,7 @@ namespace Snoop.Controls
             }
         }
 
-        public Type? DelveType
+        public BindableType? DelveType
         {
             get
             {
@@ -276,7 +281,7 @@ namespace Snoop.Controls
             }
         }
 
-        public Type? Type
+        public BindableType? Type
         {
             get
             {
@@ -411,12 +416,12 @@ namespace Snoop.Controls
 
         private void HandleNavigateToAssemblyInExplorer(object sender, ExecutedRoutedEventArgs e)
         {
-            var assembly = ((Type)e.Parameter).Assembly;
+            var assembly = (e.Parameter as Type)?.Assembly ?? ((BindableType)e.Parameter).Assembly;
             var path = assembly.Location;
 
             if (string.IsNullOrEmpty(path))
             {
-                path = assembly.CodeBase;
+                return;
             }
 
             var processStartInfo = new ProcessStartInfo
@@ -441,7 +446,46 @@ namespace Snoop.Controls
 
         private void CanNavigateToAssemblyInExplorer(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = e.Parameter is Type;
+            e.CanExecute = e.Parameter is System.Type or BindableType;
+        }
+
+        private void HandleOpenTypeInILSpy(object sender, ExecutedRoutedEventArgs e)
+        {
+            var type = (e.Parameter as Type) ?? (BindableType)e.Parameter;
+            var assembly = type.Assembly;
+            var assemblyLocation = assembly.Location;
+
+            if (string.IsNullOrEmpty(assemblyLocation)
+                || PathHelper.TryFindPathOnPath(TransientSettingsData.Current?.ILSpyPath, "ilspy.exe", out var ilspyPath) == false)
+            {
+                return;
+            }
+
+            var processStartInfo = new ProcessStartInfo
+            {
+                FileName = ilspyPath,
+                UseShellExecute = true,
+                WindowStyle = ProcessWindowStyle.Normal,
+                // https://github.com/icsharpcode/ILSpy/blob/master/doc/Command%20Line.txt
+                Arguments = $"\"{assemblyLocation}\" /navigateTo:T:{type.FullName}"
+            };
+
+            try
+            {
+                using (Process.Start(processStartInfo))
+                {
+                }
+            }
+            catch
+            {
+                // ignored
+            }
+        }
+
+        private void CanOpenTypeInILSpy(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = e.Parameter is System.Type or BindableType
+                && PathHelper.TryFindPathOnPath(TransientSettingsData.Current?.ILSpyPath, "ilspy.exe", out _);
         }
 
         private void CanUpdateBindingError(object sender, CanExecuteRoutedEventArgs e)
@@ -562,9 +606,9 @@ namespace Snoop.Controls
                         Settings.Default.UserDefinedPropertyFilterSets = this.userFilterSets;
                         Settings.Default.Save();
 
-                        #pragma warning disable INPC015
+#pragma warning disable INPC015
                         this.SelectedFilterSet = null;
-                        #pragma warning restore INPC015
+#pragma warning restore INPC015
                         this.allFilterSets = null;
 
                         // trigger the UI to re-bind to the collection, so user sees changes they just made
@@ -581,10 +625,10 @@ namespace Snoop.Controls
         }
 
         /// <summary>
-        /// Get or Set the collection of User filter sets.  These are the filters that are configurable by 
+        /// Get or Set the collection of User filter sets.  These are the filters that are configurable by
         /// the user, and serialized to/from app Settings.
         /// </summary>
-        public PropertyFilterSet[] UserFilterSets
+        public List<PropertyFilterSet> UserFilterSets
         {
             get
             {
@@ -607,7 +651,7 @@ namespace Snoop.Controls
                         ret.Clear();
                     }
 
-                    this.userFilterSets = ret.ToArray();
+                    this.userFilterSets = ret;
                 }
 
                 return this.userFilterSets;
@@ -620,9 +664,9 @@ namespace Snoop.Controls
         }
 
         /// <summary>
-        /// Get the collection of "all" filter sets.  This is the UserFilterSets wrapped with 
+        /// Get the collection of "all" filter sets.  This is the UserFilterSets wrapped with
         /// (Default) at the start and "Edit Filters..." at the end of the collection.
-        /// This is the collection bound to in the UI 
+        /// This is the collection bound to in the UI
         /// </summary>
         public PropertyFilterSet[] AllFilterSets
         {
@@ -673,15 +717,11 @@ namespace Snoop.Controls
         /// Cleanse the property names in each filter in the collection.
         /// This includes removing spaces from each one, and making them all lower case
         /// </summary>
-        private static PropertyFilterSet[] CleanFiltersForUserFilters(ICollection<PropertyFilterSet>? collection)
+        private static List<PropertyFilterSet> CleanFiltersForUserFilters(ICollection<PropertyFilterSet>? collection)
         {
             if (collection is null)
             {
-#if NET40
-                return new PropertyFilterSet[0];
-#else
-                return Array.Empty<PropertyFilterSet>();
-#endif
+                return new List<PropertyFilterSet>();
             }
 
             foreach (var filterItem in collection)
@@ -689,11 +729,11 @@ namespace Snoop.Controls
                 filterItem.Properties = filterItem.Properties?.Select(s => s.ToLower().Trim()).ToArray();
             }
 
-            return collection.Where(x => x.IsReadOnly == false).ToArray();
+            return collection.Where(x => x.IsReadOnly == false).ToList();
         }
 
         private readonly List<object> inspectStack = new();
-        private PropertyFilterSet[]? userFilterSets;
+        private List<PropertyFilterSet>? userFilterSets;
         private readonly List<PropertyInformation> delvePathList = new();
 
         private readonly Inspector inspector;
@@ -710,8 +750,8 @@ namespace Snoop.Controls
                 IsReadOnly = true,
                 Properties = new[]
                 {
-                    "width", "height", "actualwidth", "actualheight",
-                    "desiredsize",
+                    "width", "height", "minwidth", "minheight", "actualwidth", "actualheight",
+                    "desiredsize", "rendersize",
                     "margin", "padding",
                     "left", "top",
                     "horizontalalignment", "verticalalignment",

@@ -1,8 +1,9 @@
 # Snoop
 
-Snoop is the open source WPF spying utility created by [Pete Blois](https://github.com/peteblois) when he was employed at Microsoft.
+Snoop is an open source WPF spying utility originally created by [Pete Blois](https://github.com/peteblois) and is currently maintained by [Bastian Schmidt](https://github.com/batzen).
 
-It allows you to spy/browse the visual tree of a running application (without the need for a debugger) and change properties, view triggers, set breakpoints on property changes and many more things.
+It allows you to spy/browse the visual, logical and automation tree of any running WPF application (without the need for a debugger).  
+You can change property values, view triggers, set breakpoints on property changes and many more things.
 
 [![Build status for master branch](https://img.shields.io/appveyor/ci/batzen/snoopwpf/master?style=flat-square&&label=master)](https://ci.appveyor.com/project/batzen/snoopwpf/branch/master)
 [![Build status for develop branch](https://img.shields.io/appveyor/ci/batzen/snoopwpf/develop?style=flat-square&&label=develop)](https://ci.appveyor.com/project/batzen/snoopwpf/branch/develop)
@@ -19,40 +20,37 @@ It allows you to spy/browse the visual tree of a running application (without th
 - [chocolatey](https://chocolatey.org/packages/snoop) for stable and some preview versions
 - [github releases](https://github.com/snoopwpf/snoopwpf/releases) for stable versions
 - [appveyor](https://ci.appveyor.com/project/batzen/snoopwpf/build/artifacts) for the latest preview versions (built on every code change)
-- Please note that you need at least .NET Framework 4.0 to run Snoop
+- You need at least .NET Framework 4.0 to run Snoop
 
 ## Versions
 
-### [3.0.0](../../releases/tag/v3.0.0)
+You can read the [changelog](Changelog.md) for details on what changed in which version.
 
-You can read the [changelog](Changelog.md) for details on what changed in this version.
-Please note that this version is not yet finished.
+### [3.0.0](../../releases/tag/v3.0.0)
 
 Highlights:
 
 - Support for .NET Core (3.0, 3.1 and 5.0) (including self contained and single file applications)
 - Rewritten injector code
 - You no longer have to have installed any Microsoft Visual C++ Redistributable(s)
-- Snooping disabled controls when holding CTRL + SHIFT works now
+- Snooping disabled controls when holding `CTRL + SHIFT` works now
 - Snoop now filters uncommon properties by default
 - Snoop is now able to show `MergedDictionaries` from `ResourceDictionary`
 - Snoop now has two tracking modes.
-  - Holding CTRL tries to skip template parts
-  - Holding CTRL + SHIFT does not skip template parts
-- Drastically improved performance of AppChooser.Refresh() (thanks @mikel785)
+  - Holding `CTRL` tries to skip template parts => this is changed to `CTRL + ALT` in newer versions
+  - Holding `CTRL + SHIFT` does not skip template parts
+- Drastically improved performance of `AppChooser.Refresh()` (thanks @mikel785)
 - Usability improvements for process dropdown (thanks @mikel785)
 - Support for displaying the logical tree and the tree of WPF automation peers
 - Ability to inspect `Popup` without opening it
-- `Snoop.exe` and the inject laucnher now support commandline args
-- Global hotkey support (just start snoop, focus a WPF application and hit CTRL + WIN + ALT + F12)
+- `Snoop.exe` and the injector launcher now support commandline args
+- Global hotkey support (just start snoop, focus a WPF application and hit `CTRL + WIN + ALT + F12`)
 
 Known issues:
 
 - Trying to snoop a trimmed single file application might not work as trimming might have removed things Snoop relies on
 
 ### [2.11.0](../../releases/tag/2.11.0)
-
-You can read the [changelog](Changelog.md) for details on what changed in this version.
 
 Highlights:
 
@@ -91,12 +89,12 @@ As part of the process of moving to Visual Studio 2019, we have dropped support 
 
 ## How do i build Snoop?
 
-Just open `Snoop.sln` with Visual Studio 2019 (16.7 or later) and build it.
-Please note that you need the Visual Studio 2019 C++ payload and in case you are using a later version you also need the VC++ 142 payload.
+Just open `Snoop.sln` with Visual Studio and build it.
 
 Requirements:
 
-- Visual Studio 2019 16.8 (including C++ payload)
+- Visual Studio 2019 16.8 (including C++ payloads (x86/x64/ARM/ARM64))
+  - You can import the `.vsconfig` file in the Visual Studio installer to let it install all required components
 - .NET Core SDK 5.0.100
 
 ## Contributors

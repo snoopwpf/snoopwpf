@@ -5,7 +5,6 @@
     using System.Globalization;
     using System.Windows.Input;
     using System.Windows.Markup;
-    using JetBrains.Annotations;
 
     [TypeConverter(typeof(KeyGestureExConverter))]
     [ValueSerializer(typeof(KeyGestureExValueSerializer))]
@@ -28,7 +27,7 @@
         {
         }
 
-        public KeyGestureEx(Key key, ModifierKeys modifiers, [NotNull] string displayString)
+        public KeyGestureEx(Key key, ModifierKeys modifiers, string displayString)
             : base(key, modifiers, displayString)
         {
         }
@@ -69,7 +68,7 @@
 
         private static bool IsDefinedKey(Key key)
         {
-            return key >= Key.None && key <= Key.OemClear;
+            return key is >= Key.None and <= Key.OemClear;
         }
     }
 
@@ -147,18 +146,10 @@
                     keyToken = fullName;
                 }
 
-                var modifiers = ModifierKeys.None;
-                var resultkey = keyConverter.ConvertFrom(context, culture, keyToken);
-                if (resultkey is not null)
-                {
-                    var temp = modifierKeysConverter.ConvertFrom(context, culture, modifiersToken);
-                    if (temp is not null)
-                    {
-                        modifiers = (ModifierKeys)temp;
-                    }
+                var resultKey = keyConverter.ConvertFrom(context, culture, keyToken);
+                var modifiers = (ModifierKeys)modifierKeysConverter.ConvertFrom(context, culture, modifiersToken);
 
-                    return new KeyGestureEx((Key)resultkey, modifiers, displayString);
-                }
+                return new KeyGestureEx((Key)resultKey, modifiers, displayString);
             }
 
             throw this.GetConvertFromException(source);
@@ -216,7 +207,7 @@
         // Check for Valid enum, as any int can be casted to the enum.
         internal static bool IsDefinedKey(Key key)
         {
-            return key >= Key.None && key <= Key.OemClear;
+            return key is >= Key.None and <= Key.OemClear;
         }
     }
 

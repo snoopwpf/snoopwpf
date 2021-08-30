@@ -11,6 +11,8 @@
             : base(target, parent, treeService)
         {
             this.targetWindow = target;
+
+            this.ShouldBeAnalyzed = false;
         }
 
         protected override void ReloadCore()
@@ -31,7 +33,7 @@
                     continue;
                 }
 
-                this.Children.Add(this.TreeService.Construct(ownedWindow, this));
+                this.AddChild(this.TreeService.Construct(ownedWindow, this));
             }
         }
 

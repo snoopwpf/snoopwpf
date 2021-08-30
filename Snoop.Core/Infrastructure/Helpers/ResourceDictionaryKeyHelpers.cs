@@ -7,10 +7,11 @@ namespace Snoop.Infrastructure.Helpers
 {
     using System.Windows;
     using System.Windows.Media;
+    using System.Windows.Media.Media3D;
 
     public static class ResourceDictionaryKeyHelpers
     {
-        public static string GetKeyOfResourceItem(DependencyObject dependencyObject, object resourceItem)
+        public static string GetKeyOfResourceItem(DependencyObject? dependencyObject, object? resourceItem)
         {
             if (dependencyObject is null
                 || resourceItem is null)
@@ -19,10 +20,9 @@ namespace Snoop.Infrastructure.Helpers
             }
 
             // Walk up the visual tree, looking for the resourceItem in each frameworkElement's resource dictionary.
-            while (dependencyObject is not null)
+            while (dependencyObject is Visual or Visual3D)
             {
-                var frameworkElement = dependencyObject as FrameworkElement;
-                if (frameworkElement is not null)
+                if (dependencyObject is FrameworkElement frameworkElement)
                 {
                     var resourceKey = GetKeyInResourceDictionary(frameworkElement.Resources, resourceItem);
                     if (resourceKey is not null)
@@ -51,25 +51,23 @@ namespace Snoop.Infrastructure.Helpers
             return string.Empty;
         }
 
-        public static string? GetKeyInResourceDictionary(ResourceDictionary dictionary, object resourceItem)
+        public static string? GetKeyInResourceDictionary(ResourceDictionary dictionary, object? resourceItem)
         {
             foreach (var key in dictionary.Keys)
             {
-                if (dictionary[key] == resourceItem)
+                if (dictionary.TryGetValue(key, out var item)
+                    && item == resourceItem)
                 {
                     return key?.ToString();
                 }
             }
 
-            if (dictionary.MergedDictionaries is not null)
+            foreach (var dic in dictionary.MergedDictionaries)
             {
-                foreach (var dic in dictionary.MergedDictionaries)
+                var name = GetKeyInResourceDictionary(dic, resourceItem);
+                if (!string.IsNullOrEmpty(name))
                 {
-                    var name = GetKeyInResourceDictionary(dic, resourceItem);
-                    if (!string.IsNullOrEmpty(name))
-                    {
-                        return name;
-                    }
+                    return name;
                 }
             }
 

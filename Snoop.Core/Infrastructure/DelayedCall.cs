@@ -5,7 +5,6 @@
 
 namespace Snoop.Infrastructure
 {
-    using System.Windows;
     using System.Windows.Threading;
 
     public delegate void DelayedHandler();

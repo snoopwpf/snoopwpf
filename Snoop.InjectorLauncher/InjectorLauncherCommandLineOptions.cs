@@ -1,7 +1,9 @@
 ﻿namespace Snoop.InjectorLauncher
 {
     using CommandLine;
+    using JetBrains.Annotations;
 
+    [PublicAPI]
     public class InjectorLauncherCommandLineOptions
     {
         [Option('t', "targetPID", Required = true, HelpText = "The target process id.")]
@@ -27,5 +29,8 @@
 
         [Option('d', "debug")]
         public bool Debug { get; set; }
+
+        [Option("attachConsoleToParent")]
+        public bool AttachConsoleToParent { get; set; }
     }
 }

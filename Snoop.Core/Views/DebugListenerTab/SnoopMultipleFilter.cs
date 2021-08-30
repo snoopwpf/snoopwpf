@@ -8,7 +8,7 @@
     {
         private readonly List<SnoopFilter> singleFilters = new();
 
-        public override bool FilterMatches(string debugLine)
+        public override bool FilterMatches(string? debugLine)
         {
             foreach (var filter in this.singleFilters)
             {
@@ -41,12 +41,12 @@
                 return this.singleFilters[0].GroupId;
             }
 
-            #pragma warning disable INPC021
+#pragma warning disable INPC021
             set
             {
                 throw new NotSupportedException();
             }
-            #pragma warning restore INPC021
+#pragma warning restore INPC021
         }
 
         public bool IsValidMultipleFilter

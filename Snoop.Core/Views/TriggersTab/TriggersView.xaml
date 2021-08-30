@@ -12,7 +12,6 @@
     <Grid.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../../Icons.xaml"/>
                 <ResourceDictionary Source="../../Controls/ValueEditors/EditorTemplates.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
@@ -29,10 +28,10 @@
                                     <Border Background="#0F000000" Height="18" VerticalAlignment="Top" />
                                     <ContentPresenter Style="{x:Null}"
                                                       TextBlock.FontWeight="Bold" TextBlock.FontSize="11"
-                                                      TextBlock.Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" 
+                                                      TextBlock.Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
                                                       Content="{TemplateBinding Header}"
                                                       VerticalAlignment="Top" Margin="20,0,0,0" />
-                                    <Image x:Name="icon" 
+                                    <Image x:Name="icon"
                                            Style="{x:Null}"
                                            Source="{DynamicResource triggerItemDrawingImage}"
                                            Margin="4,2,0,0"
@@ -92,7 +91,7 @@
                     </DataTrigger>
                 </DataTemplate.Triggers>
             </DataTemplate>
-            
+
             <!-- ========================= -->
             <!-- TriggerActions            -->
             <!-- ========================= -->
@@ -114,7 +113,7 @@
             <!-- ========================= -->
 
             <DataTemplate DataType="{x:Type triggers:TriggerItemBase}">
-                <HeaderedContentControl x:Name="triggerControl" 
+                <HeaderedContentControl x:Name="triggerControl"
                                         Style="{StaticResource Snoop.TriggerControlStyle}"
                                         Header="{Binding TriggerType}">
                     <StackPanel>
@@ -128,10 +127,10 @@
                                             <RowDefinition />
                                         </Grid.RowDefinitions>
                                         <StackPanel Orientation="Horizontal">
-                                            <Image x:Name="image" 
+                                            <Image x:Name="image"
                                                    Style="{x:Null}"
                                                    Source="{DynamicResource inActiveDrawingImage}"
-                                                   Height="16" 
+                                                   Height="16"
                                                    Width="16" />
                                             <TextBlock x:Name="conditionText"
                                                        Style="{x:Null}"
@@ -139,20 +138,20 @@
                                                        Text="{Binding Condition}" />
                                         </StackPanel>
 
-                                        <Border Grid.Row="1" 
+                                        <Border Grid.Row="1"
                                                 x:Name="errorPane"
                                                 Visibility="Collapsed"
                                                 Background="Red"
                                                 TextElement.Foreground="White">
                                             <StackPanel Orientation="Horizontal">
-                                                <Image x:Name="warningImage" 
+                                                <Image x:Name="warningImage"
                                                        Style="{x:Null}"
                                                        Source="{DynamicResource warningDrawingImage}"
-                                                       Height="16" 
+                                                       Height="16"
                                                        Width="16"
                                                        ToolTip="{Binding Error}" />
 
-                                                <TextBlock x:Name="errorText" 
+                                                <TextBlock x:Name="errorText"
                                                            Style="{x:Null}"
                                                            Margin="2 0 0 0"
                                                            Text="{Binding Error}" />
@@ -162,14 +161,14 @@
 
                                     <DataTemplate.Triggers>
                                         <DataTrigger Binding="{Binding IsActive}" Value="True">
-                                            <Setter Property="Source" 
+                                            <Setter Property="Source"
                                                     Value="{DynamicResource activeDrawingImage}"
                                                     TargetName="image" />
-                                            <Setter Property="FontWeight" 
-                                                    Value="Bold" 
+                                            <Setter Property="FontWeight"
+                                                    Value="Bold"
                                                     TargetName="conditionText" />
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding HasError}" 
+                                        <DataTrigger Binding="{Binding HasError}"
                                                      Value="True">
                                             <Setter Property="Visibility"
                                                     Value="Visible"
@@ -179,13 +178,13 @@
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
-                        <TextBlock Style="{x:Null}" 
-                                   Text="Setters" 
+                        <TextBlock Style="{x:Null}"
+                                   Text="Setters"
                                    Margin="4,4,4,0" />
                         <ListBox Style="{x:Null}"
                                  Template="{StaticResource Snoop.TriggersView.ListBoxControlTemplate}"
-                                 Margin="8,4" 
-                                 ItemsSource="{Binding Setters}" 
+                                 Margin="8,4"
+                                 ItemsSource="{Binding Setters}"
                                  Grid.IsSharedSizeScope="True"
                                  ScrollViewer.VerticalScrollBarVisibility="Disabled"
                                  Visibility="{Binding Setters.IsEmpty, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}, ConverterParameter=True}"
@@ -195,35 +194,35 @@
                                    Visibility="{Binding Setters.IsEmpty, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}}"
                                    Opacity="0.6" />
 
-                        <TextBlock Style="{x:Null}" 
-                                   Text="EnterActions" 
+                        <TextBlock Style="{x:Null}"
+                                   Text="EnterActions"
                                    Margin="4,4,4,0"
                                    Visibility="{Binding EnterActions.IsEmpty, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}, ConverterParameter=True}" />
                         <ListBox Style="{x:Null}"
                                  Template="{StaticResource Snoop.TriggersView.ListBoxControlTemplate}"
-                                 Margin="8,4" 
-                                 ItemsSource="{Binding EnterActions}" 
+                                 Margin="8,4"
+                                 ItemsSource="{Binding EnterActions}"
                                  Grid.IsSharedSizeScope="True"
                                  ScrollViewer.VerticalScrollBarVisibility="Disabled"
                                  Visibility="{Binding EnterActions.IsEmpty, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}, ConverterParameter=True}" />
-                                 
-                        <TextBlock Style="{x:Null}" 
-                                   Text="ExitActions" 
+
+                        <TextBlock Style="{x:Null}"
+                                   Text="ExitActions"
                                    Margin="4,4,4,0"
                                    Visibility="{Binding ExitActions.IsEmpty, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}, ConverterParameter=True}" />
                         <ListBox Style="{x:Null}"
                                  Template="{StaticResource Snoop.TriggersView.ListBoxControlTemplate}"
-                                 Margin="8,4" 
-                                 ItemsSource="{Binding ExitActions}" 
+                                 Margin="8,4"
+                                 ItemsSource="{Binding ExitActions}"
                                  Grid.IsSharedSizeScope="True"
                                  ScrollViewer.VerticalScrollBarVisibility="Disabled"
                                  Visibility="{Binding ExitActions.IsEmpty, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}, ConverterParameter=True}" />
                     </StackPanel>
                 </HeaderedContentControl>
                 <DataTemplate.Triggers>
-                    <DataTrigger Binding="{Binding IsActive}" 
+                    <DataTrigger Binding="{Binding IsActive}"
                                  Value="True">
-                        <Setter Property="Background" 
+                        <Setter Property="Background"
                                 Value="{DynamicResource ActiveTriggerBrush}"
                                 TargetName="triggerControl" />
                     </DataTrigger>
@@ -265,7 +264,7 @@
                 </ItemsControl.GroupStyle>
             </ItemsControl>
         </ScrollViewer>
-        
+
         <!--<GridSplitter Grid.Row="1"
                       Height="4"
                       HorizontalAlignment="Stretch"

@@ -14,6 +14,7 @@ All other rights reserved.
         xmlns:infrastructure="clr-namespace:Snoop.Infrastructure"
         xmlns:converters="clr-namespace:Snoop.Converters"
         xmlns:snoopwpf="urn:snoopwpf"
+        xmlns:options="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
         x:Class="Snoop.AppChooser"
         Icon="Snoop.ico"
         Title="Snoop"
@@ -34,19 +35,22 @@ All other rights reserved.
         x:Name="Root">
     <Window.Resources>
         <!-- mouseOverBackgroundBrush -->
-        <RadialGradientBrush x:Key="mouseOverBackgroundBrush">
+        <RadialGradientBrush x:Key="mouseOverBackgroundBrush"
+                             options:Freeze="True">
             <GradientStop Color="#FFE3E5F0" Offset="0.439" />
             <GradientStop Color="#FFB2E3FF" Offset="1" />
         </RadialGradientBrush>
 
         <!-- glassyGradientBrush -->
-        <LinearGradientBrush x:Key="glassyGradientBrush" EndPoint="0.25,0.067" StartPoint="0.75,0.933">
+        <LinearGradientBrush x:Key="glassyGradientBrush" EndPoint="0.25,0.067" StartPoint="0.75,0.933"
+                             options:Freeze="True">
             <GradientStop Color="#FF329CA5" Offset="0" />
             <GradientStop Color="#FFAEF2FA" Offset="1" />
         </LinearGradientBrush>
 
         <!-- blueSteelGradientBrush -->
-        <LinearGradientBrush x:Key="blueSteelGradientBrush" EndPoint="0.501,-0.007" StartPoint="0.501,1.007">
+        <LinearGradientBrush x:Key="blueSteelGradientBrush" EndPoint="0.501,-0.007" StartPoint="0.501,1.007"
+                             options:Freeze="True">
             <GradientStop Color="#FF0B9FF2" Offset="0.787" />
             <GradientStop Color="#FF007674" Offset="0" />
             <GradientStop Color="#FF004468" Offset="0.257" />

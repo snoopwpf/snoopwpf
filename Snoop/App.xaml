@@ -14,7 +14,7 @@ All other rights reserved.
 	<Application.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Simple Styles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Snoop.Core;component/Styles.xaml"/>
 			</ResourceDictionary.MergedDictionaries>
 
             <!-- appChooserButtonStyle -->

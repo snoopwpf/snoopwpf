@@ -5,12 +5,10 @@
 
 namespace Snoop.Infrastructure
 {
-    using System;
-
     public interface ISkipDelve
     {
         object? NextValue { get; }
 
-        Type? NextValueType { get; }
+        BindableType? NextValueType { get; }
     }
 }

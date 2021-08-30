@@ -5,11 +5,9 @@
 
 namespace Snoop.Data.Tree
 {
-    using System;
     using System.ComponentModel;
     using System.Windows;
     using System.Windows.Data;
-    using System.Windows.Markup;
 
     public class ResourceDictionaryTreeItem : TreeItem
     {
@@ -17,6 +15,7 @@ namespace Snoop.Data.Tree
         private static readonly SortDescription displayNameSortDescription = new(nameof(DisplayName), ListSortDirection.Ascending);
 
         private readonly ResourceDictionary dictionary;
+        private TreeItem? placeholderChild;
 
         public ResourceDictionaryTreeItem(ResourceDictionary dictionary, TreeItem? parent, TreeService treeService)
             : base(dictionary, parent, treeService)
@@ -47,8 +46,34 @@ namespace Snoop.Data.Tree
 
         protected override void ReloadCore()
         {
+            if (this.IsExpanded)
+            {
+                this.ReallyLoadChildren();
+                return;
+            }
+
+            if (this.dictionary.MergedDictionaries.Count > 0
+                || this.dictionary.Keys.Count > 0)
+            {
+                this.placeholderChild = new ResourceItem("Placeholder", "Placeholder", this, this.TreeService, false);
+                this.AddChild(this.placeholderChild);
+            }
+        }
+
+        private void ReallyLoadChildren()
+        {
+            if (this.placeholderChild is not null)
+            {
+                if (this.RemoveChild(this.placeholderChild) == false)
+                {
+                    return;
+                }
+            }
+
             var order = 0;
-            foreach (var mergedDictionary in this.dictionary.MergedDictionaries)
+            var resourceDictionary = this.dictionary;
+
+            foreach (var mergedDictionary in resourceDictionary.MergedDictionaries)
             {
                 var resourceDictionaryItem = new ResourceDictionaryTreeItem(mergedDictionary, this, this.TreeService)
                 {
@@ -56,51 +81,42 @@ namespace Snoop.Data.Tree
                 };
                 resourceDictionaryItem.Reload();
 
-                this.Children.Add(resourceDictionaryItem);
+                this.AddChild(resourceDictionaryItem);
 
                 ++order;
             }
 
-            var resourceDictionary = this.dictionary;
             foreach (var key in resourceDictionary.Keys)
             {
-                Exception? exception = null;
-                object? item = null;
-                try
-                {
-                    item = resourceDictionary[key];
-                }
-                catch (Exception ex)
-                {
-                    // Sometimes we can get an exception ... because the xaml you are Snoop(ing) is bad.
-                    // e.g. I got this once when I was Snoop(ing) some xaml that was referring to an image resource that was no longer there.
-                    // Wrong style inheritance like this also cause exceptions here:
-                    // <Style x:Key="BlahStyle" TargetType="{x:Type RichTextBox}"/>
-                    // <Style x:Key="BlahBlahStyle" BasedOn="{StaticResource BlahStyle}" TargetType="{x:Type TextBoxBase}"/>
-
-                    // We only get an exception once. The next time through the value just comes back null.
-
-                    exception = ex;
-                }
+                resourceDictionary.TryGetValue(key, out var item, out var exception);
 
                 if (item is not null
+                    || exception is not null
                     || key is not null)
                 {
-                    this.Children.Add(new ResourceItem(item ?? exception ?? key!, key!, this, this.TreeService, exception is not null));
+                    this.AddChild(new ResourceItem(item ?? exception ?? key!, key, this, this.TreeService, exception is not null));
                 }
+            }
+        }
+
+        protected override void OnPropertyChanged(string propertyName)
+        {
+            base.OnPropertyChanged(propertyName);
+
+            if (propertyName is nameof(this.IsExpanded)
+                && this.IsExpanded)
+            {
+                this.ReallyLoadChildren();
             }
         }
 
         public override string ToString()
         {
-            var source = this.dictionary.Source?.ToString();
+            var source = this.dictionary.Source?.ToString() ?? "Runtime Dictionary";
 
-            if (string.IsNullOrEmpty(source))
-            {
-                return $"{this.Children.Count} resources";
-            }
+            var childrenCount = this.dictionary.MergedDictionaries.Count + this.dictionary.Keys.Count;
 
-            return $"{this.Children.Count} resources ({source})";
+            return $"{childrenCount} resources ({source})";
         }
     }
 
@@ -109,12 +125,14 @@ namespace Snoop.Data.Tree
         private readonly object? key;
         private readonly bool hasError;
 
-        public ResourceItem(object target, object key, TreeItem parent, TreeService treeService, bool hasError)
+        public ResourceItem(object target, object? key, TreeItem parent, TreeService treeService, bool hasError)
             : base(target, parent, treeService)
         {
             this.key = key;
             this.hasError = hasError;
             this.SortOrder = int.MaxValue;
+
+            this.ShouldBeAnalyzed = false;
         }
 
         public override string DisplayName => this.key?.ToString() ?? "{x:Null}";

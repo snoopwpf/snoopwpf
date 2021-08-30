@@ -125,7 +125,7 @@ namespace Snoop.Controls
 
         private PropertyInformation? selection;
 
-        public Type? Type
+        public BindableType? Type
         {
             get
             {
@@ -405,16 +405,16 @@ namespace Snoop.Controls
             }
         }
 
-        private void Sort(Comparison<PropertyInformation> comparator, ListSortDirection newDirection)
+        private void Sort(Comparison<PropertyInformation> comparison, ListSortDirection newDirection)
         {
-            this.Sort(comparator, newDirection, this.Properties);
-            this.Sort(comparator, newDirection, this.allProperties);
+            this.Sort(comparison, newDirection, this.Properties);
+            this.Sort(comparison, newDirection, this.allProperties);
         }
 
-        private void Sort(Comparison<PropertyInformation> comparator, ListSortDirection newDirection, ObservableCollection<PropertyInformation> propertiesToSort)
+        private void Sort(Comparison<PropertyInformation> comparison, ListSortDirection newDirection, ObservableCollection<PropertyInformation> propertiesToSort)
         {
             var sorter = new List<PropertyInformation>(propertiesToSort);
-            sorter.Sort(comparator);
+            sorter.Sort(comparison);
 
             if (newDirection == ListSortDirection.Descending)
             {
@@ -458,12 +458,12 @@ namespace Snoop.Controls
 
         private static int CompareValues(PropertyInformation one, PropertyInformation two)
         {
-            return string.Compare(one.StringValue, two.StringValue);
+            return string.Compare(one.StringValue, two.StringValue, StringComparison.Ordinal);
         }
 
         private static int CompareValueSources(PropertyInformation one, PropertyInformation two)
         {
-            return string.Compare(one.ValueSource.BaseValueSource.ToString(), two.ValueSource.BaseValueSource.ToString());
+            return string.Compare(one.ValueSource.BaseValueSource.ToString(), two.ValueSource.BaseValueSource.ToString(), StringComparison.Ordinal);
         }
 
         #region INotifyPropertyChanged Members

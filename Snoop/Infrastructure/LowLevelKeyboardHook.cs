@@ -11,8 +11,10 @@
     {
         private readonly PresentationSource presentationSource;
 #pragma warning disable SA1310 // Field names should not contain underscore
+        // ReSharper disable InconsistentNaming
         private static readonly IntPtr WM_KEYDOWN = new(0x0100);
         private static readonly IntPtr WM_KEYUP = new(0x0101);
+        // ReSharper restore InconsistentNaming
 #pragma warning restore SA1310 // Field names should not contain underscore
 
         private IntPtr hookId = IntPtr.Zero;
@@ -91,6 +93,7 @@
         [MethodImpl(MethodImplOptions.NoInlining)]
         private IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
         {
+            // ReSharper disable once InconsistentNaming
             const int HC_ACTION = 0;
             //you need to call CallNextHookEx without further processing
             //and return the value returned by CallNextHookEx
@@ -120,6 +123,7 @@
             return keyEventArgs;
         }
 
+        // ReSharper disable InconsistentNaming
         [StructLayout(LayoutKind.Sequential)]
         private struct KBDLLHOOKSTRUCT
         {
@@ -138,5 +142,7 @@
             LLKHF_ALTDOWN = 0x20,
             LLKHF_UP = 0x80,
         }
+
+        // ReSharper restore InconsistentNaming
     }
 }

@@ -14,49 +14,59 @@ namespace Snoop.Infrastructure
     {
         public static UIElement? CreateIfPossible(object? item)
         {
-            if (item is Window && VisualTreeHelper.GetChildrenCount((Visual)item) == 1)
+            if (item is Window window
+                && VisualTreeHelper.GetChildrenCount(window) == 1)
             {
-                item = VisualTreeHelper.GetChild((Visual)item, 0);
+                item = VisualTreeHelper.GetChild(window, 0);
             }
 
-            if (item is FrameworkElement)
+            switch (item)
             {
-                var uiElement = (FrameworkElement)item;
-                return CreateRectangleForFrameworkElement(uiElement);
-            }
-            else if (item is Visual)
-            {
-                var visual = (Visual)item;
-                return CreateRectangleForVisual(visual);
-            }
-            else if (item is ResourceDictionary)
-            {
-                var stackPanel = new StackPanel();
-
-                foreach (var value in ((ResourceDictionary)item).Values)
-                {
-                    var element = CreateIfPossible(value);
-                    if (element is not null)
+                case FrameworkElement element:
                     {
-                        stackPanel.Children.Add(element);
+                        return CreateRectangleForFrameworkElement(element);
                     }
-                }
 
-                return stackPanel;
-            }
-            else if (item is Brush)
-            {
-                var rect = new Rectangle();
-                rect.Width = 10;
-                rect.Height = 10;
-                rect.Fill = (Brush)item;
-                return rect;
-            }
-            else if (item is ImageSource)
-            {
-                var image = new Image();
-                image.Source = (ImageSource)item;
-                return image;
+                case Visual visual:
+                    {
+                        return CreateRectangleForVisual(visual);
+                    }
+
+                case ResourceDictionary resourceDictionary:
+                    {
+                        var stackPanel = new StackPanel();
+
+                        foreach (var value in resourceDictionary.Values)
+                        {
+                            var element = CreateIfPossible(value);
+                            if (element is not null)
+                            {
+                                stackPanel.Children.Add(element);
+                            }
+                        }
+
+                        return stackPanel;
+                    }
+
+                case Brush brush:
+                    {
+                        var rect = new Rectangle
+                        {
+                            Width = 10,
+                            Height = 10,
+                            Fill = brush
+                        };
+                        return rect;
+                    }
+
+                case ImageSource imageSource:
+                    {
+                        var image = new Image
+                        {
+                            Source = imageSource
+                        };
+                        return image;
+                    }
             }
 
             return null;
@@ -64,12 +74,17 @@ namespace Snoop.Infrastructure
 
         private static UIElement CreateRectangleForVisual(Visual uiElement)
         {
-            var brush = new VisualBrush(uiElement);
-            brush.Stretch = Stretch.Uniform;
-            var rect = new Rectangle();
-            rect.Fill = brush;
-            rect.Width = 50;
-            rect.Height = 50;
+            var brush = new VisualBrush(uiElement)
+            {
+                Stretch = Stretch.Uniform
+            };
+
+            var rect = new Rectangle
+            {
+                Fill = brush,
+                Width = 50,
+                Height = 50
+            };
 
             return rect;
         }
@@ -83,9 +98,17 @@ namespace Snoop.Infrastructure
             }
 
             brush.Stretch = Stretch.Uniform;
-            var rect = new Rectangle();
-            rect.Fill = brush;
-            if (uiElement.ActualHeight == 0 && uiElement.ActualWidth == 0) //sometimes the actual size might be 0 despite there being a rendered visual with a size greater than 0. This happens often on a custom panel (http://snoopwpf.codeplex.com/workitem/7217). Having a fixed size visual brush remedies the problem.
+
+            var rect = new Rectangle
+            {
+                Fill = brush
+            };
+
+            // Sometimes the actual size might be 0 despite there being a rendered visual with a size greater than 0.
+            // This happens often on a custom panel (http://snoopwpf.codeplex.com/workitem/7217).
+            // Having a fixed size visual brush remedies the problem.
+            if (uiElement.ActualHeight == 0
+                && uiElement.ActualWidth == 0)
             {
                 rect.Width = 50;
                 rect.Height = 50;

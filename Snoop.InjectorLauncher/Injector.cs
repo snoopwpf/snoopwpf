@@ -2,7 +2,6 @@ namespace Snoop.InjectorLauncher
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.IO;
     using System.Reflection;
     using System.Runtime.InteropServices;
@@ -18,8 +17,7 @@ namespace Snoop.InjectorLauncher
         {
             var logMessage = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss") + ": " + message;
 
-            Trace.WriteLine(logMessage);
-            Console.WriteLine(logMessage);
+            LogHelper.WriteLine(message);
 
             var applicationDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             applicationDataPath += "\\Snoop";
@@ -77,8 +75,6 @@ namespace Snoop.InjectorLauncher
 
             var stringForRemoteProcess = pathToDll;
 
-            Trace.WriteLine(Marshal.GetLastWin32Error());
-
             var bufLen = (stringForRemoteProcess.Length + 1) * Marshal.SizeOf(typeof(char));
             var remoteAddress = NativeMethods.VirtualAllocEx(processWrapper.Handle, IntPtr.Zero, (uint)bufLen, NativeMethods.AllocationType.Commit, NativeMethods.MemoryProtection.ReadWrite);
 
@@ -98,7 +94,7 @@ namespace Snoop.InjectorLauncher
                 if (writeProcessMemoryResult == false
                     || bytesWritten == 0)
                 {
-                    throw Marshal.GetExceptionForHR(Marshal.GetLastWin32Error());
+                    throw Marshal.GetExceptionForHR(Marshal.GetLastWin32Error()) ?? new Exception("Unknown error while trying to write to foreign process memory.");
                 }
 
                 var hLibrary = NativeMethods.GetModuleHandle("kernel32");
@@ -107,7 +103,7 @@ namespace Snoop.InjectorLauncher
                 // (via CreateRemoteThread & LoadLibrary)
                 var procAddress = NativeMethods.GetProcAddress(hLibrary, "LoadLibraryW");
 
-                if (procAddress == UIntPtr.Zero)
+                if (procAddress == IntPtr.Zero)
                 {
                     LogMessage("Could get proc address for LoadLibraryW.");
                     throw new Win32Exception();
@@ -184,7 +180,7 @@ namespace Snoop.InjectorLauncher
 
             var procAddress = NativeMethods.GetProcAddress(hLibrary, "FreeLibraryAndExitThread");
 
-            if (procAddress == UIntPtr.Zero)
+            if (procAddress == IntPtr.Zero)
             {
                 // todo: error handling
             }
@@ -218,8 +214,8 @@ namespace Snoop.InjectorLauncher
 
         private static void InjectSnoop(ProcessWrapper processWrapper, InjectorData injectorData)
         {
-            var injectorDllName = $"Snoop.GenericInjector.{processWrapper.Bitness}.dll";
-            var pathToInjectorDll = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), injectorDllName);
+            var injectorDllName = $"Snoop.GenericInjector.{processWrapper.Architecture}.dll";
+            var pathToInjectorDll = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, injectorDllName);
 
             LogMessage($"Trying to load \"{pathToInjectorDll}\"...");
 
@@ -228,13 +224,16 @@ namespace Snoop.InjectorLauncher
                 throw new FileNotFoundException("Could not find injector dll.", pathToInjectorDll);
             }
 
+            var tempLogFile = Path.GetTempFileName();
+
             var parameters = new[]
             {
                 processWrapper.SupportedFrameworkName,
                 injectorData.FullAssemblyPath,
                 injectorData.ClassName,
                 injectorData.MethodName,
-                injectorData.SettingsFile
+                injectorData.SettingsFile,
+                tempLogFile
             };
 
             var stringForRemoteProcess = string.Join("<|>", parameters);
@@ -242,12 +241,12 @@ namespace Snoop.InjectorLauncher
             var bufLen = (stringForRemoteProcess.Length + 1) * Marshal.SizeOf(typeof(char));
 
             LogMessage($"Trying to allocate {bufLen} bytes in foreign process...");
-            Trace.WriteLine(Marshal.GetLastWin32Error());
 
             var remoteAddress = NativeMethods.VirtualAllocEx(processWrapper.Handle, IntPtr.Zero, (uint)bufLen, NativeMethods.AllocationType.Commit | NativeMethods.AllocationType.Reserve, NativeMethods.MemoryProtection.ReadWrite);
 
             if (remoteAddress == IntPtr.Zero)
             {
+                File.Delete(tempLogFile);
                 throw new Win32Exception();
             }
 
@@ -263,7 +262,8 @@ namespace Snoop.InjectorLauncher
                 if (writeProcessMemoryResult == false
                     || bytesWritten == 0)
                 {
-                    throw Marshal.GetExceptionForHR(Marshal.GetLastWin32Error());
+                    File.Delete(tempLogFile);
+                    throw Marshal.GetExceptionForHR(Marshal.GetLastWin32Error()) ?? new Exception("Unknown error while trying to write to foreign process.");
                 }
 
                 var hLibrary = IntPtr.Zero;
@@ -280,11 +280,15 @@ namespace Snoop.InjectorLauncher
                     {
                         var remoteProcAddress = NativeMethods.GetRemoteProcAddress(processWrapper.Process, injectorDllName, "ExecuteInDefaultAppDomain");
 
-                        if (remoteProcAddress == UIntPtr.Zero)
+                        if (remoteProcAddress == IntPtr.Zero)
                         {
+                            File.Delete(tempLogFile);
                             LogMessage("Could not get proc address for \"ExecuteInDefaultAppDomain\".");
                             return;
                         }
+
+                        LogMessage($"Calling \"ExecuteInDefaultAppDomain\" on injector component...");
+                        LogMessage($"Args = {stringForRemoteProcess}");
 
                         var remoteThread = NativeMethods.CreateRemoteThread(processWrapper.Handle, IntPtr.Zero, 0, remoteProcAddress, remoteAddress, 0, out _);
 
@@ -292,6 +296,7 @@ namespace Snoop.InjectorLauncher
                         {
                             if (remoteThread == IntPtr.Zero)
                             {
+                                File.Delete(tempLogFile);
                                 LogMessage("Could not create remote thread.");
                                 throw new Win32Exception();
                             }
@@ -303,9 +308,15 @@ namespace Snoop.InjectorLauncher
 
                             LogMessage($"Received \"{resultFromExecuteInDefaultAppDomain}\" from injector component.");
 
+                            LogMessage("##############################################");
+                            LogMessage("Log from injector component:");
+                            LogMessage("##############################################");
+                            LogMessage(File.ReadAllText(tempLogFile));
+                            LogMessage("##############################################");
+
                             if (resultFromExecuteInDefaultAppDomain != IntPtr.Zero)
                             {
-                                throw Marshal.GetExceptionForHR((int)resultFromExecuteInDefaultAppDomain.ToInt64());
+                                throw Marshal.GetExceptionForHR((int)resultFromExecuteInDefaultAppDomain.ToInt64()) ?? new Exception("Unknown error while executing in foreign process.");
                             }
                         }
                         finally
@@ -337,6 +348,8 @@ namespace Snoop.InjectorLauncher
             }
             finally
             {
+                File.Delete(tempLogFile);
+
                 Marshal.FreeHGlobal(address);
             }
         }

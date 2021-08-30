@@ -14,22 +14,14 @@ All other rights reserved.
 	Width="500"
 	Height="300"
     x:Name="editUserFilters">
-	<Window.Resources>
-		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="../Icons.xaml"/>
-			</ResourceDictionary.MergedDictionaries>
-		</ResourceDictionary>
-	</Window.Resources>
-	
-	<Grid Margin="4">
+    <Grid Margin="4">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
-		
+
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="75"/>
 			<ColumnDefinition Width="*"/>
@@ -49,6 +41,7 @@ All other rights reserved.
 		    Style="{x:Null}"
 			VerticalAlignment="Center"
             IsReadOnly="{Binding Path=SelectedItem.IsReadOnly, ElementName=filterSetList}"
+            IsReadOnlyCaretVisible="True"
 			Text="{Binding Path=SelectedItem.DisplayName, ElementName=filterSetList}"
 		/>
 		<TextBlock
@@ -66,6 +59,7 @@ All other rights reserved.
 			VerticalAlignment="Center"
 			Margin="0,4,0,0"
             IsReadOnly="{Binding Path=SelectedItem.IsReadOnly, ElementName=filterSetList}"
+            IsReadOnlyCaretVisible="True"
 			Text="{Binding Path=SelectedItem.Properties, ElementName=filterSetList, Converter={x:Static converters:CsvStringToArrayConverter.Default}}"
 		/>
 
@@ -84,7 +78,7 @@ All other rights reserved.
 				</DataTemplate>
 			</ListBox.ItemTemplate>
 		</ListBox>
-		
+
 		<StackPanel
 			Grid.Row="3"
 			Grid.Column="1"
@@ -125,7 +119,7 @@ All other rights reserved.
 				Height="20"
 				Click="UpHandler"
 			>
-				<Image Style="{x:Null}" Source="{StaticResource scopeUpDrawingImage}" Margin="3"/>
+				<Image Style="{x:Null}" Source="{DynamicResource upDrawingImage}" Margin="3"/>
 			</Button>
 			<Button
 				x:Name="MoveDown"
@@ -135,11 +129,7 @@ All other rights reserved.
 				Margin="0,5,0,0"
 				Click="DownHandler"
 			>
-				<Image Style="{x:Null}" Source="{StaticResource scopeUpDrawingImage}" Margin="3" RenderTransformOrigin="0.5,0.5">
-					<Image.RenderTransform>
-						<RotateTransform Angle="180"/>
-					</Image.RenderTransform>
-				</Image>
+				<Image Style="{x:Null}" Source="{DynamicResource downDrawingImage}" Margin="3" />
 			</Button>
 			<Button
 			    Style="{x:Null}"

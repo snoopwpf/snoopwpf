@@ -35,15 +35,15 @@
 
   <!-- Analyzer references -->
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" privateAssets="all" includeAssets="build;compile" />
+    <PackageReference Include="JetBrains.Annotations" PrivateAssets="all" IncludeAssets="build;compile" />
     
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" privateAssets="all" includeAssets="build;analyzers" />
-
-    <!-- <PackageReference Include="PropertyChangedAnalyzers" privateAssets="all" includeAssets="build;analyzers" /> -->
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" IncludeAssets="build;analyzers" />
+   
     <!--<PackageReference Include="ReflectionAnalyzers" version="0.1-dev" privateAssets="all" includeAssets="build;analyzers" />-->
 
-    <PackageReference Include="StyleCop.Analyzers" privateAssets="all" includeAssets="build;analyzers" />
-    <PackageReference Include="WpfAnalyzers" privateAssets="all" includeAssets="build;analyzers" />
+    <PackageReference Include="StyleCop.Analyzers" PrivateAssets="all" IncludeAssets="build;analyzers" />
+    <PackageReference Include="WpfAnalyzers" PrivateAssets="all" IncludeAssets="build;analyzers" />
+    <!--<PackageReference Include="PropertyChangedAnalyzers" PrivateAssets="all" IncludeAssets="build;analyzers" />-->
   </ItemGroup>
 
   <Target Name="ForceRestore" BeforeTargets="ResolvePackageAssets" DependsOnTargets="Restore" />

@@ -13,9 +13,8 @@ namespace Snoop.Infrastructure
     using System.Windows.Interop;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
-    using JetBrains.Annotations;
 
-    public class VisualCaptureUtil
+    public static class VisualCaptureUtil
     {
         private const double BaseDpi = 96;
 
@@ -34,7 +33,7 @@ namespace Snoop.Infrastructure
                 return;
             }
 
-            var renderTargetBitmap = RenderVisualWithHighQuality(visual, dpi);
+            var renderTargetBitmap = RenderVisualWithHighQuality(visual, dpi, dpi);
 
             SaveAsPng(renderTargetBitmap, filename);
         }
@@ -79,7 +78,7 @@ namespace Snoop.Infrastructure
         /// <remarks>
         /// This way we workaround a limitation in <see cref="VisualBrush"/> which causes poor quality for larger visuals.
         /// </remarks>
-        public static RenderTargetBitmap RenderVisualWithHighQuality(Visual visual, int dpi, PixelFormat? pixelFormat = null, Viewport3D? viewport3D = null)
+        public static RenderTargetBitmap RenderVisualWithHighQuality(Visual visual, int dpiX, int dpiY, PixelFormat? pixelFormat = null, Viewport3D? viewport3D = null)
         {
             var size = GetSize(visual);
 
@@ -89,17 +88,18 @@ namespace Snoop.Infrastructure
                 DrawVisualInTiles(visual, drawingContext, size);
             }
 
-            var renderTargetBitmap = RenderVisual(drawingVisual, size, dpi, pixelFormat, viewport3D);
+            var renderTargetBitmap = RenderVisual(drawingVisual, size, dpiX, dpiY, pixelFormat, viewport3D);
             return renderTargetBitmap;
         }
 
-        public static RenderTargetBitmap RenderVisual(Visual visual, Size bounds, int dpi, PixelFormat? pixelFormat = null, Viewport3D? viewport3D = null)
+        public static RenderTargetBitmap RenderVisual(Visual visual, Size bounds, int dpiX, int dpiY, PixelFormat? pixelFormat = null, Viewport3D? viewport3D = null)
         {
-            var scale = dpi / BaseDpi;
+            var scaleX = dpiX / BaseDpi;
+            var scaleY = dpiY / BaseDpi;
 
             pixelFormat ??= PixelFormats.Pbgra32;
 
-            var renderTargetBitmap = new RenderTargetBitmap((int)Math.Ceiling(scale * bounds.Width), (int)Math.Ceiling(scale * bounds.Height), dpi, dpi, pixelFormat.Value);
+            var renderTargetBitmap = new RenderTargetBitmap((int)Math.Ceiling(scaleX * bounds.Width), (int)Math.Ceiling(scaleY * bounds.Height), dpiX, dpiY, pixelFormat.Value);
 
             if (viewport3D is not null)
             {

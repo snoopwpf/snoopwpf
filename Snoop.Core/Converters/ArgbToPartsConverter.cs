@@ -1,4 +1,4 @@
-﻿// (c) Copyright Cory Plotts.
+// (c) Copyright Cory Plotts.
 // This source is subject to the Microsoft Public License (Ms-PL).
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
@@ -21,7 +21,7 @@ namespace Snoop.Converters
         {
             // value (string)   ARGB text (i.e. #FF102030)
             // parameter (int)  which "part" to return (0 = alpha, 1 = Red, 2 = Green, 3 = Blue)
-            // return (string)  the 2-digit hex value for the requested portion 
+            // return (string)  the 2-digit hex value for the requested portion
 
             if (value is null || value == DependencyProperty.UnsetValue)
             {

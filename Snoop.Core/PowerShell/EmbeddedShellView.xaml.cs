@@ -3,6 +3,8 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
+#pragma warning disable CA1003
+
 namespace Snoop.PowerShell
 {
     using System;
@@ -61,7 +63,14 @@ namespace Snoop.PowerShell
 
                 if (targetSnoopUi is not null)
                 {
-                    embeddedShellView.Start(targetSnoopUi);
+                    try
+                    {
+                        embeddedShellView.Start(targetSnoopUi);
+                    }
+                    catch (Exception exception)
+                    {
+                        embeddedShellView.outputTextBox.AppendText(exception.ToString());
+                    }
                 }
             });
         }
@@ -168,9 +177,13 @@ namespace Snoop.PowerShell
             this.Shutdown();
         }
 
-        private void OnSnoopUiOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void OnSnoopUiOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            var snoopUi = (SnoopUI)sender;
+            if (sender is not SnoopUI snoopUi
+                || this.host is null)
+            {
+                return;
+            }
 
             switch (e.PropertyName)
             {
@@ -184,7 +197,7 @@ namespace Snoop.PowerShell
             }
         }
 
-        private void OnSnoopUiSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => this.NotifySelected(this.snoopUi?.CurrentSelection);
+        private void OnSnoopUiSelectedItemChanged(object? sender, RoutedPropertyChangedEventArgs<object> e) => this.NotifySelected(this.snoopUi?.CurrentSelection);
 
         private void OnProviderLocationChanged(TreeItem item) =>
             this.Dispatcher.RunInDispatcherAsync(() =>

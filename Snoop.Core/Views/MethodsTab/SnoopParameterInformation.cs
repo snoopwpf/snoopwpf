@@ -11,7 +11,6 @@ namespace Snoop.Views.MethodsTab
     using System.Windows;
     using System.Windows.Input;
     using Snoop.Infrastructure;
-    using Snoop.Infrastructure.Extensions;
 
     public class SnoopParameterInformation : DependencyObject
     {
@@ -20,11 +19,11 @@ namespace Snoop.Views.MethodsTab
 
         public TypeConverter? TypeConverter { get; }
 
-        public Type DeclaringType { get; }
+        public BindableType DeclaringType { get; }
 
         public bool IsCustom => !this.IsEnum && this.TypeConverter?.GetType() == typeof(TypeConverter);
 
-        public bool IsEnum => this.ParameterType?.IsEnum == true;
+        public bool IsEnum => this.ParameterType.IsEnum;
 
         public ICommand CreateCustomParameterCommand
         {
@@ -71,8 +70,7 @@ namespace Snoop.Views.MethodsTab
                 }
             };
 
-            if (this.ParameterValue is null
-                && this.ParameterType is not null)
+            if (this.ParameterValue is null)
             {
                 var typeSelector = GetTypeSelector(this.ParameterType);
                 typeSelector.ShowDialog();
@@ -112,9 +110,9 @@ namespace Snoop.Views.MethodsTab
             this.TypeConverter = TypeDescriptor.GetConverter(this.ParameterType);
         }
 
-        public string ParameterName { get; set; }
+        public string ParameterName { get; }
 
-        public Type ParameterType { get; set; }
+        public BindableType ParameterType { get; }
 
         public object? ParameterValue
         {

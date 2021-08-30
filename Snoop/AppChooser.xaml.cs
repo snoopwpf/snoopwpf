@@ -11,7 +11,6 @@ namespace Snoop
     using System.Diagnostics;
     using System.Linq;
     using System.Threading;
-    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
@@ -74,7 +73,8 @@ namespace Snoop
                         foreach (var process in processes)
                         {
                             var windows = NativeMethods.GetRootWindowsOfProcess(process.Id);
-                            var windowInfoCollection = windows.Select(h => new WindowInfo(h, process));
+                            var windowInfoCollection = windows.Select(h => WindowInfo.GetWindowInfo(h, process));
+
                             foreach (var windowInfo in windowInfoCollection)
                             {
                                 if (windowInfo.IsValidProcess && !this.IsAlreadyInList(process))
@@ -100,7 +100,7 @@ namespace Snoop
         {
             base.OnSourceInitialized(e);
 
-            this.keyboardHook = new LowLevelKeyboardHook(PresentationSource.FromVisual(this));
+            this.keyboardHook = new LowLevelKeyboardHook(PresentationSource.FromVisual(this)!);
             this.keyboardHook.LowLevelKeyUp += KeyboardHook_LowLevelKeyUp;
             this.keyboardHook.Start();
 
@@ -112,7 +112,10 @@ namespace Snoop
         {
             if (Settings.Default.GlobalHotKey.Matches(null, e))
             {
-                var thread = new Thread(AttachToForegroundWindow);
+                var thread = new Thread(AttachToForegroundWindow)
+                    {
+                        Name = "Snoop_AttachToForegroundWindow_Thread"
+                    };
                 thread.SetApartmentState(ApartmentState.STA);
                 thread.Start();
             }
@@ -124,7 +127,7 @@ namespace Snoop
 
             if (foregroundWindow != IntPtr.Zero)
             {
-                var windowInfo = new WindowInfo(foregroundWindow);
+                var windowInfo = WindowInfo.GetWindowInfo(foregroundWindow);
 
                 if (windowInfo.IsValidProcess)
                 {
@@ -135,10 +138,10 @@ namespace Snoop
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            base.OnClosing(e);
-
             // persist the window placement details to the user settings.
             SnoopWindowUtils.SaveWindowPlacement(this, wp => Settings.Default.AppChooserWindowPlacement = wp);
+
+            base.OnClosing(e);
 
             Settings.Default.Save();
         }

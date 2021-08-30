@@ -26,7 +26,7 @@
                         continue;
                     }
 
-                    this.Children.Add(this.TreeService.Construct(child, this));
+                    this.AddChild(this.TreeService.Construct(child, this));
                 }
             }
         }

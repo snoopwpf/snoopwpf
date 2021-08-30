@@ -17,7 +17,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.packages.props = Directory.packages.props
 		global.json = global.json
 		README.md = README.md
+		chocolatey\snoop.nuspec = chocolatey\snoop.nuspec
 		Snoop.ruleset = Snoop.ruleset
+		.vsconfig = .vsconfig
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snoop.Core", "Snoop.Core\Snoop.Core.csproj", "{883A18A9-A386-4342-AC95-9AFC34913FCA}"
@@ -36,6 +38,16 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snoop.Console", "Snoop.Console\Snoop.Console.csproj", "{9CD2ABCD-5DCA-49CA-9B29-8DEEF8DEC38D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", ".build\_build.csproj", "{F26BF9F3-A62E-4F0B-B04B-2A8E333FF5FA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snoop.Core.Tests", "Snoop.Core.Tests\Snoop.Core.Tests.csproj", "{7ABD1C31-D98A-43D8-8420-3498C4B51ED3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{50CC90EC-2B3B-447B-9490-4FFAD3790E49}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{357FE096-4AA8-4FBA-B134-AB3C297346BC}"
+ProjectSection(SolutionItems) = preProject
+	.github\workflows\continuous.yml = .github\workflows\continuous.yml
+	.github\workflows\deployment.yml = .github\workflows\deployment.yml
+EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,11 +99,22 @@ Global
 		{F26BF9F3-A62E-4F0B-B04B-2A8E333FF5FA}.CI_Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F26BF9F3-A62E-4F0B-B04B-2A8E333FF5FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F26BF9F3-A62E-4F0B-B04B-2A8E333FF5FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7ABD1C31-D98A-43D8-8420-3498C4B51ED3}.CI_Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7ABD1C31-D98A-43D8-8420-3498C4B51ED3}.CI_Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7ABD1C31-D98A-43D8-8420-3498C4B51ED3}.CI_Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7ABD1C31-D98A-43D8-8420-3498C4B51ED3}.CI_Release|Any CPU.Build.0 = Release|Any CPU
+		{7ABD1C31-D98A-43D8-8420-3498C4B51ED3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7ABD1C31-D98A-43D8-8420-3498C4B51ED3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7ABD1C31-D98A-43D8-8420-3498C4B51ED3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7ABD1C31-D98A-43D8-8420-3498C4B51ED3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F8E09F8F-9250-46F3-B17D-66C71921760D}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{357FE096-4AA8-4FBA-B134-AB3C297346BC} = {50CC90EC-2B3B-447B-9490-4FFAD3790E49}
 	EndGlobalSection
 EndGlobal
