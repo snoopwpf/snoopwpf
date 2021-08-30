@@ -245,13 +245,15 @@ class Build : NukeBuild
                 $"{ProjectName}.wxs -ext WixUIExtension -o \"{tempDirectory / $"{ProjectName}.wixobj"}\" -dProductVersion=\"{MajorMinorPatch}\" -nologo");
             candleProcess.AssertZeroExitCode();
 
-            var outputFile = $"{ArtifactsDirectory / $"{ProjectName}.{NuGetVersion}.msi"}";
-            var lightProcess = ProcessTasks.StartProcess(LightExecutable,
-                $"-out \"{outputFile}\" -b \"{CurrentBuildOutputDirectory}\" \"{tempDirectory / $"{ProjectName}.wixobj"}\" -ext WixUIExtension -dProductVersion=\"{MajorMinorPatch}\" -pdbout \"{tempDirectory / $"{ProjectName}.wixpdb"}\" -nologo -sice:ICE61");
-            lightProcess.AssertZeroExitCode();
+            {
+                var outputFile = $"{ArtifactsDirectory / $"{ProjectName}.{NuGetVersion}.msi"}";
+                var lightProcess = ProcessTasks.StartProcess(LightExecutable,
+                    $"-out \"{outputFile}\" -b \"{CurrentBuildOutputDirectory}\" \"{tempDirectory / $"{ProjectName}.wixobj"}\" -ext WixUIExtension -dProductVersion=\"{MajorMinorPatch}\" -pdbout \"{tempDirectory / $"{ProjectName}.wixpdb"}\" -nologo -sice:ICE61");
+                lightProcess.AssertZeroExitCode();
 
-            CheckSumFiles.Add(outputFile);
-            AppVeyor.Instance?.PushArtifact(outputFile);
+                CheckSumFiles.Add(outputFile);
+                AppVeyor.Instance?.PushArtifact(outputFile);
+            }
         });
 
     [PublicAPI]
@@ -289,6 +291,13 @@ class Build : NukeBuild
         .After(Setup)
         .Executes(async () =>
         {
+            {
+                var outputFile = ArtifactsDirectory / $"{ProjectName}.Sign.{NuGetVersion}.zip";
+                CompressionTasks.Compress(ArtifactsDirectory, outputFile);
+                CheckSumFiles.Add(outputFile);
+                AppVeyor.Instance?.PushArtifact(outputFile);
+            }
+
             // ProcessTasks.StartProcess("powershell", $"./.build/SignPath.ps1 {SignPathAuthToken} {SignPathOrganizationId} {SignPathProjectSlug} {SignPathSigningPolicySlug}")
             //     .AssertWaitForExit();
             var result = await SignPathTasks.GetSigningRequestUrlViaAppVeyor(SignPathAuthToken, SignPathOrganizationId, SignPathProjectSlug, SignPathSigningPolicySlug);
