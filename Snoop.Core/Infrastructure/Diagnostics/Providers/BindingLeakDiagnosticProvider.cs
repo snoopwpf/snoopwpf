@@ -1,4 +1,4 @@
-﻿namespace Snoop.Infrastructure.Diagnostics.Providers
+namespace Snoop.Infrastructure.Diagnostics.Providers
 {
     using System;
     using System.Collections;
