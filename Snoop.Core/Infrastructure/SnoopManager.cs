@@ -25,7 +25,7 @@ namespace Snoop.Infrastructure
 
             if (string.IsNullOrEmpty(settingsFile) == false)
             {
-                this.RunInCurrentAppDomain(settingsFile!);
+                this.RunInCurrentAppDomain(settingsFile);
             }
         }
 
