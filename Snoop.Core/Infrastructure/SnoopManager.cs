@@ -66,7 +66,7 @@ namespace Snoop.Infrastructure
         {
             LogHelper.WriteLine("Starting snoop...");
 
-            var settingsData = TransientSettingsData.LoadCurrentIfRequired(settingsFile);
+            var settingsData = TransientSettingsData.LoadCurrent(settingsFile);
 
             IList<AppDomain>? appDomains = null;
 
