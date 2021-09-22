@@ -31,6 +31,7 @@
   - [#219](../../issues/219) - Add a warning to zoomer if target has TextOptions.TextFormattingMode=Display
   - [#226](../../issues/226) - Add support for ARM/ARM64
   - [#227](../../issues/227) - Add support for .NET 6
+  - [#279](../../issues/279) - Improve filter box tooltip
 
 ## 3.0.1
 
