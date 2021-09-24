@@ -257,7 +257,7 @@ namespace Snoop.Infrastructure
 
                 var targetType = this.property.PropertyType;
 
-                try 
+                try
                 {
                     this.property.SetValue(this.Target, StringValueConverter.ConvertFromString(targetType, value));
                 }
@@ -750,8 +750,15 @@ namespace Snoop.Infrastructure
             {
                 if (filter(obj, property))
                 {
-                    var prop = new PropertyInformation(obj, property, property.Name, property.DisplayName);
-                    properties.Add(prop);
+                    try
+                    {
+                        var prop = new PropertyInformation(obj, property, property.Name, property.DisplayName);
+                        properties.Add(prop);
+                    }
+                    catch (Exception e)
+                    {
+                        Trace.TraceError($"Failed to create PropertyInformation for property '{property.Name}' on '{obj}'.{Environment.NewLine}{e}");
+                    }
                 }
             }
 
