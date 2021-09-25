@@ -16,6 +16,7 @@ namespace Snoop.Controls
     using System.Windows.Threading;
     using JetBrains.Annotations;
     using Snoop.Infrastructure;
+    using Snoop.Windows;
 
     public partial class PropertyGrid2 : INotifyPropertyChanged
     {
@@ -212,14 +213,14 @@ namespace Snoop.Controls
             };
             textBox.SetBinding(TextBox.TextProperty, new Binding(nameof(propertyInformation.BindingError)) { Source = propertyInformation, Mode = BindingMode.OneWay });
 
-            var window = new Window
+            var window = new SnoopBaseWindow
             {
                 Content = textBox,
                 Width = 400,
                 Height = 300,
                 Title = "Binding Errors for " + propertyInformation.DisplayName
             };
-            SnoopPartsRegistry.AddSnoopVisualTreeRoot(window);
+
             window.Show();
         }
 
