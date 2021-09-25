@@ -94,8 +94,7 @@ namespace Snoop.Infrastructure
             {
                 LogHelper.WriteLine($"Found {numberOfAppDomains} app domains. Running in multiple app domain mode.");
 
-                var shouldUseMultipleAppDomainMode = settingsData.MultipleAppDomainMode == MultipleAppDomainMode.Ask
-                                                     || settingsData.MultipleAppDomainMode == MultipleAppDomainMode.AlwaysUse;
+                var shouldUseMultipleAppDomainMode = settingsData.MultipleAppDomainMode is MultipleAppDomainMode.Ask or MultipleAppDomainMode.AlwaysUse;
                 if (settingsData.MultipleAppDomainMode == MultipleAppDomainMode.Ask)
                 {
                     var result =
@@ -117,10 +116,14 @@ namespace Snoop.Infrastructure
                 if (shouldUseMultipleAppDomainMode == false
                     || appDomains is null)
                 {
+                    LogHelper.WriteLine("Running in single app domain mode.");
+
                     succeeded = this.RunInCurrentAppDomain(settingsData);
                 }
                 else
                 {
+                    LogHelper.WriteLine("Running in multiple app domain mode.");
+
                     SnoopModes.MultipleAppDomainMode = true;
 
                     // Use environment variable to transport snoop settings file across multiple app domains
@@ -334,69 +337,68 @@ namespace Snoop.Infrastructure
             }
 
             var useMultipleDispatcherMode = false;
-            if (dispatcherRootObjectPairs.Count > 0)
+            if (dispatcherRootObjectPairs.Count <= 0)
             {
-                switch (settingsData.MultipleDispatcherMode)
+                return false;
+            }
+
+            switch (settingsData.MultipleDispatcherMode)
+            {
+                case MultipleDispatcherMode.NeverUse:
+                    useMultipleDispatcherMode = false;
+                    break;
+
+                case MultipleDispatcherMode.AlwaysUse:
+                    useMultipleDispatcherMode = dispatcherRootObjectPairs.Count > 1;
+                    break;
+
+                case MultipleDispatcherMode.Ask when dispatcherRootObjectPairs.Count == 1:
+                    useMultipleDispatcherMode = false;
+                    break;
+
+                default:
                 {
-                    case MultipleDispatcherMode.NeverUse:
-                        useMultipleDispatcherMode = false;
-                        break;
+                    var result =
+                        MessageBox.Show(
+                            "Snoop has noticed windows running in multiple dispatchers.\n\n" +
+                            "Would you like to enter multiple dispatcher mode, and have a separate Snoop window for each dispatcher?\n\n" +
+                            "Without having a separate Snoop window for each dispatcher, you will not be able to Snoop the windows in the dispatcher threads outside of the main dispatcher. " +
+                            "Also, note, that if you bring up additional windows in additional dispatchers (after snooping), you will need to Snoop again in order to launch Snoop windows for those additional dispatchers.",
+                            "Enter Multiple Dispatcher Mode",
+                            MessageBoxButton.YesNo,
+                            MessageBoxImage.Question);
 
-                    // Should we skip the question and always use multiple dispatcher mode?
-                    case MultipleDispatcherMode.AlwaysUse:
-                        useMultipleDispatcherMode = dispatcherRootObjectPairs.Count > 1;
-                        break;
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        useMultipleDispatcherMode = true;
+                    }
 
-                    case MultipleDispatcherMode.Ask when dispatcherRootObjectPairs.Count == 1:
-                        useMultipleDispatcherMode = false;
-                        break;
-
-                    default:
-                        {
-                            var result =
-                                MessageBox.Show(
-                                    "Snoop has noticed windows running in multiple dispatchers.\n\n" +
-                                    "Would you like to enter multiple dispatcher mode, and have a separate Snoop window for each dispatcher?\n\n" +
-                                    "Without having a separate Snoop window for each dispatcher, you will not be able to Snoop the windows in the dispatcher threads outside of the main dispatcher. " +
-                                    "Also, note, that if you bring up additional windows in additional dispatchers (after snooping), you will need to Snoop again in order to launch Snoop windows for those additional dispatchers.",
-                                    "Enter Multiple Dispatcher Mode",
-                                    MessageBoxButton.YesNo,
-                                    MessageBoxImage.Question);
-
-                            if (result == MessageBoxResult.Yes)
-                            {
-                                useMultipleDispatcherMode = true;
-                            }
-
-                            break;
-                        }
+                    break;
                 }
+            }
 
-                if (useMultipleDispatcherMode)
+            if (useMultipleDispatcherMode)
+            {
+                SnoopModes.MultipleDispatcherMode = true;
+
+                var thread = new Thread(DispatchOut)
                 {
-                    SnoopModes.MultipleDispatcherMode = true;
+                    Name = "Snoop_DisptachOut_Thread"
+                };
+                thread.Start(new DispatchOutParameters(settingsData, instanceCreator, dispatcherRootObjectPairs));
 
-                    var thread = new Thread(DispatchOut)
-                        {
-                            Name = "Snoop_DisptachOut_Thread"
-                        };
-                    thread.Start(new DispatchOutParameters(settingsData, instanceCreator, dispatcherRootObjectPairs));
-
-                    // todo: check if we really created something
-                    return true;
-                }
-
-                var dispatcherRootObjectPair = dispatcherRootObjectPairs.FirstOrDefault(x => x.RootObject is Application) ?? dispatcherRootObjectPairs[0];
-
-                dispatcherRootObjectPair.Dispatcher.Invoke((Action)(() =>
-                {
-                    _ = instanceCreator(settingsData, dispatcherRootObjectPair);
-                }));
-
+                // todo: check if we really created something
                 return true;
             }
 
-            return false;
+            var dispatcherRootObjectPairForInstanceCreation = dispatcherRootObjectPairs.FirstOrDefault(x => x.RootObject is Application) ?? dispatcherRootObjectPairs[0];
+
+            dispatcherRootObjectPairForInstanceCreation.Dispatcher.Invoke((Action)(() =>
+            {
+                _ = instanceCreator(settingsData, dispatcherRootObjectPairForInstanceCreation);
+            }));
+
+            return true;
         }
 
         private static void DispatchOut(object? o)

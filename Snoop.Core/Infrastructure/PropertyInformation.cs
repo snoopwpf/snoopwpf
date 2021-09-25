@@ -757,7 +757,7 @@ namespace Snoop.Infrastructure
                     }
                     catch (Exception e)
                     {
-                        Trace.TraceError($"Failed to create PropertyInformation for property '{property.Name}' on '{obj}'.{Environment.NewLine}{e}");
+                        LogHelper.WriteError($"Failed to create PropertyInformation for property '{property.Name}' on '{obj}'.{Environment.NewLine}{e}");
                     }
                 }
             }
