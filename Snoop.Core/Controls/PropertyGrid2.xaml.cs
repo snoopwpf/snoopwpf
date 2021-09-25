@@ -250,13 +250,12 @@ namespace Snoop.Controls
 
         private ListSortDirection GetNewSortDirection(GridViewColumnHeader columnHeader)
         {
-            if (columnHeader.Tag is not ListSortDirection)
+            if (columnHeader.Tag is not ListSortDirection sortDirection)
             {
                 return (ListSortDirection)(columnHeader.Tag = ListSortDirection.Descending);
             }
 
-            var direction = (ListSortDirection)columnHeader.Tag;
-            return (ListSortDirection)(columnHeader.Tag = (ListSortDirection)(((int)direction + 1) % 2));
+            return (ListSortDirection)(columnHeader.Tag = (ListSortDirection)(((int)sortDirection + 1) % 2));
         }
 
         private void HandleSort(object sender, ExecutedRoutedEventArgs args)
