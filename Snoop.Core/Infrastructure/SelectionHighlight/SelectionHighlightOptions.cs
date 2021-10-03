@@ -2,7 +2,6 @@ namespace Snoop.Infrastructure.SelectionHighlight
 {
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
-    using System.Windows;
     using System.Windows.Media;
     using JetBrains.Annotations;
 
@@ -10,14 +9,31 @@ namespace Snoop.Infrastructure.SelectionHighlight
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public static readonly SelectionHighlightOptions Current = new();
+        public static readonly SelectionHighlightOptions Default = new();
 
-        private Thickness borderThickness = new(4);
-        private Brush borderBrush = new SolidColorBrush(new Color
+        private double borderThickness = 2D;
+
+        private Brush borderBrush = Brushes.Red;
+
+        private bool highlightSelectedItem = true;
+
+        private Pen? pen;
+        private Brush? background;
+
+        public Brush? Background
         {
-            ScA = .3f,
-            ScR = 1
-        });
+            get => this.background;
+            set
+            {
+                if (Equals(value, this.background))
+                {
+                    return;
+                }
+
+                this.background = value;
+                this.OnPropertyChanged();
+            }
+        }
 
         public Brush BorderBrush
         {
@@ -29,12 +45,13 @@ namespace Snoop.Infrastructure.SelectionHighlight
                     return;
                 }
 
+                this.pen = null;
                 this.borderBrush = value;
                 this.OnPropertyChanged();
             }
         }
 
-        public Thickness BorderThickness
+        public double BorderThickness
         {
             get => this.borderThickness;
             set
@@ -44,12 +61,35 @@ namespace Snoop.Infrastructure.SelectionHighlight
                     return;
                 }
 
+                this.pen = null;
                 this.borderThickness = value;
                 this.OnPropertyChanged();
             }
         }
 
-        public bool HighlightSelectedItem { get; set; } = true;
+        public bool HighlightSelectedItem
+        {
+            get => this.highlightSelectedItem;
+            set
+            {
+                if (value == this.highlightSelectedItem)
+                {
+                    return;
+                }
+
+                this.highlightSelectedItem = value;
+                this.OnPropertyChanged();
+            }
+        }
+
+        public Pen Pen => this.pen ??= new Pen(this.BorderBrush, this.BorderThickness);
+
+        public void Reset()
+        {
+            this.Background = null;
+            this.BorderThickness = 2D;
+            this.BorderBrush = Brushes.Red;
+        }
 
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string? propertyName = null)

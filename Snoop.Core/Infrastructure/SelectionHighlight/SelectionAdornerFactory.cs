@@ -8,13 +8,8 @@ namespace Snoop.Infrastructure.SelectionHighlight
 
     public static class SelectionAdornerFactory
     {
-        public static AdornerContainer? CreateAndAttachAdornerContainer(UIElement uiElement)
+        public static Adorner? CreateAndAttachAdornerContainer(UIElement uiElement)
         {
-            if (SelectionHighlightOptions.Current.HighlightSelectedItem == false)
-            {
-                return null;
-            }
-
             var adornerLayer = AdornerLayer.GetAdornerLayer(uiElement);
 
             if (adornerLayer is null)
@@ -22,25 +17,32 @@ namespace Snoop.Infrastructure.SelectionHighlight
                 return null;
             }
 
-            var container = CreateAdornerContainer(uiElement);
-            container.AdornerLayer = adornerLayer;
+            var container = CreateAdornerContainer(uiElement, adornerLayer);
+
             adornerLayer.Add(container);
             return container;
         }
 
-        public static AdornerContainer CreateAdornerContainer(UIElement uiElement)
+        public static Adorner CreateAdornerContainer(UIElement uiElement, AdornerLayer? adornerLayer)
         {
-            var border = new Border
+            return new SelectionAdorner(uiElement)
             {
-                IsHitTestVisible = false
+                AdornerLayer = adornerLayer
             };
-            border.SetBinding(Border.BorderThicknessProperty, new Binding(nameof(SelectionHighlightOptions.BorderThickness)) { Source = SelectionHighlightOptions.Current });
-            border.SetBinding(Border.BorderBrushProperty, new Binding(nameof(SelectionHighlightOptions.BorderBrush)) { Source = SelectionHighlightOptions.Current });
 
-            return new AdornerContainer(uiElement)
-            {
-                Child = border
-            };
+            // var border = new Border
+            // {
+            //     IsHitTestVisible = false,
+            //     BorderThickness = new Thickness(SelectionHighlightOptions.Current.Thickness)
+            // };
+            // //border.SetBinding(Border.BorderThicknessProperty, new Binding(nameof(SelectionHighlightOptions.BorderThickness)) { Source = SelectionHighlightOptions.Current });
+            // border.SetBinding(Border.BorderBrushProperty, new Binding(nameof(SelectionHighlightOptions.BorderBrush)) { Source = SelectionHighlightOptions.Current });
+            //
+            // return new AdornerContainer(uiElement)
+            // {
+            //     Child = border,
+            //     AdornerLayer = adornerLayer
+            // };
         }
     }
 }

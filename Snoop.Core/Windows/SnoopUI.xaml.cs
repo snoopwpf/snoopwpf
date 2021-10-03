@@ -26,6 +26,7 @@ namespace Snoop.Windows
     using Snoop.Infrastructure;
     using Snoop.Infrastructure.Diagnostics;
     using Snoop.Infrastructure.Helpers;
+    using Snoop.Views;
 
     public sealed partial class SnoopUI : INotifyPropertyChanged
     {
@@ -922,6 +923,23 @@ namespace Snoop.Windows
         private void HandleSnoopSnoop_OnClick(object sender, RoutedEventArgs e)
         {
             new SnoopUI().Inspect(this);
+        }
+
+        private void HandleHighlightOptions_OnClick(object sender, RoutedEventArgs e)
+        {
+            var window = new SnoopBaseWindow
+            {
+                Content = new HighlightSettingsView(),
+                Title = "Highlight options",
+                Owner = this,
+                MinWidth = 480,
+                MinHeight = 320,
+                Width = 480,
+                Height = 320,
+                WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                WindowStyle = WindowStyle.ToolWindow
+            };
+            window.ShowDialog();
         }
     }
 

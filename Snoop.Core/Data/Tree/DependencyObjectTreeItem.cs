@@ -12,9 +12,7 @@ namespace Snoop.Data.Tree
     using System.Windows.Data;
     using System.Windows.Documents;
     using System.Windows.Media;
-    using Snoop.Controls;
     using Snoop.Infrastructure;
-    using Snoop.Infrastructure.Helpers;
     using Snoop.Infrastructure.SelectionHighlight;
 
     /// <summary>
@@ -24,7 +22,7 @@ namespace Snoop.Data.Tree
     {
         private static readonly Attribute[] propertyFilterAttributes = { new PropertyFilterAttribute(PropertyFilterOptions.All) };
 
-        private AdornerContainer? adornerContainer;
+        private Adorner? selectionHighlight;
 
         public DependencyObjectTreeItem(DependencyObject target, TreeItem? parent, TreeService treeService)
             : base(target, parent, treeService)
@@ -111,14 +109,14 @@ namespace Snoop.Data.Tree
             if (this.Visual is UIElement visualElement)
             {
                 if (this.IsSelected
-                    && this.adornerContainer is null)
+                    && this.selectionHighlight is null)
                 {
-                    this.adornerContainer = SelectionAdornerFactory.CreateAndAttachAdornerContainer(visualElement);
+                    this.selectionHighlight = SelectionAdornerFactory.CreateAndAttachAdornerContainer(visualElement);
                 }
-                else if (this.adornerContainer is not null)
+                else if (this.selectionHighlight is not null)
                 {
-                    this.adornerContainer.Dispose();
-                    this.adornerContainer = null;
+                    (this.selectionHighlight as IDisposable)?.Dispose();
+                    this.selectionHighlight = null;
                 }
             }
         }
