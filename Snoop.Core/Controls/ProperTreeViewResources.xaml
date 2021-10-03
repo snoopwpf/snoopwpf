@@ -66,35 +66,9 @@ All other rights reserved.
 		<Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}, AncestorLevel=1}, FallbackValue=Top}" />
 		<Setter Property="Padding" Value="1,0,0,0"/>
 		<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
-		<Setter Property="FocusVisualStyle">
-			<Setter.Value>
-				<Style>
-					<Setter Property="Control.Template">
-						<Setter.Value>
-							<ControlTemplate>
-								<Border x:Name="Border">
-									<Rectangle
-										x:Name="Rectangle"
-										Margin="0,0,0,0"
-										Stroke="#FF000000"
-										StrokeThickness="5"
-										Opacity="0"
-									>
-										<Rectangle.StrokeDashArray>
-											<DoubleCollection>
-												<System:Double>1</System:Double>
-												<System:Double>2</System:Double>
-											</DoubleCollection>
-										</Rectangle.StrokeDashArray>
-									</Rectangle>
-								</Border>
-							</ControlTemplate>
-						</Setter.Value>
-					</Setter>
-				</Style>
-			</Setter.Value>
-		</Setter>
-		<Setter Property="Template">
+		<Setter Property="FocusVisualStyle"
+                Value="{x:Null}" />
+        <Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type TreeViewItem}">
 					<Grid x:Name="Grid">
