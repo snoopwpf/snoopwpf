@@ -14,6 +14,8 @@ namespace Snoop.Data.Tree
     using System.Windows.Media;
     using Snoop.Controls;
     using Snoop.Infrastructure;
+    using Snoop.Infrastructure.Helpers;
+    using Snoop.Infrastructure.SelectionHighlight;
 
     /// <summary>
     /// Main class that represents a visual in the visual tree
@@ -28,6 +30,7 @@ namespace Snoop.Data.Tree
             : base(target, parent, treeService)
         {
             this.DependencyObject = target;
+
             this.Visual = target as Visual;
         }
 
@@ -104,43 +107,17 @@ namespace Snoop.Data.Tree
 
         protected override void OnIsSelectedChanged()
         {
-            if (this.Visual is null)
-            {
-                return;
-            }
-
             // Add adorners for the visual this is representing.
-            var adornerLayer = AdornerLayer.GetAdornerLayer(this.Visual);
-
-            if (adornerLayer is not null
-                && this.Visual is UIElement visualElement)
+            if (this.Visual is UIElement visualElement)
             {
                 if (this.IsSelected
                     && this.adornerContainer is null)
                 {
-                    var border = new Border
-                    {
-                        BorderThickness = new Thickness(4),
-                        IsHitTestVisible = false
-                    };
-
-                    var borderColor = new Color
-                    {
-                        ScA = .3f,
-                        ScR = 1
-                    };
-                    border.BorderBrush = new SolidColorBrush(borderColor);
-
-                    this.adornerContainer = new AdornerContainer(visualElement)
-                    {
-                        Child = border
-                    };
-                    adornerLayer.Add(this.adornerContainer);
+                    this.adornerContainer = SelectionAdornerFactory.CreateAndAttachAdornerContainer(visualElement);
                 }
                 else if (this.adornerContainer is not null)
                 {
-                    adornerLayer.Remove(this.adornerContainer);
-                    this.adornerContainer.Child = null;
+                    this.adornerContainer.Dispose();
                     this.adornerContainer = null;
                 }
             }
