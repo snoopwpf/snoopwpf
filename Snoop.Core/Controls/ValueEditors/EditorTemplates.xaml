@@ -219,15 +219,64 @@ All other rights reserved.
 			</DataTemplate>
 
 			<DataTemplate x:Key="SelectedValueTemplate" DataType="valueEditors:BrushValueEditor">
-				<controls:EditTextBox Height="Auto"
-                                      IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}"
-                                      IsReadOnlyCaretVisible="True"
-                                      Text="{Binding StringValue}"
-                                      HorizontalAlignment="Stretch"
-                                      Padding="1"
-                                      BorderThickness="0"
-                                      Background="White"
-                                      VerticalContentAlignment="Center"/>
+                <Grid Height="Auto" HorizontalAlignment="Left">
+                    <Grid.ToolTip>
+                        <ToolTip Style="{x:Null}">
+                            <ListBox Style="{x:Null}" ItemsSource="{Binding Value, Converter={x:Static converters:BrushStopsConverter.DefaultInstance}}"
+                                        Height="200"
+                                        Width="200">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="converters:BrushStop">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="40" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Style="{x:Null}"
+                                                       Grid.Column="0"
+                                                       Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+                                                       Text="{Binding Offset}"
+                                                       Margin="4" />
+                                            <TextBlock Style="{x:Null}"
+                                                       Grid.Column="1"
+                                                       Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+                                                       Text="{Binding ColorText}"
+                                                       Margin="4" />
+                                            <Border Grid.Column="2"
+                                                    BorderBrush="{DynamicResource SolidBorderBrush}"
+                                                    BorderThickness="1"
+                                                    VerticalAlignment="Stretch"
+                                                    HorizontalAlignment="Stretch">
+                                                <Border.Background>
+                                                    <SolidColorBrush Color="{Binding Color}" />
+                                                </Border.Background>
+                                            </Border>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ListBox>
+                        </ToolTip>
+                    </Grid.ToolTip>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="24"/>
+						<ColumnDefinition/>
+					</Grid.ColumnDefinitions>
+
+					<Rectangle Grid.Column="0" Fill="{StaticResource CheckerboardBrush}"/>
+					<Rectangle Grid.Column="0" Fill="{Binding Value}" Stroke="{TemplateBinding TextElement.Foreground}" StrokeThickness="1"/>
+
+                    <controls:EditTextBox Grid.Column="1"
+                                          Height="Auto"
+                                          IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}"
+                                          IsReadOnlyCaretVisible="True"
+                                          Text="{Binding StringValue}"
+                                          HorizontalAlignment="Stretch"
+                                          Padding="1"
+                                          BorderThickness="0"
+                                          Background="White"
+                                          VerticalContentAlignment="Center"/>
+                </Grid>
 			</DataTemplate>
 
 			<DataTemplate x:Key="EmptyValueTemplate"/>
@@ -264,15 +313,30 @@ All other rights reserved.
 			</DataTemplate>
 
 			<DataTemplate x:Key="SelectedValueTemplate" DataType="valueEditors:BrushValueEditor">
-				<controls:EditTextBox Height="Auto"
-                                      IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}"
-                                      IsReadOnlyCaretVisible="True"
-                                      Text="{Binding StringValue}"
-                                      HorizontalAlignment="Stretch"
-                                      Padding="1"
-                                      BorderThickness="0"
-                                      Background="White"
-                                      VerticalContentAlignment="Center"/>
+                <Grid Height="Auto" HorizontalAlignment="Left">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="24"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Rectangle Grid.Column="0" Fill="{StaticResource CheckerboardBrush}"/>
+                    <Rectangle Grid.Column="0" Stroke="{TemplateBinding TextElement.Foreground}" StrokeThickness="1">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{Binding Value}" />
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <controls:EditTextBox Grid.Column="1"
+                                          Height="Auto"
+                                          IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}"
+                                          IsReadOnlyCaretVisible="True"
+                                          Text="{Binding StringValue}"
+                                          HorizontalAlignment="Stretch"
+                                          Padding="1"
+                                          BorderThickness="0"
+                                          Background="White"
+                                          VerticalContentAlignment="Center"/>
+                </Grid>
 			</DataTemplate>
 
 			<DataTemplate x:Key="EmptyValueTemplate"/>
