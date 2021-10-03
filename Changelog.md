@@ -23,6 +23,7 @@
   - Added support for `ThreeState` bool values in the properties grid
   - Tracking mode change: Holding CTRL is changed to CTRL + ALT, as only CTRL was triggered all the time when copying text, switching tabs etc..
   - Support for ARM/ARM64
+  - Made `Color` properties editable
   - [#38](../../issues/38) - Export tree (thanks @amake for the basic idea and starting point)
   - [#103](../../issues/103) - Feature Request: Persist Tracked Events Settings
   - [#210](../../issues/210) - Add dedicated "Diagnostics" view
