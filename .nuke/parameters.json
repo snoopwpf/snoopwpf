@@ -4,5 +4,5 @@
   "TestHarnessSolution": "TestHarnesses/TestHarnesses.sln",
   "SignPathOrganizationId":"622164c8-36db-41ab-b5fd-7967c501ce93",
   "SignPathProjectSlug": "snoopwpf",
-  "SignPathSigningPolicySlug": "test-signing"
+  "SignPathSigningPolicySlug": "release-signing"
 }
