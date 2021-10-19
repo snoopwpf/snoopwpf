@@ -300,6 +300,7 @@ class Build : NukeBuild
 
             // ProcessTasks.StartProcess("powershell", $"./.build/SignPath.ps1 {SignPathAuthToken} {SignPathOrganizationId} {SignPathProjectSlug} {SignPathSigningPolicySlug}")
             //     .AssertWaitForExit();
+
             var result = await SignPathTasks.GetSigningRequestUrlViaAppVeyor(SignPathAuthToken, SignPathOrganizationId, SignPathProjectSlug, SignPathSigningPolicySlug);
             Logger.Info(result);
         });

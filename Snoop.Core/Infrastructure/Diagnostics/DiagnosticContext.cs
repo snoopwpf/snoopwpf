@@ -112,7 +112,7 @@
             // Only add global Diagnostics if with we should analyze the whole tree
             this.AddRange(diagnosticProvider.GetGlobalDiagnosticItems());
 
-            this.AnalyzeTree(this.TreeService.RootTreeItem);
+            this.AnalyzeTree(this.TreeService.RootTreeItem, diagnosticProvider);
         }
 
         private void AnalyzeTree(TreeItem item)

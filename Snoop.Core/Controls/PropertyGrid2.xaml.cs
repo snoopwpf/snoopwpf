@@ -16,6 +16,7 @@ namespace Snoop.Controls
     using System.Windows.Threading;
     using JetBrains.Annotations;
     using Snoop.Infrastructure;
+    using Snoop.Windows;
 
     public partial class PropertyGrid2 : INotifyPropertyChanged
     {
@@ -212,14 +213,14 @@ namespace Snoop.Controls
             };
             textBox.SetBinding(TextBox.TextProperty, new Binding(nameof(propertyInformation.BindingError)) { Source = propertyInformation, Mode = BindingMode.OneWay });
 
-            var window = new Window
+            var window = new SnoopBaseWindow
             {
                 Content = textBox,
                 Width = 400,
                 Height = 300,
                 Title = "Binding Errors for " + propertyInformation.DisplayName
             };
-            SnoopPartsRegistry.AddSnoopVisualTreeRoot(window);
+
             window.Show();
         }
 
@@ -250,13 +251,12 @@ namespace Snoop.Controls
 
         private ListSortDirection GetNewSortDirection(GridViewColumnHeader columnHeader)
         {
-            if (columnHeader.Tag is not ListSortDirection)
+            if (columnHeader.Tag is not ListSortDirection sortDirection)
             {
                 return (ListSortDirection)(columnHeader.Tag = ListSortDirection.Descending);
             }
 
-            var direction = (ListSortDirection)columnHeader.Tag;
-            return (ListSortDirection)(columnHeader.Tag = (ListSortDirection)(((int)direction + 1) % 2));
+            return (ListSortDirection)(columnHeader.Tag = (ListSortDirection)(((int)sortDirection + 1) % 2));
         }
 
         private void HandleSort(object sender, ExecutedRoutedEventArgs args)

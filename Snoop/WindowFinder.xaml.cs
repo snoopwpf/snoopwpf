@@ -79,17 +79,21 @@ namespace Snoop
 
             this.StopSnoopTargetsSearch();
 
-            if (windowInfoToUse is not null
-                && windowInfoToUse.IsValidProcess)
+            if (windowInfoToUse is null
+                || windowInfoToUse.IsValidProcess == false)
             {
-                if (this.WindowFinderType == WindowFinderType.Snoop)
-                {
+                return;
+            }
+
+            switch (this.WindowFinderType)
+            {
+                case WindowFinderType.Snoop:
                     AttachSnoop(windowInfoToUse);
-                }
-                else if (this.WindowFinderType == WindowFinderType.Magnify)
-                {
+                    break;
+
+                case WindowFinderType.Magnify:
                     AttachMagnify(windowInfoToUse);
-                }
+                    break;
             }
         }
 

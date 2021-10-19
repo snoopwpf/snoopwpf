@@ -502,9 +502,9 @@ All other rights reserved.
                     </Canvas>
                 </Viewbox>
             </Button>
-            <!-- crosshairs magnify window finder -->
+            <!-- crosshair magnify window finder -->
             <snoop:WindowFinder Margin="2,0,0,0" WindowFinderType="Magnify"
-                             ToolTip="Drag and drop this crosshairs over a WPF window in order to Magnify it." />
+                             ToolTip="Drag and drop this crosshair over a WPF window in order to Magnify it." />
 
             <!-- snoop button -->
             <Button Width="40"
@@ -726,9 +726,9 @@ All other rights reserved.
                     </Canvas>
                 </Viewbox>
             </Button>
-            <!-- crosshairs snoop window finder -->
+            <!-- crosshair snoop window finder -->
             <snoop:WindowFinder Margin="2,0,0,0" WindowFinderType="Snoop"
-                             ToolTip="Drag and drop this crosshairs over a WPF window in order to Snoop it." />
+                             ToolTip="Drag and drop this crosshair over a WPF window in order to Snoop it." />
         </StackPanel>
 
         <Button Grid.Column="4"

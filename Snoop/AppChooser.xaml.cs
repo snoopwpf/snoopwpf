@@ -211,7 +211,7 @@ namespace Snoop
             var window = new Window
             {
                 Content = new SettingsView(),
-                Title = "Settings for snoop",
+                Title = "Settings",
                 Owner = this,
                 MinWidth = 480,
                 MinHeight = 320,

@@ -9,6 +9,7 @@
   - Detaching Snoop now properly detaches it's exception handler
   - Fixed a performance regression in the window finder when using mouse cursor drop
   - Fixed an exception when application contains invalid resource definitions
+  - Suppressed exceptions while trying to get property information
   - [#220](../../issues/220) - StackOverflowException in ProperTreeViewItem.ArrangeOverride
   - [#221](../../issues/221) - DPI aware Issue?
   - [#232](../../issues/232) - System.NotSupportedException
@@ -23,6 +24,7 @@
   - Added support for `ThreeState` bool values in the properties grid
   - Tracking mode change: Holding CTRL is changed to CTRL + ALT, as only CTRL was triggered all the time when copying text, switching tabs etc..
   - Support for ARM/ARM64
+  - Made `Color` properties editable
   - [#38](../../issues/38) - Export tree (thanks @amake for the basic idea and starting point)
   - [#103](../../issues/103) - Feature Request: Persist Tracked Events Settings
   - [#210](../../issues/210) - Add dedicated "Diagnostics" view
@@ -31,6 +33,7 @@
   - [#219](../../issues/219) - Add a warning to zoomer if target has TextOptions.TextFormattingMode=Display
   - [#226](../../issues/226) - Add support for ARM/ARM64
   - [#227](../../issues/227) - Add support for .NET 6
+  - [#279](../../issues/279) - Improve filter box tooltip
 
 ## 3.0.1
 

@@ -219,15 +219,124 @@ All other rights reserved.
 			</DataTemplate>
 
 			<DataTemplate x:Key="SelectedValueTemplate" DataType="valueEditors:BrushValueEditor">
-				<controls:EditTextBox Height="Auto"
-                                      IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}"
-                                      IsReadOnlyCaretVisible="True"
-                                      Text="{Binding StringValue}"
-                                      HorizontalAlignment="Stretch"
-                                      Padding="1"
-                                      BorderThickness="0"
-                                      Background="White"
-                                      VerticalContentAlignment="Center"/>
+                <Grid Height="Auto" HorizontalAlignment="Left">
+                    <Grid.ToolTip>
+                        <ToolTip Style="{x:Null}">
+                            <ListBox Style="{x:Null}" ItemsSource="{Binding Value, Converter={x:Static converters:BrushStopsConverter.DefaultInstance}}"
+                                        Height="200"
+                                        Width="200">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="converters:BrushStop">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="40" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Style="{x:Null}"
+                                                       Grid.Column="0"
+                                                       Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+                                                       Text="{Binding Offset}"
+                                                       Margin="4" />
+                                            <TextBlock Style="{x:Null}"
+                                                       Grid.Column="1"
+                                                       Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+                                                       Text="{Binding ColorText}"
+                                                       Margin="4" />
+                                            <Border Grid.Column="2"
+                                                    BorderBrush="{DynamicResource SolidBorderBrush}"
+                                                    BorderThickness="1"
+                                                    VerticalAlignment="Stretch"
+                                                    HorizontalAlignment="Stretch">
+                                                <Border.Background>
+                                                    <SolidColorBrush Color="{Binding Color}" />
+                                                </Border.Background>
+                                            </Border>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ListBox>
+                        </ToolTip>
+                    </Grid.ToolTip>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="24"/>
+						<ColumnDefinition/>
+					</Grid.ColumnDefinitions>
+
+					<Rectangle Grid.Column="0" Fill="{StaticResource CheckerboardBrush}"/>
+					<Rectangle Grid.Column="0" Fill="{Binding Value}" Stroke="{TemplateBinding TextElement.Foreground}" StrokeThickness="1"/>
+
+                    <controls:EditTextBox Grid.Column="1"
+                                          Height="Auto"
+                                          IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}"
+                                          IsReadOnlyCaretVisible="True"
+                                          Text="{Binding StringValue}"
+                                          HorizontalAlignment="Stretch"
+                                          Padding="1"
+                                          BorderThickness="0"
+                                          Background="White"
+                                          VerticalContentAlignment="Center"/>
+                </Grid>
+			</DataTemplate>
+
+			<DataTemplate x:Key="EmptyValueTemplate"/>
+		</Style.Resources>
+    </Style>
+
+    <Style TargetType="{x:Type valueEditors:ColorValueEditor}"
+           BasedOn="{StaticResource {x:Type valueEditors:StandardValueEditor}}">
+		<Style.Resources>
+			<DrawingBrush Stretch="Fill" TileMode="Tile" x:Key="CheckerboardBrush" Viewport="0,0,16,16" ViewportUnits="Absolute">
+				<DrawingBrush.Drawing>
+					<DrawingGroup>
+						<GeometryDrawing Brush="White" Geometry="M 0,0 L 2,0 2,2 0,2 Z"/>
+						<GeometryDrawing Brush="LightGray" Geometry="M 0,0 L 1,0 1,2 2,2 2,1 0,1 Z"/>
+					</DrawingGroup>
+				</DrawingBrush.Drawing>
+			</DrawingBrush>
+
+			<DataTemplate x:Key="UnselectedValueTemplate" DataType="valueEditors:ValueEditor">
+				<Grid Height="Auto" HorizontalAlignment="Left">
+                    <Grid.ColumnDefinitions>
+						<ColumnDefinition Width="48"/>
+						<ColumnDefinition/>
+					</Grid.ColumnDefinitions>
+
+					<Rectangle Grid.Column="0" Fill="{StaticResource CheckerboardBrush}"/>
+					<Rectangle Grid.Column="0" Stroke="{TemplateBinding TextElement.Foreground}" StrokeThickness="1">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{Binding Value}" />
+                        </Rectangle.Fill>
+                    </Rectangle>
+					<TextBlock Grid.Column="1" Style="{x:Null}" Margin="5,0,0,0" Text="{Binding DescriptiveValue}"/>
+				</Grid>
+			</DataTemplate>
+
+			<DataTemplate x:Key="SelectedValueTemplate" DataType="valueEditors:BrushValueEditor">
+                <Grid Height="Auto" HorizontalAlignment="Left">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="24"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Rectangle Grid.Column="0" Fill="{StaticResource CheckerboardBrush}"/>
+                    <Rectangle Grid.Column="0" Stroke="{TemplateBinding TextElement.Foreground}" StrokeThickness="1">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{Binding Value}" />
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <controls:EditTextBox Grid.Column="1"
+                                          Height="Auto"
+                                          IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}"
+                                          IsReadOnlyCaretVisible="True"
+                                          Text="{Binding StringValue}"
+                                          HorizontalAlignment="Stretch"
+                                          Padding="1"
+                                          BorderThickness="0"
+                                          Background="White"
+                                          VerticalContentAlignment="Center"/>
+                </Grid>
 			</DataTemplate>
 
 			<DataTemplate x:Key="EmptyValueTemplate"/>
@@ -369,6 +478,27 @@ All other rights reserved.
 				</DockPanel>
 			</DataTemplate>
 		</valueEditors:ValueEditorTemplateSelector.BrushTemplate>
+
+        <valueEditors:ValueEditorTemplateSelector.ColorTemplate>
+            <DataTemplate DataType="infrastructure:PropertyInformation">
+                <DockPanel>
+                    <!-- add mouse wheel editor to right of value (only visible when IsSelected and CanEdit) -->
+                    <valueEditors:MouseWheelValueEditor/>
+
+                    <valueEditors:ColorValueEditor
+                        PropertyType="{Binding PropertyType}"
+                        Value="{Binding Value, Mode=TwoWay}"
+                        DescriptiveValue="{Binding DescriptiveValue, Mode=OneWay}"
+                        IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
+                        IsEditable="{Binding CanEdit}"
+                        PropertyInfo="{Binding}"
+                    />
+
+                    <!-- to allow ValueEditor to live on the left and not stretch -->
+                    <Border/>
+                </DockPanel>
+            </DataTemplate>
+        </valueEditors:ValueEditorTemplateSelector.ColorTemplate>
 
         <valueEditors:ValueEditorTemplateSelector.WithResourceKeyTemplate>
             <DataTemplate DataType="infrastructure:PropertyInformation">

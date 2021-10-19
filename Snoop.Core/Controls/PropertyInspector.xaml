@@ -158,7 +158,7 @@ All other rights reserved.
             Text="{Binding ElementName=propertyInspector, Path=StringFilter, UpdateSourceTrigger=PropertyChanged}"
             Margin="0,0,2,0">
             <TextBox.ToolTip>
-                <TextBlock Style="{x:Null}" Text="Type in this text box to filter properties" />
+                <TextBlock Style="{x:Null}" Text="Type in this text box to filter properties. The filter is applied to property names and property type names." />
             </TextBox.ToolTip>
         </TextBox>
     </DockPanel>

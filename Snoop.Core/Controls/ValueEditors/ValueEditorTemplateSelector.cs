@@ -6,6 +6,7 @@
 namespace Snoop.Controls.ValueEditors
 {
     using System;
+    using System.Reflection;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Media;
@@ -22,6 +23,8 @@ namespace Snoop.Controls.ValueEditors
         public DataTemplate? StringTemplate { get; set; }
 
         public DataTemplate? BrushTemplate { get; set; }
+
+        public DataTemplate? ColorTemplate { get; set; }
 
         public DataTemplate? WithResourceKeyTemplate { get; set; }
 
@@ -40,8 +43,7 @@ namespace Snoop.Controls.ValueEditors
             }
 
             if (property.PropertyType.Type == typeof(bool)
-                || (property.PropertyType.IsGenericType
-                    && Nullable.GetUnderlyingType(property.PropertyType.Type) == typeof(bool)))
+                || property.PropertyType.Type == typeof(bool?))
             {
                 return this.BoolTemplate;
             }
@@ -54,6 +56,11 @@ namespace Snoop.Controls.ValueEditors
             if (typeof(Brush).IsAssignableFrom(property.PropertyType.Type))
             {
                 return this.BrushTemplate;
+            }
+
+            if (typeof(Color).IsAssignableFrom(property.PropertyType.Type))
+            {
+                return this.ColorTemplate;
             }
 
             if (string.IsNullOrEmpty(property.ResourceKey) == false)

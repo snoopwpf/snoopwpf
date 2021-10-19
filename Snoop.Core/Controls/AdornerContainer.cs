@@ -25,6 +25,7 @@ namespace Snoop.Controls
         public AdornerContainer(UIElement adornedElement)
             : base(adornedElement)
         {
+            this.IsHitTestVisible = false;
             SnoopAttachedProperties.SetIsSnoopPart(this, true);
         }
 
