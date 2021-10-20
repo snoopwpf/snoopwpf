@@ -37,6 +37,7 @@
   - [#226](../../issues/226) - Add support for ARM/ARM64
   - [#227](../../issues/227) - Add support for .NET 6
   - [#279](../../issues/279) - Improve filter box tooltip
+  - [#285](../../issues/285) - Improvements to the highlight adorner
 
 ## 3.0.1
 
