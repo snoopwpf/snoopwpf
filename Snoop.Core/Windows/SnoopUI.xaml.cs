@@ -65,7 +65,7 @@ namespace Snoop.Windows
 
             this.InitializeComponent();
 
-            PresentationTraceSourcesHelper.RefreshAndEnsureInformationLevel();
+            PresentationTraceSourcesHelper.RefreshAndEnsureRequiredLevel();
 
             this.CommandBindings.Add(new(ApplicationCommands.Close, (_, _) => this.Close()));
 

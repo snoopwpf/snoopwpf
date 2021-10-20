@@ -24,15 +24,14 @@ namespace Snoop.Infrastructure.Diagnostics
 
             // check if VisualDiagnostics is enabled. If not we can't do much...
             if (ReflectionHelper.TryGetField(typeof(VisualDiagnostics), "s_IsEnabled", out var value)
-                && value is bool boolValue
-                && boolValue)
+                && value is bool and true)
             {
                 if (ReflectionHelper.TrySetProperty(typeof(BindingDiagnostics), "IsEnabled", true))
                 {
                     this.IsActive = true;
 
                     // this call, or better the Refresh class inside the method, causes BindingDiagnostics to start working as we set IsEnabled on it via reflection
-                    PresentationTraceSourcesHelper.RefreshAndEnsureInformationLevel(forceRefresh: true);
+                    PresentationTraceSourcesHelper.RefreshAndEnsureRequiredLevel(forceRefresh: true);
                 }
             }
         }

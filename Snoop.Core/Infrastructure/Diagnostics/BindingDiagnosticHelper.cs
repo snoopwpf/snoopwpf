@@ -1,4 +1,4 @@
-﻿namespace Snoop.Infrastructure.Diagnostics
+namespace Snoop.Infrastructure.Diagnostics
 {
     using System;
     using System.Diagnostics;
@@ -82,7 +82,7 @@
             var scopeGuard = new ScopeGuard(
                 () =>
                 {
-                    PresentationTraceSourcesHelper.EnsureInformationLevel();
+                    PresentationTraceSourcesHelper.EnsureRequiredLevel();
                     PresentationTraceSources.DataBindingSource.Listeners.Add(tracer);
                     //PresentationTraceSources.DataBindingSource.Listeners.Add(new SnoopDebugListener()); // for debugging purposes
                 },
