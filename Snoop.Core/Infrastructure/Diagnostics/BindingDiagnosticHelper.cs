@@ -1,4 +1,4 @@
-namespace Snoop.Infrastructure.Diagnostics
+﻿namespace Snoop.Infrastructure.Diagnostics
 {
     using System;
     using System.Diagnostics;
@@ -99,10 +99,10 @@ namespace Snoop.Infrastructure.Diagnostics
 
             // reset binding to get the error message.
             dependencyObject.ClearValue(dependencyProperty);
-            var binding = bindingExpressionBase.ParentBindingBase;
-            BindingOperations.SetBinding(dependencyObject, dependencyProperty, binding);
 
             scopeGuard.Guard(); // Start listening
+            var binding = bindingExpressionBase.ParentBindingBase;
+            BindingOperations.SetBinding(dependencyObject, dependencyProperty, binding);
 
             // this needs to happen on idle so that we can actually run the binding, which may occur asynchronously.
             dependencyObject.RunInDispatcherAsync(
