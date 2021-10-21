@@ -124,7 +124,6 @@
                         <File Id="Snoop.InjectorLauncher.ARM64.pdb" Source="SourceDir\Snoop.InjectorLauncher.ARM64.pdb"/>
                     </Component>
 
-
                     <Component Id="Root.Snoop.Core.net40.dll" Guid="{3DAA043B-7FFB-4CB6-A3C3-D67DF9D0B3D2}">
                         <File Id="Root.Snoop.Core.dll" KeyPath="yes" Source="SourceDir\Snoop.Core.dll"/>
                         <File Id="Root.Snoop.Core.pdb" Source="SourceDir\Snoop.Core.pdb"/>
