@@ -11,14 +11,19 @@ namespace Snoop.Infrastructure.SelectionHighlight
 
         public static readonly SelectionHighlightOptions Default = new();
 
-        private double borderThickness = 2D;
+        private double borderThickness;
 
-        private Brush borderBrush = Brushes.Red;
+        private Brush borderBrush = null!;
 
         private bool highlightSelectedItem = true;
 
         private Pen? pen;
         private Brush? background;
+
+        public SelectionHighlightOptions()
+        {
+            this.Reset();
+        }
 
         public Brush? Background
         {
@@ -87,8 +92,14 @@ namespace Snoop.Infrastructure.SelectionHighlight
         public void Reset()
         {
             this.Background = null;
-            this.BorderThickness = 2D;
-            this.BorderBrush = Brushes.Red;
+            this.BorderThickness = 3D;
+            var borderColor = new Color
+            {
+                ScA = .3f,
+                ScR = 1
+            };
+            this.BorderBrush = new SolidColorBrush(borderColor);
+            this.BorderBrush.Freeze();
         }
 
         [NotifyPropertyChangedInvocator]
