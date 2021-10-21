@@ -82,7 +82,7 @@
             var scopeGuard = new ScopeGuard(
                 () =>
                 {
-                    PresentationTraceSourcesHelper.EnsureInformationLevel();
+                    PresentationTraceSourcesHelper.EnsureRequiredLevel();
                     PresentationTraceSources.DataBindingSource.Listeners.Add(tracer);
                     //PresentationTraceSources.DataBindingSource.Listeners.Add(new SnoopDebugListener()); // for debugging purposes
                 },
@@ -99,10 +99,10 @@
 
             // reset binding to get the error message.
             dependencyObject.ClearValue(dependencyProperty);
-            var binding = bindingExpressionBase.ParentBindingBase;
-            BindingOperations.SetBinding(dependencyObject, dependencyProperty, binding);
 
             scopeGuard.Guard(); // Start listening
+            var binding = bindingExpressionBase.ParentBindingBase;
+            BindingOperations.SetBinding(dependencyObject, dependencyProperty, binding);
 
             // this needs to happen on idle so that we can actually run the binding, which may occur asynchronously.
             dependencyObject.RunInDispatcherAsync(
