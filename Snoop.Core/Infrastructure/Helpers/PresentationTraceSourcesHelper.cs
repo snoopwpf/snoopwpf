@@ -7,7 +7,7 @@
     {
         private static bool alreadyRefreshed;
 
-        public static void RefreshAndEnsureInformationLevel(bool forceRefresh = false)
+        public static void RefreshAndEnsureRequiredLevel(bool forceRefresh = false)
         {
             // wrap the following PresentationTraceSources.Refresh() call in a try/catch
             // sometimes a NullReferenceException occurs
@@ -30,15 +30,16 @@
                 alreadyRefreshed = true;
             }
 
-            EnsureInformationLevel();
+            EnsureRequiredLevel();
         }
 
-        public static void EnsureInformationLevel()
+        public static void EnsureRequiredLevel()
         {
             // to get all failed binding results we have to increase the trace level
-            if (PresentationTraceSources.DataBindingSource.Switch.Level < SourceLevels.Information)
+            const SourceLevels requiredLevel = SourceLevels.Warning;
+            if (PresentationTraceSources.DataBindingSource.Switch.Level < requiredLevel)
             {
-                PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.Information;
+                PresentationTraceSources.DataBindingSource.Switch.Level = requiredLevel;
             }
         }
     }

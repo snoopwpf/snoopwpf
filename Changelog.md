@@ -24,6 +24,9 @@
   - Added support for `ThreeState` bool values in the properties grid
   - Tracking mode change: Holding CTRL is changed to CTRL + ALT, as only CTRL was triggered all the time when copying text, switching tabs etc..
   - Support for ARM/ARM64
+  - Support for .NET 5 and .NET 6
+  - Binding errors are now resolved in an explicit lazy way to prevent it from fixing the error silently.  
+    Starting with .NET 5 binding errors are resolved automatically in most cases by using the new `BindingDiagnostics` class from WPF.
   - Made `Color` properties editable
   - [#38](../../issues/38) - Export tree (thanks @amake for the basic idea and starting point)
   - [#103](../../issues/103) - Feature Request: Persist Tracked Events Settings
@@ -34,6 +37,7 @@
   - [#226](../../issues/226) - Add support for ARM/ARM64
   - [#227](../../issues/227) - Add support for .NET 6
   - [#279](../../issues/279) - Improve filter box tooltip
+  - [#285](../../issues/285) - Improvements to the highlight adorner
 
 ## 3.0.1
 
