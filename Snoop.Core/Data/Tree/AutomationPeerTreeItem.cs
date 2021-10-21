@@ -49,7 +49,7 @@
                 if (this.IsSelected
                     && this.selectionHighlight is null)
                 {
-                    this.selectionHighlight = SelectionAdornerFactory.CreateAndAttachAdornerContainer(visualElement);
+                    this.selectionHighlight = SelectionAdornerFactory.CreateAndAttachSelectionAdorner(visualElement);
                 }
                 else if (this.selectionHighlight is not null)
                 {
