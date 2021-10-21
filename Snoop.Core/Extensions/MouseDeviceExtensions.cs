@@ -13,19 +13,19 @@ namespace Snoop
     {
         private static readonly PropertyInfo? rawDirectlyOverPropertyInfo = typeof(MouseDevice).GetProperty("RawDirectlyOver", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
 
-        public static IInputElement GetDirectlyOver(this MouseDevice mouseDevice)
+        public static UIElement? GetDirectlyOver(this MouseDevice mouseDevice)
         {
             return GetElementAtMousePos(mouseDevice.Dispatcher)
-                   ?? rawDirectlyOverPropertyInfo?.GetValue(mouseDevice, null) as IInputElement
-                   ?? mouseDevice.DirectlyOver;
+                   ?? rawDirectlyOverPropertyInfo?.GetValue(mouseDevice, null) as UIElement
+                   ?? mouseDevice.DirectlyOver as UIElement;
         }
 
-        private static FrameworkElement? GetElementAtMousePos(Dispatcher dispatcher)
+        private static UIElement? GetElementAtMousePos(Dispatcher dispatcher)
         {
             var windowHandleUnderMouse = NativeMethods.GetWindowUnderMouse();
             var windowUnderMouse = WindowHelper.GetVisibleWindow(windowHandleUnderMouse, dispatcher);
 
-            FrameworkElement? directlyOverElement = null;
+            UIElement? directlyOverElement = null;
 
             if (windowUnderMouse is not null)
             {
@@ -37,20 +37,23 @@ namespace Snoop
 
         private static HitTestFilterBehavior FilterCallback(DependencyObject target)
         {
-            return HitTestFilterBehavior.Continue;
+            return target switch
+            {
+                UIElement { IsVisible: false } => HitTestFilterBehavior.ContinueSkipSelfAndChildren,
+                UIElement uiElement when uiElement.IsPartOfSnoopVisualTree() => HitTestFilterBehavior.ContinueSkipSelfAndChildren,
+                _ => HitTestFilterBehavior.Continue
+            };
         }
 
-        private static HitTestResultBehavior ResultCallback(HitTestResult? result, ref FrameworkElement? directlyOverElement)
+        private static HitTestResultBehavior ResultCallback(HitTestResult? result, ref UIElement? directlyOverElement)
         {
-            if (result is not null &&
-                result.VisualHit is FrameworkElement { IsVisible: true } frameworkElement &&
-                frameworkElement.IsPartOfSnoopVisualTree() == false)
+            if (result?.VisualHit is not UIElement uiElement)
             {
-                directlyOverElement = frameworkElement;
-                return HitTestResultBehavior.Stop;
+                return HitTestResultBehavior.Continue;
             }
 
-            return HitTestResultBehavior.Continue;
+            directlyOverElement = uiElement;
+            return HitTestResultBehavior.Stop;
         }
     }
 }

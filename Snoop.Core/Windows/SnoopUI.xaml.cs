@@ -295,7 +295,7 @@ namespace Snoop.Windows
         public bool IsHandlingCTRL_SHIFT { get; set; } = true;
 
         // ReSharper disable once InconsistentNaming
-        public bool IsHandlingCTRL_ALT { get; set; } = false;
+        public bool SkipTemplateParts { get; set; } = false;
 
         /// <summary>Identifies the <see cref="CurrentTreeType"/> dependency property.</summary>
         public static readonly DependencyProperty CurrentTreeTypeProperty = DependencyProperty.Register(nameof(CurrentTreeType), typeof(TreeType), typeof(SnoopUI), new PropertyMetadata(TreeType.Visual, OnCurrentTreeTypeChanged));
@@ -604,8 +604,7 @@ namespace Snoop.Windows
         {
             this.OnPropertyChanged(nameof(this.CurrentFocus));
 
-            if (this.IsHandlingCTRL_ALT == false
-                && this.IsHandlingCTRL_SHIFT == false)
+            if (this.IsHandlingCTRL_SHIFT == false)
             {
                 return;
             }
@@ -614,52 +613,46 @@ namespace Snoop.Windows
 
             var isControlPressed = currentModifiers.HasFlag(ModifierKeys.Control);
             var isShiftPressed = currentModifiers.HasFlag(ModifierKeys.Shift);
-            var isAltPressed = currentModifiers.HasFlag(ModifierKeys.Alt);
 
-            if (isControlPressed == false)
+            if (isControlPressed == false
+                || isShiftPressed == false)
             {
                 return;
             }
 
-            if (isShiftPressed == false
-                && isAltPressed == false)
+            var itemToFind = Mouse.PrimaryDevice.GetDirectlyOver();
+
+            switch (itemToFind)
             {
-                return;
+                case null:
+                case var dependencyObject when dependencyObject.IsPartOfSnoopVisualTree():
+                case Visual visual when visual.IsDescendantOf(this):
+                    return;
             }
 
-            var itemToFind = Mouse.PrimaryDevice.GetDirectlyOver() as Visual;
-
-            if (itemToFind is null
-                || itemToFind.IsDescendantOf(this)
-                || itemToFind.IsPartOfSnoopVisualTree())
-            {
-                return;
-            }
-
-            // If Shift is not pressed search up the tree of templated parents.
-            if (this.IsHandlingCTRL_ALT
-                && isShiftPressed == false
-                && isAltPressed
+            // If template parts should be skipped search up the tree of templated parents.
+            if (this.SkipTemplateParts
                 && itemToFind is FrameworkElement frameworkElement)
             {
                 itemToFind = GetItemToFindAndSkipTemplateParts(frameworkElement);
             }
 
             var node = this.FindItem(itemToFind);
-            if (node is not null)
+            if (node is not null
+                && ReferenceEquals(this.CurrentSelection, node) == false)
             {
                 this.CurrentSelection = node;
             }
         }
 
-        private static Visual? GetItemToFindAndSkipTemplateParts(FrameworkElement? frameworkElement)
+        private static UIElement? GetItemToFindAndSkipTemplateParts(FrameworkElement? uiElement)
         {
-            Visual? itemToFind = frameworkElement;
+            UIElement? itemToFind = uiElement;
 
-            while (frameworkElement?.TemplatedParent is not null)
+            while (uiElement?.TemplatedParent is not null)
             {
-                frameworkElement = frameworkElement.TemplatedParent as FrameworkElement;
-                itemToFind = frameworkElement;
+                uiElement = uiElement.TemplatedParent as FrameworkElement;
+                itemToFind = uiElement;
             }
 
             if (itemToFind is not null)
@@ -667,9 +660,7 @@ namespace Snoop.Windows
                 var parent = VisualTreeHelper.GetParent(itemToFind) as FrameworkElement;
 
                 // If the current item is of a certain type and is part of a template try to look further up the tree
-                if (parent?.TemplatedParent is not null
-                    && (parent is ContentPresenter
-                        || parent is AccessText))
+                if (parent is FrameworkElement { TemplatedParent: { } } and (ContentPresenter or AccessText))
                 {
                     return GetItemToFindAndSkipTemplateParts(parent);
                 }

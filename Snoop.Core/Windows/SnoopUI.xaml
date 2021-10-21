@@ -139,10 +139,10 @@ All other rights reserved.
                 <MenuItem Style="{x:Null}"
                           Header="_Tracking options">
                     <MenuItem Style="{x:Null}"
-                              Header="Handle _CTRL + ALT"
+                              Header="Handle _CTRL"
                               ToolTip="When enabled and pressed tries to skip template parts."
                               IsCheckable="True"
-                              IsChecked="{Binding IsHandlingCTRL_ALT}" />
+                              IsChecked="{Binding SkipTemplateParts}" />
                     <MenuItem Style="{x:Null}"
                               Header="Handle CTRL + _SHIFT"
                               ToolTip="When enabled and pressed tracks all parts of the UI."

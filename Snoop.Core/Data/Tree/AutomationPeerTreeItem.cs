@@ -44,12 +44,12 @@
         protected override void OnIsSelectedChanged()
         {
             // Add adorners for the visual this is representing.
-            if (this.Visual is UIElement visualElement)
+            if (this.Target is DependencyObject dependencyObject)
             {
                 if (this.IsSelected
                     && this.selectionHighlight is null)
                 {
-                    this.selectionHighlight = SelectionAdornerFactory.CreateAndAttachSelectionAdorner(visualElement);
+                    this.selectionHighlight = SelectionAdornerFactory.CreateAndAttachSelectionAdorner(dependencyObject);
                 }
                 else if (this.selectionHighlight is not null)
                 {

@@ -8,6 +8,7 @@ namespace Snoop.Infrastructure
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Windows;
     using System.Windows.Media;
     using Snoop.AttachedProperties;
 
@@ -21,16 +22,16 @@ namespace Snoop.Infrastructure
         /// <summary>
         /// Checks whether given visual is a part of Snoop's visual tree.
         /// </summary>
-        /// <param name="visual">Visual under question</param>
-        /// <returns><c>true</c> if <paramref name="visual"/> belongs to Snoop's visual tree. <c>false</c> otherwise.</returns>
-        public static bool IsPartOfSnoopVisualTree(this Visual? visual)
+        /// <param name="dependencyObject">DependencyObject under question</param>
+        /// <returns><c>true</c> if <paramref name="dependencyObject"/> belongs to Snoop's visual tree. <c>false</c> otherwise.</returns>
+        public static bool IsPartOfSnoopVisualTree(this DependencyObject? dependencyObject)
         {
-            if (visual is null)
+            if (dependencyObject is null)
             {
                 return false;
             }
 
-            if (SnoopAttachedProperties.GetIsSnoopPart(visual))
+            if (SnoopAttachedProperties.GetIsSnoopPart(dependencyObject))
             {
                 return true;
             }
@@ -50,8 +51,8 @@ namespace Snoop.Infrastructure
                     continue;
                 }
 
-                if (ReferenceEquals(visual, snoopVisual)
-                    || (visual.Dispatcher == snoopVisual.Dispatcher && visual.IsDescendantOf(snoopVisual)))
+                if (ReferenceEquals(dependencyObject, snoopVisual)
+                    || (dependencyObject.Dispatcher == snoopVisual.Dispatcher && (dependencyObject as Visual)?.IsDescendantOf(snoopVisual) == true))
                 {
                     return true;
                 }
