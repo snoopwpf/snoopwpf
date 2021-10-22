@@ -106,7 +106,14 @@ namespace Snoop.Windows
 
                 var titleParameter = Uri.EscapeDataString(this.Exception.Message);
                 var bodyParameter = Uri.EscapeDataString(body);
-                Process.Start($"https://github.com/snoopwpf/snoopwpf/issues/new?title={titleParameter}&body={bodyParameter}");
+
+                var processStartInfo = new ProcessStartInfo($"https://github.com/snoopwpf/snoopwpf/issues/new?title={titleParameter}&body={bodyParameter}")
+                {
+                    UseShellExecute = true
+                };
+                using (Process.Start(processStartInfo))
+                {
+                }
             }
             catch (Exception exception)
             {

@@ -883,7 +883,11 @@ namespace Snoop.Windows
             if (directory is not null
                 && directory.Length > 0)
             {
-                using (Process.Start(directory))
+                var processStartInfo = new ProcessStartInfo(directory)
+                {
+                    UseShellExecute = true
+                };
+                using (Process.Start(processStartInfo))
                 {
                 }
             }
