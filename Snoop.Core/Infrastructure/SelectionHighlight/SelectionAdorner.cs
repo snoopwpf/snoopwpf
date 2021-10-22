@@ -39,18 +39,8 @@ namespace Snoop.Infrastructure.SelectionHighlight
             }
 
             var pen = SelectionHighlightOptions.Default.Pen;
-            var thickness = pen.Thickness;
 
-            var width = this.ActualWidth - thickness;
-            var height = this.ActualHeight - thickness;
-
-            if (width.GreaterThan(0) == false
-                || height.GreaterThan(0) == false)
-            {
-                return;
-            }
-
-            drawingContext.DrawRectangle(SelectionHighlightOptions.Default.Background, pen, new Rect(thickness, thickness, width, height));
+            drawingContext.DrawRectangle(SelectionHighlightOptions.Default.Background, pen, new Rect(0, 0, this.ActualWidth, this.ActualHeight));
         }
 
         public void Dispose()
