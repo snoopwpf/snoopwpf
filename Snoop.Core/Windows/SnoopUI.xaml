@@ -139,7 +139,7 @@ All other rights reserved.
                 <MenuItem Style="{x:Null}"
                           Header="_Tracking options">
                     <MenuItem Style="{x:Null}"
-                              Header="Handle _CTRL"
+                              Header="Skip template parts"
                               ToolTip="When enabled and pressed tries to skip template parts."
                               IsCheckable="True"
                               IsChecked="{Binding SkipTemplateParts}" />
