@@ -36,27 +36,14 @@ namespace Snoop.Infrastructure.SelectionHighlight
 
         private static UIElement? FindUIElement(DependencyObject dependencyObject)
         {
-            if (dependencyObject is UIElement uiElement)
+            return dependencyObject switch
             {
-                return uiElement;
-            }
-
-            if (dependencyObject is ColumnDefinition columnDefinition)
-            {
-                return columnDefinition.Parent as UIElement;
-            }
-
-            if (dependencyObject is RowDefinition rowDefinition)
-            {
-                return rowDefinition.Parent as UIElement;
-            }
-
-            if (dependencyObject is ContentElement contentElement)
-            {
-                return contentElement.GetUIParent() as UIElement ?? contentElement.GetParent() as UIElement;
-            }
-
-            return null;
+                UIElement uiElement => uiElement,
+                ColumnDefinition columnDefinition => columnDefinition.Parent as UIElement,
+                RowDefinition rowDefinition => rowDefinition.Parent as UIElement,
+                ContentElement contentElement => contentElement.GetUIParent() as UIElement ?? contentElement.GetParent() as UIElement,
+                _ => null
+            };
         }
 
         private static SelectionAdorner CreateSelectionAdorner(UIElement uiElement, AdornerLayer? adornerLayer)
