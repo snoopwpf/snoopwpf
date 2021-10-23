@@ -1,13 +1,13 @@
 namespace Snoop.Infrastructure.SelectionHighlight
 {
+    using System;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Documents;
-    using System.Windows.Media;
 
-    public static class SelectionAdornerFactory
+    public static class SelectionHighlightFactory
     {
-        public static Adorner? CreateAndAttachSelectionAdorner(DependencyObject dependencyObject)
+        public static IDisposable? CreateAndAttachSelectionHighlight(DependencyObject dependencyObject)
         {
             var uiElement = FindUIElement(dependencyObject);
 
@@ -16,6 +16,11 @@ namespace Snoop.Infrastructure.SelectionHighlight
                 return null;
             }
 
+            return CreateAndAttachSelectionHighlightAdorner(uiElement);
+        }
+
+        private static IDisposable? CreateAndAttachSelectionHighlightAdorner(UIElement uiElement)
+        {
             var adornerLayer = AdornerLayer.GetAdornerLayer(uiElement);
 
             if (adornerLayer is null)
@@ -23,13 +28,13 @@ namespace Snoop.Infrastructure.SelectionHighlight
                 return null;
             }
 
-            var container = CreateSelectionAdorner(uiElement, adornerLayer);
+            var selectionAdorner = CreateSelectionAdorner(uiElement, adornerLayer);
 
-            adornerLayer.Add(container);
-            return container;
+            adornerLayer.Add(selectionAdorner);
+            return selectionAdorner;
         }
 
-        public static UIElement? FindUIElement(DependencyObject dependencyObject)
+        private static UIElement? FindUIElement(DependencyObject dependencyObject)
         {
             if (dependencyObject is UIElement uiElement)
             {
@@ -54,7 +59,7 @@ namespace Snoop.Infrastructure.SelectionHighlight
             return null;
         }
 
-        public static Adorner CreateSelectionAdorner(UIElement uiElement, AdornerLayer? adornerLayer)
+        private static SelectionAdorner CreateSelectionAdorner(UIElement uiElement, AdornerLayer? adornerLayer)
         {
             return new SelectionAdorner(uiElement)
             {
