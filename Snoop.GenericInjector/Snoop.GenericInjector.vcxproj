@@ -66,6 +66,7 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset Condition="'$(v143_Installed)' == 'true'">v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <!--<EnableASAN Condition="'$(Platform)' != 'ARM' And '$(Platform)' != 'ARM64'">true</EnableASAN>-->
