@@ -135,8 +135,35 @@ class Build : NukeBuild
         .DependsOn(Restore)
         .Executes(() =>
         {
+            string toolsPath = string.Empty;
+            try
+            {
+                toolsPath = MSBuildToolPathResolver.Resolve(MSBuildVersion.VS2019, MSBuildPlatform.x64);
+            }
+            catch
+            {
+                // ignored
+            }
+
+            if (string.IsNullOrEmpty(toolsPath))
+            {
+                foreach (var edition in new[] { "Enterprise", "Professional", "Community", "BuildTools", "Preview" })
+                {
+                    var toolPath = Path.Combine(
+                        EnvironmentInfo.SpecialFolder(SpecialFolders.ProgramFiles).NotNull("path1 != null"),
+                        $@"Microsoft Visual Studio\2022\{edition}\MSBuild\Current\Bin\amd64\msbuild.exe");
+
+                    if (File.Exists(toolPath))
+                    {
+                        toolsPath = toolPath;
+                        break;
+                    }
+                }
+            }
+
             MSBuild(s => s
                 .SetProjectFile(Solution.Snoop_GenericInjector)
+                .SetProcessToolPath(toolsPath)
                 .SetConfiguration(Configuration)
                 .SetTargetPlatform(MSBuildTargetPlatform.Win32)
                 .SetAssemblyVersion(AssemblySemVer)
