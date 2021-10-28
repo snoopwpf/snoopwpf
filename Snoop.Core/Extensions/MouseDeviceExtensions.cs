@@ -13,44 +13,80 @@ namespace Snoop
     {
         private static readonly PropertyInfo? rawDirectlyOverPropertyInfo = typeof(MouseDevice).GetProperty("RawDirectlyOver", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
 
-        public static IInputElement GetDirectlyOver(this MouseDevice mouseDevice)
+        public static UIElement? GetDirectlyOver(this MouseDevice mouseDevice)
         {
-            return GetElementAtMousePos(mouseDevice.Dispatcher)
-                   ?? rawDirectlyOverPropertyInfo?.GetValue(mouseDevice, null) as IInputElement
-                   ?? mouseDevice.DirectlyOver;
+            if (TryGetElementAtMousePos(mouseDevice.Dispatcher, out var elementFromFilter, out var elementFromResult))
+            {
+                return elementFromFilter
+                       ?? elementFromResult;
+            }
+
+            var elementMouseRawDirectlyOver = rawDirectlyOverPropertyInfo?.GetValue(mouseDevice, null) as UIElement;
+            var elementMouseDeviceDirectlyOver = mouseDevice.DirectlyOver as UIElement;
+
+            return elementMouseRawDirectlyOver
+                   ?? elementMouseDeviceDirectlyOver;
         }
 
-        private static FrameworkElement? GetElementAtMousePos(Dispatcher dispatcher)
+        private static bool TryGetElementAtMousePos(Dispatcher dispatcher, out UIElement? elementFromFilter, out UIElement? elementFromResult)
         {
+            elementFromFilter = null;
+            elementFromResult = null;
+
             var windowHandleUnderMouse = NativeMethods.GetWindowUnderMouse();
             var windowUnderMouse = WindowHelper.GetVisibleWindow(windowHandleUnderMouse, dispatcher);
 
-            FrameworkElement? directlyOverElement = null;
-
-            if (windowUnderMouse is not null)
+            if (windowUnderMouse is null)
             {
-                VisualTreeHelper.HitTest(windowUnderMouse, FilterCallback, r => ResultCallback(r, ref directlyOverElement), new PointHitTestParameters(Mouse.GetPosition(windowUnderMouse)));
+                return false;
             }
 
-            return directlyOverElement;
+            var mousePosition = NativeMethods.TryGetRelativeMousePosition(windowHandleUnderMouse, out var nativeMousePosition)
+                ? DPIHelper.DevicePixelsToLogical(nativeMousePosition, windowHandleUnderMouse)
+                : Mouse.GetPosition(windowUnderMouse);
+
+            var pointHitTestParameters = new PointHitTestParameters(mousePosition);
+
+            UIElement? elementFromFilterLocal = null;
+            UIElement? elementFromResultLocal = null;
+            VisualTreeHelper.HitTest(windowUnderMouse, o => FilterCallback(o, ref elementFromFilterLocal), r => ResultCallback(r, ref elementFromResultLocal), pointHitTestParameters);
+
+            elementFromFilter = elementFromFilterLocal;
+            elementFromResult = elementFromResultLocal;
+
+            return elementFromFilter is not null
+                   || elementFromResult is not null;
         }
 
-        private static HitTestFilterBehavior FilterCallback(DependencyObject target)
+        private static HitTestFilterBehavior FilterCallback(DependencyObject target, ref UIElement? element)
         {
-            return HitTestFilterBehavior.Continue;
-        }
-
-        private static HitTestResultBehavior ResultCallback(HitTestResult? result, ref FrameworkElement? directlyOverElement)
-        {
-            if (result is not null &&
-                result.VisualHit is FrameworkElement { IsVisible: true } frameworkElement &&
-                frameworkElement.IsPartOfSnoopVisualTree() == false)
+            var filterResult = target switch
             {
-                directlyOverElement = frameworkElement;
-                return HitTestResultBehavior.Stop;
+                UIElement { IsVisible: false } => HitTestFilterBehavior.ContinueSkipSelfAndChildren,
+                UIElement uiElement when uiElement.IsPartOfSnoopVisualTree() => HitTestFilterBehavior.ContinueSkipSelfAndChildren,
+                _ => HitTestFilterBehavior.Continue
+            };
+
+            if (filterResult == HitTestFilterBehavior.Continue)
+            {
+                if (target is UIElement uiElement)
+                {
+                    element = uiElement;
+                }
             }
 
-            return HitTestResultBehavior.Continue;
+            return filterResult;
+        }
+
+        private static HitTestResultBehavior ResultCallback(HitTestResult? result, ref UIElement? directlyOverElement)
+        {
+            if (result?.VisualHit is not UIElement uiElement)
+            {
+                return HitTestResultBehavior.Continue;
+            }
+
+            directlyOverElement = uiElement;
+            return HitTestResultBehavior.Stop;
         }
     }
 }

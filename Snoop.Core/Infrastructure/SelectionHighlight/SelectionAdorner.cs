@@ -5,6 +5,7 @@ namespace Snoop.Infrastructure.SelectionHighlight
     using System.Windows;
     using System.Windows.Documents;
     using System.Windows.Media;
+    using Snoop.AttachedProperties;
     using Snoop.Infrastructure.Helpers;
 
     public class SelectionAdorner : Adorner, IDisposable
@@ -13,6 +14,7 @@ namespace Snoop.Infrastructure.SelectionHighlight
         {
             IsHitTestVisibleProperty.OverrideMetadata(typeof(SelectionAdorner), new UIPropertyMetadata(false));
             UseLayoutRoundingProperty.OverrideMetadata(typeof(SelectionAdorner), new FrameworkPropertyMetadata(true));
+            SnoopAttachedProperties.IsSnoopPartProperty.OverrideMetadata(typeof(SelectionAdorner), new FrameworkPropertyMetadata(true));
         }
 
         public SelectionAdorner(UIElement adornedElement)
@@ -37,18 +39,8 @@ namespace Snoop.Infrastructure.SelectionHighlight
             }
 
             var pen = SelectionHighlightOptions.Default.Pen;
-            var thickness = pen.Thickness;
 
-            var width = this.ActualWidth - thickness;
-            var height = this.ActualHeight - thickness;
-
-            if (width.GreaterThan(0) == false
-                || height.GreaterThan(0) == false)
-            {
-                return;
-            }
-
-            drawingContext.DrawRectangle(SelectionHighlightOptions.Default.Background, pen, new Rect(thickness, thickness, width, height));
+            drawingContext.DrawRectangle(SelectionHighlightOptions.Default.Background, pen, new Rect(0, 0, this.ActualWidth, this.ActualHeight));
         }
 
         public void Dispose()

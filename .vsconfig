@@ -10,12 +10,11 @@
 
     "Microsoft.Net.ComponentGroup.DevelopmentPrerequisites",
     "Microsoft.Net.ComponentGroup.TargetingPacks.Common",
-    "Microsoft.Net.Component.4.TargetingPack",
+    "Microsoft.Net.Component.4.6.TargetingPack",
 
     "Microsoft.VisualStudio.Workload.CoreEditor",
     "Microsoft.VisualStudio.Workload.NativeDesktop",
     "Microsoft.VisualStudio.Workload.ManagedDesktop",
-    "Microsoft.VisualStudio.Workload.NetCoreTools",
 
     "Microsoft.VisualStudio.Component.ManagedDesktop.Prerequisites",
     "Microsoft.VisualStudio.Component.NuGet",

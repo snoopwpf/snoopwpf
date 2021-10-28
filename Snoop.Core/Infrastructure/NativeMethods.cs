@@ -682,6 +682,51 @@ namespace Snoop.Infrastructure
         public const uint ATTACH_PARENT_PROCESS = 0x0ffffffff;
 
         #endregion
+
+        /// <summary>
+        /// Try to get the relative mouse position to the given handle in client coordinates.
+        /// </summary>
+        /// <param name="hWnd">The handle for this method.</param>
+        /// <param name="point">The relative mouse position to the given handle.</param>
+        public static bool TryGetRelativeMousePosition(IntPtr hWnd, out POINT point)
+        {
+            point = default;
+
+            var returnValue = hWnd != IntPtr.Zero
+                              && TryGetPhysicalCursorPos(out point);
+
+            if (returnValue)
+            {
+                ScreenToClient(hWnd, ref point);
+            }
+
+            return returnValue;
+        }
+
+        public static bool TryGetPhysicalCursorPos(out POINT pt)
+        {
+            var returnValue = _GetPhysicalCursorPos(out pt);
+            // Sometimes Win32 will fail this call, such as if you are
+            // not running in the interactive desktop. For example,
+            // a secure screen saver may be running.
+            if (!returnValue)
+            {
+                System.Diagnostics.Debug.WriteLine("GetPhysicalCursorPos failed!");
+                pt.X = 0;
+                pt.Y = 0;
+            }
+
+            return returnValue;
+        }
+
+        [DllImport("user32.dll", CharSet = CharSet.None, SetLastError = true, EntryPoint = "ScreenToClient")]
+        private static extern bool ScreenToClient(IntPtr hWnd, ref POINT point);
+
+        [DllImport("user32.dll", EntryPoint = "GetPhysicalCursorPos", ExactSpelling = true, CharSet = CharSet.Auto, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+#pragma warning disable SA1300
+        private static extern bool _GetPhysicalCursorPos(out POINT lpPoint);
+#pragma warning restore SA1300
     }
 
     // RECT structure required by WINDOWPLACEMENT structure

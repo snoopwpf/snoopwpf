@@ -61,7 +61,7 @@ Snoop requires this component, which is part of the Snoop project, to do it's jo
                 };
 
                 var commandLine = Parser.Default.FormatCommandLine(injectorLauncherCommandLineOptions);
-                var startInfo = new ProcessStartInfo(injectorLauncherExe, commandLine)
+                var processStartInfo = new ProcessStartInfo(injectorLauncherExe, commandLine)
                 {
                     UseShellExecute = true,
                     CreateNoWindow = true,
@@ -71,10 +71,10 @@ Snoop requires this component, which is part of the Snoop project, to do it's jo
                                                : null
                 };
 
-                LogHelper.WriteLine($"Launching injector \"{startInfo.FileName}\".");
+                LogHelper.WriteLine($"Launching injector \"{processStartInfo.FileName}\".");
                 LogHelper.WriteLine($"Arguments: {commandLine}.");
 
-                using var process = Process.Start(startInfo);
+                using var process = Process.Start(processStartInfo);
                 process?.WaitForExit();
             }
             finally

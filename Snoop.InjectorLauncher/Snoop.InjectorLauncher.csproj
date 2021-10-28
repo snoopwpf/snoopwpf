@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>exe</OutputType>
-    <TargetFramework Condition="'$(TargetFramework)' == ''">net40</TargetFramework>
+    <TargetFramework Condition="'$(TargetFramework)' == ''">net451</TargetFramework>
     <PlatformTarget Condition="'$(PlatformTarget)' == ''">x86</PlatformTarget>
     <ApplicationIcon>..\Artwork\Snoop.ico</ApplicationIcon>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>

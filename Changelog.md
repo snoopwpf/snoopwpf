@@ -1,6 +1,10 @@
 ﻿# Changelog for Snoop
 
-## 3.1.0
+## 4.0.0
+
+- ### Breaking changes
+
+  - Dropped support for all .NET versions prior to .NET 4.5.1
 
 - ### Bug fixes
 
@@ -22,7 +26,7 @@
   - Maximum displayed events in events viewer are now persisted in settings
   - Added menu items to close the current snoop window, open the folder containing the settings for the currently running application and reset the current settings
   - Added support for `ThreeState` bool values in the properties grid
-  - Tracking mode change: Holding CTRL is changed to CTRL + ALT, as only CTRL was triggered all the time when copying text, switching tabs etc..
+  - Tracking mode change: Holding CTRL is replaced by a mode setting as it was triggered all the time when copying text, switching tabs etc..
   - Support for ARM/ARM64
   - Support for .NET 5 and .NET 6
   - Binding errors are now resolved in an explicit lazy way to prevent it from fixing the error silently.  

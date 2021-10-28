@@ -3,13 +3,12 @@
     using System;
     using System.Windows;
     using System.Windows.Automation.Peers;
-    using System.Windows.Documents;
     using System.Windows.Media;
     using Snoop.Infrastructure.SelectionHighlight;
 
     public class AutomationPeerTreeItem : TreeItem
     {
-        private Adorner? selectionHighlight;
+        private IDisposable? selectionHighlight;
 
         public AutomationPeerTreeItem(AutomationPeer target, TreeItem? parent, TreeService treeService)
             : base(target, parent, treeService)
@@ -44,12 +43,12 @@
         protected override void OnIsSelectedChanged()
         {
             // Add adorners for the visual this is representing.
-            if (this.Visual is UIElement visualElement)
+            if (this.Target is DependencyObject dependencyObject)
             {
                 if (this.IsSelected
                     && this.selectionHighlight is null)
                 {
-                    this.selectionHighlight = SelectionAdornerFactory.CreateAndAttachAdornerContainer(visualElement);
+                    this.selectionHighlight = SelectionHighlightFactory.CreateAndAttachSelectionHighlight(dependencyObject);
                 }
                 else if (this.selectionHighlight is not null)
                 {
