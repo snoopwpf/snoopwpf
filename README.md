@@ -26,6 +26,19 @@ You can change property values, view triggers, set breakpoints on property chang
 
 You can read the [changelog](Changelog.md) for details on what changed in which version.
 
+### [4.0.0]
+
+Highlights:
+
+- Support for .NET 6.0
+- Support for ARM/ARM64
+- New "Diagnostics" view
+- Settings for highlighting
+
+Breaking:
+
+- Dropped support for all .NET versions prior to .NET 4.5.1
+
 ### [3.0.0](../../releases/tag/v3.0.0)
 
 Highlights:
