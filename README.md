@@ -34,6 +34,7 @@ Highlights:
 - Support for ARM/ARM64
 - New "Diagnostics" view
 - Settings for highlighting
+- Artifacts are digitally signed thanks to SignPath.io (MSI, Chocolatey NUPKG and zip)
 
 Breaking:
 
