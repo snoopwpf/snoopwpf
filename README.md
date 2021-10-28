@@ -86,6 +86,13 @@ Here are the links to the current Snoop Tips & Tricks:
 
 Well, you can! You will just need to use Snoop 2.9.0 and earlier, in order to do so.
 As part of the process of moving to Visual Studio 2019, we have dropped support for .NET 3.5 applications.
+The minimum supported .NET version is 4.0 as of Snoop version 3.0.
+
+## Why can't I snoop .NET 4.0 and 4.5.0 applications?
+
+Well, you can! You will just need to use Snoop 3.0.0 and earlier, in order to do so.
+As part of the process of moving to Visual Studio 2022, we have dropped support for .NET 4.0 and 4.5.0 applications.
+The minimum supported .NET version is 4.5.1 as of Snoop version 4.0.
 
 ## How do i build Snoop?
 
@@ -93,9 +100,10 @@ Just open `Snoop.sln` with Visual Studio and build it.
 
 Requirements:
 
-- Visual Studio 2019 16.8 (including C++ payloads (x86/x64/ARM/ARM64))
+- Visual Studio 2022 (including C++ payloads (x86/x64/ARM/ARM64))
   - You can import the `.vsconfig` file in the Visual Studio installer to let it install all required components
-- .NET Core SDK 5.0.100
+- .NET Core SDK 5.0.400 or later
+- .NET 4.5.1 targeting pack [download](https://dotnet.microsoft.com/download/dotnet-framework/net451)
 
 ## Contributors
 

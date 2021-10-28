@@ -60,12 +60,4 @@ namespace System.Diagnostics.CodeAnalysis
         public string ParameterName { get; }
     }
 }
-
-namespace System.Runtime.CompilerServices
-{
-    [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
-    internal class CallerMemberNameAttribute : Attribute
-    {
-    }
-}
 #endif

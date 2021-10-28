@@ -74,7 +74,7 @@ namespace Snoop.PowerShell
                 }
 
                 return false;
-#elif NET40
+#elif NET451
                 var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\PowerShell\3\PowerShellEngine");
                 if (key is not null)
                 {
