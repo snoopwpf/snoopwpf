@@ -36,10 +36,6 @@ All other rights reserved.
 	DataContext="{Binding RelativeSource={RelativeSource Self}}">
 	<Window.Resources>
 		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="../Controls/ProperTreeViewResources.xaml"/>
-			</ResourceDictionary.MergedDictionaries>
-
 			<Style x:Key="refreshButton" TargetType="{x:Type Button}">
 				<Setter Property="FocusVisualStyle">
 					<Setter.Value>

@@ -10,6 +10,9 @@ All other rights reserved.
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                     xmlns:controls="clr-namespace:Snoop.Controls"
                     mc:Ignorable="d">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Controls/ProperTreeViewResources.xaml" />
+    </ResourceDictionary.MergedDictionaries>
 
     <!-- SimpleStyles.XAML defines a set of control styles which are simplified starting points for creating your own controls -->
 
@@ -1281,118 +1284,6 @@ All other rights reserved.
                             <Setter TargetName="PART_Track" Property="Orientation" Value="Horizontal" />
                         </Trigger>
 
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <!--Simple Tree View - This lays out TreeViewItems within a ScrollViewer -->
-    <Style x:Key="SimpleTreeView" TargetType="{x:Type TreeView}">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type TreeView}">
-                    <Grid>
-                        <Border x:Name="Border" Background="{DynamicResource WindowBackgroundBrush}"
-                                BorderBrush="{DynamicResource SolidBorderBrush}" BorderThickness="1" CornerRadius="1">
-                            <ScrollViewer Style="{DynamicResource SimpleScrollViewer}" Focusable="False"
-                                          Background="{TemplateBinding Background}" Padding="4"
-                                          HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
-                                          CanContentScroll="False">
-                                <ItemsPresenter />
-                            </ScrollViewer>
-                        </Border>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <!--Simple TreeViewItem ToggleButton - + and - button to expand and collapse a TreeViewItem -->
-    <Style x:Key="SimpleTreeViewItemToggleButton" d:IsControlPart="True" TargetType="{x:Type ToggleButton}">
-        <Setter Property="Focusable" Value="False" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ToggleButton}">
-                    <Grid Width="15" Height="13" Background="Transparent">
-                        <Path Visibility="Collapsed" HorizontalAlignment="Left" Margin="1,1,1,1"
-                              x:Name="IsExpandedPath" VerticalAlignment="Center" Fill="{DynamicResource GlyphBrush}"
-                              Data="M 0 4 L 8 4 L 4 8 Z" />
-                        <Path HorizontalAlignment="Left" Margin="1,1,1,1" x:Name="ExpandPath"
-                              VerticalAlignment="Center" Fill="{DynamicResource GlyphBrush}" Data="M 4 0 L 8 4 L 4 8 Z" />
-                    </Grid>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsChecked" Value="True">
-                            <Setter Property="Visibility" Value="Visible" TargetName="IsExpandedPath" />
-                            <Setter Property="Visibility" Value="Collapsed" TargetName="ExpandPath" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <!--Simple TreeViewItem - The TreeViewItem template has a header which shows the Item and a Body which is an ItemsHost control which expands to show child items-->
-    <Style x:Key="SimpleTreeViewItem" d:IsControlPart="True" TargetType="{x:Type TreeViewItem}">
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="HorizontalContentAlignment"
-                Value="{Binding Path=HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
-        <Setter Property="VerticalContentAlignment"
-                Value="{Binding Path=VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
-        <Setter Property="Padding" Value="1,0,0,0" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type TreeViewItem}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition MinWidth="19" Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
-                        <ToggleButton x:Name="Expander" Style="{DynamicResource SimpleTreeViewItemToggleButton}"
-                                      IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
-                                      ClickMode="Press" />
-                        <Border Grid.Column="1" x:Name="Selection_Border" Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                              x:Name="PART_Header" ContentSource="Header" />
-                        </Border>
-                        <ItemsPresenter Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" x:Name="ItemsHost" />
-                    </Grid>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsExpanded" Value="false">
-                            <Setter Property="Visibility" Value="Collapsed" TargetName="ItemsHost" />
-                        </Trigger>
-                        <Trigger Property="HasItems" Value="false">
-                            <Setter Property="Visibility" Value="Hidden" TargetName="Expander" />
-                        </Trigger>
-                        <Trigger Property="IsSelected" Value="true">
-                            <Setter Property="Background"
-                                    Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"
-                                    TargetName="Selection_Border" />
-                            <Setter Property="Foreground"
-                                    Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
-                        </Trigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsSelected" Value="true" />
-                                <Condition Property="IsSelectionActive" Value="false" />
-                            </MultiTrigger.Conditions>
-                            <Setter Property="Background"
-                                    Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"
-                                    TargetName="Selection_Border" />
-                            <Setter Property="Foreground"
-                                    Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
-                        </MultiTrigger>
-                        <Trigger Property="IsEnabled" Value="false">
-                            <Setter Property="Foreground"
-                                    Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
-                        </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
