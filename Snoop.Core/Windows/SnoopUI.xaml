@@ -212,6 +212,7 @@ All other rights reserved.
 		<!-- Visual Tree TreeView -->
 		<controls:ProperTreeView
 			x:Name="Tree"
+            Style="{DynamicResource Snoop.Styles.ProperTreeView}"
 			Grid.Row="1"
 			Grid.RowSpan="2"
 			MinHeight="0"

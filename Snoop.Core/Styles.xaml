@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 (c) Copyright Cory Plotts.
 This source is subject to the Microsoft Public License (Ms-PL).
 Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
@@ -11,6 +11,7 @@ All other rights reserved.
                     xmlns:controls="clr-namespace:Snoop.Controls"
                     mc:Ignorable="d">
     <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="BaseStyles.xaml" />
         <ResourceDictionary Source="Controls/ProperTreeViewResources.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
@@ -168,6 +169,16 @@ All other rights reserved.
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <Style x:Key="{x:Type StackPanel}"
+           TargetType="{x:Type StackPanel}">
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="Margin"
+                Value="0" />
+        <Setter Property="OverridesDefaultStyle"
+                Value="True" />
     </Style>
 
     <!-- Simple CheckBox -->
