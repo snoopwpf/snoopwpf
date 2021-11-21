@@ -59,58 +59,6 @@ All other rights reserved.
             <GradientStop Color="#FF036194" Offset="1" />
         </LinearGradientBrush>
 
-        <!-- checkBoxStyle -->
-        <Style x:Key="checkBoxStyle" TargetType="{x:Type CheckBox}">
-            <Setter Property="SnapsToDevicePixels" Value="true" />
-            <Setter Property="FocusVisualStyle" Value="{DynamicResource CheckBoxFocusVisual}" />
-            <Setter Property="Background" Value="{DynamicResource NormalBrush}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type CheckBox}">
-                        <!-- BulletDecorator is used to provide baseline alignment between the checkmark and the Content -->
-                        <BulletDecorator Background="Transparent">
-                            <BulletDecorator.Bullet>
-                                <Grid Width="13" Height="13">
-                                    <Border x:Name="Border" Background="{TemplateBinding Background}"
-                                            BorderBrush="{TemplateBinding BorderBrush}"
-                                            BorderThickness="{TemplateBinding BorderThickness}" />
-                                    <Path x:Name="CheckMark" Stroke="{DynamicResource GlyphBrush}" StrokeThickness="2"
-                                          SnapsToDevicePixels="False" Data="M 3 3 L 10 10 M 3 10 L 10 3" />
-                                </Grid>
-                            </BulletDecorator.Bullet>
-                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                              Margin="{TemplateBinding Padding}"
-                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                              RecognizesAccessKey="True" />
-                        </BulletDecorator>
-                        <!-- This uses Visibility to hide and show the CheckMark on IsChecked -->
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsChecked" Value="false">
-                                <Setter Property="Visibility" Value="Collapsed" TargetName="CheckMark" />
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="true">
-                                <Setter Property="Background" Value="{DynamicResource MouseOverBrush}"
-                                        TargetName="Border" />
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="true">
-                                <Setter Property="Background" Value="{DynamicResource PressedBrush}"
-                                        TargetName="Border" />
-                                <Setter Property="BorderBrush" Value="{DynamicResource PressedBorderBrush}"
-                                        TargetName="Border" />
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="false">
-                                <Setter Property="Background" Value="{DynamicResource DisabledBackgroundBrush}"
-                                        TargetName="Border" />
-                                <Setter Property="BorderBrush" Value="{DynamicResource DisabledBorderBrush}"
-                                        TargetName="Border" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
         <!-- windowStyle (that makes the app chooser look selected/activated) -->
         <ControlTemplate x:Key="WindowTemplateKey" TargetType="{x:Type Window}">
             <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
@@ -188,6 +136,169 @@ All other rights reserved.
                         <Border>
                             <Rectangle Margin="2" Stroke="#AFFFFFFF" StrokeThickness="1" StrokeDashArray="1 2" />
                         </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <ControlTemplate x:Key="SimpleComboBoxToggleButtonTemplate" TargetType="{x:Type ToggleButton}">
+            <ControlTemplate.Resources>
+                <Storyboard x:Key="Shiney">
+                    <ObjectAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="rectangle"
+                                                   Storyboard.TargetProperty="(UIElement.Visibility)">
+                        <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}" />
+                        <DiscreteObjectKeyFrame KeyTime="00:00:00.3000000" Value="{x:Static Visibility.Visible}" />
+                        <DiscreteObjectKeyFrame KeyTime="00:00:00.4000000" Value="{x:Static Visibility.Collapsed}" />
+                    </ObjectAnimationUsingKeyFrames>
+                    <PointAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="rectangle"
+                                                  Storyboard.TargetProperty="(Shape.Fill).(LinearGradientBrush.StartPoint)">
+                        <SplinePointKeyFrame KeyTime="00:00:00" Value="-0.594,1.392" />
+                        <SplinePointKeyFrame KeyTime="00:00:00.3000000" Value="1.023,1.393" />
+                    </PointAnimationUsingKeyFrames>
+                    <PointAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="rectangle"
+                                                  Storyboard.TargetProperty="(Shape.Fill).(LinearGradientBrush.EndPoint)">
+                        <SplinePointKeyFrame KeyTime="00:00:00" Value="0.212,-0.3" />
+                        <SplinePointKeyFrame KeyTime="00:00:00.3000000" Value="1.829,-0.299" />
+                    </PointAnimationUsingKeyFrames>
+                </Storyboard>
+            </ControlTemplate.Resources>
+            <Grid Style="{x:Null}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Style="{x:Null}" />
+                    <ColumnDefinition Style="{x:Null}" Width="20" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Style="{x:Null}" Height="0.486*" />
+                    <RowDefinition Style="{x:Null}" Height="0.514*" />
+                </Grid.RowDefinitions>
+                <Rectangle Style="{x:Null}" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" x:Name="Rectangle" VerticalAlignment="Stretch"
+                           Width="Auto" Height="Auto" RadiusX="4" RadiusY="4" Stroke="{DynamicResource DarkBlue}"
+                           StrokeThickness="1" Grid.RowSpan="2">
+                    <Rectangle.Fill>
+                        <DynamicResource ResourceKey="MetalGrad" />
+                    </Rectangle.Fill>
+                </Rectangle>
+                <Border Style="{x:Null}" HorizontalAlignment="Stretch" Width="Auto" Background="{DynamicResource DarkBlue}"
+                        CornerRadius="4,0,0,4" Grid.RowSpan="2" />
+                <Rectangle Style="{x:Null}" Visibility="Collapsed" Stroke="{x:Null}" StrokeThickness="0" RadiusX="3" RadiusY="3"
+                           HorizontalAlignment="Stretch" Margin="0,0,2,1" x:Name="rectangle" Width="Auto" Height="Auto"
+                           Grid.RowSpan="2">
+                    <Rectangle.Fill>
+                        <LinearGradientBrush EndPoint="0.212,-0.3" StartPoint="-0.594,1.392">
+                            <GradientStop Color="#000073E6" Offset="0" />
+                            <GradientStop Color="#03006EB9" Offset="1" />
+                            <GradientStop Color="#91037790" Offset="0.53" />
+                        </LinearGradientBrush>
+                    </Rectangle.Fill>
+                </Rectangle>
+                <Border Style="{x:Null}" Margin="1,1,1,0" Background="{DynamicResource ShineBrush1}" CornerRadius="3,0,0,3" />
+                <Path Style="{x:Null}" Fill="{x:Null}" Stretch="Fill" Stroke="{DynamicResource DeepBlueColorBrush}" StrokeDashCap="Flat"
+                      StrokeEndLineCap="Round" StrokeLineJoin="Round" StrokeMiterLimit="20" StrokeStartLineCap="Round"
+                      StrokeThickness="2" HorizontalAlignment="Center" Margin="0,0,0,0" x:Name="path"
+                      VerticalAlignment="Center" Grid.Column="1" Data="M276.75,15.25 L282.25,21 287.25,15.25" Width="12"
+                      Height="8" Grid.RowSpan="2" />
+            </Grid>
+            <ControlTemplate.Triggers>
+                <EventTrigger RoutedEvent="FrameworkElement.Loaded" />
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard Storyboard="{StaticResource Shiney}" />
+                    </Trigger.EnterActions>
+                    <Setter Property="Stroke" TargetName="path" Value="#FF285FBF" />
+                    <Setter Property="Fill" TargetName="Rectangle">
+                        <Setter.Value>
+                            <LinearGradientBrush EndPoint="0.959,0" StartPoint="0.959,0.924">
+                                <GradientStop Color="#FFFFFFFF" Offset="0.48" />
+                                <GradientStop Color="#FFB2E2FF" Offset="1" />
+                                <GradientStop Color="#FFBAE5FF" Offset="0" />
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+                <Trigger Property="IsChecked" Value="true">
+                    <Setter Property="Fill" Value="{DynamicResource PressedBrush}" TargetName="Rectangle" />
+                    <Setter Property="Stroke" TargetName="path" Value="#FF020A16" />
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Fill" Value="{DynamicResource DisabledBackgroundBrush}" TargetName="Rectangle" />
+                    <Setter Property="Stroke" Value="{DynamicResource DisabledBorderBrush}" TargetName="Rectangle" />
+                    <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}" />
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+        <Style x:Key="SimpleComboBox" TargetType="{x:Type ComboBox}">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ComboBox}">
+                        <Grid Style="{x:Null}">
+                            <!-- The ToggleButton is databound to the ComboBox itself to toggle IsDropDownOpen -->
+                            <ToggleButton Style="{x:Null}" Grid.Column="2" Template="{DynamicResource SimpleComboBoxToggleButtonTemplate}"
+                                          x:Name="ToggleButton" Focusable="false"
+                                          IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                          ClickMode="Press" Background="{DynamicResource MetalGrad}" />
+                            <ContentPresenter Style="{x:Null}" HorizontalAlignment="Left" Margin="3,3,23,3" x:Name="ContentSite"
+                                              VerticalAlignment="Center" Content="{TemplateBinding SelectionBoxItem}"
+                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                              ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                              IsHitTestVisible="False" />
+
+                            <!-- The TextBox must be named PART_EditableTextBox or ComboBox will not recognize it -->
+                            <TextBox Visibility="Hidden" Template="{DynamicResource ComboBoxTextBox}"
+                                     HorizontalAlignment="Left" Margin="3,3,23,3" x:Name="PART_EditableTextBox"
+                                     Style="{x:Null}" VerticalAlignment="Center" Focusable="True" Background="Transparent"
+                                     IsReadOnly="{TemplateBinding IsReadOnly}"
+                                     IsReadOnlyCaretVisible="True"
+                                     FontSize="12" Foreground="#FF97E2CD" />
+
+                            <!-- The Popup shows the list of items in the ComboBox. IsOpen is databound to IsDropDownOpen which is toggled via the ComboBoxToggleButton -->
+                            <Popup Style="{x:Null}" IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" x:Name="Popup"
+                                   Focusable="False" AllowsTransparency="True" PopupAnimation="Slide">
+                                <Grid Style="{x:Null}" MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                                      MinWidth="{TemplateBinding ActualWidth}" x:Name="DropDown" SnapsToDevicePixels="True">
+                                    <Border Style="{x:Null}" x:Name="DropDownBorder" BorderBrush="{x:Null}" BorderThickness="1">
+                                        <Border.Background>
+                                            <LinearGradientBrush EndPoint="0.993,0.032" StartPoint="0.007,0.968">
+                                                <GradientStop Color="#E5CDDDE4" Offset="0.508" />
+                                                <GradientStop Color="#E5FFFFFF" Offset="1" />
+                                                <GradientStop Color="#E5FFFFFF" Offset="0" />
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                    </Border>
+                                    <ScrollViewer Margin="4,6,4,6" Style="{DynamicResource SimpleScrollViewer}"
+                                                  SnapsToDevicePixels="True" HorizontalScrollBarVisibility="Auto"
+                                                  VerticalScrollBarVisibility="Auto" CanContentScroll="True"
+                                                  Foreground="#FF043774">
+
+                                        <!-- The StackPanel is used to display the children by setting IsItemsHost to be True -->
+                                        <StackPanel Style="{x:Null}" IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+
+                                    </ScrollViewer>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <!-- This forces the DropDown to have a minimum size if it is empty -->
+                            <Trigger Property="HasItems" Value="false">
+                                <Setter Property="MinHeight" Value="95" TargetName="DropDownBorder" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsGrouping" Value="true">
+                                <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
+                            </Trigger>
+                            <Trigger Property="AllowsTransparency" SourceName="Popup" Value="true">
+                                <Setter Property="CornerRadius" Value="4" TargetName="DropDownBorder" />
+                                <Setter Property="Margin" Value="0,2,0,0" TargetName="DropDownBorder" />
+                            </Trigger>
+                            <Trigger Property="IsEditable" Value="true">
+                                <Setter Property="IsTabStop" Value="false" />
+                                <Setter Property="Visibility" Value="Visible" TargetName="PART_EditableTextBox" />
+                                <Setter Property="Visibility" Value="Hidden" TargetName="ContentSite" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -274,7 +385,7 @@ All other rights reserved.
                         </Border>
 
                         <TextBlock Grid.Column="1"
-                                   Text="{Binding ProcessId, StringFormat={}[{0}], Mode=OneTime}"
+                                   Text="{Binding OwningProcessId, StringFormat={}[{0}], Mode=OneTime}"
                                    Margin="0,0,6,0"
                                    MouseRightButtonUp="HandleDropDownColumn_OnMouseRightButtonUp">
                             <TextBlock.Style>
@@ -288,7 +399,7 @@ All other rights reserved.
                             </TextBlock.Style>
                             <TextBlock.ToolTip>
                                 <TextBlock Style="{x:Null}">
-                                    <Run Text="{Binding ProcessId, Mode=OneTime, StringFormat={}PID: &#x2019;{0}&#x2019;}"
+                                    <Run Text="{Binding OwningProcessId, Mode=OneTime, StringFormat={}PID: &#x2019;{0}&#x2019;}"
                                          Style="{x:Null}" />
                                     <LineBreak Style="{x:Null}" />
                                     <Run Text="Right mouse button click to sort" Style="{x:Null}" />
@@ -364,7 +475,7 @@ All other rights reserved.
                             <TextBlock.Text>
                                 <MultiBinding StringFormat="{}[{0}] - {1} - {2}">
                                     <MultiBinding.Bindings>
-                                        <Binding Path="ProcessId" />
+                                        <Binding Path="OwningProcessId" />
                                         <Binding Path="ProcessName" />
                                         <Binding Path="WindowTitle" />
                                     </MultiBinding.Bindings>
