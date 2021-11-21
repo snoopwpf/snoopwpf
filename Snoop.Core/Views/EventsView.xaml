@@ -35,7 +35,7 @@ All other rights reserved.
 			</DataTemplate>
 
 			<DataTemplate DataType="{x:Type ExecutedRoutedEventArgs}">
-				<StackPanel Orientation="Horizontal">
+				<StackPanel Style="{x:Null}" Orientation="Horizontal">
                     <TextBlock Style="{x:Null}" Text="{Binding Command, Converter={x:Static converters:ObjectToStringConverter.Instance}}"/>
 				</StackPanel>
 			</DataTemplate>
@@ -47,7 +47,7 @@ All other rights reserved.
 			</DataTemplate>
 
             <HierarchicalDataTemplate ItemsSource="{Binding Stack}" DataType="{x:Type infrastructure:TrackedEvent}">
-				<Grid x:Name="Grid" Background="Transparent">
+				<Grid Style="{x:Null}" x:Name="Grid" Background="Transparent">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="*"/>
 						<ColumnDefinition Width="*"/>
@@ -56,20 +56,19 @@ All other rights reserved.
 						<RowDefinition Height="*"/>
 						<RowDefinition Height="*"/>
 					</Grid.RowDefinitions>
-					<StackPanel Orientation="Horizontal">
+					<StackPanel Style="{x:Null}" Orientation="Horizontal">
 						<ContentControl Style="{x:Null}" Content="{Binding EventArgs}" Focusable="False"/>
 						<TextBlock Style="{x:Null}" Text=" on "/>
                         <TextBlock Style="{x:Null}" Text="{Binding Originator.Handler, Converter={x:Static converters:ObjectToStringConverter.Instance}}" Grid.Column="1"/>
 					</StackPanel>
-					<ContentControl
-						x:Name="Handler"
-					    Style="{x:Null}"
-						Grid.Row="1"
-						Grid.ColumnSpan="2"
-						Visibility="Collapsed"
-						Focusable="False"
-					>
-						<StackPanel Orientation="Horizontal">
+					<ContentControl Style="{x:Null}"
+                                    x:Name="Handler"
+                                    Grid.Row="1"
+                                    Grid.ColumnSpan="2"
+                                    Visibility="Collapsed"
+                                    Focusable="False"
+                    >
+						<StackPanel Style="{x:Null}" Orientation="Horizontal">
 							<TextBlock Style="{x:Null}" Text="Handled by: "/>
                             <TextBlock Style="{x:Null}" Text="{Binding HandledBy, Converter={x:Static converters:ObjectToStringConverter.Instance}}"/>
 						</StackPanel>
@@ -83,11 +82,11 @@ All other rights reserved.
 			</HierarchicalDataTemplate>
 
             <HierarchicalDataTemplate DataType="{x:Type infrastructure:EventEntry}">
-				<Grid Name="Grid" Background="Transparent">
+				<Grid Style="{x:Null}" Name="Grid" Background="Transparent">
 					<Grid.ToolTip>
 						<TextBlock Style="{x:Null}" Text="Click to select the element that handled this"/>
 					</Grid.ToolTip>
-					<StackPanel Orientation="Horizontal">
+					<StackPanel Style="{x:Null}" Orientation="Horizontal">
                         <TextBlock Style="{x:Null}" Text="{Binding Handler, Converter={x:Static converters:ObjectToStringConverter.Instance}}"/>
 						<TextBlock Style="{x:Null}" Text=" handled: "/>
 						<TextBlock Style="{x:Null}" Text="{Binding Handled}" Grid.Column="1"/>

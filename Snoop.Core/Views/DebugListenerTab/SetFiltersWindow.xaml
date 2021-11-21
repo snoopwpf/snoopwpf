@@ -50,7 +50,7 @@
 				</ListBox.ItemContainerStyle>
 				<ListBox.ItemTemplate>
 					<DataTemplate>
-						<StackPanel Orientation="Horizontal" Margin="0,5,0,5" Name="stackPanelFilter">
+						<StackPanel Style="{x:Null}" Orientation="Horizontal" Margin="0,5,0,5" Name="stackPanelFilter">
 							<TextBlock Style="{x:Null}" Text="{Binding Path=IsInverseText}" Margin="0,5,10,5" FontSize="9" VerticalAlignment="Center" Visibility="Visible">
 								<!--
 								<TextBlock.Style>

@@ -310,7 +310,7 @@ All other rights reserved.
 		>
 			<Image x:Name="Image" Style="{x:Null}" Source="{DynamicResource magnifyingGlassDrawingImage}"/>
 			<Button.ToolTip>
-				<StackPanel>
+				<StackPanel Style="{x:Null}">
 					<TextBlock Style="{x:Null}" Text="Bring up the Magnify window on"/>
 					<TextBlock Style="{x:Null}" Text="the currently selected object."/>
 				</StackPanel>
@@ -329,7 +329,7 @@ All other rights reserved.
 		>
 			<Image Style="{x:Null}" Source="{DynamicResource powerDrawingImage}"/>
 			<ToggleButton.ToolTip>
-				<StackPanel>
+				<StackPanel Style="{x:Null}">
 					<TextBlock Style="{x:Null}" Text="Enable/disable preview area (i.e. the"/>
 					<TextBlock Style="{x:Null}" Text="display of the currently selected object)."/>
 				</StackPanel>

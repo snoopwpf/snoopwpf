@@ -63,7 +63,8 @@ All other rights reserved.
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type valueEditors:StandardValueEditor}">
-					<StackPanel Orientation="Horizontal">
+					<StackPanel Style="{x:Null}"
+                                Orientation="Horizontal">
 						<Button Style="{x:Null}"
 								x:Name="OpenDetailsEditor"
 								DockPanel.Dock="Left"
@@ -114,7 +115,7 @@ All other rights reserved.
         <Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type valueEditors:BoolValueEditor}">
-					<StackPanel Orientation="Horizontal" d:DataContext="{d:DesignInstance infrastructure:PropertyInformation, IsDesignTimeCreatable=False}">
+					<StackPanel Style="{x:Null}" Orientation="Horizontal" d:DataContext="{d:DesignInstance infrastructure:PropertyInformation, IsDesignTimeCreatable=False}">
 						<CheckBox
 							x:Name="PART_CheckBox"
 						    Style="{x:Null}"

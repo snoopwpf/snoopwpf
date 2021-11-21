@@ -116,7 +116,7 @@
                 <HeaderedContentControl x:Name="triggerControl"
                                         Style="{StaticResource Snoop.TriggerControlStyle}"
                                         Header="{Binding TriggerType}">
-                    <StackPanel>
+                    <StackPanel Style="{x:Null}">
                         <TextBlock Style="{x:Null}" Text="Conditions" Margin="4,4,4,0" />
                         <ItemsControl Style="{x:Null}" Margin="8,4" ItemsSource="{Binding Conditions}">
                             <ItemsControl.ItemTemplate>
@@ -126,7 +126,7 @@
                                             <RowDefinition />
                                             <RowDefinition />
                                         </Grid.RowDefinitions>
-                                        <StackPanel Orientation="Horizontal">
+                                        <StackPanel Style="{x:Null}" Orientation="Horizontal">
                                             <Image x:Name="image"
                                                    Style="{x:Null}"
                                                    Source="{DynamicResource inActiveDrawingImage}"
@@ -138,12 +138,12 @@
                                                        Text="{Binding Condition}" />
                                         </StackPanel>
 
-                                        <Border Grid.Row="1"
+                                        <Border Style="{x:Null}" Grid.Row="1"
                                                 x:Name="errorPane"
                                                 Visibility="Collapsed"
                                                 Background="Red"
                                                 TextElement.Foreground="White">
-                                            <StackPanel Orientation="Horizontal">
+                                            <StackPanel Style="{x:Null}" Orientation="Horizontal">
                                                 <Image x:Name="warningImage"
                                                        Style="{x:Null}"
                                                        Source="{DynamicResource warningDrawingImage}"
@@ -247,13 +247,13 @@
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="{x:Type GroupItem}">
-                                            <StackPanel Margin="8">
+                                            <StackPanel Style="{x:Null}" Margin="8">
                                                 <TextBlock Style="{x:Null}"
                                                            Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
                                                            VerticalAlignment="Center"
                                                            FontWeight="Bold"
                                                            Text="{Binding Path=Name}" />
-                                                <ItemsPresenter Margin="0,4,0,0" />
+                                                <ItemsPresenter Style="{x:Null}" Margin="0,4,0,0" />
                                             </StackPanel>
                                         </ControlTemplate>
                                     </Setter.Value>

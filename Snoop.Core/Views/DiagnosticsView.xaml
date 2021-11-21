@@ -31,26 +31,26 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <StackPanel Margin="8,4,0,4" Orientation="Horizontal" HorizontalAlignment="Left">
+        <StackPanel Style="{x:Null}" Margin="8,4,0,4" Orientation="Horizontal" HorizontalAlignment="Left">
             <ToggleButton Margin="0,0,4,0" Padding="2 0" IsChecked="{Binding ElementName=self, Path=ShowErrors, Mode=TwoWay}" HorizontalContentAlignment="Left" >
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="{DynamicResource errorDrawingImage}" Height="14" />
-                    <TextBlock Margin="4,0,0,0" Text="{Binding ElementName=self, Path=ErrorCount}" />
-                    <TextBlock Margin="4,0,0,0" Text="Errors" />
+                <StackPanel Style="{x:Null}" Orientation="Horizontal">
+                    <Image Style="{x:Null}" Source="{DynamicResource errorDrawingImage}" Height="14" />
+                    <TextBlock Style="{x:Null}" Margin="4,0,0,0" Text="{Binding ElementName=self, Path=ErrorCount}" />
+                    <TextBlock Style="{x:Null}" Margin="4,0,0,0" Text="Errors" />
                 </StackPanel>
             </ToggleButton>
             <ToggleButton Margin="0,0,4,0" Padding="2 0" IsChecked="{Binding ElementName=self, Path=ShowWarnings, Mode=TwoWay}" HorizontalContentAlignment="Left" >
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="{DynamicResource warningDrawingImage}" Height="14" />
-                    <TextBlock Margin="4,0,0,0" Text="{Binding ElementName=self, Path=WarningCount}" />
-                    <TextBlock Margin="4,0,0,0" Text="Warnings" />
+                <StackPanel Style="{x:Null}" Orientation="Horizontal">
+                    <Image Style="{x:Null}" Source="{DynamicResource warningDrawingImage}" Height="14" />
+                    <TextBlock Style="{x:Null}" Margin="4,0,0,0" Text="{Binding ElementName=self, Path=WarningCount}" />
+                    <TextBlock Style="{x:Null}" Margin="4,0,0,0" Text="Warnings" />
                 </StackPanel>
             </ToggleButton>
             <ToggleButton Margin="0,0,4,0" Padding="2 0" IsChecked="{Binding ElementName=self, Path=ShowInformations, Mode=TwoWay}" HorizontalContentAlignment="Left" >
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="{DynamicResource informationDrawingImage}" Height="14" />
-                    <TextBlock Margin="4,0,0,0" Text="{Binding ElementName=self, Path=InformationCount}" />
-                    <TextBlock Margin="4,0,0,0" Text="Informations" />
+                <StackPanel Style="{x:Null}" Orientation="Horizontal">
+                    <Image Style="{x:Null}" Source="{DynamicResource informationDrawingImage}" Height="14" />
+                    <TextBlock Style="{x:Null}" Margin="4,0,0,0" Text="{Binding ElementName=self, Path=InformationCount}" />
+                    <TextBlock Style="{x:Null}" Margin="4,0,0,0" Text="Informations" />
                 </StackPanel>
             </ToggleButton>
 
@@ -91,7 +91,7 @@
                         </GridViewColumn.Header>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate DataType="diagnostics:DiagnosticItem">
-                                <StackPanel Orientation="Horizontal">
+                                <StackPanel Style="{x:Null}" Orientation="Horizontal">
                                     <TextBlock Style="{x:Null}" Text="{Binding Level, Mode=OneWay}">
                                         <TextBlock.ToolTip>
                                             <TextBlock Style="{x:Null}" Text="{Binding Level}" />
@@ -106,7 +106,7 @@
                         <GridViewColumn.Header>
                             <TextBlock Style="{x:Null}" Text="Name">
                                 <TextBlock.ToolTip>
-                                    <StackPanel>
+                                    <StackPanel Style="{x:Null}">
                                         <TextBlock Style="{x:Null}"
                                                    Text="This column shows the name of the diagnostic." />
                                     </StackPanel>
@@ -115,7 +115,7 @@
                         </GridViewColumn.Header>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate DataType="diagnostics:DiagnosticItem">
-                                <StackPanel Orientation="Horizontal">
+                                <StackPanel Style="{x:Null}" Orientation="Horizontal">
                                     <TextBlock Style="{x:Null}" Text="{Binding Name, Mode=OneWay}">
                                         <TextBlock.ToolTip>
                                             <TextBlock Style="{x:Null}" Text="{Binding Name}" />
@@ -130,7 +130,7 @@
                         <GridViewColumn.Header>
                             <TextBlock Style="{x:Null}" Text="Description">
                                 <TextBlock.ToolTip>
-                                    <StackPanel>
+                                    <StackPanel Style="{x:Null}">
                                         <TextBlock Style="{x:Null}"
                                                    Text="This column gives additional info on any diagnostic." />
                                     </StackPanel>
@@ -139,7 +139,7 @@
                         </GridViewColumn.Header>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate DataType="diagnostics:DiagnosticItem">
-                                <StackPanel Orientation="Horizontal">
+                                <StackPanel Style="{x:Null}" Orientation="Horizontal">
                                     <TextBlock Style="{x:Null}" Text="{Binding Description, Mode=OneWay}">
                                         <TextBlock.ToolTip>
                                             <TextBlock Style="{x:Null}" Text="{Binding Description}" />
@@ -154,7 +154,7 @@
                         <GridViewColumn.Header>
                             <TextBlock Style="{x:Null}" Text="Area">
                                 <TextBlock.ToolTip>
-                                    <StackPanel>
+                                    <StackPanel Style="{x:Null}">
                                         <TextBlock Style="{x:Null}"
                                                    Text="This column shows the area of the diagnostic." />
                                     </StackPanel>
@@ -163,7 +163,7 @@
                         </GridViewColumn.Header>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate DataType="diagnostics:DiagnosticItem">
-                                <StackPanel Orientation="Horizontal">
+                                <StackPanel Style="{x:Null}" Orientation="Horizontal">
                                     <TextBlock Style="{x:Null}" Text="{Binding Area, Mode=OneWay}">
                                         <TextBlock.ToolTip>
                                             <TextBlock Style="{x:Null}" Text="{Binding Area}" />

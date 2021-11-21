@@ -344,7 +344,7 @@ All other rights reserved.
 				<TabItem.Header>
 					<TextBlock Style="{x:Null}" Text="Properties">
 						<TextBlock.ToolTip>
-							<StackPanel MaxWidth="300">
+							<StackPanel Style="{x:Null}" MaxWidth="300">
 								<TextBlock Style="{x:Null}" Text="Properties View"/>
 								<TextBlock
 									Style="{x:Null}"
@@ -363,7 +363,7 @@ All other rights reserved.
 				<TabItem.Header>
 					<TextBlock Style="{x:Null}" Text="Data Context">
 						<TextBlock.ToolTip>
-							<StackPanel MaxWidth="300">
+							<StackPanel Style="{x:Null}" MaxWidth="300">
 								<TextBlock Style="{x:Null}" Text="Data Context View"/>
 								<TextBlock
 									Style="{x:Null}"

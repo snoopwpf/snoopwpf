@@ -70,7 +70,7 @@ All other rights reserved.
 			>
 				<TextBlock Style="{x:Null}" Text="Copy details to clipboard"/>
 			</Button>
-            <StackPanel Orientation="Vertical" Grid.Row="3">
+            <StackPanel Style="{x:Null}" Orientation="Vertical" Grid.Row="3">
                 <TextBlock Style="{x:Null}">
 					<Hyperlink Style="{x:Null}" NavigateUri="dummy" RequestNavigate="Hyperlink_RequestNavigate">
 						<TextBlock Style="{x:Null}" Text="Click here to create an issue on GitHub."/>

@@ -84,12 +84,11 @@ All other rights reserved.
 			Margin="0,15,0,0"
             Style="{x:Null}"
 		>
-			<StackPanel
-				Orientation="Horizontal"
-				HorizontalAlignment="Left"
-				Margin="5,0,0,5"
-                Style="{x:Null}"
-			>
+			<StackPanel Style="{x:Null}"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Left"
+                        Margin="5,0,0,5"
+            >
 				<ComboBox
 					x:Name="dpiBox"
 				    Style="{x:Null}"
@@ -123,11 +122,10 @@ All other rights reserved.
 				<TextBlock Style="{x:Null}" VerticalAlignment="Center" Text="DPI"/>
 			</StackPanel>
 
-			<StackPanel
-				Orientation="Horizontal"
-				HorizontalAlignment="Right"
-                Style="{x:Null}"
-			>
+			<StackPanel Style="{x:Null}"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+            >
 				<Button
 				    Style="{x:Null}"
 					Width="75"

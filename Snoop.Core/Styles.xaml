@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 (c) Copyright Cory Plotts.
 This source is subject to the Microsoft Public License (Ms-PL).
 Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
@@ -487,7 +487,7 @@ All other rights reserved.
                                       Background="{TemplateBinding Background}">
 
                             <!-- The StackPanel is used to display the children by setting IsItemsHost to be True -->
-                            <StackPanel Margin="2" IsItemsHost="true" />
+                            <StackPanel Style="{x:Null}" Margin="2" IsItemsHost="true" />
 
                         </ScrollViewer>
                     </Grid>
@@ -786,7 +786,7 @@ All other rights reserved.
                                               Foreground="#FF043774">
 
                                     <!-- The StackPanel is used to display the children by setting IsItemsHost to be True -->
-                                    <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                    <StackPanel Style="{x:Null}" IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
 
                                 </ScrollViewer>
                             </Grid>
@@ -937,7 +937,7 @@ All other rights reserved.
                     <Grid>
                         <Border Margin="1" x:Name="Border" BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}" />
-                        <StackPanel Background="{TemplateBinding Background}" IsItemsHost="True" ClipToBounds="True"
+                        <StackPanel Style="{x:Null}" Background="{TemplateBinding Background}" IsItemsHost="True" ClipToBounds="True"
                                     Orientation="Horizontal" />
                     </Grid>
                     <ControlTemplate.Triggers>
@@ -1014,7 +1014,7 @@ All other rights reserved.
                                             BorderBrush="{DynamicResource SolidBorderBrush}" BorderThickness="1" />
 
                                     <!-- StackPanel holds children of the menu. This is set bu IsItemsHost=True -->
-                                    <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
+                                    <StackPanel Style="{x:Null}" IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
                                 </Grid>
                             </Popup>
 
@@ -1412,7 +1412,7 @@ All other rights reserved.
                               ClickMode="Press"
                               Focusable="False">
                     <ToggleButton.Content>
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel Style="{x:Null}" Orientation="Horizontal">
                             <TextBlock Style="{x:Null}" Text="{TemplateBinding Header}" />
                             <Image Style="{x:Null}" Source="{DynamicResource downDrawingImage}"
                                    Width="8"

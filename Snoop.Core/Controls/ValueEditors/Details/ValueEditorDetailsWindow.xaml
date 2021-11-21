@@ -18,10 +18,10 @@
         <ContentPresenter Style="{x:Null}" Content="{Binding ValueEditor, RelativeSource={RelativeSource AncestorType=details:ValueEditorDetailsWindow}}"
                           ContentTemplate="{Binding ValueEditor.DetailsEditorTemplate, RelativeSource={RelativeSource AncestorType=details:ValueEditorDetailsWindow}}" />
 
-        <StackPanel Grid.Row="1"
-                   Style="{x:Null}"
-                   Orientation="Horizontal"
-                   Margin="2">
+        <StackPanel Style="{x:Null}"
+                    Grid.Row="1"
+                    Orientation="Horizontal"
+                    Margin="2">
             <Button Style="{x:Null}" Margin="2" HorizontalAlignment="Right" Click="ChangeValue_OnClick">Change value</Button>
             <Button Style="{x:Null}" Margin="2" HorizontalAlignment="Right" Click="Cancel_OnClick">Cancel</Button>
         </StackPanel>

@@ -149,7 +149,7 @@ All other rights reserved.
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 
-		<StackPanel Orientation="Horizontal" Grid.Row="0">
+		<StackPanel Style="{x:Null}" Orientation="Horizontal" Grid.Row="0">
 			<Button
 			    Style="{x:Null}"
 				Height="30"
@@ -191,7 +191,7 @@ All other rights reserved.
 			<TextBlock Style="{x:Null}" Text="Use DataContext Property"/>
 		</CheckBox>
 
-		<StackPanel Grid.Row="2" Orientation="Horizontal">
+		<StackPanel Style="{x:Null}" Grid.Row="2" Orientation="Horizontal">
 			<TextBlock
 				Style="{x:Null}"
 				VerticalAlignment="Center"
@@ -202,12 +202,12 @@ All other rights reserved.
 			<ComboBox x:Name="comboBoxMethods" Style="{x:Null}" Width="350" Height="25"/>
 		</StackPanel>
 
-		<StackPanel
-			x:Name="parametersContainer"
-			Grid.Row="3"
-			Margin="0,10,0,10"
-			Visibility="Collapsed"
-		>
+		<StackPanel Style="{x:Null}"
+                    x:Name="parametersContainer"
+                    Grid.Row="3"
+                    Margin="0,10,0,10"
+                    Visibility="Collapsed"
+        >
 			<TextBlock
 				Style="{x:Null}"
 				Margin="0,0,0,10"
@@ -234,13 +234,13 @@ All other rights reserved.
 			<TextBlock Style="{x:Null}" Text="Invoke"/>
 		</Button>
 
-		<StackPanel
-			x:Name="resultStringContainer"
-			Grid.Row="5"
-			Margin="0,20,0,0"
-			Orientation="Horizontal"
-			Visibility="Collapsed"
-		>
+		<StackPanel Style="{x:Null}"
+                    x:Name="resultStringContainer"
+                    Grid.Row="5"
+                    Margin="0,20,0,0"
+                    Orientation="Horizontal"
+                    Visibility="Collapsed"
+        >
 			<TextBlock
 				x:Name="textBlockResultLabel"
 				Style="{x:Null}"

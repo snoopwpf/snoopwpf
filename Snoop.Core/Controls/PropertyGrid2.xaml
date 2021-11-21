@@ -105,7 +105,7 @@ All other rights reserved.
 		<!--
 		<ListView.ItemsPanel>
 			<ItemsPanelTemplate>
-				<StackPanel/>
+				<StackPanel Style="{x:Null}" />
 			</ItemsPanelTemplate>
 		</ListView.ItemsPanel>
 		-->
@@ -196,7 +196,7 @@ All other rights reserved.
 					<GridViewColumn.Header>
 						<TextBlock Style="{x:Null}" Text="Value Source">
 							<TextBlock.ToolTip>
-								<StackPanel>
+								<StackPanel Style="{x:Null}">
 									<TextBlock Style="{x:Null}" Text="This is the value source of the property,"/>
 									<TextBlock Style="{x:Null}" Text="i.e. from where the property gets its value."/>
 								</StackPanel>
@@ -214,7 +214,7 @@ All other rights reserved.
 					<GridViewColumn.Header>
 						<TextBlock Style="{x:Null}" Text="Binding Errors">
 							<TextBlock.ToolTip>
-								<StackPanel>
+								<StackPanel Style="{x:Null}">
 									<TextBlock Style="{x:Null}" Text="This column gives additional info on any binding errors."/>
 									<TextBlock Style="{x:Null}" Text="Note: the row for any property with binding errors will"/>
 									<TextBlock Style="{x:Null}" Text="have a red background."/>

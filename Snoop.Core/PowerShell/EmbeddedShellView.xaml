@@ -21,7 +21,7 @@
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<StackPanel HorizontalAlignment="Right">
+		<StackPanel Style="{x:Null}" HorizontalAlignment="Right">
 			<CheckBox
 				x:Name="autoExpandCheckBox"
 			    Style="{x:Null}"
@@ -51,7 +51,7 @@
 			Grid.Row="2"
 		>
 			<TextBox.ToolTip>
-				<StackPanel MaxWidth="300">
+				<StackPanel Style="{x:Null}" MaxWidth="300">
 					<TextBlock Style="{x:Null}" Text="F5 - Reload Profile"/>
 					<TextBlock Style="{x:Null}" Text="F12 - Clear Output"/>
 				</StackPanel>

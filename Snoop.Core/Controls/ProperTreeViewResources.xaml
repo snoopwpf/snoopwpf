@@ -23,12 +23,14 @@ All other rights reserved.
 				<ControlTemplate TargetType="{x:Type ToggleButton}">
 					<Border
 						x:Name="Border"
+                        Style="{x:Null}"
 						Width="19"
 						Height="13"
 						Background="#00FFFFFF"
 					>
 						<Border
 							x:Name="Border1"
+                            Style="{x:Null}"
 							Width="9"
 							Height="9"
 							SnapsToDevicePixels="True"
@@ -44,6 +46,7 @@ All other rights reserved.
 							</Border.Background>
 							<Path
 								x:Name="ExpandPath"
+                                Style="{x:Null}"
 								Fill="#FF000000"
 								Margin="1,1,1,1"
 								Data="M0,2L0,3 2,3 2,5 3,5 3,3 5,3 5,2 3,2 3,0 2,0 2,2z"
@@ -68,10 +71,18 @@ All other rights reserved.
 		<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
 		<Setter Property="FocusVisualStyle"
                 Value="{x:Null}" />
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <StackPanel Style="{x:Null}" />
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
         <Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type TreeViewItem}">
-					<Grid x:Name="Grid">
+					<Grid x:Name="Grid"
+                          Style="{x:Null}">
 						<Grid.RowDefinitions>
 							<RowDefinition Height="Auto"/>
 							<RowDefinition/>
@@ -84,7 +95,7 @@ All other rights reserved.
 							BorderThickness="{TemplateBinding BorderThickness}"
 							Padding="{TemplateBinding Padding}"
 						>
-							<StackPanel
+							<StackPanel Style="{x:Null}"
 								Orientation='Horizontal'
 								Margin='{Binding Indent, Converter={StaticResource IndentToMarginConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:ProperTreeViewItem}}}'
 							>

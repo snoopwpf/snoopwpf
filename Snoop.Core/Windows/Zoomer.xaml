@@ -51,7 +51,7 @@ All other rights reserved.
 
         <Viewbox x:Name="Viewbox" Style="{x:Null}" />
 
-        <StackPanel Orientation="Horizontal"
+        <StackPanel Style="{x:Null}" Orientation="Horizontal"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Top"
                     Margin="2,2,0,0"
@@ -82,7 +82,7 @@ All other rights reserved.
             </RadioButton>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal"
+        <StackPanel Style="{x:Null}" Orientation="Horizontal"
                     VerticalAlignment="Bottom"
                     Visibility="{Binding Path=Target.(TextOptions.TextFormattingMode), RelativeSource={RelativeSource AncestorType=windows:Zoomer}, Converter={x:Static converters:EqualsToVisibilityConverter.DefaultInstance}, ConverterParameter=Display}">
             <Image Source="{DynamicResource warningDrawingImage}" Height="14" />
@@ -115,8 +115,7 @@ All other rights reserved.
             </Slider.ToolTip>
         </Slider>
 
-        <StackPanel x:Name="ThreeDViewControls" Orientation="Horizontal"
-                    Style="{x:Null}"
+        <StackPanel Style="{x:Null}" x:Name="ThreeDViewControls" Orientation="Horizontal"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Margin="0,0,2,2"

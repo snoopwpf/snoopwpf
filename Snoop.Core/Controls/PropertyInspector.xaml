@@ -73,7 +73,7 @@ All other rights reserved.
     <DockPanel Grid.Row="2"
                LastChildFill="True"
                Margin="0,0,0,2">
-        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+        <StackPanel Style="{x:Null}" DockPanel.Dock="Right" Orientation="Horizontal">
             <CheckBox x:Name="checkBoxClearAfterDelve"
                       Content="Clear after delve"
                       Margin="0,2,2,0" />
@@ -96,7 +96,7 @@ All other rights reserved.
                 </Button.Style>
                 <Image Style="{x:Null}" Source="{DynamicResource upDrawingImage}" Margin="3" />
                 <Button.ToolTip>
-                    <StackPanel>
+                    <StackPanel Style="{x:Null}">
                         <TextBlock Style="{x:Null}" Text="Click this button to pop up 1 level in scope" />
                         <TextBlock Style="{x:Null}" Text="(after you have delved into something)." />
                     </StackPanel>
@@ -113,7 +113,7 @@ All other rights reserved.
                 SelectedItem="{Binding Path=SelectedFilterSet, ElementName=propertyInspector, Mode=TwoWay}"
                 ItemTemplate="{StaticResource stylelessTextBlockDataTemplate}">
                 <ComboBox.ToolTip>
-                    <StackPanel>
+                    <StackPanel Style="{x:Null}">
                         <TextBlock Style="{x:Null}" Text="With this combo box, you can select" />
                         <TextBlock Style="{x:Null}" Text="a certain set of properties to view." />
                     </StackPanel>
@@ -128,7 +128,7 @@ All other rights reserved.
                 Margin="0,0,2,0">
                 <TextBlock Style="{x:Null}" FontWeight="Bold">D</TextBlock>
                 <ToggleButton.ToolTip>
-                    <StackPanel>
+                    <StackPanel Style="{x:Null}">
                         <TextBlock Style="{x:Null}" Text="Toggle this button ON to show properties" />
                         <TextBlock Style="{x:Null}" Text="that are unchanged from their default values." />
                     </StackPanel>
@@ -143,7 +143,7 @@ All other rights reserved.
                 Margin="0,0,2,0">
                 <TextBlock Style="{x:Null}" FontWeight="Bold">U</TextBlock>
                 <ToggleButton.ToolTip>
-                    <StackPanel>
+                    <StackPanel Style="{x:Null}">
                         <TextBlock Style="{x:Null}" Text="Toggle this button ON to show properties" />
                         <TextBlock Style="{x:Null}" Text="that are not commonly used in WPF applications." />
                     </StackPanel>

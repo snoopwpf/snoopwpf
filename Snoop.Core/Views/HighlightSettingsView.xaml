@@ -98,7 +98,7 @@
             </ListView.View>
         </ListView>
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal">
+        <StackPanel Style="{x:Null}" Grid.Row="1" Orientation="Horizontal">
             <Button x:Name="Close" Style="{StaticResource Snoop.Styles.Button.Large}" Click="Close_OnClick">Close</Button>
             <Button x:Name="ResetSettings" Style="{StaticResource Snoop.Styles.Button.Large}" Click="ResetSettings_OnClick">Reset settings</Button>
         </StackPanel>

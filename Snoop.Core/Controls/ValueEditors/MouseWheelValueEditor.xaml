@@ -32,7 +32,7 @@ All other rights reserved.
         </DataTemplate>
 
         <DataTemplate x:Key="CustomEditThickness" DataType="{x:Type Thickness}">
-            <StackPanel Orientation="Horizontal"
+            <StackPanel Style="{x:Null}" Orientation="Horizontal"
                         d:DataContext="{d:DesignInstance infrastructure:PropertyInformation}">
                 <TextBlock Tag="1" Style="{StaticResource MouseWheelText}" Text="{Binding Value.Left}" />
                 <TextBlock Tag="2" Style="{StaticResource MouseWheelText}" Text="{Binding Value.Top}" />
@@ -42,7 +42,7 @@ All other rights reserved.
         </DataTemplate>
 
         <DataTemplate x:Key="CustomEditBrush" DataType="{x:Type Brush}">
-            <StackPanel Orientation="Horizontal"
+            <StackPanel Style="{x:Null}" Orientation="Horizontal"
                         d:DataContext="{d:DesignInstance infrastructure:PropertyInformation}">
                 <TextBlock Tag="1" Style="{StaticResource MouseWheelText}"
                            Text="{Binding Path=Value, Converter={x:Static converters:ArgbToPartsConverter.Default}, ConverterParameter=0}" />
