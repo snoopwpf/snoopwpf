@@ -14,11 +14,6 @@ All other rights reserved.
 
 	<controls:IndentToMarginConverter x:Key='IndentToMarginConverter'/>
 
-    <Style x:Key="Snoop.Styles.ProperTreeView"
-           TargetType="TreeView"
-           BasedOn="{StaticResource Snoop.Styles.TreeView}">
-    </Style>
-
 	<Style x:Key='TreeViewToggleStyle' TargetType="{x:Type ToggleButton}">
 		<Setter Property="Focusable" Value="False"/>
 		<Setter Property="Width" Value="19"/>

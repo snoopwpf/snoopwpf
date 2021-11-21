@@ -88,12 +88,17 @@ All other rights reserved.
         <Setter Property="Control.Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Border>
-                        <Rectangle Margin="2" Stroke="#60000000" StrokeThickness="1" StrokeDashArray="1 2" />
+                    <Border Style="{x:Null}">
+                        <Rectangle Style="{x:Null}" Margin="2" Stroke="#60000000" StrokeThickness="1" StrokeDashArray="1 2" />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <Style x:Key="Snoop.Styles.ProperTreeView"
+           TargetType="TreeView"
+           BasedOn="{StaticResource Snoop.Styles.TreeView}">
     </Style>
 
     <!-- Simple Button - This control sets brushes on each state. Note that these brushes must be listed above since they are static resources -->
@@ -106,14 +111,14 @@ All other rights reserved.
                 <ControlTemplate TargetType="{x:Type Button}">
 
                     <!-- We use Grid as a root because it is easy to add more elements to customize the button -->
-                    <Grid x:Name="Grid">
-                        <Border x:Name="Border" Background="{TemplateBinding Background}"
+                    <Grid Style="{x:Null}" x:Name="Grid">
+                        <Border Style="{x:Null}" x:Name="Border" Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" />
 
                         <!-- Content Presenter is where the text content etc is placed by the control -->
                         <!-- The bindings are useful so that the control can be parameterized without editing the template -->
-                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        <ContentPresenter Style="{x:Null}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           Margin="{TemplateBinding Padding}"
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                           RecognizesAccessKey="True" />
@@ -151,8 +156,8 @@ All other rights reserved.
         <Setter Property="Control.Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Border>
-                        <Rectangle Margin="15,0,0,0" Stroke="#60000000" StrokeThickness="1" StrokeDashArray="1 2" />
+                    <Border Style="{x:Null}">
+                        <Rectangle Style="{x:Null}" Margin="15,0,0,0" Stroke="#60000000" StrokeThickness="1" StrokeDashArray="1 2" />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
@@ -163,8 +168,8 @@ All other rights reserved.
         <Setter Property="Control.Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Border>
-                        <Rectangle Margin="15,0,0,0" Stroke="#60000000" StrokeThickness="1" StrokeDashArray="1 2" />
+                    <Border Style="{x:Null}">
+                        <Rectangle Style="{x:Null}" Margin="15,0,0,0" Stroke="#60000000" StrokeThickness="1" StrokeDashArray="1 2" />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
@@ -192,17 +197,17 @@ All other rights reserved.
                 <ControlTemplate TargetType="{x:Type CheckBox}">
 
                     <!-- BulletDecorator is used to provide baseline alignment between the checkmark and the Content -->
-                    <BulletDecorator Background="Transparent">
+                    <BulletDecorator Style="{x:Null}" Background="Transparent">
                         <BulletDecorator.Bullet>
                             <Grid Width="13" Height="13">
-                                <Border x:Name="Border" Background="{TemplateBinding Background}"
+                                <Border Style="{x:Null}" x:Name="Border" Background="{TemplateBinding Background}"
                                         BorderBrush="{TemplateBinding BorderBrush}"
                                         BorderThickness="{TemplateBinding BorderThickness}" />
-                                <Path x:Name="CheckMark" Stroke="{DynamicResource GlyphBrush}" StrokeThickness="2"
+                                <Path Style="{x:Null}" x:Name="CheckMark" Stroke="{DynamicResource GlyphBrush}" StrokeThickness="2"
                                       SnapsToDevicePixels="False" Data="M 0 0 L 13 13 M 0 13 L 13 0" />
                             </Grid>
                         </BulletDecorator.Bullet>
-                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        <ContentPresenter Style="{x:Null}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           Margin="{TemplateBinding Padding}"
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                           RecognizesAccessKey="True" />
@@ -245,15 +250,15 @@ All other rights reserved.
                 <ControlTemplate TargetType="{x:Type RadioButton}">
 
                     <!-- BulletDecorator is used to provide baseline alignment between the checkmark and the Content -->
-                    <BulletDecorator Background="Transparent">
+                    <BulletDecorator Style="{x:Null}" Background="Transparent">
                         <BulletDecorator.Bullet>
-                            <Grid Width="13" Height="13">
-                                <Ellipse x:Name="Ellipse_Border" Fill="{TemplateBinding Background}"
+                            <Grid Style="{x:Null}" Width="13" Height="13">
+                                <Ellipse Style="{x:Null}" x:Name="Ellipse_Border" Fill="{TemplateBinding Background}"
                                          Stroke="{TemplateBinding BorderBrush}" StrokeThickness="1" />
-                                <Ellipse Margin="4" x:Name="CheckMark" Fill="{DynamicResource GlyphBrush}" />
+                                <Ellipse Style="{x:Null}" Margin="4" x:Name="CheckMark" Fill="{DynamicResource GlyphBrush}" />
                             </Grid>
                         </BulletDecorator.Bullet>
-                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        <ContentPresenter Style="{x:Null}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           Margin="{TemplateBinding Padding}"
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                           RecognizesAccessKey="True" />
@@ -291,11 +296,11 @@ All other rights reserved.
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type RepeatButton}">
-                    <Grid>
-                        <Border x:Name="Border" Background="{TemplateBinding Background}"
+                    <Grid Style="{x:Null}">
+                        <Border Style="{x:Null}" x:Name="Border" Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}" />
-                        <ContentPresenter HorizontalAlignment="Center" x:Name="ContentPresenter"
+                        <ContentPresenter Style="{x:Null}" HorizontalAlignment="Center" x:Name="ContentPresenter"
                                           VerticalAlignment="Center" Content="{TemplateBinding Content}"
                                           ContentTemplate="{TemplateBinding ContentTemplate}"
                                           ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}" />
@@ -331,8 +336,8 @@ All other rights reserved.
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Thumb}">
-                    <Grid Margin="0,0,0,0" x:Name="Grid">
-                        <Rectangle HorizontalAlignment="Stretch" x:Name="Rectangle" VerticalAlignment="Stretch"
+                    <Grid Style="{x:Null}" Margin="0,0,0,0" x:Name="Grid">
+                        <Rectangle Style="{x:Null}" HorizontalAlignment="Stretch" x:Name="Rectangle" VerticalAlignment="Stretch"
                                    Width="Auto" Height="Auto" RadiusX="2" RadiusY="2"
                                    Fill="{DynamicResource NormalBrush}" Stroke="{DynamicResource NormalBorderBrush}" />
                     </Grid>
@@ -356,8 +361,8 @@ All other rights reserved.
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type RepeatButton}">
-                    <Grid>
-                        <Rectangle Fill="{TemplateBinding Background}" Stroke="{TemplateBinding BorderBrush}"
+                    <Grid Style="{x:Null}">
+                        <Rectangle Style="{x:Null}" Fill="{TemplateBinding Background}" Stroke="{TemplateBinding BorderBrush}"
                                    StrokeThickness="{TemplateBinding BorderThickness}" />
                     </Grid>
                 </ControlTemplate>
@@ -373,25 +378,25 @@ All other rights reserved.
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ScrollBar}">
-                    <Grid x:Name="GridRoot"
+                    <Grid Style="{x:Null}" x:Name="GridRoot"
                           Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}"
                           Background="{TemplateBinding Background}">
                         <Grid.RowDefinitions>
-                            <RowDefinition MaxHeight="18" />
-                            <RowDefinition Height="0.00001*" />
-                            <RowDefinition MaxHeight="18" />
+                            <RowDefinition Style="{x:Null}" MaxHeight="18" />
+                            <RowDefinition Style="{x:Null}" Height="0.00001*" />
+                            <RowDefinition Style="{x:Null}" MaxHeight="18" />
                         </Grid.RowDefinitions>
 
                         <RepeatButton x:Name="DecreaseRepeat" Style="{DynamicResource SimpleRepeatButton}"
                                       Command="ScrollBar.LineUpCommand">
-                            <Grid>
-                                <Path x:Name="DecreaseArrow" Stroke="{TemplateBinding Foreground}" StrokeThickness="1"
+                            <Grid Style="{x:Null}">
+                                <Path Style="{x:Null}" x:Name="DecreaseArrow" Stroke="{TemplateBinding Foreground}" StrokeThickness="1"
                                       Data="M 0 4 L 8 4 L 4 0 Z" />
                             </Grid>
                         </RepeatButton>
 
                         <!-- Track is a special layout container which sizes the thumb and the repeat button which do jump scrolling either side of it -->
-                        <Track Grid.Row="1" x:Name="PART_Track" Orientation="Vertical" IsDirectionReversed="true">
+                        <Track Style="{x:Null}" Grid.Row="1" x:Name="PART_Track" Orientation="Vertical" IsDirectionReversed="true">
                             <Track.Thumb>
                                 <Thumb Style="{DynamicResource SimpleThumbStyle}" />
                             </Track.Thumb>
@@ -407,8 +412,8 @@ All other rights reserved.
 
                         <RepeatButton Grid.Row="2" x:Name="IncreaseRepeat" Style="{DynamicResource SimpleRepeatButton}"
                                       Command="ScrollBar.LineDownCommand">
-                            <Grid>
-                                <Path x:Name="IncreaseArrow" Stroke="{TemplateBinding Foreground}" StrokeThickness="1"
+                            <Grid Style="{x:Null}">
+                                <Path Style="{x:Null}" x:Name="IncreaseArrow" Stroke="{TemplateBinding Foreground}" StrokeThickness="1"
                                       Data="M 0 0 L 4 4 L 8 0 Z" />
                             </Grid>
                         </RepeatButton>
@@ -448,16 +453,16 @@ All other rights reserved.
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ScrollViewer}">
-                    <Grid Background="{TemplateBinding Background}">
+                    <Grid Style="{x:Null}" Background="{TemplateBinding Background}">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Style="{x:Null}" Width="*" />
+                            <ColumnDefinition Style="{x:Null}" Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="Auto" />
+                            <RowDefinition Style="{x:Null}" Height="*" />
+                            <RowDefinition Style="{x:Null}" Height="Auto" />
                         </Grid.RowDefinitions>
-                        <ScrollContentPresenter Grid.Column="0" Grid.Row="0" Margin="{TemplateBinding Padding}"
+                        <ScrollContentPresenter Style="{x:Null}" Grid.Column="0" Grid.Row="0" Margin="{TemplateBinding Padding}"
                                                 Content="{TemplateBinding Content}"
                                                 ContentTemplate="{TemplateBinding ContentTemplate}"
                                                 CanContentScroll="{TemplateBinding CanContentScroll}" />
@@ -494,8 +499,8 @@ All other rights reserved.
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ListBox}">
-                    <Grid>
-                        <Border x:Name="Border" BorderBrush="{TemplateBinding BorderBrush}"
+                    <Grid Style="{x:Null}">
+                        <Border Style="{x:Null}" x:Name="Border" BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}" />
                         <ScrollViewer Margin="1" Style="{DynamicResource SimpleScrollViewer}" Focusable="false"
                                       Background="{TemplateBinding Background}">
@@ -529,11 +534,11 @@ All other rights reserved.
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                    <Grid SnapsToDevicePixels="true">
-                        <Border x:Name="Border" Background="{TemplateBinding Background}"
+                    <Grid Style="{x:Null}" SnapsToDevicePixels="true">
+                        <Border Style="{x:Null}" x:Name="Border" Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}" />
-                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        <ContentPresenter Style="{x:Null}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                     </Grid>
                     <ControlTemplate.Triggers>
@@ -555,12 +560,12 @@ All other rights reserved.
 
     <!-- Simple Expander ToggleButton - This Button is used by the Expander control. When it is toggled it switches visibility on the Up_Arrow and Down_Arrow -->
     <ControlTemplate x:Key="ExpanderToggleButton" TargetType="{x:Type ToggleButton}">
-        <Grid>
-            <Rectangle Margin="0,0,0,0" x:Name="Rectangle" Fill="Transparent"
+        <Grid Style="{x:Null}">
+            <Rectangle Style="{x:Null}" Margin="0,0,0,0" x:Name="Rectangle" Fill="Transparent"
                        Stroke="{DynamicResource NormalBorderBrush}" />
-            <Path HorizontalAlignment="Center" x:Name="Up_Arrow" VerticalAlignment="Center"
+            <Path Style="{x:Null}" HorizontalAlignment="Center" x:Name="Up_Arrow" VerticalAlignment="Center"
                   Fill="{DynamicResource GlyphBrush}" Data="M 0 0 L 4 4 L 8 0 Z" />
-            <Path Visibility="Collapsed" HorizontalAlignment="Center" x:Name="Down_Arrow" VerticalAlignment="Center"
+            <Path Style="{x:Null}" Visibility="Collapsed" HorizontalAlignment="Center" x:Name="Down_Arrow" VerticalAlignment="Center"
                   Fill="{DynamicResource GlyphBrush}" Data="M 0 4 L 4 0 L 8 4 Z" />
         </Grid>
         <ControlTemplate.Triggers>
@@ -592,32 +597,32 @@ All other rights reserved.
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Expander}">
-                    <Grid>
+                    <Grid Style="{x:Null}">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" x:Name="ContentRow" />
+                            <RowDefinition Style="{x:Null}" Height="Auto" />
+                            <RowDefinition Style="{x:Null}" Height="*" x:Name="ContentRow" />
                         </Grid.RowDefinitions>
-                        <Border Grid.Row="0" x:Name="Border" Background="{TemplateBinding Background}"
+                        <Border Style="{x:Null}" Grid.Row="0" x:Name="Border" Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="2,2,0,0">
-                            <Grid>
+                            <Grid Style="{x:Null}">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="20" />
-                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Style="{x:Null}" Width="20" />
+                                    <ColumnDefinition Style="{x:Null}" Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <ToggleButton Template="{DynamicResource ExpanderToggleButton}"
+                                <ToggleButton Style="{x:Null}" Template="{DynamicResource ExpanderToggleButton}"
                                               Background="{DynamicResource NormalBrush}"
                                               IsChecked="{Binding Path=IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                                               OverridesDefaultStyle="True" />
-                                <ContentPresenter Grid.Column="1" Margin="4" RecognizesAccessKey="True"
+                                <ContentPresenter Style="{x:Null}" Grid.Column="1" Margin="4" RecognizesAccessKey="True"
                                                   ContentSource="Header" />
                             </Grid>
                         </Border>
-                        <Border Visibility="Collapsed" Grid.Row="1" x:Name="ExpandSite"
+                        <Border Style="{x:Null}" Visibility="Collapsed" Grid.Row="1" x:Name="ExpandSite"
                                 Background="{DynamicResource WindowBackgroundBrush}"
                                 BorderBrush="{DynamicResource SolidBorderBrush}" BorderThickness="1,0,1,1"
                                 CornerRadius="0,0,2,2">
-                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            <ContentPresenter Style="{x:Null}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                               Margin="{TemplateBinding Padding}"
                                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                               Focusable="false" />
@@ -678,25 +683,25 @@ All other rights reserved.
                 </PointAnimationUsingKeyFrames>
             </Storyboard>
         </ControlTemplate.Resources>
-        <Grid>
+        <Grid Style="{x:Null}">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition Width="20" />
+                <ColumnDefinition Style="{x:Null}" />
+                <ColumnDefinition Style="{x:Null}" Width="20" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="0.486*" />
-                <RowDefinition Height="0.514*" />
+                <RowDefinition Style="{x:Null}" Height="0.486*" />
+                <RowDefinition Style="{x:Null}" Height="0.514*" />
             </Grid.RowDefinitions>
-            <Rectangle Grid.ColumnSpan="2" HorizontalAlignment="Stretch" x:Name="Rectangle" VerticalAlignment="Stretch"
+            <Rectangle Style="{x:Null}" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" x:Name="Rectangle" VerticalAlignment="Stretch"
                        Width="Auto" Height="Auto" RadiusX="4" RadiusY="4" Stroke="{DynamicResource DarkBlue}"
                        StrokeThickness="1" Grid.RowSpan="2">
                 <Rectangle.Fill>
                     <DynamicResource ResourceKey="MetalGrad" />
                 </Rectangle.Fill>
             </Rectangle>
-            <Border HorizontalAlignment="Stretch" Width="Auto" Background="{DynamicResource DarkBlue}"
+            <Border Style="{x:Null}" HorizontalAlignment="Stretch" Width="Auto" Background="{DynamicResource DarkBlue}"
                     CornerRadius="4,0,0,4" Grid.RowSpan="2" />
-            <Rectangle Visibility="Collapsed" Stroke="{x:Null}" StrokeThickness="0" RadiusX="3" RadiusY="3"
+            <Rectangle Style="{x:Null}" Visibility="Collapsed" Stroke="{x:Null}" StrokeThickness="0" RadiusX="3" RadiusY="3"
                        HorizontalAlignment="Stretch" Margin="0,0,2,1" x:Name="rectangle" Width="Auto" Height="Auto"
                        Grid.RowSpan="2">
                 <Rectangle.Fill>
@@ -707,8 +712,8 @@ All other rights reserved.
                     </LinearGradientBrush>
                 </Rectangle.Fill>
             </Rectangle>
-            <Border Margin="1,1,1,0" Background="{DynamicResource ShineBrush1}" CornerRadius="3,0,0,3" />
-            <Path Fill="{x:Null}" Stretch="Fill" Stroke="{DynamicResource DeepBlueColorBrush}" StrokeDashCap="Flat"
+            <Border Style="{x:Null}" Margin="1,1,1,0" Background="{DynamicResource ShineBrush1}" CornerRadius="3,0,0,3" />
+            <Path Style="{x:Null}" Fill="{x:Null}" Stretch="Fill" Stroke="{DynamicResource DeepBlueColorBrush}" StrokeDashCap="Flat"
                   StrokeEndLineCap="Round" StrokeLineJoin="Round" StrokeMiterLimit="20" StrokeStartLineCap="Round"
                   StrokeThickness="2" HorizontalAlignment="Center" Margin="0,0,0,0" x:Name="path"
                   VerticalAlignment="Center" Grid.Column="1" Data="M276.75,15.25 L282.25,21 287.25,15.25" Width="12"
@@ -747,7 +752,7 @@ All other rights reserved.
 
     <ControlTemplate x:Key="ComboBoxTextBox" TargetType="{x:Type TextBox}">
         <!-- This must be named as PART_ContentHost -->
-        <Border x:Name="PART_ContentHost" Focusable="False" Background="{TemplateBinding Background}" />
+        <Border Style="{x:Null}" x:Name="PART_ContentHost" Focusable="False" Background="{TemplateBinding Background}" />
     </ControlTemplate>
 
     <!-- Simple ComboBox
@@ -760,13 +765,13 @@ All other rights reserved.
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBox}">
-                    <Grid>
+                    <Grid Style="{x:Null}">
                         <!-- The ToggleButton is databound to the ComboBox itself to toggle IsDropDownOpen -->
-                        <ToggleButton Grid.Column="2" Template="{DynamicResource ComboBoxToggleButton}"
+                        <ToggleButton Style="{x:Null}" Grid.Column="2" Template="{DynamicResource ComboBoxToggleButton}"
                                       x:Name="ToggleButton" Focusable="false"
                                       IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                                       ClickMode="Press" Background="{DynamicResource MetalGrad}" />
-                        <ContentPresenter HorizontalAlignment="Left" Margin="3,3,23,3" x:Name="ContentSite"
+                        <ContentPresenter Style="{x:Null}" HorizontalAlignment="Left" Margin="3,3,23,3" x:Name="ContentSite"
                                           VerticalAlignment="Center" Content="{TemplateBinding SelectionBoxItem}"
                                           ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
                                           ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
@@ -781,11 +786,11 @@ All other rights reserved.
                                  FontSize="12" Foreground="#FF97E2CD" />
 
                         <!-- The Popup shows the list of items in the ComboBox. IsOpen is databound to IsDropDownOpen which is toggled via the ComboBoxToggleButton -->
-                        <Popup IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" x:Name="Popup"
+                        <Popup Style="{x:Null}" IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" x:Name="Popup"
                                Focusable="False" AllowsTransparency="True" PopupAnimation="Slide">
-                            <Grid MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                            <Grid Style="{x:Null}" MaxHeight="{TemplateBinding MaxDropDownHeight}"
                                   MinWidth="{TemplateBinding ActualWidth}" x:Name="DropDown" SnapsToDevicePixels="True">
-                                <Border x:Name="DropDownBorder" BorderBrush="{x:Null}" BorderThickness="1">
+                                <Border Style="{x:Null}" x:Name="DropDownBorder" BorderBrush="{x:Null}" BorderThickness="1">
                                     <Border.Background>
                                         <LinearGradientBrush EndPoint="0.993,0.032" StartPoint="0.007,0.968">
                                             <GradientStop Color="#E5CDDDE4" Offset="0.508" />
@@ -838,11 +843,11 @@ All other rights reserved.
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBoxItem}">
-                    <Grid SnapsToDevicePixels="true">
-                        <Border x:Name="Border" Background="{TemplateBinding Background}"
+                    <Grid Style="{x:Null}" SnapsToDevicePixels="true">
+                        <Border Style="{x:Null}" x:Name="Border" Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}" />
-                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        <ContentPresenter Style="{x:Null}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                     </Grid>
                     <ControlTemplate.Triggers>
@@ -869,14 +874,14 @@ All other rights reserved.
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ProgressBar}">
-                    <Grid MinHeight="14" MinWidth="200">
+                    <Grid Style="{x:Null}" MinHeight="14" MinWidth="200">
 
                         <!-- This Border is the track. It must be named PART_Track -->
-                        <Border x:Name="PART_Track" Background="{DynamicResource PressedBrush}"
+                        <Border Style="{x:Null}" x:Name="PART_Track" Background="{DynamicResource PressedBrush}"
                                 BorderBrush="{DynamicResource SolidBorderBrush}" BorderThickness="1" CornerRadius="2" />
 
                         <!-- This Border shows progress. It must be named PART_Indicator for the control to function -->
-                        <Border HorizontalAlignment="Left" x:Name="PART_Indicator"
+                        <Border Style="{x:Null}" HorizontalAlignment="Left" x:Name="PART_Indicator"
                                 Background="{DynamicResource MouseOverBrush}"
                                 BorderBrush="{DynamicResource NormalBorderBrush}" BorderThickness="1" CornerRadius="2" />
 
@@ -894,8 +899,8 @@ All other rights reserved.
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TextBox}">
-                    <Grid>
-                        <Border x:Name="Border" Background="{DynamicResource WindowBackgroundBrush}"
+                    <Grid Style="{x:Null}">
+                        <Border Style="{x:Null}" x:Name="Border" Background="{DynamicResource WindowBackgroundBrush}"
                                 BorderBrush="{DynamicResource SolidBorderBrush}" BorderThickness="1" Padding="2"
                                 CornerRadius="2">
 
@@ -927,8 +932,8 @@ All other rights reserved.
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Label}">
-                    <Grid>
-                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                    <Grid Style="{x:Null}">
+                        <ContentPresenter Style="{x:Null}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                           RecognizesAccessKey="True" />
                     </Grid>
@@ -948,8 +953,8 @@ All other rights reserved.
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Menu}">
-                    <Grid>
-                        <Border Margin="1" x:Name="Border" BorderBrush="{TemplateBinding BorderBrush}"
+                    <Grid Style="{x:Null}">
+                        <Border Style="{x:Null}" Margin="1" x:Name="Border" BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}" />
                         <StackPanel Style="{x:Null}" Background="{TemplateBinding Background}" IsItemsHost="True" ClipToBounds="True"
                                     Orientation="Horizontal" />
@@ -981,50 +986,50 @@ All other rights reserved.
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type MenuItem}">
-                    <Border x:Name="Border" Background="{TemplateBinding Background}"
+                    <Border Style="{x:Null}" x:Name="Border" Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Grid>
+                        <Grid Style="{x:Null}">
 
                             <!-- The Grid is used to hold together columns for an Icon, Content, Glyph checkmark and Arrow to show the next level
 							 Size sharing is used in Grid so that the Icon, Content, Arrow for each MenuItem align together -->
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition MinWidth="17" Width="Auto" SharedSizeGroup="MenuItemIconColumnGroup" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemIGTColumnGroup" />
-                                <ColumnDefinition Width="14" />
+                                <ColumnDefinition Style="{x:Null}" MinWidth="17" Width="Auto" SharedSizeGroup="MenuItemIconColumnGroup" />
+                                <ColumnDefinition Style="{x:Null}" Width="*" />
+                                <ColumnDefinition Style="{x:Null}" Width="Auto" SharedSizeGroup="MenuItemIGTColumnGroup" />
+                                <ColumnDefinition Style="{x:Null}" Width="14" />
                             </Grid.ColumnDefinitions>
 
                             <!-- ContentPresenter to show an Icon if needed -->
-                            <ContentPresenter Margin="4,0,6,0" x:Name="Icon" VerticalAlignment="Center"
+                            <ContentPresenter Style="{x:Null}" Margin="4,0,6,0" x:Name="Icon" VerticalAlignment="Center"
                                               ContentSource="Icon" />
 
                             <!-- Glyph is a checkmark if needed for a checkable menu -->
-                            <Grid Visibility="Hidden" Margin="4,0,6,0" x:Name="GlyphPanel" VerticalAlignment="Center">
-                                <Path x:Name="GlyphPanelpath" VerticalAlignment="Center"
+                            <Grid Style="{x:Null}" Visibility="Hidden" Margin="4,0,6,0" x:Name="GlyphPanel" VerticalAlignment="Center">
+                                <Path Style="{x:Null}" x:Name="GlyphPanelpath" VerticalAlignment="Center"
                                       Fill="{TemplateBinding Foreground}"
                                       Data="M0,2 L0,4.8 L2.5,7.4 L7.1,2.8 L7.1,0 L2.5,4.6 z"
                                       FlowDirection="LeftToRight" />
                             </Grid>
 
                             <!-- Content for the menu text etc -->
-                            <ContentPresenter Grid.Column="1" Margin="{TemplateBinding Padding}" x:Name="HeaderHost"
+                            <ContentPresenter Style="{x:Null}" Grid.Column="1" Margin="{TemplateBinding Padding}" x:Name="HeaderHost"
                                               RecognizesAccessKey="True" ContentSource="Header" />
 
                             <!-- Arrow drawn path which points to the next level of the menu -->
-                            <Grid Grid.Column="3" Margin="4,0,6,0" x:Name="ArrowPanel" VerticalAlignment="Center">
-                                <Path x:Name="ArrowPanelPath" VerticalAlignment="Center"
+                            <Grid Style="{x:Null}" Grid.Column="3" Margin="4,0,6,0" x:Name="ArrowPanel" VerticalAlignment="Center">
+                                <Path Style="{x:Null}" x:Name="ArrowPanelPath" VerticalAlignment="Center"
                                       Fill="{TemplateBinding Foreground}" Data="M0,0 L0,8 L4,4 z" />
                             </Grid>
 
                             <!-- The Popup is the body of the menu which expands down or across depending on the level of the item -->
-                            <Popup
-                                IsOpen="{Binding Path=IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
-                                Placement="Right" x:Name="SubMenuPopup" Focusable="false" AllowsTransparency="true"
-                                PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}"
-                                VerticalOffset="-3">
-                                <Grid x:Name="SubMenu">
-                                    <Border x:Name="SubMenuBorder" Background="{DynamicResource WindowBackgroundBrush}"
+                            <Popup Style="{x:Null}"
+                                   IsOpen="{Binding Path=IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
+                                   Placement="Right" x:Name="SubMenuPopup" Focusable="false" AllowsTransparency="true"
+                                   PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}"
+                                   VerticalOffset="-3">
+                                <Grid Style="{x:Null}" x:Name="SubMenu">
+                                    <Border Style="{x:Null}" x:Name="SubMenuBorder" Background="{DynamicResource WindowBackgroundBrush}"
                                             BorderBrush="{DynamicResource SolidBorderBrush}" BorderThickness="1" />
 
                                     <!-- StackPanel holds children of the menu. This is set bu IsItemsHost=True -->
@@ -1115,7 +1120,7 @@ All other rights reserved.
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Separator}">
-                    <Border BorderBrush="{DynamicResource SolidBorderBrush}" BorderThickness="1" />
+                    <Border Style="{x:Null}" BorderBrush="{DynamicResource SolidBorderBrush}" BorderThickness="1" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -1129,24 +1134,24 @@ All other rights reserved.
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TabControl}">
-                    <Grid KeyboardNavigation.TabNavigation="Local">
+                    <Grid Style="{x:Null}" KeyboardNavigation.TabNavigation="Local">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
+                            <RowDefinition Style="{x:Null}" Height="Auto" />
+                            <RowDefinition Style="{x:Null}" Height="*" />
                         </Grid.RowDefinitions>
 
                         <!-- TabPanel is a layout container which allows the TabItems to wrap and re-order when selected
 						The implementation knows to use this control because it is marked IsItemsHost = True -->
-                        <TabPanel Grid.Row="0" Margin="0,0,4,-1" x:Name="HeaderPanel" Background="Transparent"
+                        <TabPanel Style="{x:Null}" Grid.Row="0" Margin="0,0,4,-1" x:Name="HeaderPanel" Background="Transparent"
                                   IsItemsHost="True" Panel.ZIndex="1" KeyboardNavigation.TabIndex="1" />
 
-                        <Border Grid.Row="1" x:Name="Border" Background="{DynamicResource WindowBackgroundBrush}"
+                        <Border Style="{x:Null}" Grid.Row="1" x:Name="Border" Background="{DynamicResource WindowBackgroundBrush}"
                                 BorderBrush="{DynamicResource SolidBorderBrush}" BorderThickness="1" CornerRadius="2"
                                 KeyboardNavigation.DirectionalNavigation="Contained"
                                 KeyboardNavigation.TabNavigation="Local" KeyboardNavigation.TabIndex="2">
 
                             <!-- The implementation switches the content. This control must be named PART_SelectedContentHost -->
-                            <ContentPresenter Margin="4" x:Name="PART_SelectedContentHost"
+                            <ContentPresenter Style="{x:Null}" Margin="4" x:Name="PART_SelectedContentHost"
                                               ContentSource="SelectedContent" />
 
                         </Border>
@@ -1170,11 +1175,11 @@ All other rights reserved.
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TabItem}">
-                    <Grid>
-                        <Border Margin="0,0,-4,0" x:Name="Border" Background="{DynamicResource LightBrush}"
+                    <Grid Style="{x:Null}">
+                        <Border Style="{x:Null}" Margin="0,0,-4,0" x:Name="Border" Background="{DynamicResource LightBrush}"
                                 BorderBrush="{DynamicResource SolidBorderBrush}" BorderThickness="1,1,1,1"
                                 CornerRadius="2,12,0,0">
-                            <ContentPresenter HorizontalAlignment="Center" Margin="12,2,12,2" x:Name="ContentSite"
+                            <ContentPresenter Style="{x:Null}" HorizontalAlignment="Center" Margin="12,2,12,2" x:Name="ContentSite"
                                               VerticalAlignment="Center" RecognizesAccessKey="True"
                                               ContentSource="Header" />
                         </Border>
@@ -1207,8 +1212,8 @@ All other rights reserved.
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Thumb}">
-                    <Grid>
-                        <Ellipse x:Name="Ellipse" Fill="{DynamicResource NormalBrush}"
+                    <Grid Style="{x:Null}">
+                        <Ellipse Style="{x:Null}" x:Name="Ellipse" Fill="{DynamicResource NormalBrush}"
                                  Stroke="{DynamicResource NormalBorderBrush}" StrokeThickness="1" />
                     </Grid>
                     <ControlTemplate.Triggers>
@@ -1234,22 +1239,22 @@ All other rights reserved.
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Slider}">
-                    <Grid x:Name="GridRoot">
+                    <Grid Style="{x:Null}" x:Name="GridRoot">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}" />
-                            <RowDefinition Height="Auto" />
+                            <RowDefinition Style="{x:Null}" Height="Auto" />
+                            <RowDefinition Style="{x:Null}" Height="Auto" MinHeight="{TemplateBinding MinHeight}" />
+                            <RowDefinition Style="{x:Null}" Height="Auto" />
                         </Grid.RowDefinitions>
 
                         <!-- TickBar shows the ticks for Slider -->
-                        <TickBar Visibility="Collapsed" x:Name="TopTick" Height="4" SnapsToDevicePixels="True"
+                        <TickBar Style="{x:Null}" Visibility="Collapsed" x:Name="TopTick" Height="4" SnapsToDevicePixels="True"
                                  Placement="Top" Fill="{DynamicResource GlyphBrush}" />
-                        <Border Grid.Row="1" Margin="0" x:Name="Border" Height="4"
+                        <Border Style="{x:Null}" Grid.Row="1" Margin="0" x:Name="Border" Height="4"
                                 Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="2" />
 
                         <!-- The Track lays out the repeat buttons and thumb -->
-                        <Track Grid.Row="1" x:Name="PART_Track">
+                        <Track Style="{x:Null}" Grid.Row="1" x:Name="PART_Track">
                             <Track.Thumb>
                                 <Thumb Style="{DynamicResource SimpleSliderThumb}" />
                             </Track.Thumb>
@@ -1263,7 +1268,7 @@ All other rights reserved.
                             </Track.DecreaseRepeatButton>
                         </Track>
 
-                        <TickBar Visibility="Collapsed" Grid.Row="2" x:Name="BottomTick" Height="4"
+                        <TickBar Style="{x:Null}" Visibility="Collapsed" Grid.Row="2" x:Name="BottomTick" Height="4"
                                  SnapsToDevicePixels="True" Placement="Bottom" Fill="{TemplateBinding Foreground}" />
                     </Grid>
                     <ControlTemplate.Triggers>
@@ -1303,8 +1308,8 @@ All other rights reserved.
 
     <ControlTemplate x:Key="Snoop.Templates.NoSelectionComboBox"
                      TargetType="{x:Type controls:NoSelectionComboBox}">
-        <Grid x:Name="Grid">
-            <Border x:Name="Border"
+        <Grid Style="{x:Null}" x:Name="Grid">
+            <Border Style="{x:Null}" x:Name="Border"
                     Background="{TemplateBinding Background}"
                     BorderBrush="{TemplateBinding BorderBrush}"
                     BorderThickness="{TemplateBinding BorderThickness}">
