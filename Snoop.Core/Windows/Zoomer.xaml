@@ -1,161 +1,185 @@
 ﻿<!--
-(c) Copyright Cory Plotts.
-This source is subject to the Microsoft Public License (Ms-PL).
-Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-All other rights reserved.
+    (c) Copyright Cory Plotts.
+    This source is subject to the Microsoft Public License (Ms-PL).
+    Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
+    All other rights reserved.
 -->
-<windows:SnoopMainBaseWindow
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:snoop="clr-namespace:Snoop"
-    xmlns:windows="clr-namespace:Snoop.Windows"
-    xmlns:converters="clr-namespace:Snoop.Converters"
-    x:Class="Snoop.Windows.Zoomer"
-    Title="Zoomer"
-    Width="640"
-    Height="480"
-    FocusManager.FocusedElement="{Binding ElementName=DocumentRoot}"
-    Style="{x:Null}">
+<windows:SnoopMainBaseWindow Style="{x:Null}"
+                             x:Class="Snoop.Windows.Zoomer"
+                             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                             xmlns:converters="clr-namespace:Snoop.Converters"
+                             xmlns:snoop="clr-namespace:Snoop"
+                             xmlns:windows="clr-namespace:Snoop.Windows"
+                             Title="Zoomer"
+                             Width="640"
+                             Height="480"
+                             FocusManager.FocusedElement="{Binding ElementName=DocumentRoot}">
     <Grid x:Name="DocumentRoot"
           Cursor="SizeAll"
           Focusable="True"
-          Mouse.MouseMove="Content_MouseMove"
           Mouse.MouseDown="Content_MouseDown"
+          Mouse.MouseMove="Content_MouseMove"
           Mouse.MouseUp="Content_MouseUp"
           Mouse.MouseWheel="Content_MouseWheel">
         <Grid.Background>
-            <Binding ElementName="ColorSlider" Path="Value"
-                     Converter="{x:Static windows:DoubleToWhitenessConverter.Default}" />
+            <Binding Converter="{x:Static windows:DoubleToWhitenessConverter.Default}"
+                     ElementName="ColorSlider"
+                     Path="Value" />
         </Grid.Background>
 
         <Grid.ContextMenu>
             <ContextMenu Style="{x:Null}">
-                <MenuItem Style="{x:Null}" Command="{x:Static windows:Zoomer.SwitchTo2DCommand}">
+                <MenuItem Style="{x:Null}"
+                          Command="{x:Static windows:Zoomer.SwitchTo2DCommand}">
                     <MenuItem.Header>
-                        <TextBlock Style="{x:Null}" Text="2D view" />
+                        <TextBlock Style="{x:Null}"
+                                   Text="2D view" />
                     </MenuItem.Header>
                 </MenuItem>
-                <MenuItem Style="{x:Null}" Command="{x:Static windows:Zoomer.SwitchTo3DCommand}">
+                <MenuItem Style="{x:Null}"
+                          Command="{x:Static windows:Zoomer.SwitchTo3DCommand}">
                     <MenuItem.Header>
-                        <TextBlock Style="{x:Null}" Text="3D view" />
+                        <TextBlock Style="{x:Null}"
+                                   Text="3D view" />
                     </MenuItem.Header>
                 </MenuItem>
                 <Separator />
-                <MenuItem Style="{x:Null}" Command="{x:Static windows:Zoomer.ResetCommand}">
+                <MenuItem Style="{x:Null}"
+                          Command="{x:Static windows:Zoomer.ResetCommand}">
                     <MenuItem.Header>
-                        <TextBlock Style="{x:Null}" Text="Reset" />
+                        <TextBlock Style="{x:Null}"
+                                   Text="Reset" />
                     </MenuItem.Header>
                 </MenuItem>
             </ContextMenu>
         </Grid.ContextMenu>
 
-        <Viewbox x:Name="Viewbox" Style="{x:Null}" />
+        <Viewbox Style="{x:Null}"
+                 x:Name="Viewbox" />
 
-        <StackPanel Style="{x:Null}" Orientation="Horizontal"
+        <StackPanel Style="{x:Null}"
+                    Margin="2 2 0 0"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Top"
-                    Margin="2,2,0,0"
+                    Orientation="Horizontal"
                     Opacity="0.5">
             <RadioButton Style="{DynamicResource {x:Type ToggleButton}}"
                          MinWidth="0"
                          MinHeight="0"
+                         Command="{x:Static windows:Zoomer.SwitchTo2DCommand}"
                          Cursor="Arrow"
                          Focusable="False"
-                         IsChecked="True"
-                         Command="{x:Static windows:Zoomer.SwitchTo2DCommand}">
-                <TextBlock Style="{x:Null}" Text="2D" />
+                         IsChecked="True">
+                <TextBlock Style="{x:Null}"
+                           Text="2D" />
                 <RadioButton.ToolTip>
-                    <TextBlock Style="{x:Null}" Text="2D view (F2)" />
+                    <TextBlock Style="{x:Null}"
+                               Text="2D view (F2)" />
                 </RadioButton.ToolTip>
             </RadioButton>
             <RadioButton Style="{DynamicResource {x:Type ToggleButton}}"
                          MinWidth="0"
                          MinHeight="0"
-                         Margin="2,0,0,0"
+                         Margin="2 0 0 0"
+                         Command="{x:Static windows:Zoomer.SwitchTo3DCommand}"
                          Cursor="Arrow"
-                         Focusable="False"
-                         Command="{x:Static windows:Zoomer.SwitchTo3DCommand}">
-                <TextBlock Style="{x:Null}" Text="3D" />
+                         Focusable="False">
+                <TextBlock Style="{x:Null}"
+                           Text="3D" />
                 <RadioButton.ToolTip>
-                    <TextBlock Style="{x:Null}" Text="3D view (F3)" />
+                    <TextBlock Style="{x:Null}"
+                               Text="3D view (F3)" />
                 </RadioButton.ToolTip>
             </RadioButton>
         </StackPanel>
 
-        <StackPanel Style="{x:Null}" Orientation="Horizontal"
+        <StackPanel Style="{x:Null}"
                     VerticalAlignment="Bottom"
+                    Orientation="Horizontal"
                     Visibility="{Binding Path=Target.(TextOptions.TextFormattingMode), RelativeSource={RelativeSource AncestorType=windows:Zoomer}, Converter={x:Static converters:EqualsToVisibilityConverter.DefaultInstance}, ConverterParameter=Display}">
-            <Image Source="{DynamicResource warningDrawingImage}" Height="14" />
+            <Image Height="14"
+                   Source="{DynamicResource warningDrawingImage}" />
             <TextBlock Style="{x:Null}"
-                       Foreground="DarkOrange"
                        VerticalAlignment="Center"
+                       Foreground="DarkOrange"
                        Text="&quot;TextOptions.TextFormattingMode&quot; is set to &quot;Display&quot; which causes fonts to render blurry." />
             <Button x:Name="fixTextFormattingModeButton"
+                    Margin="2 0 0 0"
+                    Padding="2"
                     Click="FixTextFormattingModeButton_OnClick"
                     Content="Fix"
-                    Cursor="Arrow"
-                    Padding="2"
-                    Margin="2 0 0 0" />
+                    Cursor="Arrow" />
         </StackPanel>
 
-        <Slider x:Name="ColorSlider"
-                Style="{x:Null}"
+        <Slider Style="{x:Null}"
+                x:Name="ColorSlider"
                 Width="100"
+                Margin="0 2 2 0"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
-                Margin="0,2,2,0"
-                Minimum="0"
-                Maximum="1"
-                Value="1"
-                Opacity=".5"
                 Cursor="Arrow"
-                Focusable="False">
+                Focusable="False"
+                Maximum="1"
+                Minimum="0"
+                Opacity=".5"
+                Value="1">
             <Slider.ToolTip>
-                <TextBlock Style="{x:Null}" Text="Use this slider to adjust the Background from white to black." />
+                <TextBlock Style="{x:Null}"
+                           Text="Use this slider to adjust the Background from white to black." />
             </Slider.ToolTip>
         </Slider>
 
-        <StackPanel Style="{x:Null}" x:Name="ThreeDViewControls" Orientation="Horizontal"
+        <StackPanel Style="{x:Null}"
+                    x:Name="ThreeDViewControls"
+                    Margin="0 0 2 2"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
-                    Margin="0,0,2,2"
+                    Orientation="Horizontal"
                     Visibility="Collapsed">
-            <ComboBox x:Name="dpiBox"
-                      Style="{x:Null}"
+            <ComboBox Style="{x:Null}"
+                      x:Name="dpiBox"
                       Grid.Column="1"
                       Width="75"
-                      Margin="0,0,5,0"
+                      Margin="0 0 5 0"
                       IsEditable="False"
                       SelectionChanged="DpiBox_OnSelectionChanged">
                 <ComboBoxItem Style="{x:Null}">
-                    <TextBlock Style="{x:Null}" Text="96" />
+                    <TextBlock Style="{x:Null}"
+                               Text="96" />
                 </ComboBoxItem>
                 <ComboBoxItem Style="{x:Null}">
-                    <TextBlock Style="{x:Null}" Text="150" />
+                    <TextBlock Style="{x:Null}"
+                               Text="150" />
                 </ComboBoxItem>
-                <ComboBoxItem Style="{x:Null}" IsSelected="True">
-                    <TextBlock Style="{x:Null}" Text="300" />
+                <ComboBoxItem Style="{x:Null}"
+                              IsSelected="True">
+                    <TextBlock Style="{x:Null}"
+                               Text="300" />
                 </ComboBoxItem>
                 <ComboBoxItem Style="{x:Null}">
-                    <TextBlock Style="{x:Null}" Text="600" />
+                    <TextBlock Style="{x:Null}"
+                               Text="600" />
                 </ComboBoxItem>
             </ComboBox>
             <TextBlock Style="{x:Null}"
-                       Margin="0,0,5,0"
-                       VerticalAlignment="Center" Text="DPI" />
+                       Margin="0 0 5 0"
+                       VerticalAlignment="Center"
+                       Text="DPI" />
 
-            <Slider x:Name="ZScaleSlider"
-                    Style="{x:Null}"
+            <Slider Style="{x:Null}"
+                    x:Name="ZScaleSlider"
                     Width="100"
-                    Minimum="-1.2"
-                    Maximum="1.2"
-                    Value="0"
-                    Opacity=".5"
                     Cursor="Arrow"
                     Focusable="False"
-                    ValueChanged="ZScaleSlider_ValueChanged">
+                    Maximum="1.2"
+                    Minimum="-1.2"
+                    ValueChanged="ZScaleSlider_ValueChanged"
+                    Opacity=".5"
+                    Value="0">
                 <Slider.ToolTip>
-                    <TextBlock Style="{x:Null}" Text="3D separation" />
+                    <TextBlock Style="{x:Null}"
+                               Text="3D separation" />
                 </Slider.ToolTip>
             </Slider>
         </StackPanel>

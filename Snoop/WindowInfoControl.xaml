@@ -1,33 +1,33 @@
 ﻿<UserControl x:Class="Snoop.WindowInfoControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:snoop="clr-namespace:Snoop"
-             xmlns:infrastructure="clr-namespace:Snoop.Infrastructure"
              xmlns:converters="clr-namespace:Snoop.Converters"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:infrastructure="clr-namespace:Snoop.Infrastructure"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:snoop="clr-namespace:Snoop"
              xmlns:snoopwpf="urn:snoopwpf"
-             mc:Ignorable="d"
              d:DesignHeight="40"
              d:DesignWidth="600"
-             SnapsToDevicePixels="True"
-             UseLayoutRounding="True"
              FontSize="14"
+             SnapsToDevicePixels="True"
              TextOptions.TextFormattingMode="Ideal"
              TextOptions.TextHintingMode="Fixed"
-             TextOptions.TextRenderingMode="Aliased">
+             TextOptions.TextRenderingMode="Aliased"
+             UseLayoutRounding="True"
+             mc:Ignorable="d">
     <!-- The TextOptions set above are important to get a crisp and clear image of this control when it's converted to an image/cursor -->
     <Border>
-        <StackPanel d:DataContext="{d:DesignInstance snoop:WindowInfo}" 
-                    Orientation="Horizontal"
+        <StackPanel Height="40"
                     Margin="8 0 0 0"
-                    Height="40">
-            <Path Width="16" 
-                  Height="16" 
-                  Margin="0 0 2 0" 
-                  Stretch="Fill" 
+                    d:DataContext="{d:DesignInstance snoop:WindowInfo}"
+                    Orientation="Horizontal">
+            <Path Width="16"
+                  Height="16"
+                  Margin="0 0 2 0"
+                  Data="{DynamicResource crosshairGeometry}"
                   Fill="Blue"
-                  Data="{DynamicResource crosshairGeometry}" />
+                  Stretch="Fill" />
 
             <Grid x:Name="WindowInfoContainer"
                   Visibility="Collapsed">
@@ -37,8 +37,8 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <Border Grid.Column="0"
-                        Style="{x:Null}"
+                <Border Style="{x:Null}"
+                        Grid.Column="0"
                         Width="32"
                         Height="32"
                         Margin="0 0 2 0"
@@ -65,14 +65,14 @@
                 </Path>
 
                 <Border Grid.Column="2"
+                        VerticalAlignment="Center"
                         Background="White"
                         BorderBrush="Black"
-                        BorderThickness="1"
-                        VerticalAlignment="Center">
-                    <TextBlock TextTrimming="CharacterEllipsis"
+                        BorderThickness="1">
+                    <TextBlock Margin="4"
                                Foreground="Black"
-                               Margin="4"
-                               Text="{Binding Description}" />
+                               Text="{Binding Description}"
+                               TextTrimming="CharacterEllipsis" />
                 </Border>
             </Grid>
         </StackPanel>

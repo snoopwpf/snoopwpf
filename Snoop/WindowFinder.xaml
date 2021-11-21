@@ -1,8 +1,8 @@
 ﻿<!--
-(c) Copyright Cory Plotts.
-This source is subject to the Microsoft Public License (Ms-PL).
-Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-All other rights reserved.
+    (c) Copyright Cory Plotts.
+    This source is subject to the Microsoft Public License (Ms-PL).
+    Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
+    All other rights reserved.
 -->
 <UserControl x:Class="Snoop.WindowFinder"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -11,16 +11,16 @@ All other rights reserved.
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d">
     <StackPanel>
-        <Button x:Name="btnStartWindowsSearch"
+        <Button Style="{DynamicResource appChooserButtonStyle}"
+                x:Name="btnStartWindowsSearch"
                 Width="20"
-                Height="20"
-                Style="{DynamicResource appChooserButtonStyle}">
+                Height="20">
             <Path x:Name="snoopCrosshairsImage"
-                  Width="16" 
-                  Height="16" 
-                  Stretch="Fill" 
+                  Width="16"
+                  Height="16"
+                  Data="{DynamicResource crosshairGeometry}"
                   Fill="Black"
-                  Data="{DynamicResource crosshairGeometry}" />
+                  Stretch="Fill" />
         </Button>
     </StackPanel>
 </UserControl>

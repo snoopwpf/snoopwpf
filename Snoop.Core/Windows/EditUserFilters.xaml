@@ -1,153 +1,137 @@
 ﻿<!--
-(c) Copyright Cory Plotts.
-This source is subject to the Microsoft Public License (Ms-PL).
-Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-All other rights reserved.
+    (c) Copyright Cory Plotts.
+    This source is subject to the Microsoft Public License (Ms-PL).
+    Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
+    All other rights reserved.
 -->
-<windows:SnoopBaseWindow
-	x:Class="Snoop.Windows.EditUserFilters"
-	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:converters="clr-namespace:Snoop.Converters"
-	xmlns:windows="clr-namespace:Snoop.Windows"
-	Title="Edit Filter Sets"
-	Width="500"
-	Height="300"
-    x:Name="editUserFilters">
+<windows:SnoopBaseWindow x:Class="Snoop.Windows.EditUserFilters"
+                         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                         xmlns:converters="clr-namespace:Snoop.Converters"
+                         xmlns:windows="clr-namespace:Snoop.Windows"
+                         x:Name="editUserFilters"
+                         Title="Edit Filter Sets"
+                         Width="500"
+                         Height="300">
     <Grid Margin="4">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="*"/>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto"/>
-		</Grid.RowDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="75"/>
-			<ColumnDefinition Width="*"/>
-			<ColumnDefinition Width="Auto"/>
-		</Grid.ColumnDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="75" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
 
-		<TextBlock
-			Grid.Row="1"
-			Grid.Column="0"
-			Style="{x:Null}"
-			VerticalAlignment="Center"
-			Text="Name:"
-		/>
-		<TextBox
-			Grid.Row="1"
-			Grid.Column="1"
-		    Style="{x:Null}"
-			VerticalAlignment="Center"
-            IsReadOnly="{Binding Path=SelectedItem.IsReadOnly, ElementName=filterSetList}"
-            IsReadOnlyCaretVisible="True"
-			Text="{Binding Path=SelectedItem.DisplayName, ElementName=filterSetList}"
-		/>
-		<TextBlock
-			Grid.Row="2"
-			Grid.Column="0"
-			Style="{x:Null}"
-			VerticalAlignment="Center"
-			Margin="0,4,0,0"
-			Text="Properties:"
-		/>
-		<TextBox
-			Grid.Row="2"
-			Grid.Column="1"
-			Style="{x:Null}"
-			VerticalAlignment="Center"
-			Margin="0,4,0,0"
-            IsReadOnly="{Binding Path=SelectedItem.IsReadOnly, ElementName=filterSetList}"
-            IsReadOnlyCaretVisible="True"
-			Text="{Binding Path=SelectedItem.Properties, ElementName=filterSetList, Converter={x:Static converters:CsvStringToArrayConverter.Default}}"
-		/>
+        <TextBlock Style="{x:Null}"
+                   Grid.Row="1"
+                   Grid.Column="0"
+                   VerticalAlignment="Center"
+                   Text="Name:" />
+        <TextBox Style="{x:Null}"
+                 Grid.Row="1"
+                 Grid.Column="1"
+                 VerticalAlignment="Center"
+                 IsReadOnly="{Binding Path=SelectedItem.IsReadOnly, ElementName=filterSetList}"
+                 IsReadOnlyCaretVisible="True"
+                 Text="{Binding Path=SelectedItem.DisplayName, ElementName=filterSetList}" />
+        <TextBlock Style="{x:Null}"
+                   Grid.Row="2"
+                   Grid.Column="0"
+                   Margin="0 4 0 0"
+                   VerticalAlignment="Center"
+                   Text="Properties:" />
+        <TextBox Style="{x:Null}"
+                 Grid.Row="2"
+                 Grid.Column="1"
+                 Margin="0 4 0 0"
+                 VerticalAlignment="Center"
+                 IsReadOnly="{Binding Path=SelectedItem.IsReadOnly, ElementName=filterSetList}"
+                 IsReadOnlyCaretVisible="True"
+                 Text="{Binding Path=SelectedItem.Properties, ElementName=filterSetList, Converter={x:Static converters:CsvStringToArrayConverter.Default}}" />
 
-		<ListBox
-			x:Name="filterSetList"
-		    Style="{x:Null}"
-			Grid.Row="0"
-			Grid.ColumnSpan="2"
-			ItemsSource="{Binding ItemsSource, ElementName=editUserFilters}"
-			SelectionChanged="SelectionChangedHandler"
-			Margin="0,0,0,10"
-		>
-			<ListBox.ItemTemplate>
-				<DataTemplate>
-					<TextBlock Style="{x:Null}" Text="{Binding DisplayName}"/>
-				</DataTemplate>
-			</ListBox.ItemTemplate>
-		</ListBox>
+        <ListBox Style="{x:Null}"
+                 x:Name="filterSetList"
+                 Grid.Row="0"
+                 Grid.ColumnSpan="2"
+                 Margin="0 0 0 10"
+                 ItemsSource="{Binding ItemsSource, ElementName=editUserFilters}"
+                 SelectionChanged="SelectionChangedHandler">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Style="{x:Null}"
+                               Text="{Binding DisplayName}" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
 
-		<StackPanel Style="{x:Null}"
+        <StackPanel Style="{x:Null}"
                     Grid.Row="3"
                     Grid.Column="1"
                     Grid.ColumnSpan="2"
+                    Margin="0 10 5 5"
                     HorizontalAlignment="Right"
-                    Margin="0,10,5,5"
-                    Orientation="Horizontal"
-        >
-			<Button
-			    Style="{x:Null}"
-				Width="75"
-				IsDefault="True"
-				Click="OkHandler"
-			>
-				<TextBlock Style="{x:Null}" Text="OK"/>
-			</Button>
-			<Button
-			    Style="{x:Null}"
-				Width="75"
-				Margin="5,0,0,0"
-				IsCancel="True"
-				Click="CancelHandler"
-			>
-				<TextBlock Style="{x:Null}" Text="Cancel"/>
-			</Button>
-		</StackPanel>
+                    Orientation="Horizontal">
+            <Button Style="{x:Null}"
+                    Width="75"
+                    Click="OkHandler"
+                    IsDefault="True">
+                <TextBlock Style="{x:Null}"
+                           Text="OK" />
+            </Button>
+            <Button Style="{x:Null}"
+                    Width="75"
+                    Margin="5 0 0 0"
+                    Click="CancelHandler"
+                    IsCancel="True">
+                <TextBlock Style="{x:Null}"
+                           Text="Cancel" />
+            </Button>
+        </StackPanel>
 
-		<StackPanel Style="{x:Null}"
+        <StackPanel Style="{x:Null}"
                     Grid.Row="0"
                     Grid.Column="2"
-                    Margin="5,0,5,0"
-                    VerticalAlignment="Center"
-        >
-			<Button
-				x:Name="MoveUp"
-			    Style="{x:Null}"
-				Width="20"
-				Height="20"
-				Click="UpHandler"
-			>
-				<Image Style="{x:Null}" Source="{DynamicResource upDrawingImage}" Margin="3"/>
-			</Button>
-			<Button
-				x:Name="MoveDown"
-			    Style="{x:Null}"
-				Width="20"
-				Height="20"
-				Margin="0,5,0,0"
-				Click="DownHandler"
-			>
-				<Image Style="{x:Null}" Source="{DynamicResource downDrawingImage}" Margin="3" />
-			</Button>
-			<Button
-			    Style="{x:Null}"
-				Width="50"
-				Margin="0,10,0,0"
-				Click="AddHandler"
-			>
-				<TextBlock Style="{x:Null}" Text="Add new"/>
-			</Button>
-			<Button
-				x:Name="DeleteItem"
-			    Style="{x:Null}"
-				Width="50"
-				Margin="0,5,0,0"
-				Click="DeleteHandler"
-			>
-				<TextBlock Style="{x:Null}" Text="Delete"/>
-			</Button>
-		</StackPanel>
-	</Grid>
+                    Margin="5 0 5 0"
+                    VerticalAlignment="Center">
+            <Button Style="{x:Null}"
+                    x:Name="MoveUp"
+                    Width="20"
+                    Height="20"
+                    Click="UpHandler">
+                <Image Style="{x:Null}"
+                       Margin="3"
+                       Source="{DynamicResource upDrawingImage}" />
+            </Button>
+            <Button Style="{x:Null}"
+                    x:Name="MoveDown"
+                    Width="20"
+                    Height="20"
+                    Margin="0 5 0 0"
+                    Click="DownHandler">
+                <Image Style="{x:Null}"
+                       Margin="3"
+                       Source="{DynamicResource downDrawingImage}" />
+            </Button>
+            <Button Style="{x:Null}"
+                    Width="50"
+                    Margin="0 10 0 0"
+                    Click="AddHandler">
+                <TextBlock Style="{x:Null}"
+                           Text="Add new" />
+            </Button>
+            <Button Style="{x:Null}"
+                    x:Name="DeleteItem"
+                    Width="50"
+                    Margin="0 5 0 0"
+                    Click="DeleteHandler">
+                <TextBlock Style="{x:Null}"
+                           Text="Delete" />
+            </Button>
+        </StackPanel>
+    </Grid>
 </windows:SnoopBaseWindow>

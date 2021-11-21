@@ -1,165 +1,167 @@
 ﻿<!--
-(c) Copyright Cory Plotts.
-This source is subject to the Microsoft Public License (Ms-PL).
-Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-All other rights reserved.
+    (c) Copyright Cory Plotts.
+    This source is subject to the Microsoft Public License (Ms-PL).
+    Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
+    All other rights reserved.
 -->
-<windows:SnoopBaseWindow
-	x:Class="Snoop.Windows.ErrorDialog"
-	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:windows="clr-namespace:Snoop.Windows"
-	Width="640"
-	Height="480"
-    MinWidth="640"
-    MinHeight="480"
-    ResizeMode="CanResizeWithGrip"
-    Style="{x:Null}">
-    <Grid Style="{x:Null}" Margin="10">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="*"/>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto"/>
-		</Grid.RowDefinitions>
+<windows:SnoopBaseWindow Style="{x:Null}"
+                         x:Class="Snoop.Windows.ErrorDialog"
+                         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                         xmlns:windows="clr-namespace:Snoop.Windows"
+                         Width="640"
+                         Height="480"
+                         MinWidth="640"
+                         MinHeight="480"
+                         ResizeMode="CanResizeWithGrip">
+    <Grid Style="{x:Null}"
+          Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-		<TextBlock
-			Style="{x:Null}"
-			Grid.Row="0"
-            x:Name="captionTextBlock"
-			FontSize="16"
-			TextWrapping="Wrap"
-		/>
-		<TextBlock
-			Style="{x:Null}"
-			Grid.Row="1"
-			Margin="0,10,0,0"
-			Text="Error details:"
-		/>
-		<TextBox
-			Style="{x:Null}"
-			Grid.Row="2"
-			x:Name="_textBlockException"
-			AcceptsReturn="True"
-            IsReadOnly="True"
-            IsReadOnlyCaretVisible="True"
-			TextWrapping="NoWrap"
-			HorizontalScrollBarVisibility="Auto"
-			VerticalScrollBarVisibility="Auto"
-		/>
+        <TextBlock Style="{x:Null}"
+                   x:Name="captionTextBlock"
+                   Grid.Row="0"
+                   FontSize="16"
+                   TextWrapping="Wrap" />
+        <TextBlock Style="{x:Null}"
+                   Grid.Row="1"
+                   Margin="0 10 0 0"
+                   Text="Error details:" />
+        <TextBox Style="{x:Null}"
+                 x:Name="_textBlockException"
+                 Grid.Row="2"
+                 AcceptsReturn="True"
+                 HorizontalScrollBarVisibility="Auto"
+                 IsReadOnly="True"
+                 IsReadOnlyCaretVisible="True"
+                 TextWrapping="NoWrap"
+                 VerticalScrollBarVisibility="Auto" />
 
-        <StackPanel Style="{x:Null}" Grid.Row="3" Margin="0,5,0,0">
-            <TextBlock
-				Style="{x:Null}"
-				Text="Take a look at the above error details (you can resize this dialog). If you think the exception is related to an issue in Snoop (versus the application you are snooping), we would be very grateful if you could create an issue on GitHub."
-				TextWrapping="Wrap"
-			/>
+        <StackPanel Style="{x:Null}"
+                    Grid.Row="3"
+                    Margin="0 5 0 0">
+            <TextBlock Style="{x:Null}"
+                       Text="Take a look at the above error details (you can resize this dialog). If you think the exception is related to an issue in Snoop (versus the application you are snooping), we would be very grateful if you could create an issue on GitHub."
+                       TextWrapping="Wrap" />
         </StackPanel>
 
-        <StackPanel Style="{x:Null}" Grid.Row="4" HorizontalAlignment="Left" Margin="0,5,0,0" Orientation="Horizontal">
-			<Button
-				x:Name="_buttonCopyToClipboard"
-			    Style="{x:Null}"
-				Width="175"
-				Height="32"
-				Margin="0,0,15,0"
-				Click="ButtonCopyToClipboard_Click"
-			>
-				<TextBlock Style="{x:Null}" Text="Copy details to clipboard"/>
-			</Button>
-            <StackPanel Style="{x:Null}" Orientation="Vertical" Grid.Row="3">
+        <StackPanel Style="{x:Null}"
+                    Grid.Row="4"
+                    Margin="0 5 0 0"
+                    HorizontalAlignment="Left"
+                    Orientation="Horizontal">
+            <Button Style="{x:Null}"
+                    x:Name="_buttonCopyToClipboard"
+                    Width="175"
+                    Height="32"
+                    Margin="0 0 15 0"
+                    Click="ButtonCopyToClipboard_Click">
+                <TextBlock Style="{x:Null}"
+                           Text="Copy details to clipboard" />
+            </Button>
+            <StackPanel Style="{x:Null}"
+                        Grid.Row="3"
+                        Orientation="Vertical">
                 <TextBlock Style="{x:Null}">
-					<Hyperlink Style="{x:Null}" NavigateUri="dummy" RequestNavigate="Hyperlink_RequestNavigate">
-						<TextBlock Style="{x:Null}" Text="Click here to create an issue on GitHub."/>
-					</Hyperlink>
-				</TextBlock>
-			</StackPanel>
-		</StackPanel>
-
-        <StackPanel Style="{x:Null}" x:Name="HandledExceptionPanel" Grid.Row="5" HorizontalAlignment="Left" Margin="0,5,0,0" Orientation="Horizontal">
-	        <Button
-	            Style="{x:Null}"
-	            Width="230"
-	            Height="32"
-	            Click="CloseAndMarkHandled_Click"
-	            IsCancel="True"
-	            IsDefault="True"
-	        >
-	            <TextBlock Style="{x:Null}" Text="Close dialog"/>
-	            <Button.ToolTip>
-	                <TextBlock
-	                    MaxWidth="300"
-	                    Style="{x:Null}"
-	                    Text="Choosing this button closes the dialog and marks the exception as handled, which should not end up crashing the application."
-	                    TextWrapping="Wrap"
-	                />
-	            </Button.ToolTip>
-	        </Button>
+                    <Hyperlink Style="{x:Null}"
+                               NavigateUri="dummy"
+                               RequestNavigate="Hyperlink_RequestNavigate">
+                        <TextBlock Style="{x:Null}"
+                                   Text="Click here to create an issue on GitHub." />
+                    </Hyperlink>
+                </TextBlock>
+            </StackPanel>
         </StackPanel>
 
-        <StackPanel Style="{x:Null}" x:Name="UnhandledExceptionPanel" Grid.Row="5" HorizontalAlignment="Left" Margin="0,5,0,0" Orientation="Horizontal">
-			<CheckBox
-				x:Name="_checkBoxRemember"
-			    Style="{x:Null}"
-				Grid.Row="5"
-				VerticalAlignment="Center"
-				Margin="0,0,5,0"
-				ToolTipService.ShowDuration="30000"
-			>
-				<TextBlock Style="{x:Null}" Text="Remember option"/>
-				<CheckBox.ToolTip>
-					<TextBlock
-						Style="{x:Null}"
-						MaxWidth="300"
-						TextWrapping="Wrap"
-					>
-						<TextBlock.Inlines>
-							<Run Style="{x:Null}" Text="This checkbox will remember whether you want to mark the exception handled or not, in the case that there are many unhandled exceptions, so that the dialog does not keep coming up."/>
-							<LineBreak Style="{x:Null}" />
-							<LineBreak Style="{x:Null}" />
-							<Run Style="{x:Null}" Text="Note that clicking this checkbox and choosing one of the close buttons, also, in essence, stops this dialog from ever coming up again ... even in the case of a different unhandled exception ... until you Snoop the application all over again."/>
-						</TextBlock.Inlines>
-					</TextBlock>
-				</CheckBox.ToolTip>
-			</CheckBox>
-			<Button
-			    Style="{x:Null}"
-				Width="230"
-				Height="32"
-				Margin="0,0,10,0"
-				Click="CloseDoNotMarkHandled_Click"
-			>
-                <TextBlock Style="{x:Null}" Text="Close dialog and do not handle exception"/>
-				<Button.ToolTip>
-					<TextBlock
-						Style="{x:Null}"
-						MaxWidth="300"
-						Text="Choosing this button closes the dialog and lets the exception through, which often will end up crashing the application."
-						TextWrapping="Wrap"
-					/>
-				</Button.ToolTip>
-			</Button>
-			<Button
-			    Style="{x:Null}"
-				Width="230"
-				Height="32"
-				Click="CloseAndMarkHandled_Click"
-			    IsCancel="True"
-			    IsDefault="True"
-			>
-				<TextBlock Style="{x:Null}" Text="Close dialog and mark exception handled"/>
-				<Button.ToolTip>
-					<TextBlock
-						MaxWidth="300"
-						Style="{x:Null}"
-						Text="Choosing this button closes the dialog and marks the exception as handled, which should not end up crashing the application."
-						TextWrapping="Wrap"
-					/>
-				</Button.ToolTip>
-			</Button>
-		</StackPanel>
-	</Grid>
+        <StackPanel Style="{x:Null}"
+                    x:Name="HandledExceptionPanel"
+                    Grid.Row="5"
+                    Margin="0 5 0 0"
+                    HorizontalAlignment="Left"
+                    Orientation="Horizontal">
+            <Button Style="{x:Null}"
+                    Width="230"
+                    Height="32"
+                    Click="CloseAndMarkHandled_Click"
+                    IsCancel="True"
+                    IsDefault="True">
+                <TextBlock Style="{x:Null}"
+                           Text="Close dialog" />
+                <Button.ToolTip>
+                    <TextBlock Style="{x:Null}"
+                               MaxWidth="300"
+                               Text="Choosing this button closes the dialog and marks the exception as handled, which should not end up crashing the application."
+                               TextWrapping="Wrap" />
+                </Button.ToolTip>
+            </Button>
+        </StackPanel>
+
+        <StackPanel Style="{x:Null}"
+                    x:Name="UnhandledExceptionPanel"
+                    Grid.Row="5"
+                    Margin="0 5 0 0"
+                    HorizontalAlignment="Left"
+                    Orientation="Horizontal">
+            <CheckBox Style="{x:Null}"
+                      x:Name="_checkBoxRemember"
+                      Grid.Row="5"
+                      Margin="0 0 5 0"
+                      VerticalAlignment="Center"
+                      ToolTipService.ShowDuration="30000">
+                <TextBlock Style="{x:Null}"
+                           Text="Remember option" />
+                <CheckBox.ToolTip>
+                    <TextBlock Style="{x:Null}"
+                               MaxWidth="300"
+                               TextWrapping="Wrap">
+                        <TextBlock.Inlines>
+                            <Run Style="{x:Null}"
+                                 Text="This checkbox will remember whether you want to mark the exception handled or not, in the case that there are many unhandled exceptions, so that the dialog does not keep coming up." />
+                            <LineBreak Style="{x:Null}" />
+                            <LineBreak Style="{x:Null}" />
+                            <Run Style="{x:Null}"
+                                 Text="Note that clicking this checkbox and choosing one of the close buttons, also, in essence, stops this dialog from ever coming up again ... even in the case of a different unhandled exception ... until you Snoop the application all over again." />
+                        </TextBlock.Inlines>
+                    </TextBlock>
+                </CheckBox.ToolTip>
+            </CheckBox>
+            <Button Style="{x:Null}"
+                    Width="230"
+                    Height="32"
+                    Margin="0 0 10 0"
+                    Click="CloseDoNotMarkHandled_Click">
+                <TextBlock Style="{x:Null}"
+                           Text="Close dialog and do not handle exception" />
+                <Button.ToolTip>
+                    <TextBlock Style="{x:Null}"
+                               MaxWidth="300"
+                               Text="Choosing this button closes the dialog and lets the exception through, which often will end up crashing the application."
+                               TextWrapping="Wrap" />
+                </Button.ToolTip>
+            </Button>
+            <Button Style="{x:Null}"
+                    Width="230"
+                    Height="32"
+                    Click="CloseAndMarkHandled_Click"
+                    IsCancel="True"
+                    IsDefault="True">
+                <TextBlock Style="{x:Null}"
+                           Text="Close dialog and mark exception handled" />
+                <Button.ToolTip>
+                    <TextBlock Style="{x:Null}"
+                               MaxWidth="300"
+                               Text="Choosing this button closes the dialog and marks the exception as handled, which should not end up crashing the application."
+                               TextWrapping="Wrap" />
+                </Button.ToolTip>
+            </Button>
+        </StackPanel>
+    </Grid>
 </windows:SnoopBaseWindow>

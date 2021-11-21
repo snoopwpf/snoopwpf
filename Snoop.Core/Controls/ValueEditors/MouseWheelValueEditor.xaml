@@ -1,25 +1,26 @@
 ﻿<!--
-(c) Copyright Cory Plotts.
-This source is subject to the Microsoft Public License (Ms-PL).
-Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-All other rights reserved.
+    (c) Copyright Cory Plotts.
+    This source is subject to the Microsoft Public License (Ms-PL).
+    Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
+    All other rights reserved.
 -->
 <UserControl x:Class="Snoop.Controls.ValueEditors.MouseWheelValueEditor"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:converters="clr-namespace:Snoop.Converters"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:infrastructure="clr-namespace:Snoop.Infrastructure"
-             mc:Ignorable="d"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              d:DesignHeight="300"
-             d:DesignWidth="300">
+             d:DesignWidth="300"
+             mc:Ignorable="d">
     <UserControl.Resources>
-        <Style x:Key="MouseWheelText" TargetType="{x:Type TextBlock}">
+        <Style x:Key="MouseWheelText"
+               TargetType="{x:Type TextBlock}">
             <!--<Setter Property="local:PropertyEditor.SupportMouseWheel" Value="True"/>-->
             <Setter Property="FontSize" Value="12" />
             <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="Margin" Value="0,0,5,0" />
+            <Setter Property="Margin" Value="0 0 5 0" />
         </Style>
 
         <DataTemplate x:Key="DefaultEmptyTemplate">
@@ -27,30 +28,48 @@ All other rights reserved.
         </DataTemplate>
 
         <DataTemplate x:Key="CustomEditSingleField">
-            <TextBlock Tag="1" Style="{StaticResource MouseWheelText}" Text="{Binding Value}"
-                       d:DataContext="{d:DesignInstance infrastructure:PropertyInformation}" />
+            <TextBlock Style="{StaticResource MouseWheelText}"
+                       d:DataContext="{d:DesignInstance infrastructure:PropertyInformation}"
+                       Tag="1"
+                       Text="{Binding Value}" />
         </DataTemplate>
 
-        <DataTemplate x:Key="CustomEditThickness" DataType="{x:Type Thickness}">
-            <StackPanel Style="{x:Null}" Orientation="Horizontal"
-                        d:DataContext="{d:DesignInstance infrastructure:PropertyInformation}">
-                <TextBlock Tag="1" Style="{StaticResource MouseWheelText}" Text="{Binding Value.Left}" />
-                <TextBlock Tag="2" Style="{StaticResource MouseWheelText}" Text="{Binding Value.Top}" />
-                <TextBlock Tag="3" Style="{StaticResource MouseWheelText}" Text="{Binding Value.Right}" />
-                <TextBlock Tag="4" Style="{StaticResource MouseWheelText}" Text="{Binding Value.Bottom}" />
+        <DataTemplate x:Key="CustomEditThickness"
+                      DataType="{x:Type Thickness}">
+            <StackPanel Style="{x:Null}"
+                        d:DataContext="{d:DesignInstance infrastructure:PropertyInformation}"
+                        Orientation="Horizontal">
+                <TextBlock Style="{StaticResource MouseWheelText}"
+                           Tag="1"
+                           Text="{Binding Value.Left}" />
+                <TextBlock Style="{StaticResource MouseWheelText}"
+                           Tag="2"
+                           Text="{Binding Value.Top}" />
+                <TextBlock Style="{StaticResource MouseWheelText}"
+                           Tag="3"
+                           Text="{Binding Value.Right}" />
+                <TextBlock Style="{StaticResource MouseWheelText}"
+                           Tag="4"
+                           Text="{Binding Value.Bottom}" />
             </StackPanel>
         </DataTemplate>
 
-        <DataTemplate x:Key="CustomEditBrush" DataType="{x:Type Brush}">
-            <StackPanel Style="{x:Null}" Orientation="Horizontal"
-                        d:DataContext="{d:DesignInstance infrastructure:PropertyInformation}">
-                <TextBlock Tag="1" Style="{StaticResource MouseWheelText}"
+        <DataTemplate x:Key="CustomEditBrush"
+                      DataType="{x:Type Brush}">
+            <StackPanel Style="{x:Null}"
+                        d:DataContext="{d:DesignInstance infrastructure:PropertyInformation}"
+                        Orientation="Horizontal">
+                <TextBlock Style="{StaticResource MouseWheelText}"
+                           Tag="1"
                            Text="{Binding Path=Value, Converter={x:Static converters:ArgbToPartsConverter.Default}, ConverterParameter=0}" />
-                <TextBlock Tag="2" Style="{StaticResource MouseWheelText}"
+                <TextBlock Style="{StaticResource MouseWheelText}"
+                           Tag="2"
                            Text="{Binding Path=Value, Converter={x:Static converters:ArgbToPartsConverter.Default}, ConverterParameter=1}" />
-                <TextBlock Tag="3" Style="{StaticResource MouseWheelText}"
+                <TextBlock Style="{StaticResource MouseWheelText}"
+                           Tag="3"
                            Text="{Binding Path=Value, Converter={x:Static converters:ArgbToPartsConverter.Default}, ConverterParameter=2}" />
-                <TextBlock Tag="4" Style="{StaticResource MouseWheelText}"
+                <TextBlock Style="{StaticResource MouseWheelText}"
+                           Tag="4"
                            Text="{Binding Path=Value, Converter={x:Static converters:ArgbToPartsConverter.Default}, ConverterParameter=3}" />
             </StackPanel>
         </DataTemplate>
@@ -58,17 +77,17 @@ All other rights reserved.
 
     <!-- DataContext: PropertyInformation -->
 
-    <ContentControl Content="{Binding}"
-                    VerticalAlignment="Center"
-                    d:DataContext="{d:DesignInstance infrastructure:PropertyInformation}">
+    <ContentControl VerticalAlignment="Center"
+                    d:DataContext="{d:DesignInstance infrastructure:PropertyInformation}"
+                    Content="{Binding}">
         <ContentControl.Style>
             <Style TargetType="{x:Type ContentControl}">
                 <!--
-					ugh! couldn't get a ContentControl binding to Value and using implicit DataTemplates. Keep getting error
-					about element is already in the visual tree.
-					So instead, we manually describe which template to use based on Type.Name
-					Add more templates here for other data types.
-					-->
+                    ugh! couldn't get a ContentControl binding to Value and using implicit DataTemplates. Keep getting error
+                    about element is already in the visual tree.
+                    So instead, we manually describe which template to use based on Type.Name
+                    Add more templates here for other data types.
+                -->
                 <Setter Property="ContentTemplate" Value="{StaticResource DefaultEmptyTemplate}" />
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding Path=PropertyType.Name}" Value="Int32">
@@ -103,14 +122,13 @@ All other rights reserved.
                     </DataTrigger>
 
                     <!--
-						Catch all to prevent editing data types (based on runtime type) that we cant support (i.e. GradientBrush)
-						and use the empty template.  The binding here is to the runtime Value of the property, not the PropertyInfo.
-						The PropertyInfo (on Border.Background for example) might say a property is of type Brush, but at runtime
-						a LinearGradientBrush is provided, so we use the converter to detect that and return false, not supported.
-						Since this is last in the list, this will override any satisfying trigger above here
-						-->
-                    <DataTrigger Binding="{Binding Path=Value, Converter={x:Static converters:IsSupportedRuntimeTypeConverter.Default}}"
-                                 Value="False">
+                        Catch all to prevent editing data types (based on runtime type) that we cant support (i.e. GradientBrush)
+                        and use the empty template.  The binding here is to the runtime Value of the property, not the PropertyInfo.
+                        The PropertyInfo (on Border.Background for example) might say a property is of type Brush, but at runtime
+                        a LinearGradientBrush is provided, so we use the converter to detect that and return false, not supported.
+                        Since this is last in the list, this will override any satisfying trigger above here
+                    -->
+                    <DataTrigger Binding="{Binding Path=Value, Converter={x:Static converters:IsSupportedRuntimeTypeConverter.Default}}" Value="False">
                         <Setter Property="ContentTemplate" Value="{StaticResource DefaultEmptyTemplate}" />
                     </DataTrigger>
                 </Style.Triggers>
