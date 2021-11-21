@@ -120,47 +120,46 @@ All other rights reserved.
 				   Padding="2"
                    Target="{Binding ElementName=TreeTypeComboBox}"
                    Content="Tree:" />
-            <ComboBox Style="{x:Null}"
-                      x:Name="TreeTypeComboBox"
+            <ComboBox x:Name="TreeTypeComboBox"
                       Padding="4,2"
                       ItemsSource="{Binding Source={snoop:EnumBindingSource {x:Type tree:TreeType}}}"
                       SelectedItem="{Binding CurrentTreeType, Mode=TwoWay}" />
-			<Menu Style="{x:Null}">
-				<MenuItem Style="{x:Null}"
+			<Menu>
+				<MenuItem
                           Header="File">
-                    <MenuItem Style="{x:Null}" Header="Close window" Command="{x:Static ApplicationCommands.Close}" />
+                    <MenuItem Header="Close window" Command="{x:Static ApplicationCommands.Close}" />
                 </MenuItem>
-                <MenuItem Style="{x:Null}"
+                <MenuItem
                           Header="Settings">
-                    <MenuItem Style="{x:Null}" Header="Open settings folder" Click="HandleOpenSettingsFolder_OnClick" />
+                    <MenuItem Header="Open settings folder" Click="HandleOpenSettingsFolder_OnClick" />
                     <Separator />
-                    <MenuItem Style="{x:Null}" Header="Reset settings and close window" Click="HandleResetSettings_OnClick" />
+                    <MenuItem Header="Reset settings and close window" Click="HandleResetSettings_OnClick" />
                 </MenuItem>
-                <MenuItem Style="{x:Null}"
+                <MenuItem
                           Header="_Tracking options">
-                    <MenuItem Style="{x:Null}"
+                    <MenuItem
                               Header="Skip template parts"
                               ToolTip="When enabled and pressed tries to skip template parts."
                               IsCheckable="True"
                               IsChecked="{Binding SkipTemplateParts}" />
-                    <MenuItem Style="{x:Null}"
+                    <MenuItem
                               Header="Handle CTRL + _SHIFT"
                               ToolTip="When enabled and pressed tracks all parts of the UI."
                               IsCheckable="True"
                               IsChecked="{Binding IsHandlingCTRL_SHIFT}" />
                     <Separator />
-                    <MenuItem Style="{x:Null}"
+                    <MenuItem
                               Header="Highlight selected item"
                               IsCheckable="True"
                               IsChecked="{Binding HighlightSelectedItem, Source={x:Static selectionHighlight:SelectionHighlightOptions.Default}}" />
-                    <MenuItem Style="{x:Null}"
+                    <MenuItem
                               Header="Highlight options ..."
                               Click="HandleHighlightOptions_OnClick" />
                 </MenuItem>
-				<MenuItem Style="{x:Null}"
+				<MenuItem
 				          Header="_Debug">
-					<MenuItem Style="{x:Null}" Header="Launch debugger" Click="HandleLaunchDebugger_OnClick" />
-					<MenuItem Style="{x:Null}" Header="Snoop Snoop" Click="HandleSnoopSnoop_OnClick" />
+					<MenuItem Header="Launch debugger" Click="HandleLaunchDebugger_OnClick" />
+					<MenuItem Header="Snoop Snoop" Click="HandleSnoopSnoop_OnClick" />
 				</MenuItem>
 			</Menu>
         </StackPanel>

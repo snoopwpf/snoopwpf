@@ -13,15 +13,14 @@ All other rights reserved.
 	xmlns:converters="clr-namespace:Snoop.Converters"
 	x:Name="PropertyGrid"
 	MinHeight="0"
-	MinWidth="0"
->
+	MinWidth="0">
 	<Grid.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ValueEditors\EditorTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <ContextMenu x:Key="PropertyMenu" Style="{x:Null}">
+            <ContextMenu x:Key="PropertyMenu">
 				<MenuItem Style="{x:Null}" Command="{x:Static controls:PropertyInspector.DelveCommand}" CommandParameter="{Binding}">
 					<MenuItem.Header>
                         <Label Style="{x:Null}" Margin="0" Padding="0" Content="Delve" />
