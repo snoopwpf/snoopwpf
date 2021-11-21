@@ -22,6 +22,10 @@ All other rights reserved.
 >
 	<Grid.Resources>
 		<ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Controls/ProperTreeViewResources.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
             <DataTemplate x:Key="CategoryTemplate">
 				<TextBlock Style="{x:Null}" Text="{Binding Path=Name}" FontWeight="Bold" Margin="2,5,0,0"/>
 			</DataTemplate>
