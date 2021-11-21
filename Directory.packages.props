@@ -29,7 +29,7 @@
     </ItemGroup>
 
     <ItemGroup Label="Build">
-        <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.0.0" />
+        <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.1.1" />
 
         <PackageVersion Include="JetBrains.Annotations" Version="2021.2.0" />
         
