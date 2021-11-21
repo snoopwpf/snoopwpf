@@ -30,4 +30,8 @@
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
     <AutoGenerateBindingRedirects Condition="$(DefineConstants.Contains(NETCOREAPP)) == false">true</AutoGenerateBindingRedirects>
   </PropertyGroup>
+  
+  <PropertyGroup>
+    <MinTargetFramework>net451</MinTargetFramework>
+  </PropertyGroup>
 </Project>
