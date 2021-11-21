@@ -2538,7 +2538,7 @@ To automatically copy the files, set the environment variable
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <StackPanel Style="{x:Null}" />
+                    <StackPanel Style="{x:Null}" Orientation="Horizontal" />
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
