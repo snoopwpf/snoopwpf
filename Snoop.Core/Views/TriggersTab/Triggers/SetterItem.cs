@@ -31,7 +31,6 @@
 
             this.Property = this.Setter.Property.Name;
 
-            var propertyDescriptor = DependencyPropertyDescriptor.FromProperty(this.Setter.Property, element.GetType());
             var targetForPropertyInformation = TemplateHelper.GetChildFromTemplateIfNeeded(element, this.Setter.TargetName);
 
             if (targetForPropertyInformation is null)
@@ -39,11 +38,14 @@
                 return;
             }
 
+            var propertyDescriptor = DependencyPropertyDescriptor.FromProperty(this.Setter.Property, targetForPropertyInformation.GetType())
+                                     ?? DependencyPropertyDescriptor.FromProperty(this.Setter.Property, this.Setter.Property.OwnerType);
+
             var binding = this.CreateBinding(targetForPropertyInformation, propertyDescriptor, this.Setter);
 
             if (binding is not null)
             {
-                var propertyInformation = new PropertyInformation(targetForPropertyInformation, propertyDescriptor, binding, GetDisplayName(this.Setter));
+                var propertyInformation = new PropertyInformation(targetForPropertyInformation, propertyDescriptor, binding, GetDisplayName(this.Setter, propertyDescriptor));
 
                 this.Value = propertyInformation;
             }
@@ -66,9 +68,9 @@
         /// </summary>
         public PropertyInformation? Value { get; }
 
-        private static string GetDisplayName(Setter setter)
+        private static string GetDisplayName(Setter setter, MemberDescriptor? memberDescriptor)
         {
-            var sb = new StringBuilder(setter.Property.Name);
+            var sb = new StringBuilder(memberDescriptor?.DisplayName ?? $"{setter.Property.OwnerType.Name}.{setter.Property.Name}");
 
             if (string.IsNullOrEmpty(setter.TargetName) == false)
             {
@@ -80,12 +82,12 @@
             return sb.ToString();
         }
 
-        private Binding? CreateBinding(object target, DependencyPropertyDescriptor property, Setter setter)
+        private Binding? CreateBinding(object target, PropertyDescriptor? property, Setter setter)
         {
-            if (setter.Value is BindingBase
-                && target is DependencyObject)
+            if (setter.Value is BindingBase bindingBase
+                && target is DependencyObject dependencyObject)
             {
-                this.attachedPropertySlot = AttachedPropertyManager.GetAndBindAttachedPropertySlot((DependencyObject)target, (BindingBase)setter.Value);
+                this.attachedPropertySlot = AttachedPropertyManager.GetAndBindAttachedPropertySlot(dependencyObject, bindingBase);
 
                 if (this.attachedPropertySlot is null)
                 {
@@ -95,7 +97,7 @@
                 var binding = new Binding
                 {
                     Path = new PropertyPath("(0)", this.attachedPropertySlot.DependencyProperty),
-                    Source = target,
+                    Source = dependencyObject,
                     Mode = BindingMode.OneWay
                 };
 
@@ -106,9 +108,9 @@
                 var binding = new Binding(nameof(System.Windows.Setter.Value))
                 {
                     Source = setter,
-                    Mode = property.IsReadOnly
-                                             ? BindingMode.OneWay
-                                             : BindingMode.TwoWay,
+                    Mode = property?.IsReadOnly == true
+                        ? BindingMode.OneWay
+                        : BindingMode.TwoWay,
                     Converter = new DynamicResourceToValueConverter(target)
                 };
 
