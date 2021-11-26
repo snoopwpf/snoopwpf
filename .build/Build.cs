@@ -124,6 +124,8 @@ class Build : NukeBuild
     Target Restore => _ => _
         .Executes(() =>
         {
+            DotNetToolRestore();
+
             DotNetRestore(s => s
                 .SetProjectFile(Solution));
 
