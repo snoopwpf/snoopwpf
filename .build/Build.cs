@@ -133,6 +133,7 @@ class Build : NukeBuild
 
     Target Compile => _ => _
         .DependsOn(Restore)
+        .DependsOn(XamlStyler)
         .Executes(() =>
         {
             string toolsPath = string.Empty;
@@ -201,6 +202,13 @@ class Build : NukeBuild
                 .SetInformationalVersion(InformationalVersion)
                 .DisableRestore()
                 .SetVerbosity(MSBuildVerbosity.Minimal));
+        });
+
+    Target XamlStyler => _ => _
+        .DependsOn(Restore)
+        .Executes(() =>
+        {
+            DotNet($"xstyler -r -d \"{RootDirectory}\"");
         });
 
     Target Test => _ => _

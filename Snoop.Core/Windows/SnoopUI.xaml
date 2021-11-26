@@ -1,595 +1,622 @@
-<!--
-(c) Copyright Cory Plotts.
-This source is subject to the Microsoft Public License (Ms-PL).
-Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-All other rights reserved.
+﻿<!--
+    (c) Copyright Cory Plotts.
+    This source is subject to the Microsoft Public License (Ms-PL).
+    Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
+    All other rights reserved.
 -->
-<windows:SnoopMainBaseWindow
-	x:Class="Snoop.Windows.SnoopUI"
-	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:snoop="clr-namespace:Snoop"
-	xmlns:infrastructure="clr-namespace:Snoop.Infrastructure"
-	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:d="http://schemas.microsoft.com/expression/interactivedesigner/2006"
-    xmlns:converters="clr-namespace:Snoop.Converters"
-    xmlns:windows="clr-namespace:Snoop.Windows"
-    xmlns:powerShell="clr-namespace:Snoop.PowerShell"
-    xmlns:controls="clr-namespace:Snoop.Controls"
-    xmlns:tree="clr-namespace:Snoop.Data.Tree"
-    xmlns:views="clr-namespace:Snoop.Views"
-    xmlns:triggersTab="clr-namespace:Snoop.Views.TriggersTab"
-    xmlns:behaviorsTab="clr-namespace:Snoop.Views.BehaviorsTab"
-    xmlns:methodsTab="clr-namespace:Snoop.Views.MethodsTab"
-    xmlns:debugListenerTab="clr-namespace:Snoop.Views.DebugListenerTab"
-    xmlns:selectionHighlight="clr-namespace:Snoop.Infrastructure.SelectionHighlight"
-    mc:Ignorable="d"
-	Title="Snoop"
-    MinWidth="480"
-    MinHeight="320"
-    d:DesignWidth="640"
-    d:DesignHeight="480"
-	ShowInTaskbar="True"
-	SnapsToDevicePixels="True"
-	Focusable="False"
-    Style="{x:Null}"
-	DataContext="{Binding RelativeSource={RelativeSource Self}}">
-	<Window.Resources>
-		<ResourceDictionary>
+<windows:SnoopMainBaseWindow Style="{x:Null}"
+                             x:Class="Snoop.Windows.SnoopUI"
+                             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                             xmlns:behaviorsTab="clr-namespace:Snoop.Views.BehaviorsTab"
+                             xmlns:controls="clr-namespace:Snoop.Controls"
+                             xmlns:converters="clr-namespace:Snoop.Converters"
+                             xmlns:d="http://schemas.microsoft.com/expression/interactivedesigner/2006"
+                             xmlns:debugListenerTab="clr-namespace:Snoop.Views.DebugListenerTab"
+                             xmlns:infrastructure="clr-namespace:Snoop.Infrastructure"
+                             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                             xmlns:methodsTab="clr-namespace:Snoop.Views.MethodsTab"
+                             xmlns:powerShell="clr-namespace:Snoop.PowerShell"
+                             xmlns:selectionHighlight="clr-namespace:Snoop.Infrastructure.SelectionHighlight"
+                             xmlns:snoop="clr-namespace:Snoop"
+                             xmlns:tree="clr-namespace:Snoop.Data.Tree"
+                             xmlns:triggersTab="clr-namespace:Snoop.Views.TriggersTab"
+                             xmlns:views="clr-namespace:Snoop.Views"
+                             xmlns:windows="clr-namespace:Snoop.Windows"
+                             Title="Snoop"
+                             MinWidth="480"
+                             MinHeight="320"
+                             d:DesignHeight="480"
+                             d:DesignWidth="640"
+                             DataContext="{Binding RelativeSource={RelativeSource Self}}"
+                             Focusable="False"
+                             ShowInTaskbar="True"
+                             SnapsToDevicePixels="True"
+                             mc:Ignorable="d">
+    <Window.Resources>
+        <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Controls/ProperTreeViewResources.xaml"/>
+                <ResourceDictionary Source="../Controls/ProperTreeViewResources.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <Style x:Key="refreshButton" TargetType="{x:Type Button}">
-				<Setter Property="FocusVisualStyle">
-					<Setter.Value>
-						<Style>
-							<Setter Property="Control.Template">
-								<Setter.Value>
-									<ControlTemplate>
-										<Rectangle Style="{x:Null}"
-                                                   Stroke="#FF000000"
-                                                   StrokeThickness="1"
-                                                   Margin="3,3,3,3"
+            <Style x:Key="refreshButton"
+                   TargetType="{x:Type Button}">
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                            <GradientStop Color="#FF69E861" Offset="0" />
+                            <GradientStop Color="#FFE3E5F0" Offset="0.5" />
+                            <GradientStop Color="#FF1CC211" Offset="1" />
+                        </LinearGradientBrush>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="BorderBrush" Value="#FF003C74" />
+                <Setter Property="FocusVisualStyle">
+                    <Setter.Value>
+                        <Style>
+                            <Setter Property="Control.Template">
+                                <Setter.Value>
+                                    <ControlTemplate>
+                                        <Rectangle Style="{x:Null}"
+                                                   Margin="3 3 3 3"
                                                    SnapsToDevicePixels="True"
+                                                   Stroke="#FF000000"
                                                    StrokeDashArray="1 2"
-                                        />
-									</ControlTemplate>
-								</Setter.Value>
-							</Setter>
-						</Style>
-					</Setter.Value>
-				</Setter>
-				<Setter Property="Background">
-					<Setter.Value>
-						<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-							<GradientStop Color="#FF69E861" Offset="0"/>
-							<GradientStop Color="#FFE3E5F0" Offset="0.5"/>
-							<GradientStop Color="#FF1CC211" Offset="1"/>
-						</LinearGradientBrush>
-					</Setter.Value>
-				</Setter>
-				<Setter Property="BorderBrush" Value="#FF003C74"/>
-				<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
-				<Setter Property="HorizontalContentAlignment" Value="Center"/>
-				<Setter Property="VerticalContentAlignment" Value="Center"/>
-				<Setter Property="Template">
-					<Setter.Value>
-						<ControlTemplate TargetType="{x:Type ButtonBase}">
-							<Grid Style="{x:Null}" Width="Auto" Height="Auto">
-								<Border  Style="{x:Null}"
-                                         x:Name="border"
-                                         BorderBrush="#FF696969"
-                                         BorderThickness="1,1,1,1"
-                                         CornerRadius="4,4,4,4"
-                                />
-								<ContentPresenter Margin="2,2,2,2"/>
-							</Grid>
-							<ControlTemplate.Triggers>
-								<Trigger Property="IsEnabled" Value="False">
-									<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
-								</Trigger>
-								<Trigger Property="IsMouseOver" Value="True">
-									<Setter Property="Background" TargetName="border">
-										<Setter.Value>
-											<LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
-												<GradientStop Color="#FFCEFFCF" Offset="0"/>
-												<GradientStop Color="#FFE1FFE3" Offset="0.43888888888888888"/>
-												<GradientStop Color="#FFC4FFC8" Offset="1"/>
-											</LinearGradientBrush>
-										</Setter.Value>
-									</Setter>
-								</Trigger>
-							</ControlTemplate.Triggers>
-						</ControlTemplate>
-					</Setter.Value>
-				</Setter>
-			</Style>
+                                                   StrokeThickness="1" />
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ButtonBase}">
+                            <Grid Style="{x:Null}"
+                                  Width="Auto"
+                                  Height="Auto">
+                                <Border Style="{x:Null}"
+                                        x:Name="border"
+                                        BorderBrush="#FF696969"
+                                        BorderThickness="1 1 1 1"
+                                        CornerRadius="4,4,4,4" />
+                                <ContentPresenter Margin="2 2 2 2" />
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background">
+                                        <Setter.Value>
+                                            <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                                                <GradientStop Color="#FFCEFFCF" Offset="0" />
+                                                <GradientStop Color="#FFE1FFE3" Offset="0.43888888888888888" />
+                                                <GradientStop Color="#FFC4FFC8" Offset="1" />
+                                            </LinearGradientBrush>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+            </Style>
 
-			<DataTemplate x:Key="stylelessTextBlockDataTemplate">
-				<TextBlock Style="{x:Null}" Text="{Binding}"/>
-			</DataTemplate>
-		</ResourceDictionary>
-	</Window.Resources>
+            <DataTemplate x:Key="stylelessTextBlockDataTemplate">
+                <TextBlock Style="{x:Null}"
+                           Text="{Binding}" />
+            </DataTemplate>
+        </ResourceDictionary>
+    </Window.Resources>
 
     <DockPanel Style="{x:Null}">
         <StackPanel Style="{x:Null}"
                     DockPanel.Dock="Top"
                     Orientation="Horizontal">
-			<Label Style="{x:Null}"
-				   Padding="2"
-                   Target="{Binding ElementName=TreeTypeComboBox}"
-                   Content="Tree:" />
-            <ComboBox Style="{x:Null}"
-                      x:Name="TreeTypeComboBox"
-                      Padding="4,2"
+            <Label Style="{x:Null}"
+                   Padding="2"
+                   Content="Tree:"
+                   Target="{Binding ElementName=TreeTypeComboBox}" />
+            <ComboBox x:Name="TreeTypeComboBox"
+                      Padding="4 2"
                       ItemsSource="{Binding Source={snoop:EnumBindingSource {x:Type tree:TreeType}}}"
                       SelectedItem="{Binding CurrentTreeType, Mode=TwoWay}" />
-			<Menu Style="{x:Null}">
-				<MenuItem Style="{x:Null}"
-                          Header="File">
-                    <MenuItem Style="{x:Null}" Header="Close window" Command="{x:Static ApplicationCommands.Close}" />
+            <Menu>
+                <MenuItem Header="File">
+                    <MenuItem Command="{x:Static ApplicationCommands.Close}"
+                              Header="Close window" />
                 </MenuItem>
-                <MenuItem Style="{x:Null}"
-                          Header="Settings">
-                    <MenuItem Style="{x:Null}" Header="Open settings folder" Click="HandleOpenSettingsFolder_OnClick" />
+                <MenuItem Header="Settings">
+                    <MenuItem Click="HandleOpenSettingsFolder_OnClick"
+                              Header="Open settings folder" />
                     <Separator />
-                    <MenuItem Style="{x:Null}" Header="Reset settings and close window" Click="HandleResetSettings_OnClick" />
+                    <MenuItem Click="HandleResetSettings_OnClick"
+                              Header="Reset settings and close window" />
                 </MenuItem>
-                <MenuItem Style="{x:Null}"
-                          Header="_Tracking options">
-                    <MenuItem Style="{x:Null}"
-                              Header="Skip template parts"
-                              ToolTip="When enabled and pressed tries to skip template parts."
+                <MenuItem Header="_Tracking options">
+                    <MenuItem Header="Skip template parts"
                               IsCheckable="True"
-                              IsChecked="{Binding SkipTemplateParts}" />
-                    <MenuItem Style="{x:Null}"
-                              Header="Handle CTRL + _SHIFT"
-                              ToolTip="When enabled and pressed tracks all parts of the UI."
+                              IsChecked="{Binding SkipTemplateParts}"
+                              ToolTip="When enabled and pressed tries to skip template parts." />
+                    <MenuItem Header="Handle CTRL + _SHIFT"
                               IsCheckable="True"
-                              IsChecked="{Binding IsHandlingCTRL_SHIFT}" />
+                              IsChecked="{Binding IsHandlingCTRL_SHIFT}"
+                              ToolTip="When enabled and pressed tracks all parts of the UI." />
                     <Separator />
-                    <MenuItem Style="{x:Null}"
-                              Header="Highlight selected item"
+                    <MenuItem Header="Highlight selected item"
                               IsCheckable="True"
                               IsChecked="{Binding HighlightSelectedItem, Source={x:Static selectionHighlight:SelectionHighlightOptions.Default}}" />
-                    <MenuItem Style="{x:Null}"
-                              Header="Highlight options ..."
-                              Click="HandleHighlightOptions_OnClick" />
+                    <MenuItem Click="HandleHighlightOptions_OnClick"
+                              Header="Highlight options ..." />
                 </MenuItem>
-				<MenuItem Style="{x:Null}"
-				          Header="_Debug">
-					<MenuItem Style="{x:Null}" Header="Launch debugger" Click="HandleLaunchDebugger_OnClick" />
-					<MenuItem Style="{x:Null}" Header="Snoop Snoop" Click="HandleSnoopSnoop_OnClick" />
-				</MenuItem>
-			</Menu>
+                <MenuItem Header="_Debug">
+                    <MenuItem Click="HandleLaunchDebugger_OnClick"
+                              Header="Launch debugger" />
+                    <MenuItem Click="HandleSnoopSnoop_OnClick"
+                              Header="Snoop Snoop" />
+                </MenuItem>
+            </Menu>
         </StackPanel>
 
-	<Grid Style="{x:Null}">
-        <Grid.RowDefinitions>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="5*"/>
-			<RowDefinition Height="1.5*" MinHeight="100"/>
-			<RowDefinition Height="Auto"/>
-		</Grid.RowDefinitions>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="1*"/>
-			<ColumnDefinition Width="2*"/>
-		</Grid.ColumnDefinitions>
+        <Grid Style="{x:Null}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="5*" />
+                <RowDefinition Height="1.5*"
+                               MinHeight="100" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
 
-		<!-- Filter Combo Box -->
-		<ComboBox
-			x:Name="filterComboBox"
-            Style="{x:Null}"
-			infrastructure:ComboBoxSettings.RegisterAsSnoopPart="True"
-			IsEditable="True"
-			Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}"
-			Margin="2,2,22,2"
-		>
-			<ComboBoxItem Style="{x:Null}">
-				<TextBlock Style="{x:Null}" Text="Clear any filter applied to the tree view"/>
-			</ComboBoxItem>
-			<ComboBoxItem Style="{x:Null}">
-				<TextBlock Style="{x:Null}" Text="Show only elements with binding errors"/>
-			</ComboBoxItem>
-			<ComboBox.ToolTip>
-				<TextBlock Style="{x:Null}" Text="Enter text in the combo box to filter the tree view by name or type"/>
-			</ComboBox.ToolTip>
-		</ComboBox>
+            <!-- Filter Combo Box -->
+            <ComboBox Style="{x:Null}"
+                      x:Name="filterComboBox"
+                      Margin="2 2 22 2"
+                      infrastructure:ComboBoxSettings.RegisterAsSnoopPart="True"
+                      IsEditable="True"
+                      Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}">
+                <ComboBoxItem Style="{x:Null}">
+                    <TextBlock Style="{x:Null}"
+                               Text="Clear any filter applied to the tree view" />
+                </ComboBoxItem>
+                <ComboBoxItem Style="{x:Null}">
+                    <TextBlock Style="{x:Null}"
+                               Text="Show only elements with binding errors" />
+                </ComboBoxItem>
+                <ComboBox.ToolTip>
+                    <TextBlock Style="{x:Null}"
+                               Text="Enter text in the combo box to filter the tree view by name or type" />
+                </ComboBox.ToolTip>
+            </ComboBox>
 
-		<!-- Refresh Button -->
-		<Button
-			Style="{StaticResource refreshButton}"
-			Width="18"
-			Height="18"
-			HorizontalAlignment="Right"
-			VerticalAlignment="Center"
-			Margin="0,2,2,2"
-			Command="{x:Static windows:SnoopUI.RefreshCommand}"
-		>
-			<Image Source="{DynamicResource reloadDrawingImage}"/>
-			<Button.ToolTip>
-				<TextBlock Style="{x:Null}" Text="Refresh the tree view"/>
-			</Button.ToolTip>
-		</Button>
+            <!-- Refresh Button -->
+            <Button Style="{StaticResource refreshButton}"
+                    Width="18"
+                    Height="18"
+                    Margin="0 2 2 2"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Command="{x:Static windows:SnoopUI.RefreshCommand}">
+                <Image Source="{DynamicResource reloadDrawingImage}" />
+                <Button.ToolTip>
+                    <TextBlock Style="{x:Null}"
+                               Text="Refresh the tree view" />
+                </Button.ToolTip>
+            </Button>
 
-		<!-- Visual Tree TreeView -->
-		<controls:ProperTreeView
-			x:Name="Tree"
-			Grid.Row="1"
-			Grid.RowSpan="2"
-			MinHeight="0"
-			MinWidth="0"
-			Margin="2,0,2,0"
-			ItemsSource="{Binding TreeItems}"
-			HorizontalAlignment="Stretch"
-		>
-			<TreeView.Resources>
-				<HierarchicalDataTemplate DataType="{x:Type tree:TreeItem}" ItemsSource="{Binding Children}">
-					<TextBlock
-                        Style="{x:Null}"
-						Text="{Binding}"
-						HorizontalAlignment="Stretch"
-						infrastructure:BringIntoViewBehavior.IsActive="{Binding IsSelected}"
-						Background="Transparent"
-						Foreground="Black"
-					/>
-				</HierarchicalDataTemplate>
+            <!-- Visual Tree TreeView -->
+            <controls:ProperTreeView Style="{DynamicResource Snoop.Styles.ProperTreeView}"
+                                     x:Name="Tree"
+                                     Grid.Row="1"
+                                     Grid.RowSpan="2"
+                                     MinWidth="0"
+                                     MinHeight="0"
+                                     Margin="2 0 2 0"
+                                     HorizontalAlignment="Stretch"
+                                     ItemsSource="{Binding TreeItems}">
+                <TreeView.Resources>
+                    <HierarchicalDataTemplate DataType="{x:Type tree:TreeItem}"
+                                              ItemsSource="{Binding Children}">
+                        <TextBlock Style="{x:Null}"
+                                   HorizontalAlignment="Stretch"
+                                   infrastructure:BringIntoViewBehavior.IsActive="{Binding IsSelected}"
+                                   Background="Transparent"
+                                   Foreground="Black"
+                                   Text="{Binding}" />
+                    </HierarchicalDataTemplate>
 
-				<!-- make the selected item be blue, even when not focused -->
-				<SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="LightBlue"/>
-			</TreeView.Resources>
+                    <!-- make the selected item be blue, even when not focused -->
+                    <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="LightBlue" />
+                </TreeView.Resources>
 
-            <TreeView.ItemContainerStyle>
-				<Style BasedOn="{StaticResource ProperTreeViewItemStyle}" TargetType="{x:Type controls:ProperTreeViewItem}">
-					<Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
-					<Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
-					<Setter Property="Background" Value="{Binding TreeBackgroundBrush}"/>
-					<Setter Property="ToolTip" Value="{Binding VisualBrush}"/>
+                <TreeView.ItemContainerStyle>
+                    <Style BasedOn="{StaticResource ProperTreeViewItemStyle}"
+                           TargetType="{x:Type controls:ProperTreeViewItem}">
+                        <Setter Property="Background" Value="{Binding TreeBackgroundBrush}" />
 
-                    <Setter Property="ContextMenu">
-						<Setter.Value>
-							<ContextMenu Style="{x:Null}">
-								<MenuItem Header="Export"
-                                          Style="{x:Null}">
-                                    <MenuItem Header="Tree (with filter)"
-                                              Style="{x:Null}"
-                                              Command="{x:Static windows:SnoopUI.ExportTreeWithFilterCommand}">
-										<MenuItem.CommandParameter>
-											<infrastructure:ExportOptions TreeItem="{Binding}"
-                                                                          Recurse="True"
-                                                                          UseFilter="True" />
-                                        </MenuItem.CommandParameter>
+                        <Setter Property="ContextMenu">
+                            <Setter.Value>
+                                <ContextMenu Style="{x:Null}">
+                                    <MenuItem Style="{x:Null}"
+                                              Header="Export">
+                                        <MenuItem Style="{x:Null}"
+                                                  Command="{x:Static windows:SnoopUI.ExportTreeWithFilterCommand}"
+                                                  Header="Tree (with filter)">
+                                            <MenuItem.CommandParameter>
+                                                <infrastructure:ExportOptions Recurse="True"
+                                                                              TreeItem="{Binding}"
+                                                                              UseFilter="True" />
+                                            </MenuItem.CommandParameter>
+                                        </MenuItem>
+                                        <MenuItem Style="{x:Null}"
+                                                  Command="{x:Static windows:SnoopUI.ExportTreeWithFilterCommand}"
+                                                  Header="Tree (without filter)">
+                                            <MenuItem.CommandParameter>
+                                                <infrastructure:ExportOptions Recurse="True"
+                                                                              TreeItem="{Binding}" />
+                                            </MenuItem.CommandParameter>
+                                        </MenuItem>
+
+                                        <Separator Style="{x:Null}" />
+
+                                        <MenuItem Style="{x:Null}"
+                                                  Command="{x:Static windows:SnoopUI.ExportTreeWithFilterCommand}"
+                                                  Header="Element (with filter)">
+                                            <MenuItem.CommandParameter>
+                                                <infrastructure:ExportOptions Recurse="False"
+                                                                              TreeItem="{Binding}"
+                                                                              UseFilter="True" />
+                                            </MenuItem.CommandParameter>
+                                        </MenuItem>
+                                        <MenuItem Style="{x:Null}"
+                                                  Command="{x:Static windows:SnoopUI.ExportTreeWithFilterCommand}"
+                                                  Header="Element (without filter)">
+                                            <MenuItem.CommandParameter>
+                                                <infrastructure:ExportOptions Recurse="False"
+                                                                              TreeItem="{Binding}" />
+                                            </MenuItem.CommandParameter>
+                                        </MenuItem>
                                     </MenuItem>
-                                    <MenuItem Header="Tree (without filter)"
-                                              Style="{x:Null}"
-                                              Command="{x:Static windows:SnoopUI.ExportTreeWithFilterCommand}">
-                                        <MenuItem.CommandParameter>
-                                            <infrastructure:ExportOptions TreeItem="{Binding}"
-                                                                          Recurse="True" />
-                                        </MenuItem.CommandParameter>
-                                    </MenuItem>
+                                </ContextMenu>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                        <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                        <Setter Property="ToolTip" Value="{Binding VisualBrush}" />
 
-                                    <Separator Style="{x:Null}" />
+                        <Style.Resources>
+                            <Style TargetType="{x:Type ToolTip}">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ToolTip}">
+                                            <Grid Style="{x:Null}"
+                                                  Width="200"
+                                                  Height="200">
+                                                <Rectangle Style="{x:Null}"
+                                                           Margin="10"
+                                                           Fill="{TemplateBinding Content}"
+                                                           RadiusX="10"
+                                                           RadiusY="10" />
 
-                                    <MenuItem Header="Element (with filter)"
-                                              Style="{x:Null}"
-                                              Command="{x:Static windows:SnoopUI.ExportTreeWithFilterCommand}">
-                                        <MenuItem.CommandParameter>
-                                            <infrastructure:ExportOptions TreeItem="{Binding}"
-                                                                          Recurse="False"
-                                                                          UseFilter="True" />
-                                        </MenuItem.CommandParameter>
-                                    </MenuItem>
-                                    <MenuItem Header="Element (without filter)"
-                                              Style="{x:Null}"
-                                              Command="{x:Static windows:SnoopUI.ExportTreeWithFilterCommand}">
-                                        <MenuItem.CommandParameter>
-                                            <infrastructure:ExportOptions TreeItem="{Binding}"
-                                                                          Recurse="False" />
-                                        </MenuItem.CommandParameter>
-                                    </MenuItem>
-                                </MenuItem>
-                            </ContextMenu>
-                        </Setter.Value>
-                    </Setter>
+                                                <Grid.Effect>
+                                                    <DropShadowEffect />
+                                                </Grid.Effect>
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Style.Resources>
+                    </Style>
+                </TreeView.ItemContainerStyle>
 
-					<Style.Resources>
-						<Style TargetType="{x:Type ToolTip}">
-							<Setter Property="Template">
-								<Setter.Value>
-									<ControlTemplate TargetType="{x:Type ToolTip}">
-										<Grid Width="200" Height="200" Style="{x:Null}">
-											<Rectangle Style="{x:Null}" Fill="{TemplateBinding Content}" RadiusX="10" RadiusY="10" Margin="10"/>
+                <controls:ProperTreeView.ToolTip>
+                    <TextBlock Style="{x:Null}"
+                               Text="Hold down Ctrl + Shift (or Ctrl + ALT) and mouse over elements in the target app to select them." />
+                </controls:ProperTreeView.ToolTip>
+            </controls:ProperTreeView>
 
-											<Grid.Effect>
-												<DropShadowEffect/>
-											</Grid.Effect>
-										</Grid>
-									</ControlTemplate>
-								</Setter.Value>
-							</Setter>
-						</Style>
-					</Style.Resources>
-				</Style>
-			</TreeView.ItemContainerStyle>
+            <!-- Vertical GridSplitter (between the visual tree tree view and the tab control (with the property grid/events view)) -->
+            <GridSplitter Style="{x:Null}"
+                          x:Name="GridSplitter"
+                          Grid.Row="0"
+                          Grid.RowSpan="3"
+                          Grid.Column="1"
+                          Grid.ColumnSpan="1"
+                          Width="4"
+                          MinHeight="0"
+                          Margin="-2 0 0 0"
+                          HorizontalAlignment="Left" />
 
-			<controls:ProperTreeView.ToolTip>
-				<TextBlock Style="{x:Null}" Text="Hold down Ctrl + Shift (or Ctrl + ALT) and mouse over elements in the target app to select them."/>
-			</controls:ProperTreeView.ToolTip>
-		</controls:ProperTreeView>
+            <!-- Tab Control (for the property grid, the data context property grid, and the events view) -->
+            <TabControl Style="{x:Null}"
+                        Grid.RowSpan="2"
+                        Grid.Column="1"
+                        Margin="2 2 2 0">
+                <TabItem Style="{x:Null}">
+                    <TabItem.Header>
+                        <TextBlock Style="{x:Null}"
+                                   Text="Properties">
+                            <TextBlock.ToolTip>
+                                <StackPanel Style="{x:Null}"
+                                            MaxWidth="300">
+                                    <TextBlock Style="{x:Null}"
+                                               Text="Properties View" />
+                                    <TextBlock Style="{x:Null}"
+                                               Text="Lists all the properties of the currently selected object. You can even edit these properties or right-click and then delve into them."
+                                               TextWrapping="Wrap" />
+                                </StackPanel>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                    </TabItem.Header>
 
-		<!-- Vertical GridSplitter (between the visual tree tree view and the tab control (with the property grid/events view)) -->
-		<GridSplitter
-			x:Name="GridSplitter"
-		    Style="{x:Null}"
-			Grid.Row="0"
-			Grid.RowSpan="3"
-			Grid.Column="1"
-			Grid.ColumnSpan="1"
-			Width="4"
-			MinHeight="0"
-			HorizontalAlignment="Left"
-			Margin="-2,0,0,0"
-		/>
+                    <controls:PropertyInspector x:Name="PropertyGrid"
+                                                RootTarget="{Binding CurrentSelection.Target}" />
+                </TabItem>
 
-		<!-- Tab Control (for the property grid, the data context property grid, and the events view) -->
-		<TabControl
-		    Style="{x:Null}"
-			Grid.Column="1"
-			Grid.RowSpan="2"
-			Margin="2,2,2,0"
-		>
-			<TabItem Style="{x:Null}">
-				<TabItem.Header>
-					<TextBlock Style="{x:Null}" Text="Properties">
-						<TextBlock.ToolTip>
-							<StackPanel Style="{x:Null}" MaxWidth="300">
-								<TextBlock Style="{x:Null}" Text="Properties View"/>
-								<TextBlock
-									Style="{x:Null}"
-									Text="Lists all the properties of the currently selected object. You can even edit these properties or right-click and then delve into them."
-									TextWrapping="Wrap"
-								/>
-							</StackPanel>
-						</TextBlock.ToolTip>
-					</TextBlock>
-				</TabItem.Header>
+                <TabItem Style="{x:Null}">
+                    <TabItem.Header>
+                        <TextBlock Style="{x:Null}"
+                                   Text="Data Context">
+                            <TextBlock.ToolTip>
+                                <StackPanel Style="{x:Null}"
+                                            MaxWidth="300">
+                                    <TextBlock Style="{x:Null}"
+                                               Text="Data Context View" />
+                                    <TextBlock Style="{x:Null}"
+                                               Text="Lists all the properties of the DataContext of the currently selected object. You can even edit these properties or right-click and then delve into them."
+                                               TextWrapping="Wrap" />
+                                </StackPanel>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                    </TabItem.Header>
 
-				<controls:PropertyInspector x:Name="PropertyGrid" RootTarget="{Binding CurrentSelection.Target}"/>
-			</TabItem>
+                    <controls:PropertyInspector x:Name="DataContextPropertyGrid"
+                                                RootTarget="{Binding CurrentSelection.Target, Converter={x:Static converters:DataContextExtractorConverter.Instance}}" />
+                </TabItem>
 
-			<TabItem Style="{x:Null}">
-				<TabItem.Header>
-					<TextBlock Style="{x:Null}" Text="Data Context">
-						<TextBlock.ToolTip>
-							<StackPanel Style="{x:Null}" MaxWidth="300">
-								<TextBlock Style="{x:Null}" Text="Data Context View"/>
-								<TextBlock
-									Style="{x:Null}"
-									Text="Lists all the properties of the DataContext of the currently selected object. You can even edit these properties or right-click and then delve into them."
-									TextWrapping="Wrap"
-								/>
-							</StackPanel>
-						</TextBlock.ToolTip>
-					</TextBlock>
-				</TabItem.Header>
+                <TabItem Style="{x:Null}">
+                    <TabItem.Header>
+                        <TextBlock Style="{x:Null}"
+                                   Text="Events">
+                            <TextBlock.ToolTip>
+                                <StackPanel Style="{x:Null}"
+                                            MaxWidth="300">
+                                    <TextBlock Style="{x:Null}"
+                                               Text="Events View" />
+                                    <TextBlock Style="{x:Null}"
+                                               Text="Lists all the all routed events in the application, so you can see how they route, and where and/or whether they are handled."
+                                               TextWrapping="Wrap" />
+                                </StackPanel>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                    </TabItem.Header>
 
-				<controls:PropertyInspector x:Name="DataContextPropertyGrid" RootTarget="{Binding CurrentSelection.Target, Converter={x:Static converters:DataContextExtractorConverter.Instance}}"/>
-			</TabItem>
+                    <views:EventsView x:Name="eventsView" />
+                </TabItem>
 
-			<TabItem Style="{x:Null}">
-				<TabItem.Header>
-					<TextBlock Style="{x:Null}" Text="Events">
-						<TextBlock.ToolTip>
-							<StackPanel Style="{x:Null}" MaxWidth="300">
-								<TextBlock Style="{x:Null}" Text="Events View"/>
-								<TextBlock
-									Style="{x:Null}"
-									Text="Lists all the all routed events in the application, so you can see how they route, and where and/or whether they are handled."
-									TextWrapping="Wrap"
-								/>
-							</StackPanel>
-						</TextBlock.ToolTip>
-					</TextBlock>
-				</TabItem.Header>
+                <TabItem Style="{x:Null}">
+                    <TabItem.Header>
+                        <TextBlock Style="{x:Null}"
+                                   Text="Triggers">
+                            <TextBlock.ToolTip>
+                                <StackPanel Style="{x:Null}"
+                                            MaxWidth="300">
+                                    <TextBlock Style="{x:Null}"
+                                               Text="Triggers View" />
+                                    <TextBlock Style="{x:Null}"
+                                               Text="Lists all triggers on currently selected object."
+                                               TextWrapping="Wrap" />
+                                </StackPanel>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                    </TabItem.Header>
 
-				<views:EventsView x:Name="eventsView" />
-			</TabItem>
+                    <triggersTab:TriggersView IsSelected="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}"
+                                              RootTarget="{Binding CurrentSelection.Target}" />
+                </TabItem>
 
-		    <TabItem Style="{x:Null}">
-		        <TabItem.Header>
-		            <TextBlock Style="{x:Null}" Text="Triggers">
-		                <TextBlock.ToolTip>
-		                    <StackPanel Style="{x:Null}" MaxWidth="300">
-		                        <TextBlock Style="{x:Null}" Text="Triggers View"/>
-		                        <TextBlock
-		                            Style="{x:Null}"
-		                            Text="Lists all triggers on currently selected object."
-		                            TextWrapping="Wrap"
-		                        />
-		                    </StackPanel>
-		                </TextBlock.ToolTip>
-		            </TextBlock>
-		        </TabItem.Header>
+                <TabItem Style="{x:Null}">
+                    <TabItem.Header>
+                        <TextBlock Style="{x:Null}"
+                                   Text="Behaviors">
+                            <TextBlock.ToolTip>
+                                <StackPanel Style="{x:Null}"
+                                            MaxWidth="300">
+                                    <TextBlock Style="{x:Null}"
+                                               Text="Behaviors View" />
+                                    <TextBlock Style="{x:Null}"
+                                               Text="Lists all behaviors on currently selected object."
+                                               TextWrapping="Wrap" />
+                                </StackPanel>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                    </TabItem.Header>
 
-		        <triggersTab:TriggersView RootTarget="{Binding CurrentSelection.Target}"
-		                                  IsSelected="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}" />
-		    </TabItem>
+                    <behaviorsTab:BehaviorsView IsSelected="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}"
+                                                RootTarget="{Binding CurrentSelection.Target}" />
+                </TabItem>
 
-			<TabItem Style="{x:Null}">
-				<TabItem.Header>
-					<TextBlock Style="{x:Null}" Text="Behaviors">
-						<TextBlock.ToolTip>
-							<StackPanel Style="{x:Null}" MaxWidth="300">
-								<TextBlock Style="{x:Null}" Text="Behaviors View"/>
-								<TextBlock
-									Style="{x:Null}"
-									Text="Lists all behaviors on currently selected object."
-									TextWrapping="Wrap"
-								/>
-							</StackPanel>
-						</TextBlock.ToolTip>
-					</TextBlock>
-				</TabItem.Header>
+                <TabItem Style="{x:Null}">
+                    <TabItem.Header>
+                        <TextBlock Style="{x:Null}"
+                                   Text="Methods">
+                            <TextBlock.ToolTip>
+                                <StackPanel Style="{x:Null}"
+                                            MaxWidth="300">
+                                    <TextBlock Style="{x:Null}"
+                                               Text="Methods View" />
+                                    <TextBlock Style="{x:Null}"
+                                               Text="A rudimentary view that lets you call methods on the selected visual or the data context of the selected visual."
+                                               TextWrapping="Wrap" />
+                                </StackPanel>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                    </TabItem.Header>
 
-				<behaviorsTab:BehaviorsView RootTarget="{Binding CurrentSelection.Target}"
-											IsSelected="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}" />
-			</TabItem>
+                    <methodsTab:MethodsControl IsSelected="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}"
+                                               RootTarget="{Binding CurrentSelection.Target}" />
+                </TabItem>
 
-			<TabItem Style="{x:Null}">
-				<TabItem.Header>
-					<TextBlock Style="{x:Null}" Text="Methods">
-						<TextBlock.ToolTip>
-							<StackPanel Style="{x:Null}" MaxWidth="300">
-								<TextBlock Style="{x:Null}" Text="Methods View"/>
-								<TextBlock
-									Style="{x:Null}"
-									Text="A rudimentary view that lets you call methods on the selected visual or the data context of the selected visual."
-									TextWrapping="Wrap"
-								/>
-							</StackPanel>
-						</TextBlock.ToolTip>
-					</TextBlock>
-				</TabItem.Header>
+                <TabItem Style="{x:Null}"
+                         Visibility="{Binding Converter={x:Static converters:IsPowerShellAvailableToVisibilityConverter.DefaultInstance}}">
+                    <TabItem.Header>
+                        <TextBlock Style="{x:Null}"
+                                   Text="PowerShell">
+                            <TextBlock.ToolTip>
+                                <StackPanel Style="{x:Null}"
+                                            MaxWidth="300">
+                                    <TextBlock Style="{x:Null}"
+                                               Text="PowerShell View" />
+                                    <TextBlock Style="{x:Null}"
+                                               Text="A view which lets you script the Snooped app using PowerShell."
+                                               TextWrapping="Wrap" />
+                                </StackPanel>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                    </TabItem.Header>
 
-				<methodsTab:MethodsControl RootTarget="{Binding CurrentSelection.Target}"
-                                           IsSelected="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}" />
-			</TabItem>
+                    <powerShell:EmbeddedShellView IsSelected="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}" />
+                </TabItem>
 
-			<TabItem Style="{x:Null}"
-				     Visibility="{Binding Converter={x:Static converters:IsPowerShellAvailableToVisibilityConverter.DefaultInstance}}">
-				<TabItem.Header>
-					<TextBlock Style="{x:Null}" Text="PowerShell">
-						<TextBlock.ToolTip>
-							<StackPanel Style="{x:Null}" MaxWidth="300">
-								<TextBlock Style="{x:Null}" Text="PowerShell View"/>
-								<TextBlock
-									Style="{x:Null}"
-									Text="A view which lets you script the Snooped app using PowerShell."
-									TextWrapping="Wrap" />
-							</StackPanel>
-						</TextBlock.ToolTip>
-					</TextBlock>
-				</TabItem.Header>
+                <TabItem Style="{x:Null}">
+                    <TabItem.Header>
+                        <TextBlock Style="{x:Null}"
+                                   Text="Debug Listener">
+                            <TextBlock.ToolTip>
+                                <StackPanel Style="{x:Null}"
+                                            MaxWidth="300">
+                                    <TextBlock Style="{x:Null}"
+                                               Text="Debug Listener" />
+                                    <TextBlock Style="{x:Null}"
+                                               Text="Shows and filters debug output from the application being Snooped."
+                                               TextWrapping="Wrap" />
+                                </StackPanel>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                    </TabItem.Header>
 
-                <powerShell:EmbeddedShellView IsSelected="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}" />
-			</TabItem>
+                    <debugListenerTab:DebugListenerControl x:Name="debugListenerControl" />
+                </TabItem>
+            </TabControl>
 
-			<TabItem Style="{x:Null}">
-				<TabItem.Header>
-					<TextBlock Style="{x:Null}" Text="Debug Listener">
-						<TextBlock.ToolTip>
-							<StackPanel Style="{x:Null}" MaxWidth="300">
-								<TextBlock Style="{x:Null}" Text="Debug Listener"/>
-								<TextBlock
-									Style="{x:Null}"
-									Text="Shows and filters debug output from the application being Snooped."
-									TextWrapping="Wrap" />
-							</StackPanel>
-						</TextBlock.ToolTip>
-					</TextBlock>
-				</TabItem.Header>
+            <!-- Horizontal GridSplitter (between the tab control (with the property grid/events view) and the diagnostics/previewer) -->
+            <GridSplitter Style="{x:Null}"
+                          Grid.Row="2"
+                          Grid.Column="1"
+                          Height="4"
+                          Margin="2 0 2 0"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Top" />
 
-				<debugListenerTab:DebugListenerControl x:Name="debugListenerControl" />
-			</TabItem>
-		</TabControl>
+            <TabControl Style="{x:Null}"
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Margin="2 4 2 0">
+                <TabItem Style="{x:Null}">
+                    <TabItem.Header>
+                        <TextBlock Style="{x:Null}"
+                                   Text="{Binding TreeService.DiagnosticContext.DiagnosticItems.Count, StringFormat={}Diagnostics ({0})}">
+                            <TextBlock.ToolTip>
+                                <StackPanel Style="{x:Null}"
+                                            MaxWidth="300">
+                                    <TextBlock Style="{x:Null}"
+                                               Text="Diagnostics" />
+                                    <TextBlock Style="{x:Null}"
+                                               Text="Lists all available diagnostics."
+                                               TextWrapping="Wrap" />
+                                </StackPanel>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                    </TabItem.Header>
 
-		<!-- Horizontal GridSplitter (between the tab control (with the property grid/events view) and the diagnostics/previewer) -->
-		<GridSplitter
-		    Style="{x:Null}"
-			Grid.Row="2"
-			Grid.Column="1"
-			Height="4"
-			HorizontalAlignment="Stretch"
-			VerticalAlignment="Top"
-			Margin="2,0,2,0" />
+                    <views:DiagnosticsView DiagnosticContext="{Binding TreeService.DiagnosticContext}" />
+                </TabItem>
 
-		<TabControl Style="{x:Null}"
-		            Grid.Row="2"
-		            Grid.Column="1"
-		            Margin="2,4,2,0">
-			<TabItem Style="{x:Null}">
-				<TabItem.Header>
-					<TextBlock Style="{x:Null}" Text="{Binding TreeService.DiagnosticContext.DiagnosticItems.Count, StringFormat={}Diagnostics ({0})}">
-						<TextBlock.ToolTip>
-							<StackPanel Style="{x:Null}" MaxWidth="300">
-								<TextBlock Style="{x:Null}" Text="Diagnostics"/>
-								<TextBlock
-									Style="{x:Null}"
-									Text="Lists all available diagnostics."
-									TextWrapping="Wrap"
-								/>
-							</StackPanel>
-						</TextBlock.ToolTip>
-					</TextBlock>
-				</TabItem.Header>
+                <TabItem Style="{x:Null}">
+                    <TabItem.Header>
+                        <TextBlock Style="{x:Null}"
+                                   Text="Preview">
+                            <TextBlock.ToolTip>
+                                <StackPanel Style="{x:Null}"
+                                            MaxWidth="300">
+                                    <TextBlock Style="{x:Null}"
+                                               Text="Preview" />
+                                    <TextBlock Style="{x:Null}"
+                                               Text="Previews the currently selected element."
+                                               TextWrapping="Wrap" />
+                                </StackPanel>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                    </TabItem.Header>
 
-				<views:DiagnosticsView DiagnosticContext="{Binding TreeService.DiagnosticContext}" />
-			</TabItem>
+                    <controls:Previewer x:Name="PreviewArea"
+                                        Target="{Binding CurrentSelection.Target}" />
+                </TabItem>
+            </TabControl>
 
-			<TabItem Style="{x:Null}">
-				<TabItem.Header>
-					<TextBlock Style="{x:Null}" Text="Preview">
-						<TextBlock.ToolTip>
-							<StackPanel Style="{x:Null}" MaxWidth="300">
-								<TextBlock Style="{x:Null}" Text="Preview"/>
-								<TextBlock
-									Style="{x:Null}"
-									Text="Previews the currently selected element."
-									TextWrapping="Wrap"
-								/>
-							</StackPanel>
-						</TextBlock.ToolTip>
-					</TextBlock>
-				</TabItem.Header>
+            <!-- StatusBar -->
+            <StatusBar Style="{x:Null}"
+                       Grid.Row="3"
+                       Grid.Column="0"
+                       Grid.ColumnSpan="2">
+                <StackPanel Style="{x:Null}"
+                            Orientation="Horizontal">
+                    <StackPanel Style="{x:Null}"
+                                Orientation="Horizontal">
+                        <TextBlock Style="{x:Null}"
+                                   Text="Keyboard.FocusedElement:" />
+                        <TextBlock Style="{x:Null}"
+                                   Margin="3 0 0 0">
+                            <windows:NoFocusHyperlink Command="{x:Static windows:SnoopUI.SelectFocusCommand}"
+                                                      CommandParameter="{Binding CurrentFocus}"
+                                                      Focusable="False">
+                                <TextBlock Style="{x:Null}"
+                                           Text="{Binding CurrentFocus, Converter={x:Static converters:ObjectToStringConverter.Instance}}" />
+                            </windows:NoFocusHyperlink>
+                        </TextBlock>
+                        <TextBlock Style="{x:Null}"
+                                   Text="; " />
+                        <StackPanel.ToolTip>
+                            <StackPanel Style="{x:Null}">
+                                <TextBlock Style="{x:Null}"
+                                           Text="This is the object that has keyboard focus." />
+                                <TextBlock Style="{x:Null}"
+                                           Text="Click the link to select this object." />
+                            </StackPanel>
+                        </StackPanel.ToolTip>
+                    </StackPanel>
 
-				<controls:Previewer x:Name="PreviewArea"
-									Target="{Binding CurrentSelection.Target}" />
-			</TabItem>
-		</TabControl>
-
-		<!-- StatusBar -->
-		<StatusBar Style="{x:Null}" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="0">
-			<StackPanel Style="{x:Null}" Orientation="Horizontal">
-				<StackPanel Style="{x:Null}" Orientation="Horizontal">
-					<TextBlock Style="{x:Null}" Text="Keyboard.FocusedElement:"/>
-					<TextBlock Style="{x:Null}" Margin="3,0,0,0">
-						<windows:NoFocusHyperlink Focusable="False"
-                                                  Command="{x:Static windows:SnoopUI.SelectFocusCommand}"
-							                      CommandParameter="{Binding CurrentFocus}" >
-							<TextBlock Style="{x:Null}" Text="{Binding CurrentFocus, Converter={x:Static converters:ObjectToStringConverter.Instance}}"/>
-						</windows:NoFocusHyperlink>
-					</TextBlock>
-					<TextBlock Style="{x:Null}" Text="; "/>
-					<StackPanel.ToolTip>
-						<StackPanel Style="{x:Null}">
-							<TextBlock Style="{x:Null}" Text="This is the object that has keyboard focus."/>
-							<TextBlock Style="{x:Null}" Text="Click the link to select this object."/>
-						</StackPanel>
-					</StackPanel.ToolTip>
-				</StackPanel>
-
-				<StackPanel Style="{x:Null}" Orientation="Horizontal">
-					<TextBlock Style="{x:Null}" Text="Current FocusScope:"/>
-					<TextBlock Style="{x:Null}" Margin="3,0,0,0">
-						<windows:NoFocusHyperlink
-							Focusable="False"
-							Command="{x:Static windows:SnoopUI.SelectFocusScopeCommand}"
-							CommandParameter="{Binding CurrentFocusScope}"
-						>
-							<TextBlock Text="{Binding CurrentFocusScope, Converter={x:Static converters:ObjectToStringConverter.Instance}}"/>
-						</windows:NoFocusHyperlink>
-					</TextBlock>
-					<StackPanel.ToolTip>
-						<StackPanel Style="{x:Null}">
-							<TextBlock Style="{x:Null}" Text="This is the object that is the root of the current focus scope."/>
-							<TextBlock Style="{x:Null}" Text="Click the link to select this object."/>
-						</StackPanel>
-					</StackPanel.ToolTip>
-				</StackPanel>
-			</StackPanel>
-		</StatusBar>
-	</Grid>
+                    <StackPanel Style="{x:Null}"
+                                Orientation="Horizontal">
+                        <TextBlock Style="{x:Null}"
+                                   Text="Current FocusScope:" />
+                        <TextBlock Style="{x:Null}"
+                                   Margin="3 0 0 0">
+                            <windows:NoFocusHyperlink Command="{x:Static windows:SnoopUI.SelectFocusScopeCommand}"
+                                                      CommandParameter="{Binding CurrentFocusScope}"
+                                                      Focusable="False">
+                                <TextBlock Text="{Binding CurrentFocusScope, Converter={x:Static converters:ObjectToStringConverter.Instance}}" />
+                            </windows:NoFocusHyperlink>
+                        </TextBlock>
+                        <StackPanel.ToolTip>
+                            <StackPanel Style="{x:Null}">
+                                <TextBlock Style="{x:Null}"
+                                           Text="This is the object that is the root of the current focus scope." />
+                                <TextBlock Style="{x:Null}"
+                                           Text="Click the link to select this object." />
+                            </StackPanel>
+                        </StackPanel.ToolTip>
+                    </StackPanel>
+                </StackPanel>
+            </StatusBar>
+        </Grid>
     </DockPanel>
 </windows:SnoopMainBaseWindow>
