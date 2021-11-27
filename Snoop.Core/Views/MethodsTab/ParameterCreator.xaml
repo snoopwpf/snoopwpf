@@ -43,8 +43,7 @@
                     Grid.Row="2"
                     Margin="15 15 0 15"
                     Orientation="Horizontal">
-            <Button Style="{x:Null}"
-                    Name="btnOK"
+            <Button Name="btnOK"
                     Grid.Row="1"
                     Width="100"
                     Height="25"
@@ -53,8 +52,7 @@
                     VerticalAlignment="Center"
                     Click="OKClick"
                     Content="OK" />
-            <Button Style="{x:Null}"
-                    Name="btnCancel"
+            <Button Name="btnCancel"
                     Grid.Row="1"
                     Width="100"
                     Height="25"

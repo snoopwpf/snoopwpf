@@ -205,8 +205,7 @@
                         <TextBlock Style="{x:Null}"
                                    Margin="4 4 4 0"
                                    Text="Setters" />
-                        <ListBox Style="{x:Null}"
-                                 Margin="8 4"
+                        <ListBox Margin="8 4"
                                  Grid.IsSharedSizeScope="True"
                                  ItemsSource="{Binding Setters}"
                                  ScrollViewer.VerticalScrollBarVisibility="Disabled"
@@ -223,8 +222,7 @@
                                    Margin="4 4 4 0"
                                    Text="EnterActions"
                                    Visibility="{Binding EnterActions.IsEmpty, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}, ConverterParameter=True}" />
-                        <ListBox Style="{x:Null}"
-                                 Margin="8 4"
+                        <ListBox Margin="8 4"
                                  Grid.IsSharedSizeScope="True"
                                  ItemsSource="{Binding EnterActions}"
                                  ScrollViewer.VerticalScrollBarVisibility="Disabled"
@@ -235,8 +233,7 @@
                                    Margin="4 4 4 0"
                                    Text="ExitActions"
                                    Visibility="{Binding ExitActions.IsEmpty, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}, ConverterParameter=True}" />
-                        <ListBox Style="{x:Null}"
-                                 Margin="8 4"
+                        <ListBox Margin="8 4"
                                  Grid.IsSharedSizeScope="True"
                                  ItemsSource="{Binding ExitActions}"
                                  ScrollViewer.VerticalScrollBarVisibility="Disabled"
@@ -259,13 +256,17 @@
             <!--<RowDefinition Height="1*"/>-->
         </Grid.RowDefinitions>
 
-        <ScrollViewer Style="{x:Null}"
-                      Grid.Row="0"
+        <ScrollViewer Grid.Row="0"
                       HorizontalScrollBarVisibility="Disabled">
             <ItemsControl Style="{x:Null}"
                           ItemsSource="{Binding TriggerItems, ElementName=triggerView}">
                 <ItemsControl.GroupStyle>
                     <GroupStyle>
+                        <GroupStyle.Panel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Style="{x:Null}" />
+                            </ItemsPanelTemplate>
+                        </GroupStyle.Panel>
                         <GroupStyle.ContainerStyle>
                             <Style TargetType="{x:Type GroupItem}">
                                 <Setter Property="Margin" Value="0 0 0 2" />

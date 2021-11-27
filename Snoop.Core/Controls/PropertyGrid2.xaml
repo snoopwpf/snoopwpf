@@ -20,72 +20,58 @@
             </ResourceDictionary.MergedDictionaries>
 
             <ContextMenu x:Key="PropertyMenu">
-                <MenuItem Style="{x:Null}"
-                          Command="{x:Static controls:PropertyInspector.DelveCommand}"
+                <MenuItem Command="{x:Static controls:PropertyInspector.DelveCommand}"
                           CommandParameter="{Binding}">
                     <MenuItem.Header>
-                        <Label Style="{x:Null}"
-                               Margin="0"
+                        <Label Margin="0"
                                Padding="0"
                                Content="Delve" />
                     </MenuItem.Header>
                 </MenuItem>
-                <MenuItem Style="{x:Null}"
-                          Command="{x:Static controls:PropertyInspector.DelveBindingCommand}"
+                <MenuItem Command="{x:Static controls:PropertyInspector.DelveBindingCommand}"
                           CommandParameter="{Binding}">
                     <MenuItem.Header>
-                        <Label Style="{x:Null}"
-                               Margin="0"
+                        <Label Margin="0"
                                Padding="0"
                                Content="Delve Binding" />
                     </MenuItem.Header>
                 </MenuItem>
-                <MenuItem Style="{x:Null}"
-                          Command="{x:Static controls:PropertyInspector.DelveBindingExpressionCommand}"
+                <MenuItem Command="{x:Static controls:PropertyInspector.DelveBindingExpressionCommand}"
                           CommandParameter="{Binding}">
                     <MenuItem.Header>
-                        <Label Style="{x:Null}"
-                               Margin="0"
+                        <Label Margin="0"
                                Padding="0"
                                Content="Delve BindingExpression" />
                     </MenuItem.Header>
                 </MenuItem>
-                <MenuItem Style="{x:Null}"
-                          Command="{x:Static controls:PropertyGrid2.ShowBindingErrorsCommand}"
+                <MenuItem Command="{x:Static controls:PropertyGrid2.ShowBindingErrorsCommand}"
                           CommandParameter="{Binding}">
                     <MenuItem.Header>
-                        <Label Style="{x:Null}"
-                               Margin="0"
+                        <Label Margin="0"
                                Padding="0"
                                Content="Display Binding Errors" />
                     </MenuItem.Header>
                 </MenuItem>
-                <MenuItem Style="{x:Null}"
-                          Command="{x:Static controls:PropertyGrid2.ClearCommand}"
+                <MenuItem Command="{x:Static controls:PropertyGrid2.ClearCommand}"
                           CommandParameter="{Binding}">
                     <MenuItem.Header>
-                        <Label Style="{x:Null}"
-                               Margin="0"
+                        <Label Margin="0"
                                Padding="0"
                                Content="Clear/Reset" />
                     </MenuItem.Header>
                 </MenuItem>
-                <MenuItem Style="{x:Null}"
-                          Command="{x:Static controls:PropertyInspector.CopyResourceNameCommand}"
+                <MenuItem Command="{x:Static controls:PropertyInspector.CopyResourceNameCommand}"
                           CommandParameter="{Binding}">
                     <MenuItem.Header>
-                        <Label Style="{x:Null}"
-                               Margin="0"
+                        <Label Margin="0"
                                Padding="0"
                                Content="Copy Resource Name" />
                     </MenuItem.Header>
                 </MenuItem>
-                <MenuItem Style="{x:Null}"
-                          Command="{x:Static controls:PropertyInspector.CopyXamlCommand}"
+                <MenuItem Command="{x:Static controls:PropertyInspector.CopyXamlCommand}"
                           CommandParameter="{Binding}">
                     <MenuItem.Header>
-                        <Label Style="{x:Null}"
-                               Margin="0"
+                        <Label Margin="0"
                                Padding="0"
                                Content="Copy XAML" />
                     </MenuItem.Header>
@@ -193,8 +179,7 @@
                 <GridViewColumn Width="25">
                     <GridViewColumn.CellTemplate>
                         <DataTemplate DataType="infrastructure:PropertyInformation">
-                            <CheckBox Style="{x:Null}"
-                                      IsChecked="{Binding BreakOnChange}"
+                            <CheckBox IsChecked="{Binding BreakOnChange}"
                                       Template="{StaticResource BreakpointTemplate}">
                                 <CheckBox.ToolTip>
                                     <TextBlock Style="{x:Null}"
@@ -286,8 +271,7 @@
                         <DataTemplate DataType="infrastructure:PropertyInformation">
                             <DockPanel LastChildFill="True"
                                        Visibility="{Binding IsInvalidBinding, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}}">
-                                <Button Style="{x:Null}"
-                                        Command="{x:Static controls:PropertyInspector.UpdateBindingErrorCommand}"
+                                <Button Command="{x:Static controls:PropertyInspector.UpdateBindingErrorCommand}"
                                         CommandParameter="{Binding}"
                                         Content="Get error message"
                                         DockPanel.Dock="Left">

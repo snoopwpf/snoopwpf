@@ -54,8 +54,7 @@
                  IsReadOnlyCaretVisible="True"
                  Text="{Binding Path=SelectedItem.Properties, ElementName=filterSetList, Converter={x:Static converters:CsvStringToArrayConverter.Default}}" />
 
-        <ListBox Style="{x:Null}"
-                 x:Name="filterSetList"
+        <ListBox x:Name="filterSetList"
                  Grid.Row="0"
                  Grid.ColumnSpan="2"
                  Margin="0 0 0 10"
@@ -76,15 +75,13 @@
                     Margin="0 10 5 5"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
-            <Button Style="{x:Null}"
-                    Width="75"
+            <Button Width="75"
                     Click="OkHandler"
                     IsDefault="True">
                 <TextBlock Style="{x:Null}"
                            Text="OK" />
             </Button>
-            <Button Style="{x:Null}"
-                    Width="75"
+            <Button Width="75"
                     Margin="5 0 0 0"
                     Click="CancelHandler"
                     IsCancel="True">
@@ -98,8 +95,7 @@
                     Grid.Column="2"
                     Margin="5 0 5 0"
                     VerticalAlignment="Center">
-            <Button Style="{x:Null}"
-                    x:Name="MoveUp"
+            <Button x:Name="MoveUp"
                     Width="20"
                     Height="20"
                     Click="UpHandler">
@@ -107,8 +103,7 @@
                        Margin="3"
                        Source="{DynamicResource upDrawingImage}" />
             </Button>
-            <Button Style="{x:Null}"
-                    x:Name="MoveDown"
+            <Button x:Name="MoveDown"
                     Width="20"
                     Height="20"
                     Margin="0 5 0 0"
@@ -117,15 +112,13 @@
                        Margin="3"
                        Source="{DynamicResource downDrawingImage}" />
             </Button>
-            <Button Style="{x:Null}"
-                    Width="50"
+            <Button Width="50"
                     Margin="0 10 0 0"
                     Click="AddHandler">
                 <TextBlock Style="{x:Null}"
                            Text="Add new" />
             </Button>
-            <Button Style="{x:Null}"
-                    x:Name="DeleteItem"
+            <Button x:Name="DeleteItem"
                     Width="50"
                     Margin="0 5 0 0"
                     Click="DeleteHandler">

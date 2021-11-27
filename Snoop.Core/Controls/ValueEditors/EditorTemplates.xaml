@@ -71,8 +71,7 @@
                 <ControlTemplate TargetType="{x:Type valueEditors:StandardValueEditor}">
                     <StackPanel Style="{x:Null}"
                                 Orientation="Horizontal">
-                        <Button Style="{x:Null}"
-                                x:Name="OpenDetailsEditor"
+                        <Button x:Name="OpenDetailsEditor"
                                 Command="{x:Static valueEditors:ValueEditor.OpenDetailsEditorCommand}"
                                 Content=" ... "
                                 DockPanel.Dock="Left"
@@ -127,8 +126,7 @@
                                 d:DataContext="{d:DesignInstance infrastructure:PropertyInformation,
                                                                  IsDesignTimeCreatable=False}"
                                 Orientation="Horizontal">
-                        <CheckBox Style="{x:Null}"
-                                  x:Name="PART_CheckBox"
+                        <CheckBox x:Name="PART_CheckBox"
                                   VerticalAlignment="Center"
                                   IsChecked="{Binding Value, Mode=TwoWay}"
                                   IsEnabled="{TemplateBinding IsEditable}"
@@ -187,9 +185,8 @@
                 <Grid Height="Auto"
                       HorizontalAlignment="Left">
                     <Grid.ToolTip>
-                        <ToolTip Style="{x:Null}">
-                            <ListBox Style="{x:Null}"
-                                     Width="200"
+                        <ToolTip>
+                            <ListBox Width="200"
                                      Height="200"
                                      ItemsSource="{Binding Value, Converter={x:Static converters:BrushStopsConverter.DefaultInstance}}">
                                 <ItemsControl.ItemTemplate>
@@ -248,9 +245,8 @@
                 <Grid Height="Auto"
                       HorizontalAlignment="Left">
                     <Grid.ToolTip>
-                        <ToolTip Style="{x:Null}">
-                            <ListBox Style="{x:Null}"
-                                     Width="200"
+                        <ToolTip>
+                            <ListBox Width="200"
                                      Height="200"
                                      ItemsSource="{Binding Value, Converter={x:Static converters:BrushStopsConverter.DefaultInstance}}">
                                 <ItemsControl.ItemTemplate>
@@ -404,8 +400,7 @@
 
             <DataTemplate x:Key="SelectedValueTemplate"
                           DataType="valueEditors:EnumValueEditor">
-                <ComboBox Style="{x:Null}"
-                          Height="16"
+                <ComboBox Height="16"
                           Padding="2 -2 2 0"
                           IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}"
                           IsSynchronizedWithCurrentItem="True"

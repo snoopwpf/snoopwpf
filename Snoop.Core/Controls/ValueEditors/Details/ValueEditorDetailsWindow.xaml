@@ -23,14 +23,12 @@
                     Grid.Row="1"
                     Margin="2"
                     Orientation="Horizontal">
-            <Button Style="{x:Null}"
-                    Margin="2"
+            <Button Margin="2"
                     HorizontalAlignment="Right"
                     Click="ChangeValue_OnClick">
                 Change value
             </Button>
-            <Button Style="{x:Null}"
-                    Margin="2"
+            <Button Margin="2"
                     HorizontalAlignment="Right"
                     Click="Cancel_OnClick">
                 Cancel

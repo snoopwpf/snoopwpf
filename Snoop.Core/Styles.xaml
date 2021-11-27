@@ -85,6 +85,10 @@
            BasedOn="{StaticResource Snoop.Styles.TreeView}"
            TargetType="TreeView" />
 
+    <Style x:Key="{x:Type TreeView}"
+           BasedOn="{StaticResource Snoop.Styles.TreeView}"
+           TargetType="TreeView" />
+
     <!-- <Style x:Key="{x:Type StackPanel}" -->
     <!-- TargetType="{x:Type StackPanel}"> -->
     <!-- <Setter Property="Background" -->
@@ -392,8 +396,7 @@
                     Background="{TemplateBinding Background}"
                     BorderBrush="{TemplateBinding BorderBrush}"
                     BorderThickness="{TemplateBinding BorderThickness}">
-                <ToggleButton Style="{x:Null}"
-                              x:Name="ToggleButton"
+                <ToggleButton x:Name="ToggleButton"
                               ClickMode="Press"
                               Focusable="False"
                               IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
@@ -437,8 +440,7 @@
                                            Height="*" />
                         </Grid.RowDefinitions>
 
-                        <Button Style="{x:Null}"
-                                Grid.Row="0"
+                        <Button Grid.Row="0"
                                 Command="{TemplateBinding ResetSettingsCommand}">
                             <TextBlock Style="{x:Null}">
                                 Reset to default settings
@@ -449,12 +451,12 @@
                             </Button.ToolTip>
                         </Button>
 
-                        <ScrollViewer Style="{x:Null}"
-                                      x:Name="ScrollViewer"
+                        <ScrollViewer x:Name="ScrollViewer"
                                       Grid.Row="1"
                                       Margin="0 2 0 0">
                             <ItemsControl Style="{x:Null}"
                                           x:Name="PART_ItemsControl"
+                                          ItemsPanel="{TemplateBinding ItemsPanel}"
                                           ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource TemplatedParent}}"
                                           KeyboardNavigation.DirectionalNavigation="Contained">
                                 <!--<ItemsControl.ItemsPanel>
@@ -509,6 +511,13 @@
     <Style x:Key="{x:Type controls:NoSelectionComboBox}"
            BasedOn="{x:Null}"
            TargetType="{x:Type controls:NoSelectionComboBox}">
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel Style="{x:Null}" />
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
         <Setter Property="Template" Value="{StaticResource Snoop.Templates.NoSelectionComboBox}" />
     </Style>
 </ResourceDictionary>

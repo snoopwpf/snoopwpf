@@ -58,7 +58,8 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Calendar">
-                    <StackPanel Name="PART_Root"
+                    <StackPanel Style="{x:Null}"
+                                Name="PART_Root"
                                 HorizontalAlignment="Center">
                         <CalendarItem Style="{TemplateBinding CalendarItemStyle}"
                                       Name="PART_CalendarItem"
@@ -1858,7 +1859,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type GroupItem}">
-                    <StackPanel>
+                    <StackPanel Style="{x:Null}">
                         <ContentPresenter x:Name="PART_Header" />
                         <ItemsPresenter x:Name="ItemsPresenter"
                                         Margin="5 0 0 0" />
@@ -1879,7 +1880,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type HeaderedContentControl}">
-                    <StackPanel>
+                    <StackPanel Style="{x:Null}">
                         <ContentPresenter ContentSource="Header" />
                         <ContentPresenter />
                     </StackPanel>

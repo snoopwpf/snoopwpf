@@ -30,8 +30,7 @@
         <Viewbox Style="{x:Null}"
                  x:Name="Viewbox" />
 
-        <Slider Style="{x:Null}"
-                x:Name="ColorSlider"
+        <Slider x:Name="ColorSlider"
                 Width="100"
                 Margin="0 2 2 0"
                 HorizontalAlignment="Right"

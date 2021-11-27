@@ -57,8 +57,7 @@
                Margin="2"
                Background="Transparent"
                TextWrapping="Wrap">
-        <Hyperlink Style="{x:Null}"
-                   Command="{x:Static controls:PropertyInspector.NavigateToAssemblyInExplorerCommand}"
+        <Hyperlink Command="{x:Static controls:PropertyInspector.NavigateToAssemblyInExplorerCommand}"
                    CommandParameter="{Binding ElementName=propertyInspector, Path=DelveType, Mode=OneWay}">
             <TextBlock Style="{x:Null}"
                        Text="{Binding ElementName=propertyInspector, Path=DelveType.FullName, Mode=OneWay}" />
@@ -120,8 +119,7 @@
                     </StackPanel>
                 </Button.ToolTip>
             </Button>
-            <ComboBox Style="{x:Null}"
-                      x:Name="FilterSetCombo"
+            <ComboBox x:Name="FilterSetCombo"
                       Width="100"
                       Margin="0 0 2 0"
                       Padding="4 1 4 1"
@@ -138,8 +136,7 @@
                     </StackPanel>
                 </ComboBox.ToolTip>
             </ComboBox>
-            <ToggleButton Style="{x:Null}"
-                          Width="18"
+            <ToggleButton Width="18"
                           Height="18"
                           Margin="0 0 2 0"
                           Padding="0"
@@ -157,8 +154,7 @@
                     </StackPanel>
                 </ToggleButton.ToolTip>
             </ToggleButton>
-            <ToggleButton Style="{x:Null}"
-                          Width="18"
+            <ToggleButton Width="18"
                           Height="18"
                           Margin="0 0 2 0"
                           Padding="0"

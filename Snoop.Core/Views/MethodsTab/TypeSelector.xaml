@@ -18,15 +18,13 @@
     <Grid Style="{x:Null}"
           Width="495"
           Height="130">
-        <ComboBox Style="{x:Null}"
-                  Name="comboBoxTypes"
+        <ComboBox Name="comboBoxTypes"
                   Width="439"
                   Height="30"
                   Margin="29 32 0 0"
                   HorizontalAlignment="Left"
                   VerticalAlignment="Top" />
-        <Button Style="{x:Null}"
-                Name="buttonCreateInstance"
+        <Button Name="buttonCreateInstance"
                 Width="136"
                 Height="30"
                 Margin="29 88 0 0"
@@ -34,8 +32,7 @@
                 VerticalAlignment="Top"
                 Click="ButtonCreateInstance_Click"
                 Content="Create Instance" />
-        <Button Style="{x:Null}"
-                Name="buttonCancel"
+        <Button Name="buttonCancel"
                 Width="130"
                 Height="30"
                 Margin="188 88 0 0"

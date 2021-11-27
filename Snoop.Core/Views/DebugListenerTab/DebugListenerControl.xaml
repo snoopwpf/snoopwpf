@@ -20,8 +20,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <CheckBox Style="{x:Null}"
-                      Name="checkBoxStartListening"
+            <CheckBox Name="checkBoxStartListening"
                       Margin="10"
                       Checked="CheckBoxStartListening_Checked"
                       Unchecked="CheckBoxStartListening_Unchecked">
@@ -36,49 +35,40 @@
                            Margin="0 0 10 0"
                            VerticalAlignment="Center"
                            Text="WPF Trace Level: " />
-                <ComboBox Style="{x:Null}"
-                          Name="comboBoxPresentationTraceLevel"
+                <ComboBox Name="comboBoxPresentationTraceLevel"
                           Width="110"
                           Height="25"
                           SelectedIndex="2"
                           SelectionChanged="ComboBoxPresentationTraceLevel_SelectionChanged">
-                    <ComboBoxItem Style="{x:Null}"
-                                  Tag="Off">
+                    <ComboBoxItem Tag="Off">
                         <TextBlock Style="{x:Null}"
                                    Text="Off" />
                     </ComboBoxItem>
-                    <ComboBoxItem Style="{x:Null}"
-                                  Tag="Critical">
+                    <ComboBoxItem Tag="Critical">
                         <TextBlock Style="{x:Null}"
                                    Text="Critical" />
                     </ComboBoxItem>
-                    <ComboBoxItem Style="{x:Null}"
-                                  Tag="Error">
+                    <ComboBoxItem Tag="Error">
                         <TextBlock Style="{x:Null}"
                                    Text="Error" />
                     </ComboBoxItem>
-                    <ComboBoxItem Style="{x:Null}"
-                                  Tag="Warning">
+                    <ComboBoxItem Tag="Warning">
                         <TextBlock Style="{x:Null}"
                                    Text="Warning" />
                     </ComboBoxItem>
-                    <ComboBoxItem Style="{x:Null}"
-                                  Tag="Information">
+                    <ComboBoxItem Tag="Information">
                         <TextBlock Style="{x:Null}"
                                    Text="Information" />
                     </ComboBoxItem>
-                    <ComboBoxItem Style="{x:Null}"
-                                  Tag="Verbose">
+                    <ComboBoxItem Tag="Verbose">
                         <TextBlock Style="{x:Null}"
                                    Text="Verbose" />
                     </ComboBoxItem>
-                    <ComboBoxItem Style="{x:Null}"
-                                  Tag="ActivityTracing">
+                    <ComboBoxItem Tag="ActivityTracing">
                         <TextBlock Style="{x:Null}"
                                    Text="Activity Tracing" />
                     </ComboBoxItem>
-                    <ComboBoxItem Style="{x:Null}"
-                                  Tag="All">
+                    <ComboBoxItem Tag="All">
                         <TextBlock Style="{x:Null}"
                                    Text="All" />
                     </ComboBoxItem>
@@ -90,8 +80,7 @@
                         Grid.ColumnSpan="2"
                         Margin="10 0 10 10"
                         Orientation="Horizontal">
-                <Button Style="{x:Null}"
-                        Name="buttonClear"
+                <Button Name="buttonClear"
                         Width="75"
                         Height="25"
                         HorizontalAlignment="Left"
@@ -99,8 +88,7 @@
                     <TextBlock Style="{x:Null}"
                                Text="Clear Text" />
                 </Button>
-                <Button Style="{x:Null}"
-                        Name="buttonClearFilters"
+                <Button Name="buttonClearFilters"
                         Width="75"
                         Height="25"
                         Margin="10 0 0 0"
@@ -109,8 +97,7 @@
                     <TextBlock Style="{x:Null}"
                                Text="Clear Filters" />
                 </Button>
-                <Button Style="{x:Null}"
-                        Name="buttonSetFilters"
+                <Button Name="buttonSetFilters"
                         Width="75"
                         Height="25"
                         Margin="10 0 0 0"

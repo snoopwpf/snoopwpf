@@ -305,8 +305,7 @@
     <Grid DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
         <controls:ZoomerControl x:Name="Zoomer" />
 
-        <Button Style="{x:Null}"
-                Width="22"
+        <Button Width="22"
                 Height="20"
                 Margin="0 0 44 0"
                 HorizontalAlignment="Right"
@@ -326,8 +325,7 @@
             </Button.ToolTip>
         </Button>
 
-        <ToggleButton Style="{x:Null}"
-                      Width="22"
+        <ToggleButton Width="22"
                       Height="20"
                       Margin="0 0 22 0"
                       HorizontalAlignment="Right"
@@ -346,8 +344,7 @@
             </ToggleButton.ToolTip>
         </ToggleButton>
 
-        <Button Style="{x:Null}"
-                Width="22"
+        <Button Width="22"
                 Height="20"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"

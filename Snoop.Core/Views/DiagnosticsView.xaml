@@ -14,8 +14,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <DataTemplate DataType="{x:Type diagnostics:DiagnosticProvider}">
-                <CheckBox Style="{x:Null}"
-                          IsChecked="{Binding IsActive}">
+                <CheckBox IsChecked="{Binding IsActive}">
                     <TextBlock Style="{x:Null}"
                                Text="{Binding Name}" />
                 </CheckBox>

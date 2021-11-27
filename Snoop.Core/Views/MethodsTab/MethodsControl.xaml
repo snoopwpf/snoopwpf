@@ -30,8 +30,7 @@
                            Margin="0 0 25 0"
                            HorizontalAlignment="Left"
                            Text="{Binding ParameterName}" />
-                <ComboBox Style="{x:Null}"
-                          Grid.Column="1"
+                <ComboBox Grid.Column="1"
                           Width="129"
                           HorizontalAlignment="Left"
                           ItemsSource="{Binding ParameterValue, Converter={x:Static converters:SnoopEnumValuesConverter.Default}}"
@@ -50,8 +49,7 @@
                            Margin="0 0 25 0"
                            HorizontalAlignment="Left"
                            Text="{Binding ParameterName}" />
-                <ComboBox Style="{x:Null}"
-                          Grid.Column="1"
+                <ComboBox Grid.Column="1"
                           Width="129"
                           HorizontalAlignment="Left"
                           ItemsSource="{Binding Converter={x:Static converters:SnoopDependencyPropertiesConverter.Default}}"
@@ -92,8 +90,7 @@
                            Margin="0 0 25 0"
                            HorizontalAlignment="Left"
                            Text="{Binding ParameterName}" />
-                <Button Style="{x:Null}"
-                        Grid.Column="1"
+                <Button Grid.Column="1"
                         Width="150"
                         Height="25"
                         HorizontalAlignment="Left"
@@ -101,8 +98,7 @@
                     <TextBlock Style="{x:Null}"
                                Text="Create/Modify Parameter" />
                 </Button>
-                <Button Style="{x:Null}"
-                        Grid.Column="2"
+                <Button Grid.Column="2"
                         Width="150"
                         Height="25"
                         HorizontalAlignment="Left"
@@ -132,8 +128,7 @@
         <StackPanel Style="{x:Null}"
                     Grid.Row="0"
                     Orientation="Horizontal">
-            <Button Style="{x:Null}"
-                    Width="100"
+            <Button Width="100"
                     Height="30"
                     Margin="0 0 15 0"
                     VerticalAlignment="Center"
@@ -160,8 +155,7 @@
             </Grid>
         </StackPanel>
 
-        <CheckBox Style="{x:Null}"
-                  x:Name="checkBoxUseDataContext"
+        <CheckBox x:Name="checkBoxUseDataContext"
                   Grid.Row="1">
             <TextBlock Style="{x:Null}"
                        Text="Use DataContext Property" />
@@ -175,8 +169,7 @@
                        VerticalAlignment="Center"
                        FontWeight="Bold"
                        Text="Method:" />
-            <ComboBox Style="{x:Null}"
-                      x:Name="comboBoxMethods"
+            <ComboBox x:Name="comboBoxMethods"
                       Width="350"
                       Height="25" />
         </StackPanel>
@@ -197,8 +190,7 @@
                           ItemTemplateSelector="{StaticResource SnoopParameterInformationTemplateSelector}" />
         </StackPanel>
 
-        <Button Style="{x:Null}"
-                Grid.Row="4"
+        <Button Grid.Row="4"
                 Width="200"
                 Height="25"
                 HorizontalAlignment="Left"

@@ -18,31 +18,27 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <!--<StackPanel>-->
-            <ListBox Style="{x:Null}"
-                     Name="listBoxFilters"
+            <ListBox Name="listBoxFilters"
                      AlternationCount="2"
                      ItemsSource="{Binding Path=Filters}"
                      SelectionMode="Extended">
                 <ListBox.ContextMenu>
-                    <ContextMenu Style="{x:Null}">
-                        <MenuItem Style="{x:Null}"
-                                  Name="menuItemGroupFilters"
+                    <ContextMenu>
+                        <MenuItem Name="menuItemGroupFilters"
                                   Click="MenuItemGroupFilters_Click">
                             <MenuItem.Header>
                                 <TextBlock Style="{x:Null}"
                                            Text="Group Filters" />
                             </MenuItem.Header>
                         </MenuItem>
-                        <MenuItem Style="{x:Null}"
-                                  Name="menuItemClearFilterGroups"
+                        <MenuItem Name="menuItemClearFilterGroups"
                                   Click="MenuItemClearFilterGroups_Click">
                             <MenuItem.Header>
                                 <TextBlock Style="{x:Null}"
                                            Text="Clear Filter Groups" />
                             </MenuItem.Header>
                         </MenuItem>
-                        <MenuItem Style="{x:Null}"
-                                  Name="menuItemSetInverse"
+                        <MenuItem Name="menuItemSetInverse"
                                   Click="MenuItemSetInverse_Click">
                             <MenuItem.Header>
                                 <TextBlock Style="{x:Null}"
@@ -84,24 +80,23 @@
 								</TextBlock.Style>
 								-->
                             </TextBlock>
-                            <ComboBox Style="{x:Null}"
-                                      Name="comboBoxFilterTypes"
+                            <ComboBox Name="comboBoxFilterTypes"
                                       Width="140"
                                       Height="23"
                                       SelectedIndex="{Binding Path=FilterType, Mode=TwoWay, Converter={x:Static converters:FilterTypeToIntConverter.Default}}">
-                                <ComboBoxItem Style="{x:Null}">
+                                <ComboBoxItem>
                                     <TextBlock Style="{x:Null}"
                                                Text="Starts With" />
                                 </ComboBoxItem>
-                                <ComboBoxItem Style="{x:Null}">
+                                <ComboBoxItem>
                                     <TextBlock Style="{x:Null}"
                                                Text="Ends With" />
                                 </ComboBoxItem>
-                                <ComboBoxItem Style="{x:Null}">
+                                <ComboBoxItem>
                                     <TextBlock Style="{x:Null}"
                                                Text="Contains" />
                                 </ComboBoxItem>
-                                <ComboBoxItem Style="{x:Null}">
+                                <ComboBoxItem>
                                     <TextBlock Style="{x:Null}"
                                                Text="Regular Expression" />
                                 </ComboBoxItem>
@@ -113,8 +108,7 @@
                                      Margin="10 0 0 0"
                                      Loaded="TextBlockFilter_Loaded"
                                      Text="{Binding Path=Text, Mode=TwoWay}" />
-                            <Button Style="{x:Null}"
-                                    Name="buttonRemoveFilter"
+                            <Button Name="buttonRemoveFilter"
                                     Width="14"
                                     Height="14"
                                     Margin="10 0 0 0"
@@ -138,8 +132,7 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <Button Style="{x:Null}"
-                    Name="buttonAddFilter"
+            <Button Name="buttonAddFilter"
                     Grid.Row="1"
                     Width="110"
                     Height="25"
@@ -151,8 +144,7 @@
                            Text="Add Another Filter" />
             </Button>
         </Grid>
-        <Button Style="{x:Null}"
-                Name="buttonSetFilter"
+        <Button Name="buttonSetFilter"
                 Grid.Row="1"
                 Width="110"
                 Height="25"

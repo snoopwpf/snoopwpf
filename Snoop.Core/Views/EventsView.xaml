@@ -45,8 +45,7 @@
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type infrastructure:EventTracker}">
-                <CheckBox Style="{x:Null}"
-                          IsChecked="{Binding IsEnabled}">
+                <CheckBox IsChecked="{Binding IsEnabled}">
                     <TextBlock Style="{x:Null}"
                                Text="{Binding RoutedEvent.Name}" />
                 </CheckBox>
@@ -144,8 +143,7 @@
         </ComboBox.ToolTip>
     </controls:NoSelectionComboBox>
 
-    <Button Style="{x:Null}"
-            Grid.Row="0"
+    <Button Grid.Row="0"
             Width="18"
             Height="18"
             Padding="3"
@@ -167,8 +165,7 @@
         </Button.ToolTip>
     </Button>
 
-    <TreeView Style="{x:Null}"
-              x:Name="EventTree"
+    <TreeView x:Name="EventTree"
               Grid.Row="1"
               HorizontalContentAlignment="Stretch"
               ItemsSource="{Binding ElementName=Events, Path=InterestingEvents}"

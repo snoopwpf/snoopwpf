@@ -21,8 +21,7 @@
 
         <StackPanel Style="{x:Null}"
                     HorizontalAlignment="Right">
-            <CheckBox Style="{x:Null}"
-                      x:Name="autoExpandCheckBox"
+            <CheckBox x:Name="autoExpandCheckBox"
                       IsChecked="True">
                 <TextBlock Style="{x:Null}"
                            Text="Auto-expand" />

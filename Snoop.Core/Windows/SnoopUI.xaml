@@ -117,8 +117,7 @@
         <StackPanel Style="{x:Null}"
                     DockPanel.Dock="Top"
                     Orientation="Horizontal">
-            <Label Style="{x:Null}"
-                   Padding="2"
+            <Label Padding="2"
                    Content="Tree:"
                    Target="{Binding ElementName=TreeTypeComboBox}" />
             <ComboBox x:Name="TreeTypeComboBox"
@@ -176,17 +175,16 @@
             </Grid.ColumnDefinitions>
 
             <!-- Filter Combo Box -->
-            <ComboBox Style="{x:Null}"
-                      x:Name="filterComboBox"
+            <ComboBox x:Name="filterComboBox"
                       Margin="2 2 22 2"
                       infrastructure:ComboBoxSettings.RegisterAsSnoopPart="True"
                       IsEditable="True"
                       Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}">
-                <ComboBoxItem Style="{x:Null}">
+                <ComboBoxItem>
                     <TextBlock Style="{x:Null}"
                                Text="Clear any filter applied to the tree view" />
                 </ComboBoxItem>
-                <ComboBoxItem Style="{x:Null}">
+                <ComboBoxItem>
                     <TextBlock Style="{x:Null}"
                                Text="Show only elements with binding errors" />
                 </ComboBoxItem>
@@ -243,11 +241,9 @@
 
                         <Setter Property="ContextMenu">
                             <Setter.Value>
-                                <ContextMenu Style="{x:Null}">
-                                    <MenuItem Style="{x:Null}"
-                                              Header="Export">
-                                        <MenuItem Style="{x:Null}"
-                                                  Command="{x:Static windows:SnoopUI.ExportTreeWithFilterCommand}"
+                                <ContextMenu>
+                                    <MenuItem Header="Export">
+                                        <MenuItem Command="{x:Static windows:SnoopUI.ExportTreeWithFilterCommand}"
                                                   Header="Tree (with filter)">
                                             <MenuItem.CommandParameter>
                                                 <infrastructure:ExportOptions Recurse="True"
@@ -255,8 +251,7 @@
                                                                               UseFilter="True" />
                                             </MenuItem.CommandParameter>
                                         </MenuItem>
-                                        <MenuItem Style="{x:Null}"
-                                                  Command="{x:Static windows:SnoopUI.ExportTreeWithFilterCommand}"
+                                        <MenuItem Command="{x:Static windows:SnoopUI.ExportTreeWithFilterCommand}"
                                                   Header="Tree (without filter)">
                                             <MenuItem.CommandParameter>
                                                 <infrastructure:ExportOptions Recurse="True"
@@ -264,10 +259,9 @@
                                             </MenuItem.CommandParameter>
                                         </MenuItem>
 
-                                        <Separator Style="{x:Null}" />
+                                        <Separator />
 
-                                        <MenuItem Style="{x:Null}"
-                                                  Command="{x:Static windows:SnoopUI.ExportTreeWithFilterCommand}"
+                                        <MenuItem Command="{x:Static windows:SnoopUI.ExportTreeWithFilterCommand}"
                                                   Header="Element (with filter)">
                                             <MenuItem.CommandParameter>
                                                 <infrastructure:ExportOptions Recurse="False"
@@ -275,8 +269,7 @@
                                                                               UseFilter="True" />
                                             </MenuItem.CommandParameter>
                                         </MenuItem>
-                                        <MenuItem Style="{x:Null}"
-                                                  Command="{x:Static windows:SnoopUI.ExportTreeWithFilterCommand}"
+                                        <MenuItem Command="{x:Static windows:SnoopUI.ExportTreeWithFilterCommand}"
                                                   Header="Element (without filter)">
                                             <MenuItem.CommandParameter>
                                                 <infrastructure:ExportOptions Recurse="False"
@@ -324,8 +317,7 @@
             </controls:ProperTreeView>
 
             <!-- Vertical GridSplitter (between the visual tree tree view and the tab control (with the property grid/events view)) -->
-            <GridSplitter Style="{x:Null}"
-                          x:Name="GridSplitter"
+            <GridSplitter x:Name="GridSplitter"
                           Grid.Row="0"
                           Grid.RowSpan="3"
                           Grid.Column="1"
@@ -336,11 +328,10 @@
                           HorizontalAlignment="Left" />
 
             <!-- Tab Control (for the property grid, the data context property grid, and the events view) -->
-            <TabControl Style="{x:Null}"
-                        Grid.RowSpan="2"
+            <TabControl Grid.RowSpan="2"
                         Grid.Column="1"
                         Margin="2 2 2 0">
-                <TabItem Style="{x:Null}">
+                <TabItem>
                     <TabItem.Header>
                         <TextBlock Style="{x:Null}"
                                    Text="Properties">
@@ -361,7 +352,7 @@
                                                 RootTarget="{Binding CurrentSelection.Target}" />
                 </TabItem>
 
-                <TabItem Style="{x:Null}">
+                <TabItem>
                     <TabItem.Header>
                         <TextBlock Style="{x:Null}"
                                    Text="Data Context">
@@ -382,7 +373,7 @@
                                                 RootTarget="{Binding CurrentSelection.Target, Converter={x:Static converters:DataContextExtractorConverter.Instance}}" />
                 </TabItem>
 
-                <TabItem Style="{x:Null}">
+                <TabItem>
                     <TabItem.Header>
                         <TextBlock Style="{x:Null}"
                                    Text="Events">
@@ -402,7 +393,7 @@
                     <views:EventsView x:Name="eventsView" />
                 </TabItem>
 
-                <TabItem Style="{x:Null}">
+                <TabItem>
                     <TabItem.Header>
                         <TextBlock Style="{x:Null}"
                                    Text="Triggers">
@@ -423,7 +414,7 @@
                                               RootTarget="{Binding CurrentSelection.Target}" />
                 </TabItem>
 
-                <TabItem Style="{x:Null}">
+                <TabItem>
                     <TabItem.Header>
                         <TextBlock Style="{x:Null}"
                                    Text="Behaviors">
@@ -444,7 +435,7 @@
                                                 RootTarget="{Binding CurrentSelection.Target}" />
                 </TabItem>
 
-                <TabItem Style="{x:Null}">
+                <TabItem>
                     <TabItem.Header>
                         <TextBlock Style="{x:Null}"
                                    Text="Methods">
@@ -465,8 +456,7 @@
                                                RootTarget="{Binding CurrentSelection.Target}" />
                 </TabItem>
 
-                <TabItem Style="{x:Null}"
-                         Visibility="{Binding Converter={x:Static converters:IsPowerShellAvailableToVisibilityConverter.DefaultInstance}}">
+                <TabItem Visibility="{Binding Converter={x:Static converters:IsPowerShellAvailableToVisibilityConverter.DefaultInstance}}">
                     <TabItem.Header>
                         <TextBlock Style="{x:Null}"
                                    Text="PowerShell">
@@ -486,7 +476,7 @@
                     <powerShell:EmbeddedShellView IsSelected="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}" />
                 </TabItem>
 
-                <TabItem Style="{x:Null}">
+                <TabItem>
                     <TabItem.Header>
                         <TextBlock Style="{x:Null}"
                                    Text="Debug Listener">
@@ -508,19 +498,17 @@
             </TabControl>
 
             <!-- Horizontal GridSplitter (between the tab control (with the property grid/events view) and the diagnostics/previewer) -->
-            <GridSplitter Style="{x:Null}"
-                          Grid.Row="2"
+            <GridSplitter Grid.Row="2"
                           Grid.Column="1"
                           Height="4"
                           Margin="2 0 2 0"
                           HorizontalAlignment="Stretch"
                           VerticalAlignment="Top" />
 
-            <TabControl Style="{x:Null}"
-                        Grid.Row="2"
+            <TabControl Grid.Row="2"
                         Grid.Column="1"
                         Margin="2 4 2 0">
-                <TabItem Style="{x:Null}">
+                <TabItem>
                     <TabItem.Header>
                         <TextBlock Style="{x:Null}"
                                    Text="{Binding TreeService.DiagnosticContext.DiagnosticItems.Count, StringFormat={}Diagnostics ({0})}">
@@ -540,7 +528,7 @@
                     <views:DiagnosticsView DiagnosticContext="{Binding TreeService.DiagnosticContext}" />
                 </TabItem>
 
-                <TabItem Style="{x:Null}">
+                <TabItem>
                     <TabItem.Header>
                         <TextBlock Style="{x:Null}"
                                    Text="Preview">

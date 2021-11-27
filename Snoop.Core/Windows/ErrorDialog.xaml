@@ -58,8 +58,7 @@
                     Margin="0 5 0 0"
                     HorizontalAlignment="Left"
                     Orientation="Horizontal">
-            <Button Style="{x:Null}"
-                    x:Name="_buttonCopyToClipboard"
+            <Button x:Name="_buttonCopyToClipboard"
                     Width="175"
                     Height="32"
                     Margin="0 0 15 0"
@@ -71,8 +70,7 @@
                         Grid.Row="3"
                         Orientation="Vertical">
                 <TextBlock Style="{x:Null}">
-                    <Hyperlink Style="{x:Null}"
-                               NavigateUri="dummy"
+                    <Hyperlink NavigateUri="dummy"
                                RequestNavigate="Hyperlink_RequestNavigate">
                         <TextBlock Style="{x:Null}"
                                    Text="Click here to create an issue on GitHub." />
@@ -87,8 +85,7 @@
                     Margin="0 5 0 0"
                     HorizontalAlignment="Left"
                     Orientation="Horizontal">
-            <Button Style="{x:Null}"
-                    Width="230"
+            <Button Width="230"
                     Height="32"
                     Click="CloseAndMarkHandled_Click"
                     IsCancel="True"
@@ -110,8 +107,7 @@
                     Margin="0 5 0 0"
                     HorizontalAlignment="Left"
                     Orientation="Horizontal">
-            <CheckBox Style="{x:Null}"
-                      x:Name="_checkBoxRemember"
+            <CheckBox x:Name="_checkBoxRemember"
                       Grid.Row="5"
                       Margin="0 0 5 0"
                       VerticalAlignment="Center"
@@ -133,8 +129,7 @@
                     </TextBlock>
                 </CheckBox.ToolTip>
             </CheckBox>
-            <Button Style="{x:Null}"
-                    Width="230"
+            <Button Width="230"
                     Height="32"
                     Margin="0 0 10 0"
                     Click="CloseDoNotMarkHandled_Click">
@@ -147,8 +142,7 @@
                                TextWrapping="Wrap" />
                 </Button.ToolTip>
             </Button>
-            <Button Style="{x:Null}"
-                    Width="230"
+            <Button Width="230"
                     Height="32"
                     Click="CloseAndMarkHandled_Click"
                     IsCancel="True"

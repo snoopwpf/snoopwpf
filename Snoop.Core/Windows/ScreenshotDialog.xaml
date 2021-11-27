@@ -80,38 +80,36 @@
                         Margin="5 0 0 5"
                         HorizontalAlignment="Left"
                         Orientation="Horizontal">
-                <ComboBox Style="{x:Null}"
-                          x:Name="dpiBox"
+                <ComboBox x:Name="dpiBox"
                           Grid.Column="1"
                           Width="75"
                           Margin="0 0 5 0"
                           IsEditable="False">
-                    <ComboBoxItem Style="{x:Null}">
+                    <ComboBoxItem>
                         <TextBlock Style="{x:Null}"
                                    Text="96" />
                     </ComboBoxItem>
-                    <ComboBoxItem Style="{x:Null}">
+                    <ComboBoxItem>
                         <TextBlock Style="{x:Null}"
                                    Text="150" />
                     </ComboBoxItem>
-                    <ComboBoxItem Style="{x:Null}"
-                                  IsSelected="True">
+                    <ComboBoxItem IsSelected="True">
                         <TextBlock Style="{x:Null}"
                                    Text="300" />
                     </ComboBoxItem>
-                    <ComboBoxItem Style="{x:Null}">
+                    <ComboBoxItem>
                         <TextBlock Style="{x:Null}"
                                    Text="600" />
                     </ComboBoxItem>
-                    <ComboBoxItem Style="{x:Null}">
+                    <ComboBoxItem>
                         <TextBlock Style="{x:Null}"
                                    Text="1200" />
                     </ComboBoxItem>
-                    <ComboBoxItem Style="{x:Null}">
+                    <ComboBoxItem>
                         <TextBlock Style="{x:Null}"
                                    Text="2400" />
                     </ComboBoxItem>
-                    <ComboBoxItem Style="{x:Null}">
+                    <ComboBoxItem>
                         <TextBlock Style="{x:Null}"
                                    Text="4800" />
                     </ComboBoxItem>
@@ -124,16 +122,14 @@
             <StackPanel Style="{x:Null}"
                         HorizontalAlignment="Right"
                         Orientation="Horizontal">
-                <Button Style="{x:Null}"
-                        Width="75"
+                <Button Width="75"
                         Margin="0 0 5 5"
                         Command="{x:Static windows:ScreenshotDialog.SaveCommand}"
                         IsDefault="True">
                     <TextBlock Style="{x:Null}"
                                Text="Save" />
                 </Button>
-                <Button Style="{x:Null}"
-                        Width="75"
+                <Button Width="75"
                         Margin="0 0 5 5"
                         Command="{x:Static windows:ScreenshotDialog.CancelCommand}"
                         IsCancel="True">

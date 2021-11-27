@@ -29,24 +29,21 @@
         </Grid.Background>
 
         <Grid.ContextMenu>
-            <ContextMenu Style="{x:Null}">
-                <MenuItem Style="{x:Null}"
-                          Command="{x:Static windows:Zoomer.SwitchTo2DCommand}">
+            <ContextMenu>
+                <MenuItem Command="{x:Static windows:Zoomer.SwitchTo2DCommand}">
                     <MenuItem.Header>
                         <TextBlock Style="{x:Null}"
                                    Text="2D view" />
                     </MenuItem.Header>
                 </MenuItem>
-                <MenuItem Style="{x:Null}"
-                          Command="{x:Static windows:Zoomer.SwitchTo3DCommand}">
+                <MenuItem Command="{x:Static windows:Zoomer.SwitchTo3DCommand}">
                     <MenuItem.Header>
                         <TextBlock Style="{x:Null}"
                                    Text="3D view" />
                     </MenuItem.Header>
                 </MenuItem>
                 <Separator />
-                <MenuItem Style="{x:Null}"
-                          Command="{x:Static windows:Zoomer.ResetCommand}">
+                <MenuItem Command="{x:Static windows:Zoomer.ResetCommand}">
                     <MenuItem.Header>
                         <TextBlock Style="{x:Null}"
                                    Text="Reset" />
@@ -112,8 +109,7 @@
                     Cursor="Arrow" />
         </StackPanel>
 
-        <Slider Style="{x:Null}"
-                x:Name="ColorSlider"
+        <Slider x:Name="ColorSlider"
                 Width="100"
                 Margin="0 2 2 0"
                 HorizontalAlignment="Right"
@@ -137,27 +133,25 @@
                     VerticalAlignment="Bottom"
                     Orientation="Horizontal"
                     Visibility="Collapsed">
-            <ComboBox Style="{x:Null}"
-                      x:Name="dpiBox"
+            <ComboBox x:Name="dpiBox"
                       Grid.Column="1"
                       Width="75"
                       Margin="0 0 5 0"
                       IsEditable="False"
                       SelectionChanged="DpiBox_OnSelectionChanged">
-                <ComboBoxItem Style="{x:Null}">
+                <ComboBoxItem>
                     <TextBlock Style="{x:Null}"
                                Text="96" />
                 </ComboBoxItem>
-                <ComboBoxItem Style="{x:Null}">
+                <ComboBoxItem>
                     <TextBlock Style="{x:Null}"
                                Text="150" />
                 </ComboBoxItem>
-                <ComboBoxItem Style="{x:Null}"
-                              IsSelected="True">
+                <ComboBoxItem IsSelected="True">
                     <TextBlock Style="{x:Null}"
                                Text="300" />
                 </ComboBoxItem>
-                <ComboBoxItem Style="{x:Null}">
+                <ComboBoxItem>
                     <TextBlock Style="{x:Null}"
                                Text="600" />
                 </ComboBoxItem>
@@ -167,8 +161,7 @@
                        VerticalAlignment="Center"
                        Text="DPI" />
 
-            <Slider Style="{x:Null}"
-                    x:Name="ZScaleSlider"
+            <Slider x:Name="ZScaleSlider"
                     Width="100"
                     Cursor="Arrow"
                     Focusable="False"
