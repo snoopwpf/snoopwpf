@@ -1,6 +1,7 @@
 namespace Snoop
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
@@ -9,12 +10,10 @@ namespace Snoop
 
     public class WindowInfo
     {
-        private static readonly Dictionary<IntPtr, WindowInfo> windowInfoCache = new();
+        private static readonly ConcurrentDictionary<IntPtr, WindowInfo> windowInfoCache = new();
 
         // we have to match "HwndWrapper[{0};{1};{2}]" which is used at https://referencesource.microsoft.com/#WindowsBase/Shared/MS/Win32/HwndWrapper.cs,2a8e13c293bb3f8c
         private static readonly Regex windowClassNameRegex = new(@"^HwndWrapper\[.*;.*;.*\]$", RegexOptions.Compiled);
-
-        private IList<NativeMethods.MODULEENTRY32>? modules;
 
         private ProcessInfo? owningProcessInfo;
 
@@ -42,7 +41,10 @@ namespace Snoop
             }
 
             windowInfo = new(hwnd, owningProcess);
-            windowInfoCache.Add(hwnd, windowInfo);
+            while (windowInfoCache.TryAdd(hwnd, windowInfo) == false)
+            {
+            }
+
             return windowInfo;
         }
 
@@ -50,8 +52,6 @@ namespace Snoop
         {
             windowInfoCache.Clear();
         }
-
-        public IList<NativeMethods.MODULEENTRY32> Modules => this.modules ??= NativeMethods.GetModulesFromWindowHandle(this.HWnd).ToList();
 
         private bool? isValidProcess;
 
@@ -73,15 +73,14 @@ namespace Snoop
                         return this.isValidProcess.Value;
                     }
 
-                    var process = this.OwningProcessInfo;
-                    if (process is null)
+                    if (this.OwningProcessId == -1)
                     {
                         this.isValidProcess = false;
                         return this.isValidProcess.Value;
                     }
 
                     // else determine the process validity and cache it.
-                    if (process.Process.Id == snoopProcessId)
+                    if (this.OwningProcessId == snoopProcessId)
                     {
                         this.isValidProcess = false;
 
@@ -119,7 +118,7 @@ namespace Snoop
                             // sometimes the module names aren't always the same case. compare case insensitive.
                             // see for more info: http://snoopwpf.codeplex.com/workitem/6090
 
-                            foreach (var module in this.Modules)
+                            foreach (var module in NativeMethods.GetModulesFromWindowHandle(this.HWnd))
                             {
                                 if (module.szModule.StartsWith("PresentationFramework", StringComparison.OrdinalIgnoreCase)
                                     || module.szModule.StartsWith("PresentationCore", StringComparison.OrdinalIgnoreCase)
@@ -141,6 +140,22 @@ namespace Snoop
             }
         }
 
+        private int? owningProcessId;
+
+        public int OwningProcessId
+        {
+            get
+            {
+                if (this.owningProcessId is null)
+                {
+                    NativeMethods.GetWindowThreadProcessId(this.HWnd, out var processId);
+                    this.owningProcessId = processId;
+                }
+
+                return this.owningProcessId.Value;
+            }
+        }
+
         public ProcessInfo? OwningProcessInfo
         {
             get
@@ -150,20 +165,22 @@ namespace Snoop
                     return this.owningProcessInfo;
                 }
 
-                var windowThreadProcess = NativeMethods.GetWindowThreadProcess(this.HWnd);
-
-                if (windowThreadProcess is not null)
+                try
                 {
-                    return this.owningProcessInfo ??= new(windowThreadProcess);
-                }
+                    var windowProcess = Process.GetProcessById(this.OwningProcessId);
 
-                return null;
+                    return this.owningProcessInfo = new(windowProcess);
+                }
+                catch
+                {
+                    return null;
+                }
             }
         }
 
         public IntPtr HWnd { get; }
 
-        public string Description => $"{this.WindowTitle} - {this.OwningProcessInfo?.Process?.ProcessName ?? string.Empty} [{this.OwningProcessInfo?.Process?.Id}]";
+        public string Description => $"{this.WindowTitle} - {this.OwningProcessInfo?.Process.ProcessName ?? string.Empty} [{this.OwningProcessId}]";
 
         #region UI Binding sources
 
@@ -171,14 +188,13 @@ namespace Snoop
         {
             get
             {
-                var processInfo = this.OwningProcessInfo;
                 var windowTitle = NativeMethods.GetText(this.HWnd);
 
                 if (string.IsNullOrEmpty(windowTitle))
                 {
                     try
                     {
-                        windowTitle = processInfo?.Process.MainWindowTitle;
+                        windowTitle = this.OwningProcessInfo?.Process.MainWindowTitle;
                     }
                     catch (InvalidOperationException)
                     {
@@ -191,9 +207,7 @@ namespace Snoop
             }
         }
 
-        public string? ProcessName => this.OwningProcessInfo?.Process?.ProcessName;
-
-        public int ProcessId => this.OwningProcessInfo?.Process?.Id ?? -1;
+        public string? ProcessName => this.OwningProcessInfo?.Process.ProcessName;
 
         #endregion
 

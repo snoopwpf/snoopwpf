@@ -117,7 +117,7 @@ namespace Snoop.Infrastructure
         /// <param name="property">the property around which we are constructing this PropertyInformation object</param>
         /// <param name="binding">the <see cref="BindingBase"/> from which the value should be retrieved</param>
         /// <param name="propertyDisplayName">the display name for the property that goes in the name column</param>
-        public PropertyInformation(object target, PropertyDescriptor property, BindingBase binding, string propertyDisplayName)
+        public PropertyInformation(object target, PropertyDescriptor? property, BindingBase binding, string propertyDisplayName)
         {
             this.Target = target;
             this.property = property;

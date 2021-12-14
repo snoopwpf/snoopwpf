@@ -118,7 +118,7 @@ namespace Snoop.Views.TriggersTab
             }
         }
 
-        private void UpdateTriggerList(object target)
+        private void UpdateTriggerList(object? target)
         {
             if (target is null)
             {
@@ -127,12 +127,8 @@ namespace Snoop.Views.TriggersTab
 
             if (target is FrameworkElement fe)
             {
-                var style = fe.Style;
                 // If the target does not have an explicit style, try to find the default style
-                if (style is null)
-                {
-                    style = fe.TryFindResource(fe.GetType()) as Style;
-                }
+                var style = fe.Style ?? fe.TryFindResource(fe.GetType()) as Style;
 
                 if (style is not null)
                 {
@@ -144,12 +140,8 @@ namespace Snoop.Views.TriggersTab
 
             if (target is FrameworkContentElement fec)
             {
-                var style = fec.Style;
                 // If the target does not have an explicit style, try to find the default style
-                if (style is null)
-                {
-                    style = fec.TryFindResource(fec.GetType()) as Style;
-                }
+                var style = fec.Style ?? fec.TryFindResource(fec.GetType()) as Style;
 
                 if (style is not null)
                 {
@@ -157,22 +149,20 @@ namespace Snoop.Views.TriggersTab
                 }
             }
 
-            var control = target as Control;
-            if (control is not null && control.Template is not null)
+            if (target is Control { Template: { } } control)
             {
                 this.AddTriggers(control, control.Template.Triggers, TriggerSource.ControlTemplate);
             }
 
-            var contentControl = target as ContentControl;
-            if (contentControl is not null && contentControl.ContentTemplate is not null)
+            switch (target)
             {
-                this.AddTriggers(contentControl, contentControl.ContentTemplate.Triggers, TriggerSource.DataTemplate);
-            }
+                case ContentControl { ContentTemplate: { } } contentControl:
+                    this.AddTriggers(contentControl, contentControl.ContentTemplate.Triggers, TriggerSource.DataTemplate);
+                    break;
 
-            var contentPresenter = target as ContentPresenter;
-            if (contentPresenter is not null && contentPresenter.ContentTemplate is not null)
-            {
-                this.AddTriggers(contentPresenter, contentPresenter.ContentTemplate.Triggers, TriggerSource.DataTemplate);
+                case ContentPresenter { ContentTemplate: { } } contentPresenter:
+                    this.AddTriggers(contentPresenter, contentPresenter.ContentTemplate.Triggers, TriggerSource.DataTemplate);
+                    break;
             }
         }
 

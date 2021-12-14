@@ -52,17 +52,35 @@ namespace Snoop.Infrastructure
             }
         }
 
-        public static List<IntPtr> GetRootWindowsOfCurrentProcess()
+        public static Dictionary<int, IList<IntPtr>> GetProcessesAndWindows()
         {
-            using (var currentProcess = Process.GetCurrentProcess())
+            var map = new Dictionary<int, IList<IntPtr>>();
+            var rootWindows = TopLevelWindows;
+
+            foreach (var rootWindow in rootWindows)
             {
-                return GetRootWindowsOfProcess(currentProcess.Id);
+                GetWindowThreadProcessId(rootWindow, out var processId);
+
+                if (map.TryGetValue(processId, out var windows) == false)
+                {
+                    windows = new List<IntPtr>();
+                    map.Add(processId, windows);
+                }
+
+                windows.Add(rootWindow);
             }
+
+            return map;
         }
 
         public static List<IntPtr> GetRootWindowsOfProcess(int pid)
         {
             var rootWindows = TopLevelWindows;
+            return GetRootWindowsOfProcess(pid, rootWindows);
+        }
+
+        public static List<IntPtr> GetRootWindowsOfProcess(int pid, IntPtr[] rootWindows)
+        {
             var dsProcRootWindows = new List<IntPtr>();
 
             foreach (var hWnd in rootWindows)
@@ -77,29 +95,13 @@ namespace Snoop.Infrastructure
             return dsProcRootWindows;
         }
 
-        public static Process? GetWindowThreadProcess(IntPtr hwnd)
-        {
-            int processID;
-            GetWindowThreadProcessId(hwnd, out processID);
-
-            try
-            {
-                return Process.GetProcessById(processID);
-            }
-            catch (ArgumentException)
-            {
-                return null;
-            }
-        }
-
         private delegate bool EnumWindowsCallBackDelegate(IntPtr hwnd, IntPtr lParam);
 
         private static bool EnumWindowsCallback(IntPtr hwnd, IntPtr lParam)
         {
             var target = ((GCHandle)lParam).Target;
-            var intPtrs = target as List<IntPtr>;
 
-            if (intPtrs is null)
+            if (target is not List<IntPtr> intPtrs)
             {
                 return false;
             }
@@ -434,7 +436,7 @@ namespace Snoop.Infrastructure
             foreach (ProcessModule? mod in Process.GetCurrentProcess().Modules)
             {
                 if (mod?.ModuleName is null
-                    || mod?.FileName is null)
+                    || mod.FileName is null)
                 {
                     continue;
                 }

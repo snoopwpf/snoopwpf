@@ -181,7 +181,7 @@ namespace Snoop
 
             if (result?.Success == false)
             {
-                ErrorDialog.ShowDialog(result.AttachException, "Can't Snoop the process", $"Failed to attach to '{result.WindowName}'.", true);
+                ErrorDialog.ShowDialog(result.AttachException, "Can't Snoop the process", $"Failed to attach to '{windowInfo.Description}'.", true);
             }
         }
 
@@ -191,7 +191,7 @@ namespace Snoop
 
             if (result?.Success == false)
             {
-                ErrorDialog.ShowDialog(result.AttachException, "Can't Snoop the process", $"Failed to attach to '{result.WindowName}'.", true);
+                ErrorDialog.ShowDialog(result.AttachException, "Can't Snoop the process", $"Failed to attach to '{windowInfo.Description}'.", true);
             }
         }
 

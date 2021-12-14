@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <TargetFrameworks>net5.0-windows;netcoreapp3.1;netcoreapp3.0;net451</TargetFrameworks>
+    <TargetFrameworks>net5.0-windows;netcoreapp3.1;netcoreapp3.0;$(MinTargetFramework)</TargetFrameworks>
 
     <RootNamespace>Snoop</RootNamespace>
 
@@ -20,12 +20,12 @@
     <_WpfCommonNetFxReference Remove="System.Windows.Controls.Ribbon" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net451'">
+  <ItemGroup Condition="'$(TargetFramework)' == '$(MinTargetFramework)'">
     <Reference Include="System.Configuration" />
     <PackageReference Include="microsoft.powershell.3.referenceassemblies" PrivateAssets="All" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' != 'net451'">
+  <ItemGroup Condition="'$(TargetFramework)' != '$(MinTargetFramework)'">
     <PackageReference Include="System.Management.Automation" PrivateAssets="All" />
   </ItemGroup>
 

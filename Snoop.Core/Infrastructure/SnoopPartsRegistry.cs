@@ -26,37 +26,37 @@ namespace Snoop.Infrastructure
         /// <returns><c>true</c> if <paramref name="dependencyObject"/> belongs to Snoop's visual tree. <c>false</c> otherwise.</returns>
         public static bool IsPartOfSnoopVisualTree(this DependencyObject? dependencyObject)
         {
-            if (dependencyObject is null)
-            {
-                return false;
-            }
-
-            if (SnoopAttachedProperties.GetIsSnoopPart(dependencyObject))
-            {
-                return true;
-            }
-
-            foreach (var registeredSnoopVisual in registeredSnoopVisualTreeRoots.ToList())
-            {
-                if (registeredSnoopVisual.IsAlive == false)
-                {
-                    registeredSnoopVisualTreeRoots.Remove(registeredSnoopVisual);
-                    continue;
-                }
-
-                var snoopVisual = (Visual?)registeredSnoopVisual.Target;
-
-                if (snoopVisual is null)
-                {
-                    continue;
-                }
-
-                if (ReferenceEquals(dependencyObject, snoopVisual)
-                    || (dependencyObject.Dispatcher == snoopVisual.Dispatcher && (dependencyObject as Visual)?.IsDescendantOf(snoopVisual) == true))
-                {
-                    return true;
-                }
-            }
+            // if (dependencyObject is null)
+            // {
+            //     return false;
+            // }
+            //
+            // if (SnoopAttachedProperties.GetIsSnoopPart(dependencyObject))
+            // {
+            //     return true;
+            // }
+            //
+            // foreach (var registeredSnoopVisual in registeredSnoopVisualTreeRoots.ToList())
+            // {
+            //     if (registeredSnoopVisual.IsAlive == false)
+            //     {
+            //         registeredSnoopVisualTreeRoots.Remove(registeredSnoopVisual);
+            //         continue;
+            //     }
+            //
+            //     var snoopVisual = (Visual?)registeredSnoopVisual.Target;
+            //
+            //     if (snoopVisual is null)
+            //     {
+            //         continue;
+            //     }
+            //
+            //     if (ReferenceEquals(dependencyObject, snoopVisual)
+            //         || (dependencyObject.Dispatcher == snoopVisual.Dispatcher && (dependencyObject as Visual)?.IsDescendantOf(snoopVisual) == true))
+            //     {
+            //         return true;
+            //     }
+            // }
 
             return false;
         }

@@ -6,6 +6,7 @@
 namespace Snoop
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Diagnostics;
@@ -41,7 +42,7 @@ namespace Snoop
         public AppChooser()
         {
             this.WindowInfos = CollectionViewSource.GetDefaultView(this.windowInfos);
-            this.WindowInfos.SortDescriptions.Add(new SortDescription(nameof(WindowInfo.ProcessId), ListSortDirection.Ascending));
+            this.WindowInfos.SortDescriptions.Add(new SortDescription(nameof(WindowInfo.OwningProcessId), ListSortDirection.Ascending));
             this.SortColumn = 1;
 
             this.InitializeComponent();
@@ -68,20 +69,40 @@ namespace Snoop
                     {
                         Mouse.OverrideCursor = Cursors.Wait;
 
-                        var processes = Process.GetProcesses().Except(new[] { Process.GetCurrentProcess() });
+                        using var currentProcess = Process.GetCurrentProcess();
+                        var currentProcessId = currentProcess.Id;
 
-                        foreach (var process in processes)
+                        var processesAndWindows = NativeMethods.GetProcessesAndWindows();
+
+                        var processToWindowInfo = new ConcurrentDictionary<int, WindowInfo>();
+
+                        foreach (var processId in processesAndWindows.Keys)
                         {
-                            var windows = NativeMethods.GetRootWindowsOfProcess(process.Id);
-                            var windowInfoCollection = windows.Select(h => WindowInfo.GetWindowInfo(h, process));
+                            if (processId == currentProcessId
+                                || processesAndWindows.TryGetValue(processId, out var windows) == false)
+                            {
+                                continue;
+                            }
+
+                            var windowInfoCollection = windows.Select(h => WindowInfo.GetWindowInfo(h));
 
                             foreach (var windowInfo in windowInfoCollection)
                             {
-                                if (windowInfo.IsValidProcess && !this.IsAlreadyInList(process))
+                                if (processToWindowInfo.ContainsKey(processId)
+                                    || windowInfo.IsValidProcess == false)
                                 {
-                                    this.windowInfos.Add(windowInfo);
+                                    break;
+                                }
+
+                                while (processToWindowInfo.TryAdd(processId, windowInfo) == false)
+                                {
                                 }
                             }
+                        }
+
+                        foreach (var windowInfo in processToWindowInfo.Values)
+                        {
+                            this.windowInfos.Add(windowInfo);
                         }
 
                         if (this.windowInfos.Count > 0)
@@ -153,20 +174,6 @@ namespace Snoop
             base.OnClosed(e);
         }
 
-        private bool IsAlreadyInList(Process process)
-        {
-            foreach (var window in this.windowInfos)
-            {
-                if (window.OwningProcessInfo is not null
-                    && window.OwningProcessInfo.Process.Id == process.Id)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
         private void HandleCanInspectOrMagnifyCommand(object sender, CanExecuteRoutedEventArgs e)
         {
             if (this.WindowInfos.CurrentItem is not null)
@@ -179,23 +186,35 @@ namespace Snoop
 
         private void HandleInspectCommand(object sender, ExecutedRoutedEventArgs e)
         {
-            var window = (WindowInfo)this.WindowInfos.CurrentItem;
-            var result = window?.OwningProcessInfo?.Snoop(window.HWnd);
+            var window = (WindowInfo?)this.WindowInfos.CurrentItem;
+
+            if (window is null)
+            {
+                return;
+            }
+
+            var result = window.OwningProcessInfo?.Snoop(window.HWnd);
 
             if (result?.Success == false)
             {
-                ErrorDialog.ShowDialog(result.AttachException, "Can't Snoop the process", $"Failed to attach to '{result.WindowName}'.", true);
+                ErrorDialog.ShowDialog(result.AttachException, "Can't Snoop the process", $"Failed to attach to '{window.Description}'.", true);
             }
         }
 
         private void HandleMagnifyCommand(object sender, ExecutedRoutedEventArgs e)
         {
-            var window = (WindowInfo)this.WindowInfos.CurrentItem;
+            var window = (WindowInfo?)this.WindowInfos.CurrentItem;
+
+            if (window is null)
+            {
+                return;
+            }
+
             var result = window.OwningProcessInfo?.Magnify(window.HWnd);
 
             if (result?.Success == false)
             {
-                ErrorDialog.ShowDialog(result.AttachException, "Can't Snoop the process", $"Failed to attach to '{result.WindowName}'.", true);
+                ErrorDialog.ShowDialog(result.AttachException, "Can't Snoop the process", $"Failed to attach to '{window.Description}'.", true);
             }
         }
 
@@ -257,44 +276,46 @@ namespace Snoop
         /// <param name="e">Arguments</param>
         private void HandleDropDownColumn_OnMouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (sender is TextBlock textBlock)
+            if (sender is not TextBlock textBlock)
             {
-                var gridColumn = (int)textBlock.GetValue(Grid.ColumnProperty);
-                this.SortColumn = gridColumn;
-
-                var propertyName = default(string);
-                switch (gridColumn)
-                {
-                    //by pid
-                    case 1:
-                        propertyName = nameof(WindowInfo.ProcessId);
-                        break;
-                    //by process name
-                    case 2:
-                        propertyName = nameof(WindowInfo.ProcessName);
-                        break;
-                    //by window name
-                    case 3:
-                        propertyName = nameof(WindowInfo.WindowTitle);
-                        break;
-                }
-
-                //read current sort order
-                var sortDirection = this.WindowInfos.SortDescriptions.FirstOrDefault().Direction;
-
-                //1 - read current target property for sorting.
-                //2 - if current property not changed from last click - invert direction
-                //3 - if property changed - direction does not change
-                var currentSortProperty = this.WindowInfos.SortDescriptions.FirstOrDefault().PropertyName;
-                if (string.Equals(currentSortProperty, propertyName))
-                {
-                    //toggle sort direction
-                    sortDirection = sortDirection == ListSortDirection.Ascending ? ListSortDirection.Descending : ListSortDirection.Ascending;
-                }
-
-                this.WindowInfos.SortDescriptions.Clear();
-                this.WindowInfos.SortDescriptions.Add(new SortDescription(propertyName, sortDirection));
+                return;
             }
+
+            var gridColumn = (int)textBlock.GetValue(Grid.ColumnProperty);
+            this.SortColumn = gridColumn;
+
+            var propertyName = string.Empty;
+            switch (gridColumn)
+            {
+                //by pid
+                case 1:
+                    propertyName = nameof(WindowInfo.OwningProcessId);
+                    break;
+                //by process name
+                case 2:
+                    propertyName = nameof(WindowInfo.ProcessName);
+                    break;
+                //by window name
+                case 3:
+                    propertyName = nameof(WindowInfo.WindowTitle);
+                    break;
+            }
+
+            //read current sort order
+            var sortDirection = this.WindowInfos.SortDescriptions.FirstOrDefault().Direction;
+
+            //1 - read current target property for sorting.
+            //2 - if current property not changed from last click - invert direction
+            //3 - if property changed - direction does not change
+            var currentSortProperty = this.WindowInfos.SortDescriptions.FirstOrDefault().PropertyName;
+            if (string.Equals(currentSortProperty, propertyName))
+            {
+                //toggle sort direction
+                sortDirection = sortDirection == ListSortDirection.Ascending ? ListSortDirection.Descending : ListSortDirection.Ascending;
+            }
+
+            this.WindowInfos.SortDescriptions.Clear();
+            this.WindowInfos.SortDescriptions.Add(new SortDescription(propertyName, sortDirection));
         }
     }
 
@@ -312,18 +333,8 @@ namespace Snoop
             this.AttachException = attachException;
         }
 
-        public AttachResult(Exception attachException, string windowName)
-        {
-            this.Success = false;
-
-            this.AttachException = attachException;
-            this.WindowName = windowName;
-        }
-
         public bool Success { get; }
 
         public Exception? AttachException { get; }
-
-        public string? WindowName { get; }
     }
 }

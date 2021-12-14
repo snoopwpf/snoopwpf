@@ -1,177 +1,200 @@
-<!--
-(c) Copyright Cory Plotts.
-This source is subject to the Microsoft Public License (Ms-PL).
-Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-All other rights reserved.
+﻿<!--
+    (c) Copyright Cory Plotts.
+    This source is subject to the Microsoft Public License (Ms-PL).
+    Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
+    All other rights reserved.
 -->
-<Grid
-	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:snoop="clr-namespace:Snoop"
-	xmlns:d="http://schemas.microsoft.com/expression/interactivedesigner/2006"
-	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:infrastructure="clr-namespace:Snoop.Infrastructure"
-	xmlns:views="clr-namespace:Snoop.Views"
-	xmlns:converters="clr-namespace:Snoop.Converters"
-	xmlns:controls="clr-namespace:Snoop.Controls"
-	mc:Ignorable="d"
-	x:Class="Snoop.Views.EventsView"
-	x:Name="Events"
-	MinHeight="0"
-	MinWidth="0"
->
-	<Grid.Resources>
-		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="../Controls/ProperTreeViewResources.xaml"/>
-			</ResourceDictionary.MergedDictionaries>
+<Grid x:Class="Snoop.Views.EventsView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:controls="clr-namespace:Snoop.Controls"
+      xmlns:converters="clr-namespace:Snoop.Converters"
+      xmlns:d="http://schemas.microsoft.com/expression/interactivedesigner/2006"
+      xmlns:infrastructure="clr-namespace:Snoop.Infrastructure"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:snoop="clr-namespace:Snoop"
+      xmlns:views="clr-namespace:Snoop.Views"
+      x:Name="Events"
+      MinWidth="0"
+      MinHeight="0"
+      mc:Ignorable="d">
+    <Grid.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Controls/ProperTreeViewResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
 
-			<DataTemplate x:Key="CategoryTemplate">
-				<TextBlock Style="{x:Null}" Text="{Binding Path=Name}" FontWeight="Bold" Margin="2,5,0,0"/>
-			</DataTemplate>
+            <DataTemplate x:Key="CategoryTemplate">
+                <TextBlock Style="{x:Null}"
+                           Margin="2 5 0 0"
+                           FontWeight="Bold"
+                           Text="{Binding Path=Name}" />
+            </DataTemplate>
 
-			<DataTemplate DataType="{x:Type RoutedEventArgs}">
-				<TextBlock Style="{x:Null}" Text="{Binding RoutedEvent.Name}" />
-			</DataTemplate>
+            <DataTemplate DataType="{x:Type RoutedEventArgs}">
+                <TextBlock Style="{x:Null}"
+                           Text="{Binding RoutedEvent.Name}" />
+            </DataTemplate>
 
-			<DataTemplate DataType="{x:Type ExecutedRoutedEventArgs}">
-				<StackPanel Orientation="Horizontal">
-                    <TextBlock Style="{x:Null}" Text="{Binding Command, Converter={x:Static converters:ObjectToStringConverter.Instance}}"/>
-				</StackPanel>
-			</DataTemplate>
+            <DataTemplate DataType="{x:Type ExecutedRoutedEventArgs}">
+                <StackPanel Style="{x:Null}"
+                            Orientation="Horizontal">
+                    <TextBlock Style="{x:Null}"
+                               Text="{Binding Command, Converter={x:Static converters:ObjectToStringConverter.Instance}}" />
+                </StackPanel>
+            </DataTemplate>
 
             <DataTemplate DataType="{x:Type infrastructure:EventTracker}">
-				<CheckBox Style="{x:Null}" IsChecked="{Binding IsEnabled}">
-					<TextBlock Style="{x:Null}" Text="{Binding RoutedEvent.Name}"/>
-				</CheckBox>
-			</DataTemplate>
+                <CheckBox IsChecked="{Binding IsEnabled}">
+                    <TextBlock Style="{x:Null}"
+                               Text="{Binding RoutedEvent.Name}" />
+                </CheckBox>
+            </DataTemplate>
 
-            <HierarchicalDataTemplate ItemsSource="{Binding Stack}" DataType="{x:Type infrastructure:TrackedEvent}">
-				<Grid x:Name="Grid" Background="Transparent">
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="*"/>
-						<ColumnDefinition Width="*"/>
-					</Grid.ColumnDefinitions>
-					<Grid.RowDefinitions>
-						<RowDefinition Height="*"/>
-						<RowDefinition Height="*"/>
-					</Grid.RowDefinitions>
-					<StackPanel Orientation="Horizontal">
-						<ContentControl Style="{x:Null}" Content="{Binding EventArgs}" Focusable="False"/>
-						<TextBlock Style="{x:Null}" Text=" on "/>
-                        <TextBlock Style="{x:Null}" Text="{Binding Originator.Handler, Converter={x:Static converters:ObjectToStringConverter.Instance}}" Grid.Column="1"/>
-					</StackPanel>
-					<ContentControl
-						x:Name="Handler"
-					    Style="{x:Null}"
-						Grid.Row="1"
-						Grid.ColumnSpan="2"
-						Visibility="Collapsed"
-						Focusable="False"
-					>
-						<StackPanel Orientation="Horizontal">
-							<TextBlock Style="{x:Null}" Text="Handled by: "/>
-                            <TextBlock Style="{x:Null}" Text="{Binding HandledBy, Converter={x:Static converters:ObjectToStringConverter.Instance}}"/>
-						</StackPanel>
-					</ContentControl>
-				</Grid>
-				<HierarchicalDataTemplate.Triggers>
-					<DataTrigger Binding="{Binding Handled}" Value="True">
-						<Setter TargetName="Handler" Property="Visibility" Value="Visible"/>
-					</DataTrigger>
-				</HierarchicalDataTemplate.Triggers>
-			</HierarchicalDataTemplate>
+            <HierarchicalDataTemplate DataType="{x:Type infrastructure:TrackedEvent}"
+                                      ItemsSource="{Binding Stack}">
+                <Grid Style="{x:Null}"
+                      x:Name="Grid"
+                      Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Style="{x:Null}"
+                                Orientation="Horizontal">
+                        <ContentControl Style="{x:Null}"
+                                        Content="{Binding EventArgs}"
+                                        Focusable="False" />
+                        <TextBlock Style="{x:Null}"
+                                   Text=" on " />
+                        <TextBlock Style="{x:Null}"
+                                   Grid.Column="1"
+                                   Text="{Binding Originator.Handler, Converter={x:Static converters:ObjectToStringConverter.Instance}}" />
+                    </StackPanel>
+                    <ContentControl Style="{x:Null}"
+                                    x:Name="Handler"
+                                    Grid.Row="1"
+                                    Grid.ColumnSpan="2"
+                                    Focusable="False"
+                                    Visibility="Collapsed">
+                        <StackPanel Style="{x:Null}"
+                                    Orientation="Horizontal">
+                            <TextBlock Style="{x:Null}"
+                                       Text="Handled by: " />
+                            <TextBlock Style="{x:Null}"
+                                       Text="{Binding HandledBy, Converter={x:Static converters:ObjectToStringConverter.Instance}}" />
+                        </StackPanel>
+                    </ContentControl>
+                </Grid>
+                <HierarchicalDataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding Handled}" Value="True">
+                        <Setter TargetName="Handler" Property="Visibility" Value="Visible" />
+                    </DataTrigger>
+                </HierarchicalDataTemplate.Triggers>
+            </HierarchicalDataTemplate>
 
             <HierarchicalDataTemplate DataType="{x:Type infrastructure:EventEntry}">
-				<Grid Name="Grid" Background="Transparent">
-					<Grid.ToolTip>
-						<TextBlock Style="{x:Null}" Text="Click to select the element that handled this"/>
-					</Grid.ToolTip>
-					<StackPanel Orientation="Horizontal">
-                        <TextBlock Style="{x:Null}" Text="{Binding Handler, Converter={x:Static converters:ObjectToStringConverter.Instance}}"/>
-						<TextBlock Style="{x:Null}" Text=" handled: "/>
-						<TextBlock Style="{x:Null}" Text="{Binding Handled}" Grid.Column="1"/>
-					</StackPanel>
-				</Grid>
-			</HierarchicalDataTemplate>
+                <Grid Style="{x:Null}"
+                      Name="Grid"
+                      Background="Transparent">
+                    <Grid.ToolTip>
+                        <TextBlock Style="{x:Null}"
+                                   Text="Click to select the element that handled this" />
+                    </Grid.ToolTip>
+                    <StackPanel Style="{x:Null}"
+                                Orientation="Horizontal">
+                        <TextBlock Style="{x:Null}"
+                                   Text="{Binding Handler, Converter={x:Static converters:ObjectToStringConverter.Instance}}" />
+                        <TextBlock Style="{x:Null}"
+                                   Text=" handled: " />
+                        <TextBlock Style="{x:Null}"
+                                   Grid.Column="1"
+                                   Text="{Binding Handled}" />
+                    </StackPanel>
+                </Grid>
+            </HierarchicalDataTemplate>
         </ResourceDictionary>
-	</Grid.Resources>
+    </Grid.Resources>
 
-	<Grid.RowDefinitions>
-		<RowDefinition Height="Auto"/>
-        <RowDefinition Height="*"/>
-        <RowDefinition Height="Auto"/>
+    <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="*" />
+        <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
 
     <controls:NoSelectionComboBox x:Name="EventChooser"
-                                  Margin="0,0,20,0"
-                                  infrastructure:ComboBoxSettings.RegisterAsSnoopPart="True"
+                                  Margin="0 0 20 0"
                                   HorizontalAlignment="Stretch"
                                   VerticalAlignment="Stretch"
-                                  ItemsSource="{Binding ElementName=Events, Path=AvailableEvents}"
-                                  IsSynchronizedWithCurrentItem="True"
+                                  infrastructure:ComboBoxSettings.RegisterAsSnoopPart="True"
+                                  GroupHeaderTemplate="{StaticResource CategoryTemplate}"
                                   Header="Change tracked events"
+                                  IsSynchronizedWithCurrentItem="True"
+                                  ItemsSource="{Binding ElementName=Events, Path=AvailableEvents}"
                                   ResetSettingsCommand="{x:Static views:EventsView.ResetEventTrackersToDefaultCommand}"
-                                  ResetSettingsToolTip="Reset the enabled event trackers."
-                                  GroupHeaderTemplate="{StaticResource CategoryTemplate}">
+                                  ResetSettingsToolTip="Reset the enabled event trackers.">
         <ComboBox.ToolTip>
-            <TextBlock Style="{x:Null}" Text="Select which events you want to track."/>
+            <TextBlock Style="{x:Null}"
+                       Text="Select which events you want to track." />
         </ComboBox.ToolTip>
     </controls:NoSelectionComboBox>
 
-	<Button
-        Grid.Row="0"
-        Style="{x:Null}"
-		Width="18"
-		Height="18"
-		HorizontalAlignment="Right"
-		Padding="3"
-		Command="{x:Static views:EventsView.ClearCommand}"
-	>
-		<Grid>
-			<Path
-				Stretch="Fill"
-				Stroke="Black"
-				StrokeThickness="2"
-				Data="M18.33996,8.7972167 L1.8622991,25.274878"
-			/>
-			<Path
-				Stretch="Fill"
-				Stroke="Black"
-				StrokeThickness="2"
-				Data="M19.831014,18.751491 L4.5959764,3.5164535"
-			/>
-		</Grid>
-		<Button.ToolTip>
-			<TextBlock Style="{x:Null}" Text="Clear the current list of events."/>
-		</Button.ToolTip>
-	</Button>
+    <Button Grid.Row="0"
+            Width="18"
+            Height="18"
+            Padding="3"
+            HorizontalAlignment="Right"
+            Command="{x:Static views:EventsView.ClearCommand}">
+        <Grid>
+            <Path Data="M18.33996,8.7972167 L1.8622991,25.274878"
+                  Stretch="Fill"
+                  Stroke="Black"
+                  StrokeThickness="2" />
+            <Path Data="M19.831014,18.751491 L4.5959764,3.5164535"
+                  Stretch="Fill"
+                  Stroke="Black"
+                  StrokeThickness="2" />
+        </Grid>
+        <Button.ToolTip>
+            <TextBlock Style="{x:Null}"
+                       Text="Clear the current list of events." />
+        </Button.ToolTip>
+    </Button>
 
-	<TreeView
-		x:Name="EventTree"
-	    Style="{x:Null}"
-		SelectedItemChanged="EventTree_SelectedItemChanged"
-		Grid.Row="1"
-		ItemsSource="{Binding ElementName=Events, Path=InterestingEvents}"
-		HorizontalContentAlignment="Stretch">
-		<TreeView.ItemContainerStyle>
-			<Style BasedOn="{StaticResource ProperTreeViewItemStyle}" TargetType="{x:Type TreeViewItem}">
-				<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-				<Setter Property="HorizontalAlignment" Value="Stretch"/>
-				<Style.Triggers>
-					<DataTrigger Binding="{Binding Handled}" Value="True">
-						<Setter Property="Background" Value="LightGreen"/>
-					</DataTrigger>
-					<Trigger Property="IsSelected" Value="True">
-						<Setter Property="Background" Value="LightGray"/>
-					</Trigger>
-				</Style.Triggers>
-			</Style>
-		</TreeView.ItemContainerStyle>
-	</TreeView>
+    <TreeView x:Name="EventTree"
+              Grid.Row="1"
+              HorizontalContentAlignment="Stretch"
+              ItemsSource="{Binding ElementName=Events, Path=InterestingEvents}"
+              SelectedItemChanged="EventTree_SelectedItemChanged">
+        <TreeView.ItemContainerStyle>
+            <Style BasedOn="{StaticResource ProperTreeViewItemStyle}"
+                   TargetType="{x:Type TreeViewItem}">
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Handled}" Value="True">
+                        <Setter Property="Background" Value="LightGreen" />
+                    </DataTrigger>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="Background" Value="LightGray" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </TreeView.ItemContainerStyle>
+    </TreeView>
 
-    <StackPanel Style="{x:Null}" Orientation="Horizontal" Grid.Row="2">
-        <TextBlock Style="{x:Null}" Text="Maximum events displayed: "/>
-        <TextBox Style="{x:Null}" Text="{Binding ElementName=Events, Path=MaxEventsDisplayed}" MinWidth="64" VerticalAlignment="Stretch" />
+    <StackPanel Style="{x:Null}"
+                Grid.Row="2"
+                Orientation="Horizontal">
+        <TextBlock Style="{x:Null}"
+                   Text="Maximum events displayed: " />
+        <TextBox Style="{x:Null}"
+                 MinWidth="64"
+                 VerticalAlignment="Stretch"
+                 Text="{Binding ElementName=Events, Path=MaxEventsDisplayed}" />
     </StackPanel>
 </Grid>

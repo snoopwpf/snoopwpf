@@ -1,53 +1,50 @@
 ﻿<!--
-(c) Copyright Cory Plotts.
-This source is subject to the Microsoft Public License (Ms-PL).
-Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-All other rights reserved.
+    (c) Copyright Cory Plotts.
+    This source is subject to the Microsoft Public License (Ms-PL).
+    Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
+    All other rights reserved.
 -->
-<UserControl
-	x:Class="Snoop.Controls.ZoomerControl"
-	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-	mc:Ignorable="d"
-	Focusable="True"
-	xmlns:snoop="clr-namespace:Snoop"
-	xmlns:windows="clr-namespace:Snoop.Windows"
-	d:DesignWidth="300"
-	d:DesignHeight="300"
->
-	<Grid
-		x:Name="DocumentRoot"
-		Focusable="True"
-		ClipToBounds="True"
-		Mouse.MouseDown="Content_MouseDown"
-		Mouse.MouseMove="Content_MouseMove"
-		Mouse.MouseUp="Content_MouseUp"
-	>
-		<Grid.Background>
-			<Binding ElementName="ColorSlider" Path="Value" Converter="{x:Static windows:DoubleToWhitenessConverter.Default}" />
+<UserControl x:Class="Snoop.Controls.ZoomerControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:snoop="clr-namespace:Snoop"
+             xmlns:windows="clr-namespace:Snoop.Windows"
+             d:DesignHeight="300"
+             d:DesignWidth="300"
+             Focusable="True"
+             mc:Ignorable="d">
+    <Grid x:Name="DocumentRoot"
+          ClipToBounds="True"
+          Focusable="True"
+          Mouse.MouseDown="Content_MouseDown"
+          Mouse.MouseMove="Content_MouseMove"
+          Mouse.MouseUp="Content_MouseUp">
+        <Grid.Background>
+            <Binding Converter="{x:Static windows:DoubleToWhitenessConverter.Default}"
+                     ElementName="ColorSlider"
+                     Path="Value" />
         </Grid.Background>
 
-		<Viewbox x:Name="Viewbox" Style="{x:Null}" />
+        <Viewbox Style="{x:Null}"
+                 x:Name="Viewbox" />
 
-		<Slider
-			x:Name="ColorSlider"
-		    Style="{x:Null}"
-			Width="100"
-			HorizontalAlignment="Right"
-			VerticalAlignment="Top"
-			Margin="0,2,2,0"
-			Minimum="0"
-			Maximum="1"
-			Value=".75"
-			Opacity=".5"
-			Cursor="Arrow"
-			Focusable="False"
-		>
-			<Slider.ToolTip>
-				<TextBlock Style="{x:Null}" Text="Use this slider to adjust the Background from white to black."/>
-			</Slider.ToolTip>
-		</Slider>
-	</Grid>
+        <Slider x:Name="ColorSlider"
+                Width="100"
+                Margin="0 2 2 0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Cursor="Arrow"
+                Focusable="False"
+                Maximum="1"
+                Minimum="0"
+                Opacity=".5"
+                Value=".75">
+            <Slider.ToolTip>
+                <TextBlock Style="{x:Null}"
+                           Text="Use this slider to adjust the Background from white to black." />
+            </Slider.ToolTip>
+        </Slider>
+    </Grid>
 </UserControl>

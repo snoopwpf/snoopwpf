@@ -71,8 +71,21 @@
                 && this.GroupHeaderTemplate is not null)
             {
                 this.itemsControl.GroupStyle.Clear();
-                this.itemsControl.GroupStyle.Add(new GroupStyle { HeaderTemplate = this.GroupHeaderTemplate }); //, Panel = new ItemsPanelTemplate(new FrameworkElementFactory(typeof(WrapPanel))) });
+                this.itemsControl.GroupStyle.Add(new GroupStyle { HeaderTemplate = this.GroupHeaderTemplate, Panel = defaultItemsPanelTemplate });
             }
+        }
+
+        private static readonly ItemsPanelTemplate defaultItemsPanelTemplate = CreateDefaultItemsPanelTemplate();
+
+        private static ItemsPanelTemplate CreateDefaultItemsPanelTemplate()
+        {
+            var frameworkElementFactory = new FrameworkElementFactory(typeof(VirtualizingStackPanel));
+            frameworkElementFactory.SetValue(StyleProperty, new Style(typeof(VirtualizingPanel), null));
+
+            var template = new ItemsPanelTemplate(frameworkElementFactory);
+            template.Seal();
+
+            return template;
         }
     }
 }

@@ -1,61 +1,56 @@
-﻿<UserControl
-	x:Class="Snoop.PowerShell.EmbeddedShellView"
-	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-	mc:Ignorable="d"
-	d:DesignHeight="300"
-	d:DesignWidth="300"
->
-	<UserControl.Resources>
-		<Style TargetType="TextBox">
-			<Setter Property="FontFamily" Value="Consolas"/>
-		</Style>
-	</UserControl.Resources>
+﻿<UserControl x:Class="Snoop.PowerShell.EmbeddedShellView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             d:DesignHeight="300"
+             d:DesignWidth="300"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="FontFamily" Value="Consolas" />
+        </Style>
+    </UserControl.Resources>
 
-	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="*"/>
-			<RowDefinition Height="Auto"/>
-		</Grid.RowDefinitions>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-		<StackPanel HorizontalAlignment="Right">
-			<CheckBox
-				x:Name="autoExpandCheckBox"
-			    Style="{x:Null}"
-				IsChecked="True">
-				<TextBlock Style="{x:Null}" Text="Auto-expand"/>
-				<CheckBox.ToolTip>
-					<TextBlock
-					    Style="{x:Null}"
-						MaxWidth="300"
-						Text="Automatically expands the selected tree item when changed from the PowerShell provider."
-						TextWrapping="Wrap"
-					/>
-				</CheckBox.ToolTip>
-			</CheckBox>
-		</StackPanel>
-		<TextBox
-			x:Name="outputTextBox"
-		    Style="{x:Null}"
-			Grid.Row="1"
-			AcceptsReturn="True"
-			ScrollViewer.VerticalScrollBarVisibility="Auto"
-			TextWrapping="Wrap"
-		/>
-		<TextBox
-			x:Name="commandTextBox"
-		    Style="{x:Null}"
-			Grid.Row="2"
-		>
-			<TextBox.ToolTip>
-				<StackPanel MaxWidth="300">
-					<TextBlock Style="{x:Null}" Text="F5 - Reload Profile"/>
-					<TextBlock Style="{x:Null}" Text="F12 - Clear Output"/>
-				</StackPanel>
-			</TextBox.ToolTip>
-		</TextBox>
-	</Grid>
+        <StackPanel Style="{x:Null}"
+                    HorizontalAlignment="Right">
+            <CheckBox x:Name="autoExpandCheckBox"
+                      IsChecked="True">
+                <TextBlock Style="{x:Null}"
+                           Text="Auto-expand" />
+                <CheckBox.ToolTip>
+                    <TextBlock Style="{x:Null}"
+                               MaxWidth="300"
+                               Text="Automatically expands the selected tree item when changed from the PowerShell provider."
+                               TextWrapping="Wrap" />
+                </CheckBox.ToolTip>
+            </CheckBox>
+        </StackPanel>
+        <TextBox Style="{x:Null}"
+                 x:Name="outputTextBox"
+                 Grid.Row="1"
+                 AcceptsReturn="True"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                 TextWrapping="Wrap" />
+        <TextBox Style="{x:Null}"
+                 x:Name="commandTextBox"
+                 Grid.Row="2">
+            <TextBox.ToolTip>
+                <StackPanel Style="{x:Null}"
+                            MaxWidth="300">
+                    <TextBlock Style="{x:Null}"
+                               Text="F5 - Reload Profile" />
+                    <TextBlock Style="{x:Null}"
+                               Text="F12 - Clear Output" />
+                </StackPanel>
+            </TextBox.ToolTip>
+        </TextBox>
+    </Grid>
 </UserControl>

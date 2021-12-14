@@ -1,17 +1,17 @@
 ﻿<UserControl x:Class="Snoop.Views.HighlightSettingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:infrastructure="clr-namespace:Snoop.Infrastructure"
-             mc:Ignorable="d"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             x:Name="Control"
              d:DesignHeight="450"
              d:DesignWidth="800"
-             x:Name="Control">
+             mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Controls/ValueEditors/EditorTemplates.xaml"/>
+                <ResourceDictionary Source="../Controls/ValueEditors/EditorTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -24,26 +24,26 @@
         <Grid.Resources>
             <ResourceDictionary>
                 <Style x:Key="Snoop.Styles.Button.Large"
-                       TargetType="Button"
-                       BasedOn="{x:Null}">
-                    <Setter Property="MinWidth" Value="100" />
+                       BasedOn="{x:Null}"
+                       TargetType="Button">
                     <Setter Property="Height" Value="30" />
                     <Setter Property="Margin" Value="5" />
+                    <Setter Property="MinWidth" Value="100" />
                     <Setter Property="Padding" Value="5" />
                 </Style>
 
             </ResourceDictionary>
         </Grid.Resources>
 
-        <ListView x:Name="ListView"
-                  Style="{x:Null}"
+        <ListView Style="{x:Null}"
+                  x:Name="ListView"
                   Grid.Row="0"
-                  MinHeight="0"
                   MinWidth="0"
+                  MinHeight="0"
                   HorizontalContentAlignment="Stretch"
-                  ItemsSource="{Binding ElementName=Control, Path=Properties}"
+                  AlternationCount="2"
                   IsSynchronizedWithCurrentItem="True"
-                  AlternationCount="2">
+                  ItemsSource="{Binding ElementName=Control, Path=Properties}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -68,28 +68,35 @@
                 <GridView>
                     <GridViewColumn Width="200">
                         <GridViewColumn.Header>
-                            <TextBlock Style="{x:Null}" Text="Name">
+                            <TextBlock Style="{x:Null}"
+                                       Text="Name">
                                 <TextBlock.ToolTip>
-                                    <TextBlock Style="{x:Null}" Text="The name of the property" />
+                                    <TextBlock Style="{x:Null}"
+                                               Text="The name of the property" />
                                 </TextBlock.ToolTip>
                             </TextBlock>
                         </GridViewColumn.Header>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate DataType="infrastructure:PropertyInformation">
-                                <TextBlock Style="{x:Null}" Text="{Binding DisplayName}">
+                                <TextBlock Style="{x:Null}"
+                                           Text="{Binding DisplayName}">
                                     <TextBlock.ToolTip>
-                                        <TextBlock Style="{x:Null}" Text="{Binding DisplayName}" />
+                                        <TextBlock Style="{x:Null}"
+                                                   Text="{Binding DisplayName}" />
                                     </TextBlock.ToolTip>
                                 </TextBlock>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
 
-                    <GridViewColumn Width="175" CellTemplateSelector="{StaticResource EditorSelector}">
+                    <GridViewColumn Width="175"
+                                    CellTemplateSelector="{StaticResource EditorSelector}">
                         <GridViewColumn.Header>
-                            <TextBlock Style="{x:Null}" Text="Value">
+                            <TextBlock Style="{x:Null}"
+                                       Text="Value">
                                 <TextBlock.ToolTip>
-                                    <TextBlock Style="{x:Null}" Text="The value of the property" />
+                                    <TextBlock Style="{x:Null}"
+                                               Text="The value of the property" />
                                 </TextBlock.ToolTip>
                             </TextBlock>
                         </GridViewColumn.Header>
@@ -98,9 +105,19 @@
             </ListView.View>
         </ListView>
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal">
-            <Button x:Name="Close" Style="{StaticResource Snoop.Styles.Button.Large}" Click="Close_OnClick">Close</Button>
-            <Button x:Name="ResetSettings" Style="{StaticResource Snoop.Styles.Button.Large}" Click="ResetSettings_OnClick">Reset settings</Button>
+        <StackPanel Style="{x:Null}"
+                    Grid.Row="1"
+                    Orientation="Horizontal">
+            <Button Style="{StaticResource Snoop.Styles.Button.Large}"
+                    x:Name="Close"
+                    Click="Close_OnClick">
+                Close
+            </Button>
+            <Button Style="{StaticResource Snoop.Styles.Button.Large}"
+                    x:Name="ResetSettings"
+                    Click="ResetSettings_OnClick">
+                Reset settings
+            </Button>
         </StackPanel>
     </Grid>
 </UserControl>
