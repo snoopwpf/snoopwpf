@@ -11,11 +11,12 @@
                              xmlns:behaviorsTab="clr-namespace:Snoop.Views.BehaviorsTab"
                              xmlns:controls="clr-namespace:Snoop.Controls"
                              xmlns:converters="clr-namespace:Snoop.Converters"
-                             xmlns:d="http://schemas.microsoft.com/expression/interactivedesigner/2006"
+                             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                              xmlns:debugListenerTab="clr-namespace:Snoop.Views.DebugListenerTab"
                              xmlns:infrastructure="clr-namespace:Snoop.Infrastructure"
                              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                              xmlns:methodsTab="clr-namespace:Snoop.Views.MethodsTab"
+                             xmlns:options="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
                              xmlns:powerShell="clr-namespace:Snoop.PowerShell"
                              xmlns:selectionHighlight="clr-namespace:Snoop.Infrastructure.SelectionHighlight"
                              xmlns:snoop="clr-namespace:Snoop"
@@ -32,7 +33,7 @@
                              Focusable="False"
                              ShowInTaskbar="True"
                              SnapsToDevicePixels="True"
-                             mc:Ignorable="d">
+                             mc:Ignorable="options d">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -231,7 +232,7 @@
                     </HierarchicalDataTemplate>
 
                     <!-- make the selected item be blue, even when not focused -->
-                    <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="LightBlue" />
+                    <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="LightBlue" options:Freeze="True" />
                 </TreeView.Resources>
 
                 <TreeView.ItemContainerStyle>
