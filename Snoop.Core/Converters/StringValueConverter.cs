@@ -98,14 +98,12 @@
         private static object? GetValueFromConverter(Type targetType, string? value, TypeConverter converter)
         {
             if (string.IsNullOrEmpty(value)
-                && converter.CanConvertFrom(targetType) == false)
+                || converter.CanConvertFrom(targetType) == false)
             {
                 return null;
             }
-            else
-            {
-                return converter.ConvertFrom(value);
-            }
+
+            return converter.ConvertFrom(value);
         }
 
         private static string? GetStringValueFromConverter(object value, TypeConverter converter, bool invariant)

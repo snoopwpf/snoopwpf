@@ -14,18 +14,23 @@ namespace Snoop.Converters
     using System.Windows.Data;
     using Snoop.Views.MethodsTab;
 
+    [ValueConversion(typeof(SnoopParameterInformation), typeof(object))]
     public class SnoopParameterInfoConverter : IValueConverter
     {
         public static readonly SnoopParameterInfoConverter Default = new();
 
         #region IValueConverter Members
 
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object? value, Type targetType, object parameter, CultureInfo culture)
         {
-            var paramInfo = value as SnoopParameterInformation;
-            if (paramInfo is null)
+            if (value is not SnoopParameterInformation paramInfo)
             {
                 return value;
+            }
+
+            if (paramInfo.ParameterValue is null)
+            {
+                return null;
             }
 
             var converter = TypeDescriptor.GetConverter(paramInfo.ParameterType);
