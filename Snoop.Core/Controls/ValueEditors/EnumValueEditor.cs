@@ -30,7 +30,7 @@ namespace Snoop.Controls.ValueEditors
 
             this.Values.Clear();
 
-            var propertyType = this.PropertyType;
+            var propertyType = this.PropertyType?.Type;
             if (propertyType is not null)
             {
                 var values = Enum.GetValues(propertyType);
