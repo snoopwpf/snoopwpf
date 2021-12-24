@@ -4,7 +4,7 @@
 
 - ### Bug fixes
 
-- Editing values works again
+  - Editing values works again
 
 ## 4.0.0
 
