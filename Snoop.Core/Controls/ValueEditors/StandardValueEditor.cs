@@ -43,7 +43,7 @@ namespace Snoop.Controls.ValueEditors
                 this.PropertyInfo.IsValueChangedByUser = true;
             }
 
-            var targetType = this.PropertyType;
+            var targetType = this.PropertyType?.Type;
 
             this.Value = StringValueConverter.ConvertFromString(targetType, newValue);
         }

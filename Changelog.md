@@ -1,5 +1,11 @@
 ﻿# Changelog for Snoop
 
+## 4.0.1
+
+- ### Bug fixes
+
+  - Editing values works again
+
 ## 4.0.0
 
 - ### Breaking changes

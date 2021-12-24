@@ -11,9 +11,10 @@
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:infrastructure="clr-namespace:Snoop.Infrastructure"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:options="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
                     xmlns:snoop="clr-namespace:Snoop"
                     xmlns:valueEditors="clr-namespace:Snoop.Controls.ValueEditors"
-                    mc:Ignorable="d">
+                    mc:Ignorable="options d">
 
     <Style TargetType="{x:Type valueEditors:MouseWheelValueEditor}">
         <Setter Property="DockPanel.Dock" Value="Right" />
@@ -169,7 +170,8 @@
                           Stretch="Fill"
                           TileMode="Tile"
                           Viewport="0,0,16,16"
-                          ViewportUnits="Absolute">
+                          ViewportUnits="Absolute"
+                          options:Freeze="True">
                 <DrawingBrush.Drawing>
                     <DrawingGroup>
                         <GeometryDrawing Brush="White"
@@ -318,7 +320,8 @@
                           Stretch="Fill"
                           TileMode="Tile"
                           Viewport="0,0,16,16"
-                          ViewportUnits="Absolute">
+                          ViewportUnits="Absolute"
+                          options:Freeze="True">
                 <DrawingBrush.Drawing>
                     <DrawingGroup>
                         <GeometryDrawing Brush="White"
