@@ -33,7 +33,7 @@
             {
                 using (new InvariantThreadCultureScope())
                 {
-                    return GetValueFromConverter(targetType, value, converter);
+                    return GetValueFromConverter(value, converter, true);
                 }
             }
             catch
@@ -42,7 +42,7 @@
                 // If the user entered data that was culture specific, we try setting it again using the original culture and not an invariant.
                 try
                 {
-                    return GetValueFromConverter(targetType, value, converter);
+                    return GetValueFromConverter(value, converter, false);
                 }
                 catch
                 {
@@ -95,15 +95,14 @@
             return null;
         }
 
-        private static object? GetValueFromConverter(Type targetType, string? value, TypeConverter converter)
+        private static object? GetValueFromConverter(string? value, TypeConverter converter, bool invariant)
         {
-            if (string.IsNullOrEmpty(value)
-                || converter.CanConvertFrom(targetType) == false)
+            if (invariant)
             {
-                return null;
+                return converter.ConvertFromInvariantString(value);
             }
 
-            return converter.ConvertFrom(value);
+            return converter.ConvertFromString(value);
         }
 
         private static string? GetStringValueFromConverter(object value, TypeConverter converter, bool invariant)
