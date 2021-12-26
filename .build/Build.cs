@@ -193,7 +193,7 @@ class Build : NukeBuild
                 .SetConfiguration(Configuration)
                 .SetAssemblyVersion(AssemblySemVer)
                 .SetInformationalVersion(InformationalVersion)
-                .SetNoRestore(true)
+                .EnableNoRestore()
                 .SetVerbosity(DotNetVerbosity.Minimal));
 
             MSBuild(s => s
@@ -225,7 +225,7 @@ class Build : NukeBuild
                 .SetConfiguration(Configuration)
                 .SetVerbosity(DotNetVerbosity.Normal)
                 .AddLoggers("trx")
-                .SetNoBuild(true)
+                .EnableNoBuild()
                 .SetResultsDirectory(TestResultDirectory));
         });
 
@@ -246,7 +246,7 @@ class Build : NukeBuild
                 .SetVersion(NuGetVersion)
                 .SetConfiguration(Configuration)
                 .SetOutputDirectory(ArtifactsDirectory)
-                .SetNoPackageAnalysis(true));
+                .EnableNoPackageAnalysis());
 
             var tempDirectory = TemporaryDirectory / $"{ProjectName}{nameof(Pack)}";
 
@@ -357,6 +357,7 @@ class Build : NukeBuild
                || GitVersion.NuGetVersion.Contains("-") == false;
     }
 
+    // ReSharper disable once InconsistentNaming
     Target CI => _ => _
         .DependsOn(Compile, Test, Pack, Setup, SignArtifacts);
 }
