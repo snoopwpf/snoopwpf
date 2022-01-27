@@ -116,7 +116,7 @@ Requirements:
 
 - Visual Studio 2022 (including C++ payloads (x86/x64/ARM/ARM64))
   - You can import the `.vsconfig` file in the Visual Studio installer to let it install all required components
-- .NET Core SDK 5.0.400 or later
+- .NET Core SDK 6.0.100 or later
 - .NET 4.5.1 targeting pack [download](https://dotnet.microsoft.com/download/dotnet-framework/net451)
 
 ## Contributors
