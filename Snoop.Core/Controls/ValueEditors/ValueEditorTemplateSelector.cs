@@ -58,7 +58,8 @@ namespace Snoop.Controls.ValueEditors
                 return this.BrushTemplate;
             }
 
-            if (typeof(Color).IsAssignableFrom(property.PropertyType.Type))
+            if (typeof(Color).IsAssignableFrom(property.PropertyType.Type)
+                || typeof(Color?).IsAssignableFrom(property.PropertyType.Type))
             {
                 return this.ColorTemplate;
             }
