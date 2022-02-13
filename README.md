@@ -123,7 +123,7 @@ Requirements:
 
 Over time contributions have been added by several people, most notably:
 
-- [Bastian Schmidt](https://github.com/batzen), [batzendev.de](https://batzendev.de) (current maintainer)
+- [Bastian Schmidt](https://github.com/batzen), [batzen.dev](https://batzen.dev) (current maintainer)
 - [Cory Plotts](https://github.com/cplotts), [cplotts.com](https://cplotts.com)
 - [Dan Hanan](http://blogs.interknowlogy.com/author/danhanan/)
 - [Andrei Kashcha](http://blog.yasiv.com/)
