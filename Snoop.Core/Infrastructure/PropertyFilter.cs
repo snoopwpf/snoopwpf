@@ -142,7 +142,7 @@ namespace Snoop.Infrastructure
 
             if (this.IsPropertyFilterSet)
             {
-                if (this.SelectedFilterSet!.IsPropertyInFilter(property.DisplayName))
+                if (this.SelectedFilterSet!.IsPropertyInFilter(property))
                 {
                     return true;
                 }
@@ -272,7 +272,7 @@ namespace Snoop.Infrastructure
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public bool IsPropertyInFilter(string property)
+        public bool IsPropertyInFilter(PropertyInformation property)
         {
             if (this.Properties is null)
             {
@@ -281,7 +281,8 @@ namespace Snoop.Infrastructure
 
             foreach (var filterProp in this.Properties)
             {
-                if (property.StartsWith(filterProp, StringComparison.OrdinalIgnoreCase))
+                if (property.Name?.Equals(filterProp, StringComparison.OrdinalIgnoreCase) == true
+                    || property.DisplayName.StartsWith(filterProp, StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
                 }
