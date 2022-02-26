@@ -751,11 +751,12 @@ namespace Snoop.Controls
                 Properties = new[]
                 {
                     "width", "height", "minwidth", "minheight", "maxwidth", "maxheight", "actualwidth", "actualheight",
-                    "desiredsize", "rendersize",
+                    "desiredsize", "rendersize", "availablesize",
                     "margin", "padding",
                     "left", "top",
                     "horizontalalignment", "verticalalignment",
                     "horizontalcontentalignment", "verticalcontentalignment",
+                    "visibility"
                 }
             },
             new()
