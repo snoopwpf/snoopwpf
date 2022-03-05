@@ -1,5 +1,12 @@
 ﻿# Changelog for Snoop
 
+## 4.0.2
+
+- ### Bug fixes
+
+  - Editing Color? values works now
+  - [#313](../../issues/313) - Error: Collection was modified; enumeration operation may not execute.
+
 ## 4.0.1
 
 - ### Bug fixes

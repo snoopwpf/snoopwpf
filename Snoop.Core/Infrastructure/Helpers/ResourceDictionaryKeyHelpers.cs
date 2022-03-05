@@ -5,6 +5,7 @@
 
 namespace Snoop.Infrastructure.Helpers
 {
+    using System.Linq;
     using System.Windows;
     using System.Windows.Media;
     using System.Windows.Media.Media3D;
@@ -62,7 +63,7 @@ namespace Snoop.Infrastructure.Helpers
                 }
             }
 
-            foreach (var dic in dictionary.MergedDictionaries)
+            foreach (var dic in dictionary.MergedDictionaries.ToList())
             {
                 var name = GetKeyInResourceDictionary(dic, resourceItem);
                 if (!string.IsNullOrEmpty(name))
