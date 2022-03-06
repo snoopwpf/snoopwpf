@@ -32,6 +32,6 @@
   </PropertyGroup>
   
   <PropertyGroup>
-    <MinTargetFramework>net451</MinTargetFramework>
+    <MinTargetFramework>net452</MinTargetFramework>
   </PropertyGroup>
 </Project>

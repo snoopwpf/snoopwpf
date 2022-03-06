@@ -1,6 +1,10 @@
 ﻿# Changelog for Snoop
 
-## 4.0.2
+## 5.0.0
+
+- ### Breaking changes
+
+  - Dropped support for all .NET versions prior to .NET 4.5.2
 
 - ### Bug fixes
 

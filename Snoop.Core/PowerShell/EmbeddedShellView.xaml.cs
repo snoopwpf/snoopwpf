@@ -104,7 +104,7 @@ namespace Snoop.PowerShell
                 this.runspace = RunspaceFactory.CreateRunspace(this.host, iis);
                 this.runspace.ThreadOptions = PSThreadOptions.UseCurrentThread;
 
-#if NET451
+#if NET452
                 this.runspace.ApartmentState = System.Threading.ApartmentState.STA;
 #endif
 

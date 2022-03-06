@@ -138,7 +138,7 @@ namespace Snoop.InjectorLauncher
                 }
             }
 
-            return "net451";
+            return "net452";
         }
     }
 }

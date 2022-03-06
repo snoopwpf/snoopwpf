@@ -35,10 +35,10 @@
 
     <file src="..\bin\$Configuration$\CommandLine.dll" target="tools\" />
     
-    <file src="..\bin\$Configuration$\net451\Snoop.Core*.config" target="tools\net451\" />
-    <file src="..\bin\$Configuration$\net451\Snoop.Core*.dll" target="tools\net451\" />
-    <file src="..\bin\$Configuration$\net451\Snoop.Core*.pdb" target="tools\net451\" />
-    <file src="..\bin\$Configuration$\net451\System.Management.Automation.dll" target="tools\net451\" />
+    <file src="..\bin\$Configuration$\net452\Snoop.Core*.config" target="tools\net452\" />
+    <file src="..\bin\$Configuration$\net452\Snoop.Core*.dll" target="tools\net452\" />
+    <file src="..\bin\$Configuration$\net452\Snoop.Core*.pdb" target="tools\net452\" />
+    <file src="..\bin\$Configuration$\net452\System.Management.Automation.dll" target="tools\net452\" />
 
     <file src="..\bin\$Configuration$\netcoreapp3.0\Snoop.Core*.config" target="tools\netcoreapp3.0\" />
     <file src="..\bin\$Configuration$\netcoreapp3.0\Snoop.Core*.dll" target="tools\netcoreapp3.0\" />

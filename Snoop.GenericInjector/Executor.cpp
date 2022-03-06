@@ -21,7 +21,7 @@ std::unique_ptr<FrameworkExecutor> GetExecutor(const std::wstring& framework)
 	}
 
 #ifndef NO_FULL_FRAMEWORK
-	if (icase_cmp(framework, L"net451"))
+	if (icase_cmp(framework, L"net452"))
 	{
 		return std::make_unique<NetFull4_0Executor>();
 	}
