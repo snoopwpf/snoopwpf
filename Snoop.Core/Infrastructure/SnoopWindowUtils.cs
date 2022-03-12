@@ -111,21 +111,22 @@ namespace Snoop.Infrastructure
 
         public static void LoadWindowPlacement(Window window, WINDOWPLACEMENT? windowPlacement)
         {
-            if (windowPlacement.HasValue == false
-                || windowPlacement.Value.NormalPosition.Width == 0
-                || windowPlacement.Value.NormalPosition.Height == 0
-                || IsVisibleOnAnyScreen(windowPlacement.Value.NormalPosition, out var screen) == false)
+            if (windowPlacement.HasValue == false)
             {
                 return;
             }
 
+            var windowPlacementValue = windowPlacement.Value;
+
             try
             {
-                if (windowPlacement.Value.ShowCmd == NativeMethods.SW_SHOWMAXIMIZED)
+                if (windowPlacementValue.ShowCmd == NativeMethods.SW_SHOWMAXIMIZED)
                 {
                     window.WindowState = WindowState.Maximized;
                 }
-                else
+                else if (windowPlacementValue.NormalPosition.Width is not 0
+                         && windowPlacementValue.NormalPosition.Height is not 0
+                         && IsVisibleOnAnyScreen(windowPlacementValue.NormalPosition, out var screen))
                 {
                     var screenContainsPosition = screen.Bounds.Contains(windowPlacement.Value.NormalPosition.Left, windowPlacement.Value.NormalPosition.Top);
                     var hwnd = new WindowInteropHelper(window).Handle;
