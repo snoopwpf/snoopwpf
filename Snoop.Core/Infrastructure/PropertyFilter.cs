@@ -170,6 +170,11 @@ namespace Snoop.Infrastructure
                 return false;
             }
 
+            if (property.Property.IsBrowsable == false)
+            {
+                return false;
+            }
+
             if (uncommonPropertyNames.Contains(property.Property.Name))
             {
                 return true;
