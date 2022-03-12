@@ -11,29 +11,114 @@ using Snoop.Infrastructure;
 public sealed class Settings : SettingsBase<Settings>
 {
     private static readonly XmlSerializer serializer = new(typeof(Settings));
-
-    public static Settings Default { get; } = new Settings().Load();
+    private bool enableDiagnostics = true;
+    private KeyGestureEx? globalHotKey = new(Key.F12, ModifierKeys.Control | ModifierKeys.Windows | ModifierKeys.Alt);
+    private string? ilSpyPath = "%path%";
+    private MultipleAppDomainMode multipleAppDomainMode = MultipleAppDomainMode.Ask;
+    private MultipleDispatcherMode multipleDispatcherMode = MultipleDispatcherMode.Ask;
+    private bool setOwnerWindow = true;
 
     public Settings()
     {
         this.SettingsFile = SettingsHelper.GetSettingsFileForSnoop();
     }
 
+    public static Settings Default { get; } = new Settings().Load();
+
     protected override XmlSerializer Serializer => serializer;
 
     public WINDOWPLACEMENT? AppChooserWindowPlacement { get; set; }
 
-    public bool SetOwnerWindow { get; set; } = true;
+    public bool SetOwnerWindow
+    {
+        get => this.setOwnerWindow;
+        set
+        {
+            if (value == this.setOwnerWindow)
+            {
+                return;
+            }
 
-    public MultipleAppDomainMode MultipleAppDomainMode { get; set; } = MultipleAppDomainMode.Ask;
+            this.setOwnerWindow = value;
+            this.OnPropertyChanged();
+        }
+    }
 
-    public MultipleDispatcherMode MultipleDispatcherMode { get; set; } = MultipleDispatcherMode.Ask;
+    public MultipleAppDomainMode MultipleAppDomainMode
+    {
+        get => this.multipleAppDomainMode;
+        set
+        {
+            if (value == this.multipleAppDomainMode)
+            {
+                return;
+            }
 
-    public KeyGestureEx? GlobalHotKey { get; set; } = new KeyGestureEx(Key.F12, ModifierKeys.Control | ModifierKeys.Windows | ModifierKeys.Alt);
+            this.multipleAppDomainMode = value;
+            this.OnPropertyChanged();
+        }
+    }
 
-    public string? ILSpyPath { get; set; } = "%path%";
+    public MultipleDispatcherMode MultipleDispatcherMode
+    {
+        get => this.multipleDispatcherMode;
+        set
+        {
+            if (value == this.multipleDispatcherMode)
+            {
+                return;
+            }
 
-    public bool EnableDiagnostics { get; set; } = true;
+            this.multipleDispatcherMode = value;
+            this.OnPropertyChanged();
+        }
+    }
+
+    [XmlElement(Type = typeof(string))]
+    public KeyGestureEx? GlobalHotKey
+    {
+        get => this.globalHotKey;
+        set
+        {
+            if (Equals(value, this.globalHotKey))
+            {
+                return;
+            }
+
+            this.globalHotKey = value;
+            this.OnPropertyChanged();
+        }
+    }
+
+    public string? ILSpyPath
+    {
+        get => this.ilSpyPath;
+        set
+        {
+            if (value == this.ilSpyPath)
+            {
+                return;
+            }
+
+            this.ilSpyPath = value;
+            this.OnPropertyChanged();
+        }
+    }
+
+    public bool EnableDiagnostics
+    {
+        get => this.enableDiagnostics;
+        set
+        {
+            if (value == this.enableDiagnostics)
+            {
+                return;
+            }
+
+            this.enableDiagnostics = value;
+            this.OnPropertyChanged();
+        }
+    }
 
     protected override void UpdateWith(Settings settings)
     {

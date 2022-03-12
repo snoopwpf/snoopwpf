@@ -12,8 +12,10 @@ using Snoop.Views.DebugListenerTab;
 public sealed class Settings : SettingsBase<Settings>
 {
     private static readonly XmlSerializer serializer = new(typeof(Settings));
-
-    public static Settings Default { get; } = new Settings().Load();
+    private bool clearAfterDelve = true;
+    private int maximumTrackedEvents = 100;
+    private bool showDefaults = true;
+    private bool showPreviewer;
 
     public Settings()
     {
@@ -22,13 +24,54 @@ public sealed class Settings : SettingsBase<Settings>
         this.Reset();
     }
 
+    public static Settings Default { get; } = new Settings().Load();
+
     protected override XmlSerializer Serializer => serializer;
 
-    public bool ShowDefaults { get; set; } = true;
+    public bool ShowDefaults
+    {
+        get => this.showDefaults;
+        set
+        {
+            if (value == this.showDefaults)
+            {
+                return;
+            }
 
-    public bool ShowPreviewer { get; set; } = true;
+            this.showDefaults = value;
+            this.OnPropertyChanged();
+        }
+    }
 
-    public bool ClearAfterDelve { get; set; } = true;
+    public bool ShowPreviewer
+    {
+        get => this.showPreviewer;
+        set
+        {
+            if (value == this.showPreviewer)
+            {
+                return;
+            }
+
+            this.showPreviewer = value;
+            this.OnPropertyChanged();
+        }
+    }
+
+    public bool ClearAfterDelve
+    {
+        get => this.clearAfterDelve;
+        set
+        {
+            if (value == this.clearAfterDelve)
+            {
+                return;
+            }
+
+            this.clearAfterDelve = value;
+            this.OnPropertyChanged();
+        }
+    }
 
     public WINDOWPLACEMENT? SnoopUIWindowPlacement { get; set; }
 
@@ -40,7 +83,20 @@ public sealed class Settings : SettingsBase<Settings>
 
     public ObservableCollection<EventTrackerSettingsItem> EventTrackers { get; private set; } = new();
 
-    public int MaximumTrackedEvents { get; set; } = 100;
+    public int MaximumTrackedEvents
+    {
+        get => this.maximumTrackedEvents;
+        set
+        {
+            if (value == this.maximumTrackedEvents)
+            {
+                return;
+            }
+
+            this.maximumTrackedEvents = value;
+            this.OnPropertyChanged();
+        }
+    }
 
     protected override void UpdateWith(Settings settings)
     {

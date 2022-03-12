@@ -1,14 +1,17 @@
 ﻿namespace Snoop.Core;
 
 using System;
+using System.ComponentModel;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using JetBrains.Annotations;
 using Snoop.Infrastructure;
 
 [Serializable]
-public abstract class SettingsBase<T>
+public abstract class SettingsBase<T> : INotifyPropertyChanged
     where T : SettingsBase<T>, new()
 {
     protected abstract XmlSerializer Serializer { get; }
@@ -63,5 +66,13 @@ public abstract class SettingsBase<T>
         using var writer = new StreamWriter(stream, Encoding.UTF8);
         using var xmlWriter = XmlWriter.Create(writer, new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 });
         this.Serializer.Serialize(xmlWriter, this);
+    }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    [NotifyPropertyChangedInvocator]
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
