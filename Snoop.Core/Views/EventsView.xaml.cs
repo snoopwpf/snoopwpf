@@ -36,6 +36,16 @@ namespace Snoop.Views
 
             this.InitializeComponent();
 
+            this.UpdateTrackers();
+
+            this.CommandBindings.Add(new CommandBinding(ClearCommand, this.HandleClear));
+            this.CommandBindings.Add(new CommandBinding(ResetEventTrackersToDefaultCommand, this.HandleResetEventTrackersToDefault));
+        }
+
+        public void UpdateTrackers()
+        {
+            this.trackers.Clear();
+
             var sorter = new List<EventTracker>();
 
             foreach (var routedEvent in EventManager.GetRoutedEvents())
@@ -65,9 +75,6 @@ namespace Snoop.Views
             {
                 this.trackers.Add(tracker);
             }
-
-            this.CommandBindings.Add(new CommandBinding(ClearCommand, this.HandleClear));
-            this.CommandBindings.Add(new CommandBinding(ResetEventTrackersToDefaultCommand, this.HandleResetEventTrackersToDefault));
         }
 
         public ReadOnlyObservableCollection<TrackedEvent> InterestingEvents { get; }

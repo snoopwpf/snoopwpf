@@ -11,7 +11,6 @@ namespace Snoop.Views.DebugListenerTab
 
     public partial class DebugListenerControl : IListener, IDisposable
     {
-        private readonly FiltersViewModel filtersViewModel;
 #pragma warning disable CA2213
         private readonly SnoopDebugListener snoopDebugListener = new();
 #pragma warning restore CA2213
@@ -20,8 +19,8 @@ namespace Snoop.Views.DebugListenerTab
 
         public DebugListenerControl()
         {
-            this.filtersViewModel = new FiltersViewModel(Settings.Default.SnoopDebugFilters);
-            this.DataContext = this.filtersViewModel;
+            this.FiltersViewModel = new FiltersViewModel(Settings.Default.SnoopDebugFilters);
+            this.DataContext = this.FiltersViewModel;
 
             this.InitializeComponent();
 
@@ -31,6 +30,8 @@ namespace Snoop.Views.DebugListenerTab
             PresentationTraceSources.SetTraceLevel(this.textBlockStatus, PresentationTraceLevel.None);
             PresentationTraceSources.SetTraceLevel(this.textBoxDebugContent, PresentationTraceLevel.None);
         }
+
+        internal FiltersViewModel FiltersViewModel { get; }
 
         private void CheckBoxStartListening_Checked(object sender, RoutedEventArgs e)
         {
@@ -47,7 +48,7 @@ namespace Snoop.Views.DebugListenerTab
         {
             this.allText.Append(str);
 
-            if (!this.filtersViewModel.IsSet || this.filtersViewModel.FilterMatches(str))
+            if (!this.FiltersViewModel.IsSet || this.FiltersViewModel.FilterMatches(str))
             {
                 this.Dispatcher.RunInDispatcherAsync(() => this.DoWrite(str), DispatcherPriority.Send);
             }
@@ -87,7 +88,7 @@ namespace Snoop.Views.DebugListenerTab
             var result = MessageBox.Show("Are you sure you want to clear your filters?", "Clear Filters Confirmation", MessageBoxButton.YesNo);
             if (result == MessageBoxResult.Yes)
             {
-                this.filtersViewModel.ClearFilters();
+                this.FiltersViewModel.ClearFilters();
                 Settings.Default.SnoopDebugFilters.Clear();
                 this.textBoxDebugContent.Text = this.allText.ToString();
             }
@@ -95,7 +96,7 @@ namespace Snoop.Views.DebugListenerTab
 
         private void ButtonSetFilters_Click(object sender, RoutedEventArgs e)
         {
-            var setFiltersWindow = new SetFiltersWindow(this.filtersViewModel)
+            var setFiltersWindow = new SetFiltersWindow(this.FiltersViewModel)
             {
                 Topmost = true
             };
@@ -107,7 +108,7 @@ namespace Snoop.Views.DebugListenerTab
 
             foreach (var line in allLines)
             {
-                if (this.filtersViewModel.FilterMatches(line))
+                if (this.FiltersViewModel.FilterMatches(line))
                 {
                     this.textBoxDebugContent.AppendText(line + Environment.NewLine);
                 }

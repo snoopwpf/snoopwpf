@@ -9,6 +9,7 @@ namespace Snoop.Controls
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Linq;
@@ -539,17 +540,17 @@ namespace Snoop.Controls
             }
         }
 
-        public bool ShowPropertiesFromUncommonTypes
+        public bool ShowUncommonProperties
         {
-            get { return this.propertyFilter.ShowPropertiesFromUncommonTypes; }
+            get { return this.propertyFilter.ShowUncommonProperties; }
 
             set
             {
-                this.propertyFilter.ShowPropertiesFromUncommonTypes = value;
+                this.propertyFilter.ShowUncommonProperties = value;
 
                 this.inspector.Filter = this.propertyFilter;
 
-                this.OnPropertyChanged(nameof(this.ShowPropertiesFromUncommonTypes));
+                this.OnPropertyChanged(nameof(this.ShowUncommonProperties));
             }
         }
 
@@ -600,9 +601,8 @@ namespace Snoop.Controls
                     if (res.GetValueOrDefault())
                     {
                         // take the adjusted values from the dialog
-                        this.UserFilterSets = CleanFiltersForUserFilters(dlg.ItemsSource);
+                        this.UserFilterSets.UpdateWith(CleanFiltersForUserFilters(dlg.ItemsSource));
 
-                        Settings.Default.UserDefinedPropertyFilterSets.UpdateWith(this.UserFilterSets);
                         Settings.Default.Save();
 
 #pragma warning disable INPC015
@@ -627,37 +627,7 @@ namespace Snoop.Controls
         /// Get or Set the collection of User filter sets.  These are the filters that are configurable by
         /// the user, and serialized to/from app Settings.
         /// </summary>
-        public List<PropertyFilterSet> UserFilterSets
-        {
-            get
-            {
-                if (this.userFilterSets is null)
-                {
-                    var ret = new List<PropertyFilterSet>();
-
-                    try
-                    {
-                        var userFilters = Settings.Default.UserDefinedPropertyFilterSets;
-
-                        ret.AddRange(userFilters);
-                    }
-                    catch (Exception exception)
-                    {
-                        ErrorDialog.ShowDialog(exception, "Error reading user filters from settings. Using default filters.", exceptionAlreadyHandled: true);
-                        ret.Clear();
-                    }
-
-                    this.userFilterSets = ret;
-                }
-
-                return this.userFilterSets;
-            }
-
-            set
-            {
-                this.userFilterSets = value;
-            }
-        }
+        public ObservableCollection<PropertyFilterSet> UserFilterSets { get; } = Settings.Default.UserDefinedPropertyFilterSets;
 
         /// <summary>
         /// Get the collection of "all" filter sets.  This is the UserFilterSets wrapped with
@@ -729,7 +699,6 @@ namespace Snoop.Controls
         }
 
         private readonly List<object> inspectStack = new();
-        private List<PropertyFilterSet>? userFilterSets;
         private readonly List<PropertyInformation> delvePathList = new();
 
         private readonly Inspector inspector;

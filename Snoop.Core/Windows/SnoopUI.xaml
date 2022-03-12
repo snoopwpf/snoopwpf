@@ -134,7 +134,7 @@
                     <MenuItem Header="Open settings folder"
                               Click="HandleOpenSettingsFolder_OnClick" />
                     <Separator />
-                    <MenuItem Header="Reset settings and close window"
+                    <MenuItem Header="Reset settings"
                               Click="HandleResetSettings_OnClick" />
                 </MenuItem>
                 <MenuItem Header="_Tracking options">

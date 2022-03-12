@@ -396,11 +396,8 @@ namespace Snoop.Windows
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            if (this.isResettingSettings == false)
-            {
-                // persist the window placement details to the user settings.
-                SnoopWindowUtils.SaveWindowPlacement(this, wp => Settings.Default.SnoopUIWindowPlacement = wp);
-            }
+            // persist the window placement details to the user settings.
+            SnoopWindowUtils.SaveWindowPlacement(this, wp => Settings.Default.SnoopUIWindowPlacement = wp);
 
             base.OnClosing(e);
         }
@@ -420,14 +417,11 @@ namespace Snoop.Windows
 
             this.filterTimer?.Stop();
 
-            if (this.isResettingSettings == false)
-            {
-                // persist whether all properties are shown by default
-                Settings.Default.ShowDefaults = this.PropertyGrid.ShowDefaults;
+            // persist whether all properties are shown by default
+            Settings.Default.ShowDefaults = this.PropertyGrid.ShowDefaults;
 
-                // persist whether the previewer is shown by default
-                Settings.Default.ShowPreviewer = this.PreviewArea?.IsActive == true;
-            }
+            // persist whether the previewer is shown by default
+            Settings.Default.ShowPreviewer = this.PreviewArea?.IsActive == true;
 
             // actually do the persisting
             Settings.Default.Save();
@@ -875,7 +869,6 @@ namespace Snoop.Windows
         /// </summary>
         private bool returnPreviousFocus;
 
-        private bool isResettingSettings;
         private TreeService treeService = null!;
 
         #endregion
@@ -894,14 +887,7 @@ namespace Snoop.Windows
 
         private void HandleOpenSettingsFolder_OnClick(object sender, RoutedEventArgs e)
         {
-            var config = System.Configuration.ConfigurationManager.OpenExeConfiguration(System.Configuration.ConfigurationUserLevel.PerUserRoamingAndLocal);
-
-            if (string.IsNullOrEmpty(config.FilePath))
-            {
-                return;
-            }
-
-            var directory = Path.GetDirectoryName(config.FilePath);
+            var directory = Path.GetDirectoryName(Settings.Default.SettingsFile);
 
             if (directory is not null
                 && directory.Length > 0)
@@ -918,8 +904,6 @@ namespace Snoop.Windows
 
         private void HandleResetSettings_OnClick(object sender, RoutedEventArgs e)
         {
-            this.isResettingSettings = true;
-
             Settings.Default.Reset();
 
             // load whether all properties are shown by default
@@ -928,9 +912,12 @@ namespace Snoop.Windows
             // load whether the previewer is shown by default
             this.PreviewArea.IsActive = Settings.Default.ShowPreviewer;
 
-            this.Close();
+            this.PropertyGrid.checkBoxClearAfterDelve.IsChecked = Settings.Default.ClearAfterDelve;
 
-            this.isResettingSettings = false;
+            this.eventsView.UpdateTrackers();
+            this.eventsView.MaxEventsDisplayed = Settings.Default.MaximumTrackedEvents;
+
+            this.debugListenerControl.FiltersViewModel.InitializeFilters(Settings.Default.SnoopDebugFilters);
         }
 
         private void HandleLaunchDebugger_OnClick(object sender, RoutedEventArgs e)

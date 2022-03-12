@@ -158,7 +158,7 @@
                           Height="18"
                           Margin="0 0 2 0"
                           Padding="0"
-                          IsChecked="{Binding ElementName=propertyInspector, Path=ShowPropertiesFromUncommonTypes}">
+                          IsChecked="{Binding ElementName=propertyInspector, Path=ShowUncommonProperties}">
                 <TextBlock Style="{x:Null}"
                            FontWeight="Bold">
                     U
