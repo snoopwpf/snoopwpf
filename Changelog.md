@@ -8,8 +8,12 @@
 
 - ### Bug fixes
 
-  - Editing Color? values works now
+  - Editing `Color?` values works now
   - [#313](../../issues/313) - Error: Collection was modified; enumeration operation may not execute.
+
+- ### Improvements
+
+  - [#314](../../issues/314) - Hide properties from Snoop?
 
 ## 4.0.1
 
