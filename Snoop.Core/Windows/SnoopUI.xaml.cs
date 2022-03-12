@@ -21,7 +21,7 @@ namespace Snoop.Windows
     using System.Windows.Media.Media3D;
     using System.Windows.Threading;
     using JetBrains.Annotations;
-    using Snoop.Core.Properties;
+    using Snoop.Core;
     using Snoop.Data.Tree;
     using Snoop.Infrastructure;
     using Snoop.Infrastructure.Helpers;

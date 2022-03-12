@@ -26,12 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
      <ProjectReference Include="../Snoop.Core/Snoop.Core.csproj" /> 
   </ItemGroup>
 

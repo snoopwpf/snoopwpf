@@ -32,7 +32,7 @@ namespace Snoop.Data
 
         public long TargetWindowHandle { get; set; }
 
-        public string ILSpyPath { get; set; }
+        public string? ILSpyPath { get; set; }
 
         public bool EnableDiagnostics { get; set; }
 
@@ -42,10 +42,8 @@ namespace Snoop.Data
 
             LogHelper.WriteLine($"Writing transient settings file to \"{settingsFile}\"");
 
-            using (var stream = new FileStream(settingsFile, FileMode.Create))
-            {
-                serializer.Serialize(stream, this);
-            }
+            using var stream = new FileStream(settingsFile, FileMode.Create);
+            serializer.Serialize(stream, this);
 
             return settingsFile;
         }

@@ -17,7 +17,7 @@ namespace Snoop.Controls
     using System.Windows.Input;
     using JetBrains.Annotations;
     using Snoop.Converters;
-    using Snoop.Core.Properties;
+    using Snoop.Core;
     using Snoop.Data;
     using Snoop.Infrastructure;
     using Snoop.Infrastructure.Helpers;
@@ -75,7 +75,7 @@ namespace Snoop.Controls
         {
             get
             {
-                return this.nameValueOnly;
+                return this.PropertyGrid.NameValueOnly;
             }
 
             set
@@ -83,8 +83,6 @@ namespace Snoop.Controls
                 this.PropertyGrid.NameValueOnly = value;
             }
         }
-
-        private readonly bool nameValueOnly = false;
 
         private void HandleCopyResourceName(object sender, ExecutedRoutedEventArgs e)
         {
@@ -604,7 +602,7 @@ namespace Snoop.Controls
                         // take the adjusted values from the dialog
                         this.UserFilterSets = CleanFiltersForUserFilters(dlg.ItemsSource);
 
-                        Settings.Default.UserDefinedPropertyFilterSets = this.userFilterSets;
+                        Settings.Default.UserDefinedPropertyFilterSets.UpdateWith(this.UserFilterSets);
                         Settings.Default.Save();
 
 #pragma warning disable INPC015
@@ -641,10 +639,7 @@ namespace Snoop.Controls
                     {
                         var userFilters = Settings.Default.UserDefinedPropertyFilterSets;
 
-                        if (userFilters is not null)
-                        {
-                            ret.AddRange(userFilters);
-                        }
+                        ret.AddRange(userFilters);
                     }
                     catch (Exception exception)
                     {

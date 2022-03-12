@@ -17,7 +17,7 @@ namespace Snoop.Views
     using System.Windows.Input;
     using System.Windows.Media;
     using JetBrains.Annotations;
-    using Snoop.Core.Properties;
+    using Snoop.Core;
     using Snoop.Infrastructure;
     using Snoop.Windows;
 

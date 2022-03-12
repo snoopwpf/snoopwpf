@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel;
+    using System.Xml.Serialization;
     using JetBrains.Annotations;
 
     [Serializable]
@@ -18,6 +19,7 @@
             this.IsDirty = false;
         }
 
+        [XmlIgnore]
         public bool IsDirty
         {
             get

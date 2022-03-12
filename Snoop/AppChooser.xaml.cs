@@ -18,7 +18,6 @@ namespace Snoop
     using System.Windows.Input;
     using System.Windows.Threading;
     using Snoop.Infrastructure;
-    using Snoop.Properties;
     using Snoop.Views;
     using Snoop.Windows;
 
@@ -131,7 +130,7 @@ namespace Snoop
 
         private static void KeyboardHook_LowLevelKeyUp(object sender, KeyEventArgs e)
         {
-            if (Settings.Default.GlobalHotKey.Matches(null, e))
+            if (Settings.Default.GlobalHotKey?.Matches(null, e) == true)
             {
                 var thread = new Thread(AttachToForegroundWindow)
                     {
@@ -163,8 +162,6 @@ namespace Snoop
             SnoopWindowUtils.SaveWindowPlacement(this, wp => Settings.Default.AppChooserWindowPlacement = wp);
 
             base.OnClosing(e);
-
-            Settings.Default.Save();
         }
 
         protected override void OnClosed(EventArgs e)

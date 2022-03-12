@@ -6,7 +6,6 @@
     using System.Linq;
     using System.Windows;
     using Snoop.Infrastructure;
-    using Snoop.Properties;
 
     public partial class SettingsView
     {

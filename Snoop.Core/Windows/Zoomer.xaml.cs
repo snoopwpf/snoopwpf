@@ -14,7 +14,7 @@ namespace Snoop.Windows
     using System.Windows.Input;
     using System.Windows.Media;
     using Snoop.Controls;
-    using Snoop.Core.Properties;
+    using Snoop.Core;
     using Snoop.Infrastructure;
 
     public sealed partial class Zoomer

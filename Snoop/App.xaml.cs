@@ -7,7 +7,6 @@ namespace Snoop
 {
     using System;
     using System.Windows;
-    using Snoop.Properties;
 
     public partial class App
     {

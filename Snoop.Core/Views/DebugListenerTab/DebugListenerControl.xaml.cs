@@ -6,7 +6,7 @@ namespace Snoop.Views.DebugListenerTab
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Threading;
-    using Snoop.Core.Properties;
+    using Snoop.Core;
     using Snoop.Infrastructure;
 
     public partial class DebugListenerControl : IListener, IDisposable
@@ -88,7 +88,7 @@ namespace Snoop.Views.DebugListenerTab
             if (result == MessageBoxResult.Yes)
             {
                 this.filtersViewModel.ClearFilters();
-                Settings.Default.SnoopDebugFilters = null;
+                Settings.Default.SnoopDebugFilters.Clear();
                 this.textBoxDebugContent.Text = this.allText.ToString();
             }
         }
