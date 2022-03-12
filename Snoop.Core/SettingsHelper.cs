@@ -42,16 +42,7 @@ public static class SettingsHelper
     {
         var snoopAppDataPath = GetSnoopAppDataPath();
 
-        {
-            var settingsFileFromMap = SettingsFileMap.Default.GetSettingsFile(currentProcessName, currentProcessPath);
-
-            if (string.IsNullOrEmpty(settingsFileFromMap) == false
-                && File.Exists(settingsFileFromMap))
-            {
-                return settingsFileFromMap;
-            }
-        }
-
+        // Try to find application specific settings
         {
             var settingsPath = Path.Combine(snoopAppDataPath, currentProcessName);
             var settingsFile = Path.Combine(settingsPath, "Settings.xml");
@@ -63,6 +54,18 @@ public static class SettingsHelper
             }
         }
 
+        // Try to to find mapped application settings
+        {
+            var settingsFileFromMap = SettingsFileMap.Default.GetSettingsFile(currentProcessName, currentProcessPath);
+
+            if (string.IsNullOrEmpty(settingsFileFromMap) == false
+                && File.Exists(settingsFileFromMap))
+            {
+                return settingsFileFromMap;
+            }
+        }
+
+        // Use default settings
         return Path.Combine(snoopAppDataPath, "DefaultSettings.xml");
     }
 }
