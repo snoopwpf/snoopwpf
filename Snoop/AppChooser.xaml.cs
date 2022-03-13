@@ -236,9 +236,12 @@ namespace Snoop
                 WindowStartupLocation = WindowStartupLocation.CenterScreen,
                 WindowStyle = WindowStyle.ToolWindow
             };
-            window.ShowDialog();
-            // Reload here to require users to explicitly save the settings from the dialog. Reload just discards any unsaved changes.
-            Settings.Default.Reload();
+
+            if (window.ShowDialog() != true)
+            {
+                // Reload here to require users to explicitly save the settings from the dialog. Reload just discards any unsaved changes.
+                Settings.Default.Reload();
+            }
         }
 
         private void HandleMinimizeCommand(object sender, ExecutedRoutedEventArgs e)

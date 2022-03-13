@@ -40,7 +40,12 @@
         private void SaveSettingsAndClose_OnClick(object sender, RoutedEventArgs e)
         {
             Settings.Default.Save();
-            Window.GetWindow(this)?.Close();
+
+            if (Window.GetWindow(this) is { } ownerWindow)
+            {
+                ownerWindow.DialogResult = true;
+                ownerWindow.Close();
+            }
         }
 
         private void DiscardSettings_OnClick(object sender, RoutedEventArgs e)
