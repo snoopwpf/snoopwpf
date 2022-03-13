@@ -904,6 +904,11 @@ namespace Snoop.Windows
 
         private void HandleResetSettings_OnClick(object sender, RoutedEventArgs e)
         {
+            if (MessageBox.Show(this, "Are you sure that you want to reset all settings?", string.Empty, MessageBoxButton.YesNo) == MessageBoxResult.No)
+            {
+                return;
+            }
+
             Settings.Default.Reset();
 
             // load whether all properties are shown by default
