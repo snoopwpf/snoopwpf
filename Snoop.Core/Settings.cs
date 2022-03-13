@@ -12,6 +12,7 @@ using Snoop.Views.DebugListenerTab;
 public sealed class Settings : SettingsBase<Settings>
 {
     private static readonly XmlSerializer serializer = new(typeof(Settings));
+
     private bool clearAfterDelve = true;
     private int maximumTrackedEvents = 100;
     private bool showDefaults = true;

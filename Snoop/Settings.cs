@@ -11,6 +11,7 @@ using Snoop.Infrastructure;
 public sealed class Settings : SettingsBase<Settings>
 {
     private static readonly XmlSerializer serializer = new(typeof(Settings));
+
     private bool enableDiagnostics = true;
     private KeyGestureEx? globalHotKey = new(Key.F12, ModifierKeys.Control | ModifierKeys.Windows | ModifierKeys.Alt);
     private string? ilSpyPath = "%path%";

@@ -24,33 +24,36 @@ public abstract class SettingsBase<T> : INotifyPropertyChanged
         this.UpdateWith(new T());
     }
 
-    public void Reload()
+    public T Reload()
     {
+        return this.Load();
     }
 
     protected abstract void UpdateWith(T settings);
 
     public T Load()
     {
+        T? loadedSettings = null;
+
         if (File.Exists(this.SettingsFile) == false)
         {
-            return (T)this;
+            loadedSettings = new();
         }
-
-        try
+        else
         {
-            using var stream = new FileStream(this.SettingsFile, FileMode.Open, FileAccess.Read);
-            using var reader = new StreamReader(stream, Encoding.UTF8);
-            var settings = (T?)this.Serializer.Deserialize(stream);
-            if (settings is not null)
+            try
             {
-                this.UpdateWith(settings);
+                using var stream = new FileStream(this.SettingsFile, FileMode.Open, FileAccess.Read);
+                using var reader = new StreamReader(stream, Encoding.UTF8);
+                loadedSettings = (T?)this.Serializer.Deserialize(stream);
+            }
+            catch (Exception exception)
+            {
+                LogHelper.WriteError(exception);
             }
         }
-        catch (Exception exception)
-        {
-            LogHelper.WriteError(exception);
-        }
+
+        this.UpdateWith(loadedSettings ?? new());
 
         return (T)this;
     }
