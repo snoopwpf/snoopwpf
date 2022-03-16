@@ -4,7 +4,10 @@ namespace Snoop.Core;
 
 using System;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
+using JetBrains.Annotations;
 using Snoop.Infrastructure;
 using Snoop.Views.DebugListenerTab;
 
@@ -17,17 +20,32 @@ public sealed class Settings : SettingsBase<Settings>
     private int maximumTrackedEvents = 100;
     private bool showDefaults = true;
     private bool showPreviewer;
+    private bool isDefaultSettingsFile;
 
     public Settings()
     {
-        this.SettingsFile = SettingsHelper.GetSettingsFileForCurrentProcess();
-
-        this.Reset();
+        this.SettingsFile = SettingsHelper.GetSettingsFileForCurrentApplication();
     }
 
     public static Settings Default { get; } = new Settings().Load();
 
     protected override XmlSerializer Serializer => serializer;
+
+    [XmlIgnore]
+    public bool IsDefaultSettingsFile
+    {
+        get => this.isDefaultSettingsFile;
+        set
+        {
+            if (value == this.isDefaultSettingsFile)
+            {
+                return;
+            }
+
+            this.isDefaultSettingsFile = value;
+            this.OnPropertyChanged();
+        }
+    }
 
     public bool ShowDefaults
     {
@@ -112,5 +130,16 @@ public sealed class Settings : SettingsBase<Settings>
         this.UserDefinedPropertyFilterSets.UpdateWith(settings.UserDefinedPropertyFilterSets);
         this.SnoopDebugFilters.UpdateWith(settings.SnoopDebugFilters);
         this.EventTrackers.UpdateWith(settings.EventTrackers);
+    }
+
+    [NotifyPropertyChangedInvocator]
+    protected override void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        base.OnPropertyChanged(propertyName);
+
+        if (propertyName == nameof(this.SettingsFile))
+        {
+            this.IsDefaultSettingsFile = Path.GetFileName(this.SettingsFile).Equals("DefaultSettings.xml", StringComparison.OrdinalIgnoreCase);
+        }
     }
 }

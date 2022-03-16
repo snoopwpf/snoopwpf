@@ -7,6 +7,7 @@ namespace Snoop
     using System.Runtime.InteropServices;
     using System.Windows;
     using CommandLine;
+    using Snoop.Core;
     using Snoop.Infrastructure;
 
     public static class Program
@@ -21,6 +22,8 @@ namespace Snoop
         [STAThread]
         public static int Main(string[] args)
         {
+            Environment.SetEnvironmentVariable(SettingsHelper.SNOOP_INSTALL_PATH_ENV_VAR, Path.GetDirectoryName(EnvironmentEx.CurrentProcessPath), EnvironmentVariableTarget.Process);
+
             var helpWriter = new StringWriter();
 
             var parser = new Parser(x => x.HelpWriter = helpWriter);

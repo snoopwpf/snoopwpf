@@ -14,10 +14,27 @@ using Snoop.Infrastructure;
 public abstract class SettingsBase<T> : INotifyPropertyChanged
     where T : SettingsBase<T>, new()
 {
+    private string settingsFile = null!;
+
     protected abstract XmlSerializer Serializer { get; }
 
     [XmlIgnore]
-    public string SettingsFile { get; set; } = null!;
+    public string SettingsFile
+    {
+        get => this.settingsFile;
+        set
+        {
+            if (value == this.settingsFile)
+            {
+                return;
+            }
+
+            this.settingsFile = value;
+            this.OnPropertyChanged();
+        }
+    }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public void Reset()
     {
@@ -37,7 +54,7 @@ public abstract class SettingsBase<T> : INotifyPropertyChanged
 
         if (File.Exists(this.SettingsFile) == false)
         {
-            loadedSettings = new();
+            loadedSettings = new T();
         }
         else
         {
@@ -53,7 +70,7 @@ public abstract class SettingsBase<T> : INotifyPropertyChanged
             }
         }
 
-        this.UpdateWith(loadedSettings ?? new());
+        this.UpdateWith(loadedSettings ?? new T());
 
         return (T)this;
     }
@@ -62,16 +79,18 @@ public abstract class SettingsBase<T> : INotifyPropertyChanged
     {
         LogHelper.WriteLine($"Writing settings to \"{this.SettingsFile}\"");
 
-        // MemberInfo[] members = FormatterServices.GetSerializableMembers(this.GetType());
-        // var data = FormatterServices.GetObjectData(this, members);
+        var directory = Path.GetDirectoryName(this.SettingsFile);
+
+        if (string.IsNullOrEmpty(directory) == false)
+        {
+            Directory.CreateDirectory(directory);
+        }
 
         using var stream = new FileStream(this.SettingsFile, FileMode.OpenOrCreate, FileAccess.Write);
         using var writer = new StreamWriter(stream, Encoding.UTF8);
         using var xmlWriter = XmlWriter.Create(writer, new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 });
         this.Serializer.Serialize(xmlWriter, this);
     }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
 
     [NotifyPropertyChangedInvocator]
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)

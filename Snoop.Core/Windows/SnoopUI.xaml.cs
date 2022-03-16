@@ -885,6 +885,25 @@ namespace Snoop.Windows
 
         #endregion
 
+        private void HandleMakeSettingsApplicationsSpecific_OnClick(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.SettingsFile = SettingsHelper.GetApplicationSpecificSettingsFile();
+            Settings.Default.Save();
+        }
+
+        private void HandleDeleteApplicationSpecificSettings_OnClick(object sender, RoutedEventArgs e)
+        {
+            // Prevent accidental delete of default settings file
+            if (Settings.Default.IsDefaultSettingsFile == false)
+            {
+                File.Delete(Settings.Default.SettingsFile);
+            }
+
+            Settings.Default.SettingsFile = SettingsHelper.GetDefaultApplicationSettingsFile();
+
+            Settings.Default.Reload();
+        }
+
         private void HandleOpenSettingsFolder_OnClick(object sender, RoutedEventArgs e)
         {
             var directory = Path.GetDirectoryName(Settings.Default.SettingsFile);

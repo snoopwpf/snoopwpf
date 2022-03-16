@@ -24,6 +24,7 @@
                              xmlns:triggersTab="clr-namespace:Snoop.Views.TriggersTab"
                              xmlns:views="clr-namespace:Snoop.Views"
                              xmlns:windows="clr-namespace:Snoop.Windows"
+                             xmlns:core="clr-namespace:Snoop.Core"
                              Title="Snoop"
                              MinWidth="480"
                              MinHeight="320"
@@ -131,6 +132,11 @@
                               Command="{x:Static ApplicationCommands.Close}" />
                 </MenuItem>
                 <MenuItem Header="Settings">
+                    <MenuItem Header="{Binding Path=SettingsFile, Source={x:Static core:Settings.Default}}" />
+                    <MenuItem Header="Make settings application specific"
+                              Click="HandleMakeSettingsApplicationsSpecific_OnClick" />
+                    <MenuItem Header="Delete application specific settings"
+                              Click="HandleDeleteApplicationSpecificSettings_OnClick" />
                     <MenuItem Header="Open settings folder"
                               Click="HandleOpenSettingsFolder_OnClick" />
                     <Separator />

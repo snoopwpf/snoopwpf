@@ -1,9 +1,11 @@
 // ReSharper disable once CheckNamespace
 namespace Snoop.Data
 {
+    using System;
     using System.IO;
     using System.Xml.Serialization;
     using JetBrains.Annotations;
+    using Snoop.Core;
     using Snoop.Infrastructure;
 
     [PublicAPI]
@@ -36,6 +38,8 @@ namespace Snoop.Data
 
         public bool EnableDiagnostics { get; set; }
 
+        public string? SnoopInstallPath { get; set; } = Environment.GetEnvironmentVariable(SettingsHelper.SNOOP_INSTALL_PATH_ENV_VAR);
+
         public string WriteToFile()
         {
             var settingsFile = Path.GetTempFileName();
@@ -62,10 +66,12 @@ namespace Snoop.Data
         {
             LogHelper.WriteLine($"Loading transient settings file from \"{settingsFile}\"");
 
-            using (var stream = new FileStream(settingsFile, FileMode.Open))
-            {
-                return Current = (TransientSettingsData?)serializer.Deserialize(stream) ?? new TransientSettingsData();
-            }
+            using var stream = new FileStream(settingsFile, FileMode.Open);
+            Current = (TransientSettingsData?)serializer.Deserialize(stream) ?? new TransientSettingsData();
+
+            Environment.SetEnvironmentVariable(SettingsHelper.SNOOP_INSTALL_PATH_ENV_VAR, Current.SnoopInstallPath, EnvironmentVariableTarget.Process);
+
+            return Current;
         }
     }
 
