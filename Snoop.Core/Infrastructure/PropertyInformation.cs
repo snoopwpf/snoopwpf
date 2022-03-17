@@ -33,6 +33,8 @@ namespace Snoop.Infrastructure
         private ValueSource valueSource;
 
         private readonly PropertyDescriptor? property;
+        private bool wasTriedAsDependencyProperty;
+        private DependencyProperty? dependencyProperty;
         private readonly string name;
         private readonly string displayName;
         private bool isLocallySet;
@@ -623,16 +625,18 @@ namespace Snoop.Infrastructure
         {
             get
             {
-                if (this.property is not null)
+                if (this.dependencyProperty is not null)
                 {
-                    // in order to be a DependencyProperty, the object must first be a regular property,
-                    // and not an item in a collection.
+                    return this.dependencyProperty;
+                }
 
-                    var dpd = DependencyPropertyDescriptor.FromProperty(this.property);
-                    if (dpd is not null)
-                    {
-                        return dpd.DependencyProperty;
-                    }
+                if (this.property is not null
+                    && this.wasTriedAsDependencyProperty == false)
+                {
+                    this.wasTriedAsDependencyProperty = true;
+                    this.dependencyProperty = DependencyPropertyDescriptor.FromProperty(this.property)?.DependencyProperty;
+
+                    return this.dependencyProperty;
                 }
 
                 return null;
