@@ -498,8 +498,13 @@ namespace Snoop.Infrastructure
                 if (this.property is null)
                 {
                     // if this is a PropertyInformation object constructed for an item in a collection
-                    //return false;
                     return this.isCopyable;
+                }
+
+                if (this.Target is SetterBase { IsSealed: true }
+                    or Style { IsSealed: true })
+                {
+                    return false;
                 }
 
                 return this.property.IsReadOnly == false;

@@ -6,6 +6,34 @@
 
     public static class StringValueConverter
     {
+        public static bool CanConvertFromString(Type? targetType)
+        {
+            if (targetType is null)
+            {
+                return false;
+            }
+
+            if (targetType.IsAssignableFrom(typeof(string)))
+            {
+                return true;
+            }
+
+            var converter = TypeDescriptor.GetConverter(targetType);
+            // ReSharper disable ConditionIsAlwaysTrueOrFalse
+            // ReSharper disable HeuristicUnreachableCode
+            if (converter is null)
+            {
+                return false;
+            }
+
+            if (converter.CanConvertFrom(typeof(string)) == false)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public static object? ConvertFromString(Type? targetType, string? value)
         {
             if (targetType is null)
@@ -24,6 +52,11 @@
             if (converter is null)
             {
                 return null;
+            }
+
+            if (converter.CanConvertFrom(typeof(string)) == false)
+            {
+                return value;
             }
 
             // ReSharper restore HeuristicUnreachableCode
@@ -53,11 +86,11 @@
             return null;
         }
 
-        public static string? ConvertToString(Type sourceType, object value)
+        public static string? ConvertToString(Type sourceType, object? value)
         {
             if (typeof(string).IsAssignableFrom(sourceType))
             {
-                return (string)value;
+                return (string?)value;
             }
 
             var converter = TypeDescriptor.GetConverter(sourceType);
@@ -66,6 +99,11 @@
             if (converter is null)
             {
                 return null;
+            }
+
+            if (converter.CanConvertTo(typeof(string)) == false)
+            {
+                return value?.ToString();
             }
 
             // ReSharper restore HeuristicUnreachableCode
@@ -105,7 +143,7 @@
             return converter.ConvertFromString(value);
         }
 
-        private static string? GetStringValueFromConverter(object value, TypeConverter converter, bool invariant)
+        private static string? GetStringValueFromConverter(object? value, TypeConverter converter, bool invariant)
         {
             if (invariant)
             {
