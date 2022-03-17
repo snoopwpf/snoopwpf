@@ -127,12 +127,12 @@
     </Grid.RowDefinitions>
 
     <controls:NoSelectionComboBox x:Name="EventChooser"
+                                  Header="Change tracked events"
                                   Margin="0 0 20 0"
                                   HorizontalAlignment="Stretch"
                                   VerticalAlignment="Stretch"
                                   infrastructure:ComboBoxSettings.RegisterAsSnoopPart="True"
                                   GroupHeaderTemplate="{StaticResource CategoryTemplate}"
-                                  Header="Change tracked events"
                                   IsSynchronizedWithCurrentItem="True"
                                   ItemsSource="{Binding ElementName=Events, Path=AvailableEvents}"
                                   ResetSettingsCommand="{x:Static views:EventsView.ResetEventTrackersToDefaultCommand}"

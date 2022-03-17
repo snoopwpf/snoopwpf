@@ -91,12 +91,12 @@
                 </StackPanel>
             </ToggleButton>
 
-            <controls:NoSelectionComboBox Margin="10 0 20 0"
+            <controls:NoSelectionComboBox Header="Change active diagnostic providers"
+                                          Margin="10 0 20 0"
                                           HorizontalAlignment="Stretch"
                                           VerticalAlignment="Stretch"
                                           infrastructure:ComboBoxSettings.RegisterAsSnoopPart="True"
                                           GroupHeaderTemplate="{StaticResource CategoryTemplate}"
-                                          Header="Change active diagnostic providers"
                                           IsSynchronizedWithCurrentItem="True"
                                           ItemsSource="{Binding ElementName=self, Path=DiagnosticProvidersView}"
                                           ResetSettingsCommand="{x:Static views:DiagnosticsView.ResetEnabledDiagnosticsToDefaultCommand}">

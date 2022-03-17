@@ -70,14 +70,14 @@
 
         <TextBlock.ContextMenu>
             <ContextMenu x:Name="delveTypeContextMenu">
-                <MenuItem Command="{x:Static controls:PropertyInspector.NavigateToAssemblyInExplorerCommand}"
+                <MenuItem Header="Open in Explorer"
+                          Command="{x:Static controls:PropertyInspector.NavigateToAssemblyInExplorerCommand}"
                           CommandParameter="{Binding Path=DelveType, Mode=OneWay}"
-                          CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                          Header="Open in Explorer" />
-                <MenuItem Command="{x:Static controls:PropertyInspector.OpenTypeInILSpyCommand}"
+                          CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" />
+                <MenuItem Header="Open in ILSpy"
+                          Command="{x:Static controls:PropertyInspector.OpenTypeInILSpyCommand}"
                           CommandParameter="{Binding Path=DelveType, Mode=OneWay}"
-                          CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                          Header="Open in ILSpy" />
+                          CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" />
             </ContextMenu>
         </TextBlock.ContextMenu>
     </TextBlock>
