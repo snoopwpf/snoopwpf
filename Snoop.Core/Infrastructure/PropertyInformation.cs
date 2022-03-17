@@ -24,7 +24,7 @@ namespace Snoop.Infrastructure
 
     public class PropertyInformation : DependencyObject, IComparable, INotifyPropertyChanged
     {
-        private static readonly Attribute[] getAllPropertiesAttributeFilter = { new PropertyFilterAttribute(PropertyFilterOptions.All) };
+        private static readonly Attribute[] getAllPropertiesAttributeFilter = { PropertyFilterAttribute.Default };
 
         private readonly object? component;
         private readonly bool isCopyable;
