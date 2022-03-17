@@ -51,6 +51,7 @@
     <property displayName="ContextMenuService.VerticalOffset" value="0" />
     <property displayName="Cursor" value="null" />
     <property displayName="DataContext" value="null" />
+    <property displayName="DefaultStyleKey" value="null" />
     <property displayName="DependencyObjectType" value="System.Windows.DependencyObjectType" />
     <property displayName="DesiredSize" value="0,0" />
     <property displayName="Dispatcher" value="System.Windows.Threading.Dispatcher" />

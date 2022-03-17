@@ -51,6 +51,7 @@
     <property displayName="ContextMenuService.VerticalOffset" value="0" />
     <property displayName="Cursor" value="null" />
     <property displayName="DataContext" value="null" />
+    <property displayName="DefaultStyleKey" value="null" />
     <property displayName="DependencyObjectType" value="System.Windows.DependencyObjectType" />
     <property displayName="DesiredSize" value="0,0" />
     <property displayName="Dispatcher" value="System.Windows.Threading.Dispatcher" />
@@ -289,6 +290,7 @@
       <property displayName="ContextMenuService.VerticalOffset" value="0" />
       <property displayName="Cursor" value="null" />
       <property displayName="DataContext" value="null" />
+      <property displayName="DefaultStyleKey" value="System.Windows.Controls.TextBlock" />
       <property displayName="DependencyObjectType" value="System.Windows.DependencyObjectType" />
       <property displayName="DesiredSize" value="0,0" />
       <property displayName="Dispatcher" value="System.Windows.Threading.Dispatcher" />
@@ -531,6 +533,7 @@
       <property displayName="CornerRadius" value="0,0,0,0" />
       <property displayName="Cursor" value="null" />
       <property displayName="DataContext" value="null" />
+      <property displayName="DefaultStyleKey" value="null" />
       <property displayName="DependencyObjectType" value="System.Windows.DependencyObjectType" />
       <property displayName="DesiredSize" value="0,0" />
       <property displayName="Dispatcher" value="System.Windows.Threading.Dispatcher" />
@@ -768,6 +771,7 @@
         <property displayName="ContextMenuService.VerticalOffset" value="0" />
         <property displayName="Cursor" value="null" />
         <property displayName="DataContext" value="null" />
+        <property displayName="DefaultStyleKey" value="System.Windows.Controls.CheckBox" />
         <property displayName="DependencyObjectType" value="System.Windows.DependencyObjectType" />
         <property displayName="DesiredSize" value="0,0" />
         <property displayName="Dispatcher" value="System.Windows.Threading.Dispatcher" />
