@@ -19,6 +19,8 @@ namespace Snoop.Infrastructure
     {
         private static readonly List<WeakReference> registeredSnoopVisualTreeRoots = new();
 
+        public static bool IsSnoopingSnoop { get; set; }
+
         /// <summary>
         /// Checks whether given visual is a part of Snoop's visual tree.
         /// </summary>
@@ -26,7 +28,8 @@ namespace Snoop.Infrastructure
         /// <returns><c>true</c> if <paramref name="dependencyObject"/> belongs to Snoop's visual tree. <c>false</c> otherwise.</returns>
         public static bool IsPartOfSnoopVisualTree(this DependencyObject? dependencyObject)
         {
-            if (dependencyObject is null)
+            if (dependencyObject is null
+                || IsSnoopingSnoop)
             {
                 return false;
             }
