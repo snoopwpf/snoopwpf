@@ -11,6 +11,7 @@ namespace Snoop.Infrastructure
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Linq;
+    using System.Reflection;
     using System.Windows;
     using System.Windows.Automation.Peers;
     using System.Windows.Controls;
@@ -776,6 +777,15 @@ namespace Snoop.Infrastructure
                     {
                         LogHelper.WriteError($"Failed to create PropertyInformation for property '{property.Name}' on '{obj}'.{Environment.NewLine}{e}");
                     }
+                }
+            }
+
+            if (obj is FrameworkElement)
+            {
+                const string defaultStyleKeyPropertyName = "DefaultStyleKey";
+                if (obj.GetType().GetProperty(defaultStyleKeyPropertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic) is not null)
+                {
+                    properties.Add(new(obj, TypeDescriptor.CreateProperty(obj.GetType(), defaultStyleKeyPropertyName, typeof(Style)), defaultStyleKeyPropertyName, defaultStyleKeyPropertyName));
                 }
             }
 
