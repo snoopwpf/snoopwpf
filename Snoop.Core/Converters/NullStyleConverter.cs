@@ -22,12 +22,12 @@
             {
                 if (parameter is FrameworkElement fe)
                 {
-                    return fe.TryFindResource(fe.GetType()) as Style;
+                    return fe.TryFindResource(FrameworkElementDefaultStyleKeyHelper.GetDefaultStyleKey(fe)) as Style;
                 }
 
                 if (parameter is FrameworkContentElement fec)
                 {
-                    return fec.TryFindResource(fec.GetType()) as Style;
+                    return fec.TryFindResource(FrameworkContentElementDefaultStyleKeyHelper.GetDefaultStyleKey(fec)) as Style;
                 }
             }
 
@@ -38,5 +38,19 @@
         {
             return Binding.DoNothing;
         }
+
+#pragma warning disable CA1812
+
+        private class FrameworkElementDefaultStyleKeyHelper : FrameworkElement
+        {
+            public static object GetDefaultStyleKey(FrameworkElement element) => element.GetValue(DefaultStyleKeyProperty);
+        }
+
+        private class FrameworkContentElementDefaultStyleKeyHelper : FrameworkElement
+        {
+            public static object GetDefaultStyleKey(FrameworkContentElement element) => element.GetValue(DefaultStyleKeyProperty);
+        }
+
+#pragma warning restore CA1812
     }
 }
