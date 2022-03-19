@@ -6,14 +6,35 @@
 namespace Snoop.Infrastructure
 {
     using System.Collections.Generic;
+    using System.Windows;
+    using Snoop.Infrastructure.Helpers;
 
-    public static class ResourceKeyCache
+    public class ResourceKeyCache : ICacheManaged
     {
-        private static readonly Dictionary<object, string> keys = new();
+        private readonly Dictionary<object, string> keys = new();
 
-        public static string? GetKey(object element)
+        public static readonly ResourceKeyCache Instance = new();
+
+        private ResourceKeyCache()
         {
-            if (keys.TryGetValue(element, out var key))
+        }
+
+        public string? GetOrAddKey(DependencyObject element, object value)
+        {
+            var resourceKey = this.GetKey(value);
+
+            if (string.IsNullOrEmpty(resourceKey))
+            {
+                resourceKey = ResourceDictionaryKeyHelpers.GetKeyOfResourceItem(element, value);
+                this.Cache(value, resourceKey);
+            }
+
+            return resourceKey;
+        }
+
+        public string? GetKey(object value)
+        {
+            if (this.keys.TryGetValue(value, out var key))
             {
                 return key;
             }
@@ -21,17 +42,26 @@ namespace Snoop.Infrastructure
             return null;
         }
 
-        public static void Cache(object element, string key)
+        public void Cache(object value, string key)
         {
-            if (keys.ContainsKey(element) == false)
+            if (this.keys.ContainsKey(value) == false)
             {
-                keys.Add(element, key);
+                this.keys.Add(value, key);
             }
         }
 
-        public static bool Contains(object element)
+        public bool Contains(object element)
         {
-            return keys.ContainsKey(element);
+            return this.keys.ContainsKey(element);
+        }
+
+        public void Activate()
+        {
+        }
+
+        public void Dispose()
+        {
+            this.keys.Clear();
         }
     }
 }

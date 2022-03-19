@@ -9,11 +9,9 @@
     using System.Windows.Threading;
     using Snoop.Infrastructure.Helpers;
 
-    public partial class BindingDiagnosticHelper : IDisposable
+    public partial class BindingDiagnosticHelper : ICacheManaged
     {
         public static readonly BindingDiagnosticHelper Instance = new();
-
-        private int usageCount;
 
         private BindingDiagnosticHelper()
         {
@@ -24,27 +22,7 @@
 
         public bool IsActive { get; private set; }
 
-        public void IncreaseUsageCount()
-        {
-            if (this.usageCount == 0)
-            {
-                this.Activate();
-            }
-
-            ++this.usageCount;
-        }
-
-        public void DecreaseUsageCount()
-        {
-            --this.usageCount;
-
-            if (this.usageCount == 0)
-            {
-                this.Dispose();
-            }
-        }
-
-        private void Activate()
+        public void Activate()
         {
             if (this.IsActive)
             {

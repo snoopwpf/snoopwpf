@@ -302,15 +302,7 @@ namespace Snoop.Infrastructure
                             // Cache the resource key for this item if not cached already. This could be done for more types, but would need to optimize perf.
                             if (TypeMightHaveResourceKey(this.property.PropertyType))
                             {
-                                var resourceKey = ResourceKeyCache.GetKey(value);
-
-                                if (string.IsNullOrEmpty(resourceKey))
-                                {
-                                    resourceKey = ResourceDictionaryKeyHelpers.GetKeyOfResourceItem(dependencyObject, value);
-                                    ResourceKeyCache.Cache(value, resourceKey);
-                                }
-
-                                Debug.Assert(resourceKey is not null, "resourceKey is not null");
+                                var resourceKey = ResourceKeyCache.Instance.GetOrAddKey(dependencyObject, value);
 
                                 return resourceKey;
                             }
@@ -780,12 +772,15 @@ namespace Snoop.Infrastructure
                 }
             }
 
-            if (obj is FrameworkElement)
+            if (obj is FrameworkElement
+                or FrameworkContentElement)
             {
-                const string defaultStyleKeyPropertyName = "DefaultStyleKey";
-                if (obj.GetType().GetProperty(defaultStyleKeyPropertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic) is not null)
                 {
-                    properties.Add(new(obj, TypeDescriptor.CreateProperty(obj.GetType(), defaultStyleKeyPropertyName, typeof(Style)), defaultStyleKeyPropertyName, defaultStyleKeyPropertyName));
+                    const string propertyName = "DefaultStyleKey";
+                    if (obj.GetType().GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic) is not null)
+                    {
+                        properties.Add(new(obj, TypeDescriptor.CreateProperty(obj.GetType(), propertyName, typeof(Style)), propertyName, propertyName));
+                    }
                 }
             }
 
@@ -854,9 +849,9 @@ namespace Snoop.Infrastructure
                 return null;
             }
 
-            if (ResourceKeyCache.Contains(obj))
+            if (ResourceKeyCache.Instance.Contains(obj))
             {
-                var key = ResourceKeyCache.GetKey(obj);
+                var key = ResourceKeyCache.Instance.GetKey(obj);
                 var prop = new PropertyInformation(key!, null, "x:Key", key!, isCopyable: true);
                 return new List<PropertyInformation>
                 {

@@ -24,7 +24,6 @@ namespace Snoop.Windows
     using Snoop.Core.Properties;
     using Snoop.Data.Tree;
     using Snoop.Infrastructure;
-    using Snoop.Infrastructure.Diagnostics;
     using Snoop.Infrastructure.Helpers;
     using Snoop.Views;
 
@@ -370,11 +369,12 @@ namespace Snoop.Windows
         #endregion
 
         #region Protected Event Overrides
+
         protected override void OnSourceInitialized(EventArgs e)
         {
             base.OnSourceInitialized(e);
 
-            BindingDiagnosticHelper.Instance.IncreaseUsageCount();
+            CacheManager.Instance.IncreaseUsageCount();
 
             // load whether all properties are shown by default
             this.PropertyGrid.ShowDefaults = Settings.Default.ShowDefaults;
@@ -406,7 +406,7 @@ namespace Snoop.Windows
             this.eventsView?.Dispose();
             this.debugListenerControl?.Dispose();
 
-            BindingDiagnosticHelper.Instance.DecreaseUsageCount();
+            CacheManager.Instance.DecreaseUsageCount();
 
             InputManager.Current.PreProcessInput -= this.HandlePreProcessInput;
 
