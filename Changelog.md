@@ -10,10 +10,13 @@
 
   - Editing `Color?` values works now
   - [#313](../../issues/313) - Error: Collection was modified; enumeration operation may not execute.
+  - [#319](../../issues/319) - Wrong style being displayed in property inspector if DefaultStyleKey is overwritten.
 
 - ### Improvements
 
+  - Improved resource lookup (used to get resource keys from resources)
   - [#314](../../issues/314) - Hide properties from Snoop?
+  - [#320](../../issues/320) - System resources are not shown in the tree
 
 ## 4.0.1
 
