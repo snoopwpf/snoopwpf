@@ -1,4 +1,4 @@
-// (c) Copyright Cory Plotts.
+﻿// (c) Copyright Cory Plotts.
 // This source is subject to the Microsoft Public License (Ms-PL).
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
@@ -39,7 +39,7 @@ namespace Snoop.Infrastructure.Helpers
                 dependencyObject = VisualTreeHelper.GetParent(dependencyObject);
             }
 
-            // check the application resources
+            // Check application resources
             if (Application.Current is not null)
             {
                 var resourceKey = GetKeyInResourceDictionary(Application.Current.Resources, resourceItem);
@@ -49,11 +49,36 @@ namespace Snoop.Infrastructure.Helpers
                 }
             }
 
+            // Check system resources
+            foreach (var cacheEntry in SystemResourcesCache.Instance.SystemResources.Reverse())
+            {
+                {
+                    var resourceKey = GetKeyInResourceDictionary(cacheEntry.Themed, resourceItem);
+                    if (resourceKey is not null)
+                    {
+                        return resourceKey;
+                    }
+                }
+
+                {
+                    var resourceKey = GetKeyInResourceDictionary(cacheEntry.Generic, resourceItem);
+                    if (resourceKey is not null)
+                    {
+                        return resourceKey;
+                    }
+                }
+            }
+
             return string.Empty;
         }
 
-        public static string? GetKeyInResourceDictionary(ResourceDictionary dictionary, object? resourceItem)
+        public static string? GetKeyInResourceDictionary(ResourceDictionary? dictionary, object? resourceItem)
         {
+            if (dictionary is null)
+            {
+                return null;
+            }
+
             foreach (var key in dictionary.Keys)
             {
                 if (dictionary.TryGetValue(key, out var item)

@@ -129,6 +129,7 @@ namespace Snoop.Windows
 
         #region RootTreeItem
 
+        public SystemResourcesTreeItem? SystemResourcesTreeItem { get; private set; }
 
         /// <summary>
         /// Root element of the tree.
@@ -452,10 +453,15 @@ namespace Snoop.Windows
                 var previousSelection = this.CurrentSelection;
                 var previousTarget = previousSelection?.Target;
 
+                SystemResourcesCache.Instance.Reload();
+
                 this.TreeItems.Clear();
 
-                this.Root?.Dispose();
-                this.Root = this.TreeService.Construct(this.RootObject!, null);
+                this.SystemResourcesTreeItem?.Dispose();
+                this.SystemResourcesTreeItem = (SystemResourcesTreeItem)new SystemResourcesTreeItem(null, this.TreeService).Reload();
+
+                this.RootTreeItem?.Dispose();
+                this.RootTreeItem = this.TreeService.Construct(this.RootObject!, null);
 
                 this.TreeService.DiagnosticContext.AnalyzeTree();
 
@@ -740,7 +746,8 @@ namespace Snoop.Windows
                         return null; // Something went wrong. At least we will not crash with null ref here.
                     }
 
-                    this.Root = this.TreeService.Construct(presentationSource.RootVisual, null);
+                    this.SystemResourcesTreeItem = (SystemResourcesTreeItem)new SystemResourcesTreeItem(null, this.TreeService).Reload();
+                    this.RootTreeItem = this.TreeService.Construct(presentationSource.RootVisual, null);
                     newRootSet = true;
                 }
             }
@@ -748,7 +755,8 @@ namespace Snoop.Windows
             // Constructing a new root already reloads it
             if (newRootSet == false)
             {
-                this.Root.Reload();
+                this.SystemResourcesTreeItem?.Reload();
+                this.RootTreeItem.Reload();
             }
 
             this.TreeService.DiagnosticContext.AnalyzeTree();
@@ -793,7 +801,8 @@ namespace Snoop.Windows
             }
             else if (this.filter.Length == 0)
             {
-                this.TreeItems.Add(this.rootTreeItem!);
+                this.TreeItems.Add(this.SystemResourcesTreeItem!);
+                this.TreeItems.Add(this.RootTreeItem!);
             }
             else
             {
