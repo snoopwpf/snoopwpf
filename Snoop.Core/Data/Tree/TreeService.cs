@@ -1,4 +1,4 @@
-﻿namespace Snoop.Data.Tree
+namespace Snoop.Data.Tree
 {
     using System;
     using System.Collections;
@@ -117,6 +117,8 @@
 
                     child.ExpandTo();
                 }
+
+                return this.RootTreeItem;
             }
 
             return treeItem;

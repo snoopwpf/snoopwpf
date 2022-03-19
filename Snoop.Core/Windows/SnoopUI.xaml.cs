@@ -190,7 +190,8 @@ namespace Snoop.Windows
                 this.OnPropertyChanged(nameof(this.CurrentFocusScope));
 
                 if (this.TreeItems.Count > 1
-                    || (this.TreeItems.Count == 1 && this.TreeItems[0] != this.rootTreeItem))
+                    || (this.TreeItems.Count == 1 && this.TreeItems[0] != this.RootTreeItem)
+                    || (this.TreeItems.Count == 2 && this.TreeItems[1] != this.RootTreeItem))
                 {
                     // Check whether the selected item is filtered out by the filter,
                     // in which case reset the filter.
