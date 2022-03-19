@@ -86,7 +86,7 @@ namespace Snoop.Data.Tree
             }
         }
 
-        public virtual string DisplayName => this.Name;
+        public virtual string DisplayName => $"{this.Name} ({this.TargetType.Name})";
 
         public int SortOrder { get; protected set; }
 
@@ -153,10 +153,10 @@ namespace Snoop.Data.Tree
 
         public override string ToString()
         {
-            var sb = new StringBuilder(4 + 1 + this.Name.Length + 2 + this.TargetType.Name.Length + 1 + this.childItemCount > 0 ? 3 : 0);
+            var sb = new StringBuilder(4 + 1 + this.DisplayName.Length + 1 + this.childItemCount > 0 ? 3 : 0);
 
             // [depth] name (type) numberOfChildren
-            sb.AppendFormat("[{0:D3}] {1} ({2})", this.Depth, this.Name, this.TargetType.Name);
+            sb.AppendFormat("[{0:D3}] {1}", this.Depth, this.DisplayName);
 
             if (this.childItemCount != 0)
             {
