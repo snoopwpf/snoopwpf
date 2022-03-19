@@ -470,6 +470,10 @@ namespace Snoop.Windows
                             this.CurrentSelection.ExpandTo();
                         }
                     }
+                    else
+                    {
+                        this.CurrentSelection = null;
+                    }
                 }
 
                 this.SetFilter(this.filter);
