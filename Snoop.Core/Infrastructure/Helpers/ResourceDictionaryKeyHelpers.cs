@@ -1,4 +1,4 @@
-﻿// (c) Copyright Cory Plotts.
+// (c) Copyright Cory Plotts.
 // This source is subject to the Microsoft Public License (Ms-PL).
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
@@ -63,7 +63,7 @@ namespace Snoop.Infrastructure.Helpers
                 }
             }
 
-            foreach (var dic in dictionary.MergedDictionaries.ToList())
+            foreach (var dic in dictionary.MergedDictionaries.Reverse())
             {
                 var name = GetKeyInResourceDictionary(dic, resourceItem);
                 if (!string.IsNullOrEmpty(name))
