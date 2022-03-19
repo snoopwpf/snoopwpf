@@ -117,7 +117,7 @@ namespace Snoop.PowerShell
                 // allow scripting of the host controls
                 this.SetVariable("snoopui", targetSnoopUi);
                 this.SetVariable("ui", this);
-                this.SetVariable(ShellConstants.Root, targetSnoopUi.Root);
+                this.SetVariable(ShellConstants.Root, targetSnoopUi.RootTreeItem);
                 this.SetVariable(ShellConstants.Selected, targetSnoopUi.CurrentSelection);
 
                 // marshall back to the UI thread when the provider notifiers of a location change
@@ -191,8 +191,8 @@ namespace Snoop.PowerShell
                     this.SetVariable(ShellConstants.Selected, snoopUi.CurrentSelection);
                     break;
 
-                case nameof(SnoopUI.Root):
-                    this.SetVariable(ShellConstants.Root, snoopUi.Root);
+                case nameof(SnoopUI.RootTreeItem):
+                    this.SetVariable(ShellConstants.Root, snoopUi.RootTreeItem);
                     break;
             }
         }

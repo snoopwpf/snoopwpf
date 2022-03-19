@@ -121,25 +121,26 @@ namespace Snoop.Windows
         }
 
         /// <summary>
-        /// This is the collection of VisualTreeItem(s) that the visual tree TreeView binds to.
+        /// This is the collection the TreeView binds to.
         /// </summary>
         public ObservableCollection<TreeItem> TreeItems { get; } = new();
 
         #endregion
 
-        #region Root
+        #region RootTreeItem
+
 
         /// <summary>
         /// Root element of the tree.
         /// </summary>
-        public TreeItem? Root
+        public TreeItem? RootTreeItem
         {
-            get { return this.rootTreeItem; }
+            get => this.rootTreeItem;
 
             private set
             {
                 this.rootTreeItem = value;
-                this.OnPropertyChanged(nameof(this.Root));
+                this.OnPropertyChanged(nameof(this.RootTreeItem));
             }
         }
 
@@ -163,7 +164,7 @@ namespace Snoop.Windows
         /// </summary>
         public TreeItem? CurrentSelection
         {
-            get { return this.currentSelection; }
+            get => this.currentSelection;
 
             set
             {
@@ -180,9 +181,9 @@ namespace Snoop.Windows
 
                 this.currentSelection = value;
 
-                if (this.currentSelection is not null)
+                if (this.CurrentSelection is not null)
                 {
-                    this.currentSelection.IsSelected = true;
+                    this.CurrentSelection.IsSelected = true;
                 }
 
                 this.OnPropertyChanged(nameof(this.CurrentSelection));
@@ -193,7 +194,7 @@ namespace Snoop.Windows
                 {
                     // Check whether the selected item is filtered out by the filter,
                     // in which case reset the filter.
-                    var tmp = this.currentSelection;
+                    var tmp = this.CurrentSelection;
 
                     while (tmp is not null && !this.TreeItems.Contains(tmp))
                     {
@@ -581,9 +582,9 @@ namespace Snoop.Windows
 
         private void CopyPropertyChangesHandler(object sender, ExecutedRoutedEventArgs e)
         {
-            if (this.currentSelection is not null)
+            if (this.CurrentSelection is not null)
             {
-                this.SaveEditedProperties(this.currentSelection);
+                this.SaveEditedProperties(this.CurrentSelection);
             }
 
             EditedPropertiesHelper.DumpObjectsWithEditedProperties();
@@ -684,13 +685,13 @@ namespace Snoop.Windows
         /// </summary>
         private TreeItem? FindItem(object? target)
         {
-            if (this.Root is null)
+            if (this.RootTreeItem is null)
             {
                 return null;
             }
 
             {
-                var node = this.Root.FindNode(target);
+                var node = this.RootTreeItem.FindNode(target);
 
                 if (node is not null)
                 {
@@ -706,7 +707,7 @@ namespace Snoop.Windows
 
                 while (parent is not null)
                 {
-                    var node = this.Root.FindNode(parent);
+                    var node = this.RootTreeItem.FindNode(parent);
 
                     if (node is not null)
                     {
@@ -718,7 +719,7 @@ namespace Snoop.Windows
             }
 
             var newRootSet = false;
-            var rootVisual = this.Root.MainVisual;
+            var rootVisual = this.RootTreeItem.MainVisual;
 
             if (target is Visual visual
                 && rootVisual is not null)
@@ -752,7 +753,7 @@ namespace Snoop.Windows
             this.TreeService.DiagnosticContext.AnalyzeTree();
 
             {
-                var node = this.Root.FindNode(target);
+                var node = this.RootTreeItem.FindNode(target);
 
                 // Tree items are cleared when filtering
                 this.SetFilter(this.filter);
@@ -787,7 +788,7 @@ namespace Snoop.Windows
             }
             else if (this.filter == "Show only elements with binding errors")
             {
-                this.FilterBindings(this.rootTreeItem!);
+                this.FilterBindings(this.RootTreeItem!);
             }
             else if (this.filter.Length == 0)
             {
@@ -795,7 +796,7 @@ namespace Snoop.Windows
             }
             else
             {
-                this.FilterTree(this.rootTreeItem!, this.filter.ToLower());
+                this.FilterTree(this.RootTreeItem!, this.filter.ToLower());
             }
         }
 
@@ -833,7 +834,7 @@ namespace Snoop.Windows
         {
             this.Refresh();
 
-            this.CurrentSelection = this.rootTreeItem;
+            this.CurrentSelection = this.RootTreeItem;
         }
 
         #endregion
