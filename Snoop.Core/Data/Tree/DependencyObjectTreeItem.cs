@@ -6,12 +6,14 @@
 namespace Snoop.Data.Tree
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
     using System.Windows.Media;
     using Snoop.Infrastructure;
+    using Snoop.Infrastructure.Helpers;
     using Snoop.Infrastructure.SelectionHighlight;
 
     /// <summary>
@@ -27,7 +29,6 @@ namespace Snoop.Data.Tree
             : base(target, parent, treeService)
         {
             this.DependencyObject = target;
-
             this.Visual = target as Visual;
         }
 
@@ -84,27 +85,68 @@ namespace Snoop.Data.Tree
             }
         }
 
-        protected override ResourceDictionary? ResourceDictionary
+        protected override IEnumerable<ResourceDictionaryWrapper?> ResourceDictionary
         {
             get
             {
-                if (this.Target is FrameworkElement frameworkElement)
+                switch (this.Target)
                 {
-                    return frameworkElement.Resources;
-                }
+                    case FrameworkElement fe:
+                        yield return fe.Resources;
 
-                if (this.Target is FrameworkContentElement frameworkContentElement)
-                {
-                    return frameworkContentElement.Resources;
-                }
+                        {
+                            var resources = FrameworkElementHelper.GetStyle(fe)?.Resources;
+                            if (resources is not null)
+                            {
+                                yield return new ResourceDictionaryWrapper(resources, "style");
+                            }
+                        }
 
-                return null;
+                        {
+                            var resources = FrameworkElementHelper.GetTemplate(fe)?.Resources;
+                            if (resources is not null)
+                            {
+                                yield return new ResourceDictionaryWrapper(resources, "template");
+                            }
+                        }
+
+                        {
+                            var resources = FrameworkElementHelper.GetThemeStyle(fe)?.Resources;
+                            if (resources is not null)
+                            {
+                                yield return new ResourceDictionaryWrapper(resources, "theme style");
+                            }
+                        }
+
+                        break;
+
+                    case FrameworkContentElement fce:
+                        yield return fce.Resources;
+
+                        {
+                            var resources = FrameworkElementHelper.GetStyle(fce)?.Resources;
+                            if (resources is not null)
+                            {
+                                yield return new ResourceDictionaryWrapper(resources, "style");
+                            }
+                        }
+
+                        {
+                            var resources = FrameworkElementHelper.GetThemeStyle(fce)?.Resources;
+                            if (resources is not null)
+                            {
+                                yield return new ResourceDictionaryWrapper(resources, "theme style");
+                            }
+                        }
+
+                        break;
+                }
             }
         }
 
         protected override void OnIsSelectedChanged()
         {
-            // Add adorners for the visual this is representing.
+            // Add adorner for the visual this is representing.
             if (this.Target is DependencyObject dependencyObject)
             {
                 if (this.IsSelected
@@ -114,7 +156,7 @@ namespace Snoop.Data.Tree
                 }
                 else if (this.selectionHighlight is not null)
                 {
-                    (this.selectionHighlight as IDisposable)?.Dispose();
+                    this.selectionHighlight?.Dispose();
                     this.selectionHighlight = null;
                 }
             }

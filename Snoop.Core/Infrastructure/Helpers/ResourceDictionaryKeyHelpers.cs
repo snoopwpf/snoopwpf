@@ -8,32 +8,40 @@ namespace Snoop.Infrastructure.Helpers
     using System.Linq;
     using System.Windows;
     using System.Windows.Media;
-    using System.Windows.Media.Media3D;
 
     public static class ResourceDictionaryKeyHelpers
     {
-        public static string GetKeyOfResourceItem(DependencyObject? dependencyObject, object? resourceItem)
+        public static object GetKeyOfResourceItem(DependencyObject? dependencyObject, object? resourceItem)
         {
             if (dependencyObject is null
                 || resourceItem is null)
             {
-                return string.Empty;
+                return DependencyProperty.UnsetValue;
             }
 
             // Walk up the visual tree, looking for the resourceItem in each frameworkElement's resource dictionary.
-            while (dependencyObject is Visual or Visual3D)
+            while (dependencyObject is not null)
             {
-                if (dependencyObject is FrameworkElement frameworkElement)
+                if (dependencyObject is FrameworkElement fe)
                 {
-                    var resourceKey = GetKeyInResourceDictionary(frameworkElement.Resources, resourceItem);
+                    var resourceKey = GetKeyInResourceDictionary(fe.Resources, resourceItem)
+                                      ?? GetKeyInResourceDictionary(FrameworkElementHelper.GetStyle(fe)?.Resources, resourceItem)
+                                      ?? GetKeyInResourceDictionary(FrameworkElementHelper.GetTemplate(fe)?.Resources, resourceItem)
+                                      ?? GetKeyInResourceDictionary(FrameworkElementHelper.GetThemeStyle(fe)?.Resources, resourceItem);
                     if (resourceKey is not null)
                     {
                         return resourceKey;
                     }
                 }
-                else
+                else if (dependencyObject is FrameworkContentElement fce)
                 {
-                    break;
+                    var resourceKey = GetKeyInResourceDictionary(fce.Resources, resourceItem)
+                                      ?? GetKeyInResourceDictionary(FrameworkElementHelper.GetStyle(fce)?.Resources, resourceItem)
+                                      ?? GetKeyInResourceDictionary(FrameworkElementHelper.GetThemeStyle(fce)?.Resources, resourceItem);
+                    if (resourceKey is not null)
+                    {
+                        return resourceKey;
+                    }
                 }
 
                 dependencyObject = VisualTreeHelper.GetParent(dependencyObject);
@@ -69,10 +77,10 @@ namespace Snoop.Infrastructure.Helpers
                 }
             }
 
-            return string.Empty;
+            return DependencyProperty.UnsetValue;
         }
 
-        public static string? GetKeyInResourceDictionary(ResourceDictionary? dictionary, object? resourceItem)
+        public static object? GetKeyInResourceDictionary(ResourceDictionary? dictionary, object? resourceItem)
         {
             if (dictionary is null)
             {
@@ -84,16 +92,16 @@ namespace Snoop.Infrastructure.Helpers
                 if (dictionary.TryGetValue(key, out var item)
                     && item == resourceItem)
                 {
-                    return key?.ToString();
+                    return key;
                 }
             }
 
             foreach (var dic in dictionary.MergedDictionaries.Reverse())
             {
-                var name = GetKeyInResourceDictionary(dic, resourceItem);
-                if (!string.IsNullOrEmpty(name))
+                var key = GetKeyInResourceDictionary(dic, resourceItem);
+                if (key is not null)
                 {
-                    return name;
+                    return key;
                 }
             }
 

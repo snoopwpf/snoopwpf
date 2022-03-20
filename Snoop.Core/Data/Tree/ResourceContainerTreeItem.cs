@@ -5,7 +5,8 @@
 
 namespace Snoop.Data.Tree
 {
-    using System.Windows;
+    using System.Collections.Generic;
+    using System.Linq;
 
     public abstract class ResourceContainerTreeItem : TreeItem
     {
@@ -14,16 +15,24 @@ namespace Snoop.Data.Tree
         {
         }
 
-        protected abstract ResourceDictionary? ResourceDictionary { get; }
+        protected abstract IEnumerable<ResourceDictionaryWrapper?> ResourceDictionary { get; }
 
         protected override void ReloadCore()
         {
-            var resourceDictionary = this.ResourceDictionary;
+            var resourceDictionaries = this.ResourceDictionary.ToList();
 
-            if (resourceDictionary is not null
-                && (resourceDictionary.Count != 0 || resourceDictionary.MergedDictionaries.Count > 0))
+            foreach (var resourceDictionary in resourceDictionaries)
             {
-                this.AddChild(this.TreeService.Construct(resourceDictionary, this));
+                if (resourceDictionary is null)
+                {
+                    continue;
+                }
+
+                if (resourceDictionary.Keys.Count > 0
+                    || resourceDictionary.MergedDictionaries.Count > 0)
+                {
+                    this.AddChild(this.TreeService.Construct(resourceDictionary, this));
+                }
             }
 
             base.ReloadCore();

@@ -74,6 +74,10 @@ namespace Snoop.Data.Tree
                     treeItem = new AutomationPeerTreeItem(automationPeer, parent, this);
                     break;
 
+                case ResourceDictionaryWrapper resourceDictionary:
+                    treeItem = new ResourceDictionaryTreeItem(resourceDictionary, parent, this);
+                    break;
+
                 case ResourceDictionary resourceDictionary:
                     treeItem = new ResourceDictionaryTreeItem(resourceDictionary, parent, this);
                     break;

@@ -6,7 +6,6 @@
 namespace Snoop.Data.Tree
 {
     using System.ComponentModel;
-    using System.Windows;
     using System.Windows.Data;
 
     public class ResourceDictionaryTreeItem : TreeItem
@@ -14,10 +13,10 @@ namespace Snoop.Data.Tree
         private static readonly SortDescription dictionarySortDescription = new(nameof(SortOrder), ListSortDirection.Ascending);
         private static readonly SortDescription displayNameSortDescription = new(nameof(DisplayName), ListSortDirection.Ascending);
 
-        private readonly ResourceDictionary dictionary;
+        private readonly ResourceDictionaryWrapper dictionary;
         private TreeItem? placeholderChild;
 
-        public ResourceDictionaryTreeItem(ResourceDictionary dictionary, TreeItem? parent, TreeService treeService)
+        public ResourceDictionaryTreeItem(ResourceDictionaryWrapper dictionary, TreeItem? parent, TreeService treeService)
             : base(dictionary, parent, treeService)
         {
             this.dictionary = dictionary;
@@ -32,7 +31,7 @@ namespace Snoop.Data.Tree
             return null;
         }
 
-        protected override string GetName() => this.dictionary.Source?.ToString() ?? "Runtime Dictionary";
+        protected override string GetName() => $"{this.dictionary.Source} from {this.dictionary.Origin}";
 
         protected override void ReloadCore()
         {
@@ -78,7 +77,7 @@ namespace Snoop.Data.Tree
 
             foreach (var key in resourceDictionary.Keys)
             {
-                resourceDictionary.TryGetValue(key, out var item, out var exception);
+                resourceDictionary.ResourceDictionary.TryGetValue(key, out var item, out var exception);
 
                 if (item is not null
                     || exception is not null

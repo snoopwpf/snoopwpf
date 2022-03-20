@@ -5,6 +5,7 @@
 
 namespace Snoop.Data.Tree
 {
+    using System.Collections.Generic;
     using System.Windows;
     using System.Windows.Media;
     using Snoop.Infrastructure;
@@ -22,7 +23,10 @@ namespace Snoop.Data.Tree
 
         public override Visual? MainVisual => this.application.MainWindow;
 
-        protected override ResourceDictionary ResourceDictionary => this.application.Resources;
+        protected override IEnumerable<ResourceDictionaryWrapper?> ResourceDictionary
+        {
+            get { yield return this.application.Resources; }
+        }
 
         protected override void ReloadCore()
         {
