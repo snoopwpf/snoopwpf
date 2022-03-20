@@ -22,12 +22,14 @@
             {
                 if (parameter is FrameworkElement fe)
                 {
-                    return fe.TryFindResource(FrameworkElementDefaultStyleKeyHelper.GetDefaultStyleKey(fe)) as Style;
+                    var defaultStyleKey = FrameworkElementDefaultStyleKeyHelper.GetDefaultStyleKey(fe) ?? fe.GetType();
+                    return fe.TryFindResource(defaultStyleKey) as Style;
                 }
 
-                if (parameter is FrameworkContentElement fec)
+                if (parameter is FrameworkContentElement fce)
                 {
-                    return fec.TryFindResource(FrameworkContentElementDefaultStyleKeyHelper.GetDefaultStyleKey(fec)) as Style;
+                    var defaultStyleKey = FrameworkContentElementDefaultStyleKeyHelper.GetDefaultStyleKey(fce) ?? fce.GetType();
+                    return fce.TryFindResource(defaultStyleKey) as Style;
                 }
             }
 
@@ -43,12 +45,12 @@
 
         private class FrameworkElementDefaultStyleKeyHelper : FrameworkElement
         {
-            public static object GetDefaultStyleKey(FrameworkElement element) => element.GetValue(DefaultStyleKeyProperty);
+            public static object? GetDefaultStyleKey(FrameworkElement element) => element.GetValue(DefaultStyleKeyProperty);
         }
 
         private class FrameworkContentElementDefaultStyleKeyHelper : FrameworkElement
         {
-            public static object GetDefaultStyleKey(FrameworkContentElement element) => element.GetValue(DefaultStyleKeyProperty);
+            public static object? GetDefaultStyleKey(FrameworkContentElement element) => element.GetValue(DefaultStyleKeyProperty);
         }
 
 #pragma warning restore CA1812
