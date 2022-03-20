@@ -8,6 +8,7 @@ namespace Snoop.Views.TriggersTab
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
+    using Snoop.Infrastructure.Helpers;
     using Snoop.Views.TriggersTab.Triggers;
 
     public partial class TriggersView
@@ -127,8 +128,7 @@ namespace Snoop.Views.TriggersTab
 
             if (target is FrameworkElement fe)
             {
-                // If the target does not have an explicit style, try to find the default style
-                var style = fe.Style ?? fe.TryFindResource(fe.GetType()) as Style;
+                var style = FrameworkElementHelper.GetStyle(fe);
 
                 if (style is not null)
                 {
@@ -136,22 +136,21 @@ namespace Snoop.Views.TriggersTab
                 }
 
                 this.AddTriggers(fe, fe.Triggers, TriggerSource.Element);
-            }
 
-            if (target is FrameworkContentElement fec)
-            {
-                // If the target does not have an explicit style, try to find the default style
-                var style = fec.Style ?? fec.TryFindResource(fec.GetType()) as Style;
-
-                if (style is not null)
+                if (FrameworkElementHelper.GetTemplate(fe) is ControlTemplate controlTemplate)
                 {
-                    this.AddTriggers(fec, style, TriggerSource.Style);
+                    this.AddTriggers(fe, controlTemplate.Triggers, TriggerSource.ControlTemplate);
                 }
             }
 
-            if (target is Control { Template: { } } control)
+            if (target is FrameworkContentElement fce)
             {
-                this.AddTriggers(control, control.Template.Triggers, TriggerSource.ControlTemplate);
+                var style = FrameworkElementHelper.GetStyle(fce);
+
+                if (style is not null)
+                {
+                    this.AddTriggers(fce, style, TriggerSource.Style);
+                }
             }
 
             switch (target)

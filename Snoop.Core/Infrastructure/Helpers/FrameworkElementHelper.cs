@@ -11,18 +11,33 @@ public static class FrameworkElementHelper
 
     public static Style? GetStyle(FrameworkElement fe)
     {
+        if (fe.Style is not null)
+        {
+            return fe.Style;
+        }
+
         var defaultStyleKey = FrameworkElementDefaultStyleKeyHelper.GetDefaultStyleKey(fe) ?? fe.GetType();
         return fe.TryFindResource(defaultStyleKey) as Style;
     }
 
     public static Style? GetStyle(FrameworkContentElement fce)
     {
+        if (fce.Style is not null)
+        {
+            return fce.Style;
+        }
+
         var defaultStyleKey = FrameworkContentElementDefaultStyleKeyHelper.GetDefaultStyleKey(fce) ?? fce.GetType();
         return fce.TryFindResource(defaultStyleKey) as Style;
     }
 
     public static FrameworkTemplate? GetTemplate(FrameworkElement fe)
     {
+        if (fe is Control control)
+        {
+            return control.Template;
+        }
+
         return (FrameworkTemplate?)fe.GetType().GetProperty("TemplateInternal", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(fe);
     }
 
