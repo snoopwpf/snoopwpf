@@ -44,7 +44,7 @@ namespace Snoop.Infrastructure.Helpers
                     }
                 }
 
-                dependencyObject = VisualTreeHelper.GetParent(dependencyObject);
+                dependencyObject = VisualTreeHelper.GetParent(dependencyObject) ?? LogicalTreeHelper.GetParent(dependencyObject);
             }
 
             // Check application resources
