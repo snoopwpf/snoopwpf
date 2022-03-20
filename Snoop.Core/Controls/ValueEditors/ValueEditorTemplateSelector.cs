@@ -11,6 +11,7 @@ namespace Snoop.Controls.ValueEditors
     using System.Windows.Controls;
     using System.Windows.Media;
     using Snoop.Infrastructure;
+    using Snoop.Infrastructure.Helpers;
 
     public class ValueEditorTemplateSelector : DataTemplateSelector
     {
@@ -64,7 +65,7 @@ namespace Snoop.Controls.ValueEditors
                 return this.ColorTemplate;
             }
 
-            if (string.IsNullOrEmpty(property.ResourceKey) == false)
+            if (ResourceKeyHelper.IsValidResourceKey(property.ResourceKey))
             {
                 return this.WithResourceKeyTemplate;
             }

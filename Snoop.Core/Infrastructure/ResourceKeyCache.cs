@@ -11,7 +11,7 @@ namespace Snoop.Infrastructure
 
     public class ResourceKeyCache : ICacheManaged
     {
-        private readonly Dictionary<object, string> keys = new();
+        private readonly Dictionary<object, object> keys = new();
 
         public static readonly ResourceKeyCache Instance = new();
 
@@ -19,11 +19,11 @@ namespace Snoop.Infrastructure
         {
         }
 
-        public string? GetOrAddKey(DependencyObject element, object value)
+        public object? GetOrAddKey(DependencyObject element, object value)
         {
             var resourceKey = this.GetKey(value);
 
-            if (string.IsNullOrEmpty(resourceKey))
+            if (resourceKey is null)
             {
                 resourceKey = ResourceDictionaryKeyHelpers.GetKeyOfResourceItem(element, value);
                 this.Cache(value, resourceKey);
@@ -32,7 +32,7 @@ namespace Snoop.Infrastructure
             return resourceKey;
         }
 
-        public string? GetKey(object value)
+        public object? GetKey(object value)
         {
             if (this.keys.TryGetValue(value, out var key))
             {
@@ -42,7 +42,7 @@ namespace Snoop.Infrastructure
             return null;
         }
 
-        public void Cache(object value, string key)
+        public void Cache(object value, object key)
         {
             if (this.keys.ContainsKey(value) == false)
             {

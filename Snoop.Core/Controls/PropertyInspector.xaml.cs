@@ -16,6 +16,7 @@ namespace Snoop.Controls
     using System.Windows;
     using System.Windows.Input;
     using JetBrains.Annotations;
+    using Snoop.Converters;
     using Snoop.Core.Properties;
     using Snoop.Data;
     using Snoop.Infrastructure;
@@ -89,8 +90,8 @@ namespace Snoop.Controls
         {
             try
             {
-                var resourceKey = ((PropertyInformation?)e.Parameter)?.ResourceKey ?? string.Empty;
-                ClipboardHelper.SetText(resourceKey);
+                var stringValue = StringValueConverter.ConvertToString(((PropertyInformation?)e.Parameter)?.ResourceKey);
+                ClipboardHelper.SetText(stringValue ?? string.Empty);
             }
             catch (Exception exception)
             {
@@ -102,7 +103,7 @@ namespace Snoop.Controls
         {
             if (e.Parameter is PropertyInformation propertyInformation)
             {
-                e.CanExecute = string.IsNullOrEmpty(propertyInformation.ResourceKey) == false;
+                e.CanExecute = ResourceKeyHelper.IsValidResourceKey(propertyInformation.ResourceKey);
             }
 
             e.Handled = true;

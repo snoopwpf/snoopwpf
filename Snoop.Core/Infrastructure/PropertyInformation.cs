@@ -276,7 +276,7 @@ namespace Snoop.Infrastructure
             }
         }
 
-        public string? ResourceKey
+        public object? ResourceKey
         {
             get
             {
@@ -364,7 +364,7 @@ namespace Snoop.Infrastructure
                 if (this.Target is DependencyObject)
                 {
                     // Display both the value and the resource key, if there's a key for this property.
-                    if (string.IsNullOrEmpty(this.ResourceKey) == false)
+                    if (ResourceKeyHelper.IsValidResourceKey(this.ResourceKey))
                     {
                         return $"{stringValue} [{this.ResourceKey}]";
                     }
@@ -849,14 +849,17 @@ namespace Snoop.Infrastructure
                 return null;
             }
 
-            if (ResourceKeyCache.Instance.Contains(obj))
             {
                 var key = ResourceKeyCache.Instance.GetKey(obj);
-                var prop = new PropertyInformation(key!, null, "x:Key", key!, isCopyable: true);
-                return new List<PropertyInformation>
+
+                if (ResourceKeyHelper.IsValidResourceKey(key))
                 {
-                    prop
-                };
+                    var prop = new PropertyInformation(key!, null, "x:Key", key!, isCopyable: true);
+                    return new List<PropertyInformation>
+                    {
+                        prop
+                    };
+                }
             }
 
             if (obj is string

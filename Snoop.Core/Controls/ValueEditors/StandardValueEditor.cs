@@ -56,14 +56,7 @@ namespace Snoop.Controls.ValueEditors
 
             var value = this.Value;
 
-            if (value is not null)
-            {
-                this.StringValue = StringValueConverter.ConvertToString(value.GetType(), value) ?? string.Empty;
-            }
-            else
-            {
-                this.StringValue = string.Empty;
-            }
+            this.StringValue = StringValueConverter.ConvertToString(value) ?? string.Empty;
 
             this.isUpdatingValue = false;
 

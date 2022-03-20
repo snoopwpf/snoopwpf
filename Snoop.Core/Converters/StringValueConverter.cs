@@ -86,6 +86,16 @@
             return null;
         }
 
+        public static string? ConvertToString(object? value)
+        {
+            if (value is null)
+            {
+                return null;
+            }
+
+            return ConvertToString(value.GetType(), value);
+        }
+
         public static string? ConvertToString(Type sourceType, object? value)
         {
             if (typeof(string).IsAssignableFrom(sourceType))
