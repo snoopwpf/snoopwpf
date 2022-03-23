@@ -17,6 +17,7 @@ namespace Snoop.Infrastructure
     using System.Windows.Controls;
     using System.Windows.Data;
     using System.Windows.Media;
+    using System.Windows.Media.Animation;
     using System.Windows.Threading;
     using JetBrains.Annotations;
     using Snoop.Converters;
@@ -415,11 +416,20 @@ namespace Snoop.Infrastructure
 
         private static bool TypeMightHaveResourceKey(Type type)
         {
-            return typeof(Style).IsAssignableFrom(type)
-                   || typeof(ControlTemplate).IsAssignableFrom(type)
+            return typeof(Brush).IsAssignableFrom(type)
                    || typeof(Color).IsAssignableFrom(type)
-                   || typeof(Brush).IsAssignableFrom(type)
-                   || typeof(DrawingImage).IsAssignableFrom(type);
+                   || typeof(ControlTemplate).IsAssignableFrom(type)
+                   || typeof(DataTemplate).IsAssignableFrom(type)
+                   || typeof(DrawingImage).IsAssignableFrom(type)
+                   || typeof(Storyboard).IsAssignableFrom(type)
+                   || typeof(Style).IsAssignableFrom(type)
+
+                   || typeof(DataTemplateSelector).IsAssignableFrom(type)
+                   || typeof(ItemContainerTemplateSelector).IsAssignableFrom(type)
+                   || typeof(StyleSelector).IsAssignableFrom(type)
+
+                   || typeof(IValueConverter).IsAssignableFrom(type)
+                   || typeof(IMultiValueConverter).IsAssignableFrom(type);
         }
 
         public BindableType? ComponentType
