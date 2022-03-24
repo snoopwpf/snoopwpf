@@ -50,8 +50,6 @@ namespace Snoop.Controls.ValueEditors
 
         protected override void OnValueChanged(object? newValue)
         {
-            this.IsEditable = StringValueConverter.CanConvertFromString(this.PropertyType?.Type);
-
             this.isUpdatingValue = true;
 
             var value = this.Value;
@@ -62,6 +60,13 @@ namespace Snoop.Controls.ValueEditors
 
             var binding = BindingOperations.GetBindingExpression(this, StringValueProperty);
             binding?.UpdateSource();
+        }
+
+        protected override void OnPropertyTypeChanged()
+        {
+            base.OnPropertyTypeChanged();
+
+            this.IsEditable = StringValueConverter.CanConvertFromString(this.PropertyType?.Type);
         }
     }
 }
