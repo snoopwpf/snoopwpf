@@ -8,6 +8,7 @@ namespace Snoop.Infrastructure.Helpers
     using System.Linq;
     using System.Windows;
     using System.Windows.Media;
+    using System.Windows.Media.Media3D;
 
     public static class ResourceDictionaryKeyHelpers
     {
@@ -20,7 +21,7 @@ namespace Snoop.Infrastructure.Helpers
             }
 
             // Walk up the visual tree, looking for the resourceItem in each frameworkElement's resource dictionary.
-            while (dependencyObject is not null)
+            while (dependencyObject is Visual or Visual3D)
             {
                 if (dependencyObject is FrameworkElement fe)
                 {
