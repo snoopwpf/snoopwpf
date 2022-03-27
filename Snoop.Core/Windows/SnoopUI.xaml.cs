@@ -187,7 +187,6 @@ namespace Snoop.Windows
                 }
 
                 this.OnPropertyChanged(nameof(this.CurrentSelection));
-                this.OnPropertyChanged(nameof(this.CurrentFocusScope));
 
                 if (this.TreeItems.Count > 1
                     || (this.TreeItems.Count == 1 && this.TreeItems[0] != this.RootTreeItem)
@@ -256,33 +255,48 @@ namespace Snoop.Windows
         }
 
         private string filter = string.Empty;
+
         #endregion
 
-        #region CurrentFocus
+        #region Focus
+
         public IInputElement? CurrentFocus
         {
             get
             {
                 var newFocus = Keyboard.FocusedElement;
-                if (newFocus != this.currentFocus)
+
+                if (newFocus == this.currentFocus
+                    || (newFocus is null && this.IsActive))
                 {
-                    // Store reference to previously focused element only if focused element was changed.
-                    this.previousFocus = this.currentFocus;
+                    return this.currentFocus;
+                }
+
+                if (SnoopPartsRegistry.IsSnoopingSnoop == false
+                    && newFocus is DependencyObject dpo
+                    && dpo.IsPartOfSnoopVisualTree())
+                {
+                    return this.previousFocus;
                 }
 
                 this.currentFocus = newFocus;
 
-                return this.returnPreviousFocus ? this.previousFocus : this.currentFocus;
+                 var result = this.returnPreviousFocus ? this.previousFocus : this.currentFocus;
+
+                 // Store reference to previously focused element only if focused element was changed.
+                 this.previousFocus = this.currentFocus;
+
+                 this.OnPropertyChanged(nameof(this.CurrentFocusScope));
+
+                 return result;
             }
         }
-        #endregion
 
-        #region CurrentFocusScope
         public object? CurrentFocusScope
         {
             get
             {
-                if (this.CurrentSelection?.Target is DependencyObject selectedItem)
+                if (this.currentFocus is DependencyObject selectedItem)
                 {
                     return FocusManager.GetFocusScope(selectedItem);
                 }
