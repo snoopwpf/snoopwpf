@@ -13,9 +13,6 @@
 
     public sealed class DiagnosticContext : IDisposable, INotifyPropertyChanged
     {
-        private readonly ObservableCollection<DiagnosticProvider> diagnosticProviders = new();
-        private readonly ObservableCollection<DiagnosticItem> diagnosticItems = new();
-
         public DiagnosticContext(TreeService treeService)
             : this()
         {
@@ -24,19 +21,19 @@
 
         public DiagnosticContext()
         {
-            this.DiagnosticProviders = new(this.diagnosticProviders);
-            this.DiagnosticItems = new(this.diagnosticItems);
+            this.DiagnosticProviders = new();
+            this.DiagnosticItems = new SuspendableObservableCollection<DiagnosticItem>();
 
-            this.diagnosticProviders.Add(new FreezeFreezablesDiagnosticProvider());
-            this.diagnosticProviders.Add(new LocalResourceDefinitionsDiagnosticProvider());
-            this.diagnosticProviders.Add(new NonVirtualizedListsDiagnosticProvider());
-            this.diagnosticProviders.Add(new UnresolvedDynamicResourceDiagnosticProvider());
-            this.diagnosticProviders.Add(new BindingLeakDiagnosticProvider());
+            this.DiagnosticProviders.Add(new FreezeFreezablesDiagnosticProvider());
+            this.DiagnosticProviders.Add(new LocalResourceDefinitionsDiagnosticProvider());
+            this.DiagnosticProviders.Add(new NonVirtualizedListsDiagnosticProvider());
+            this.DiagnosticProviders.Add(new UnresolvedDynamicResourceDiagnosticProvider());
+            this.DiagnosticProviders.Add(new BindingLeakDiagnosticProvider());
 #if USE_WPF_BINDING_DIAG
             //this.diagnosticProviders.Add(new BindingDiagnosticProvider());
 #endif
 
-            foreach (var diagnosticProvider in this.diagnosticProviders)
+            foreach (var diagnosticProvider in this.DiagnosticProviders)
             {
                 diagnosticProvider.IsActive = TransientSettingsData.Current?.EnableDiagnostics ?? true;
                 diagnosticProvider.PropertyChanged += this.HandleDiagnosticProviderPropertyChanged;
@@ -45,30 +42,30 @@
 
         public TreeService? TreeService { get; }
 
-        public ReadOnlyObservableCollection<DiagnosticProvider> DiagnosticProviders { get; }
+        public ObservableCollection<DiagnosticProvider> DiagnosticProviders { get; } = new();
 
-        public ReadOnlyObservableCollection<DiagnosticItem> DiagnosticItems { get; }
+        public SuspendableObservableCollection<DiagnosticItem> DiagnosticItems { get; } = new();
 
         public void Add(DiagnosticItem item)
         {
-            this.diagnosticItems.Add(item);
+            this.DiagnosticItems.Add(item);
         }
 
         public void AddRange(IEnumerable<DiagnosticItem> items)
         {
             foreach (var item in items)
             {
-                this.diagnosticItems.Add(item);
+                this.DiagnosticItems.Add(item);
             }
         }
 
         public void TreeItemDisposed(TreeItem treeItem)
         {
-            foreach (var item in this.diagnosticItems.ToList())
+            foreach (var item in this.DiagnosticItems.ToList())
             {
                 if (item.TreeItem == treeItem)
                 {
-                    this.diagnosticItems.Remove(item);
+                    this.DiagnosticItems.Remove(item);
                 }
             }
         }
@@ -93,6 +90,8 @@
                 return;
             }
 
+            using var suspender = this.DiagnosticItems.SuspendNotifications();
+
             // Only add global Diagnostics if with we should analyze the whole tree
             foreach (var diagnosticProvider in this.DiagnosticProviders)
             {
@@ -108,6 +107,8 @@
             {
                 return;
             }
+
+            using var suspender = this.DiagnosticItems.SuspendNotifications();
 
             // Only add global Diagnostics if with we should analyze the whole tree
             this.AddRange(diagnosticProvider.GetGlobalDiagnosticItems());
@@ -147,9 +148,9 @@
                 && sender is DiagnosticProvider diagnosticProvider)
             {
                 // Always remove the diagnostics from the affected provider first
-                foreach (var diagnosticItem in this.diagnosticItems.Where(x => ReferenceEquals(x.DiagnosticProvider, diagnosticProvider)).ToList())
+                foreach (var diagnosticItem in this.DiagnosticItems.Where(x => ReferenceEquals(x.DiagnosticProvider, diagnosticProvider)).ToList())
                 {
-                    this.diagnosticItems.Remove(diagnosticItem);
+                    this.DiagnosticItems.Remove(diagnosticItem);
                 }
 
                 if (diagnosticProvider.IsActive)

@@ -17,13 +17,13 @@
             DependencyProperty.Register(nameof(DiagnosticContext), typeof(DiagnosticContext), typeof(DiagnosticsView), new PropertyMetadata(default(DiagnosticContext), OnDiagnosticContextChanged));
 
         public static readonly DependencyProperty DiagnosticProvidersProperty = DependencyProperty.Register(
-            nameof(DiagnosticProviders), typeof(ReadOnlyObservableCollection<DiagnosticProvider>), typeof(DiagnosticsView), new PropertyMetadata(default(ReadOnlyObservableCollection<DiagnosticProvider>)));
+            nameof(DiagnosticProviders), typeof(ObservableCollection<DiagnosticProvider>), typeof(DiagnosticsView), new PropertyMetadata(null));
 
         public static readonly DependencyProperty DiagnosticProvidersViewProperty = DependencyProperty.Register(
             nameof(DiagnosticProvidersView), typeof(ICollectionView), typeof(DiagnosticsView), new PropertyMetadata(default(ICollectionView)));
 
         public static readonly DependencyProperty DiagnosticItemsProperty = DependencyProperty.Register(
-            nameof(DiagnosticItems), typeof(ReadOnlyObservableCollection<DiagnosticItem>), typeof(DiagnosticsView), new PropertyMetadata(default(ReadOnlyObservableCollection<DiagnosticItem>)));
+            nameof(DiagnosticItems), typeof(ObservableCollection<DiagnosticItem>), typeof(DiagnosticsView), new PropertyMetadata(null));
 
         public static readonly DependencyProperty DiagnosticsItemsViewProperty = DependencyProperty.Register(
             nameof(DiagnosticsItemsView), typeof(ICollectionView), typeof(DiagnosticsView), new PropertyMetadata(default(ICollectionView)));
@@ -55,9 +55,9 @@
             this.CommandBindings.Add(new CommandBinding(ResetEnabledDiagnosticsToDefaultCommand, this.HandleResetResetEnabledDiagnosticsToDefault));
         }
 
-        public ReadOnlyObservableCollection<DiagnosticProvider>? DiagnosticProviders
+        public ObservableCollection<DiagnosticProvider>? DiagnosticProviders
         {
-            get => (ReadOnlyObservableCollection<DiagnosticProvider>?)this.GetValue(DiagnosticProvidersProperty);
+            get => (ObservableCollection<DiagnosticProvider>?)this.GetValue(DiagnosticProvidersProperty);
             set => this.SetValue(DiagnosticProvidersProperty, value);
         }
 
@@ -67,9 +67,9 @@
             set => this.SetValue(DiagnosticProvidersViewProperty, value);
         }
 
-        public ReadOnlyObservableCollection<DiagnosticItem>? DiagnosticItems
+        public ObservableCollection<DiagnosticItem>? DiagnosticItems
         {
-            get => (ReadOnlyObservableCollection<DiagnosticItem>?)this.GetValue(DiagnosticItemsProperty);
+            get => (ObservableCollection<DiagnosticItem>?)this.GetValue(DiagnosticItemsProperty);
             set => this.SetValue(DiagnosticItemsProperty, value);
         }
 

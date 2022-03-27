@@ -309,6 +309,12 @@ namespace Snoop.Data.Tree
 
         public void Dispose()
         {
+            if (this.Parent is null)
+            {
+                // We clear all diagnostic items here for performance reasons if this is the root node
+                this.TreeService.DiagnosticContext.DiagnosticItems.Clear();
+            }
+
             this.TreeService.DiagnosticContext.TreeItemDisposed(this);
 
             foreach (var treeItem in this.Children)
