@@ -424,7 +424,7 @@ namespace Snoop.Windows
 
             InputManager.Current.PreProcessInput -= this.HandlePreProcessInput;
 
-            this.filterTimer.Stop();
+            this.filterTimer?.Stop();
 
             if (this.isResettingSettings == false)
             {
