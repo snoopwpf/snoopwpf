@@ -362,7 +362,6 @@ namespace Snoop.Infrastructure
                     stringValue = "Transparent";
                 }
 
-                if (this.Target is DependencyObject)
                 {
                     // Display both the value and the resource key, if there's a key for this property.
                     if (ResourceKeyHelper.IsValidResourceKey(this.ResourceKey))
@@ -518,7 +517,7 @@ namespace Snoop.Infrastructure
 
         public bool IsDatabound => this.isDatabound;
 
-        public bool IsExpression => this.valueSource.IsExpression;
+        public bool IsExpression => this.valueSource.IsExpression || this.Binding is not null;
 
         public bool IsAnimated => this.valueSource.IsAnimated;
 
@@ -550,7 +549,7 @@ namespace Snoop.Infrastructure
                     return BindingOperations.GetBindingBase(d, dp);
                 }
 
-                return null;
+                return this.Value as BindingBase;
             }
         }
 
