@@ -313,7 +313,7 @@
 
                 <controls:ProperTreeView.ToolTip>
                     <TextBlock Style="{x:Null}"
-                               Text="Hold down Ctrl + Shift (or Ctrl + ALT) and mouse over elements in the target app to select them." />
+                               Text="Hold down Ctrl + Shift and mouse over elements in the target app to select them." />
                 </controls:ProperTreeView.ToolTip>
             </controls:ProperTreeView>
 
