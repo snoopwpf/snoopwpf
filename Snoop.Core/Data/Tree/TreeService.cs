@@ -66,42 +66,17 @@ namespace Snoop.Data.Tree
 
         public virtual TreeItem Construct(object target, TreeItem? parent, bool omitChildren = false)
         {
-            TreeItem treeItem;
-
-            switch (target)
+            TreeItem treeItem = target switch
             {
-                case AutomationPeer automationPeer:
-                    treeItem = new AutomationPeerTreeItem(automationPeer, parent, this);
-                    break;
-
-                case ResourceDictionaryWrapper resourceDictionary:
-                    treeItem = new ResourceDictionaryTreeItem(resourceDictionary, parent, this);
-                    break;
-
-                case ResourceDictionary resourceDictionary:
-                    treeItem = new ResourceDictionaryTreeItem(resourceDictionary, parent, this);
-                    break;
-
-                case Application application:
-                    treeItem = new ApplicationTreeItem(application, parent, this);
-                    break;
-
-                case Window window:
-                    treeItem = new WindowTreeItem(window, parent, this);
-                    break;
-
-                case Popup popup:
-                    treeItem = new PopupTreeItem(popup, parent, this);
-                    break;
-
-                case DependencyObject dependencyObject:
-                    treeItem = new DependencyObjectTreeItem(dependencyObject, parent, this);
-                    break;
-
-                default:
-                    treeItem = new TreeItem(target, parent, this);
-                    break;
-            }
+                AutomationPeer automationPeer => new AutomationPeerTreeItem(automationPeer, parent, this),
+                ResourceDictionaryWrapper resourceDictionary => new ResourceDictionaryTreeItem(resourceDictionary, parent, this),
+                ResourceDictionary resourceDictionary => new ResourceDictionaryTreeItem(resourceDictionary, parent, this),
+                Application application => new ApplicationTreeItem(application, parent, this),
+                Window window => new WindowTreeItem(window, parent, this),
+                Popup popup => new PopupTreeItem(popup, parent, this),
+                DependencyObject dependencyObject => this.ConstructFromDependencyObject(parent, dependencyObject),
+                _ => new TreeItem(target, parent, this)
+            };
 
             treeItem.OmitChildren = omitChildren;
 
@@ -128,22 +103,20 @@ namespace Snoop.Data.Tree
             return treeItem;
         }
 
+        private DependencyObjectTreeItem ConstructFromDependencyObject(TreeItem? parent, DependencyObject dependencyObject)
+        {
+            return new DependencyObjectTreeItem(dependencyObject, parent, this);
+        }
+
         public static TreeService From(TreeType treeType)
         {
-            switch (treeType)
+            return treeType switch
             {
-                case TreeType.Visual:
-                    return new VisualTreeService();
-
-                case TreeType.Logical:
-                    return new LogicalTreeService();
-
-                case TreeType.Automation:
-                    return new AutomationPeerTreeService();
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(treeType), treeType, null);
-            }
+                TreeType.Visual => new VisualTreeService(),
+                TreeType.Logical => new LogicalTreeService(),
+                TreeType.Automation => new AutomationPeerTreeService(),
+                _ => throw new ArgumentOutOfRangeException(nameof(treeType), treeType, null)
+            };
         }
 
         public void Dispose()
