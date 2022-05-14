@@ -128,10 +128,13 @@ namespace Snoop.Infrastructure
                 else
                 {
                     var screenContainsPosition = screen.Bounds.Contains(windowPlacement.Value.NormalPosition.Left, windowPlacement.Value.NormalPosition.Top);
-                    window.Top = screenContainsPosition ? windowPlacement.Value.NormalPosition.Top : screen.Bounds.Top;
-                    window.Left = screenContainsPosition ? windowPlacement.Value.NormalPosition.Left : screen.Bounds.Left;
-                    window.Width = Math.Max(100, Math.Min(screen.Bounds.Width, windowPlacement.Value.NormalPosition.Width));
-                    window.Height = Math.Max(26, Math.Min(screen.Bounds.Height, windowPlacement.Value.NormalPosition.Height));
+                    var hwnd = new WindowInteropHelper(window).Handle;
+                    Point screenPosition = DPIHelper.DevicePixelsToLogical(new Point(windowPlacement.Value.NormalPosition.Left, windowPlacement.Value.NormalPosition.Top), hwnd);
+                    window.Top = screenContainsPosition ? screenPosition.Y : screen.Bounds.Top;
+                    window.Left = screenContainsPosition ? screenPosition.X : screen.Bounds.Left;
+                    Point windowSize = DPIHelper.DevicePixelsToLogical(new Point(windowPlacement.Value.NormalPosition.Width, windowPlacement.Value.NormalPosition.Height), hwnd);
+                    window.Width = Math.Max(100, Math.Min(screen.Bounds.Width, windowSize.X));
+                    window.Height = Math.Max(26, Math.Min(screen.Bounds.Height, windowSize.Y));
                 }
             }
             catch (Exception exception)
