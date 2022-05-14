@@ -129,12 +129,13 @@ namespace Snoop.Infrastructure
                 {
                     var screenContainsPosition = screen.Bounds.Contains(windowPlacement.Value.NormalPosition.Left, windowPlacement.Value.NormalPosition.Top);
                     var hwnd = new WindowInteropHelper(window).Handle;
-                    Point screenPosition = DPIHelper.DevicePixelsToLogical(new Point(windowPlacement.Value.NormalPosition.Left, windowPlacement.Value.NormalPosition.Top), hwnd);
-                    window.Top = screenContainsPosition ? screenPosition.Y : screen.Bounds.Top;
-                    window.Left = screenContainsPosition ? screenPosition.X : screen.Bounds.Left;
-                    Point windowSize = DPIHelper.DevicePixelsToLogical(new Point(windowPlacement.Value.NormalPosition.Width, windowPlacement.Value.NormalPosition.Height), hwnd);
-                    window.Width = Math.Max(100, Math.Min(screen.Bounds.Width, windowSize.X));
-                    window.Height = Math.Max(26, Math.Min(screen.Bounds.Height, windowSize.Y));
+                    Point logicalScreenPosition = DPIHelper.DevicePixelsToLogical(new Point(windowPlacement.Value.NormalPosition.Left, windowPlacement.Value.NormalPosition.Top), hwnd);
+                    window.Top = screenContainsPosition ? logicalScreenPosition.Y : screen.Bounds.Top;
+                    window.Left = screenContainsPosition ? logicalScreenPosition.X : screen.Bounds.Left;
+                    Point logicalWindowSize = DPIHelper.DevicePixelsToLogical(new Point(windowPlacement.Value.NormalPosition.Width, windowPlacement.Value.NormalPosition.Height), hwnd);
+                    Point logicalScreenSize = DPIHelper.DevicePixelsToLogical(new Point(screen.Bounds.Width, screen.Bounds.Height), hwnd);
+                    window.Width = Math.Max(100, Math.Min(logicalScreenSize.X, logicalWindowSize.X));
+                    window.Height = Math.Max(26, Math.Min(logicalScreenSize.Y, logicalWindowSize.Y));
                 }
             }
             catch (Exception exception)
