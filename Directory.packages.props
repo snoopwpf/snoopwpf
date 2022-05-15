@@ -39,4 +39,11 @@
         <PackageVersion Include="WpfAnalyzers" version="4.0.2" />
         <PackageVersion Include="PropertyChangedAnalyzers" Version="4.0.0" />
     </ItemGroup>
+    
+    <ItemGroup Label="Test-Projects">
+        <PackageVersion Include="CefSharp.Common.NETCore" Version="101.0.150" />
+        <PackageVersion Include="CefSharp.Wpf.NETCore" Version="101.0.150" />
+
+        <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.1210.39" />
+    </ItemGroup>
 </Project>

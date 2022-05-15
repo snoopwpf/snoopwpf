@@ -105,6 +105,11 @@ namespace Snoop.Data.Tree
 
         private DependencyObjectTreeItem ConstructFromDependencyObject(TreeItem? parent, DependencyObject dependencyObject)
         {
+            if (WebBrowserTreeItem.IsWebBrowserWithDevToolsSupport(dependencyObject))
+            {
+                return new WebBrowserTreeItem(dependencyObject, parent, this);
+            }
+
             return new DependencyObjectTreeItem(dependencyObject, parent, this);
         }
 

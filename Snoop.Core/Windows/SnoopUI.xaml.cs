@@ -43,7 +43,6 @@ namespace Snoop.Windows
 
         #endregion
 
-        #region Static Constructor
         static SnoopUI()
         {
             IntrospectCommand.InputGestures.Add(new KeyGesture(Key.I, ModifierKeys.Control));
@@ -52,9 +51,6 @@ namespace Snoop.Windows
             ClearSearchFilterCommand.InputGestures.Add(new KeyGesture(Key.Escape));
             CopyPropertyChangesCommand.InputGestures.Add(new KeyGesture(Key.C, ModifierKeys.Control | ModifierKeys.Shift));
         }
-        #endregion
-
-        #region Public Constructor
 
         public SnoopUI()
         {
@@ -97,8 +93,6 @@ namespace Snoop.Windows
                 this.filterTimer.Stop();
             };
         }
-
-        #endregion
 
         #region Public Properties
 

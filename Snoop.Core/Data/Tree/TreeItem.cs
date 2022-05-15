@@ -12,8 +12,11 @@ namespace Snoop.Data.Tree
     using System.Text;
     using System.Windows;
     using System.Windows.Automation;
+    using System.Windows.Controls;
     using System.Windows.Media;
     using JetBrains.Annotations;
+    using Snoop.Infrastructure;
+    using Snoop.Windows;
 
     public class TreeItem : INotifyPropertyChanged, IDisposable
     {
@@ -25,6 +28,7 @@ namespace Snoop.Data.Tree
         private readonly string typeNameLower;
         private int childItemCount;
         private readonly ObservableCollection<TreeItem> children = new();
+        private ObservableCollection<MenuItem>? menuItems;
 
         public TreeItem(object target, TreeItem? parent, TreeService treeService)
         {
@@ -94,6 +98,29 @@ namespace Snoop.Data.Tree
         /// The children of this instance
         /// </summary>
         public ReadOnlyObservableCollection<TreeItem> Children { get; }
+
+        public ObservableCollection<MenuItem> MenuItems => this.menuItems ??= this.CreateMenuItems();
+
+        protected virtual ObservableCollection<MenuItem> CreateMenuItems()
+        {
+            var items = new ObservableCollection<MenuItem>
+            {
+                new()
+                {
+                    Header = "Export",
+                    Items =
+                    {
+                        new MenuItem { Header = "Tree (with filter)", Command = SnoopUI.ExportTreeWithFilterCommand, CommandParameter = new ExportOptions { Recurse = true, TreeItem = this, UseFilter = true } },
+                        new MenuItem { Header = "Tree (without filter)", Command = SnoopUI.ExportTreeWithFilterCommand, CommandParameter = new ExportOptions { Recurse = true, TreeItem = this, UseFilter = false } },
+                        new Separator(),
+                        new MenuItem { Header = "Element (with filter)", Command = SnoopUI.ExportTreeWithFilterCommand, CommandParameter = new ExportOptions { Recurse = false, TreeItem = this, UseFilter = true } },
+                        new MenuItem { Header = "Element (without filter)", Command = SnoopUI.ExportTreeWithFilterCommand, CommandParameter = new ExportOptions { Recurse = false, TreeItem = this, UseFilter = false } },
+                    }
+                }
+            };
+
+            return items;
+        }
 
         public bool IsSelected
         {

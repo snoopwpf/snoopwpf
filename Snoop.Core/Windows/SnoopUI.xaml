@@ -242,43 +242,7 @@
 
                         <Setter Property="ContextMenu">
                             <Setter.Value>
-                                <ContextMenu>
-                                    <MenuItem Header="Export">
-                                        <MenuItem Header="Tree (with filter)"
-                                                  Command="{x:Static windows:SnoopUI.ExportTreeWithFilterCommand}">
-                                            <MenuItem.CommandParameter>
-                                                <infrastructure:ExportOptions Recurse="True"
-                                                                              TreeItem="{Binding}"
-                                                                              UseFilter="True" />
-                                            </MenuItem.CommandParameter>
-                                        </MenuItem>
-                                        <MenuItem Header="Tree (without filter)"
-                                                  Command="{x:Static windows:SnoopUI.ExportTreeWithFilterCommand}">
-                                            <MenuItem.CommandParameter>
-                                                <infrastructure:ExportOptions Recurse="True"
-                                                                              TreeItem="{Binding}" />
-                                            </MenuItem.CommandParameter>
-                                        </MenuItem>
-
-                                        <Separator />
-
-                                        <MenuItem Header="Element (with filter)"
-                                                  Command="{x:Static windows:SnoopUI.ExportTreeWithFilterCommand}">
-                                            <MenuItem.CommandParameter>
-                                                <infrastructure:ExportOptions Recurse="False"
-                                                                              TreeItem="{Binding}"
-                                                                              UseFilter="True" />
-                                            </MenuItem.CommandParameter>
-                                        </MenuItem>
-                                        <MenuItem Header="Element (without filter)"
-                                                  Command="{x:Static windows:SnoopUI.ExportTreeWithFilterCommand}">
-                                            <MenuItem.CommandParameter>
-                                                <infrastructure:ExportOptions Recurse="False"
-                                                                              TreeItem="{Binding}" />
-                                            </MenuItem.CommandParameter>
-                                        </MenuItem>
-                                    </MenuItem>
-                                </ContextMenu>
+                                <ContextMenu ItemsSource="{Binding MenuItems}" />
                             </Setter.Value>
                         </Setter>
                         <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
