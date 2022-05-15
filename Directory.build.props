@@ -2,6 +2,7 @@
   <PropertyGroup>
     <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
     <DisableWinExeOutputInference>true</DisableWinExeOutputInference>
     <!-- 
     Turns off reference assembly generation 
