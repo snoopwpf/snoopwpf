@@ -17,6 +17,7 @@
   - Improved resource lookup (used to get resource keys from resources)
   - [#314](../../issues/314) - Hide properties from Snoop?
   - [#320](../../issues/320) - System resources are not shown in the tree
+  - [#326](../../issues/326) - Enable Snoop to show the dev tools of browser controls
 
 ## 4.0.1
 
