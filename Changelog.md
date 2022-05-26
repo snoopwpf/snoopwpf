@@ -21,6 +21,7 @@
 
   - Editing `Color?` values works now
   - Improved resource lookup (used to get resource keys from resources)
+  - [#283](../../issues/283) - [Feature Request] Be able to import filters or make them available across applications. (solved by [#316](../../issues/316))
   - [#314](../../issues/314) - Hide properties from Snoop?
   - [#320](../../issues/320) - System resources are not shown in the tree
   - [#326](../../issues/326) - Enable Snoop to show the dev tools of browser controls
