@@ -30,10 +30,17 @@ namespace Snoop.Controls.ValueEditors
 
             this.Values.Clear();
 
-            var propertyType = this.PropertyType?.Type;
-            if (propertyType is not null)
+            var enumType = this.PropertyType?.Type;
+
+            if (enumType is not null)
             {
-                var values = Enum.GetValues(propertyType);
+                if (enumType.IsEnum == false
+                    && Nullable.GetUnderlyingType(enumType) is { IsEnum: true } underlyingType)
+                {
+                    enumType = underlyingType;
+                }
+
+                var values = Enum.GetValues(enumType);
                 foreach (var value in values)
                 {
                     if (value is null)

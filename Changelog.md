@@ -19,6 +19,7 @@
   - [#314](../../issues/314) - Hide properties from Snoop?
   - [#320](../../issues/320) - System resources are not shown in the tree
   - [#326](../../issues/326) - Enable Snoop to show the dev tools of browser controls
+  - [#339](../../issues/339) - Value selector when dependency property type is a nullable enum.
 
 ## 4.0.1
 

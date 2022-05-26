@@ -38,7 +38,8 @@ namespace Snoop.Controls.ValueEditors
                 return null;
             }
 
-            if (property.PropertyType.IsEnum)
+            if (property.PropertyType.IsEnum
+                || Nullable.GetUnderlyingType(property.PropertyType.Type) is { IsEnum: true })
             {
                 return this.EnumTemplate;
             }
