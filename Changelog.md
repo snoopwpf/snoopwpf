@@ -1,10 +1,14 @@
-# Changelog for Snoop
+﻿# Changelog for Snoop
 
 ## 5.0.0
 
 - ### Breaking changes
 
   - Dropped support for all .NET versions prior to .NET 4.5.2
+  - [#316](../../issues/316) - Improved settings management and storage  
+    Settings do not rely on `System.Configuration` anymore.  
+    The new system allows sharing of settings between different snooped applications.  
+    It also allows to define settings for whole directory trees.
 
 - ### Bug fixes
 
