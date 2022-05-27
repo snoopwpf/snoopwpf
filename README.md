@@ -20,11 +20,25 @@ You can change property values, view triggers, set breakpoints on property chang
 - [chocolatey](https://chocolatey.org/packages/snoop) for stable and some preview versions
 - [github releases](https://github.com/snoopwpf/snoopwpf/releases) for stable versions
 - [appveyor](https://ci.appveyor.com/project/batzen/snoopwpf/build/artifacts) for the latest preview versions (built on every code change)
-- You need at least .NET Framework 4.0 to run Snoop
+- You need at least .NET Framework 4.5.2 to run Snoop
 
 ## Versions
 
 You can read the [changelog](Changelog.md) for details on what changed in which version.
+
+### [5.0.0]
+
+Highlights:
+
+- Improved settings system that does not rely on `System.Configuration`
+- It's now possible to hide properties from Snoop in it's default view.  
+  Just annotate your properties with `[System.ComponentModel.BrowsableAttribute(false)]`.
+- Added the ability to show browser dev tools on browser controls.  
+  `WebView2` and `CefSharp` are currently supported.
+
+Breaking:
+
+- Dropped support for all .NET versions prior to .NET 4.5.2
 
 ### [4.0.0]
 
