@@ -19,7 +19,7 @@
 
 - ### Improvements
 
-  - Editing `Color?` values works now
+  - Editing `Color?` and `Enum?` values works now
   - Improved resource lookup (used to get resource keys from resources)
   - [#283](../../issues/283) - [Feature Request] Be able to import filters or make them available across applications. (solved by [#316](../../issues/316))
   - [#314](../../issues/314) - Hide properties from Snoop?
