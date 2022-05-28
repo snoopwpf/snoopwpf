@@ -21,7 +21,7 @@ namespace Snoop.Windows
     using System.Windows.Media.Media3D;
     using System.Windows.Threading;
     using JetBrains.Annotations;
-    using Snoop.Core.Properties;
+    using Snoop.Core;
     using Snoop.Data.Tree;
     using Snoop.Infrastructure;
     using Snoop.Infrastructure.Helpers;
@@ -396,11 +396,8 @@ namespace Snoop.Windows
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            if (this.isResettingSettings == false)
-            {
-                // persist the window placement details to the user settings.
-                SnoopWindowUtils.SaveWindowPlacement(this, wp => Settings.Default.SnoopUIWindowPlacement = wp);
-            }
+            // persist the window placement details to the user settings.
+            SnoopWindowUtils.SaveWindowPlacement(this, wp => Settings.Default.SnoopUIWindowPlacement = wp);
 
             base.OnClosing(e);
         }
@@ -420,14 +417,11 @@ namespace Snoop.Windows
 
             this.filterTimer?.Stop();
 
-            if (this.isResettingSettings == false)
-            {
-                // persist whether all properties are shown by default
-                Settings.Default.ShowDefaults = this.PropertyGrid.ShowDefaults;
+            // persist whether all properties are shown by default
+            Settings.Default.ShowDefaults = this.PropertyGrid.ShowDefaults;
 
-                // persist whether the previewer is shown by default
-                Settings.Default.ShowPreviewer = this.PreviewArea?.IsActive == true;
-            }
+            // persist whether the previewer is shown by default
+            Settings.Default.ShowPreviewer = this.PreviewArea?.IsActive == true;
 
             // actually do the persisting
             Settings.Default.Save();
@@ -875,7 +869,6 @@ namespace Snoop.Windows
         /// </summary>
         private bool returnPreviousFocus;
 
-        private bool isResettingSettings;
         private TreeService treeService = null!;
 
         #endregion
@@ -892,16 +885,28 @@ namespace Snoop.Windows
 
         #endregion
 
-        private void HandleOpenSettingsFolder_OnClick(object sender, RoutedEventArgs e)
+        private void HandleMakeSettingsApplicationsSpecific_OnClick(object sender, RoutedEventArgs e)
         {
-            var config = System.Configuration.ConfigurationManager.OpenExeConfiguration(System.Configuration.ConfigurationUserLevel.PerUserRoamingAndLocal);
+            Settings.Default.SettingsFile = SettingsHelper.GetApplicationSpecificSettingsFile();
+            Settings.Default.Save();
+        }
 
-            if (string.IsNullOrEmpty(config.FilePath))
+        private void HandleDeleteApplicationSpecificSettings_OnClick(object sender, RoutedEventArgs e)
+        {
+            // Prevent accidental delete of default settings file
+            if (Settings.Default.IsDefaultSettingsFile == false)
             {
-                return;
+                File.Delete(Settings.Default.SettingsFile);
             }
 
-            var directory = Path.GetDirectoryName(config.FilePath);
+            Settings.Default.SettingsFile = SettingsHelper.GetDefaultApplicationSettingsFile();
+
+            Settings.Default.Reload();
+        }
+
+        private void HandleOpenSettingsFolder_OnClick(object sender, RoutedEventArgs e)
+        {
+            var directory = Path.GetDirectoryName(Settings.Default.SettingsFile);
 
             if (directory is not null
                 && directory.Length > 0)
@@ -918,7 +923,10 @@ namespace Snoop.Windows
 
         private void HandleResetSettings_OnClick(object sender, RoutedEventArgs e)
         {
-            this.isResettingSettings = true;
+            if (MessageBox.Show(this, "Are you sure that you want to reset all settings?", string.Empty, MessageBoxButton.YesNo) == MessageBoxResult.No)
+            {
+                return;
+            }
 
             Settings.Default.Reset();
 
@@ -928,9 +936,12 @@ namespace Snoop.Windows
             // load whether the previewer is shown by default
             this.PreviewArea.IsActive = Settings.Default.ShowPreviewer;
 
-            this.Close();
+            this.PropertyGrid.checkBoxClearAfterDelve.IsChecked = Settings.Default.ClearAfterDelve;
 
-            this.isResettingSettings = false;
+            this.eventsView.UpdateTrackers();
+            this.eventsView.MaxEventsDisplayed = Settings.Default.MaximumTrackedEvents;
+
+            this.debugListenerControl.FiltersViewModel.InitializeFilters(Settings.Default.SnoopDebugFilters);
         }
 
         private void HandleLaunchDebugger_OnClick(object sender, RoutedEventArgs e)

@@ -17,7 +17,7 @@ namespace Snoop.Views
     using System.Windows.Input;
     using System.Windows.Media;
     using JetBrains.Annotations;
-    using Snoop.Core.Properties;
+    using Snoop.Core;
     using Snoop.Infrastructure;
     using Snoop.Windows;
 
@@ -35,6 +35,16 @@ namespace Snoop.Views
             this.InterestingEvents = new(this.interestingEvents);
 
             this.InitializeComponent();
+
+            this.UpdateTrackers();
+
+            this.CommandBindings.Add(new CommandBinding(ClearCommand, this.HandleClear));
+            this.CommandBindings.Add(new CommandBinding(ResetEventTrackersToDefaultCommand, this.HandleResetEventTrackersToDefault));
+        }
+
+        public void UpdateTrackers()
+        {
+            this.trackers.Clear();
 
             var sorter = new List<EventTracker>();
 
@@ -65,9 +75,6 @@ namespace Snoop.Views
             {
                 this.trackers.Add(tracker);
             }
-
-            this.CommandBindings.Add(new CommandBinding(ClearCommand, this.HandleClear));
-            this.CommandBindings.Add(new CommandBinding(ResetEventTrackersToDefaultCommand, this.HandleResetEventTrackersToDefault));
         }
 
         public ReadOnlyObservableCollection<TrackedEvent> InterestingEvents { get; }

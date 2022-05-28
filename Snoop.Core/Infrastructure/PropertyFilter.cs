@@ -98,7 +98,7 @@ namespace Snoop.Infrastructure
 
         public bool ShowDefaults { get; set; }
 
-        public bool ShowPropertiesFromUncommonTypes { get; set; }
+        public bool ShowUncommonProperties { get; set; }
 
         public PropertyFilterSet? SelectedFilterSet { get; set; }
 
@@ -106,7 +106,7 @@ namespace Snoop.Infrastructure
 
         public bool Show(PropertyInformation property)
         {
-            if (this.ShowPropertiesFromUncommonTypes == false
+            if (this.ShowUncommonProperties == false
                 && IsUncommonProperty(property))
             {
                 return false;

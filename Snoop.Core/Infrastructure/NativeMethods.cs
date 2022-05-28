@@ -27,6 +27,7 @@ namespace Snoop.Infrastructure
     using System.Runtime.InteropServices;
     using System.Security;
     using System.Text;
+    using System.Xml.Serialization;
     using Microsoft.Win32.SafeHandles;
 
     public static class NativeMethods
@@ -774,10 +775,14 @@ namespace Snoop.Infrastructure
     [StructLayout(LayoutKind.Sequential)]
     public struct WINDOWPLACEMENT
     {
+        [XmlIgnore]
         public int Length;
+        [XmlIgnore]
         public int Flags;
         public int ShowCmd;
+        [XmlIgnore]
         public POINT MinPosition;
+        [XmlIgnore]
         public POINT MaxPosition;
         public RECT NormalPosition;
     }

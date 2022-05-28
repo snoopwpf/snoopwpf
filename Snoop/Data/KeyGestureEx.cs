@@ -6,12 +6,11 @@
     using System.Windows.Input;
     using System.Windows.Markup;
 
+    [Serializable]
     [TypeConverter(typeof(KeyGestureExConverter))]
     [ValueSerializer(typeof(KeyGestureExValueSerializer))]
-    public class KeyGestureEx : KeyGesture
+    public class KeyGestureEx : KeyGesture, IEquatable<KeyGestureEx>
     {
-        private static readonly KeyGestureExConverter converter = new();
-
         public KeyGestureEx()
             : this(Key.None)
         {
@@ -61,14 +60,72 @@
                    && modifiers == Keyboard.Modifiers;
         }
 
+        public static implicit operator KeyGestureEx(string s)
+        {
+            return (KeyGestureEx)KeyGestureExConverter.Default.ConvertFromString(s)!;
+        }
+
+        public static implicit operator string(KeyGestureEx r)
+        {
+            return KeyGestureExConverter.Default.ConvertToString(r)!;
+        }
+
         public override string ToString()
         {
-            return converter.ConvertToString(this) ?? string.Empty;
+            return KeyGestureExConverter.Default.ConvertToString(this) ?? string.Empty;
         }
 
         private static bool IsDefinedKey(Key key)
         {
             return key is >= Key.None and <= Key.OemClear;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is not KeyGestureEx other)
+            {
+                return false;
+            }
+
+            return this.Equals(other);
+        }
+
+        public bool Equals(KeyGestureEx? other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+
+            return this.Key == other.Key
+                   && this.Modifiers == other.Modifiers;
+        }
+
+#if NETCOREAPP
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(this.Key, this.Modifiers);
+        }
+#else
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = this.Key.GetHashCode();
+                hashCode = (hashCode * 397) ^ this.Modifiers.GetHashCode();
+                return hashCode;
+            }
+        }
+#endif
+
+        public static bool operator ==(KeyGestureEx? left, KeyGestureEx? right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(KeyGestureEx? left, KeyGestureEx? right)
+        {
+            return !Equals(left, right);
         }
     }
 
@@ -83,6 +140,8 @@
         internal const char DISPLAYSTRING_SEPARATOR = ',';
         // ReSharper restore InconsistentNaming
 #pragma warning restore SA1310 // Field names should not contain underscore
+
+        public static readonly KeyGestureExConverter Default = new();
 
         private static readonly KeyConverter keyConverter = new();
         private static readonly ModifierKeysConverter modifierKeysConverter = new();
@@ -213,10 +272,14 @@
 
     public class KeyGestureExValueSerializer : KeyGestureValueSerializer
     {
+        public override string ConvertToString(object value, IValueSerializerContext context)
+        {
+            return KeyGestureExConverter.Default.ConvertToString(value);
+        }
+
         public override object ConvertFromString(string value, IValueSerializerContext context)
         {
-            var converter = TypeDescriptor.GetConverter(typeof(KeyGestureEx));
-            return converter.ConvertFromString(value);
+            return KeyGestureExConverter.Default.ConvertFromString(value);
         }
     }
 }

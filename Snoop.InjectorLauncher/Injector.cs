@@ -19,8 +19,7 @@ namespace Snoop.InjectorLauncher
 
             LogHelper.WriteLine(message);
 
-            var applicationDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            applicationDataPath += "\\Snoop";
+            var applicationDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Snoop");
 
             if (Directory.Exists(applicationDataPath) == false)
             {

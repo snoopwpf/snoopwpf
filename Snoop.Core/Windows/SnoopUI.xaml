@@ -11,6 +11,7 @@
                              xmlns:behaviorsTab="clr-namespace:Snoop.Views.BehaviorsTab"
                              xmlns:controls="clr-namespace:Snoop.Controls"
                              xmlns:converters="clr-namespace:Snoop.Converters"
+                             xmlns:core="clr-namespace:Snoop.Core"
                              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                              xmlns:debugListenerTab="clr-namespace:Snoop.Views.DebugListenerTab"
                              xmlns:infrastructure="clr-namespace:Snoop.Infrastructure"
@@ -131,10 +132,15 @@
                               Command="{x:Static ApplicationCommands.Close}" />
                 </MenuItem>
                 <MenuItem Header="Settings">
+                    <MenuItem Header="{Binding Path=SettingsFile, Source={x:Static core:Settings.Default}}" />
+                    <MenuItem Header="Make settings application specific"
+                              Click="HandleMakeSettingsApplicationsSpecific_OnClick" />
+                    <MenuItem Header="Delete application specific settings"
+                              Click="HandleDeleteApplicationSpecificSettings_OnClick" />
                     <MenuItem Header="Open settings folder"
                               Click="HandleOpenSettingsFolder_OnClick" />
                     <Separator />
-                    <MenuItem Header="Reset settings and close window"
+                    <MenuItem Header="Reset settings"
                               Click="HandleResetSettings_OnClick" />
                 </MenuItem>
                 <MenuItem Header="_Tracking options">

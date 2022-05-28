@@ -221,7 +221,7 @@ namespace Snoop.Infrastructure.Diagnostics.Providers
 #if NETCOREAPP
             public override int GetHashCode()
             {
-                return HashCode.Combine(this.TypeName, this.PropertyName, this.ValueChangedHandlers);
+                return HashCode.Combine(this.TypeName, this.PropertyName);
             }
 #else
             public override int GetHashCode()

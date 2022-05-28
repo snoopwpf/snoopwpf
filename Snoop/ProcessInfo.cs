@@ -5,7 +5,6 @@
     using System.Windows.Input;
     using Snoop.Data;
     using Snoop.Infrastructure;
-    using Snoop.Properties;
 
     public class ProcessInfo
     {
@@ -31,7 +30,7 @@
 
             try
             {
-                InjectorLauncherManager.Launch(this, targetHwnd, typeof(SnoopManager).GetMethod(nameof(SnoopManager.StartSnoop)), CreateTransientSettingsData(SnoopStartTarget.SnoopUI, targetHwnd));
+                InjectorLauncherManager.Launch(this, targetHwnd, typeof(SnoopManager).GetMethod(nameof(SnoopManager.StartSnoop))!, CreateTransientSettingsData(SnoopStartTarget.SnoopUI, targetHwnd));
             }
             catch (Exception e)
             {
@@ -51,7 +50,7 @@
 
             try
             {
-                InjectorLauncherManager.Launch(this, targetHwnd, typeof(SnoopManager).GetMethod(nameof(SnoopManager.StartSnoop)), CreateTransientSettingsData(SnoopStartTarget.Zoomer, targetHwnd));
+                InjectorLauncherManager.Launch(this, targetHwnd, typeof(SnoopManager).GetMethod(nameof(SnoopManager.StartSnoop))!, CreateTransientSettingsData(SnoopStartTarget.Zoomer, targetHwnd));
             }
             catch (Exception e)
             {

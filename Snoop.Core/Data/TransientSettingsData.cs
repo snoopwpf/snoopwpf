@@ -1,9 +1,11 @@
 // ReSharper disable once CheckNamespace
 namespace Snoop.Data
 {
+    using System;
     using System.IO;
     using System.Xml.Serialization;
     using JetBrains.Annotations;
+    using Snoop.Core;
     using Snoop.Infrastructure;
 
     [PublicAPI]
@@ -32,9 +34,11 @@ namespace Snoop.Data
 
         public long TargetWindowHandle { get; set; }
 
-        public string ILSpyPath { get; set; }
+        public string? ILSpyPath { get; set; }
 
         public bool EnableDiagnostics { get; set; }
+
+        public string? SnoopInstallPath { get; set; } = Environment.GetEnvironmentVariable(SettingsHelper.SNOOP_INSTALL_PATH_ENV_VAR);
 
         public string WriteToFile()
         {
@@ -42,10 +46,8 @@ namespace Snoop.Data
 
             LogHelper.WriteLine($"Writing transient settings file to \"{settingsFile}\"");
 
-            using (var stream = new FileStream(settingsFile, FileMode.Create))
-            {
-                serializer.Serialize(stream, this);
-            }
+            using var stream = new FileStream(settingsFile, FileMode.Create);
+            serializer.Serialize(stream, this);
 
             return settingsFile;
         }
@@ -64,10 +66,12 @@ namespace Snoop.Data
         {
             LogHelper.WriteLine($"Loading transient settings file from \"{settingsFile}\"");
 
-            using (var stream = new FileStream(settingsFile, FileMode.Open))
-            {
-                return Current = (TransientSettingsData?)serializer.Deserialize(stream) ?? new TransientSettingsData();
-            }
+            using var stream = new FileStream(settingsFile, FileMode.Open);
+            Current = (TransientSettingsData?)serializer.Deserialize(stream) ?? new TransientSettingsData();
+
+            Environment.SetEnvironmentVariable(SettingsHelper.SNOOP_INSTALL_PATH_ENV_VAR, Current.SnoopInstallPath, EnvironmentVariableTarget.Process);
+
+            return Current;
         }
     }
 
