@@ -21,6 +21,7 @@ paket-files/
 *.dll
 *.ncb
 .idea/
+*_wpftmp.csproj
 
 # Temp-Files from Verify
 *.received.txt
