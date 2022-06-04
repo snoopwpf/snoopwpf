@@ -6,6 +6,7 @@
     using System.Windows.Input;
     using System.Windows.Media.Imaging;
     using Snoop.Infrastructure;
+    using Snoop.Infrastructure.Helpers;
 
     public class SnoopBaseWindow : Window
     {
@@ -16,6 +17,8 @@
             this.Icon = new BitmapImage(new Uri("pack://application:,,,/Snoop.Core;component/Snoop.ico"));
 
             SnoopPartsRegistry.AddSnoopVisualTreeRoot(this);
+
+            this.SetValue(DefaultStyleKeyFixer.KeyFixerProperty, new object());
         }
 
         protected override void OnInitialized(EventArgs e)

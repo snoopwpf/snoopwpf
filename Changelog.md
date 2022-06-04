@@ -14,6 +14,7 @@
 
   - [#300](../../issues/300) - An error has occured in developing .NET 6 Desktop App
   - [#313](../../issues/313) - Error: Collection was modified; enumeration operation may not execute.
+  - [#318](../../issues/318) - Styles from application apply to Snoop UI if DefaultStyleKey is overwritten by application
   - [#319](../../issues/319) - Wrong style being displayed in property inspector if DefaultStyleKey is overwritten.
   - [#333](../../issues/333) - Dual Monitor high dpi window sizes and positions broken (thanks @Algorithman)
 

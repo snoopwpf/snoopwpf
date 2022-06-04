@@ -16,7 +16,7 @@ public static class FrameworkElementHelper
             return fe.Style;
         }
 
-        var defaultStyleKey = FrameworkElementDefaultStyleKeyHelper.GetDefaultStyleKey(fe) ?? fe.GetType();
+        var defaultStyleKey = DefaultStyleKeyHelper.GetDefaultStyleKey(fe) ?? fe.GetType();
         return fe.TryFindResource(defaultStyleKey) as Style;
     }
 
@@ -27,7 +27,7 @@ public static class FrameworkElementHelper
             return fce.Style;
         }
 
-        var defaultStyleKey = FrameworkContentElementDefaultStyleKeyHelper.GetDefaultStyleKey(fce) ?? fce.GetType();
+        var defaultStyleKey = DefaultStyleKeyHelper.GetDefaultStyleKey(fce) ?? fce.GetType();
         return fce.TryFindResource(defaultStyleKey) as Style;
     }
 
@@ -50,18 +50,4 @@ public static class FrameworkElementHelper
     {
         return (Style?)frameworkContentElementThemeStylePropertyInfo.GetValue(fce);
     }
-
-#pragma warning disable CA1812
-
-    private class FrameworkElementDefaultStyleKeyHelper : FrameworkElement
-    {
-        public static object? GetDefaultStyleKey(FrameworkElement element) => element.GetValue(DefaultStyleKeyProperty);
-    }
-
-    private class FrameworkContentElementDefaultStyleKeyHelper : FrameworkElement
-    {
-        public static object? GetDefaultStyleKey(FrameworkContentElement element) => element.GetValue(DefaultStyleKeyProperty);
-    }
-
-#pragma warning restore CA1812
 }
