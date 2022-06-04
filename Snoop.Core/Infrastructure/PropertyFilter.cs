@@ -185,6 +185,11 @@ namespace Snoop.Infrastructure
                 return false;
             }
 
+            if (property.DependencyProperty.OwnerType.Namespace?.StartsWith("Snoop", StringComparison.Ordinal) == true)
+            {
+                return true;
+            }
+
             return uncommonTypes.Contains(property.DependencyProperty.OwnerType);
         }
     }
