@@ -3,29 +3,28 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop.Controls.ValueEditors
+namespace Snoop.Controls.ValueEditors;
+
+using System.Windows;
+using System.Windows.Controls;
+
+public class BoolValueEditor : ValueEditor
 {
-    using System.Windows;
-    using System.Windows.Controls;
-
-    public class BoolValueEditor : ValueEditor
+    public override void OnApplyTemplate()
     {
-        public override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
+        base.OnApplyTemplate();
 
-            if (this.Template.FindName("PART_CheckBox", this) is CheckBox checkBox)
-            {
-                checkBox.Click += this.CheckBoxClickedHandler;
-            }
+        if (this.Template.FindName("PART_CheckBox", this) is CheckBox checkBox)
+        {
+            checkBox.Click += this.CheckBoxClickedHandler;
         }
+    }
 
-        private void CheckBoxClickedHandler(object sender, RoutedEventArgs e)
+    private void CheckBoxClickedHandler(object sender, RoutedEventArgs e)
+    {
+        if (this.PropertyInfo is not null)
         {
-            if (this.PropertyInfo is not null)
-            {
-                this.PropertyInfo.IsValueChangedByUser = true;
-            }
+            this.PropertyInfo.IsValueChangedByUser = true;
         }
     }
 }

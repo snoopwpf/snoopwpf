@@ -3,65 +3,64 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop.Infrastructure
+namespace Snoop.Infrastructure;
+
+using System.Collections.Generic;
+using System.Windows;
+using Snoop.Infrastructure.Helpers;
+
+public class ResourceKeyCache : ICacheManaged
 {
-    using System.Collections.Generic;
-    using System.Windows;
-    using Snoop.Infrastructure.Helpers;
+    private readonly Dictionary<object, object> keys = new();
 
-    public class ResourceKeyCache : ICacheManaged
+    public static readonly ResourceKeyCache Instance = new();
+
+    private ResourceKeyCache()
     {
-        private readonly Dictionary<object, object> keys = new();
+    }
 
-        public static readonly ResourceKeyCache Instance = new();
+    public object? GetOrAddKey(DependencyObject element, object value)
+    {
+        var resourceKey = this.GetKey(value);
 
-        private ResourceKeyCache()
+        if (resourceKey is null)
         {
+            resourceKey = ResourceDictionaryKeyHelpers.GetKeyOfResourceItem(element, value);
+            this.Cache(value, resourceKey);
         }
 
-        public object? GetOrAddKey(DependencyObject element, object value)
+        return resourceKey;
+    }
+
+    public object? GetKey(object value)
+    {
+        if (this.keys.TryGetValue(value, out var key))
         {
-            var resourceKey = this.GetKey(value);
-
-            if (resourceKey is null)
-            {
-                resourceKey = ResourceDictionaryKeyHelpers.GetKeyOfResourceItem(element, value);
-                this.Cache(value, resourceKey);
-            }
-
-            return resourceKey;
+            return key;
         }
 
-        public object? GetKey(object value)
-        {
-            if (this.keys.TryGetValue(value, out var key))
-            {
-                return key;
-            }
+        return null;
+    }
 
-            return null;
-        }
-
-        public void Cache(object value, object key)
+    public void Cache(object value, object key)
+    {
+        if (this.keys.ContainsKey(value) == false)
         {
-            if (this.keys.ContainsKey(value) == false)
-            {
-                this.keys.Add(value, key);
-            }
+            this.keys.Add(value, key);
         }
+    }
 
-        public bool Contains(object element)
-        {
-            return this.keys.ContainsKey(element);
-        }
+    public bool Contains(object element)
+    {
+        return this.keys.ContainsKey(element);
+    }
 
-        public void Activate()
-        {
-        }
+    public void Activate()
+    {
+    }
 
-        public void Dispose()
-        {
-            this.keys.Clear();
-        }
+    public void Dispose()
+    {
+        this.keys.Clear();
     }
 }

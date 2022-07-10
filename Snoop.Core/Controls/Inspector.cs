@@ -3,28 +3,27 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop.Controls
+namespace Snoop.Controls;
+
+using System.Windows.Controls;
+using Snoop.Infrastructure;
+
+public class Inspector : Grid
 {
-    using System.Windows.Controls;
-    using Snoop.Infrastructure;
-
-    public class Inspector : Grid
+    public PropertyFilter? Filter
     {
-        public PropertyFilter? Filter
+        get { return this.filter; }
+
+        set
         {
-            get { return this.filter; }
-
-            set
-            {
-                this.filter = value;
-                this.OnFilterChanged();
-            }
+            this.filter = value;
+            this.OnFilterChanged();
         }
+    }
 
-        private PropertyFilter? filter;
+    private PropertyFilter? filter;
 
-        protected virtual void OnFilterChanged()
-        {
-        }
+    protected virtual void OnFilterChanged()
+    {
     }
 }

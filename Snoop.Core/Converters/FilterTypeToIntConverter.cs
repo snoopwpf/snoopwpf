@@ -1,36 +1,35 @@
-﻿namespace Snoop.Converters
+﻿namespace Snoop.Converters;
+
+using System;
+using System.Globalization;
+using System.Windows.Data;
+using Snoop.Views.DebugListenerTab;
+
+[ValueConversion(typeof(object), typeof(object))]
+[ValueConversion(typeof(FilterType), typeof(int))]
+public class FilterTypeToIntConverter : IValueConverter
 {
-    using System;
-    using System.Globalization;
-    using System.Windows.Data;
-    using Snoop.Views.DebugListenerTab;
+    public static readonly FilterTypeToIntConverter Default = new();
 
-    [ValueConversion(typeof(object), typeof(object))]
-    [ValueConversion(typeof(FilterType), typeof(int))]
-    public class FilterTypeToIntConverter : IValueConverter
+    public object? Convert(object? value, Type? targetType, object? parameter, CultureInfo? culture)
     {
-        public static readonly FilterTypeToIntConverter Default = new();
-
-        public object? Convert(object? value, Type? targetType, object? parameter, CultureInfo? culture)
+        if (value is not FilterType)
         {
-            if (value is not FilterType)
-            {
-                return value;
-            }
-
-            var filterType = (FilterType)value;
-            return (int)filterType;
+            return value;
         }
 
-        public object? ConvertBack(object? value, Type? targetType, object? parameter, CultureInfo? culture)
-        {
-            if (value is not int)
-            {
-                return value;
-            }
+        var filterType = (FilterType)value;
+        return (int)filterType;
+    }
 
-            var intValue = (int)value;
-            return (FilterType)intValue;
+    public object? ConvertBack(object? value, Type? targetType, object? parameter, CultureInfo? culture)
+    {
+        if (value is not int)
+        {
+            return value;
         }
+
+        var intValue = (int)value;
+        return (FilterType)intValue;
     }
 }

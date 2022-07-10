@@ -3,34 +3,33 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop.Views.MethodsTab
+namespace Snoop.Views.MethodsTab;
+
+using System;
+
+public class TypeNamePair : IComparable
 {
-    using System;
-
-    public class TypeNamePair : IComparable
+    public TypeNamePair(Type type)
     {
-        public TypeNamePair(Type type)
-        {
-            this.Type = type ?? throw new ArgumentNullException(nameof(type));
-            this.Name = this.Type.Name;
-        }
-
-        public BindableType Type { get; }
-
-        public string Name { get; }
-
-        public override string ToString()
-        {
-            return this.Name;
-        }
-
-        #region IComparable Members
-
-        public int CompareTo(object? obj)
-        {
-            return string.Compare(this.Name, (obj as TypeNamePair)?.Name, StringComparison.Ordinal);
-        }
-
-        #endregion
+        this.Type = type ?? throw new ArgumentNullException(nameof(type));
+        this.Name = this.Type.Name;
     }
+
+    public BindableType Type { get; }
+
+    public string Name { get; }
+
+    public override string ToString()
+    {
+        return this.Name;
+    }
+
+    #region IComparable Members
+
+    public int CompareTo(object? obj)
+    {
+        return string.Compare(this.Name, (obj as TypeNamePair)?.Name, StringComparison.Ordinal);
+    }
+
+    #endregion
 }

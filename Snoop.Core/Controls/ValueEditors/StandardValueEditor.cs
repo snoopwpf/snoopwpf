@@ -3,70 +3,69 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop.Controls.ValueEditors
+namespace Snoop.Controls.ValueEditors;
+
+using System.Windows;
+using System.Windows.Data;
+using Snoop.Converters;
+
+public class StandardValueEditor : ValueEditor
 {
-    using System.Windows;
-    using System.Windows.Data;
-    using Snoop.Converters;
+    public static readonly DependencyProperty StringValueProperty =
+        DependencyProperty.Register(
+            nameof(StringValue),
+            typeof(string),
+            typeof(StandardValueEditor),
+            new PropertyMetadata(OnStringValueChanged));
 
-    public class StandardValueEditor : ValueEditor
+    private bool isUpdatingValue;
+
+    public string? StringValue
     {
-        public static readonly DependencyProperty StringValueProperty =
-            DependencyProperty.Register(
-                nameof(StringValue),
-                typeof(string),
-                typeof(StandardValueEditor),
-                new PropertyMetadata(OnStringValueChanged));
+        get => (string?)this.GetValue(StringValueProperty);
+        set => this.SetValue(StringValueProperty, value);
+    }
 
-        private bool isUpdatingValue;
+    private static void OnStringValueChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+    {
+        ((StandardValueEditor)sender).OnStringValueChanged((string?)e.NewValue);
+    }
 
-        public string? StringValue
+    protected virtual void OnStringValueChanged(string? newValue)
+    {
+        if (this.isUpdatingValue)
         {
-            get => (string?)this.GetValue(StringValueProperty);
-            set => this.SetValue(StringValueProperty, value);
+            return;
         }
 
-        private static void OnStringValueChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        if (this.PropertyInfo is not null)
         {
-            ((StandardValueEditor)sender).OnStringValueChanged((string?)e.NewValue);
+            this.PropertyInfo.IsValueChangedByUser = true;
         }
 
-        protected virtual void OnStringValueChanged(string? newValue)
-        {
-            if (this.isUpdatingValue)
-            {
-                return;
-            }
+        var targetType = this.PropertyType?.Type;
 
-            if (this.PropertyInfo is not null)
-            {
-                this.PropertyInfo.IsValueChangedByUser = true;
-            }
+        this.Value = StringValueConverter.ConvertFromString(targetType, newValue);
+    }
 
-            var targetType = this.PropertyType?.Type;
+    protected override void OnValueChanged(object? newValue)
+    {
+        this.isUpdatingValue = true;
 
-            this.Value = StringValueConverter.ConvertFromString(targetType, newValue);
-        }
+        var value = this.Value;
 
-        protected override void OnValueChanged(object? newValue)
-        {
-            this.isUpdatingValue = true;
+        this.StringValue = StringValueConverter.ConvertToString(value) ?? string.Empty;
 
-            var value = this.Value;
+        this.isUpdatingValue = false;
 
-            this.StringValue = StringValueConverter.ConvertToString(value) ?? string.Empty;
+        var binding = BindingOperations.GetBindingExpression(this, StringValueProperty);
+        binding?.UpdateSource();
+    }
 
-            this.isUpdatingValue = false;
+    protected override void OnPropertyTypeChanged()
+    {
+        base.OnPropertyTypeChanged();
 
-            var binding = BindingOperations.GetBindingExpression(this, StringValueProperty);
-            binding?.UpdateSource();
-        }
-
-        protected override void OnPropertyTypeChanged()
-        {
-            base.OnPropertyTypeChanged();
-
-            this.IsEditable = StringValueConverter.CanConvertFromString(this.PropertyType?.Type);
-        }
+        this.IsEditable = StringValueConverter.CanConvertFromString(this.PropertyType?.Type);
     }
 }

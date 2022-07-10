@@ -3,27 +3,26 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop.Converters
+namespace Snoop.Converters;
+
+using System;
+using System.Globalization;
+using System.Windows;
+using System.Windows.Data;
+
+public class IsPowerShellAvailableToVisibilityConverter : IValueConverter
 {
-    using System;
-    using System.Globalization;
-    using System.Windows;
-    using System.Windows.Data;
+    public static readonly IsPowerShellAvailableToVisibilityConverter DefaultInstance = new();
 
-    public class IsPowerShellAvailableToVisibilityConverter : IValueConverter
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        public static readonly IsPowerShellAvailableToVisibilityConverter DefaultInstance = new();
+        return Snoop.PowerShell.ShellConstants.IsPowerShellInstalled
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+    }
 
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return Snoop.PowerShell.ShellConstants.IsPowerShellInstalled
-                ? Visibility.Visible
-                : Visibility.Collapsed;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
     }
 }

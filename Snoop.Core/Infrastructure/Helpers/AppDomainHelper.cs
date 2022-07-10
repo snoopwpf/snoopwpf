@@ -1,16 +1,16 @@
-﻿namespace Snoop.Infrastructure.Helpers
-{
-#if NETCOREAPP // Appdomains don't exist in .net core
-    using System;
-    using System.Collections.Generic;
+﻿namespace Snoop.Infrastructure.Helpers;
 
-    public class AppDomainHelper
+#if NETCOREAPP // Appdomains don't exist in .net core
+using System;
+using System.Collections.Generic;
+
+public class AppDomainHelper
+{
+    public IList<AppDomain>? GetAppDomains()
     {
-        public IList<AppDomain>? GetAppDomains()
-        {
-            return null;
-        }
+        return null;
     }
+}
 #else
     using System;
     using System.Collections.Generic;
@@ -81,4 +81,3 @@
         }
     }
 #endif
-}

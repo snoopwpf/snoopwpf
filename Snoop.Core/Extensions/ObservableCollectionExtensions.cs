@@ -4,30 +4,29 @@
 // All other rights reserved.
 
 // ReSharper disable once CheckNamespace
-namespace Snoop
+namespace Snoop;
+
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+
+public static class ObservableCollectionExtensions
 {
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-
-    public static class ObservableCollectionExtensions
+    public static void UpdateWith<T>(this ObservableCollection<T> target, IReadOnlyCollection<T> source)
     {
-        public static void UpdateWith<T>(this ObservableCollection<T> target, IReadOnlyCollection<T> source)
+        if (target.Count > 0)
         {
-            if (target.Count > 0)
-            {
-                target.Clear();
-            }
+            target.Clear();
+        }
 
-            if (source is null
-                || source.Count <= 0)
-            {
-                return;
-            }
+        if (source is null
+            || source.Count <= 0)
+        {
+            return;
+        }
 
-            foreach (var item in source)
-            {
-                target.Add(item);
-            }
+        foreach (var item in source)
+        {
+            target.Add(item);
         }
     }
 }

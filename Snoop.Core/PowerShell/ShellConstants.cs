@@ -3,70 +3,70 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop.PowerShell
+namespace Snoop.PowerShell;
+
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using Microsoft.Win32;
+using Snoop.Data.Tree;
+
+internal static class ShellConstants
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using System.IO;
-    using Microsoft.Win32;
-    using Snoop.Data.Tree;
+    /// <summary>
+    /// The file name of the .psm1 module to load on startup.
+    /// </summary>
+    public const string SnoopModule = "Snoop.psm1";
 
-    internal static class ShellConstants
+    /// <summary>
+    /// The file name of the .ps1 profile script to load on startup.
+    /// </summary>
+    public const string SnoopProfile = "SnoopProfile.ps1";
+
+    /// <summary>
+    /// Variable name for the root variable of the tree.
+    /// </summary>
+    public const string Root = "root";
+
+    /// <summary>
+    /// Variable name for the currently selected item in the tree.
+    /// </summary>
+    public const string Selected = "selected";
+
+    /// <summary>
+    /// Variable name for the path of a .ps1 script file which represents the profile of the current session.
+    /// </summary>
+    public const string Profile = "profile";
+
+    /// <summary>
+    /// The PowerShell provider drive name.
+    /// </summary>
+    public const string DriveName = "snoop";
+
+    /// <summary>
+    /// Are we currently synching the last known location in PowerShell known by Snoop.
+    /// </summary>
+    public const string IsCurrentlySynchingLastKnownSnoopLocation = "IsCurrentlySynchingLastKnownSnoopLocation";
+
+    /// <summary>
+    /// The last known location in PowerShell known by Snoop.
+    /// </summary>
+    public const string LastKnownSnoopLocation = "LastKnownSnoopLocation";
+
+    /// <summary>
+    /// Gets the key for storing an <see cref="Action{T}"/> of type <see cref="TreeItem"/>.
+    /// </summary>
+    public const string LocationChangedActionKey = "lca_key";
+
+    /// <summary>
+    /// Checks to see if PowerShell is installed.
+    /// </summary>
+    public static bool IsPowerShellInstalled
     {
-        /// <summary>
-        /// The file name of the .psm1 module to load on startup.
-        /// </summary>
-        public const string SnoopModule = "Snoop.psm1";
-
-        /// <summary>
-        /// The file name of the .ps1 profile script to load on startup.
-        /// </summary>
-        public const string SnoopProfile = "SnoopProfile.ps1";
-
-        /// <summary>
-        /// Variable name for the root variable of the tree.
-        /// </summary>
-        public const string Root = "root";
-
-        /// <summary>
-        /// Variable name for the currently selected item in the tree.
-        /// </summary>
-        public const string Selected = "selected";
-
-        /// <summary>
-        /// Variable name for the path of a .ps1 script file which represents the profile of the current session.
-        /// </summary>
-        public const string Profile = "profile";
-
-        /// <summary>
-        /// The PowerShell provider drive name.
-        /// </summary>
-        public const string DriveName = "snoop";
-
-        /// <summary>
-        /// Are we currently synching the last known location in PowerShell known by Snoop.
-        /// </summary>
-        public const string IsCurrentlySynchingLastKnownSnoopLocation = "IsCurrentlySynchingLastKnownSnoopLocation";
-
-        /// <summary>
-        /// The last known location in PowerShell known by Snoop.
-        /// </summary>
-        public const string LastKnownSnoopLocation = "LastKnownSnoopLocation";
-
-        /// <summary>
-        /// Gets the key for storing an <see cref="Action{T}"/> of type <see cref="TreeItem"/>.
-        /// </summary>
-        public const string LocationChangedActionKey = "lca_key";
-
-        /// <summary>
-        /// Checks to see if PowerShell is installed.
-        /// </summary>
-        public static bool IsPowerShellInstalled
+        get
         {
-            get
-            {
 #if NETCOREAPP3_0
-                return false;
+            return false;
 #elif NETCOREAPP3_1 || NET5_0_OR_GREATER
                 if (TryGetPowerShellCoreInstallPath(out _))
                 {
@@ -90,8 +90,8 @@ namespace Snoop.PowerShell
 #else
                 invalid target framework
 #endif
-            }
         }
+    }
 
 #if NETCOREAPP3_1 || NET5_0_OR_GREATER
         public static bool TryGetPowerShellCoreInstallPath([NotNullWhen(true)] out string? path)
@@ -136,5 +136,4 @@ namespace Snoop.PowerShell
             return false;
         }
 #endif
-    }
 }

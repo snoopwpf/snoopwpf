@@ -5,201 +5,200 @@
 
 #pragma warning disable CA1819
 
-namespace Snoop.Infrastructure
+namespace Snoop.Infrastructure;
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Text.RegularExpressions;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Markup;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Navigation;
+
+public class PropertyFilter
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Text.RegularExpressions;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Documents;
-    using System.Windows.Input;
-    using System.Windows.Markup;
-    using System.Windows.Media;
-    using System.Windows.Media.Animation;
-    using System.Windows.Navigation;
-
-    public class PropertyFilter
+    private static readonly List<Type> uncommonTypes = new()
     {
-        private static readonly List<Type> uncommonTypes = new()
-        {
-            typeof(BaseUriHelper),
-            typeof(Block),
-            typeof(ContextMenuService),
-            typeof(DesignerProperties),
-            typeof(InputLanguageManager),
-            typeof(InputMethod),
-            typeof(NameScope),
-            typeof(NavigationService),
-            typeof(NumberSubstitution),
-            typeof(SpellCheck),
-            typeof(Stylus),
-            typeof(TextSearch),
-            typeof(Timeline),
-            typeof(ToolBar),
-            typeof(ToolTipService),
-            typeof(Typography),
-            typeof(VirtualizingPanel),
-            typeof(VisualStateManager),
-            typeof(XmlAttributeProperties)
-        };
+        typeof(BaseUriHelper),
+        typeof(Block),
+        typeof(ContextMenuService),
+        typeof(DesignerProperties),
+        typeof(InputLanguageManager),
+        typeof(InputMethod),
+        typeof(NameScope),
+        typeof(NavigationService),
+        typeof(NumberSubstitution),
+        typeof(SpellCheck),
+        typeof(Stylus),
+        typeof(TextSearch),
+        typeof(Timeline),
+        typeof(ToolBar),
+        typeof(ToolTipService),
+        typeof(Typography),
+        typeof(VirtualizingPanel),
+        typeof(VisualStateManager),
+        typeof(XmlAttributeProperties)
+    };
 
-        private static readonly List<PropertyDescriptor> nonUncommonProperties = new()
-        {
-        };
+    private static readonly List<PropertyDescriptor> nonUncommonProperties = new()
+    {
+    };
 
-        private static readonly List<DependencyProperty> nonUncommonDependencyProperties = new()
-        {
-            ContextMenuService.ContextMenuProperty,
-            ToolTipService.ToolTipProperty
-        };
+    private static readonly List<DependencyProperty> nonUncommonDependencyProperties = new()
+    {
+        ContextMenuService.ContextMenuProperty,
+        ToolTipService.ToolTipProperty
+    };
 
-        private static readonly List<string> uncommonPropertyNames = new()
-        {
-            "Binding.XmlNamespaceManager"
-        };
+    private static readonly List<string> uncommonPropertyNames = new()
+    {
+        "Binding.XmlNamespaceManager"
+    };
 
-        private Regex? filterRegex;
-        private string? filterString;
-        private bool hasFilterString;
+    private Regex? filterRegex;
+    private string? filterString;
+    private bool hasFilterString;
 
-        public PropertyFilter(string filterString, bool showDefaults)
-        {
-            this.FilterString = filterString;
-            this.ShowDefaults = showDefaults;
-        }
+    public PropertyFilter(string filterString, bool showDefaults)
+    {
+        this.FilterString = filterString;
+        this.ShowDefaults = showDefaults;
+    }
 
-        public string? FilterString
+    public string? FilterString
+    {
+        get => this.filterString;
+        set
         {
-            get => this.filterString;
-            set
+            this.filterString = value;
+            this.hasFilterString = string.IsNullOrEmpty(this.filterString) == false;
+
+            if (this.hasFilterString == false)
             {
-                this.filterString = value;
-                this.hasFilterString = string.IsNullOrEmpty(this.filterString) == false;
+                this.filterRegex = null;
+                return;
+            }
 
-                if (this.hasFilterString == false)
-                {
-                    this.filterRegex = null;
-                    return;
-                }
-
-                try
-                {
-                    this.filterRegex = new Regex(this.FilterString!, RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
-                }
-                catch
-                {
-                    this.filterRegex = null;
-                }
+            try
+            {
+                this.filterRegex = new Regex(this.FilterString!, RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
+            }
+            catch
+            {
+                this.filterRegex = null;
             }
         }
+    }
 
-        public bool ShowDefaults { get; set; }
+    public bool ShowDefaults { get; set; }
 
-        public bool ShowUncommonProperties { get; set; }
+    public bool ShowUncommonProperties { get; set; }
 
-        public PropertyFilterSet? SelectedFilterSet { get; set; }
+    public PropertyFilterSet? SelectedFilterSet { get; set; }
 
-        public bool IsPropertyFilterSet => this.SelectedFilterSet?.Properties is not null;
+    public bool IsPropertyFilterSet => this.SelectedFilterSet?.Properties is not null;
 
-        public bool ShouldShow(PropertyInformation property)
+    public bool ShouldShow(PropertyInformation property)
+    {
+        if (this.ShowUncommonProperties == false
+            && IsUncommonProperty(property))
         {
-            if (this.ShowUncommonProperties == false
-                && IsUncommonProperty(property))
+            return false;
+        }
+
+        // use a regular expression if we have one and we also have a filter string.
+        if (this.hasFilterString
+            && this.filterRegex is not null)
+        {
+            return this.filterRegex.IsMatch(property.DisplayName)
+                   || (property.Property is not null && this.filterRegex.IsMatch(property.Property.PropertyType.Name));
+        }
+
+        // else just check for containment if we don't have a regular expression but we do have a filter string.
+
+        if (this.hasFilterString)
+        {
+            if (property.DisplayName.ContainsIgnoreCase(this.FilterString))
             {
-                return false;
+                return true;
             }
 
-            // use a regular expression if we have one and we also have a filter string.
-            if (this.hasFilterString
-                && this.filterRegex is not null)
+            if (property.Property is not null
+                && property.Property.PropertyType.Name.ContainsIgnoreCase(this.FilterString))
             {
-                return this.filterRegex.IsMatch(property.DisplayName)
-                       || (property.Property is not null && this.filterRegex.IsMatch(property.Property.PropertyType.Name));
+                return true;
             }
 
-            // else just check for containment if we don't have a regular expression but we do have a filter string.
+            return false;
+        }
 
-            if (this.hasFilterString)
+        // else use the filter set if we have one of those.
+
+        if (this.IsPropertyFilterSet)
+        {
+            if (this.SelectedFilterSet!.IsPropertyInFilter(property))
             {
-                if (property.DisplayName.ContainsIgnoreCase(this.FilterString))
-                {
-                    return true;
-                }
-
-                if (property.Property is not null
-                    && property.Property.PropertyType.Name.ContainsIgnoreCase(this.FilterString))
-                {
-                    return true;
-                }
-
-                return false;
+                return true;
             }
 
-            // else use the filter set if we have one of those.
+            return false;
+        }
 
-            if (this.IsPropertyFilterSet)
-            {
-                if (this.SelectedFilterSet!.IsPropertyInFilter(property))
-                {
-                    return true;
-                }
+        // finally, if none of the above applies
+        // just check to see if we're not showing properties at their default values
+        // and this property is actually set to its default value
 
-                return false;
-            }
+        if (this.ShowDefaults == false
+            && property.ValueSource.BaseValueSource == BaseValueSource.Default)
+        {
+            return false;
+        }
 
-            // finally, if none of the above applies
-            // just check to see if we're not showing properties at their default values
-            // and this property is actually set to its default value
+        return true;
+    }
 
-            if (this.ShowDefaults == false
-                && property.ValueSource.BaseValueSource == BaseValueSource.Default)
-            {
-                return false;
-            }
+    private static bool IsUncommonProperty(PropertyInformation property)
+    {
+        if (property.Property is null)
+        {
+            return false;
+        }
 
+        if (property.Property.IsBrowsable == false)
+        {
+            return false;
+        }
+
+        if (nonUncommonProperties.Contains(property.Property))
+        {
+            return false;
+        }
+
+        if (uncommonPropertyNames.Contains(property.Property.Name))
+        {
             return true;
         }
 
-        private static bool IsUncommonProperty(PropertyInformation property)
+        if (property.DependencyProperty is null)
         {
-            if (property.Property is null)
-            {
-                return false;
-            }
-
-            if (property.Property.IsBrowsable == false)
-            {
-                return false;
-            }
-
-            if (nonUncommonProperties.Contains(property.Property))
-            {
-                return false;
-            }
-
-            if (uncommonPropertyNames.Contains(property.Property.Name))
-            {
-                return true;
-            }
-
-            if (property.DependencyProperty is null)
-            {
-                return false;
-            }
-
-            if (nonUncommonDependencyProperties.Contains(property.DependencyProperty))
-            {
-                return false;
-            }
-
-            if (property.DependencyProperty.OwnerType.Namespace?.StartsWith("Snoop", StringComparison.Ordinal) == true)
-            {
-                return true;
-            }
-
-            return uncommonTypes.Contains(property.DependencyProperty.OwnerType);
+            return false;
         }
+
+        if (nonUncommonDependencyProperties.Contains(property.DependencyProperty))
+        {
+            return false;
+        }
+
+        if (property.DependencyProperty.OwnerType.Namespace?.StartsWith("Snoop", StringComparison.Ordinal) == true)
+        {
+            return true;
+        }
+
+        return uncommonTypes.Contains(property.DependencyProperty.OwnerType);
     }
 }

@@ -1,21 +1,20 @@
-﻿namespace Snoop
+﻿namespace Snoop;
+
+using System.Windows;
+
+public partial class WindowInfoControl
 {
-    using System.Windows;
-
-    public partial class WindowInfoControl
+    public WindowInfoControl()
     {
-        public WindowInfoControl()
-        {
-            this.InitializeComponent();
+        this.InitializeComponent();
 
-            this.DataContextChanged += this.WindowInfoControl_DataContextChanged;
-        }
+        this.DataContextChanged += this.WindowInfoControl_DataContextChanged;
+    }
 
-        private void WindowInfoControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            this.WindowInfoContainer.Visibility = e.NewValue is not null
-                                                      ? Visibility.Visible
-                                                      : Visibility.Collapsed;
-        }
+    private void WindowInfoControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+        this.WindowInfoContainer.Visibility = e.NewValue is not null
+            ? Visibility.Visible
+            : Visibility.Collapsed;
     }
 }

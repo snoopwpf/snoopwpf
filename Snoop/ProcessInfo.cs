@@ -1,84 +1,83 @@
-﻿namespace Snoop
+﻿namespace Snoop;
+
+using System;
+using System.Diagnostics;
+using System.Windows.Input;
+using Snoop.Data;
+using Snoop.Infrastructure;
+
+public class ProcessInfo
 {
-    using System;
-    using System.Diagnostics;
-    using System.Windows.Input;
-    using Snoop.Data;
-    using Snoop.Infrastructure;
+    private bool? isOwningProcessElevated;
 
-    public class ProcessInfo
+    public ProcessInfo(int processId)
+        : this(Process.GetProcessById(processId))
     {
-        private bool? isOwningProcessElevated;
+    }
 
-        public ProcessInfo(int processId)
-            : this(Process.GetProcessById(processId))
+    public ProcessInfo(Process process)
+    {
+        this.Process = process;
+    }
+
+    public Process Process { get; }
+
+    public bool IsProcessElevated => this.isOwningProcessElevated ??= NativeMethods.IsProcessElevated(this.Process);
+
+    public AttachResult Snoop(IntPtr targetHwnd)
+    {
+        Mouse.OverrideCursor = Cursors.Wait;
+
+        try
         {
+            InjectorLauncherManager.Launch(this, targetHwnd, typeof(SnoopManager).GetMethod(nameof(SnoopManager.StartSnoop))!, CreateTransientSettingsData(SnoopStartTarget.SnoopUI, targetHwnd));
+        }
+        catch (Exception e)
+        {
+            return new AttachResult(e);
+        }
+        finally
+        {
+            Mouse.OverrideCursor = null;
         }
 
-        public ProcessInfo(Process process)
+        return new AttachResult();
+    }
+
+    public AttachResult Magnify(IntPtr targetHwnd)
+    {
+        Mouse.OverrideCursor = Cursors.Wait;
+
+        try
         {
-            this.Process = process;
+            InjectorLauncherManager.Launch(this, targetHwnd, typeof(SnoopManager).GetMethod(nameof(SnoopManager.StartSnoop))!, CreateTransientSettingsData(SnoopStartTarget.Zoomer, targetHwnd));
+        }
+        catch (Exception e)
+        {
+            return new AttachResult(e);
+        }
+        finally
+        {
+            Mouse.OverrideCursor = null;
         }
 
-        public Process Process { get; }
+        return new AttachResult();
+    }
 
-        public bool IsProcessElevated => this.isOwningProcessElevated ??= NativeMethods.IsProcessElevated(this.Process);
+    private static TransientSettingsData CreateTransientSettingsData(SnoopStartTarget startTarget, IntPtr targetWindowHandle)
+    {
+        var settings = Settings.Default;
 
-        public AttachResult Snoop(IntPtr targetHwnd)
+        return new TransientSettingsData
         {
-            Mouse.OverrideCursor = Cursors.Wait;
+            StartTarget = startTarget,
+            TargetWindowHandle = targetWindowHandle.ToInt64(),
 
-            try
-            {
-                InjectorLauncherManager.Launch(this, targetHwnd, typeof(SnoopManager).GetMethod(nameof(SnoopManager.StartSnoop))!, CreateTransientSettingsData(SnoopStartTarget.SnoopUI, targetHwnd));
-            }
-            catch (Exception e)
-            {
-                return new AttachResult(e);
-            }
-            finally
-            {
-                Mouse.OverrideCursor = null;
-            }
-
-            return new AttachResult();
-        }
-
-        public AttachResult Magnify(IntPtr targetHwnd)
-        {
-            Mouse.OverrideCursor = Cursors.Wait;
-
-            try
-            {
-                InjectorLauncherManager.Launch(this, targetHwnd, typeof(SnoopManager).GetMethod(nameof(SnoopManager.StartSnoop))!, CreateTransientSettingsData(SnoopStartTarget.Zoomer, targetHwnd));
-            }
-            catch (Exception e)
-            {
-                return new AttachResult(e);
-            }
-            finally
-            {
-                Mouse.OverrideCursor = null;
-            }
-
-            return new AttachResult();
-        }
-
-        private static TransientSettingsData CreateTransientSettingsData(SnoopStartTarget startTarget, IntPtr targetWindowHandle)
-        {
-            var settings = Settings.Default;
-
-            return new TransientSettingsData
-            {
-                StartTarget = startTarget,
-                TargetWindowHandle = targetWindowHandle.ToInt64(),
-
-                MultipleAppDomainMode = settings.MultipleAppDomainMode,
-                MultipleDispatcherMode = settings.MultipleDispatcherMode,
-                SetOwnerWindow = settings.SetOwnerWindow,
-                EnableDiagnostics = settings.EnableDiagnostics,
-                ILSpyPath = settings.ILSpyPath
-            };
-        }
+            MultipleAppDomainMode = settings.MultipleAppDomainMode,
+            MultipleDispatcherMode = settings.MultipleDispatcherMode,
+            SetOwnerWindow = settings.SetOwnerWindow,
+            EnableDiagnostics = settings.EnableDiagnostics,
+            ILSpyPath = settings.ILSpyPath
+        };
     }
 }

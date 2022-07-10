@@ -1,64 +1,63 @@
-﻿namespace Snoop.Converters
+﻿namespace Snoop.Converters;
+
+using System;
+using System.Globalization;
+using System.Linq;
+using System.Windows;
+using System.Windows.Data;
+
+[ValueConversion(typeof(object), typeof(object))]
+[ValueConversion(typeof(bool), typeof(Visibility))]
+public class BoolToVisibilityConverter : IValueConverter, IMultiValueConverter
 {
-    using System;
-    using System.Globalization;
-    using System.Linq;
-    using System.Windows;
-    using System.Windows.Data;
+    public static readonly BoolToVisibilityConverter DefaultInstance = new();
 
-    [ValueConversion(typeof(object), typeof(object))]
-    [ValueConversion(typeof(bool), typeof(Visibility))]
-    public class BoolToVisibilityConverter : IValueConverter, IMultiValueConverter
+    public object Convert(object value, Type? targetType, object? parameter, CultureInfo? culture)
     {
-        public static readonly BoolToVisibilityConverter DefaultInstance = new();
+        var invert = false;
 
-        public object Convert(object value, Type? targetType, object? parameter, CultureInfo? culture)
+        if (parameter is bool boolParameter)
         {
-            var invert = false;
-
-            if (parameter is bool boolParameter)
-            {
-                invert = boolParameter;
-            }
-            else if (parameter is string stringParameter)
-            {
-                _ = bool.TryParse(stringParameter, out invert);
-            }
-
-            if (value is bool boolValue)
-            {
-                return boolValue ^ invert ? Visibility.Visible : Visibility.Collapsed;
-            }
-
-            return value;
+            invert = boolParameter;
+        }
+        else if (parameter is string stringParameter)
+        {
+            _ = bool.TryParse(stringParameter, out invert);
         }
 
-        public object ConvertBack(object? value, Type? targetType, object? parameter, CultureInfo? culture)
+        if (value is bool boolValue)
         {
-            return Binding.DoNothing;
+            return boolValue ^ invert ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        public object Convert(object[] values, Type? targetType, object? parameter, CultureInfo? culture)
+        return value;
+    }
+
+    public object ConvertBack(object? value, Type? targetType, object? parameter, CultureInfo? culture)
+    {
+        return Binding.DoNothing;
+    }
+
+    public object Convert(object[] values, Type? targetType, object? parameter, CultureInfo? culture)
+    {
+        var invert = false;
+
+        if (parameter is bool boolParameter)
         {
-            var invert = false;
-
-            if (parameter is bool boolParameter)
-            {
-                invert = boolParameter;
-            }
-            else if (parameter is string stringParameter)
-            {
-                _ = bool.TryParse(stringParameter, out invert);
-            }
-
-            var boolValues = values.OfType<bool>();
-
-            return boolValues.All(x => x) ^ invert ? Visibility.Visible : Visibility.Collapsed;
+            invert = boolParameter;
+        }
+        else if (parameter is string stringParameter)
+        {
+            _ = bool.TryParse(stringParameter, out invert);
         }
 
-        public object[] ConvertBack(object? value, Type[]? targetTypes, object? parameter, CultureInfo? culture)
-        {
-            throw new NotImplementedException();
-        }
+        var boolValues = values.OfType<bool>();
+
+        return boolValues.All(x => x) ^ invert ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    public object[] ConvertBack(object? value, Type[]? targetTypes, object? parameter, CultureInfo? culture)
+    {
+        throw new NotImplementedException();
     }
 }

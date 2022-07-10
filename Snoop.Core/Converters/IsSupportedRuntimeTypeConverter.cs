@@ -3,47 +3,46 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop.Converters
+namespace Snoop.Converters;
+
+using System;
+using System.Windows.Data;
+
+/// <summary>
+/// Converter to tell us if the given value is supported for MouseWheel editing.
+/// Used to use app.config to drive this, but now it's just a hardcoded list
+/// </summary>
+public class IsSupportedRuntimeTypeConverter : IValueConverter
 {
-    using System;
-    using System.Windows.Data;
+    public static readonly IsSupportedRuntimeTypeConverter Default = new();
 
-    /// <summary>
-    /// Converter to tell us if the given value is supported for MouseWheel editing.
-    /// Used to use app.config to drive this, but now it's just a hardcoded list
-    /// </summary>
-    public class IsSupportedRuntimeTypeConverter : IValueConverter
+    private static readonly string[] ExcludeTypeNames = { "LinearGradientBrush", "RadialGradientBrush", "TileBrush" };
+
+    #region IValueConverter Members
+    public object Convert(object? value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
-        public static readonly IsSupportedRuntimeTypeConverter Default = new();
+        // value (object)   the runtime value - compare against known incompatible types (use list from config)
+        // return (boolean) whether the type is supported or not
 
-        private static readonly string[] ExcludeTypeNames = { "LinearGradientBrush", "RadialGradientBrush", "TileBrush" };
-
-        #region IValueConverter Members
-        public object Convert(object? value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        if (value is null)
         {
-            // value (object)   the runtime value - compare against known incompatible types (use list from config)
-            // return (boolean) whether the type is supported or not
+            return false;
+        }
 
-            if (value is null)
+        foreach (var excludeTypeName in ExcludeTypeNames)
+        {
+            if (value.GetType().Name == excludeTypeName)
             {
                 return false;
             }
-
-            foreach (var excludeTypeName in ExcludeTypeNames)
-            {
-                if (value.GetType().Name == excludeTypeName)
-                {
-                    return false;
-                }
-            }
-
-            return true;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-        #endregion
+        return true;
     }
+
+    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+    #endregion
 }

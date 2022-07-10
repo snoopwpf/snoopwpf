@@ -1,241 +1,240 @@
-﻿namespace Snoop.Views
+﻿namespace Snoop.Views;
+
+using System;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Input;
+using Snoop.Infrastructure.Diagnostics;
+
+public partial class DiagnosticsView : UserControl
 {
-    using System;
-    using System.Collections.ObjectModel;
-    using System.Collections.Specialized;
-    using System.ComponentModel;
-    using System.Linq;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Data;
-    using System.Windows.Input;
-    using Snoop.Infrastructure.Diagnostics;
+    public static readonly DependencyProperty DiagnosticContextProperty =
+        DependencyProperty.Register(nameof(DiagnosticContext), typeof(DiagnosticContext), typeof(DiagnosticsView), new PropertyMetadata(default(DiagnosticContext), OnDiagnosticContextChanged));
 
-    public partial class DiagnosticsView : UserControl
+    public static readonly DependencyProperty DiagnosticProvidersProperty = DependencyProperty.Register(
+        nameof(DiagnosticProviders), typeof(ObservableCollection<DiagnosticProvider>), typeof(DiagnosticsView), new PropertyMetadata(null));
+
+    public static readonly DependencyProperty DiagnosticProvidersViewProperty = DependencyProperty.Register(
+        nameof(DiagnosticProvidersView), typeof(ICollectionView), typeof(DiagnosticsView), new PropertyMetadata(default(ICollectionView)));
+
+    public static readonly DependencyProperty DiagnosticItemsProperty = DependencyProperty.Register(
+        nameof(DiagnosticItems), typeof(ObservableCollection<DiagnosticItem>), typeof(DiagnosticsView), new PropertyMetadata(null));
+
+    public static readonly DependencyProperty DiagnosticsItemsViewProperty = DependencyProperty.Register(
+        nameof(DiagnosticsItemsView), typeof(ICollectionView), typeof(DiagnosticsView), new PropertyMetadata(default(ICollectionView)));
+
+    public static readonly DependencyProperty ShowErrorsProperty = DependencyProperty.Register(
+        nameof(ShowErrors), typeof(bool), typeof(DiagnosticsView), new PropertyMetadata(true, OnFilterPropertyChanged));
+
+    public static readonly DependencyProperty ShowWarningsProperty = DependencyProperty.Register(
+        nameof(ShowWarnings), typeof(bool), typeof(DiagnosticsView), new PropertyMetadata(true, OnFilterPropertyChanged));
+
+    public static readonly DependencyProperty ShowInformationsProperty = DependencyProperty.Register(
+        nameof(ShowInformations), typeof(bool), typeof(DiagnosticsView), new PropertyMetadata(true, OnFilterPropertyChanged));
+
+    public static readonly DependencyProperty ErrorCountProperty = DependencyProperty.Register(
+        nameof(ErrorCount), typeof(int), typeof(DiagnosticsView), new PropertyMetadata(default(int)));
+
+    public static readonly DependencyProperty WarningCountProperty = DependencyProperty.Register(
+        nameof(WarningCount), typeof(int), typeof(DiagnosticsView), new PropertyMetadata(default(int)));
+
+    public static readonly DependencyProperty InformationCountProperty = DependencyProperty.Register(
+        nameof(InformationCount), typeof(int), typeof(DiagnosticsView), new PropertyMetadata(default(int)));
+
+    public static readonly RoutedCommand ResetEnabledDiagnosticsToDefaultCommand = new(nameof(ResetEnabledDiagnosticsToDefaultCommand), typeof(DiagnosticsView));
+
+    public DiagnosticsView()
     {
-        public static readonly DependencyProperty DiagnosticContextProperty =
-            DependencyProperty.Register(nameof(DiagnosticContext), typeof(DiagnosticContext), typeof(DiagnosticsView), new PropertyMetadata(default(DiagnosticContext), OnDiagnosticContextChanged));
+        this.InitializeComponent();
 
-        public static readonly DependencyProperty DiagnosticProvidersProperty = DependencyProperty.Register(
-            nameof(DiagnosticProviders), typeof(ObservableCollection<DiagnosticProvider>), typeof(DiagnosticsView), new PropertyMetadata(null));
+        this.CommandBindings.Add(new CommandBinding(ResetEnabledDiagnosticsToDefaultCommand, this.HandleResetResetEnabledDiagnosticsToDefault));
+    }
 
-        public static readonly DependencyProperty DiagnosticProvidersViewProperty = DependencyProperty.Register(
-            nameof(DiagnosticProvidersView), typeof(ICollectionView), typeof(DiagnosticsView), new PropertyMetadata(default(ICollectionView)));
+    public ObservableCollection<DiagnosticProvider>? DiagnosticProviders
+    {
+        get => (ObservableCollection<DiagnosticProvider>?)this.GetValue(DiagnosticProvidersProperty);
+        set => this.SetValue(DiagnosticProvidersProperty, value);
+    }
 
-        public static readonly DependencyProperty DiagnosticItemsProperty = DependencyProperty.Register(
-            nameof(DiagnosticItems), typeof(ObservableCollection<DiagnosticItem>), typeof(DiagnosticsView), new PropertyMetadata(null));
+    public ICollectionView? DiagnosticProvidersView
+    {
+        get => (ICollectionView?)this.GetValue(DiagnosticProvidersViewProperty);
+        set => this.SetValue(DiagnosticProvidersViewProperty, value);
+    }
 
-        public static readonly DependencyProperty DiagnosticsItemsViewProperty = DependencyProperty.Register(
-            nameof(DiagnosticsItemsView), typeof(ICollectionView), typeof(DiagnosticsView), new PropertyMetadata(default(ICollectionView)));
+    public ObservableCollection<DiagnosticItem>? DiagnosticItems
+    {
+        get => (ObservableCollection<DiagnosticItem>?)this.GetValue(DiagnosticItemsProperty);
+        set => this.SetValue(DiagnosticItemsProperty, value);
+    }
 
-        public static readonly DependencyProperty ShowErrorsProperty = DependencyProperty.Register(
-            nameof(ShowErrors), typeof(bool), typeof(DiagnosticsView), new PropertyMetadata(true, OnFilterPropertyChanged));
+    public int ErrorCount
+    {
+        get => (int)this.GetValue(ErrorCountProperty);
+        set => this.SetValue(ErrorCountProperty, value);
+    }
 
-        public static readonly DependencyProperty ShowWarningsProperty = DependencyProperty.Register(
-            nameof(ShowWarnings), typeof(bool), typeof(DiagnosticsView), new PropertyMetadata(true, OnFilterPropertyChanged));
+    public int WarningCount
+    {
+        get => (int)this.GetValue(WarningCountProperty);
+        set => this.SetValue(WarningCountProperty, value);
+    }
 
-        public static readonly DependencyProperty ShowInformationsProperty = DependencyProperty.Register(
-            nameof(ShowInformations), typeof(bool), typeof(DiagnosticsView), new PropertyMetadata(true, OnFilterPropertyChanged));
+    public int InformationCount
+    {
+        get => (int)this.GetValue(InformationCountProperty);
+        set => this.SetValue(InformationCountProperty, value);
+    }
 
-        public static readonly DependencyProperty ErrorCountProperty = DependencyProperty.Register(
-            nameof(ErrorCount), typeof(int), typeof(DiagnosticsView), new PropertyMetadata(default(int)));
+    public ICollectionView? DiagnosticsItemsView
+    {
+        get => (ICollectionView?)this.GetValue(DiagnosticsItemsViewProperty);
+        set => this.SetValue(DiagnosticsItemsViewProperty, value);
+    }
 
-        public static readonly DependencyProperty WarningCountProperty = DependencyProperty.Register(
-            nameof(WarningCount), typeof(int), typeof(DiagnosticsView), new PropertyMetadata(default(int)));
+    public DiagnosticContext? DiagnosticContext
+    {
+        get => (DiagnosticContext?)this.GetValue(DiagnosticContextProperty);
+        set => this.SetValue(DiagnosticContextProperty, value);
+    }
 
-        public static readonly DependencyProperty InformationCountProperty = DependencyProperty.Register(
-            nameof(InformationCount), typeof(int), typeof(DiagnosticsView), new PropertyMetadata(default(int)));
+    public bool ShowErrors
+    {
+        get => (bool)this.GetValue(ShowErrorsProperty);
+        set => this.SetValue(ShowErrorsProperty, value);
+    }
 
-        public static readonly RoutedCommand ResetEnabledDiagnosticsToDefaultCommand = new(nameof(ResetEnabledDiagnosticsToDefaultCommand), typeof(DiagnosticsView));
+    public bool ShowWarnings
+    {
+        get => (bool)this.GetValue(ShowWarningsProperty);
+        set => this.SetValue(ShowWarningsProperty, value);
+    }
 
-        public DiagnosticsView()
+    public bool ShowInformations
+    {
+        get => (bool)this.GetValue(ShowInformationsProperty);
+        set => this.SetValue(ShowInformationsProperty, value);
+    }
+
+    private void HandleResetResetEnabledDiagnosticsToDefault(object sender, ExecutedRoutedEventArgs e)
+    {
+        if (this.DiagnosticProviders is null)
         {
-            this.InitializeComponent();
-
-            this.CommandBindings.Add(new CommandBinding(ResetEnabledDiagnosticsToDefaultCommand, this.HandleResetResetEnabledDiagnosticsToDefault));
+            return;
         }
 
-        public ObservableCollection<DiagnosticProvider>? DiagnosticProviders
+        foreach (var diagnosticProvider in this.DiagnosticProviders)
         {
-            get => (ObservableCollection<DiagnosticProvider>?)this.GetValue(DiagnosticProvidersProperty);
-            set => this.SetValue(DiagnosticProvidersProperty, value);
+            diagnosticProvider.IsActive = true;
+        }
+    }
+
+    private static void OnDiagnosticContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var control = (DiagnosticsView)d;
+
+        if (control.DiagnosticItems is not null)
+        {
+            ((INotifyCollectionChanged)control.DiagnosticItems).CollectionChanged -= control.OnCollectionChanged;
         }
 
-        public ICollectionView? DiagnosticProvidersView
-        {
-            get => (ICollectionView?)this.GetValue(DiagnosticProvidersViewProperty);
-            set => this.SetValue(DiagnosticProvidersViewProperty, value);
-        }
+        control.DiagnosticItems = ((DiagnosticContext?)e.NewValue)?.DiagnosticItems;
 
-        public ObservableCollection<DiagnosticItem>? DiagnosticItems
+        if (control.DiagnosticItems is not null)
         {
-            get => (ObservableCollection<DiagnosticItem>?)this.GetValue(DiagnosticItemsProperty);
-            set => this.SetValue(DiagnosticItemsProperty, value);
-        }
+            ((INotifyCollectionChanged)control.DiagnosticItems).CollectionChanged += control.OnCollectionChanged;
 
-        public int ErrorCount
-        {
-            get => (int)this.GetValue(ErrorCountProperty);
-            set => this.SetValue(ErrorCountProperty, value);
-        }
-
-        public int WarningCount
-        {
-            get => (int)this.GetValue(WarningCountProperty);
-            set => this.SetValue(WarningCountProperty, value);
-        }
-
-        public int InformationCount
-        {
-            get => (int)this.GetValue(InformationCountProperty);
-            set => this.SetValue(InformationCountProperty, value);
-        }
-
-        public ICollectionView? DiagnosticsItemsView
-        {
-            get => (ICollectionView?)this.GetValue(DiagnosticsItemsViewProperty);
-            set => this.SetValue(DiagnosticsItemsViewProperty, value);
-        }
-
-        public DiagnosticContext? DiagnosticContext
-        {
-            get => (DiagnosticContext?)this.GetValue(DiagnosticContextProperty);
-            set => this.SetValue(DiagnosticContextProperty, value);
-        }
-
-        public bool ShowErrors
-        {
-            get => (bool)this.GetValue(ShowErrorsProperty);
-            set => this.SetValue(ShowErrorsProperty, value);
-        }
-
-        public bool ShowWarnings
-        {
-            get => (bool)this.GetValue(ShowWarningsProperty);
-            set => this.SetValue(ShowWarningsProperty, value);
-        }
-
-        public bool ShowInformations
-        {
-            get => (bool)this.GetValue(ShowInformationsProperty);
-            set => this.SetValue(ShowInformationsProperty, value);
-        }
-
-        private void HandleResetResetEnabledDiagnosticsToDefault(object sender, ExecutedRoutedEventArgs e)
-        {
-            if (this.DiagnosticProviders is null)
+            var newView = new ListCollectionView(control.DiagnosticItems)
             {
-                return;
-            }
-
-            foreach (var diagnosticProvider in this.DiagnosticProviders)
-            {
-                diagnosticProvider.IsActive = true;
-            }
-        }
-
-        private static void OnDiagnosticContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var control = (DiagnosticsView)d;
-
-            if (control.DiagnosticItems is not null)
-            {
-                ((INotifyCollectionChanged)control.DiagnosticItems).CollectionChanged -= control.OnCollectionChanged;
-            }
-
-            control.DiagnosticItems = ((DiagnosticContext?)e.NewValue)?.DiagnosticItems;
-
-            if (control.DiagnosticItems is not null)
-            {
-                ((INotifyCollectionChanged)control.DiagnosticItems).CollectionChanged += control.OnCollectionChanged;
-
-                var newView = new ListCollectionView(control.DiagnosticItems)
-                {
-                    Filter = control.FilterDiagnosticItems
-                };
-                control.DiagnosticsItemsView = newView;
-            }
-            else
-            {
-                control.DiagnosticsItemsView = null;
-            }
-
-            control.DiagnosticProviders = ((DiagnosticContext?)e.NewValue)?.DiagnosticProviders;
-
-            if (control.DiagnosticProviders is not null)
-            {
-                var newView = new ListCollectionView(control.DiagnosticProviders);
-
-                // newView.GroupDescriptions.Add(new
-                // {
-                //     PropertyName = nameof(DiagnosticProvider.Category),
-                //     StringComparison = StringComparison.OrdinalIgnoreCase
-                // });
-
-                // cvs.SortDescriptions.Add(new SortDescription(nameof(DiagnosticProvider.Category), ListSortDirection.Ascending));
-                newView.SortDescriptions.Add(new SortDescription(nameof(DiagnosticProvider.Name), ListSortDirection.Ascending));
-
-                control.DiagnosticProvidersView = newView;
-            }
-            else
-            {
-                control.DiagnosticProvidersView = null;
-            }
-        }
-
-        private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-            this.ErrorCount = this.DiagnosticItems!.Count(x => x.Level == DiagnosticLevel.Critical || x.Level == DiagnosticLevel.Error);
-            this.WarningCount = this.DiagnosticItems!.Count(x => x.Level == DiagnosticLevel.Warning);
-            this.InformationCount = this.DiagnosticItems!.Count(x => x.Level == DiagnosticLevel.Info);
-        }
-
-        private bool FilterDiagnosticItems(object obj)
-        {
-            if (obj is not DiagnosticItem diagnosticItem)
-            {
-                return false;
-            }
-
-            if (diagnosticItem.DiagnosticProvider?.IsActive == false)
-            {
-                return false;
-            }
-
-            return diagnosticItem.Level switch
-            {
-                DiagnosticLevel.Info => this.ShowInformations,
-                DiagnosticLevel.Warning => this.ShowWarnings,
-                DiagnosticLevel.Error => this.ShowErrors,
-                DiagnosticLevel.Critical => true,
-                _ => throw new ArgumentOutOfRangeException(nameof(diagnosticItem.Level), diagnosticItem.Level, "Unknown diagnostic level.")
+                Filter = control.FilterDiagnosticItems
             };
+            control.DiagnosticsItemsView = newView;
+        }
+        else
+        {
+            control.DiagnosticsItemsView = null;
         }
 
-        private static void OnFilterPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        control.DiagnosticProviders = ((DiagnosticContext?)e.NewValue)?.DiagnosticProviders;
+
+        if (control.DiagnosticProviders is not null)
         {
-            var control = (DiagnosticsView)d;
-            control.DiagnosticsItemsView?.Refresh();
+            var newView = new ListCollectionView(control.DiagnosticProviders);
+
+            // newView.GroupDescriptions.Add(new
+            // {
+            //     PropertyName = nameof(DiagnosticProvider.Category),
+            //     StringComparison = StringComparison.OrdinalIgnoreCase
+            // });
+
+            // cvs.SortDescriptions.Add(new SortDescription(nameof(DiagnosticProvider.Category), ListSortDirection.Ascending));
+            newView.SortDescriptions.Add(new SortDescription(nameof(DiagnosticProvider.Name), ListSortDirection.Ascending));
+
+            control.DiagnosticProvidersView = newView;
+        }
+        else
+        {
+            control.DiagnosticProvidersView = null;
+        }
+    }
+
+    private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        this.ErrorCount = this.DiagnosticItems!.Count(x => x.Level == DiagnosticLevel.Critical || x.Level == DiagnosticLevel.Error);
+        this.WarningCount = this.DiagnosticItems!.Count(x => x.Level == DiagnosticLevel.Warning);
+        this.InformationCount = this.DiagnosticItems!.Count(x => x.Level == DiagnosticLevel.Info);
+    }
+
+    private bool FilterDiagnosticItems(object obj)
+    {
+        if (obj is not DiagnosticItem diagnosticItem)
+        {
+            return false;
         }
 
-        private void Control_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        if (diagnosticItem.DiagnosticProvider?.IsActive == false)
         {
-            this.NavigateToSelectedTreeItem();
+            return false;
         }
 
-        private void Diagnostics_OnKeyUp(object sender, KeyEventArgs e)
+        return diagnosticItem.Level switch
         {
-            this.NavigateToSelectedTreeItem();
-        }
+            DiagnosticLevel.Info => this.ShowInformations,
+            DiagnosticLevel.Warning => this.ShowWarnings,
+            DiagnosticLevel.Error => this.ShowErrors,
+            DiagnosticLevel.Critical => true,
+            _ => throw new ArgumentOutOfRangeException(nameof(diagnosticItem.Level), diagnosticItem.Level, "Unknown diagnostic level.")
+        };
+    }
 
-        private void NavigateToSelectedTreeItem()
+    private static void OnFilterPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var control = (DiagnosticsView)d;
+        control.DiagnosticsItemsView?.Refresh();
+    }
+
+    private void Control_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        this.NavigateToSelectedTreeItem();
+    }
+
+    private void Diagnostics_OnKeyUp(object sender, KeyEventArgs e)
+    {
+        this.NavigateToSelectedTreeItem();
+    }
+
+    private void NavigateToSelectedTreeItem()
+    {
+        var diagnosticItem = this.diagnostics.SelectedItem as DiagnosticItem;
+
+        if (diagnosticItem?.TreeItem != null)
         {
-            var diagnosticItem = this.diagnostics.SelectedItem as DiagnosticItem;
-
-            if (diagnosticItem?.TreeItem != null)
-            {
-                diagnosticItem.TreeItem.IsSelected = true;
-            }
+            diagnosticItem.TreeItem.IsSelected = true;
         }
     }
 }

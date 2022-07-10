@@ -1,10 +1,9 @@
-namespace Snoop.Infrastructure.Diagnostics
+namespace Snoop.Infrastructure.Diagnostics;
+
+public enum DiagnosticLevel
 {
-    public enum DiagnosticLevel
-    {
-        Info,
-        Warning,
-        Error,
-        Critical
-    }
+    Info,
+    Warning,
+    Error,
+    Critical
 }

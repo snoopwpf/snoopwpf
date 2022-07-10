@@ -3,12 +3,11 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop.Infrastructure
-{
-    public interface ISkipDelve
-    {
-        object? NextValue { get; }
+namespace Snoop.Infrastructure;
 
-        BindableType? NextValueType { get; }
-    }
+public interface ISkipDelve
+{
+    object? NextValue { get; }
+
+    BindableType? NextValueType { get; }
 }

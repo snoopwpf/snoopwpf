@@ -1,100 +1,99 @@
-﻿namespace Snoop.Views.DebugListenerTab
+﻿namespace Snoop.Views.DebugListenerTab;
+
+using System;
+using System.Text.RegularExpressions;
+
+[Serializable]
+public class SnoopSingleFilter : SnoopFilter, ICloneable
 {
-    using System;
-    using System.Text.RegularExpressions;
+    private string text;
+    private FilterType filterType;
 
-    [Serializable]
-    public class SnoopSingleFilter : SnoopFilter, ICloneable
+    public SnoopSingleFilter()
     {
-        private string text;
-        private FilterType filterType;
+        this.text = string.Empty;
+    }
 
-        public SnoopSingleFilter()
+    public FilterType FilterType
+    {
+        get => this.filterType;
+        set
         {
-            this.text = string.Empty;
+            if (value == this.filterType)
+            {
+                return;
+            }
+
+            this.filterType = value;
+            this.RaisePropertyChanged(nameof(this.FilterType));
+        }
+    }
+
+    public string Text
+    {
+        get
+        {
+            return this.text;
         }
 
-        public FilterType FilterType
+        set
         {
-            get => this.filterType;
-            set
-            {
-                if (value == this.filterType)
-                {
-                    return;
-                }
+            this.text = value;
+            this.RaisePropertyChanged(nameof(this.Text));
+        }
+    }
 
-                this.filterType = value;
-                this.RaisePropertyChanged(nameof(this.FilterType));
-            }
+    public override bool FilterMatches(string? debugLine)
+    {
+        debugLine = debugLine?.ToLower() ?? string.Empty;
+        var lowerText = this.Text.ToLower();
+        var filterMatches = false;
+        switch (this.FilterType)
+        {
+            case FilterType.Contains:
+                filterMatches = debugLine.Contains(lowerText, StringComparison.Ordinal);
+                break;
+            case FilterType.StartsWith:
+                filterMatches = debugLine.StartsWith(lowerText, StringComparison.Ordinal);
+                break;
+            case FilterType.EndsWith:
+                filterMatches = debugLine.EndsWith(lowerText, StringComparison.Ordinal);
+                break;
+            case FilterType.RegularExpression:
+                filterMatches = TryMatch(debugLine, lowerText);
+                break;
         }
 
-        public string Text
+        if (this.IsInverse)
         {
-            get
-            {
-                return this.text;
-            }
-
-            set
-            {
-                this.text = value;
-                this.RaisePropertyChanged(nameof(this.Text));
-            }
+            filterMatches = !filterMatches;
         }
 
-        public override bool FilterMatches(string? debugLine)
+        return filterMatches;
+    }
+
+    private static bool TryMatch(string input, string pattern)
+    {
+        try
         {
-            debugLine = debugLine?.ToLower() ?? string.Empty;
-            var lowerText = this.Text.ToLower();
-            var filterMatches = false;
-            switch (this.FilterType)
-            {
-                case FilterType.Contains:
-                    filterMatches = debugLine.Contains(lowerText, StringComparison.Ordinal);
-                    break;
-                case FilterType.StartsWith:
-                    filterMatches = debugLine.StartsWith(lowerText, StringComparison.Ordinal);
-                    break;
-                case FilterType.EndsWith:
-                    filterMatches = debugLine.EndsWith(lowerText, StringComparison.Ordinal);
-                    break;
-                case FilterType.RegularExpression:
-                    filterMatches = TryMatch(debugLine, lowerText);
-                    break;
-            }
-
-            if (this.IsInverse)
-            {
-                filterMatches = !filterMatches;
-            }
-
-            return filterMatches;
+            return Regex.IsMatch(input, pattern);
         }
-
-        private static bool TryMatch(string input, string pattern)
+        catch (Exception)
         {
-            try
-            {
-                return Regex.IsMatch(input, pattern);
-            }
-            catch (Exception)
-            {
-                return false;
-            }
+            return false;
         }
+    }
 
-        public object Clone()
+    public object Clone()
+    {
+        var newFilter = new SnoopSingleFilter
         {
-            var newFilter = new SnoopSingleFilter
-            {
-                IsGrouped = this.IsGrouped,
-                GroupId = this.GroupId,
-                Text = this.Text,
-                FilterType = this.FilterType,
-                IsInverse = this.IsInverse
-            };
-            return newFilter;
-        }
+            IsGrouped = this.IsGrouped,
+            GroupId = this.GroupId,
+            Text = this.Text,
+            FilterType = this.FilterType,
+            IsInverse = this.IsInverse
+        };
+        return newFilter;
     }
 }

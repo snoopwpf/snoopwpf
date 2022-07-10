@@ -1,70 +1,69 @@
-﻿namespace Snoop.Infrastructure.Diagnostics
+﻿namespace Snoop.Infrastructure.Diagnostics;
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using JetBrains.Annotations;
+using Snoop.Data.Tree;
+
+public abstract class DiagnosticProvider : IDisposable, INotifyPropertyChanged
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Linq;
-    using System.Runtime.CompilerServices;
-    using JetBrains.Annotations;
-    using Snoop.Data.Tree;
+    private bool isActive = true;
 
-    public abstract class DiagnosticProvider : IDisposable, INotifyPropertyChanged
+    public abstract string Name { get; }
+
+    public abstract string Description { get; }
+
+    public bool IsActive
     {
-        private bool isActive = true;
-
-        public abstract string Name { get; }
-
-        public abstract string Description { get; }
-
-        public bool IsActive
+        get => this.isActive;
+        set
         {
-            get => this.isActive;
-            set
+            if (value == this.isActive)
             {
-                if (value == this.isActive)
-                {
-                    return;
-                }
-
-                this.isActive = value;
-                this.OnPropertyChanged();
+                return;
             }
-        }
 
-        public IEnumerable<DiagnosticItem> GetDiagnosticItems(TreeItem treeItem)
-        {
-            return this.IsActive == false || treeItem.ShouldBeAnalyzed == false
-                ? Enumerable.Empty<DiagnosticItem>()
-                : this.GetDiagnosticItemsInternal(treeItem);
+            this.isActive = value;
+            this.OnPropertyChanged();
         }
+    }
 
-        protected virtual IEnumerable<DiagnosticItem> GetDiagnosticItemsInternal(TreeItem treeItem)
-        {
-            return Enumerable.Empty<DiagnosticItem>();
-        }
+    public IEnumerable<DiagnosticItem> GetDiagnosticItems(TreeItem treeItem)
+    {
+        return this.IsActive == false || treeItem.ShouldBeAnalyzed == false
+            ? Enumerable.Empty<DiagnosticItem>()
+            : this.GetDiagnosticItemsInternal(treeItem);
+    }
 
-        public IEnumerable<DiagnosticItem> GetGlobalDiagnosticItems()
-        {
-            return this.IsActive == false
-                ? Enumerable.Empty<DiagnosticItem>()
-                : this.GetGlobalDiagnosticItemsInternal();
-        }
+    protected virtual IEnumerable<DiagnosticItem> GetDiagnosticItemsInternal(TreeItem treeItem)
+    {
+        return Enumerable.Empty<DiagnosticItem>();
+    }
 
-        protected virtual IEnumerable<DiagnosticItem> GetGlobalDiagnosticItemsInternal()
-        {
-            return Enumerable.Empty<DiagnosticItem>();
-        }
+    public IEnumerable<DiagnosticItem> GetGlobalDiagnosticItems()
+    {
+        return this.IsActive == false
+            ? Enumerable.Empty<DiagnosticItem>()
+            : this.GetGlobalDiagnosticItemsInternal();
+    }
 
-        public virtual void Dispose()
-        {
-        }
+    protected virtual IEnumerable<DiagnosticItem> GetGlobalDiagnosticItemsInternal()
+    {
+        return Enumerable.Empty<DiagnosticItem>();
+    }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+    public virtual void Dispose()
+    {
+    }
 
-        [NotifyPropertyChangedInvocator]
-        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    [NotifyPropertyChangedInvocator]
+    protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

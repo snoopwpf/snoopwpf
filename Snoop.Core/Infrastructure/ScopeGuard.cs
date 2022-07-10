@@ -1,28 +1,27 @@
-﻿namespace Snoop.Infrastructure
+﻿namespace Snoop.Infrastructure;
+
+using System;
+
+public class ScopeGuard : IDisposable
 {
-    using System;
-
-    public class ScopeGuard : IDisposable
+    public ScopeGuard(Action? enterAction = null, Action? exitAction = null)
     {
-        public ScopeGuard(Action? enterAction = null, Action? exitAction = null)
-        {
-            this.EnterAction = enterAction;
-            this.ExitAction = exitAction;
-        }
+        this.EnterAction = enterAction;
+        this.ExitAction = exitAction;
+    }
 
-        public Action? EnterAction { get; }
+    public Action? EnterAction { get; }
 
-        public Action? ExitAction { get; }
+    public Action? ExitAction { get; }
 
-        public ScopeGuard Guard()
-        {
-            this.EnterAction?.Invoke();
-            return this;
-        }
+    public ScopeGuard Guard()
+    {
+        this.EnterAction?.Invoke();
+        return this;
+    }
 
-        public void Dispose()
-        {
-            this.ExitAction?.Invoke();
-        }
+    public void Dispose()
+    {
+        this.ExitAction?.Invoke();
     }
 }

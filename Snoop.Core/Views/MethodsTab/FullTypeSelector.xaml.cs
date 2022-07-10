@@ -3,94 +3,93 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop.Views.MethodsTab
+namespace Snoop.Views.MethodsTab;
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Windows;
+using System.Windows.Controls;
+
+/// <summary>
+/// Interaction logic for FullTypeSelector.xaml
+/// </summary>
+public partial class FullTypeSelector : ITypeSelector
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Windows;
-    using System.Windows.Controls;
-
-    /// <summary>
-    /// Interaction logic for FullTypeSelector.xaml
-    /// </summary>
-    public partial class FullTypeSelector : ITypeSelector
+    public FullTypeSelector()
     {
-        public FullTypeSelector()
+        this.InitializeComponent();
+
+        var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+        var listAssemblies = new List<AssemblyNamePair>();
+        foreach (var assembly in assemblies)
         {
-            this.InitializeComponent();
+            var namePair = new AssemblyNamePair(assembly);
 
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            listAssemblies.Add(namePair);
+        }
 
-            var listAssemblies = new List<AssemblyNamePair>();
-            foreach (var assembly in assemblies)
+        listAssemblies.Sort();
+
+        this.comboBoxAssemblies.ItemsSource = listAssemblies;
+    }
+
+    private void ComboBoxAssemblies_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        var assembly = ((AssemblyNamePair)this.comboBoxAssemblies.SelectedItem).Assembly;
+
+        var types = assembly.GetTypes();
+
+        var typePairs = new List<TypeNamePair>();
+
+        foreach (var type in types)
+        {
+            if (!type.IsPublic
+                || type.IsAbstract)
             {
-                var namePair = new AssemblyNamePair(assembly);
-
-                listAssemblies.Add(namePair);
+                continue;
             }
 
-            listAssemblies.Sort();
+            var pair = new TypeNamePair(type);
 
-            this.comboBoxAssemblies.ItemsSource = listAssemblies;
+            typePairs.Add(pair);
         }
 
-        private void ComboBoxAssemblies_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        typePairs.Sort();
+
+        this.comboBoxTypes.ItemsSource = typePairs;
+    }
+
+    private void ButtonCreateInstance_Click(object sender, RoutedEventArgs e)
+    {
+        var selectedType = ((TypeNamePair)this.comboBoxTypes.SelectedItem).Type;
+
+        if (string.IsNullOrEmpty(this.textBoxConvertFrom.Text))
         {
-            var assembly = ((AssemblyNamePair)this.comboBoxAssemblies.SelectedItem).Assembly;
-
-            var types = assembly.GetTypes();
-
-            var typePairs = new List<TypeNamePair>();
-
-            foreach (var type in types)
-            {
-                if (!type.IsPublic
-                    || type.IsAbstract)
-                {
-                    continue;
-                }
-
-                var pair = new TypeNamePair(type);
-
-                typePairs.Add(pair);
-            }
-
-            typePairs.Sort();
-
-            this.comboBoxTypes.ItemsSource = typePairs;
+            this.Instance = Activator.CreateInstance(selectedType);
         }
-
-        private void ButtonCreateInstance_Click(object sender, RoutedEventArgs e)
+        else
         {
-            var selectedType = ((TypeNamePair)this.comboBoxTypes.SelectedItem).Type;
-
-            if (string.IsNullOrEmpty(this.textBoxConvertFrom.Text))
-            {
-                this.Instance = Activator.CreateInstance(selectedType);
-            }
-            else
-            {
-                var converter = TypeDescriptor.GetConverter(selectedType);
-                this.Instance = converter.ConvertFrom(this.textBoxConvertFrom.Text);
-            }
-
-            this.DialogResult = true;
-
-            this.Close();
+            var converter = TypeDescriptor.GetConverter(selectedType);
+            this.Instance = converter.ConvertFrom(this.textBoxConvertFrom.Text);
         }
 
-        public object? Instance
-        {
-            get;
-            private set;
-        }
+        this.DialogResult = true;
 
-        private void ButtonCancel_Click(object sender, RoutedEventArgs e)
-        {
-            this.DialogResult = false;
+        this.Close();
+    }
 
-            this.Close();
-        }
+    public object? Instance
+    {
+        get;
+        private set;
+    }
+
+    private void ButtonCancel_Click(object sender, RoutedEventArgs e)
+    {
+        this.DialogResult = false;
+
+        this.Close();
     }
 }

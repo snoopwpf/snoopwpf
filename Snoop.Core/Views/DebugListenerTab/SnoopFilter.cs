@@ -1,111 +1,110 @@
-﻿namespace Snoop.Views.DebugListenerTab
+﻿namespace Snoop.Views.DebugListenerTab;
+
+using System;
+using System.ComponentModel;
+using System.Xml.Serialization;
+using JetBrains.Annotations;
+
+[Serializable]
+public abstract class SnoopFilter : INotifyPropertyChanged
 {
-    using System;
-    using System.ComponentModel;
-    using System.Xml.Serialization;
-    using JetBrains.Annotations;
+    private bool isGrouped;
+    private string groupId = string.Empty;
+    private bool isDirty;
+    private bool isInverse;
+    //protected string _isInverseText = string.Empty;
 
-    [Serializable]
-    public abstract class SnoopFilter : INotifyPropertyChanged
+    public void ResetDirtyFlag()
     {
-        private bool isGrouped;
-        private string groupId = string.Empty;
-        private bool isDirty;
-        private bool isInverse;
-        //protected string _isInverseText = string.Empty;
+        this.IsDirty = false;
+    }
 
-        public void ResetDirtyFlag()
+    [XmlIgnore]
+    public bool IsDirty
+    {
+        get
         {
-            this.IsDirty = false;
+            return this.isDirty;
         }
 
-        [XmlIgnore]
-        public bool IsDirty
+        protected set
         {
-            get
-            {
-                return this.isDirty;
-            }
+            this.isDirty = value;
+            this.RaisePropertyChanged(nameof(this.IsDirty));
+        }
+    }
 
-            protected set
-            {
-                this.isDirty = value;
-                this.RaisePropertyChanged(nameof(this.IsDirty));
-            }
+    public abstract bool FilterMatches(string? debugLine);
+
+    public virtual bool SupportsGrouping
+    {
+        get
+        {
+            return true;
+        }
+    }
+
+    public bool IsInverse
+    {
+        get
+        {
+            return this.isInverse;
         }
 
-        public abstract bool FilterMatches(string? debugLine);
-
-        public virtual bool SupportsGrouping
+        set
         {
-            get
+            if (value != this.isInverse)
             {
-                return true;
+                this.isInverse = value;
+                this.RaisePropertyChanged(nameof(this.IsInverse));
+                this.RaisePropertyChanged(nameof(this.IsInverseText));
             }
         }
+    }
 
-        public bool IsInverse
+    public string IsInverseText
+    {
+        get
         {
-            get
-            {
-                return this.isInverse;
-            }
+            return this.isInverse ? "NOT" : string.Empty;
+        }
+    }
 
-            set
-            {
-                if (value != this.isInverse)
-                {
-                    this.isInverse = value;
-                    this.RaisePropertyChanged(nameof(this.IsInverse));
-                    this.RaisePropertyChanged(nameof(this.IsInverseText));
-                }
-            }
+    public bool IsGrouped
+    {
+        get
+        {
+            return this.isGrouped;
         }
 
-        public string IsInverseText
+        set
         {
-            get
-            {
-                return this.isInverse ? "NOT" : string.Empty;
-            }
+            this.isGrouped = value;
+            this.RaisePropertyChanged(nameof(this.IsGrouped));
+            this.groupId = string.Empty;
+        }
+    }
+
+    public virtual string GroupId
+    {
+        get
+        {
+            return this.groupId;
         }
 
-        public bool IsGrouped
+        set
         {
-            get
-            {
-                return this.isGrouped;
-            }
-
-            set
-            {
-                this.isGrouped = value;
-                this.RaisePropertyChanged(nameof(this.IsGrouped));
-                this.groupId = string.Empty;
-            }
+            this.groupId = value;
+            this.RaisePropertyChanged(nameof(this.GroupId));
         }
+    }
 
-        public virtual string GroupId
-        {
-            get
-            {
-                return this.groupId;
-            }
+    public event PropertyChangedEventHandler? PropertyChanged;
 
-            set
-            {
-                this.groupId = value;
-                this.RaisePropertyChanged(nameof(this.GroupId));
-            }
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected void RaisePropertyChanged(string propertyName)
-        {
-            this.isDirty = true;
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+    [NotifyPropertyChangedInvocator]
+    protected void RaisePropertyChanged(string propertyName)
+    {
+        this.isDirty = true;
+        this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

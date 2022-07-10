@@ -1,14 +1,13 @@
 ﻿// ReSharper disable once CheckNamespace
-namespace Snoop
-{
-    using System;
+namespace Snoop;
 
-    public static class ConsoleProgram
+using System;
+
+public static class ConsoleProgram
+{
+    [STAThread]
+    public static int Main(string[] args)
     {
-        [STAThread]
-        public static int Main(string[] args)
-        {
-            return Program.Main(args);
-        }
+        return Program.Main(args);
     }
 }
