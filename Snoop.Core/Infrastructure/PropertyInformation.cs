@@ -607,7 +607,7 @@ namespace Snoop.Infrastructure
         // Required to prevent binding leaks
         public BaseValueSource ValueSourceBaseValueSource => this.ValueSource.BaseValueSource;
 
-        public bool IsVisible => this.filter?.Show(this) != false;
+        public bool IsVisible => this.filter?.ShouldShow(this) != false;
 
         public void Clear()
         {

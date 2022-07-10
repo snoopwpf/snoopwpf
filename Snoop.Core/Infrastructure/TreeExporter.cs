@@ -77,7 +77,7 @@
                 foreach (var propertyInformation in propertyInformations)
                 {
                     if (filter is not null
-                        && filter.Show(propertyInformation) == false)
+                        && filter.ShouldShow(propertyInformation) == false)
                     {
                         continue;
                     }
