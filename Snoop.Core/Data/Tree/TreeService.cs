@@ -8,6 +8,7 @@ namespace Snoop.Data.Tree
     using System.Windows;
     using System.Windows.Automation;
     using System.Windows.Automation.Peers;
+    using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
     using System.Windows.Media;
     using System.Windows.Media.Media3D;
@@ -174,6 +175,24 @@ namespace Snoop.Data.Tree
             foreach (var child in LogicalTreeHelper.GetChildren(dependencyObject))
             {
                 yield return child;
+            }
+
+            if (target is ItemsControl itemsControl)
+            {
+                foreach (var item in itemsControl.Items)
+                {
+                    if (item is DependencyObject)
+                    {
+                        continue;
+                    }
+
+                    var container = itemsControl.ItemContainerGenerator.ContainerFromItem(item);
+
+                    if (container is not null)
+                    {
+                        yield return container;
+                    }
+                }
             }
         }
     }
