@@ -44,6 +44,6 @@
         <PackageVersion Include="CefSharp.Common.NETCore" Version="101.0.150" />
         <PackageVersion Include="CefSharp.Wpf.NETCore" Version="101.0.150" />
 
-        <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.1210.39" />
+        <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.1264.42" />
     </ItemGroup>
 </Project>
