@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Snoop.Views.SettingsView"
+<UserControl x:Class="Snoop.Views.SettingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -17,7 +17,7 @@
         <Grid.Resources>
             <ResourceDictionary>
                 <Style x:Key="Snoop.Styles.Button.Large"
-                       BasedOn="{x:Null}"
+                       BasedOn="{StaticResource {x:Type Button}}"
                        TargetType="Button">
                     <Setter Property="Height" Value="30" />
                     <Setter Property="Margin" Value="5" />
@@ -28,14 +28,15 @@
             </ResourceDictionary>
         </Grid.Resources>
 
-        <ListView Style="{x:Null}"
-                  x:Name="ListView"
+        <ListView x:Name="ListView"
                   Grid.Row="0"
                   MinWidth="0"
                   MinHeight="0"
                   HorizontalContentAlignment="Stretch"
                   AlternationCount="2"
                   IsSynchronizedWithCurrentItem="True"
+                  Background="{DynamicResource Snoop.Brushes.Default.Background}"
+                  Foreground="{DynamicResource Snoop.Brushes.Default.Foreground}"
                   ItemsSource="{Binding ElementName=Control, Path=Properties}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
@@ -45,7 +46,7 @@
                             <Setter Property="Background" Value="Transparent" />
                         </Trigger>
                         <Trigger Property="ItemsControl.AlternationIndex" Value="1">
-                            <Setter Property="Background" Value="#FFEAEAEA" />
+                            <Setter Property="Background" Value="{DynamicResource Snoop.Brushes.ItemsControl.AlternationBackground}" />
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Background" Value="LightGray" />

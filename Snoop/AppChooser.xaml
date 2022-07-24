@@ -86,8 +86,8 @@
 
         <Style x:Key="windowStyle"
                TargetType="{x:Type Window}">
-            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
-            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" />
+            <Setter Property="Background" Value="{DynamicResource Snoop.Brushes.Default.Background}" />
+            <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.Foreground}" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Window}">
@@ -203,11 +203,8 @@
                            RadiusX="4"
                            RadiusY="4"
                            Stroke="{DynamicResource DarkBlue}"
-                           StrokeThickness="1">
-                    <Rectangle.Fill>
-                        <DynamicResource ResourceKey="MetalGrad" />
-                    </Rectangle.Fill>
-                </Rectangle>
+                           StrokeThickness="1"
+                           Fill="{DynamicResource MetalGrad}" />
                 <Border Style="{x:Null}"
                         Grid.RowSpan="2"
                         Width="Auto"
@@ -448,7 +445,6 @@
                   DropDownOpened="HandleWindowsComboBox_OnDropDownOpened"
                   FocusVisualStyle="{DynamicResource simpleComboBoxFocusStyle}"
                   FontSize="10.667"
-                  Foreground="#FFFFFFFF"
                   Grid.IsSharedSizeScope="True"
                   IsSynchronizedWithCurrentItem="True"
                   ItemsSource="{Binding WindowInfos}"

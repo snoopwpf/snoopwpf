@@ -14,73 +14,8 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="BaseStyles.xaml" />
         <ResourceDictionary Source="Controls/ProperTreeViewResources.xaml" />
+        <ResourceDictionary Source="Controls/ValueEditors/EditorTemplates.xaml" />
     </ResourceDictionary.MergedDictionaries>
-
-    <!-- SimpleStyles.XAML defines a set of control styles which are simplified starting points for creating your own controls -->
-
-    <!--
-        Brushes : These are used to define the color for background, foreground, selection, enabled etc of all controls
-        If you want to change the color of a control you can just change the brush; if you want to add a new shape or change arrangement then also edit the template
-    -->
-
-    <!-- NormalBrush is used as the Background for SimpleButton, SimpleRepeatButton -->
-    <LinearGradientBrush x:Key="NormalBrush" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
-        <GradientStop Color="#EEEE" Offset="0.0" />
-        <GradientStop Color="#CCCC" Offset="1.0" />
-    </LinearGradientBrush>
-    <LinearGradientBrush x:Key="NormalBorderBrush" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
-        <GradientStop Color="#CCCC" Offset="0.0" />
-        <GradientStop Color="#4444" Offset="1.0" />
-    </LinearGradientBrush>
-
-    <!-- LightBrush is used for content areas such as Menu, Tab Control background -->
-    <LinearGradientBrush x:Key="LightBrush" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
-        <GradientStop Color="#FFFF" Offset="0.0" />
-        <GradientStop Color="#EEEE" Offset="1.0" />
-    </LinearGradientBrush>
-
-
-    <!-- Style and Template pairs are used to define each control Part -->
-    <!-- The Style provides default values on the control; the Template gives the elements for each control -->
-
-    <LinearGradientBrush x:Key="MouseOverBrush" StartPoint="0,0.5" EndPoint="1,0.5" options:Freeze="True">
-        <GradientStop Color="#FFFFFFFF" Offset="0.48" />
-        <GradientStop Color="#FFB2E2FF" Offset="1" />
-        <GradientStop Color="#FFBAE5FF" Offset="0" />
-    </LinearGradientBrush>
-
-    <!-- PressedBrush is used for Pressed in Button, Radio Button, CheckBox -->
-    <LinearGradientBrush x:Key="PressedBrush" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
-        <GradientStop Color="#BBBB" Offset="0.0" />
-        <GradientStop Color="#EEEE" Offset="0.1" />
-        <GradientStop Color="#EEEE" Offset="0.9" />
-        <GradientStop Color="#FFFF" Offset="1.0" />
-    </LinearGradientBrush>
-    <LinearGradientBrush x:Key="PressedBorderBrush" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
-        <GradientStop Color="#4444" Offset="0.0" />
-        <GradientStop Color="#8888" Offset="1.0" />
-    </LinearGradientBrush>
-
-    <!-- SelectedBackgroundBrush is used for the Selected item in ListBoxItem, ComboBoxItem -->
-    <SolidColorBrush x:Key="SelectedBackgroundBrush" Color="#DDDD" options:Freeze="True" />
-
-    <!-- Disabled Brushes are used for the Disabled look of each control -->
-    <SolidColorBrush x:Key="DisabledForegroundBrush" Color="#8888" options:Freeze="True" />
-    <SolidColorBrush x:Key="DisabledBackgroundBrush" Color="#EEEE" options:Freeze="True" />
-    <SolidColorBrush x:Key="DisabledBorderBrush" Color="#AAAA" options:Freeze="True" />
-
-    <!-- Used for background of ScrollViewer, TreeView, ListBox, Expander, TextBox, Tab Control -->
-    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#FFFF" options:Freeze="True" />
-
-    <!-- DefaultedBorderBrush is used to show KeyBoardFocus -->
-    <LinearGradientBrush x:Key="DefaultedBorderBrush" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
-        <GradientStop Color="#7777" Offset="0.0" />
-        <GradientStop Color="#0000" Offset="1.0" />
-    </LinearGradientBrush>
-
-    <SolidColorBrush x:Key="SolidBorderBrush" Color="#8888" options:Freeze="True" />
-    <SolidColorBrush x:Key="LightBorderBrush" Color="#AAAA" options:Freeze="True" />
-    <SolidColorBrush x:Key="LightColorBrush" Color="#DDDD" options:Freeze="True" />
 
     <Style x:Key="Snoop.Styles.ProperTreeView"
            BasedOn="{StaticResource Snoop.Styles.TreeView}"
@@ -205,7 +140,7 @@
 
     <Style x:Key="SimpleScrollBar"
            TargetType="{x:Type ScrollBar}">
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+        <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.Foreground}" />
         <Setter Property="Stylus.IsFlicksEnabled" Value="false" />
         <Setter Property="Template">
             <Setter.Value>
@@ -361,22 +296,6 @@
         </Setter>
     </Style>
 
-    <LinearGradientBrush x:Key="DarkBlue" StartPoint="0.498,0.038" EndPoint="0.498,0.952" options:Freeze="True">
-        <GradientStop Color="#FF021122" Offset="0" />
-        <GradientStop Color="#FF052941" Offset="1" />
-    </LinearGradientBrush>
-    <LinearGradientBrush x:Key="ShineBrush1" StartPoint="0.503,0.925" EndPoint="0.503,0" options:Freeze="True">
-        <GradientStop Color="#0C5BBCFF" Offset="0" />
-        <GradientStop Color="#3365C0FF" Offset="1" />
-    </LinearGradientBrush>
-
-    <SolidColorBrush x:Key="DeepBlueColorBrush" Color="#FF142947" options:Freeze="True" />
-
-    <LinearGradientBrush x:Key="MetalGrad" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
-        <GradientStop Color="#FFEEEEEE" Offset="0" />
-        <GradientStop Color="#FF596F7E" Offset="1" />
-    </LinearGradientBrush>
-
     <!-- This is the area which contains the selected item in the ComboBox -->
 
     <ControlTemplate x:Key="ComboBoxTextBox"
@@ -429,8 +348,8 @@
                       MaxHeight="{TemplateBinding MaxDropDownHeight}">
                     <Border Style="{x:Null}"
                             x:Name="DropDownBorder"
-                            Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                            BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}"
+                            Background="{DynamicResource Snoop.Brushes.Default.Background}"
+                            BorderBrush="{DynamicResource Snoop.Brushes.Window.Frame}"
                             BorderThickness="1 1 1 1" />
                     <Grid Style="{x:Null}"
                           Margin="1 1 1 1">
@@ -478,7 +397,7 @@
                     <Condition Property="IsKeyboardFocusWithin" Value="True" />
                     <Condition Property="IsDropDownOpen" Value="False" />
                 </MultiTrigger.Conditions>
-                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
+                <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.HighlightForeground}" />
             </MultiTrigger>
             <Trigger SourceName="PART_Popup" Property="Popup.HasDropShadow" Value="True">
                 <Setter TargetName="DropDown" Property="Margin" Value="0 0 3 3" />
@@ -494,8 +413,8 @@
                 <Setter TargetName="DropDownBorder" Property="MinHeight" Value="95" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
-                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                <Setter Property="Background" Value="{DynamicResource Snoop.Brushes.Default.Control}" />
+                <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.GrayForeground}" />
             </Trigger>
             <Trigger Property="IsGrouping" Value="True">
                 <Setter Property="ScrollViewer.CanContentScroll" Value="False" />

@@ -15,10 +15,6 @@
       MinHeight="0">
     <Grid.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ValueEditors\EditorTemplates.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
             <DataTemplate x:Key="stylelessTextBlockDataTemplate"
                           DataType="infrastructure:PropertyFilterSet">
                 <TextBlock Style="{x:Null}"

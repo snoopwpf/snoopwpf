@@ -15,10 +15,6 @@
                     MinHeight="0">
     <Grid.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ValueEditors\EditorTemplates.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
             <ContextMenu x:Key="PropertyMenu">
                 <MenuItem Command="{x:Static controls:PropertyInspector.DelveCommand}"
                           CommandParameter="{Binding}">
@@ -124,6 +120,7 @@
               HorizontalContentAlignment="Stretch"
               AlternationCount="2"
               IsSynchronizedWithCurrentItem="True"
+              Background="{DynamicResource Snoop.Brushes.Default.Background}"
               ItemsSource="{Binding ElementName=PropertyGrid, Path=Properties}"
               SelectedItem="{Binding ElementName=PropertyGrid, Path=Selection, Mode=TwoWay}">
         <!-- cplotts note: -->
@@ -146,11 +143,11 @@
                         <Setter Property="Background" Value="Transparent" />
                     </Trigger>
                     <Trigger Property="ItemsControl.AlternationIndex" Value="1">
-                        <Setter Property="Background" Value="#FFEAEAEA" />
+                        <Setter Property="Background" Value="{DynamicResource Snoop.Brushes.ItemsControl.AlternationBackground}" />
                     </Trigger>
 
                     <DataTrigger Binding="{Binding IsLocallySet}" Value="False">
-                        <Setter Property="Foreground" Value="Black" />
+                        <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.PropertyGrid.IsLocallySetForeground}" />
                     </DataTrigger>
                     <!--<DataTrigger Binding="{Binding IsOdd}" Value="False">
 						<Setter Property="Background" Value="#FFEAEAEA"/>

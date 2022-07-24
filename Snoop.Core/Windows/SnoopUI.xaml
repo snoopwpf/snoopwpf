@@ -1,4 +1,4 @@
-﻿<!--
+<!--
     (c) Copyright Cory Plotts.
     This source is subject to the Microsoft Public License (Ms-PL).
     Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
@@ -71,7 +71,7 @@
                         </Style>
                     </Setter.Value>
                 </Setter>
-                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+                <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.Foreground}" />
                 <Setter Property="HorizontalContentAlignment" Value="Center" />
                 <Setter Property="Template">
                     <Setter.Value>
@@ -88,7 +88,7 @@
                             </Grid>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsEnabled" Value="False">
-                                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                                    <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.GrayForeground}" />
                                 </Trigger>
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter TargetName="border" Property="Background">
@@ -233,12 +233,11 @@
                                    HorizontalAlignment="Stretch"
                                    infrastructure:BringIntoViewBehavior.IsActive="{Binding IsSelected}"
                                    Background="Transparent"
-                                   Foreground="Black"
                                    Text="{Binding}" />
                     </HierarchicalDataTemplate>
 
                     <!-- make the selected item be blue, even when not focused -->
-                    <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="LightBlue" options:Freeze="True" />
+                    <SolidColorBrush x:Key="Snoop.Brushes.Default.Control" Color="LightBlue" options:Freeze="True" />
                 </TreeView.Resources>
 
                 <TreeView.ItemContainerStyle>

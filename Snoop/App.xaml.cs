@@ -21,7 +21,6 @@ public partial class App
         base.OnStartup(e);
 
         this.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri($"pack://application:,,,/Snoop.Core;component/Icons.xaml") });
-        this.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri($"pack://application:,,,/Snoop.Core;component/Controls/ValueEditors/EditorTemplates.xaml") });
     }
 
     private void Application_Exit(object sender, ExitEventArgs e)

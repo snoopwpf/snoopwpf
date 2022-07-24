@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using Snoop.Core;
 using Snoop.Infrastructure;
 using Snoop.Infrastructure.Helpers;
 
@@ -35,6 +36,10 @@ public class SnoopBaseWindow : Window
             this.Resources.MergedDictionaries.Add(resourceDictionary);
         }
 
+        ThemeManager.Current.ApplyTheme(Settings.Default.ThemeMode, this);
+
+        this.Style = (Style)this.FindResource(typeof(Window));
+
         base.OnInitialized(e);
     }
 
@@ -61,6 +66,8 @@ public class SnoopBaseWindow : Window
     protected override void OnClosed(EventArgs e)
     {
         this.PopMenuModeSafe();
+
+        SnoopPartsRegistry.RemoveSnoopVisualTreeRoot(this);
 
         base.OnClosed(e);
     }
