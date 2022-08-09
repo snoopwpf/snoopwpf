@@ -42,7 +42,7 @@
     
     <ItemGroup Label="Test-Projects">
         <PackageVersion Include="CefSharp.Common.NETCore" Version="103.0.90" />
-        <PackageVersion Include="CefSharp.Wpf.NETCore" Version="103.0.90" />
+        <PackageVersion Include="CefSharp.Wpf.NETCore" Version="104.4.180" />
 
         <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.1264.42" />
     </ItemGroup>
