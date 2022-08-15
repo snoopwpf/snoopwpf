@@ -2,6 +2,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Windows;
 using System.Windows.Input;
 using Snoop.Data;
 using Snoop.Infrastructure;
@@ -26,7 +27,10 @@ public class ProcessInfo
 
     public AttachResult Snoop(IntPtr targetHwnd)
     {
-        Mouse.OverrideCursor = Cursors.Wait;
+        if (Application.Current?.CheckAccess() == true)
+        {
+            Mouse.OverrideCursor = Cursors.Wait;
+        }
 
         try
         {
@@ -38,7 +42,10 @@ public class ProcessInfo
         }
         finally
         {
-            Mouse.OverrideCursor = null;
+            if (Application.Current?.CheckAccess() == true)
+            {
+                Mouse.OverrideCursor = null;
+            }
         }
 
         return new AttachResult();
@@ -46,7 +53,10 @@ public class ProcessInfo
 
     public AttachResult Magnify(IntPtr targetHwnd)
     {
-        Mouse.OverrideCursor = Cursors.Wait;
+        if (Application.Current?.CheckAccess() == true)
+        {
+            Mouse.OverrideCursor = Cursors.Wait;
+        }
 
         try
         {
@@ -58,7 +68,10 @@ public class ProcessInfo
         }
         finally
         {
-            Mouse.OverrideCursor = null;
+            if (Application.Current?.CheckAccess() == true)
+            {
+                Mouse.OverrideCursor = null;
+            }
         }
 
         return new AttachResult();
