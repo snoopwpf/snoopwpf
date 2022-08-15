@@ -65,7 +65,7 @@ Snoop requires this component, which is part of the Snoop project, to do it's jo
             {
                 UseShellExecute = true,
                 CreateNoWindow = true,
-                WindowStyle = ProcessWindowStyle.Hidden,
+                WindowStyle = Program.Debug ? ProcessWindowStyle.Normal : ProcessWindowStyle.Hidden,
                 Verb = processInfo.IsProcessElevated
                     ? "runas"
                     : null
