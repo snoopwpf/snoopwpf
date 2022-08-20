@@ -1,4 +1,4 @@
-﻿<!--
+<!--
     (c) Copyright Cory Plotts.
     This source is subject to the Microsoft Public License (Ms-PL).
     Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
@@ -474,11 +474,11 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Keyboard.FocusedElement:" />
                         <TextBlock Margin="3 0 0 0">
-                            <windows:NoFocusHyperlink Command="{x:Static windows:SnoopUI.SelectFocusCommand}"
-                                                      CommandParameter="{Binding CurrentFocus}"
-                                                      Focusable="False">
+                            <controls:NoFocusHyperlink Command="{x:Static windows:SnoopUI.SelectFocusCommand}"
+                                                       CommandParameter="{Binding CurrentFocus}"
+                                                       Focusable="False">
                                 <TextBlock Text="{Binding CurrentFocus, Converter={x:Static converters:ObjectToStringConverter.Instance}}" />
-                            </windows:NoFocusHyperlink>
+                            </controls:NoFocusHyperlink>
                         </TextBlock>
                         <TextBlock Text="; " />
                         <StackPanel.ToolTip>
@@ -492,11 +492,11 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Current FocusScope:" />
                         <TextBlock Margin="3 0 0 0">
-                            <windows:NoFocusHyperlink Command="{x:Static windows:SnoopUI.SelectFocusScopeCommand}"
-                                                      CommandParameter="{Binding CurrentFocusScope}"
-                                                      Focusable="False">
+                            <controls:NoFocusHyperlink Command="{x:Static windows:SnoopUI.SelectFocusScopeCommand}"
+                                                       CommandParameter="{Binding CurrentFocusScope}"
+                                                       Focusable="False">
                                 <TextBlock Text="{Binding CurrentFocusScope, Converter={x:Static converters:ObjectToStringConverter.Instance}}" />
-                            </windows:NoFocusHyperlink>
+                            </controls:NoFocusHyperlink>
                         </TextBlock>
                         <StackPanel.ToolTip>
                             <StackPanel>
