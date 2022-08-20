@@ -40,6 +40,7 @@ Highlights:
   Just annotate your properties with `[System.ComponentModel.BrowsableAttribute(false)]`.
 - Added the ability to show browser dev tools on browser controls.  
   `WebView2` and `CefSharp` are currently supported.
+- Added dark theme
 
 Breaking:
 
