@@ -74,15 +74,15 @@
                 </MenuItem>
             </ContextMenu>
 
-            <Style TargetType="{x:Type GridViewColumnHeader}">
+            <Style TargetType="{x:Type GridViewColumnHeader}"
+                   BasedOn="{StaticResource {x:Type GridViewColumnHeader}}">
                 <Setter Property="Command" Value="{x:Static controls:PropertyGrid2.SortCommand}" />
             </Style>
 
             <ControlTemplate x:Key="BreakpointTemplate"
                              TargetType="{x:Type CheckBox}">
                 <Grid>
-                    <Image Style="{x:Null}"
-                           Name="Icon"
+                    <Image Name="Icon"
                            Width="12"
                            Height="12"
                            Source="{DynamicResource noBreakpointDrawingImage}" />
@@ -96,12 +96,10 @@
 
             <DataTemplate x:Key="ValueSourceTemplate"
                           DataType="infrastructure:PropertyInformation">
-                <TextBlock Style="{x:Null}"
-                           Height="16"
+                <TextBlock Height="16"
                            Text="{Binding ValueSourceBaseValueSource}">
                     <TextBlock.ToolTip>
-                        <TextBlock Style="{x:Null}"
-                                   Text="{Binding ValueSourceBaseValueSource}" />
+                        <TextBlock Text="{Binding ValueSourceBaseValueSource}" />
                     </TextBlock.ToolTip>
                 </TextBlock>
             </DataTemplate>
@@ -112,8 +110,7 @@
         <RowDefinition Height="*" />
     </Grid.RowDefinitions>
 
-    <ListView Style="{x:Null}"
-              x:Name="ListView"
+    <ListView x:Name="ListView"
               Grid.RowSpan="2"
               MinWidth="0"
               MinHeight="0"
@@ -128,7 +125,7 @@
         <!--
 		<ListView.ItemsPanel>
 			<ItemsPanelTemplate>
-				<StackPanel Style="{x:Null}" />
+				<StackPanel />
 			</ItemsPanelTemplate>
 		</ListView.ItemsPanel>
 		-->
@@ -179,8 +176,7 @@
                             <CheckBox IsChecked="{Binding BreakOnChange}"
                                       Template="{StaticResource BreakpointTemplate}">
                                 <CheckBox.ToolTip>
-                                    <TextBlock Style="{x:Null}"
-                                               Text="Click here to toggle a debug breakpoint on and off." />
+                                    <TextBlock Text="Click here to toggle a debug breakpoint on and off." />
                                 </CheckBox.ToolTip>
                             </CheckBox>
                         </DataTemplate>
@@ -189,22 +185,18 @@
 
                 <GridViewColumn Width="200">
                     <GridViewColumn.Header>
-                        <TextBlock Style="{x:Null}"
-                                   Text="Name">
+                        <TextBlock Text="Name">
                             <TextBlock.ToolTip>
-                                <TextBlock Style="{x:Null}"
-                                           Text="The name of the property" />
+                                <TextBlock Text="The name of the property" />
                             </TextBlock.ToolTip>
                         </TextBlock>
                     </GridViewColumn.Header>
                     <GridViewColumn.CellTemplate>
                         <DataTemplate DataType="infrastructure:PropertyInformation">
-                            <TextBlock Style="{x:Null}"
-                                       MouseLeftButtonDown="HandleNameClick"
+                            <TextBlock MouseLeftButtonDown="HandleNameClick"
                                        Text="{Binding DisplayName}">
                                 <TextBlock.ToolTip>
-                                    <TextBlock Style="{x:Null}"
-                                               Text="{Binding DisplayName}" />
+                                    <TextBlock Text="{Binding DisplayName}" />
                                 </TextBlock.ToolTip>
                             </TextBlock>
                         </DataTemplate>
@@ -214,11 +206,9 @@
                 <GridViewColumn Width="250"
                                 CellTemplateSelector="{StaticResource EditorSelector}">
                     <GridViewColumn.Header>
-                        <TextBlock Style="{x:Null}"
-                                   Text="Value">
+                        <TextBlock Text="Value">
                             <TextBlock.ToolTip>
-                                <TextBlock Style="{x:Null}"
-                                           Text="The value of the property" />
+                                <TextBlock Text="The value of the property" />
                             </TextBlock.ToolTip>
                         </TextBlock>
                     </GridViewColumn.Header>
@@ -226,22 +216,18 @@
 
                 <GridViewColumn Width="143">
                     <GridViewColumn.Header>
-                        <TextBlock Style="{x:Null}"
-                                   Text="Value Source">
+                        <TextBlock Text="Value Source">
                             <TextBlock.ToolTip>
-                                <StackPanel Style="{x:Null}">
-                                    <TextBlock Style="{x:Null}"
-                                               Text="This is the value source of the property," />
-                                    <TextBlock Style="{x:Null}"
-                                               Text="i.e. from where the property gets its value." />
+                                <StackPanel>
+                                    <TextBlock Text="This is the value source of the property," />
+                                    <TextBlock Text="i.e. from where the property gets its value." />
                                 </StackPanel>
                             </TextBlock.ToolTip>
                         </TextBlock>
                     </GridViewColumn.Header>
                     <GridViewColumn.CellTemplate>
                         <DataTemplate>
-                            <ContentControl Style="{x:Null}"
-                                            x:Name="ContentHost"
+                            <ContentControl x:Name="ContentHost"
                                             Content="{Binding}"
                                             ContentTemplate="{StaticResource ValueSourceTemplate}" />
                         </DataTemplate>
@@ -250,16 +236,12 @@
 
                 <GridViewColumn Width="200">
                     <GridViewColumn.Header>
-                        <TextBlock Style="{x:Null}"
-                                   Text="Binding Errors">
+                        <TextBlock Text="Binding Errors">
                             <TextBlock.ToolTip>
-                                <StackPanel Style="{x:Null}">
-                                    <TextBlock Style="{x:Null}"
-                                               Text="This column gives additional info on any binding errors." />
-                                    <TextBlock Style="{x:Null}"
-                                               Text="Note: the row for any property with binding errors will" />
-                                    <TextBlock Style="{x:Null}"
-                                               Text="have a red background." />
+                                <StackPanel>
+                                    <TextBlock Text="This column gives additional info on any binding errors." />
+                                    <TextBlock Text="Note: the row for any property with binding errors will" />
+                                    <TextBlock Text="have a red background." />
                                 </StackPanel>
                             </TextBlock.ToolTip>
                         </TextBlock>
@@ -279,16 +261,14 @@
                                         </MultiBinding>
                                     </Button.Visibility>
                                 </Button>
-                                <TextBox Style="{x:Null}"
-                                         MaxHeight="50"
+                                <TextBox MaxHeight="50"
                                          IsReadOnly="True"
                                          IsReadOnlyCaretVisible="True"
                                          Text="{Binding BindingError, Mode=OneWay}"
                                          TextWrapping="Wrap"
                                          VerticalScrollBarVisibility="Auto">
                                     <TextBox.ToolTip>
-                                        <TextBlock Style="{x:Null}"
-                                                   Text="{Binding BindingError}" />
+                                        <TextBlock Text="{Binding BindingError}" />
                                     </TextBox.ToolTip>
                                     <TextBox.Visibility>
                                         <MultiBinding Converter="{x:Static converters:BoolToVisibilityConverter.DefaultInstance}"

@@ -1,4 +1,4 @@
-﻿
+
 <!--
     =================================================================
     Licensed to the .NET Foundation under one or more agreements.
@@ -1091,9 +1091,6 @@
                                     <RowDefinition MaxHeight="7" />
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
-                                <Rectangle Name="UpperHighlight"
-                                           Fill="#FFE3F7FF"
-                                           Visibility="Collapsed" />
                                 <Border Grid.RowSpan="2"
                                         Padding="{TemplateBinding Padding}">
                                     <ContentPresenter Name="HeaderContent"
@@ -1121,7 +1118,6 @@
                             <Setter TargetName="HeaderBorder" Property="Background" Value="{DynamicResource GridViewColumnHeaderHoverBackground}" />
                             <Setter TargetName="HeaderHoverBorder" Property="BorderBrush" Value="#FF88CBEB" />
                             <Setter TargetName="PART_HeaderGripper" Property="Background" Value="Transparent" />
-                            <Setter TargetName="UpperHighlight" Property="Visibility" Value="Visible" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
                             <Setter TargetName="HeaderBorder" Property="Background" Value="{DynamicResource GridViewColumnHeaderPressBackground}" />
@@ -1129,8 +1125,6 @@
                             <Setter TargetName="HeaderHoverBorder" Property="BorderBrush" Value="#FF95DAF9" />
                             <Setter TargetName="HeaderPressBorder" Property="BorderBrush" Value="#FF7A9EB1" />
                             <Setter TargetName="PART_HeaderGripper" Property="Visibility" Value="Hidden" />
-                            <Setter TargetName="UpperHighlight" Property="Fill" Value="#FFBCE4F9" />
-                            <Setter TargetName="UpperHighlight" Property="Visibility" Value="Visible" />
                         </Trigger>
                         <Trigger Property="Height" Value="Auto">
                             <Setter Property="MinHeight" Value="20" />
@@ -1178,6 +1172,28 @@
                 </Setter>
             </Trigger>
         </Style.Triggers>
+    </Style>
+
+    <!-- ListView Style -->
+    <Style x:Key="{x:Type ListView}"
+           TargetType="{x:Type ListView}">
+        <Setter Property="Background" Value="{DynamicResource Snoop.Brushes.Default.Background}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ListBorder}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.Foreground}" />
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <StackPanel Style="{x:Null}" />
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ScrollViewer.CanContentScroll" Value="true" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.PanningMode" Value="Both" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
 
     <!-- GridView Style -->
@@ -1275,9 +1291,6 @@
                                     <RowDefinition MaxHeight="11" />
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
-                                <Rectangle Name="UpperHighlight"
-                                           Fill="#75FFFFFF"
-                                           Visibility="Collapsed" />
                                 <!-- remove the HorizontalAlignment due to HeaderRowPresenter does not have the ability to align to center or right -->
                                 <GridViewRowPresenter Grid.RowSpan="2"
                                                       VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
@@ -1289,14 +1302,11 @@
                         <Trigger Property="IsMouseOver" Value="true">
                             <Setter Property="Background" Value="{DynamicResource ListItemHoverFill}" />
                             <Setter Property="BorderBrush" Value="#FFCCF0FF" />
-                            <Setter TargetName="UpperHighlight" Property="Visibility" Value="Visible" />
                         </Trigger>
                         <Trigger Property="IsSelected" Value="true">
                             <Setter Property="Background" Value="{DynamicResource ListItemSelectedFill}" />
                             <Setter Property="BorderBrush" Value="#FF98DDFB" />
                             <Setter TargetName="InnerBorder" Property="BorderBrush" Value="#80FFFFFF" />
-                            <Setter TargetName="UpperHighlight" Property="Fill" Value="#40FFFFFF" />
-                            <Setter TargetName="UpperHighlight" Property="Visibility" Value="Visible" />
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
