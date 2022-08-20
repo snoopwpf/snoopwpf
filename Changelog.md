@@ -1,4 +1,4 @@
-# Changelog for Snoop
+﻿# Changelog for Snoop
 
 ## 5.0.0
 
@@ -6,6 +6,7 @@
 
   - Dropped support for all .NET Framework versions prior to .NET 4.5.2
   - Dropped support for .NET 3.0
+  - Added support for .NET versions > 6.0 (by not explicitly blocking versions greater than 6.0)
   - [#316](../../issues/316) - Improved settings management and storage  
     Settings do not rely on `System.Configuration` anymore.  
     The new system allows sharing of settings between different snooped applications.  
