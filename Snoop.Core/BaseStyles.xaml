@@ -1174,28 +1174,6 @@
         </Style.Triggers>
     </Style>
 
-    <!-- ListView Style -->
-    <Style x:Key="{x:Type ListView}"
-           TargetType="{x:Type ListView}">
-        <Setter Property="Background" Value="{DynamicResource Snoop.Brushes.Default.Background}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource ListBorder}" />
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.Foreground}" />
-        <Setter Property="ItemsPanel">
-            <Setter.Value>
-                <ItemsPanelTemplate>
-                    <StackPanel Style="{x:Null}" />
-                </ItemsPanelTemplate>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="ScrollViewer.CanContentScroll" Value="true" />
-        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
-        <Setter Property="ScrollViewer.PanningMode" Value="Both" />
-        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
-        <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
-        <Setter Property="VerticalContentAlignment" Value="Center" />
-    </Style>
-
     <!-- GridView Style -->
     <Style x:Key="{x:Static GridView.GridViewStyleKey}"
            TargetType="{x:Type ListView}">

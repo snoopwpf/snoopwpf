@@ -1,4 +1,4 @@
-<!--
+﻿<!--
     (c) Copyright Cory Plotts.
     This source is subject to the Microsoft Public License (Ms-PL).
     Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
@@ -243,7 +243,7 @@
                 <TreeView.ItemContainerStyle>
                     <Style BasedOn="{StaticResource ProperTreeViewItemStyle}"
                            TargetType="{x:Type controls:ProperTreeViewItem}">
-                        <Setter Property="Background" Value="{Binding TreeBackgroundBrush}" />
+                        <!-- <Setter Property="Background" Value="{Binding TreeBackgroundBrush}" /> -->
 
                         <Setter Property="ContextMenu">
                             <Setter.Value>

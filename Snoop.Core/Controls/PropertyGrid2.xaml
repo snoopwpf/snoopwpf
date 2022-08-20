@@ -131,7 +131,8 @@
 		-->
 
         <ListView.ItemContainerStyle>
-            <Style TargetType="{x:Type ListViewItem}">
+            <Style TargetType="{x:Type ListViewItem}"
+                   BasedOn="{StaticResource {x:Static GridView.GridViewItemContainerStyleKey}}">
                 <Setter Property="ContextMenu" Value="{StaticResource PropertyMenu}" />
                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                 <Style.Triggers>
@@ -159,9 +160,9 @@
                         <Setter Property="Background" Value="Red" />
                         <Setter Property="Foreground" Value="White" />
                     </DataTrigger>
-                    <Trigger Property="IsSelected" Value="True">
-                        <Setter Property="Background" Value="LightGray" />
-                    </Trigger>
+                    <!-- <Trigger Property="IsSelected" Value="True"> -->
+                    <!--     <Setter Property="Background" Value="LightGray" /> -->
+                    <!-- </Trigger> -->
                     <DataTrigger Binding="{Binding HasChangedRecently}" Value="True">
                         <Setter Property="Background" Value="Yellow" />
                     </DataTrigger>
