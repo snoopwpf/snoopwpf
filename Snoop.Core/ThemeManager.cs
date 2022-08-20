@@ -13,7 +13,7 @@ public class ThemeManager
 {
     public static readonly ThemeManager Current = new();
 
-    private readonly ResourceDictionary darkResourceDictionary; // = (ResourceDictionary)Application.LoadComponent(new Uri("/Snoop.Core;component/Themes/Colors.Dark.xaml", UriKind.Relative));
+    private readonly ResourceDictionary darkResourceDictionary;
     private readonly ResourceDictionary lightResourceDictionary;
 
     public ThemeManager()
