@@ -108,20 +108,7 @@
                                                    Height="{Binding ElementName=ContextMenuBorder, Path=ActualHeight}"
                                                    Fill="{Binding ElementName=ContextMenuBorder, Path=Background}" />
                                     </Canvas>
-                                    <Rectangle Width="28"
-                                               Margin="1 2"
-                                               HorizontalAlignment="Left"
-                                               Fill="#F1F1F1"
-                                               RadiusX="2"
-                                               RadiusY="2" />
-                                    <Rectangle Width="1"
-                                               Margin="29 2 0 2"
-                                               HorizontalAlignment="Left"
-                                               Fill="#E2E3E3" />
-                                    <Rectangle Width="1"
-                                               Margin="30 2 0 2"
-                                               HorizontalAlignment="Left"
-                                               Fill="White" />
+
                                     <ItemsPresenter Name="ItemsPresenter"
                                                     Margin="{TemplateBinding Padding}"
                                                     KeyboardNavigation.DirectionalNavigation="Cycle"
@@ -778,7 +765,7 @@
                     <Condition Binding="{Binding Path=(SystemParameters.HighContrast)}" Value="false" />
                     <Condition Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true" />
                 </MultiDataTrigger.Conditions>
-                <Setter Property="Foreground" Value="Red" />
+                <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.Highlight}" />
             </MultiDataTrigger>
             <Trigger Property="IsEnabled" Value="false">
                 <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.GrayForeground}" />
@@ -1184,7 +1171,7 @@
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <StackPanel />
+                    <VirtualizingStackPanel />
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
@@ -2825,11 +2812,7 @@
     -->
     <Style x:Key="{x:Type StatusBar}"
            TargetType="{x:Type StatusBar}">
-        <Setter Property="Background" Value="#FFF1EDED" />
-        <Setter Property="FontFamily" Value="{DynamicResource {x:Static SystemFonts.StatusFontFamilyKey}}" />
-        <Setter Property="FontSize" Value="{DynamicResource {x:Static SystemFonts.StatusFontSizeKey}}" />
-        <Setter Property="FontStyle" Value="{DynamicResource {x:Static SystemFonts.StatusFontStyleKey}}" />
-        <Setter Property="FontWeight" Value="{DynamicResource {x:Static SystemFonts.StatusFontWeightKey}}" />
+        <Setter Property="Background" Value="{DynamicResource Snoop.Brushes.Default.LightDarkBackground}" />
         <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.Foreground}" />
         <Setter Property="ItemsPanel">
             <Setter.Value>

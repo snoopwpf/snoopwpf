@@ -111,6 +111,7 @@
     </Grid.RowDefinitions>
 
     <ListView x:Name="ListView"
+              Style="{StaticResource {x:Static GridView.GridViewStyleKey}}"
               Grid.RowSpan="2"
               MinWidth="0"
               MinHeight="0"
@@ -144,7 +145,7 @@
                         <Setter Property="Background" Value="{DynamicResource Snoop.Brushes.ItemsControl.AlternationBackground}" />
                     </Trigger>
 
-                    <DataTrigger Binding="{Binding IsLocallySet}" Value="False">
+                    <DataTrigger Binding="{Binding IsLocallySet}" Value="True">
                         <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.PropertyGrid.IsLocallySetForeground}" />
                     </DataTrigger>
                     <!--<DataTrigger Binding="{Binding IsOdd}" Value="False">

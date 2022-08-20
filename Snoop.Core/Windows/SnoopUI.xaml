@@ -1,4 +1,4 @@
-<!--
+﻿<!--
     (c) Copyright Cory Plotts.
     This source is subject to the Microsoft Public License (Ms-PL).
     Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
@@ -224,9 +224,6 @@
                                    Background="Transparent"
                                    Text="{Binding}" />
                     </HierarchicalDataTemplate>
-
-                    <!-- make the selected item be blue, even when not focused -->
-                    <SolidColorBrush x:Key="Snoop.Brushes.Default.Control" Color="LightBlue" options:Freeze="True" />
                 </TreeView.Resources>
 
                 <TreeView.ItemContainerStyle>

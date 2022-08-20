@@ -13,8 +13,8 @@
         <ResourceDictionary>
             <Style x:Key="Snoop.TriggerControlStyle"
                    TargetType="{x:Type HeaderedContentControl}">
-                <Setter Property="Background" Value="#f7f7f7" />
-                <Setter Property="BorderBrush" Value="#d4d4d4" />
+                <Setter Property="Background" Value="{DynamicResource Snoop.Brushes.Default.Control}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource Snoop.Brushes.Default.ControlDark}" />
                 <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.Foreground}" />
                 <Setter Property="Template">
                     <Setter.Value>
@@ -219,7 +219,7 @@
                 </HeaderedContentControl>
                 <DataTemplate.Triggers>
                     <DataTrigger Binding="{Binding IsActive}" Value="True">
-                        <Setter TargetName="triggerControl" Property="Background" Value="{DynamicResource ActiveTriggerBrush}" />
+                        <Setter TargetName="triggerControl" Property="Background" Value="{DynamicResource Snoop.Brushes.Default.InactiveSelectionHighlight}" />
                     </DataTrigger>
                 </DataTemplate.Triggers>
             </DataTemplate>
