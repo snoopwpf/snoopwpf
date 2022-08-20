@@ -16,4 +16,23 @@ public static class SnoopAttachedProperties
     {
         return (bool)element.GetValue(IsSnoopPartProperty);
     }
+
+    public static readonly DependencyProperty InverterHintProperty = DependencyProperty.RegisterAttached(
+        "InverterHint", typeof(InverterHint), typeof(SnoopAttachedProperties), new PropertyMetadata(default(InverterHint)));
+
+    public static void SetInverterHint(DependencyObject element, InverterHint value)
+    {
+        element.SetValue(InverterHintProperty, value);
+    }
+
+    public static InverterHint GetInverterHint(DependencyObject element)
+    {
+        return (InverterHint)element.GetValue(InverterHintProperty);
+    }
+}
+
+public enum InverterHint
+{
+    None,
+    LeaveAsIs
 }
