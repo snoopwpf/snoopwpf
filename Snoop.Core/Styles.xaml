@@ -408,4 +408,8 @@
         </Setter>
         <Setter Property="Template" Value="{StaticResource Snoop.Templates.NoSelectionComboBox}" />
     </Style>
+
+    <Style x:Key="{x:Type controls:NoFocusHyperlink}"
+           TargetType="{x:Type controls:NoFocusHyperlink}"
+           BasedOn="{StaticResource {x:Type Hyperlink}}" />
 </ResourceDictionary>
