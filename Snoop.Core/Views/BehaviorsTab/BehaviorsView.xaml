@@ -27,8 +27,7 @@
                                     RootTarget="{Binding Path=SelectedBehavior, ElementName=behaviorView}" />
     </Grid>
 
-    <TextBlock Style="{x:Null}"
-               HorizontalAlignment="Center"
+    <TextBlock HorizontalAlignment="Center"
                VerticalAlignment="Center"
                Text="The element has no behaviors"
                Visibility="{Binding HasBehaviors, ElementName=behaviorView, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}, ConverterParameter=True}"

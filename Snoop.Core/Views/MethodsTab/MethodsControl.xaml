@@ -26,8 +26,7 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Style="{x:Null}"
-                           Margin="0 0 25 0"
+                <TextBlock Margin="0 0 25 0"
                            HorizontalAlignment="Left"
                            Text="{Binding ParameterName}" />
                 <ComboBox Grid.Column="1"
@@ -45,8 +44,7 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Style="{x:Null}"
-                           Margin="0 0 25 0"
+                <TextBlock Margin="0 0 25 0"
                            HorizontalAlignment="Left"
                            Text="{Binding ParameterName}" />
                 <ComboBox Grid.Column="1"
@@ -64,12 +62,10 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Style="{x:Null}"
-                           Margin="0 0 25 0"
+                <TextBlock Margin="0 0 25 0"
                            HorizontalAlignment="Left"
                            Text="{Binding ParameterName}" />
-                <TextBox Style="{x:Null}"
-                         x:Name="ParameterValue"
+                <TextBox x:Name="ParameterValue"
                          Grid.Column="1"
                          Width="100"
                          HorizontalAlignment="Left"
@@ -86,8 +82,7 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Style="{x:Null}"
-                           Margin="0 0 25 0"
+                <TextBlock Margin="0 0 25 0"
                            HorizontalAlignment="Left"
                            Text="{Binding ParameterName}" />
                 <Button Grid.Column="1"
@@ -95,19 +90,16 @@
                         Height="25"
                         HorizontalAlignment="Left"
                         Command="{Binding CreateCustomParameterCommand}">
-                    <TextBlock Style="{x:Null}"
-                               Text="Create/Modify Parameter" />
+                    <TextBlock Text="Create/Modify Parameter" />
                 </Button>
                 <Button Grid.Column="2"
                         Width="150"
                         Height="25"
                         HorizontalAlignment="Left"
                         Command="{Binding NullOutParameterCommand}">
-                    <TextBlock Style="{x:Null}"
-                               Text="Clear Parameter" />
+                    <TextBlock Text="Clear Parameter" />
                 </Button>
-                <TextBlock Style="{x:Null}"
-                           Grid.Column="3"
+                <TextBlock Grid.Column="3"
                            VerticalAlignment="Center"
                            Text="{Binding ParameterValue}" />
             </Grid>
@@ -125,16 +117,14 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <StackPanel Style="{x:Null}"
-                    Grid.Row="0"
+        <StackPanel Grid.Row="0"
                     Orientation="Horizontal">
             <Button Width="100"
                     Height="30"
                     Margin="0 0 15 0"
                     VerticalAlignment="Center"
                     Click="ChangeTarget_Click">
-                <TextBlock Style="{x:Null}"
-                           Text="Change Target" />
+                <TextBlock Text="Change Target" />
             </Button>
 
             <Grid VerticalAlignment="Center">
@@ -143,13 +133,11 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Style="{x:Null}"
-                           Grid.Row="0"
+                <TextBlock Grid.Row="0"
                            VerticalAlignment="Center"
                            FontWeight="Bold"
                            Text="Current Target:" />
-                <TextBlock Style="{x:Null}"
-                           Grid.Row="1"
+                <TextBlock Grid.Row="1"
                            VerticalAlignment="Center"
                            Text="{Binding Path=Target, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type methodsTab:MethodsControl}}}" />
             </Grid>
@@ -157,15 +145,12 @@
 
         <CheckBox x:Name="checkBoxUseDataContext"
                   Grid.Row="1">
-            <TextBlock Style="{x:Null}"
-                       Text="Use DataContext Property" />
+            <TextBlock Text="Use DataContext Property" />
         </CheckBox>
 
-        <StackPanel Style="{x:Null}"
-                    Grid.Row="2"
+        <StackPanel Grid.Row="2"
                     Orientation="Horizontal">
-            <TextBlock Style="{x:Null}"
-                       Margin="0 0 5 0"
+            <TextBlock Margin="0 0 5 0"
                        VerticalAlignment="Center"
                        FontWeight="Bold"
                        Text="Method:" />
@@ -174,17 +159,14 @@
                       Height="25" />
         </StackPanel>
 
-        <StackPanel Style="{x:Null}"
-                    x:Name="parametersContainer"
+        <StackPanel x:Name="parametersContainer"
                     Grid.Row="3"
                     Margin="0 10 0 10"
                     Visibility="Collapsed">
-            <TextBlock Style="{x:Null}"
-                       Margin="0 0 0 10"
+            <TextBlock Margin="0 0 0 10"
                        FontWeight="Bold"
                        Text="Parameters:" />
-            <ItemsControl Style="{x:Null}"
-                          x:Name="itemsControlParameters"
+            <ItemsControl x:Name="itemsControlParameters"
                           Grid.Row="1"
                           Margin="0 10 0 0"
                           ItemTemplateSelector="{StaticResource SnoopParameterInformationTemplateSelector}" />
@@ -195,24 +177,20 @@
                 Height="25"
                 HorizontalAlignment="Left"
                 Click="InvokeMethodClick">
-            <TextBlock Style="{x:Null}"
-                       Text="Invoke" />
+            <TextBlock Text="Invoke" />
         </Button>
 
-        <StackPanel Style="{x:Null}"
-                    x:Name="resultStringContainer"
+        <StackPanel x:Name="resultStringContainer"
                     Grid.Row="5"
                     Margin="0 20 0 0"
                     Orientation="Horizontal"
                     Visibility="Collapsed">
-            <TextBlock Style="{x:Null}"
-                       x:Name="textBlockResultLabel"
+            <TextBlock x:Name="textBlockResultLabel"
                        Margin="0 0 5 0"
                        VerticalAlignment="Center"
                        FontWeight="Bold"
                        Text="Result as string:" />
-            <TextBox Style="{x:Null}"
-                     x:Name="textBlockResult"
+            <TextBox x:Name="textBlockResult"
                      Grid.Row="3"
                      VerticalAlignment="Center"
                      IsReadOnly="True"
@@ -228,8 +206,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <TextBlock Style="{x:Null}"
-                       FontWeight="Bold"
+            <TextBlock FontWeight="Bold"
                        Text="Result Properties:" />
             <controls:PropertyInspector x:Name="propertyInspector"
                                         Grid.Row="1" />

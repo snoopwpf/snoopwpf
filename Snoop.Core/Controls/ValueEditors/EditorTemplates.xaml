@@ -22,8 +22,7 @@
         <Setter Property="ToolTip">
             <Setter.Value>
                 <DataTemplate>
-                    <TextBlock Style="{x:Null}"
-                               Text="Scroll mouse wheel here to edit value" />
+                    <TextBlock Text="Scroll mouse wheel here to edit value" />
                 </DataTemplate>
             </Setter.Value>
         </Setter>
@@ -43,14 +42,12 @@
         <Style.Resources>
             <DataTemplate x:Key="EmptyValueTemplate"
                           DataType="valueEditors:ValueEditor">
-                <TextBlock Style="{x:Null}"
-                           Text="{Binding DescriptiveValue}" />
+                <TextBlock Text="{Binding DescriptiveValue}" />
             </DataTemplate>
 
             <DataTemplate x:Key="UnselectedValueTemplate"
                           DataType="valueEditors:ValueEditor">
-                <TextBlock Style="{x:Null}"
-                           Text="{Binding DescriptiveValue}" />
+                <TextBlock Text="{Binding DescriptiveValue}" />
             </DataTemplate>
 
             <DataTemplate x:Key="SelectedValueTemplate"
@@ -70,27 +67,24 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type valueEditors:StandardValueEditor}">
-                    <StackPanel Style="{x:Null}"
-                                Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal">
                         <Button x:Name="OpenDetailsEditor"
                                 Command="{x:Static valueEditors:ValueEditor.OpenDetailsEditorCommand}"
                                 Content=" ... "
                                 DockPanel.Dock="Left"
                                 Visibility="Collapsed">
                             <Button.ToolTip>
-                                <TextBlock Style="{x:Null}">
-                                    Opens an editor window where you can see and edit the full value.<LineBreak Style="{x:Null}" />
+                                <TextBlock>
+                                    Opens an editor window where you can see and edit the full value.<LineBreak />
                                     Editing is only possible if the property is not read only.</TextBlock>
                             </Button.ToolTip>
                         </Button>
 
-                        <ContentPresenter Style="{x:Null}"
-                                          Name="ValueHolder"
+                        <ContentPresenter Name="ValueHolder"
                                           Content="{Binding RelativeSource={RelativeSource TemplatedParent}}"
                                           ContentTemplate="{DynamicResource UnselectedValueTemplate}">
                             <ContentPresenter.ToolTip>
-                                <TextBlock Style="{x:Null}"
-                                           Text="{TemplateBinding DescriptiveValue}" />
+                                <TextBlock Text="{TemplateBinding DescriptiveValue}" />
                             </ContentPresenter.ToolTip>
                         </ContentPresenter>
                     </StackPanel>
@@ -123,17 +117,14 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type valueEditors:BoolValueEditor}">
-                    <StackPanel Style="{x:Null}"
-                                d:DataContext="{d:DesignInstance infrastructure:PropertyInformation,
-                                                                 IsDesignTimeCreatable=False}"
+                    <StackPanel d:DataContext="{d:DesignInstance infrastructure:PropertyInformation, IsDesignTimeCreatable=False}"
                                 Orientation="Horizontal">
                         <CheckBox x:Name="PART_CheckBox"
                                   VerticalAlignment="Center"
                                   IsChecked="{Binding Value, Mode=TwoWay}"
                                   IsEnabled="{TemplateBinding IsEditable}"
                                   IsThreeState="{Binding IsNullableValueType}" />
-                        <TextBlock Style="{x:Null}"
-                                   Margin="3 0"
+                        <TextBlock Margin="3 0"
                                    VerticalAlignment="Center"
                                    Text="{Binding Path=DescriptiveValue}"
                                    Visibility="{Binding Path=IsExpression, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}}" />
@@ -149,8 +140,7 @@
             <Setter Property="DetailsEditorTemplate">
                 <Setter.Value>
                     <DataTemplate DataType="valueEditors:StringValueEditor">
-                        <TextBox Style="{x:Null}"
-                                 AcceptsReturn="True"
+                        <TextBox AcceptsReturn="True"
                                  HorizontalScrollBarVisibility="Disabled"
                                  IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}"
                                  IsReadOnlyCaretVisible="True"
@@ -199,13 +189,11 @@
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="40" />
                                             </Grid.ColumnDefinitions>
-                                            <TextBlock Style="{x:Null}"
-                                                       Grid.Column="0"
+                                            <TextBlock Grid.Column="0"
                                                        Margin="4"
                                                        Foreground="{DynamicResource Snoop.Brushes.Default.Foreground}"
                                                        Text="{Binding Offset}" />
-                                            <TextBlock Style="{x:Null}"
-                                                       Grid.Column="1"
+                                            <TextBlock Grid.Column="1"
                                                        Margin="4"
                                                        Foreground="{DynamicResource Snoop.Brushes.Default.Foreground}"
                                                        Text="{Binding ColorText}" />
@@ -235,8 +223,7 @@
                                Fill="{Binding Value}"
                                Stroke="{TemplateBinding TextElement.Foreground}"
                                StrokeThickness="1" />
-                    <TextBlock Style="{x:Null}"
-                               Grid.Column="1"
+                    <TextBlock Grid.Column="1"
                                Margin="5 0 0 0"
                                Text="{Binding DescriptiveValue}" />
                 </Grid>
@@ -259,13 +246,11 @@
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="40" />
                                             </Grid.ColumnDefinitions>
-                                            <TextBlock Style="{x:Null}"
-                                                       Grid.Column="0"
+                                            <TextBlock Grid.Column="0"
                                                        Margin="4"
                                                        Foreground="{DynamicResource Snoop.Brushes.Default.Foreground}"
                                                        Text="{Binding Offset}" />
-                                            <TextBlock Style="{x:Null}"
-                                                       Grid.Column="1"
+                                            <TextBlock Grid.Column="1"
                                                        Margin="4"
                                                        Foreground="{DynamicResource Snoop.Brushes.Default.Foreground}"
                                                        Text="{Binding ColorText}" />
@@ -350,8 +335,7 @@
                             <SolidColorBrush Color="{Binding Value}" />
                         </Rectangle.Fill>
                     </Rectangle>
-                    <TextBlock Style="{x:Null}"
-                               Grid.Column="1"
+                    <TextBlock Grid.Column="1"
                                Margin="5 0 0 0"
                                Text="{Binding DescriptiveValue}" />
                 </Grid>
@@ -397,8 +381,7 @@
         <Style.Resources>
             <DataTemplate x:Key="UnselectedValueTemplate"
                           DataType="valueEditors:ValueEditor">
-                <TextBlock Style="{x:Null}"
-                           Text="{Binding DescriptiveValue}" />
+                <TextBlock Text="{Binding DescriptiveValue}" />
             </DataTemplate>
 
             <DataTemplate x:Key="SelectedValueTemplate"
@@ -414,8 +397,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type valueEditors:EnumValueEditor}">
-                    <ContentPresenter Style="{x:Null}"
-                                      Name="ValueHolder"
+                    <ContentPresenter Name="ValueHolder"
                                       Content="{Binding RelativeSource={RelativeSource TemplatedParent}}"
                                       ContentTemplate="{DynamicResource UnselectedValueTemplate}" />
 

@@ -20,13 +20,11 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ToggleButton}">
-                    <Border Style="{x:Null}"
-                            x:Name="Border"
+                    <Border x:Name="Border"
                             Width="19"
                             Height="13"
                             Background="#00FFFFFF">
-                        <Border Style="{x:Null}"
-                                x:Name="Border1"
+                        <Border x:Name="Border1"
                                 Width="9"
                                 Height="9"
                                 BorderBrush="#FF9495A2"
@@ -39,8 +37,7 @@
                                     <GradientStop Color="#FFC6CEDA" Offset="1" />
                                 </LinearGradientBrush>
                             </Border.Background>
-                            <Path Style="{x:Null}"
-                                  x:Name="ExpandPath"
+                            <Path x:Name="ExpandPath"
                                   Margin="1 1 1 1"
                                   Data="M0,2L0,3 2,3 2,5 3,5 3,3 5,3 5,2 3,2 3,0 2,0 2,2z"
                                   Fill="#FF000000" />
@@ -65,7 +62,7 @@
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <StackPanel Style="{x:Null}" />
+                    <StackPanel />
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
@@ -73,8 +70,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TreeViewItem}">
-                    <Grid Style="{x:Null}"
-                          x:Name="Grid">
+                    <Grid x:Name="Grid">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition />
@@ -85,15 +81,13 @@
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}">
-                            <StackPanel Style="{x:Null}"
-                                        Margin="{Binding Indent, Converter={StaticResource IndentToMarginConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:ProperTreeViewItem}}}"
+                            <StackPanel Margin="{Binding Indent, Converter={StaticResource IndentToMarginConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:ProperTreeViewItem}}}"
                                         Orientation="Horizontal">
                                 <ToggleButton Style="{StaticResource TreeViewToggleStyle}"
                                               x:Name="Expander"
                                               ClickMode="Press"
                                               IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" />
-                                <ContentPresenter Style="{x:Null}"
-                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                   Content="{TemplateBinding Header}"
                                                   ContentSource="Header"
                                                   ContentTemplate="{TemplateBinding HeaderTemplate}"
@@ -101,8 +95,7 @@
                                                   DataContext="{x:Null}" />
                             </StackPanel>
                         </Border>
-                        <ItemsPresenter Style="{x:Null}"
-                                        x:Name="ItemsHost"
+                        <ItemsPresenter x:Name="ItemsHost"
                                         Grid.Row="1"
                                         Grid.Column="1"
                                         Grid.ColumnSpan="2" />

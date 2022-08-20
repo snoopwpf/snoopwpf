@@ -58,8 +58,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Calendar">
-                    <StackPanel Style="{x:Null}"
-                                Name="PART_Root"
+                    <StackPanel Name="PART_Root"
                                 HorizontalAlignment="Center">
                         <CalendarItem Style="{TemplateBinding CalendarItemStyle}"
                                       Name="PART_CalendarItem"

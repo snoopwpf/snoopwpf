@@ -77,7 +77,7 @@
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <StackPanel Style="{x:Null}" />
+                    <StackPanel />
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
@@ -733,7 +733,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type GroupItem}">
-                    <StackPanel Style="{x:Null}">
+                    <StackPanel>
                         <ContentPresenter x:Name="PART_Header" />
                         <ItemsPresenter x:Name="ItemsPresenter"
                                         Margin="5 0 0 0" />
@@ -754,7 +754,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type HeaderedContentControl}">
-                    <StackPanel Style="{x:Null}">
+                    <StackPanel>
                         <ContentPresenter ContentSource="Header" />
                         <ContentPresenter />
                     </StackPanel>
@@ -799,7 +799,7 @@
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <StackPanel Style="{x:Null}" />
+                    <StackPanel />
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
@@ -862,7 +862,7 @@
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <StackPanel Style="{x:Null}" />
+                    <StackPanel />
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
@@ -1184,7 +1184,7 @@
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <StackPanel Style="{x:Null}" />
+                    <StackPanel />
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
@@ -1328,8 +1328,7 @@
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <StackPanel Style="{x:Null}"
-                                Orientation="Horizontal" />
+                    <StackPanel Orientation="Horizontal" />
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
@@ -1883,7 +1882,7 @@
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <StackPanel Style="{x:Null}" />
+                    <StackPanel />
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
@@ -2835,7 +2834,7 @@
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <StackPanel Style="{x:Null}" />
+                    <StackPanel />
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
@@ -3451,7 +3450,7 @@
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <StackPanel Style="{x:Null}" />
+                    <StackPanel />
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
@@ -3600,7 +3599,7 @@
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <StackPanel Style="{x:Null}" />
+                    <StackPanel />
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
@@ -4285,7 +4284,7 @@
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <StackPanel Style="{x:Null}" />
+                    <StackPanel />
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>

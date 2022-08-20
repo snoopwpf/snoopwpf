@@ -24,15 +24,12 @@
                       Margin="10"
                       Checked="CheckBoxStartListening_Checked"
                       Unchecked="CheckBoxStartListening_Unchecked">
-                <TextBlock Style="{x:Null}"
-                           Text="Start Listening" />
+                <TextBlock Text="Start Listening" />
             </CheckBox>
 
-            <StackPanel Style="{x:Null}"
-                        Grid.Column="1"
+            <StackPanel Grid.Column="1"
                         Orientation="Horizontal">
-                <TextBlock Style="{x:Null}"
-                           Margin="0 0 10 0"
+                <TextBlock Margin="0 0 10 0"
                            VerticalAlignment="Center"
                            Text="WPF Trace Level: " />
                 <ComboBox Name="comboBoxPresentationTraceLevel"
@@ -41,42 +38,33 @@
                           SelectedIndex="2"
                           SelectionChanged="ComboBoxPresentationTraceLevel_SelectionChanged">
                     <ComboBoxItem Tag="Off">
-                        <TextBlock Style="{x:Null}"
-                                   Text="Off" />
+                        <TextBlock Text="Off" />
                     </ComboBoxItem>
                     <ComboBoxItem Tag="Critical">
-                        <TextBlock Style="{x:Null}"
-                                   Text="Critical" />
+                        <TextBlock Text="Critical" />
                     </ComboBoxItem>
                     <ComboBoxItem Tag="Error">
-                        <TextBlock Style="{x:Null}"
-                                   Text="Error" />
+                        <TextBlock Text="Error" />
                     </ComboBoxItem>
                     <ComboBoxItem Tag="Warning">
-                        <TextBlock Style="{x:Null}"
-                                   Text="Warning" />
+                        <TextBlock Text="Warning" />
                     </ComboBoxItem>
                     <ComboBoxItem Tag="Information">
-                        <TextBlock Style="{x:Null}"
-                                   Text="Information" />
+                        <TextBlock Text="Information" />
                     </ComboBoxItem>
                     <ComboBoxItem Tag="Verbose">
-                        <TextBlock Style="{x:Null}"
-                                   Text="Verbose" />
+                        <TextBlock Text="Verbose" />
                     </ComboBoxItem>
                     <ComboBoxItem Tag="ActivityTracing">
-                        <TextBlock Style="{x:Null}"
-                                   Text="Activity Tracing" />
+                        <TextBlock Text="Activity Tracing" />
                     </ComboBoxItem>
                     <ComboBoxItem Tag="All">
-                        <TextBlock Style="{x:Null}"
-                                   Text="All" />
+                        <TextBlock Text="All" />
                     </ComboBoxItem>
                 </ComboBox>
             </StackPanel>
 
-            <StackPanel Style="{x:Null}"
-                        Grid.Row="1"
+            <StackPanel Grid.Row="1"
                         Grid.ColumnSpan="2"
                         Margin="10 0 10 10"
                         Orientation="Horizontal">
@@ -85,8 +73,7 @@
                         Height="25"
                         HorizontalAlignment="Left"
                         Click="ButtonClear_Click">
-                    <TextBlock Style="{x:Null}"
-                               Text="Clear Text" />
+                    <TextBlock Text="Clear Text" />
                 </Button>
                 <Button Name="buttonClearFilters"
                         Width="75"
@@ -94,8 +81,7 @@
                         Margin="10 0 0 0"
                         HorizontalAlignment="Left"
                         Click="ButtonClearFilters_Click">
-                    <TextBlock Style="{x:Null}"
-                               Text="Clear Filters" />
+                    <TextBlock Text="Clear Filters" />
                 </Button>
                 <Button Name="buttonSetFilters"
                         Width="75"
@@ -103,18 +89,15 @@
                         Margin="10 0 0 0"
                         HorizontalAlignment="Left"
                         Click="ButtonSetFilters_Click">
-                    <TextBlock Style="{x:Null}"
-                               Text="Edit Filter" />
+                    <TextBlock Text="Edit Filter" />
                 </Button>
-                <TextBlock Style="{x:Null}"
-                           Name="textBlockStatus"
+                <TextBlock Name="textBlockStatus"
                            Margin="10 0 0 0"
                            Text="{Binding Path=FilterStatus}" />
             </StackPanel>
 
         </Grid>
-        <TextBox Style="{x:Null}"
-                 Name="textBoxDebugContent"
+        <TextBox Name="textBoxDebugContent"
                  Grid.Row="1"
                  Margin="10"
                  IsReadOnly="True"

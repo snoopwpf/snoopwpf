@@ -36,8 +36,7 @@
 
         <DataTemplate x:Key="CustomEditThickness"
                       DataType="{x:Type Thickness}">
-            <StackPanel Style="{x:Null}"
-                        d:DataContext="{d:DesignInstance infrastructure:PropertyInformation}"
+            <StackPanel d:DataContext="{d:DesignInstance infrastructure:PropertyInformation}"
                         Orientation="Horizontal">
                 <TextBlock Style="{StaticResource MouseWheelText}"
                            Tag="1"
@@ -56,8 +55,7 @@
 
         <DataTemplate x:Key="CustomEditBrush"
                       DataType="{x:Type Brush}">
-            <StackPanel Style="{x:Null}"
-                        d:DataContext="{d:DesignInstance infrastructure:PropertyInformation}"
+            <StackPanel d:DataContext="{d:DesignInstance infrastructure:PropertyInformation}"
                         Orientation="Horizontal">
                 <TextBlock Style="{StaticResource MouseWheelText}"
                            Tag="1"

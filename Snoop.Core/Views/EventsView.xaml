@@ -25,36 +25,30 @@
             </ResourceDictionary.MergedDictionaries>
 
             <DataTemplate x:Key="CategoryTemplate">
-                <TextBlock Style="{x:Null}"
-                           Margin="2 5 0 0"
+                <TextBlock Margin="2 5 0 0"
                            FontWeight="Bold"
                            Text="{Binding Path=Name}" />
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type RoutedEventArgs}">
-                <TextBlock Style="{x:Null}"
-                           Text="{Binding RoutedEvent.Name}" />
+                <TextBlock Text="{Binding RoutedEvent.Name}" />
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type ExecutedRoutedEventArgs}">
-                <StackPanel Style="{x:Null}"
-                            Orientation="Horizontal">
-                    <TextBlock Style="{x:Null}"
-                               Text="{Binding Command, Converter={x:Static converters:ObjectToStringConverter.Instance}}" />
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Command, Converter={x:Static converters:ObjectToStringConverter.Instance}}" />
                 </StackPanel>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type infrastructure:EventTracker}">
                 <CheckBox IsChecked="{Binding IsEnabled}">
-                    <TextBlock Style="{x:Null}"
-                               Text="{Binding RoutedEvent.Name}" />
+                    <TextBlock Text="{Binding RoutedEvent.Name}" />
                 </CheckBox>
             </DataTemplate>
 
             <HierarchicalDataTemplate DataType="{x:Type infrastructure:TrackedEvent}"
                                       ItemsSource="{Binding Stack}">
-                <Grid Style="{x:Null}"
-                      x:Name="Grid"
+                <Grid x:Name="Grid"
                       Background="Transparent">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -64,29 +58,21 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <StackPanel Style="{x:Null}"
-                                Orientation="Horizontal">
-                        <ContentControl Style="{x:Null}"
-                                        Content="{Binding EventArgs}"
+                    <StackPanel Orientation="Horizontal">
+                        <ContentControl Content="{Binding EventArgs}"
                                         Focusable="False" />
-                        <TextBlock Style="{x:Null}"
-                                   Text=" on " />
-                        <TextBlock Style="{x:Null}"
-                                   Grid.Column="1"
+                        <TextBlock Text=" on " />
+                        <TextBlock Grid.Column="1"
                                    Text="{Binding Originator.Handler, Converter={x:Static converters:ObjectToStringConverter.Instance}}" />
                     </StackPanel>
-                    <ContentControl Style="{x:Null}"
-                                    x:Name="Handler"
+                    <ContentControl x:Name="Handler"
                                     Grid.Row="1"
                                     Grid.ColumnSpan="2"
                                     Focusable="False"
                                     Visibility="Collapsed">
-                        <StackPanel Style="{x:Null}"
-                                    Orientation="Horizontal">
-                            <TextBlock Style="{x:Null}"
-                                       Text="Handled by: " />
-                            <TextBlock Style="{x:Null}"
-                                       Text="{Binding HandledBy, Converter={x:Static converters:ObjectToStringConverter.Instance}}" />
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Handled by: " />
+                            <TextBlock Text="{Binding HandledBy, Converter={x:Static converters:ObjectToStringConverter.Instance}}" />
                         </StackPanel>
                     </ContentControl>
                 </Grid>
@@ -98,21 +84,15 @@
             </HierarchicalDataTemplate>
 
             <HierarchicalDataTemplate DataType="{x:Type infrastructure:EventEntry}">
-                <Grid Style="{x:Null}"
-                      Name="Grid"
+                <Grid Name="Grid"
                       Background="Transparent">
                     <Grid.ToolTip>
-                        <TextBlock Style="{x:Null}"
-                                   Text="Click to select the element that handled this" />
+                        <TextBlock Text="Click to select the element that handled this" />
                     </Grid.ToolTip>
-                    <StackPanel Style="{x:Null}"
-                                Orientation="Horizontal">
-                        <TextBlock Style="{x:Null}"
-                                   Text="{Binding Handler, Converter={x:Static converters:ObjectToStringConverter.Instance}}" />
-                        <TextBlock Style="{x:Null}"
-                                   Text=" handled: " />
-                        <TextBlock Style="{x:Null}"
-                                   Grid.Column="1"
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Handler, Converter={x:Static converters:ObjectToStringConverter.Instance}}" />
+                        <TextBlock Text=" handled: " />
+                        <TextBlock Grid.Column="1"
                                    Text="{Binding Handled}" />
                     </StackPanel>
                 </Grid>
@@ -138,8 +118,7 @@
                                   ResetSettingsCommand="{x:Static views:EventsView.ResetEventTrackersToDefaultCommand}"
                                   ResetSettingsToolTip="Reset the enabled event trackers.">
         <ComboBox.ToolTip>
-            <TextBlock Style="{x:Null}"
-                       Text="Select which events you want to track." />
+            <TextBlock Text="Select which events you want to track." />
         </ComboBox.ToolTip>
     </controls:NoSelectionComboBox>
 
@@ -160,8 +139,7 @@
                   StrokeThickness="2" />
         </Grid>
         <Button.ToolTip>
-            <TextBlock Style="{x:Null}"
-                       Text="Clear the current list of events." />
+            <TextBlock Text="Clear the current list of events." />
         </Button.ToolTip>
     </Button>
 
@@ -187,13 +165,10 @@
         </TreeView.ItemContainerStyle>
     </TreeView>
 
-    <StackPanel Style="{x:Null}"
-                Grid.Row="2"
+    <StackPanel Grid.Row="2"
                 Orientation="Horizontal">
-        <TextBlock Style="{x:Null}"
-                   Text="Maximum events displayed: " />
-        <TextBox Style="{x:Null}"
-                 MinWidth="64"
+        <TextBlock Text="Maximum events displayed: " />
+        <TextBox MinWidth="64"
                  VerticalAlignment="Stretch"
                  Text="{Binding ElementName=Events, Path=MaxEventsDisplayed}" />
     </StackPanel>

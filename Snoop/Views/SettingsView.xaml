@@ -63,21 +63,17 @@
                 <GridView>
                     <GridViewColumn Width="200">
                         <GridViewColumn.Header>
-                            <TextBlock Style="{x:Null}"
-                                       Text="Name">
+                            <TextBlock Text="Name">
                                 <TextBlock.ToolTip>
-                                    <TextBlock Style="{x:Null}"
-                                               Text="The name of the property" />
+                                    <TextBlock Text="The name of the property" />
                                 </TextBlock.ToolTip>
                             </TextBlock>
                         </GridViewColumn.Header>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate DataType="snoop:PropertyInformation">
-                                <TextBlock Style="{x:Null}"
-                                           Text="{Binding DisplayName}">
+                                <TextBlock Text="{Binding DisplayName}">
                                     <TextBlock.ToolTip>
-                                        <TextBlock Style="{x:Null}"
-                                                   Text="{Binding DisplayName}" />
+                                        <TextBlock Text="{Binding DisplayName}" />
                                     </TextBlock.ToolTip>
                                 </TextBlock>
                             </DataTemplate>
@@ -87,11 +83,9 @@
                     <GridViewColumn Width="175"
                                     CellTemplateSelector="{StaticResource EditorSelector}">
                         <GridViewColumn.Header>
-                            <TextBlock Style="{x:Null}"
-                                       Text="Value">
+                            <TextBlock Text="Value">
                                 <TextBlock.ToolTip>
-                                    <TextBlock Style="{x:Null}"
-                                               Text="The value of the property" />
+                                    <TextBlock Text="The value of the property" />
                                 </TextBlock.ToolTip>
                             </TextBlock>
                         </GridViewColumn.Header>
