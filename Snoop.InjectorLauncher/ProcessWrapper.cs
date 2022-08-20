@@ -117,24 +117,19 @@ public class ProcessWrapper
             }
         }
 
-        if (wpfGfxForCoreFrameworkFound)
+        if (wpfGfxForCoreFrameworkFound
+            && hostPolicyVersionInfo is not null)
         {
-            switch (hostPolicyVersionInfo?.ProductMajorPart)
+            switch (hostPolicyVersionInfo.ProductMajorPart)
             {
-                case 6:
-                    return "net5.0-windows";
-
-                case 5:
+                case >= 5:
                     return "net5.0-windows";
 
                 case 3 when hostPolicyVersionInfo.ProductMinorPart >= 1:
                     return "netcoreapp3.1";
 
-                case 3:
-                    return "netcoreapp3.0";
-
                 default:
-                    return "netcoreapp3.0";
+                    throw new NotSupportedException($".NET Core version {hostPolicyVersionInfo.ProductVersion} is not supported.");
             }
         }
 

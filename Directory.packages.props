@@ -7,10 +7,6 @@
         <PackageVersion Include="microsoft.powershell.3.referenceassemblies" Version="1.0.0" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
-        <PackageVersion Include="System.Management.Automation" Version="6.2.3" />
-    </ItemGroup>
-
     <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
         <PackageVersion Include="System.Management.Automation" Version="7.0.0" />
     </ItemGroup>

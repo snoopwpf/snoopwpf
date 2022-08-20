@@ -38,7 +38,8 @@ Highlights:
 
 Breaking:
 
-- Dropped support for all .NET versions prior to .NET 4.5.2
+- Dropped support for all .NET Framework versions prior to .NET 4.5.2
+- Dropped support for .NET 3.0
 
 ### [4.0.0]
 

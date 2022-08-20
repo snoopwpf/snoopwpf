@@ -32,16 +32,6 @@
                         </Component>
                     </Directory>
 
-                    <Directory Id="netcoreapp30" Name="netcoreapp3.0">
-                        <Component Id="Snoop.Core.netcoreapp3.0.dll" Guid="{936DC81A-039F-41C3-8F46-23AEBCFF7B22}">
-                            <File Id="Snoop.Core.netcoreapp3.0.dll" KeyPath="yes"
-                                  Source="SourceDir\netcoreapp3.0\Snoop.Core.dll"/>
-                            <File Id="Snoop.Core.netcoreapp3.0.deps.json"
-                                  Source="SourceDir\netcoreapp3.0\Snoop.Core.deps.json"/>
-                            <File Id="Snoop.Core.netcoreapp3.0.pdb" Source="SourceDir\netcoreapp3.0\Snoop.Core.pdb"/>
-                        </Component>
-                    </Directory>
-
                     <Directory Id="netcoreapp31" Name="netcoreapp3.1">
                         <Component Id="Snoop.Core.netcoreapp3.1.dll" Guid="{FF43CCAC-9D8B-42BE-A571-809F3E14082D}">
                             <File Id="Snoop.Core.netcoreapp3.1.dll" KeyPath="yes"
@@ -189,7 +179,6 @@
             <ComponentRef Id="Snoop.Core.net452.dll"/>
             <ComponentRef Id="System.Management.Automation.dll"/>
 
-            <ComponentRef Id="Snoop.Core.netcoreapp3.0.dll"/>
             <ComponentRef Id="Snoop.Core.netcoreapp3.1.dll"/>
             <ComponentRef Id="Snoop.Core.net5.0_windows.dll"/>
 

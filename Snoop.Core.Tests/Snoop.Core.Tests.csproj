@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <TargetFrameworks>net5.0-windows;netcoreapp3.1;netcoreapp3.0;net472</TargetFrameworks>
+    <TargetFrameworks>net5.0-windows;netcoreapp3.1;net472</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>

@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <TargetFrameworks>net5.0-windows;netcoreapp3.1;netcoreapp3.0;$(MinTargetFramework)</TargetFrameworks>
+    <TargetFrameworks>net5.0-windows;netcoreapp3.1;$(MinTargetFramework)</TargetFrameworks>
 
     <RootNamespace>Snoop</RootNamespace>
 
