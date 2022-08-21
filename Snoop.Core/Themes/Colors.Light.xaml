@@ -345,6 +345,9 @@
     <SolidColorBrush x:Key="Snoop.Brushes.ItemsControl.AlternationBackground" Color="#FFEAEAEA" options:Freeze="True" />
 
     <SolidColorBrush x:Key="Snoop.Brushes.PropertyGrid.IsLocallySetForeground" Color="DarkBlue" options:Freeze="True" />
+    <SolidColorBrush x:Key="Snoop.Brushes.PropertyGrid.HasChangedRecently" Color="Yellow" options:Freeze="True" />
+    <SolidColorBrush x:Key="Snoop.Brushes.PropertyGrid.IsExpression" Color="LightGreen" options:Freeze="True" />
+    <SolidColorBrush x:Key="Snoop.Brushes.PropertyGrid.IsAnimated" Color="LightSalmon" options:Freeze="True" />
 
     <!-- DefaultedBorderBrush is used to show KeyBoardFocus -->
     <LinearGradientBrush x:Key="DefaultedBorderBrush" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">

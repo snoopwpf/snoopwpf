@@ -531,12 +531,9 @@ public class PropertyInformation : DependencyObject, IComparable, INotifyPropert
             {
                 this.index = value;
                 this.OnPropertyChanged(nameof(this.Index));
-                this.OnPropertyChanged(nameof(this.IsOdd));
             }
         }
     }
-
-    public bool IsOdd => this.index % 2 == 1;
 
     public BindingBase? Binding
     {

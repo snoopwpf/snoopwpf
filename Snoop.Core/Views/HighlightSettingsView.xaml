@@ -44,14 +44,10 @@
                             <Setter Property="Background" Value="Transparent" />
                         </Trigger>
                         <Trigger Property="ItemsControl.AlternationIndex" Value="1">
-                            <Setter Property="Background" Value="#FFEAEAEA" />
+                            <Setter Property="Background" Value="{DynamicResource Snoop.Brushes.ItemsControl.AlternationBackground}" />
                         </Trigger>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="LightGray" />
-                        </Trigger>
-
                         <DataTrigger Binding="{Binding HasChangedRecently}" Value="True">
-                            <Setter Property="Background" Value="Yellow" />
+                            <Setter Property="Background" Value="{DynamicResource Snoop.Brushes.PropertyGrid.HasChangedRecently}" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
