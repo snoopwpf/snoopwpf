@@ -47,7 +47,7 @@
                     <Style TargetType="{x:Type ListBoxItem}">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding Path=IsGrouped}" Value="True">
-                                <Setter Property="Background" Value="#FFEAEAEA" />
+                                <Setter Property="Background" Value="{DynamicResource Snoop.Brushes.Default.LightDarkBackground}" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>

@@ -51,7 +51,7 @@
                         </LinearGradientBrush>
                     </Setter.Value>
                 </Setter>
-                <Setter Property="BorderBrush" Value="#FF003C74" />
+                <Setter Property="BorderBrush" Value="{DynamicResource Snoop.Brushes.Default.Highlight}" />
                 <Setter Property="FocusVisualStyle">
                     <Setter.Value>
                         <Style>
@@ -77,7 +77,7 @@
                             <Grid Width="Auto"
                                   Height="Auto">
                                 <Border x:Name="border"
-                                        BorderBrush="#FF696969"
+                                        BorderBrush="{DynamicResource Snoop.Brushes.Default.ControlDarkDark}"
                                         BorderThickness="1 1 1 1"
                                         CornerRadius="4,4,4,4" />
                                 <ContentPresenter Margin="2 2 2 2" />

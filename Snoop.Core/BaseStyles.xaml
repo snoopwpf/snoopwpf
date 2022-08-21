@@ -65,12 +65,8 @@
     <Style x:Key="{x:Type ContextMenu}"
            TargetType="{x:Type ContextMenu}">
         <Setter Property="Background" Value="{DynamicResource Snoop.Brushes.Default.Background}" />
-        <Setter Property="BorderBrush" Value="#FF959595" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Snoop.Brushes.Default.ControlDark}" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="FontFamily" Value="{DynamicResource {x:Static SystemFonts.MenuFontFamilyKey}}" />
-        <Setter Property="FontSize" Value="{DynamicResource {x:Static SystemFonts.MenuFontSizeKey}}" />
-        <Setter Property="FontStyle" Value="{DynamicResource {x:Static SystemFonts.MenuFontStyleKey}}" />
-        <Setter Property="FontWeight" Value="{DynamicResource {x:Static SystemFonts.MenuFontWeightKey}}" />
         <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.Foreground}" />
         <Setter Property="Grid.IsSharedSizeScope" Value="true" />
         <Setter Property="HasDropShadow" Value="{DynamicResource {x:Static SystemParameters.DropShadowKey}}" />
@@ -1219,7 +1215,7 @@
                 <ControlTemplate>
                     <Rectangle RadiusX="2"
                                RadiusY="2"
-                               Stroke="#8E6EA6F5"
+                               Stroke="{DynamicResource Snoop.Brushes.Default.Highlight}"
                                StrokeThickness="1" />
                 </ControlTemplate>
             </Setter.Value>
@@ -1266,11 +1262,11 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="true">
                             <Setter Property="Background" Value="{DynamicResource ListItemHoverFill}" />
-                            <Setter Property="BorderBrush" Value="#FFCCF0FF" />
+                            <Setter Property="BorderBrush" Value="{DynamicResource Item.MouseOver.Border}" />
                         </Trigger>
                         <Trigger Property="IsSelected" Value="true">
                             <Setter Property="Background" Value="{DynamicResource ListItemSelectedFill}" />
-                            <Setter Property="BorderBrush" Value="#FF98DDFB" />
+                            <Setter Property="BorderBrush" Value="{DynamicResource Item.SelectedActive.Border}" />
                             <Setter TargetName="InnerBorder" Property="BorderBrush" Value="#80FFFFFF" />
                         </Trigger>
                         <MultiTrigger>
@@ -1279,7 +1275,7 @@
                                 <Condition Property="Selector.IsSelectionActive" Value="false" />
                             </MultiTrigger.Conditions>
                             <Setter Property="Background" Value="{DynamicResource ListItemSelectedInactiveFill}" />
-                            <Setter Property="BorderBrush" Value="#FFCFCFCF" />
+                            <Setter Property="BorderBrush" Value="{DynamicResource Item.SelectedInactive.Border}" />
                         </MultiTrigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
@@ -1287,7 +1283,7 @@
                                 <Condition Property="IsMouseOver" Value="true" />
                             </MultiTrigger.Conditions>
                             <Setter Property="Background" Value="{DynamicResource ListItemSelectedHoverFill}" />
-                            <Setter Property="BorderBrush" Value="#FF98DDFB" />
+                            <Setter Property="BorderBrush" Value="{DynamicResource Snoop.Brushes.Default.HotTrack}" />
                         </MultiTrigger>
                         <Trigger Property="IsEnabled" Value="false">
                             <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.GrayForeground}" />

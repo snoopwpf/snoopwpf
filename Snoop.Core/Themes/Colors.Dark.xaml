@@ -7,4 +7,6 @@
             <GradientStop Color="#1E2737" Offset="1" />
         </LinearGradientBrush.GradientStops>
     </LinearGradientBrush>
+
+    <SolidColorBrush x:Key="Snoop.Brushes.PropertyGrid.IsExpression" Color="#4A3D4F" options:Freeze="True" />
 </ResourceDictionary>
