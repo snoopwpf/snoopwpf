@@ -117,7 +117,8 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type valueEditors:BoolValueEditor}">
-                    <StackPanel d:DataContext="{d:DesignInstance infrastructure:PropertyInformation, IsDesignTimeCreatable=False}"
+                    <StackPanel d:DataContext="{d:DesignInstance infrastructure:PropertyInformation,
+                                                                 IsDesignTimeCreatable=False}"
                                 Orientation="Horizontal">
                         <CheckBox x:Name="PART_CheckBox"
                                   VerticalAlignment="Center"
