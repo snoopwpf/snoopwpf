@@ -14,7 +14,8 @@
     <controls:IndentToMarginConverter x:Key="IndentToMarginConverter" />
 
     <Style x:Key="TreeViewToggleStyle"
-           TargetType="{x:Type ToggleButton}">
+           TargetType="{x:Type ToggleButton}"
+           BasedOn="{StaticResource {x:Type ToggleButton}}">
         <Setter Property="Focusable" Value="False" />
         <Setter Property="Height" Value="13" />
         <Setter Property="Template">

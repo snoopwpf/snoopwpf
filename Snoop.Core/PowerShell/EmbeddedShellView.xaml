@@ -7,7 +7,8 @@
              d:DesignWidth="300"
              mc:Ignorable="d">
     <UserControl.Resources>
-        <Style TargetType="TextBox">
+        <Style TargetType="TextBox"
+               BasedOn="{StaticResource {x:Type TextBox}}">
             <Setter Property="FontFamily" Value="Consolas" />
         </Style>
     </UserControl.Resources>

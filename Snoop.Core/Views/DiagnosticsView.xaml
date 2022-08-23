@@ -96,7 +96,8 @@
                   ItemsSource="{Binding ElementName=self, Path=DiagnosticsItemsView}"
                   KeyUp="Diagnostics_OnKeyUp"
                   MouseDoubleClick="Control_OnMouseDoubleClick"
-                  Style="{StaticResource {x:Static GridView.GridViewStyleKey}}">
+                  Style="{StaticResource {x:Static GridView.GridViewStyleKey}}"
+                  ItemContainerStyle="{StaticResource {x:Static GridView.GridViewItemContainerStyleKey}}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="50">

@@ -18,7 +18,8 @@
                          mc:Ignorable="d">
     <Window.Resources>
         <Style x:Key="PhotoFrameStyle"
-               TargetType="{x:Type ContentControl}">
+               TargetType="{x:Type ContentControl}"
+               BasedOn="{StaticResource {x:Type ContentControl}}">
             <Style.Setters>
                 <Setter Property="Template">
                     <Setter.Value>

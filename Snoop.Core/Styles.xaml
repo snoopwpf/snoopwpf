@@ -134,7 +134,8 @@
     <!-- Simple ScrollBar  This makes use of SimpleThumb, SimpleRepeatButton and SimpleScrollRepeatButton -->
 
     <Style x:Key="SimpleScrollBar"
-           TargetType="{x:Type ScrollBar}">
+           TargetType="{x:Type ScrollBar}"
+           BasedOn="{StaticResource {x:Type ScrollBar}}">
         <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.Foreground}" />
         <Setter Property="Stylus.IsFlicksEnabled" Value="false" />
         <Setter Property="Template">
@@ -228,7 +229,7 @@
         It is used by ListBox, MenuItem, ComboBox, and TreeView
     -->
     <Style x:Key="SimpleScrollViewer"
-           BasedOn="{x:Null}"
+           BasedOn="{StaticResource {x:Type ScrollViewer}}"
            TargetType="{x:Type ScrollViewer}">
         <Setter Property="Template">
             <Setter.Value>
@@ -397,7 +398,7 @@
     </ControlTemplate>
 
     <Style x:Key="{x:Type controls:NoSelectionComboBox}"
-           BasedOn="{x:Null}"
+           BasedOn="{StaticResource {x:Type ComboBox}}"
            TargetType="{x:Type controls:NoSelectionComboBox}">
         <Setter Property="ItemsPanel">
             <Setter.Value>
