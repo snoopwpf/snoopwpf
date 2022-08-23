@@ -41,8 +41,8 @@
             </ResourceDictionary.MergedDictionaries>
 
             <Style x:Key="refreshButton"
-                   TargetType="{x:Type Button}"
-                   BasedOn="{StaticResource {x:Type Button}}">
+                   BasedOn="{StaticResource {x:Type Button}}"
+                   TargetType="{x:Type Button}">
                 <Setter Property="Background">
                     <Setter.Value>
                         <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
@@ -242,8 +242,8 @@
                         <Setter Property="ToolTip" Value="{Binding VisualBrush}" />
 
                         <Style.Resources>
-                            <Style TargetType="{x:Type ToolTip}"
-                                   BasedOn="{StaticResource {x:Type ToolTip}}">
+                            <Style BasedOn="{StaticResource {x:Type ToolTip}}"
+                                   TargetType="{x:Type ToolTip}">
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="{x:Type ToolTip}">

@@ -134,8 +134,8 @@
     <!-- Simple ScrollBar  This makes use of SimpleThumb, SimpleRepeatButton and SimpleScrollRepeatButton -->
 
     <Style x:Key="SimpleScrollBar"
-           TargetType="{x:Type ScrollBar}"
-           BasedOn="{StaticResource {x:Type ScrollBar}}">
+           BasedOn="{StaticResource {x:Type ScrollBar}}"
+           TargetType="{x:Type ScrollBar}">
         <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.Foreground}" />
         <Setter Property="Stylus.IsFlicksEnabled" Value="false" />
         <Setter Property="Template">
@@ -411,6 +411,6 @@
     </Style>
 
     <Style x:Key="{x:Type controls:NoFocusHyperlink}"
-           TargetType="{x:Type controls:NoFocusHyperlink}"
-           BasedOn="{StaticResource {x:Type Hyperlink}}" />
+           BasedOn="{StaticResource {x:Type Hyperlink}}"
+           TargetType="{x:Type controls:NoFocusHyperlink}" />
 </ResourceDictionary>

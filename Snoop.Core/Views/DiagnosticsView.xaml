@@ -91,13 +91,13 @@
             </controls:NoSelectionComboBox>
         </StackPanel>
 
-        <ListView x:Name="diagnostics"
+        <ListView Style="{StaticResource {x:Static GridView.GridViewStyleKey}}"
+                  x:Name="diagnostics"
                   Grid.Row="1"
+                  ItemContainerStyle="{StaticResource {x:Static GridView.GridViewItemContainerStyleKey}}"
                   ItemsSource="{Binding ElementName=self, Path=DiagnosticsItemsView}"
                   KeyUp="Diagnostics_OnKeyUp"
-                  MouseDoubleClick="Control_OnMouseDoubleClick"
-                  Style="{StaticResource {x:Static GridView.GridViewStyleKey}}"
-                  ItemContainerStyle="{StaticResource {x:Static GridView.GridViewItemContainerStyleKey}}">
+                  MouseDoubleClick="Control_OnMouseDoubleClick">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="50">

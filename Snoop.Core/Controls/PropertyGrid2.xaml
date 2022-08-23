@@ -74,8 +74,8 @@
                 </MenuItem>
             </ContextMenu>
 
-            <Style TargetType="{x:Type GridViewColumnHeader}"
-                   BasedOn="{StaticResource {x:Type GridViewColumnHeader}}">
+            <Style BasedOn="{StaticResource {x:Type GridViewColumnHeader}}"
+                   TargetType="{x:Type GridViewColumnHeader}">
                 <Setter Property="Command" Value="{x:Static controls:PropertyGrid2.SortCommand}" />
             </Style>
 
@@ -110,15 +110,15 @@
         <RowDefinition Height="*" />
     </Grid.RowDefinitions>
 
-    <ListView x:Name="ListView"
-              Style="{StaticResource {x:Static GridView.GridViewStyleKey}}"
+    <ListView Style="{StaticResource {x:Static GridView.GridViewStyleKey}}"
+              x:Name="ListView"
               Grid.RowSpan="2"
               MinWidth="0"
               MinHeight="0"
               HorizontalContentAlignment="Stretch"
               AlternationCount="2"
-              IsSynchronizedWithCurrentItem="True"
               Background="{DynamicResource Snoop.Brushes.Default.Background}"
+              IsSynchronizedWithCurrentItem="True"
               ItemsSource="{Binding ElementName=PropertyGrid, Path=Properties}"
               SelectedItem="{Binding ElementName=PropertyGrid, Path=Selection, Mode=TwoWay}">
         <!-- cplotts note: -->
@@ -132,8 +132,8 @@
 		-->
 
         <ListView.ItemContainerStyle>
-            <Style TargetType="{x:Type ListViewItem}"
-                   BasedOn="{StaticResource {x:Static GridView.GridViewItemContainerStyleKey}}">
+            <Style BasedOn="{StaticResource {x:Static GridView.GridViewItemContainerStyleKey}}"
+                   TargetType="{x:Type ListViewItem}">
                 <Setter Property="ContextMenu" Value="{StaticResource PropertyMenu}" />
                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                 <Style.Triggers>

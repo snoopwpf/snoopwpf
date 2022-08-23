@@ -37,8 +37,8 @@
                   IsSynchronizedWithCurrentItem="True"
                   ItemsSource="{Binding ElementName=Control, Path=Properties}">
             <ListView.ItemContainerStyle>
-                <Style TargetType="{x:Type ListViewItem}"
-                       BasedOn="{StaticResource {x:Type ListViewItem}}">
+                <Style BasedOn="{StaticResource {x:Type ListViewItem}}"
+                       TargetType="{x:Type ListViewItem}">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                     <Style.Triggers>
                         <Trigger Property="ItemsControl.AlternationIndex" Value="0">

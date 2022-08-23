@@ -12,8 +12,8 @@
     <Grid.Resources>
         <ResourceDictionary>
             <Style x:Key="Snoop.TriggerControlStyle"
-                   TargetType="{x:Type HeaderedContentControl}"
-                   BasedOn="{StaticResource {x:Type HeaderedContentControl}}">
+                   BasedOn="{StaticResource {x:Type HeaderedContentControl}}"
+                   TargetType="{x:Type HeaderedContentControl}">
                 <Setter Property="Background" Value="{DynamicResource Snoop.Brushes.Default.Control}" />
                 <Setter Property="BorderBrush" Value="{DynamicResource Snoop.Brushes.Default.ControlDark}" />
                 <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.Foreground}" />
@@ -244,8 +244,8 @@
                             </ItemsPanelTemplate>
                         </GroupStyle.Panel>
                         <GroupStyle.ContainerStyle>
-                            <Style TargetType="{x:Type GroupItem}"
-                                   BasedOn="{StaticResource {x:Type GroupItem}}">
+                            <Style BasedOn="{StaticResource {x:Type GroupItem}}"
+                                   TargetType="{x:Type GroupItem}">
                                 <Setter Property="Margin" Value="0 0 0 2" />
                                 <Setter Property="Template">
                                     <Setter.Value>

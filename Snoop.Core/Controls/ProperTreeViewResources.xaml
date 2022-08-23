@@ -14,8 +14,8 @@
     <controls:IndentToMarginConverter x:Key="IndentToMarginConverter" />
 
     <Style x:Key="TreeViewToggleStyle"
-           TargetType="{x:Type ToggleButton}"
-           BasedOn="{StaticResource {x:Type ToggleButton}}">
+           BasedOn="{StaticResource {x:Type ToggleButton}}"
+           TargetType="{x:Type ToggleButton}">
         <Setter Property="Focusable" Value="False" />
         <Setter Property="Height" Value="13" />
         <Setter Property="Template">
@@ -56,8 +56,8 @@
     </Style>
 
     <Style x:Key="ProperTreeViewItemStyle"
-           TargetType="{x:Type TreeViewItem}"
-           BasedOn="{StaticResource {x:Type TreeViewItem}}">
+           BasedOn="{StaticResource {x:Type TreeViewItem}}"
+           TargetType="{x:Type TreeViewItem}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}, AncestorLevel=1}, FallbackValue=Left}" />
         <Setter Property="ItemsPanel">

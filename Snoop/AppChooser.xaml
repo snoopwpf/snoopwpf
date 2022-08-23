@@ -196,11 +196,11 @@
                            Height="Auto"
                            HorizontalAlignment="Stretch"
                            VerticalAlignment="Stretch"
+                           Fill="{DynamicResource MetalGrad}"
                            RadiusX="4"
                            RadiusY="4"
                            Stroke="{DynamicResource DarkBlue}"
-                           StrokeThickness="1"
-                           Fill="{DynamicResource MetalGrad}" />
+                           StrokeThickness="1" />
                 <Border Grid.RowSpan="2"
                         Width="Auto"
                         HorizontalAlignment="Stretch"
