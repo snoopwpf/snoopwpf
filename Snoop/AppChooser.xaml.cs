@@ -17,6 +17,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
+using Snoop.Core;
 using Snoop.Infrastructure;
 using Snoop.Views;
 using Snoop.Windows;
@@ -45,6 +46,8 @@ public partial class AppChooser
         this.SortColumn = 1;
 
         this.InitializeComponent();
+
+        ThemeManager.Current.ApplyTheme(ThemeMode.Light, this);
 
         this.CommandBindings.Add(new CommandBinding(RefreshCommand, this.HandleRefreshCommand));
         this.CommandBindings.Add(new CommandBinding(InspectCommand, this.HandleInspectCommand, this.HandleCanInspectOrMagnifyCommand));
@@ -224,7 +227,7 @@ public partial class AppChooser
 
     private void HandleSettingsCommand(object sender, ExecutedRoutedEventArgs e)
     {
-        var window = new Window
+        var window = new SnoopBaseWindow
         {
             Content = new SettingsView(),
             Title = "Settings",

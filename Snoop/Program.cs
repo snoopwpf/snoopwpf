@@ -71,7 +71,7 @@ public static class Program
     private static int ErrorHandler(string[] args, IList<Error> errors, StringWriter helpWriter)
     {
         if (errors.Count == 1
-            && errors.All(x => x is NoVerbSelectedError || x is BadVerbSelectedError))
+            && errors.All(x => x is NoVerbSelectedError or BadVerbSelectedError))
         {
             var localHelpWriter = new StringWriter();
             var parser = new Parser(x => x.HelpWriter = localHelpWriter);

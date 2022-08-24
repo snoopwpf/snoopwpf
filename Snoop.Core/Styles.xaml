@@ -14,73 +14,8 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="BaseStyles.xaml" />
         <ResourceDictionary Source="Controls/ProperTreeViewResources.xaml" />
+        <ResourceDictionary Source="Controls/ValueEditors/EditorTemplates.xaml" />
     </ResourceDictionary.MergedDictionaries>
-
-    <!-- SimpleStyles.XAML defines a set of control styles which are simplified starting points for creating your own controls -->
-
-    <!--
-        Brushes : These are used to define the color for background, foreground, selection, enabled etc of all controls
-        If you want to change the color of a control you can just change the brush; if you want to add a new shape or change arrangement then also edit the template
-    -->
-
-    <!-- NormalBrush is used as the Background for SimpleButton, SimpleRepeatButton -->
-    <LinearGradientBrush x:Key="NormalBrush" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
-        <GradientStop Color="#EEEE" Offset="0.0" />
-        <GradientStop Color="#CCCC" Offset="1.0" />
-    </LinearGradientBrush>
-    <LinearGradientBrush x:Key="NormalBorderBrush" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
-        <GradientStop Color="#CCCC" Offset="0.0" />
-        <GradientStop Color="#4444" Offset="1.0" />
-    </LinearGradientBrush>
-
-    <!-- LightBrush is used for content areas such as Menu, Tab Control background -->
-    <LinearGradientBrush x:Key="LightBrush" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
-        <GradientStop Color="#FFFF" Offset="0.0" />
-        <GradientStop Color="#EEEE" Offset="1.0" />
-    </LinearGradientBrush>
-
-
-    <!-- Style and Template pairs are used to define each control Part -->
-    <!-- The Style provides default values on the control; the Template gives the elements for each control -->
-
-    <LinearGradientBrush x:Key="MouseOverBrush" StartPoint="0,0.5" EndPoint="1,0.5" options:Freeze="True">
-        <GradientStop Color="#FFFFFFFF" Offset="0.48" />
-        <GradientStop Color="#FFB2E2FF" Offset="1" />
-        <GradientStop Color="#FFBAE5FF" Offset="0" />
-    </LinearGradientBrush>
-
-    <!-- PressedBrush is used for Pressed in Button, Radio Button, CheckBox -->
-    <LinearGradientBrush x:Key="PressedBrush" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
-        <GradientStop Color="#BBBB" Offset="0.0" />
-        <GradientStop Color="#EEEE" Offset="0.1" />
-        <GradientStop Color="#EEEE" Offset="0.9" />
-        <GradientStop Color="#FFFF" Offset="1.0" />
-    </LinearGradientBrush>
-    <LinearGradientBrush x:Key="PressedBorderBrush" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
-        <GradientStop Color="#4444" Offset="0.0" />
-        <GradientStop Color="#8888" Offset="1.0" />
-    </LinearGradientBrush>
-
-    <!-- SelectedBackgroundBrush is used for the Selected item in ListBoxItem, ComboBoxItem -->
-    <SolidColorBrush x:Key="SelectedBackgroundBrush" Color="#DDDD" options:Freeze="True" />
-
-    <!-- Disabled Brushes are used for the Disabled look of each control -->
-    <SolidColorBrush x:Key="DisabledForegroundBrush" Color="#8888" options:Freeze="True" />
-    <SolidColorBrush x:Key="DisabledBackgroundBrush" Color="#EEEE" options:Freeze="True" />
-    <SolidColorBrush x:Key="DisabledBorderBrush" Color="#AAAA" options:Freeze="True" />
-
-    <!-- Used for background of ScrollViewer, TreeView, ListBox, Expander, TextBox, Tab Control -->
-    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#FFFF" options:Freeze="True" />
-
-    <!-- DefaultedBorderBrush is used to show KeyBoardFocus -->
-    <LinearGradientBrush x:Key="DefaultedBorderBrush" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
-        <GradientStop Color="#7777" Offset="0.0" />
-        <GradientStop Color="#0000" Offset="1.0" />
-    </LinearGradientBrush>
-
-    <SolidColorBrush x:Key="SolidBorderBrush" Color="#8888" options:Freeze="True" />
-    <SolidColorBrush x:Key="LightBorderBrush" Color="#AAAA" options:Freeze="True" />
-    <SolidColorBrush x:Key="LightColorBrush" Color="#DDDD" options:Freeze="True" />
 
     <Style x:Key="Snoop.Styles.ProperTreeView"
            BasedOn="{StaticResource Snoop.Styles.TreeView}"
@@ -110,14 +45,12 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type RepeatButton}">
-                    <Grid Style="{x:Null}">
-                        <Border Style="{x:Null}"
-                                x:Name="Border"
+                    <Grid>
+                        <Border x:Name="Border"
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}" />
-                        <ContentPresenter Style="{x:Null}"
-                                          x:Name="ContentPresenter"
+                        <ContentPresenter x:Name="ContentPresenter"
                                           HorizontalAlignment="Center"
                                           VerticalAlignment="Center"
                                           Content="{TemplateBinding Content}"
@@ -154,11 +87,9 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Thumb}">
-                    <Grid Style="{x:Null}"
-                          x:Name="Grid"
+                    <Grid x:Name="Grid"
                           Margin="0 0 0 0">
-                        <Rectangle Style="{x:Null}"
-                                   x:Name="Rectangle"
+                        <Rectangle x:Name="Rectangle"
                                    Width="Auto"
                                    Height="Auto"
                                    HorizontalAlignment="Stretch"
@@ -190,9 +121,8 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type RepeatButton}">
-                    <Grid Style="{x:Null}">
-                        <Rectangle Style="{x:Null}"
-                                   Fill="{TemplateBinding Background}"
+                    <Grid>
+                        <Rectangle Fill="{TemplateBinding Background}"
                                    Stroke="{TemplateBinding BorderBrush}"
                                    StrokeThickness="{TemplateBinding BorderThickness}" />
                     </Grid>
@@ -204,31 +134,27 @@
     <!-- Simple ScrollBar  This makes use of SimpleThumb, SimpleRepeatButton and SimpleScrollRepeatButton -->
 
     <Style x:Key="SimpleScrollBar"
+           BasedOn="{StaticResource {x:Type ScrollBar}}"
            TargetType="{x:Type ScrollBar}">
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+        <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.Foreground}" />
         <Setter Property="Stylus.IsFlicksEnabled" Value="false" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ScrollBar}">
-                    <Grid Style="{x:Null}"
-                          x:Name="GridRoot"
+                    <Grid x:Name="GridRoot"
                           Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}"
                           Background="{TemplateBinding Background}">
                         <Grid.RowDefinitions>
-                            <RowDefinition Style="{x:Null}"
-                                           MaxHeight="18" />
-                            <RowDefinition Style="{x:Null}"
-                                           Height="0.00001*" />
-                            <RowDefinition Style="{x:Null}"
-                                           MaxHeight="18" />
+                            <RowDefinition MaxHeight="18" />
+                            <RowDefinition Height="0.00001*" />
+                            <RowDefinition MaxHeight="18" />
                         </Grid.RowDefinitions>
 
                         <RepeatButton Style="{DynamicResource SimpleRepeatButton}"
                                       x:Name="DecreaseRepeat"
                                       Command="ScrollBar.LineUpCommand">
-                            <Grid Style="{x:Null}">
-                                <Path Style="{x:Null}"
-                                      x:Name="DecreaseArrow"
+                            <Grid>
+                                <Path x:Name="DecreaseArrow"
                                       Data="M 0 4 L 8 4 L 4 0 Z"
                                       Stroke="{TemplateBinding Foreground}"
                                       StrokeThickness="1" />
@@ -236,8 +162,7 @@
                         </RepeatButton>
 
                         <!-- Track is a special layout container which sizes the thumb and the repeat button which do jump scrolling either side of it -->
-                        <Track Style="{x:Null}"
-                               x:Name="PART_Track"
+                        <Track x:Name="PART_Track"
                                Grid.Row="1"
                                IsDirectionReversed="true"
                                Orientation="Vertical">
@@ -260,9 +185,8 @@
                                       x:Name="IncreaseRepeat"
                                       Grid.Row="2"
                                       Command="ScrollBar.LineDownCommand">
-                            <Grid Style="{x:Null}">
-                                <Path Style="{x:Null}"
-                                      x:Name="IncreaseArrow"
+                            <Grid>
+                                <Path x:Name="IncreaseArrow"
                                       Data="M 0 0 L 4 4 L 8 0 Z"
                                       Stroke="{TemplateBinding Foreground}"
                                       StrokeThickness="1" />
@@ -305,27 +229,21 @@
         It is used by ListBox, MenuItem, ComboBox, and TreeView
     -->
     <Style x:Key="SimpleScrollViewer"
-           BasedOn="{x:Null}"
+           BasedOn="{StaticResource {x:Type ScrollViewer}}"
            TargetType="{x:Type ScrollViewer}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ScrollViewer}">
-                    <Grid Style="{x:Null}"
-                          Background="{TemplateBinding Background}">
+                    <Grid Background="{TemplateBinding Background}">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Style="{x:Null}"
-                                              Width="*" />
-                            <ColumnDefinition Style="{x:Null}"
-                                              Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Style="{x:Null}"
-                                           Height="*" />
-                            <RowDefinition Style="{x:Null}"
-                                           Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <ScrollContentPresenter Style="{x:Null}"
-                                                Grid.Row="0"
+                        <ScrollContentPresenter Grid.Row="0"
                                                 Grid.Column="0"
                                                 Margin="{TemplateBinding Padding}"
                                                 CanContentScroll="{TemplateBinding CanContentScroll}"
@@ -361,39 +279,20 @@
         </Setter>
     </Style>
 
-    <LinearGradientBrush x:Key="DarkBlue" StartPoint="0.498,0.038" EndPoint="0.498,0.952" options:Freeze="True">
-        <GradientStop Color="#FF021122" Offset="0" />
-        <GradientStop Color="#FF052941" Offset="1" />
-    </LinearGradientBrush>
-    <LinearGradientBrush x:Key="ShineBrush1" StartPoint="0.503,0.925" EndPoint="0.503,0" options:Freeze="True">
-        <GradientStop Color="#0C5BBCFF" Offset="0" />
-        <GradientStop Color="#3365C0FF" Offset="1" />
-    </LinearGradientBrush>
-
-    <SolidColorBrush x:Key="DeepBlueColorBrush" Color="#FF142947" options:Freeze="True" />
-
-    <LinearGradientBrush x:Key="MetalGrad" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
-        <GradientStop Color="#FFEEEEEE" Offset="0" />
-        <GradientStop Color="#FF596F7E" Offset="1" />
-    </LinearGradientBrush>
-
     <!-- This is the area which contains the selected item in the ComboBox -->
 
     <ControlTemplate x:Key="ComboBoxTextBox"
                      TargetType="{x:Type TextBox}">
         <!-- This must be named as PART_ContentHost -->
-        <Border Style="{x:Null}"
-                x:Name="PART_ContentHost"
+        <Border x:Name="PART_ContentHost"
                 Background="{TemplateBinding Background}"
                 Focusable="False" />
     </ControlTemplate>
 
     <ControlTemplate x:Key="Snoop.Templates.NoSelectionComboBox"
                      TargetType="{x:Type controls:NoSelectionComboBox}">
-        <Grid Style="{x:Null}"
-              x:Name="Grid">
-            <Border Style="{x:Null}"
-                    x:Name="Border"
+        <Grid x:Name="Grid">
+            <Border x:Name="Border"
                     Background="{TemplateBinding Background}"
                     BorderBrush="{TemplateBinding BorderBrush}"
                     BorderThickness="{TemplateBinding BorderThickness}">
@@ -402,12 +301,9 @@
                               Focusable="False"
                               IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
                     <ToggleButton.Content>
-                        <StackPanel Style="{x:Null}"
-                                    Orientation="Horizontal">
-                            <TextBlock Style="{x:Null}"
-                                       Text="{TemplateBinding Header}" />
-                            <Image Style="{x:Null}"
-                                   Width="8"
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{TemplateBinding Header}" />
+                            <Image Width="8"
                                    Height="6"
                                    Margin="3 0 0 0"
                                    Source="{DynamicResource downDrawingImage}" />
@@ -416,47 +312,39 @@
                 </ToggleButton>
             </Border>
 
-            <Popup Style="{x:Null}"
-                   x:Name="PART_Popup"
+            <Popup x:Name="PART_Popup"
                    AllowsTransparency="True"
                    Focusable="False"
                    IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource Mode=TemplatedParent, AncestorType={x:Null}}}"
                    Placement="Bottom"
                    PopupAnimation="Slide">
-                <Grid Style="{x:Null}"
-                      x:Name="DropDown"
+                <Grid x:Name="DropDown"
                       MinWidth="{TemplateBinding ActualWidth}"
                       MaxHeight="{TemplateBinding MaxDropDownHeight}">
-                    <Border Style="{x:Null}"
-                            x:Name="DropDownBorder"
-                            Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                            BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}"
+                    <Border x:Name="DropDownBorder"
+                            Background="{DynamicResource Snoop.Brushes.Default.Background}"
+                            BorderBrush="{DynamicResource Snoop.Brushes.Window.Frame}"
                             BorderThickness="1 1 1 1" />
-                    <Grid Style="{x:Null}"
-                          Margin="1 1 1 1">
+                    <Grid Margin="1 1 1 1">
                         <Grid.RowDefinitions>
-                            <RowDefinition Style="{x:Null}"
-                                           Height="Auto" />
-                            <RowDefinition Style="{x:Null}"
-                                           Height="*" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
                         <Button Grid.Row="0"
                                 Command="{TemplateBinding ResetSettingsCommand}">
-                            <TextBlock Style="{x:Null}">
+                            <TextBlock>
                                 Reset to default settings
                             </TextBlock>
                             <Button.ToolTip>
-                                <TextBlock Style="{x:Null}"
-                                           Text="{TemplateBinding ResetSettingsToolTip}" />
+                                <TextBlock Text="{TemplateBinding ResetSettingsToolTip}" />
                             </Button.ToolTip>
                         </Button>
 
                         <ScrollViewer x:Name="ScrollViewer"
                                       Grid.Row="1"
                                       Margin="0 2 0 0">
-                            <ItemsControl Style="{x:Null}"
-                                          x:Name="PART_ItemsControl"
+                            <ItemsControl x:Name="PART_ItemsControl"
                                           ItemsPanel="{TemplateBinding ItemsPanel}"
                                           ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource TemplatedParent}}"
                                           KeyboardNavigation.DirectionalNavigation="Contained">
@@ -478,7 +366,7 @@
                     <Condition Property="IsKeyboardFocusWithin" Value="True" />
                     <Condition Property="IsDropDownOpen" Value="False" />
                 </MultiTrigger.Conditions>
-                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
+                <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.HighlightForeground}" />
             </MultiTrigger>
             <Trigger SourceName="PART_Popup" Property="Popup.HasDropShadow" Value="True">
                 <Setter TargetName="DropDown" Property="Margin" Value="0 0 3 3" />
@@ -494,8 +382,8 @@
                 <Setter TargetName="DropDownBorder" Property="MinHeight" Value="95" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
-                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                <Setter Property="Background" Value="{DynamicResource Snoop.Brushes.Default.Control}" />
+                <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.GrayForeground}" />
             </Trigger>
             <Trigger Property="IsGrouping" Value="True">
                 <Setter Property="ScrollViewer.CanContentScroll" Value="False" />
@@ -510,15 +398,19 @@
     </ControlTemplate>
 
     <Style x:Key="{x:Type controls:NoSelectionComboBox}"
-           BasedOn="{x:Null}"
+           BasedOn="{StaticResource {x:Type ComboBox}}"
            TargetType="{x:Type controls:NoSelectionComboBox}">
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <VirtualizingStackPanel Style="{x:Null}" />
+                    <VirtualizingStackPanel />
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
         <Setter Property="Template" Value="{StaticResource Snoop.Templates.NoSelectionComboBox}" />
     </Style>
+
+    <Style x:Key="{x:Type controls:NoFocusHyperlink}"
+           BasedOn="{StaticResource {x:Type Hyperlink}}"
+           TargetType="{x:Type controls:NoFocusHyperlink}" />
 </ResourceDictionary>

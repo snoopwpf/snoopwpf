@@ -14,7 +14,7 @@ public abstract class SnoopMainBaseWindow : SnoopBaseWindow
 
     public abstract object? Target { get; set; }
 
-    public void Inspect(object rootObject)
+    public Window Inspect(object rootObject)
     {
         ExceptionHandler.AddExceptionHandler(this.Dispatcher);
 
@@ -50,6 +50,8 @@ public abstract class SnoopMainBaseWindow : SnoopBaseWindow
         this.Activate();
 
         LogHelper.WriteLine("Shown and activated snoop UI.");
+
+        return this;
     }
 
     private void OnOwnerWindowOnClosed(object? o, EventArgs eventArgs)

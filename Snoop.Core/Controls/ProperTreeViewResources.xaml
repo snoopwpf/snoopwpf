@@ -14,19 +14,18 @@
     <controls:IndentToMarginConverter x:Key="IndentToMarginConverter" />
 
     <Style x:Key="TreeViewToggleStyle"
+           BasedOn="{StaticResource {x:Type ToggleButton}}"
            TargetType="{x:Type ToggleButton}">
         <Setter Property="Focusable" Value="False" />
         <Setter Property="Height" Value="13" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ToggleButton}">
-                    <Border Style="{x:Null}"
-                            x:Name="Border"
+                    <Border x:Name="Border"
                             Width="19"
                             Height="13"
                             Background="#00FFFFFF">
-                        <Border Style="{x:Null}"
-                                x:Name="Border1"
+                        <Border x:Name="Border1"
                                 Width="9"
                                 Height="9"
                                 BorderBrush="#FF9495A2"
@@ -39,8 +38,7 @@
                                     <GradientStop Color="#FFC6CEDA" Offset="1" />
                                 </LinearGradientBrush>
                             </Border.Background>
-                            <Path Style="{x:Null}"
-                                  x:Name="ExpandPath"
+                            <Path x:Name="ExpandPath"
                                   Margin="1 1 1 1"
                                   Data="M0,2L0,3 2,3 2,5 3,5 3,3 5,3 5,2 3,2 3,0 2,0 2,2z"
                                   Fill="#FF000000" />
@@ -58,15 +56,14 @@
     </Style>
 
     <Style x:Key="ProperTreeViewItemStyle"
+           BasedOn="{StaticResource {x:Type TreeViewItem}}"
            TargetType="{x:Type TreeViewItem}">
-        <Setter Property="Background" Value="#00FFFFFF" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
         <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}, AncestorLevel=1}, FallbackValue=Left}" />
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <StackPanel Style="{x:Null}" />
+                    <StackPanel />
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
@@ -74,8 +71,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TreeViewItem}">
-                    <Grid Style="{x:Null}"
-                          x:Name="Grid">
+                    <Grid x:Name="Grid">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition />
@@ -86,15 +82,13 @@
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}">
-                            <StackPanel Style="{x:Null}"
-                                        Margin="{Binding Indent, Converter={StaticResource IndentToMarginConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:ProperTreeViewItem}}}"
+                            <StackPanel Margin="{Binding Indent, Converter={StaticResource IndentToMarginConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:ProperTreeViewItem}}}"
                                         Orientation="Horizontal">
                                 <ToggleButton Style="{StaticResource TreeViewToggleStyle}"
                                               x:Name="Expander"
                                               ClickMode="Press"
                                               IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" />
-                                <ContentPresenter Style="{x:Null}"
-                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                   Content="{TemplateBinding Header}"
                                                   ContentSource="Header"
                                                   ContentTemplate="{TemplateBinding HeaderTemplate}"
@@ -102,8 +96,7 @@
                                                   DataContext="{x:Null}" />
                             </StackPanel>
                         </Border>
-                        <ItemsPresenter Style="{x:Null}"
-                                        x:Name="ItemsHost"
+                        <ItemsPresenter x:Name="ItemsHost"
                                         Grid.Row="1"
                                         Grid.Column="1"
                                         Grid.ColumnSpan="2" />
@@ -131,19 +124,19 @@
                             <Setter TargetName="PART_Header" Property="MinHeight" Value="19" />
                         </MultiTrigger>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
-                            <Setter TargetName="PART_Header" Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                            <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.HighlightForeground}" />
+                            <Setter TargetName="PART_Header" Property="Background" Value="{DynamicResource Snoop.Brushes.Default.Highlight}" />
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsSelected" Value="True" />
                                 <Condition Property="IsSelectionActive" Value="False" />
                             </MultiTrigger.Conditions>
-                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
-                            <Setter TargetName="PART_Header" Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
+                            <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.Foreground}" />
+                            <Setter TargetName="PART_Header" Property="Background" Value="{DynamicResource Snoop.Brushes.Default.Control}" />
                         </MultiTrigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                            <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.GrayForeground}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

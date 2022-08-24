@@ -4,8 +4,7 @@
     Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
     All other rights reserved.
 -->
-<windows:SnoopMainBaseWindow Style="{x:Null}"
-                             x:Class="Snoop.Windows.SnoopUI"
+<windows:SnoopMainBaseWindow x:Class="Snoop.Windows.SnoopUI"
                              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                              xmlns:behaviorsTab="clr-namespace:Snoop.Views.BehaviorsTab"
@@ -42,6 +41,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <Style x:Key="refreshButton"
+                   BasedOn="{StaticResource {x:Type Button}}"
                    TargetType="{x:Type Button}">
                 <Setter Property="Background">
                     <Setter.Value>
@@ -52,15 +52,14 @@
                         </LinearGradientBrush>
                     </Setter.Value>
                 </Setter>
-                <Setter Property="BorderBrush" Value="#FF003C74" />
+                <Setter Property="BorderBrush" Value="{DynamicResource Snoop.Brushes.Default.Highlight}" />
                 <Setter Property="FocusVisualStyle">
                     <Setter.Value>
                         <Style>
                             <Setter Property="Control.Template">
                                 <Setter.Value>
                                     <ControlTemplate>
-                                        <Rectangle Style="{x:Null}"
-                                                   Margin="3 3 3 3"
+                                        <Rectangle Margin="3 3 3 3"
                                                    SnapsToDevicePixels="True"
                                                    Stroke="#FF000000"
                                                    StrokeDashArray="1 2"
@@ -71,24 +70,22 @@
                         </Style>
                     </Setter.Value>
                 </Setter>
-                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+                <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.Foreground}" />
                 <Setter Property="HorizontalContentAlignment" Value="Center" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ButtonBase}">
-                            <Grid Style="{x:Null}"
-                                  Width="Auto"
+                            <Grid Width="Auto"
                                   Height="Auto">
-                                <Border Style="{x:Null}"
-                                        x:Name="border"
-                                        BorderBrush="#FF696969"
+                                <Border x:Name="border"
+                                        BorderBrush="{DynamicResource Snoop.Brushes.Default.ControlDarkDark}"
                                         BorderThickness="1 1 1 1"
                                         CornerRadius="4,4,4,4" />
                                 <ContentPresenter Margin="2 2 2 2" />
                             </Grid>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsEnabled" Value="False">
-                                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                                    <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.GrayForeground}" />
                                 </Trigger>
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter TargetName="border" Property="Background">
@@ -109,15 +106,13 @@
             </Style>
 
             <DataTemplate x:Key="stylelessTextBlockDataTemplate">
-                <TextBlock Style="{x:Null}"
-                           Text="{Binding}" />
+                <TextBlock Text="{Binding}" />
             </DataTemplate>
         </ResourceDictionary>
     </Window.Resources>
 
-    <DockPanel Style="{x:Null}">
-        <StackPanel Style="{x:Null}"
-                    DockPanel.Dock="Top"
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top"
                     Orientation="Horizontal">
             <Label Padding="2"
                    Content="Tree:"
@@ -168,7 +163,7 @@
             </Menu>
         </StackPanel>
 
-        <Grid Style="{x:Null}">
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="5*" />
@@ -188,16 +183,13 @@
                       IsEditable="True"
                       Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}">
                 <ComboBoxItem>
-                    <TextBlock Style="{x:Null}"
-                               Text="Clear any filter applied to the tree view" />
+                    <TextBlock Text="Clear any filter applied to the tree view" />
                 </ComboBoxItem>
                 <ComboBoxItem>
-                    <TextBlock Style="{x:Null}"
-                               Text="Show only elements with binding errors" />
+                    <TextBlock Text="Show only elements with binding errors" />
                 </ComboBoxItem>
                 <ComboBox.ToolTip>
-                    <TextBlock Style="{x:Null}"
-                               Text="Enter text in the combo box to filter the tree view by name or type" />
+                    <TextBlock Text="Enter text in the combo box to filter the tree view by name or type" />
                 </ComboBox.ToolTip>
             </ComboBox>
 
@@ -211,8 +203,7 @@
                     Command="{x:Static windows:SnoopUI.RefreshCommand}">
                 <Image Source="{DynamicResource reloadDrawingImage}" />
                 <Button.ToolTip>
-                    <TextBlock Style="{x:Null}"
-                               Text="Refresh the tree view" />
+                    <TextBlock Text="Refresh the tree view" />
                 </Button.ToolTip>
             </Button>
 
@@ -229,22 +220,17 @@
                 <TreeView.Resources>
                     <HierarchicalDataTemplate DataType="{x:Type tree:TreeItem}"
                                               ItemsSource="{Binding Children}">
-                        <TextBlock Style="{x:Null}"
-                                   HorizontalAlignment="Stretch"
+                        <TextBlock HorizontalAlignment="Stretch"
                                    infrastructure:BringIntoViewBehavior.IsActive="{Binding IsSelected}"
                                    Background="Transparent"
-                                   Foreground="Black"
                                    Text="{Binding}" />
                     </HierarchicalDataTemplate>
-
-                    <!-- make the selected item be blue, even when not focused -->
-                    <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="LightBlue" options:Freeze="True" />
                 </TreeView.Resources>
 
                 <TreeView.ItemContainerStyle>
                     <Style BasedOn="{StaticResource ProperTreeViewItemStyle}"
                            TargetType="{x:Type controls:ProperTreeViewItem}">
-                        <Setter Property="Background" Value="{Binding TreeBackgroundBrush}" />
+                        <!-- <Setter Property="Background" Value="{Binding TreeBackgroundBrush}" /> -->
 
                         <Setter Property="ContextMenu">
                             <Setter.Value>
@@ -256,15 +242,14 @@
                         <Setter Property="ToolTip" Value="{Binding VisualBrush}" />
 
                         <Style.Resources>
-                            <Style TargetType="{x:Type ToolTip}">
+                            <Style BasedOn="{StaticResource {x:Type ToolTip}}"
+                                   TargetType="{x:Type ToolTip}">
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="{x:Type ToolTip}">
-                                            <Grid Style="{x:Null}"
-                                                  Width="200"
+                                            <Grid Width="200"
                                                   Height="200">
-                                                <Rectangle Style="{x:Null}"
-                                                           Margin="10"
+                                                <Rectangle Margin="10"
                                                            Fill="{TemplateBinding Content}"
                                                            RadiusX="10"
                                                            RadiusY="10" />
@@ -282,8 +267,7 @@
                 </TreeView.ItemContainerStyle>
 
                 <controls:ProperTreeView.ToolTip>
-                    <TextBlock Style="{x:Null}"
-                               Text="Hold down Ctrl + Shift and mouse over elements in the target app to select them." />
+                    <TextBlock Text="Hold down Ctrl + Shift and mouse over elements in the target app to select them." />
                 </controls:ProperTreeView.ToolTip>
             </controls:ProperTreeView>
 
@@ -304,15 +288,11 @@
                         Margin="2 2 2 0">
                 <TabItem>
                     <TabItem.Header>
-                        <TextBlock Style="{x:Null}"
-                                   Text="Properties">
+                        <TextBlock Text="Properties">
                             <TextBlock.ToolTip>
-                                <StackPanel Style="{x:Null}"
-                                            MaxWidth="300">
-                                    <TextBlock Style="{x:Null}"
-                                               Text="Properties View" />
-                                    <TextBlock Style="{x:Null}"
-                                               Text="Lists all the properties of the currently selected object. You can even edit these properties or right-click and then delve into them."
+                                <StackPanel MaxWidth="300">
+                                    <TextBlock Text="Properties View" />
+                                    <TextBlock Text="Lists all the properties of the currently selected object. You can even edit these properties or right-click and then delve into them."
                                                TextWrapping="Wrap" />
                                 </StackPanel>
                             </TextBlock.ToolTip>
@@ -325,15 +305,11 @@
 
                 <TabItem>
                     <TabItem.Header>
-                        <TextBlock Style="{x:Null}"
-                                   Text="Data Context">
+                        <TextBlock Text="Data Context">
                             <TextBlock.ToolTip>
-                                <StackPanel Style="{x:Null}"
-                                            MaxWidth="300">
-                                    <TextBlock Style="{x:Null}"
-                                               Text="Data Context View" />
-                                    <TextBlock Style="{x:Null}"
-                                               Text="Lists all the properties of the DataContext of the currently selected object. You can even edit these properties or right-click and then delve into them."
+                                <StackPanel MaxWidth="300">
+                                    <TextBlock Text="Data Context View" />
+                                    <TextBlock Text="Lists all the properties of the DataContext of the currently selected object. You can even edit these properties or right-click and then delve into them."
                                                TextWrapping="Wrap" />
                                 </StackPanel>
                             </TextBlock.ToolTip>
@@ -346,15 +322,11 @@
 
                 <TabItem>
                     <TabItem.Header>
-                        <TextBlock Style="{x:Null}"
-                                   Text="Events">
+                        <TextBlock Text="Events">
                             <TextBlock.ToolTip>
-                                <StackPanel Style="{x:Null}"
-                                            MaxWidth="300">
-                                    <TextBlock Style="{x:Null}"
-                                               Text="Events View" />
-                                    <TextBlock Style="{x:Null}"
-                                               Text="Lists all the all routed events in the application, so you can see how they route, and where and/or whether they are handled."
+                                <StackPanel MaxWidth="300">
+                                    <TextBlock Text="Events View" />
+                                    <TextBlock Text="Lists all the all routed events in the application, so you can see how they route, and where and/or whether they are handled."
                                                TextWrapping="Wrap" />
                                 </StackPanel>
                             </TextBlock.ToolTip>
@@ -366,15 +338,11 @@
 
                 <TabItem>
                     <TabItem.Header>
-                        <TextBlock Style="{x:Null}"
-                                   Text="Triggers">
+                        <TextBlock Text="Triggers">
                             <TextBlock.ToolTip>
-                                <StackPanel Style="{x:Null}"
-                                            MaxWidth="300">
-                                    <TextBlock Style="{x:Null}"
-                                               Text="Triggers View" />
-                                    <TextBlock Style="{x:Null}"
-                                               Text="Lists all triggers on currently selected object."
+                                <StackPanel MaxWidth="300">
+                                    <TextBlock Text="Triggers View" />
+                                    <TextBlock Text="Lists all triggers on currently selected object."
                                                TextWrapping="Wrap" />
                                 </StackPanel>
                             </TextBlock.ToolTip>
@@ -387,15 +355,11 @@
 
                 <TabItem>
                     <TabItem.Header>
-                        <TextBlock Style="{x:Null}"
-                                   Text="Behaviors">
+                        <TextBlock Text="Behaviors">
                             <TextBlock.ToolTip>
-                                <StackPanel Style="{x:Null}"
-                                            MaxWidth="300">
-                                    <TextBlock Style="{x:Null}"
-                                               Text="Behaviors View" />
-                                    <TextBlock Style="{x:Null}"
-                                               Text="Lists all behaviors on currently selected object."
+                                <StackPanel MaxWidth="300">
+                                    <TextBlock Text="Behaviors View" />
+                                    <TextBlock Text="Lists all behaviors on currently selected object."
                                                TextWrapping="Wrap" />
                                 </StackPanel>
                             </TextBlock.ToolTip>
@@ -408,15 +372,11 @@
 
                 <TabItem>
                     <TabItem.Header>
-                        <TextBlock Style="{x:Null}"
-                                   Text="Methods">
+                        <TextBlock Text="Methods">
                             <TextBlock.ToolTip>
-                                <StackPanel Style="{x:Null}"
-                                            MaxWidth="300">
-                                    <TextBlock Style="{x:Null}"
-                                               Text="Methods View" />
-                                    <TextBlock Style="{x:Null}"
-                                               Text="A rudimentary view that lets you call methods on the selected visual or the data context of the selected visual."
+                                <StackPanel MaxWidth="300">
+                                    <TextBlock Text="Methods View" />
+                                    <TextBlock Text="A rudimentary view that lets you call methods on the selected visual or the data context of the selected visual."
                                                TextWrapping="Wrap" />
                                 </StackPanel>
                             </TextBlock.ToolTip>
@@ -429,15 +389,11 @@
 
                 <TabItem Visibility="{Binding Converter={x:Static converters:IsPowerShellAvailableToVisibilityConverter.DefaultInstance}}">
                     <TabItem.Header>
-                        <TextBlock Style="{x:Null}"
-                                   Text="PowerShell">
+                        <TextBlock Text="PowerShell">
                             <TextBlock.ToolTip>
-                                <StackPanel Style="{x:Null}"
-                                            MaxWidth="300">
-                                    <TextBlock Style="{x:Null}"
-                                               Text="PowerShell View" />
-                                    <TextBlock Style="{x:Null}"
-                                               Text="A view which lets you script the Snooped app using PowerShell."
+                                <StackPanel MaxWidth="300">
+                                    <TextBlock Text="PowerShell View" />
+                                    <TextBlock Text="A view which lets you script the Snooped app using PowerShell."
                                                TextWrapping="Wrap" />
                                 </StackPanel>
                             </TextBlock.ToolTip>
@@ -449,15 +405,11 @@
 
                 <TabItem>
                     <TabItem.Header>
-                        <TextBlock Style="{x:Null}"
-                                   Text="Debug Listener">
+                        <TextBlock Text="Debug Listener">
                             <TextBlock.ToolTip>
-                                <StackPanel Style="{x:Null}"
-                                            MaxWidth="300">
-                                    <TextBlock Style="{x:Null}"
-                                               Text="Debug Listener" />
-                                    <TextBlock Style="{x:Null}"
-                                               Text="Shows and filters debug output from the application being Snooped."
+                                <StackPanel MaxWidth="300">
+                                    <TextBlock Text="Debug Listener" />
+                                    <TextBlock Text="Shows and filters debug output from the application being Snooped."
                                                TextWrapping="Wrap" />
                                 </StackPanel>
                             </TextBlock.ToolTip>
@@ -481,15 +433,11 @@
                         Margin="2 4 2 0">
                 <TabItem>
                     <TabItem.Header>
-                        <TextBlock Style="{x:Null}"
-                                   Text="{Binding TreeService.DiagnosticContext.DiagnosticItems.Count, StringFormat={}Diagnostics ({0})}">
+                        <TextBlock Text="{Binding TreeService.DiagnosticContext.DiagnosticItems.Count, StringFormat={}Diagnostics ({0})}">
                             <TextBlock.ToolTip>
-                                <StackPanel Style="{x:Null}"
-                                            MaxWidth="300">
-                                    <TextBlock Style="{x:Null}"
-                                               Text="Diagnostics" />
-                                    <TextBlock Style="{x:Null}"
-                                               Text="Lists all available diagnostics."
+                                <StackPanel MaxWidth="300">
+                                    <TextBlock Text="Diagnostics" />
+                                    <TextBlock Text="Lists all available diagnostics."
                                                TextWrapping="Wrap" />
                                 </StackPanel>
                             </TextBlock.ToolTip>
@@ -501,15 +449,11 @@
 
                 <TabItem>
                     <TabItem.Header>
-                        <TextBlock Style="{x:Null}"
-                                   Text="Preview">
+                        <TextBlock Text="Preview">
                             <TextBlock.ToolTip>
-                                <StackPanel Style="{x:Null}"
-                                            MaxWidth="300">
-                                    <TextBlock Style="{x:Null}"
-                                               Text="Preview" />
-                                    <TextBlock Style="{x:Null}"
-                                               Text="Previews the currently selected element."
+                                <StackPanel MaxWidth="300">
+                                    <TextBlock Text="Preview" />
+                                    <TextBlock Text="Previews the currently selected element."
                                                TextWrapping="Wrap" />
                                 </StackPanel>
                             </TextBlock.ToolTip>
@@ -522,55 +466,41 @@
             </TabControl>
 
             <!-- StatusBar -->
-            <StatusBar Style="{x:Null}"
-                       Grid.Row="3"
+            <StatusBar Grid.Row="3"
                        Grid.Column="0"
                        Grid.ColumnSpan="2">
-                <StackPanel Style="{x:Null}"
-                            Orientation="Horizontal">
-                    <StackPanel Style="{x:Null}"
-                                Orientation="Horizontal">
-                        <TextBlock Style="{x:Null}"
-                                   Text="Keyboard.FocusedElement:" />
-                        <TextBlock Style="{x:Null}"
-                                   Margin="3 0 0 0">
-                            <windows:NoFocusHyperlink Command="{x:Static windows:SnoopUI.SelectFocusCommand}"
-                                                      CommandParameter="{Binding CurrentFocus}"
-                                                      Focusable="False">
-                                <TextBlock Style="{x:Null}"
-                                           Text="{Binding CurrentFocus, Converter={x:Static converters:ObjectToStringConverter.Instance}}" />
-                            </windows:NoFocusHyperlink>
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Keyboard.FocusedElement:" />
+                        <TextBlock Margin="3 0 0 0">
+                            <controls:NoFocusHyperlink Command="{x:Static windows:SnoopUI.SelectFocusCommand}"
+                                                       CommandParameter="{Binding CurrentFocus}"
+                                                       Focusable="False">
+                                <TextBlock Text="{Binding CurrentFocus, Converter={x:Static converters:ObjectToStringConverter.Instance}}" />
+                            </controls:NoFocusHyperlink>
                         </TextBlock>
-                        <TextBlock Style="{x:Null}"
-                                   Text="; " />
+                        <TextBlock Text="; " />
                         <StackPanel.ToolTip>
-                            <StackPanel Style="{x:Null}">
-                                <TextBlock Style="{x:Null}"
-                                           Text="This is the object that has keyboard focus." />
-                                <TextBlock Style="{x:Null}"
-                                           Text="Click the link to select this object." />
+                            <StackPanel>
+                                <TextBlock Text="This is the object that has keyboard focus." />
+                                <TextBlock Text="Click the link to select this object." />
                             </StackPanel>
                         </StackPanel.ToolTip>
                     </StackPanel>
 
-                    <StackPanel Style="{x:Null}"
-                                Orientation="Horizontal">
-                        <TextBlock Style="{x:Null}"
-                                   Text="Current FocusScope:" />
-                        <TextBlock Style="{x:Null}"
-                                   Margin="3 0 0 0">
-                            <windows:NoFocusHyperlink Command="{x:Static windows:SnoopUI.SelectFocusScopeCommand}"
-                                                      CommandParameter="{Binding CurrentFocusScope}"
-                                                      Focusable="False">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Current FocusScope:" />
+                        <TextBlock Margin="3 0 0 0">
+                            <controls:NoFocusHyperlink Command="{x:Static windows:SnoopUI.SelectFocusScopeCommand}"
+                                                       CommandParameter="{Binding CurrentFocusScope}"
+                                                       Focusable="False">
                                 <TextBlock Text="{Binding CurrentFocusScope, Converter={x:Static converters:ObjectToStringConverter.Instance}}" />
-                            </windows:NoFocusHyperlink>
+                            </controls:NoFocusHyperlink>
                         </TextBlock>
                         <StackPanel.ToolTip>
-                            <StackPanel Style="{x:Null}">
-                                <TextBlock Style="{x:Null}"
-                                           Text="This is the object that is the root of the current focus scope." />
-                                <TextBlock Style="{x:Null}"
-                                           Text="Click the link to select this object." />
+                            <StackPanel>
+                                <TextBlock Text="This is the object that is the root of the current focus scope." />
+                                <TextBlock Text="Click the link to select this object." />
                             </StackPanel>
                         </StackPanel.ToolTip>
                     </StackPanel>

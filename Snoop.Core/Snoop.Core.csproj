@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <TargetFrameworks>net5.0-windows;netcoreapp3.1;netcoreapp3.0;$(MinTargetFramework)</TargetFrameworks>
+    <TargetFrameworks>net5.0-windows;netcoreapp3.1;$(MinTargetFramework)</TargetFrameworks>
 
     <RootNamespace>Snoop</RootNamespace>
 
@@ -20,13 +20,12 @@
     <_WpfCommonNetFxReference Remove="System.Windows.Controls.Ribbon" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == '$(MinTargetFramework)'">
-    <Reference Include="System.Configuration" />
-    <PackageReference Include="microsoft.powershell.3.referenceassemblies" PrivateAssets="All" />
-  </ItemGroup>
+  <ItemGroup Label="PowerShell">
+    <Reference Include="System.Configuration" Condition="'$(TargetFramework)' == '$(MinTargetFramework)'" />
+    <PackageReference Include="microsoft.powershell.3.referenceassemblies" PrivateAssets="All" Condition="'$(TargetFramework)' == '$(MinTargetFramework)'" />
 
-  <ItemGroup Condition="'$(TargetFramework)' != '$(MinTargetFramework)'">
-    <PackageReference Include="System.Management.Automation" PrivateAssets="All" />
+    <PackageReference Include="System.Management.Automation" PrivateAssets="All" Condition="'$(TargetFramework)' == 'netcoreapp3.1'" />
+    <PackageReference Include="System.Management.Automation" PrivateAssets="All" Condition="'$(TargetFramework)' == 'net5.0-windows'" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net5.0-windows'">

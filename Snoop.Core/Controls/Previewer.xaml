@@ -57,8 +57,7 @@
                                 <GradientStop Color="#FFC6C5D7" Offset="1" />
                             </LinearGradientBrush>
                         </Border.BorderBrush>
-                        <ContentPresenter Style="{x:Null}"
-                                          x:Name="ContentPresenter"
+                        <ContentPresenter x:Name="ContentPresenter"
                                           Margin="1 1 1 1"
                                           Content="{TemplateBinding Content}"
                                           ContentTemplate="{TemplateBinding ContentTemplate}"
@@ -110,7 +109,7 @@
                     <Trigger Property="IsEnabled" Value="False">
                         <Setter Property="Background" Value="#77FFFFFF" />
                         <Setter Property="BorderBrush" Value="#44000000" />
-                        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                        <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.GrayForeground}" />
                         <Setter TargetName="Border1" Property="BorderBrush">
                             <Setter.Value>
                                 <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
@@ -150,8 +149,7 @@
                                 <GradientStop Color="#FFC6C5D7" Offset="1" />
                             </LinearGradientBrush>
                         </Border.BorderBrush>
-                        <ContentPresenter Style="{x:Null}"
-                                          x:Name="ContentPresenter"
+                        <ContentPresenter x:Name="ContentPresenter"
                                           Margin="1 1 1 1"
                                           Content="{TemplateBinding Content}"
                                           ContentTemplate="{TemplateBinding ContentTemplate}"
@@ -203,7 +201,7 @@
                     <Trigger Property="IsEnabled" Value="False">
                         <Setter Property="Background" Value="#77FFFFFF" />
                         <Setter Property="BorderBrush" Value="#44000000" />
-                        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                        <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.GrayForeground}" />
                         <Setter TargetName="Border1" Property="BorderBrush">
                             <Setter.Value>
                                 <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
@@ -245,8 +243,7 @@
                                 <GradientStop Color="#FFC6C5D7" Offset="1" />
                             </LinearGradientBrush>
                         </Border.BorderBrush>
-                        <ContentPresenter Style="{x:Null}"
-                                          x:Name="ContentPresenter"
+                        <ContentPresenter x:Name="ContentPresenter"
                                           Margin="1 1 1 1"
                                           Content="{TemplateBinding Content}"
                                           ContentTemplate="{TemplateBinding ContentTemplate}"
@@ -288,7 +285,7 @@
                     <Trigger Property="IsEnabled" Value="False">
                         <Setter Property="Background" Value="#77FFFFFF" />
                         <Setter Property="BorderBrush" Value="#44000000" />
-                        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                        <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.GrayForeground}" />
                         <Setter TargetName="Border1" Property="BorderBrush">
                             <Setter.Value>
                                 <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
@@ -314,15 +311,12 @@
                 VerticalAlignment="Bottom"
                 Command="{x:Static controls:Previewer.MagnifyCommand}"
                 Template="{DynamicResource ButtonLeft}">
-            <Image Style="{x:Null}"
-                   x:Name="Image"
+            <Image x:Name="Image"
                    Source="{DynamicResource magnifyingGlassDrawingImage}" />
             <Button.ToolTip>
-                <StackPanel Style="{x:Null}">
-                    <TextBlock Style="{x:Null}"
-                               Text="Bring up the Magnify window on" />
-                    <TextBlock Style="{x:Null}"
-                               Text="the currently selected object." />
+                <StackPanel>
+                    <TextBlock Text="Bring up the Magnify window on" />
+                    <TextBlock Text="the currently selected object." />
                 </StackPanel>
             </Button.ToolTip>
         </Button>
@@ -334,14 +328,11 @@
                       VerticalAlignment="Bottom"
                       IsChecked="{Binding IsActive}"
                       Template="{DynamicResource ButtonMiddle}">
-            <Image Style="{x:Null}"
-                   Source="{DynamicResource powerDrawingImage}" />
+            <Image Source="{DynamicResource powerDrawingImage}" />
             <ToggleButton.ToolTip>
-                <StackPanel Style="{x:Null}">
-                    <TextBlock Style="{x:Null}"
-                               Text="Enable/disable preview area (i.e. the" />
-                    <TextBlock Style="{x:Null}"
-                               Text="display of the currently selected object)." />
+                <StackPanel>
+                    <TextBlock Text="Enable/disable preview area (i.e. the" />
+                    <TextBlock Text="display of the currently selected object)." />
                 </StackPanel>
             </ToggleButton.ToolTip>
         </ToggleButton>
@@ -352,12 +343,10 @@
                 VerticalAlignment="Bottom"
                 Command="{x:Static controls:Previewer.ScreenshotCommand}"
                 Template="{DynamicResource ButtonRight}">
-            <Image Style="{x:Null}"
-                   Margin="1"
+            <Image Margin="1"
                    Source="{DynamicResource cameraDrawingImage}" />
             <Button.ToolTip>
-                <TextBlock Style="{x:Null}"
-                           Text="Save the current preview to a file." />
+                <TextBlock Text="Save the current preview to a file." />
             </Button.ToolTip>
         </Button>
     </Grid>

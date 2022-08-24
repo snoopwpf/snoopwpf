@@ -11,13 +11,14 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using Snoop.AttachedProperties;
+using Snoop.Core;
 
 /// <summary>
 ///     This service allows Snoop to mark certain visuals as visual tree roots of its own UI.
 /// </summary>
 public static class SnoopPartsRegistry
 {
-    private static readonly List<WeakReference> registeredSnoopVisualTreeRoots = new();
+    private static readonly List<WeakReference<Visual>> registeredSnoopVisualTreeRoots = new();
 
     public static bool IsSnoopingSnoop { get; set; }
 
@@ -41,13 +42,11 @@ public static class SnoopPartsRegistry
 
         foreach (var registeredSnoopVisual in registeredSnoopVisualTreeRoots.ToList())
         {
-            if (registeredSnoopVisual.IsAlive == false)
+            if (registeredSnoopVisual.TryGetTarget(out var snoopVisual) == false)
             {
                 registeredSnoopVisualTreeRoots.Remove(registeredSnoopVisual);
                 continue;
             }
-
-            var snoopVisual = (Visual?)registeredSnoopVisual.Target;
 
             if (snoopVisual is null)
             {
@@ -69,9 +68,11 @@ public static class SnoopPartsRegistry
     /// </summary>
     internal static void AddSnoopVisualTreeRoot(Visual root)
     {
-        if (registeredSnoopVisualTreeRoots.Any(x => x.IsAlive && ReferenceEquals(x.Target, root)) == false)
+        if (registeredSnoopVisualTreeRoots.Any(x => x.TryGetTarget(out var target) && ReferenceEquals(target, root)) == false)
         {
-            registeredSnoopVisualTreeRoots.Add(new WeakReference(root));
+            registeredSnoopVisualTreeRoots.Add(new(root));
+
+            //ThemeManager.Current.ApplyTheme(Settings.Default.ThemeMode, root);
         }
     }
 
@@ -80,11 +81,22 @@ public static class SnoopPartsRegistry
     /// </summary>
     internal static void RemoveSnoopVisualTreeRoot(Visual root)
     {
-        var toRemove = registeredSnoopVisualTreeRoots.FirstOrDefault(x => x.IsAlive && ReferenceEquals(x.Target, root));
+        var toRemove = registeredSnoopVisualTreeRoots.FirstOrDefault(x => x.TryGetTarget(out var target) && ReferenceEquals(target, root));
 
         if (toRemove is not null)
         {
             registeredSnoopVisualTreeRoots.Remove(toRemove);
+        }
+    }
+
+    internal static IEnumerable<Visual> GetSnoopVisualTreeRoots()
+    {
+        foreach (var weakReference in registeredSnoopVisualTreeRoots)
+        {
+            if (weakReference.TryGetTarget(out var target))
+            {
+                yield return target;
+            }
         }
     }
 }

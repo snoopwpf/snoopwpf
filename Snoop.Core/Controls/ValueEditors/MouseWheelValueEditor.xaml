@@ -16,6 +16,7 @@
              mc:Ignorable="d">
     <UserControl.Resources>
         <Style x:Key="MouseWheelText"
+               BasedOn="{StaticResource {x:Type TextBlock}}"
                TargetType="{x:Type TextBlock}">
             <!--<Setter Property="local:PropertyEditor.SupportMouseWheel" Value="True"/>-->
             <Setter Property="FontSize" Value="12" />
@@ -36,8 +37,7 @@
 
         <DataTemplate x:Key="CustomEditThickness"
                       DataType="{x:Type Thickness}">
-            <StackPanel Style="{x:Null}"
-                        d:DataContext="{d:DesignInstance infrastructure:PropertyInformation}"
+            <StackPanel d:DataContext="{d:DesignInstance infrastructure:PropertyInformation}"
                         Orientation="Horizontal">
                 <TextBlock Style="{StaticResource MouseWheelText}"
                            Tag="1"
@@ -56,8 +56,7 @@
 
         <DataTemplate x:Key="CustomEditBrush"
                       DataType="{x:Type Brush}">
-            <StackPanel Style="{x:Null}"
-                        d:DataContext="{d:DesignInstance infrastructure:PropertyInformation}"
+            <StackPanel d:DataContext="{d:DesignInstance infrastructure:PropertyInformation}"
                         Orientation="Horizontal">
                 <TextBlock Style="{StaticResource MouseWheelText}"
                            Tag="1"
@@ -81,7 +80,8 @@
                     d:DataContext="{d:DesignInstance infrastructure:PropertyInformation}"
                     Content="{Binding}">
         <ContentControl.Style>
-            <Style TargetType="{x:Type ContentControl}">
+            <Style BasedOn="{StaticResource {x:Type ContentControl}}"
+                   TargetType="{x:Type ContentControl}">
                 <!--
                     ugh! couldn't get a ContentControl binding to Value and using implicit DataTemplates. Keep getting error
                     about element is already in the visual tree.

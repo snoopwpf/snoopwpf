@@ -7,6 +7,7 @@ namespace Snoop;
 
 using System;
 using System.Windows;
+using Snoop.Windows;
 
 public partial class App
 {
@@ -21,7 +22,16 @@ public partial class App
         base.OnStartup(e);
 
         this.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri($"pack://application:,,,/Snoop.Core;component/Icons.xaml") });
-        this.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri($"pack://application:,,,/Snoop.Core;component/Controls/ValueEditors/EditorTemplates.xaml") });
+
+#if NEVER
+        this.RunInDispatcherAsync(this.SnoopSelf, DispatcherPriority.ApplicationIdle);
+#endif
+    }
+
+    private void SnoopSelf()
+    {
+        var ui = new SnoopUI().Inspect(this.MainWindow);
+        ui.Show();
     }
 
     private void Application_Exit(object sender, ExitEventArgs e)

@@ -4,7 +4,9 @@
 
 - ### Breaking changes
 
-  - Dropped support for all .NET versions prior to .NET 4.5.2
+  - Dropped support for all .NET Framework versions prior to .NET 4.5.2
+  - Dropped support for .NET 3.0
+  - Added support for .NET versions > 6.0 (by not explicitly blocking versions greater than 6.0)
   - [#316](../../issues/316) - Improved settings management and storage  
     Settings do not rely on `System.Configuration` anymore.  
     The new system allows sharing of settings between different snooped applications.  
@@ -22,6 +24,7 @@
 
   - Editing `Color?` and `Enum?` values works now
   - Improved resource lookup (used to get resource keys from resources)
+  - Added dark theme
   - [#283](../../issues/283) - [Feature Request] Be able to import filters or make them available across applications. (solved by [#316](../../issues/316))
   - [#314](../../issues/314) - Hide properties from Snoop?
   - [#320](../../issues/320) - System resources are not shown in the tree

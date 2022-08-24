@@ -86,8 +86,8 @@
 
         <Style x:Key="windowStyle"
                TargetType="{x:Type Window}">
-            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
-            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" />
+            <Setter Property="Background" Value="{DynamicResource Snoop.Brushes.Default.Background}" />
+            <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.Foreground}" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Window}">
@@ -180,42 +180,33 @@
                     </PointAnimationUsingKeyFrames>
                 </Storyboard>
             </ControlTemplate.Resources>
-            <Grid Style="{x:Null}">
+            <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Style="{x:Null}" />
-                    <ColumnDefinition Style="{x:Null}"
-                                      Width="20" />
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="20" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Style="{x:Null}"
-                                   Height="0.486*" />
-                    <RowDefinition Style="{x:Null}"
-                                   Height="0.514*" />
+                    <RowDefinition Height="0.486*" />
+                    <RowDefinition Height="0.514*" />
                 </Grid.RowDefinitions>
-                <Rectangle Style="{x:Null}"
-                           x:Name="Rectangle"
+                <Rectangle x:Name="Rectangle"
                            Grid.RowSpan="2"
                            Grid.ColumnSpan="2"
                            Width="Auto"
                            Height="Auto"
                            HorizontalAlignment="Stretch"
                            VerticalAlignment="Stretch"
+                           Fill="{DynamicResource MetalGrad}"
                            RadiusX="4"
                            RadiusY="4"
                            Stroke="{DynamicResource DarkBlue}"
-                           StrokeThickness="1">
-                    <Rectangle.Fill>
-                        <DynamicResource ResourceKey="MetalGrad" />
-                    </Rectangle.Fill>
-                </Rectangle>
-                <Border Style="{x:Null}"
-                        Grid.RowSpan="2"
+                           StrokeThickness="1" />
+                <Border Grid.RowSpan="2"
                         Width="Auto"
                         HorizontalAlignment="Stretch"
                         Background="{DynamicResource DarkBlue}"
                         CornerRadius="4,0,0,4" />
-                <Rectangle Style="{x:Null}"
-                           x:Name="rectangle"
+                <Rectangle x:Name="rectangle"
                            Grid.RowSpan="2"
                            Width="Auto"
                            Height="Auto"
@@ -234,12 +225,10 @@
                         </LinearGradientBrush>
                     </Rectangle.Fill>
                 </Rectangle>
-                <Border Style="{x:Null}"
-                        Margin="1 1 1 0"
+                <Border Margin="1 1 1 0"
                         Background="{DynamicResource ShineBrush1}"
                         CornerRadius="3,0,0,3" />
-                <Path Style="{x:Null}"
-                      x:Name="path"
+                <Path x:Name="path"
                       Grid.RowSpan="2"
                       Grid.Column="1"
                       Width="12"
@@ -293,7 +282,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ComboBox}">
-                        <Grid Style="{x:Null}">
+                        <Grid>
                             <!-- The ToggleButton is databound to the ComboBox itself to toggle IsDropDownOpen -->
                             <ToggleButton x:Name="ToggleButton"
                                           Grid.Column="2"
@@ -302,8 +291,7 @@
                                           Focusable="false"
                                           IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                                           Template="{DynamicResource SimpleComboBoxToggleButtonTemplate}" />
-                            <ContentPresenter Style="{x:Null}"
-                                              x:Name="ContentSite"
+                            <ContentPresenter x:Name="ContentSite"
                                               Margin="3 3 23 3"
                                               HorizontalAlignment="Left"
                                               VerticalAlignment="Center"
@@ -313,8 +301,7 @@
                                               IsHitTestVisible="False" />
 
                             <!-- The TextBox must be named PART_EditableTextBox or ComboBox will not recognize it -->
-                            <TextBox Style="{x:Null}"
-                                     x:Name="PART_EditableTextBox"
+                            <TextBox x:Name="PART_EditableTextBox"
                                      Margin="3 3 23 3"
                                      HorizontalAlignment="Left"
                                      VerticalAlignment="Center"
@@ -328,20 +315,17 @@
                                      Visibility="Hidden" />
 
                             <!-- The Popup shows the list of items in the ComboBox. IsOpen is databound to IsDropDownOpen which is toggled via the ComboBoxToggleButton -->
-                            <Popup Style="{x:Null}"
-                                   x:Name="Popup"
+                            <Popup x:Name="Popup"
                                    AllowsTransparency="True"
                                    Focusable="False"
                                    IsOpen="{TemplateBinding IsDropDownOpen}"
                                    Placement="Bottom"
                                    PopupAnimation="Slide">
-                                <Grid Style="{x:Null}"
-                                      x:Name="DropDown"
+                                <Grid x:Name="DropDown"
                                       MinWidth="{TemplateBinding ActualWidth}"
                                       MaxHeight="{TemplateBinding MaxDropDownHeight}"
                                       SnapsToDevicePixels="True">
-                                    <Border Style="{x:Null}"
-                                            x:Name="DropDownBorder"
+                                    <Border x:Name="DropDownBorder"
                                             BorderBrush="{x:Null}"
                                             BorderThickness="1">
                                         <Border.Background>
@@ -361,8 +345,7 @@
                                                   VerticalScrollBarVisibility="Auto">
 
                                         <!-- The StackPanel is used to display the children by setting IsItemsHost to be True -->
-                                        <StackPanel Style="{x:Null}"
-                                                    IsItemsHost="True"
+                                        <StackPanel IsItemsHost="True"
                                                     KeyboardNavigation.DirectionalNavigation="Contained" />
 
                                     </ScrollViewer>
@@ -448,7 +431,6 @@
                   DropDownOpened="HandleWindowsComboBox_OnDropDownOpened"
                   FocusVisualStyle="{DynamicResource simpleComboBoxFocusStyle}"
                   FontSize="10.667"
-                  Foreground="#FFFFFFFF"
                   Grid.IsSharedSizeScope="True"
                   IsSynchronizedWithCurrentItem="True"
                   ItemsSource="{Binding WindowInfos}"
@@ -457,7 +439,7 @@
                 <!-- Drop down list item template -->
                 <DataTemplate x:Key="DropDownItemTemplate"
                               DataType="{x:Type snoop:WindowInfo}">
-                    <Grid Style="{x:Null}">
+                    <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"
                                               SharedSizeGroup="Column1" />
@@ -468,12 +450,10 @@
                             <ColumnDefinition Width="Auto"
                                               SharedSizeGroup="Column4" />
                         </Grid.ColumnDefinitions>
-                        <Border Style="{x:Null}"
-                                Grid.Column="0"
+                        <Border Grid.Column="0"
                                 Width="16"
                                 Height="16">
-                            <Image Style="{x:Null}"
-                                   Source="{Binding Source={x:Static infrastructure:SystemIcon.Shield}, Converter={x:Static converters:SystemIconToImageSourceConverter.Instance}, ConverterParameter=16, Mode=OneTime}"
+                            <Image Source="{Binding Source={x:Static infrastructure:SystemIcon.Shield}, Converter={x:Static converters:SystemIconToImageSourceConverter.Instance}, ConverterParameter=16, Mode=OneTime}"
                                    Visibility="{Binding OwningProcessInfo.IsProcessElevated, Converter={x:Static snoopwpf:BoolToVisibilityConverter.DefaultInstance}}" />
                         </Border>
 
@@ -491,12 +471,10 @@
                                 </Style>
                             </TextBlock.Style>
                             <TextBlock.ToolTip>
-                                <TextBlock Style="{x:Null}">
-                                    <Run Style="{x:Null}"
-                                         Text="{Binding OwningProcessId, Mode=OneTime, StringFormat={}PID: &#x2019;{0}&#x2019;}" />
-                                    <LineBreak Style="{x:Null}" />
-                                    <Run Style="{x:Null}"
-                                         Text="Right mouse button click to sort" />
+                                <TextBlock>
+                                    <Run Text="{Binding OwningProcessId, Mode=OneTime, StringFormat={}PID: &#x2019;{0}&#x2019;}" />
+                                    <LineBreak />
+                                    <Run Text="Right mouse button click to sort" />
                                 </TextBlock>
                             </TextBlock.ToolTip>
                         </TextBlock>
@@ -515,12 +493,10 @@
                                 </Style>
                             </TextBlock.Style>
                             <TextBlock.ToolTip>
-                                <TextBlock Style="{x:Null}">
-                                    <Run Style="{x:Null}"
-                                         Text="{Binding Path=ProcessName, Mode=OneTime, StringFormat={}Process name: &#x2019;{0}&#x2019;}" />
-                                    <LineBreak Style="{x:Null}" />
-                                    <Run Style="{x:Null}"
-                                         Text="Right mouse button click to sort" />
+                                <TextBlock>
+                                    <Run Text="{Binding Path=ProcessName, Mode=OneTime, StringFormat={}Process name: &#x2019;{0}&#x2019;}" />
+                                    <LineBreak />
+                                    <Run Text="Right mouse button click to sort" />
                                 </TextBlock>
                             </TextBlock.ToolTip>
                         </TextBlock>
@@ -538,12 +514,10 @@
                                 </Style>
                             </TextBlock.Style>
                             <TextBlock.ToolTip>
-                                <TextBlock Style="{x:Null}">
-                                    <Run Style="{x:Null}"
-                                         Text="{Binding Path=WindowTitle, Mode=OneTime, StringFormat={}Window title: &#x2019;{0}&#x2019;}" />
-                                    <LineBreak Style="{x:Null}" />
-                                    <Run Style="{x:Null}"
-                                         Text="Right mouse button click to sort" />
+                                <TextBlock>
+                                    <Run Text="{Binding Path=WindowTitle, Mode=OneTime, StringFormat={}Window title: &#x2019;{0}&#x2019;}" />
+                                    <LineBreak />
+                                    <Run Text="Right mouse button click to sort" />
                                 </TextBlock>
                             </TextBlock.ToolTip>
                         </TextBlock>
@@ -558,16 +532,13 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Border Style="{x:Null}"
-                                Grid.Column="0"
+                        <Border Grid.Column="0"
                                 Width="16"
                                 Height="16">
-                            <Image Style="{x:Null}"
-                                   Source="{Binding Source={x:Static infrastructure:SystemIcon.Shield}, Converter={x:Static converters:SystemIconToImageSourceConverter.Instance}, ConverterParameter=16}"
+                            <Image Source="{Binding Source={x:Static infrastructure:SystemIcon.Shield}, Converter={x:Static converters:SystemIconToImageSourceConverter.Instance}, ConverterParameter=16}"
                                    Visibility="{Binding OwningProcessInfo.IsProcessElevated, Converter={x:Static snoopwpf:BoolToVisibilityConverter.DefaultInstance}}" />
                         </Border>
-                        <TextBlock Style="{x:Null}"
-                                   Grid.Column="1">
+                        <TextBlock Grid.Column="1">
                             <TextBlock.Text>
                                 <MultiBinding StringFormat="{}[{0}] - {1} - {2}">
                                     <MultiBinding.Bindings>
@@ -584,8 +555,7 @@
             <ComboBox.ItemTemplate>
                 <!-- Due to design limitations we can not just set SelectionBoxItemTemplate and be happy -->
                 <DataTemplate DataType="snoop:WindowInfo">
-                    <ContentPresenter Style="{x:Null}"
-                                      x:Name="Presenter"
+                    <ContentPresenter x:Name="Presenter"
                                       Content="{Binding}"
                                       ContentTemplate="{StaticResource DropDownItemTemplate}" />
                     <DataTemplate.Triggers>
@@ -1035,8 +1005,7 @@
                 Margin="0 0 8 0"
                 Command="{x:Static snoop:AppChooser.SettingsCommand}"
                 ToolTip="Change Snoop settings.">
-            <Image Style="{x:Null}"
-                   Source="{Binding Source={x:Static infrastructure:SystemIcon.Settings}, Converter={x:Static converters:SystemIconToImageSourceConverter.Instance}, ConverterParameter=16}" />
+            <Image Source="{Binding Source={x:Static infrastructure:SystemIcon.Settings}, Converter={x:Static converters:SystemIconToImageSourceConverter.Instance}, ConverterParameter=16}" />
         </Button>
 
         <!-- minimizeButton -->

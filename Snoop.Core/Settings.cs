@@ -21,6 +21,7 @@ public sealed class Settings : SettingsBase<Settings>
     private bool showDefaults = true;
     private bool showPreviewer;
     private bool isDefaultSettingsFile;
+    private ThemeMode themeMode;
 
     public Settings()
     {
@@ -117,8 +118,20 @@ public sealed class Settings : SettingsBase<Settings>
         }
     }
 
+    public ThemeMode ThemeMode
+    {
+        get => this.themeMode;
+        set
+        {
+            this.themeMode = value;
+            this.OnPropertyChanged();
+            ThemeManager.Current.ApplyTheme(value);
+        }
+    }
+
     protected override void UpdateWith(Settings settings)
     {
+        this.ThemeMode = settings.ThemeMode;
         this.ShowDefaults = settings.ShowDefaults;
         this.ShowPreviewer = settings.ShowPreviewer;
         this.ClearAfterDelve = settings.ClearAfterDelve;
@@ -142,4 +155,12 @@ public sealed class Settings : SettingsBase<Settings>
             this.IsDefaultSettingsFile = Path.GetFileName(this.SettingsFile).Equals("DefaultSettings.xml", StringComparison.OrdinalIgnoreCase);
         }
     }
+}
+
+[PublicAPI]
+public enum ThemeMode
+{
+    Auto = 0,
+    Dark = 1,
+    Light = 2
 }

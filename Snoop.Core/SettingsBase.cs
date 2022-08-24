@@ -86,7 +86,7 @@ public abstract class SettingsBase<T> : INotifyPropertyChanged
             Directory.CreateDirectory(directory);
         }
 
-        using var stream = new FileStream(this.SettingsFile, FileMode.OpenOrCreate, FileAccess.Write);
+        using var stream = new FileStream(this.SettingsFile, FileMode.Create, FileAccess.Write);
         using var writer = new StreamWriter(stream, Encoding.UTF8);
         using var xmlWriter = XmlWriter.Create(writer, new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 });
         this.Serializer.Serialize(xmlWriter, this);

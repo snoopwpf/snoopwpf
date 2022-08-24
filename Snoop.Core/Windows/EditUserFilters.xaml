@@ -27,26 +27,22 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock Style="{x:Null}"
-                   Grid.Row="1"
+        <TextBlock Grid.Row="1"
                    Grid.Column="0"
                    VerticalAlignment="Center"
                    Text="Name:" />
-        <TextBox Style="{x:Null}"
-                 Grid.Row="1"
+        <TextBox Grid.Row="1"
                  Grid.Column="1"
                  VerticalAlignment="Center"
                  IsReadOnly="{Binding Path=SelectedItem.IsReadOnly, ElementName=filterSetList}"
                  IsReadOnlyCaretVisible="True"
                  Text="{Binding Path=SelectedItem.DisplayName, ElementName=filterSetList}" />
-        <TextBlock Style="{x:Null}"
-                   Grid.Row="2"
+        <TextBlock Grid.Row="2"
                    Grid.Column="0"
                    Margin="0 4 0 0"
                    VerticalAlignment="Center"
                    Text="Properties:" />
-        <TextBox Style="{x:Null}"
-                 Grid.Row="2"
+        <TextBox Grid.Row="2"
                  Grid.Column="1"
                  Margin="0 4 0 0"
                  VerticalAlignment="Center"
@@ -62,14 +58,12 @@
                  SelectionChanged="SelectionChangedHandler">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Style="{x:Null}"
-                               Text="{Binding DisplayName}" />
+                    <TextBlock Text="{Binding DisplayName}" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <StackPanel Style="{x:Null}"
-                    Grid.Row="3"
+        <StackPanel Grid.Row="3"
                     Grid.Column="1"
                     Grid.ColumnSpan="2"
                     Margin="0 10 5 5"
@@ -78,20 +72,17 @@
             <Button Width="75"
                     Click="OkHandler"
                     IsDefault="True">
-                <TextBlock Style="{x:Null}"
-                           Text="OK" />
+                <TextBlock Text="OK" />
             </Button>
             <Button Width="75"
                     Margin="5 0 0 0"
                     Click="CancelHandler"
                     IsCancel="True">
-                <TextBlock Style="{x:Null}"
-                           Text="Cancel" />
+                <TextBlock Text="Cancel" />
             </Button>
         </StackPanel>
 
-        <StackPanel Style="{x:Null}"
-                    Grid.Row="0"
+        <StackPanel Grid.Row="0"
                     Grid.Column="2"
                     Margin="5 0 5 0"
                     VerticalAlignment="Center">
@@ -99,8 +90,7 @@
                     Width="20"
                     Height="20"
                     Click="UpHandler">
-                <Image Style="{x:Null}"
-                       Margin="3"
+                <Image Margin="3"
                        Source="{DynamicResource upDrawingImage}" />
             </Button>
             <Button x:Name="MoveDown"
@@ -108,22 +98,19 @@
                     Height="20"
                     Margin="0 5 0 0"
                     Click="DownHandler">
-                <Image Style="{x:Null}"
-                       Margin="3"
+                <Image Margin="3"
                        Source="{DynamicResource downDrawingImage}" />
             </Button>
             <Button Width="50"
                     Margin="0 10 0 0"
                     Click="AddHandler">
-                <TextBlock Style="{x:Null}"
-                           Text="Add new" />
+                <TextBlock Text="Add new" />
             </Button>
             <Button x:Name="DeleteItem"
                     Width="50"
                     Margin="0 5 0 0"
                     Click="DeleteHandler">
-                <TextBlock Style="{x:Null}"
-                           Text="Delete" />
+                <TextBlock Text="Delete" />
             </Button>
         </StackPanel>
     </Grid>

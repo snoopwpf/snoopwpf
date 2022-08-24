@@ -37,14 +37,12 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <Border Style="{x:Null}"
-                        Grid.Column="0"
+                <Border Grid.Column="0"
                         Width="32"
                         Height="32"
                         Margin="0 0 2 0"
                         Visibility="{Binding OwningProcessInfo.IsProcessElevated, Converter={x:Static snoopwpf:BoolToVisibilityConverter.DefaultInstance}}">
-                    <Image Style="{x:Null}"
-                           Source="{Binding Source={x:Static infrastructure:SystemIcon.Shield}, Converter={x:Static converters:SystemIconToImageSourceConverter.Instance}, ConverterParameter=32}" />
+                    <Image Source="{Binding Source={x:Static infrastructure:SystemIcon.Shield}, Converter={x:Static converters:SystemIconToImageSourceConverter.Instance}, ConverterParameter=32}" />
                 </Border>
 
                 <Path Grid.Column="1"

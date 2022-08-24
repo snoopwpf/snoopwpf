@@ -3,20 +3,10 @@
         <PackageVersion Include="CommandLineParser" Version="2.9.1" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(TargetFramework)' == '$(MinTargetFramework)'">
-        <PackageVersion Include="microsoft.powershell.3.referenceassemblies" Version="1.0.0" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
-        <PackageVersion Include="System.Management.Automation" Version="6.2.3" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
-        <PackageVersion Include="System.Management.Automation" Version="7.0.0" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)' == 'net5.0-windows'">
-      <PackageVersion Include="System.Management.Automation" Version="7.1.0" />
+    <ItemGroup Label="PowerShell">
+        <PackageVersion Include="microsoft.powershell.3.referenceassemblies" Version="1.0.0" Condition="'$(TargetFramework)' == '$(MinTargetFramework)'" />
+        <PackageVersion Include="System.Management.Automation" Version="7.0.0" Condition="'$(TargetFramework)' == 'netcoreapp3.1'" />
+        <PackageVersion Include="System.Management.Automation" Version="7.1.0" Condition="'$(TargetFramework)' == 'net5.0-windows'" />
     </ItemGroup>
 
     <ItemGroup Label="Test">
