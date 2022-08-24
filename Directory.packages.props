@@ -15,7 +15,7 @@
 
       <PackageVersion Include="Verify.NUnit" Version="16.3.4" />
 
-      <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
+      <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.3.0" />
     </ItemGroup>
 
     <ItemGroup Label="Build">
