@@ -35,7 +35,6 @@ using static Nuke.Common.Tools.MSBuild.MSBuildTasks;
     InvokedTargets = new[] { nameof(CI) },
     AutoGenerate = false
 )]
-[CheckBuildProjectConfigurations]
 [UnsetVisualStudioEnvironmentVariables]
 class Build : NukeBuild
 {
