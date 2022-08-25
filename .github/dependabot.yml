@@ -15,9 +15,6 @@ updates:
   - dependency-name: Verify.NUnit
     versions:
     - "> 11.0.3"
-  - dependency-name: Microsoft.CodeAnalysis.CSharp
-    versions:
-    - 3.9.0
-  - dependency-name: NUnit
-    versions:
-    - 3.13.0
+  - dependency-name: CefSharp.Common.NETCore
+  - dependency-name: CefSharp.Wpf.NETCore
+  - dependency-name: Microsoft.Web.WebView2
