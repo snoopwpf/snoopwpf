@@ -40,7 +40,7 @@ public class ThemeManager
 
         var finalThemeMode = themeMode is ThemeMode.Auto
             ? AppsUseLightTheme() ? ThemeMode.Light : ThemeMode.Dark
-            : ThemeMode.Light;
+            : themeMode;
 
         var resourceDictionary = finalThemeMode is ThemeMode.Dark
             ? this.darkResourceDictionary
