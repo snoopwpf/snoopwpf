@@ -29,6 +29,7 @@
         </Grid.Resources>
 
         <ListView x:Name="ListView"
+                  Style="{StaticResource {x:Static GridView.GridViewStyleKey}}"
                   Grid.Row="0"
                   MinWidth="0"
                   MinHeight="0"
@@ -37,7 +38,7 @@
                   IsSynchronizedWithCurrentItem="True"
                   ItemsSource="{Binding ElementName=Control, Path=Properties}">
             <ListView.ItemContainerStyle>
-                <Style BasedOn="{StaticResource {x:Type ListViewItem}}"
+                <Style BasedOn="{StaticResource {x:Static GridView.GridViewItemContainerStyleKey}}"
                        TargetType="{x:Type ListViewItem}">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                     <Style.Triggers>
