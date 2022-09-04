@@ -161,6 +161,16 @@
                               Click="HandleSnoopSnoop_OnClick" />
                 </MenuItem>
             </Menu>
+            <StackPanel HorizontalAlignment="Right"
+                        Orientation="Horizontal">
+                <Label Padding="2"
+                       Content="Theme:"
+                       Target="{Binding ElementName=ThemeComboBox}" />
+                <ComboBox x:Name="ThemeComboBox"
+                          Padding="4 2"
+                          ItemsSource="{Binding Source={snoop:EnumBindingSource {x:Type core:ThemeMode}}}"
+                          SelectedItem="{Binding ThemeMode, Source={x:Static core:Settings.Default}, Mode=TwoWay}" />
+            </StackPanel>
         </StackPanel>
 
         <Grid>
