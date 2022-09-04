@@ -8,23 +8,11 @@ using Snoop.Data.Tree;
 
 public class DiagnosticItem : INotifyPropertyChanged
 {
-    public DiagnosticItem(DiagnosticProvider diagnosticProvider)
+    public DiagnosticItem(DiagnosticProvider diagnosticProvider, string? name = null, string? description = null, DiagnosticArea area = DiagnosticArea.Misc, DiagnosticLevel level = DiagnosticLevel.Info)
     {
         this.DiagnosticProvider = diagnosticProvider;
-        this.Name = string.Empty;
-        this.Description = string.Empty;
-    }
-
-    public DiagnosticItem(DiagnosticProvider diagnosticProvider, string name, string description)
-    {
-        this.DiagnosticProvider = diagnosticProvider;
-        this.Name = name;
-        this.Description = description;
-    }
-
-    public DiagnosticItem(DiagnosticProvider diagnosticProvider, string name, string description, DiagnosticArea area, DiagnosticLevel level)
-        : this(diagnosticProvider, name, description)
-    {
+        this.Name = name ?? diagnosticProvider.Name;
+        this.Description = description ?? diagnosticProvider.Description;
         this.Area = area;
         this.Level = level;
     }

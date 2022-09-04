@@ -151,7 +151,8 @@ public partial class DiagnosticsView : UserControl
 
             var newView = new ListCollectionView(control.DiagnosticItems)
             {
-                Filter = control.FilterDiagnosticItems
+                Filter = control.FilterDiagnosticItems,
+                SortDescriptions = { new SortDescription(nameof(DiagnosticItem.Level), ListSortDirection.Descending) }
             };
             control.DiagnosticsItemsView = newView;
         }

@@ -4,11 +4,14 @@ using System;
 using System.Windows;
 using System.Windows.Automation.Peers;
 using System.Windows.Media;
+using Snoop.Infrastructure.Diagnostics;
+using Snoop.Infrastructure.Diagnostics.Providers;
 using Snoop.Infrastructure.SelectionHighlight;
 
 public class AutomationPeerTreeItem : TreeItem
 {
     private IDisposable? selectionHighlight;
+    private DiagnosticItem? missingAdornerLayerDiagnosticItem;
 
     public AutomationPeerTreeItem(AutomationPeer target, TreeItem? parent, TreeService treeService)
         : base(target, parent, treeService)
@@ -49,10 +52,27 @@ public class AutomationPeerTreeItem : TreeItem
                 && this.selectionHighlight is null)
             {
                 this.selectionHighlight = SelectionHighlightFactory.CreateAndAttachSelectionHighlight(dependencyObject);
+
+                if (this.selectionHighlight is null
+                    && this.missingAdornerLayerDiagnosticItem is null)
+                {
+                    this.missingAdornerLayerDiagnosticItem = new DiagnosticItem(MissingAdornerLayerDiagnosticProvider.Instance, area: DiagnosticArea.Highlight, level: DiagnosticLevel.Critical)
+                    {
+                        TreeItem = this,
+                        Dispatcher = dependencyObject.Dispatcher,
+                        SourceObject = dependencyObject
+                    };
+                    this.TreeService.DiagnosticContext.DiagnosticItems.Add(this.missingAdornerLayerDiagnosticItem);
+                }
             }
-            else if (this.selectionHighlight is not null)
+            else
             {
-                (this.selectionHighlight as IDisposable)?.Dispose();
+                if (this.missingAdornerLayerDiagnosticItem is not null)
+                {
+                    this.TreeService.DiagnosticContext.DiagnosticItems.Remove(this.missingAdornerLayerDiagnosticItem);
+                }
+
+                this.selectionHighlight?.Dispose();
                 this.selectionHighlight = null;
             }
         }

@@ -1,4 +1,5 @@
-﻿namespace Snoop.Infrastructure;
+﻿// ReSharper disable once CheckNamespace
+namespace Snoop;
 
 using System;
 using System.Windows.Threading;

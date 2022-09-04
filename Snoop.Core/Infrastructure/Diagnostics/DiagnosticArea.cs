@@ -5,5 +5,7 @@ public enum DiagnosticArea
     Binding,
     Resource,
     Performance,
-    Maintainability
+    Maintainability,
+    Misc,
+    Highlight
 }

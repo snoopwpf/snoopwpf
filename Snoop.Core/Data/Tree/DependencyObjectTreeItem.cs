@@ -13,6 +13,8 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using Snoop.Infrastructure;
+using Snoop.Infrastructure.Diagnostics;
+using Snoop.Infrastructure.Diagnostics.Providers;
 using Snoop.Infrastructure.Helpers;
 using Snoop.Infrastructure.SelectionHighlight;
 
@@ -24,6 +26,7 @@ public class DependencyObjectTreeItem : ResourceContainerTreeItem
     private static readonly Attribute[] propertyFilterAttributes = { new PropertyFilterAttribute(PropertyFilterOptions.All) };
 
     private IDisposable? selectionHighlight;
+    private DiagnosticItem? missingAdornerLayerDiagnosticItem;
 
     public DependencyObjectTreeItem(DependencyObject target, TreeItem? parent, TreeService treeService)
         : base(target, parent, treeService)
@@ -153,9 +156,27 @@ public class DependencyObjectTreeItem : ResourceContainerTreeItem
                 && this.selectionHighlight is null)
             {
                 this.selectionHighlight = SelectionHighlightFactory.CreateAndAttachSelectionHighlight(dependencyObject);
+
+                if (this.selectionHighlight is null
+                    && this.missingAdornerLayerDiagnosticItem is null)
+                {
+                    this.missingAdornerLayerDiagnosticItem = new DiagnosticItem(MissingAdornerLayerDiagnosticProvider.Instance, area: DiagnosticArea.Highlight, level: DiagnosticLevel.Critical)
+                    {
+                        TreeItem = this,
+                        Dispatcher = dependencyObject.Dispatcher,
+                        SourceObject = dependencyObject
+                    };
+                    this.TreeService.DiagnosticContext.DiagnosticItems.Add(this.missingAdornerLayerDiagnosticItem);
+                }
             }
-            else if (this.selectionHighlight is not null)
+            else
             {
+                if (this.missingAdornerLayerDiagnosticItem is not null)
+                {
+                    this.TreeService.DiagnosticContext.DiagnosticItems.Remove(this.missingAdornerLayerDiagnosticItem);
+                }
+
+                this.missingAdornerLayerDiagnosticItem = null;
                 this.selectionHighlight?.Dispose();
                 this.selectionHighlight = null;
             }
