@@ -239,19 +239,7 @@ public class TreeItem : INotifyPropertyChanged, IDisposable
 
     protected virtual string GetName()
     {
-        var result = string.Empty;
-
-        if (this.Target is FrameworkElement targetFrameworkElement)
-        {
-            result = targetFrameworkElement.Name;
-
-            if (string.IsNullOrEmpty(result))
-            {
-                result = AutomationProperties.GetAutomationId(targetFrameworkElement);
-            }
-        }
-
-        return result;
+        return UIObjectNameHelper.GetName(this.Target as DependencyObject);
     }
 
     protected virtual void ReloadCore()
