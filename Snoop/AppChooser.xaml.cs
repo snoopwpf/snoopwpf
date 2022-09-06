@@ -133,7 +133,7 @@ public partial class AppChooser
 
     private static void KeyboardHook_LowLevelKeyUp(object sender, KeyEventArgs e)
     {
-        if (Settings.Default.GlobalHotKey?.Matches(null, e) == true)
+        if (Settings.Default?.GlobalHotKey?.Matches(null, e) == true)
         {
             var thread = new Thread(AttachToForegroundWindow)
             {
