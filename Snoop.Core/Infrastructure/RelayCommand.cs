@@ -11,45 +11,36 @@ using System.Windows.Input;
 
 public class RelayCommand : ICommand
 {
-    #region Fields
-
     private readonly Action<object?> execute;
     private readonly Predicate<object?>? canExecute;
 
-    #endregion // Fields
-
-    #region Constructors
-
-    public RelayCommand(Action<object?> execute)
-        : this(execute, null)
-    {
-    }
-
-    public RelayCommand(Action<object?> execute, Predicate<object?>? canExecute)
+    public RelayCommand(Action<object?> execute, Predicate<object?>? canExecute = null)
     {
         this.execute = execute ?? throw new ArgumentNullException(nameof(execute));
         this.canExecute = canExecute;
     }
-    #endregion // Constructors
-
-    #region ICommand Members
 
     [DebuggerStepThrough]
     public bool CanExecute(object? parameter)
     {
-        return this.canExecute is null ? true : this.canExecute(parameter);
+        return this.canExecute?.Invoke(parameter) ?? true;
     }
 
     public event EventHandler? CanExecuteChanged
     {
-        add { CommandManager.RequerySuggested += value; }
-        remove { CommandManager.RequerySuggested -= value; }
+        add
+        {
+            if (this.canExecute is not null)
+            {
+                CommandManager.RequerySuggested += value;
+            }
+        }
+
+        remove => CommandManager.RequerySuggested -= value;
     }
 
     public void Execute(object? parameter)
     {
         this.execute(parameter);
     }
-
-    #endregion // ICommand Members
 }
