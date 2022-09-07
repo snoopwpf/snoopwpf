@@ -3198,6 +3198,7 @@
         <Setter Property="KeyboardNavigation.TabNavigation" Value="None" />
         <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst" />
         <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
+        <Setter Property="SelectionBrush" Value="{DynamicResource Snoop.Brushes.Default.Highlight}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TextBoxBase}">
