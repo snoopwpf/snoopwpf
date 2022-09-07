@@ -15,6 +15,11 @@
              d:DesignWidth="300"
              mc:Ignorable="d">
     <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Snoop.Core;component/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
         <Style x:Key="MouseWheelText"
                BasedOn="{StaticResource {x:Type TextBlock}}"
                TargetType="{x:Type TextBlock}">
@@ -72,6 +77,7 @@
                            Text="{Binding Path=Value, Converter={x:Static converters:ArgbToPartsConverter.Default}, ConverterParameter=3}" />
             </StackPanel>
         </DataTemplate>
+            </ResourceDictionary>
     </UserControl.Resources>
 
     <!-- DataContext: PropertyInformation -->

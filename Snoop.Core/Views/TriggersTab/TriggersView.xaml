@@ -11,6 +11,10 @@
       mc:Ignorable="d">
     <Grid.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Snoop.Core;component/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
             <Style x:Key="Snoop.TriggerControlStyle"
                    BasedOn="{StaticResource {x:Type HeaderedContentControl}}"
                    TargetType="{x:Type HeaderedContentControl}">

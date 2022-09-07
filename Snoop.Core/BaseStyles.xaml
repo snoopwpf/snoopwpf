@@ -25,6 +25,7 @@
                     xmlns:options="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
                     xmlns:themes="clr-namespace:Snoop.Themes"
                     xmlns:system="clr-namespace:System;assembly=mscorlib"
+                    xmlns:controls="clr-namespace:Snoop.Controls"
                     mc:Ignorable="options d">
 
     <!-- <ResourceDictionary.MergedDictionaries> -->
@@ -1060,7 +1061,7 @@
         <Setter Property="Width" Value="18" />
     </Style>
 
-    <Style x:Key="{x:Type GridViewColumnHeader}"
+    <Style x:Key="GridViewColumnHeaderStyle"
            TargetType="{x:Type GridViewColumnHeader}">
         <Setter Property="Background" Value="{DynamicResource GridViewColumnHeaderBackground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource GridViewColumnHeaderBorderBackground}" />
@@ -1163,6 +1164,10 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+
+    <Style x:Key="{x:Type GridViewColumnHeader}"
+           TargetType="{x:Type GridViewColumnHeader}"
+           BasedOn="{StaticResource GridViewColumnHeaderStyle}" />
 
     <!-- GridView Style -->
     <Style x:Key="GridView.GridViewStyle"
@@ -3315,6 +3320,10 @@
     <Style x:Key="{x:Type TextBox}"
            BasedOn="{StaticResource {x:Type TextBoxBase}}"
            TargetType="{x:Type TextBox}" />
+
+    <Style x:Key="{x:Type controls:EditTextBox}"
+           BasedOn="{StaticResource {x:Type TextBoxBase}}"
+           TargetType="{x:Type controls:EditTextBox}" />
     <!--
         =================================================================
         RichTextBox

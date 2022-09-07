@@ -20,6 +20,10 @@
       mc:Ignorable="d">
     <Grid.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Snoop.Core;component/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
             <DataTemplate x:Key="CategoryTemplate">
                 <TextBlock Margin="2 5 0 0"
                            FontWeight="Bold"

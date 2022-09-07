@@ -7,10 +7,16 @@
              d:DesignWidth="300"
              mc:Ignorable="d">
     <UserControl.Resources>
+        <ResourceDictionary>
+        <ResourceDictionary.MergedDictionaries>
+            <ResourceDictionary Source="pack://application:,,,/Snoop.Core;component/Styles.xaml" />
+        </ResourceDictionary.MergedDictionaries>
+
         <Style BasedOn="{StaticResource {x:Type TextBox}}"
                TargetType="TextBox">
             <Setter Property="FontFamily" Value="Consolas" />
         </Style>
+            </ResourceDictionary>
     </UserControl.Resources>
 
     <Grid>

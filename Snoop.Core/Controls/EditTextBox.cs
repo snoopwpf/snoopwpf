@@ -6,6 +6,7 @@
 namespace Snoop.Controls;
 
 using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -15,6 +16,11 @@ using System.Windows.Input;
 /// </summary>
 public class EditTextBox : TextBox
 {
+    static EditTextBox()
+    {
+        DefaultStyleKeyProperty.OverrideMetadata(typeof(EditTextBox), new FrameworkPropertyMetadata(typeof(EditTextBox)));
+    }
+
     protected override void OnInitialized(EventArgs e)
     {
         base.OnInitialized(e);

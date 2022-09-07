@@ -36,6 +36,10 @@
                              mc:Ignorable="options d">
     <windows:SnoopMainBaseWindow.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Snoop.Core;component/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
             <Style x:Key="refreshButton"
                    BasedOn="{StaticResource {x:Type Button}}"
                    TargetType="{x:Type Button}">

@@ -13,6 +13,10 @@
              mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Snoop.Core;component/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
             <DataTemplate DataType="{x:Type diagnostics:DiagnosticProvider}">
                 <CheckBox IsChecked="{Binding IsActive}">
                     <TextBlock Text="{Binding Name}" />
