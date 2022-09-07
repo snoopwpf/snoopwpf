@@ -30,7 +30,9 @@ public sealed class DiagnosticContext : IDisposable, INotifyPropertyChanged
         this.DiagnosticProviders.Add(new UnresolvedDynamicResourceDiagnosticProvider());
         this.DiagnosticProviders.Add(new BindingLeakDiagnosticProvider());
 #if USE_WPF_BINDING_DIAG
-            //this.diagnosticProviders.Add(new BindingDiagnosticProvider());
+        // todo: add providers
+        //this.DiagnosticProviders.Add(new BindingDiagnosticProvider());
+        //System.Windows.Diagnostics.ResourceDictionaryDiagnostics.StaticResourceResolved += this.ResourceDictionaryDiagnosticsOnStaticResourceResolved;
 #endif
 
         foreach (var diagnosticProvider in this.DiagnosticProviders)
@@ -39,6 +41,12 @@ public sealed class DiagnosticContext : IDisposable, INotifyPropertyChanged
             diagnosticProvider.PropertyChanged += this.HandleDiagnosticProviderPropertyChanged;
         }
     }
+
+#if USE_WPF_BINDING_DIAG
+    private void ResourceDictionaryDiagnosticsOnStaticResourceResolved(object? sender, System.Windows.Diagnostics.StaticResourceResolvedEventArgs e)
+    {
+    }
+#endif
 
     public TreeService? TreeService { get; }
 
