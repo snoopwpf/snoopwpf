@@ -91,13 +91,26 @@
             </controls:NoSelectionComboBox>
         </StackPanel>
 
-        <ListView Style="{StaticResource {x:Static GridView.GridViewStyleKey}}"
+        <ListView Style="{DynamicResource GridView.GridViewStyle}"
                   x:Name="diagnostics"
                   Grid.Row="1"
-                  ItemContainerStyle="{StaticResource {x:Static GridView.GridViewItemContainerStyleKey}}"
                   ItemsSource="{Binding ElementName=self, Path=DiagnosticsItemsView}"
+                  AlternationCount="2"
                   KeyUp="Diagnostics_OnKeyUp"
                   MouseDoubleClick="Control_OnMouseDoubleClick">
+            <ListView.ItemContainerStyle>
+                <Style BasedOn="{StaticResource GridView.GridViewItemContainerStyle}"
+                       TargetType="{x:Type ListViewItem}">
+                    <Style.Triggers>
+                        <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                            <Setter Property="Background" Value="Transparent" />
+                        </Trigger>
+                        <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                            <Setter Property="Background" Value="{DynamicResource Snoop.Brushes.ItemsControl.AlternationBackground}" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ListView.ItemContainerStyle>
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="50">

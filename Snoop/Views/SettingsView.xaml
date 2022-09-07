@@ -39,7 +39,7 @@
                   IsSynchronizedWithCurrentItem="True"
                   ItemsSource="{Binding ElementName=Control, Path=Properties}">
             <ListView.ItemContainerStyle>
-                <Style BasedOn="{StaticResource {x:Static GridView.GridViewItemContainerStyleKey}}"
+                <Style BasedOn="{StaticResource GridView.GridViewItemContainerStyle}"
                        TargetType="{x:Type ListViewItem}">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                     <Style.Triggers>
@@ -77,7 +77,7 @@
                     </GridViewColumn>
 
                     <GridViewColumn Width="175"
-                                    CellTemplateSelector="{StaticResource EditorSelector}">
+                                    CellTemplateSelector="{DynamicResource EditorSelector}">
                         <GridViewColumn.Header>
                             <TextBlock Text="Value">
                                 <TextBlock.ToolTip>

@@ -1,4 +1,4 @@
-﻿namespace Snoop.Windows;
+namespace Snoop.Windows;
 
 using System;
 using System.Diagnostics;

@@ -4,17 +4,17 @@
     Licensed to the .NET Foundation under one or more agreements.
     The .NET Foundation licenses this file to you under the MIT license.
     See the LICENSE file in the project root for more information.
-    
+
     This file was generated from individual xaml files found
     in WPF\src\Themes\XAML\, please do not edit it directly.
-    
+
     To generate this file, bcz in WPF\src\Themes\Generator and copy
     the generated theme files from the output directory to
     the corresponding themes\ folder.
-    
+
     To automatically copy the files, set the environment variable
     set THEMEXAML_AUTOUPDATE=1
-    
+
     ==================================================================
 -->
 
@@ -24,11 +24,18 @@
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                     xmlns:options="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
                     xmlns:themes="clr-namespace:Snoop.Themes"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib"
                     mc:Ignorable="options d">
 
     <!-- <ResourceDictionary.MergedDictionaries> -->
     <!--     <ResourceDictionary Source="Themes/Colors.Light.xaml" /> -->
     <!-- </ResourceDictionary.MergedDictionaries> -->
+
+    <system:Double x:Key="HorizontalScrollBarHeight">17</system:Double>
+    <system:Double x:Key="VerticalScrollBarWidth">17</system:Double>
+
+    <system:Double x:Key="HorizontalScrollBarButtonWidth">17</system:Double>
+    <system:Double x:Key="VerticalScrollBarButtonHeight">17</system:Double>
 
     <!--
         =================================================================
@@ -949,7 +956,7 @@
     -->
 
     <!-- GridView ScrollViewer Style -->
-    <Style x:Key="{x:Static GridView.GridViewScrollViewerStyleKey}"
+    <Style x:Key="GridView.GridViewScrollViewerStyle"
            TargetType="{x:Type ScrollViewer}">
         <Setter Property="Focusable" Value="false" />
         <Setter Property="Template">
@@ -1158,7 +1165,7 @@
     </Style>
 
     <!-- GridView Style -->
-    <Style x:Key="{x:Static GridView.GridViewStyleKey}"
+    <Style x:Key="GridView.GridViewStyle"
            TargetType="{x:Type ListView}">
         <Setter Property="Background" Value="{DynamicResource Snoop.Brushes.Default.Background}" />
         <Setter Property="BorderBrush" Value="{DynamicResource ListBorder}" />
@@ -1186,7 +1193,7 @@
                                           RenderFocused="{TemplateBinding IsKeyboardFocusWithin}"
                                           RenderMouseOver="{TemplateBinding IsMouseOver}"
                                           SnapsToDevicePixels="true">
-                        <ScrollViewer Style="{DynamicResource {x:Static GridView.GridViewScrollViewerStyleKey}}"
+                        <ScrollViewer Style="{DynamicResource GridView.GridViewScrollViewerStyle}"
                                       Padding="{TemplateBinding Padding}">
                             <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                         </ScrollViewer>
@@ -1228,7 +1235,7 @@
         ==================================================================
     -->
     <!-- GridView ItemContainerStyle -->
-    <Style x:Key="{x:Static GridView.GridViewItemContainerStyleKey}"
+    <Style x:Key="GridView.GridViewItemContainerStyle"
            TargetType="{x:Type ListViewItem}">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="Transparent" />
@@ -1464,7 +1471,7 @@
         MenuItem
         ==================================================================
     -->
-    <Style x:Key="{x:Static MenuItem.SeparatorStyleKey}"
+    <Style x:Key="MenuItem.SeparatorStyle"
            TargetType="{x:Type Separator}">
         <Setter Property="Background" Value="{DynamicResource Menu.Static.Separator}" />
         <Setter Property="BorderBrush" Value="{DynamicResource Menu.Static.Separator}" />
@@ -2049,8 +2056,8 @@
     <Style x:Key="{x:Type ResizeGrip}"
            TargetType="{x:Type ResizeGrip}">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="MinHeight" Value="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarHeightKey}}" />
-        <Setter Property="MinWidth" Value="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" />
+        <Setter Property="MinHeight" Value="{DynamicResource HorizontalScrollBarHeight}" />
+        <Setter Property="MinWidth" Value="{DynamicResource VerticalScrollBarWidth}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ResizeGrip}">
@@ -2201,7 +2208,7 @@
         <Setter Property="BorderBrush" Value="{DynamicResource ScrollBar.Static.Border}" />
         <Setter Property="BorderThickness" Value="1 0" />
         <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.Foreground}" />
-        <Setter Property="MinWidth" Value="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" />
+        <Setter Property="MinWidth" Value="{DynamicResource VerticalScrollBarWidth}" />
         <Setter Property="Stylus.IsFlicksEnabled" Value="false" />
         <Setter Property="Stylus.IsPressAndHoldEnabled" Value="false" />
         <Setter Property="Template">
@@ -2210,9 +2217,9 @@
                     <Grid x:Name="Bg"
                           SnapsToDevicePixels="true">
                         <Grid.RowDefinitions>
-                            <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}" />
+                            <RowDefinition MaxHeight="{DynamicResource VerticalScrollBarButtonHeight}" />
                             <RowDefinition Height="0.00001*" />
-                            <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}" />
+                            <RowDefinition MaxHeight="{DynamicResource VerticalScrollBarButtonHeight}" />
                         </Grid.RowDefinitions>
                         <Border Grid.Row="1"
                                 Background="{TemplateBinding Background}"
@@ -2293,12 +2300,12 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="Width" Value="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" />
+        <Setter Property="Width" Value="{DynamicResource VerticalScrollBarWidth}" />
         <Style.Triggers>
             <Trigger Property="Orientation" Value="Horizontal">
                 <Setter Property="BorderThickness" Value="0 1" />
-                <Setter Property="Height" Value="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarHeightKey}}" />
-                <Setter Property="MinHeight" Value="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarHeightKey}}" />
+                <Setter Property="Height" Value="{DynamicResource HorizontalScrollBarHeight}" />
+                <Setter Property="MinHeight" Value="{DynamicResource HorizontalScrollBarHeight}" />
                 <Setter Property="MinWidth" Value="0" />
                 <Setter Property="Template">
                     <Setter.Value>
@@ -2306,9 +2313,9 @@
                             <Grid x:Name="Bg"
                                   SnapsToDevicePixels="true">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition MaxWidth="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarButtonWidthKey}}" />
+                                    <ColumnDefinition MaxWidth="{DynamicResource HorizontalScrollBarButtonWidth}" />
                                     <ColumnDefinition Width="0.00001*" />
-                                    <ColumnDefinition MaxWidth="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarButtonWidthKey}}" />
+                                    <ColumnDefinition MaxWidth="{DynamicResource HorizontalScrollBarButtonWidth}" />
                                 </Grid.ColumnDefinitions>
                                 <Border Grid.Column="1"
                                         Background="{TemplateBinding Background}"
@@ -2831,7 +2838,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style x:Key="{x:Static StatusBar.SeparatorStyleKey}"
+    <Style x:Key="StatusBar.SeparatorStyle}"
            TargetType="{x:Type Separator}">
         <Setter Property="Background" Value="{DynamicResource Snoop.Brushes.Default.ControlDarkDark}" />
         <Setter Property="Margin" Value="2" />
@@ -3569,7 +3576,8 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style x:Key="{x:Type TreeViewItem}"
+
+    <Style x:Key="TreeViewItemStyle"
            TargetType="{x:Type TreeViewItem}">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="FocusVisualStyle" Value="{StaticResource TreeViewItemFocusVisual}" />
@@ -3658,6 +3666,9 @@
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="{x:Type TreeViewItem}"
+           TargetType="{x:Type TreeViewItem}"
+           BasedOn="{StaticResource TreeViewItemStyle}" />
 
     <!--
         =================================================================
@@ -3982,7 +3993,7 @@
                             BorderThickness="{TemplateBinding BorderThickness}"
                             SnapsToDevicePixels="true">
                         <Border x:Name="splitBorder"
-                                Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}"
+                                Width="{DynamicResource VerticalScrollBarWidth}"
                                 Margin="0"
                                 HorizontalAlignment="Right"
                                 BorderBrush="Transparent"
@@ -4086,7 +4097,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="0"
-                                  MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" />
+                                  MinWidth="{DynamicResource VerticalScrollBarWidth}" />
             </Grid.ColumnDefinitions>
             <Popup x:Name="PART_Popup"
                    Grid.ColumnSpan="2"
@@ -4176,7 +4187,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="0"
-                                  MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" />
+                                  MinWidth="{DynamicResource VerticalScrollBarWidth}" />
             </Grid.ColumnDefinitions>
             <Popup x:Name="PART_Popup"
                    Grid.ColumnSpan="2"

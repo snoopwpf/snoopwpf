@@ -1,4 +1,4 @@
-﻿<!--
+<!--
     (c) Copyright Cory Plotts.
     This source is subject to the Microsoft Public License (Ms-PL).
     Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
@@ -110,7 +110,7 @@
         <RowDefinition Height="*" />
     </Grid.RowDefinitions>
 
-    <ListView Style="{StaticResource {x:Static GridView.GridViewStyleKey}}"
+    <ListView Style="{StaticResource GridView.GridViewStyle}"
               x:Name="ListView"
               Grid.RowSpan="2"
               MinWidth="0"
@@ -132,12 +132,11 @@
 		-->
 
         <ListView.ItemContainerStyle>
-            <Style BasedOn="{StaticResource {x:Static GridView.GridViewItemContainerStyleKey}}"
+            <Style BasedOn="{StaticResource GridView.GridViewItemContainerStyle}"
                    TargetType="{x:Type ListViewItem}">
                 <Setter Property="ContextMenu" Value="{StaticResource PropertyMenu}" />
                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                 <Style.Triggers>
-
                     <Trigger Property="ItemsControl.AlternationIndex" Value="0">
                         <Setter Property="Background" Value="Transparent" />
                     </Trigger>
@@ -200,7 +199,7 @@
                 </GridViewColumn>
 
                 <GridViewColumn Width="250"
-                                CellTemplateSelector="{StaticResource EditorSelector}">
+                                CellTemplateSelector="{DynamicResource EditorSelector}">
                     <GridViewColumn.Header>
                         <TextBlock Text="Value">
                             <TextBlock.ToolTip>

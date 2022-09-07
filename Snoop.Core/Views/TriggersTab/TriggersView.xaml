@@ -91,7 +91,7 @@
                                       Grid.Column="1"
                                       Margin="4 0 0 0"
                                       Content="{Binding Value}"
-                                      ContentTemplateSelector="{StaticResource EditorSelector}" />
+                                      ContentTemplateSelector="{DynamicResource EditorSelector}" />
                 </Grid>
 
                 <DataTemplate.Triggers>

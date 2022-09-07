@@ -1,4 +1,4 @@
-﻿<!--
+<!--
     (c) Copyright Cory Plotts.
     This source is subject to the Microsoft Public License (Ms-PL).
     Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
@@ -34,12 +34,8 @@
                              ShowInTaskbar="True"
                              SnapsToDevicePixels="True"
                              mc:Ignorable="options d">
-    <Window.Resources>
+    <windows:SnoopMainBaseWindow.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Controls/ProperTreeViewResources.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
             <Style x:Key="refreshButton"
                    BasedOn="{StaticResource {x:Type Button}}"
                    TargetType="{x:Type Button}">
@@ -109,7 +105,7 @@
                 <TextBlock Text="{Binding}" />
             </DataTemplate>
         </ResourceDictionary>
-    </Window.Resources>
+    </windows:SnoopMainBaseWindow.Resources>
 
     <DockPanel>
         <StackPanel DockPanel.Dock="Top"
