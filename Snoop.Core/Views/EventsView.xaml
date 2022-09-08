@@ -155,7 +155,8 @@
                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding Handled}" Value="True">
-                        <Setter Property="Background" Value="{DynamicResource Snoop.Brushes.PropertyGrid.IsExpression}" />
+                        <Setter Property="Background" Value="{DynamicResource Snoop.Brushes.EventsView.Handled.Background}" />
+                        <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.EventsView.Handled.Foreground}" />
                     </DataTrigger>
                 </Style.Triggers>
             </Style>

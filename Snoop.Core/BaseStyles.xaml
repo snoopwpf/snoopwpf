@@ -149,7 +149,7 @@
                     <Border>
                         <Rectangle Margin="0"
                                    SnapsToDevicePixels="true"
-                                   Stroke="Black"
+                                   Stroke="{DynamicResource Snoop.Brushes.Default.Foreground}"
                                    StrokeDashArray="1 2"
                                    StrokeThickness="1" />
                     </Border>
@@ -4167,7 +4167,7 @@
                 <Setter TargetName="Border" Property="Opacity" Value="0.56" />
             </Trigger>
             <Trigger Property="IsKeyboardFocusWithin" Value="true">
-                <Setter Property="Foreground" Value="Black" />
+                <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.Foreground}" />
             </Trigger>
             <Trigger SourceName="PART_Popup" Property="HasDropShadow" Value="true">
                 <Setter TargetName="shadow" Property="Color" Value="#71000000" />

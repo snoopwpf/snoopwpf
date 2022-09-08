@@ -9,4 +9,6 @@
     </LinearGradientBrush>
 
     <SolidColorBrush x:Key="Snoop.Brushes.PropertyGrid.IsExpression" Color="#4A3D4F" options:Freeze="True" />
+    <SolidColorBrush x:Key="Snoop.Brushes.EventsView.Handled.Background" Color="LightGreen" options:Freeze="True" />
+    <SolidColorBrush x:Key="Snoop.Brushes.EventsView.Handled.Foreground" Color="Black" options:Freeze="True" />
 </ResourceDictionary>
