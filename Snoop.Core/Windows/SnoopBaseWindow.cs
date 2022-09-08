@@ -13,6 +13,7 @@ public class SnoopBaseWindow : Window
 {
     public SnoopBaseWindow()
     {
+        this.UseLayoutRounding = true;
         this.InheritanceBehavior = InheritanceBehavior.SkipToThemeNext;
         this.SnapsToDevicePixels = true;
         this.Icon = new BitmapImage(new Uri("pack://application:,,,/Snoop.Core;component/Snoop.ico"));
