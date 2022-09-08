@@ -15,6 +15,10 @@
       MinHeight="0">
     <Grid.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Snoop.Core;component/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
             <DataTemplate x:Key="stylelessTextBlockDataTemplate"
                           DataType="infrastructure:PropertyFilterSet">
                 <TextBlock Margin="0"
@@ -88,7 +92,8 @@
                     Command="{x:Static controls:PropertyInspector.PopTargetCommand}"
                     ToolTipService.ShowOnDisabled="True">
                 <Button.Style>
-                    <Style>
+                    <Style TargetType="{x:Type Button}"
+                           BasedOn="{StaticResource BaseButtonStyle}">
                         <Style.Triggers>
                             <Trigger Property="Button.IsEnabled" Value="False">
                                 <Setter Property="Button.Opacity" Value=".5" />

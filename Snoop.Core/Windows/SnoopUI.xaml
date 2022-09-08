@@ -41,7 +41,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <Style x:Key="refreshButton"
-                   BasedOn="{StaticResource {x:Type Button}}"
+                   BasedOn="{StaticResource BaseButtonStyle}"
                    TargetType="{x:Type Button}">
                 <Setter Property="Background">
                     <Setter.Value>
@@ -79,8 +79,7 @@
                                   Height="Auto">
                                 <Border x:Name="border"
                                         BorderBrush="{DynamicResource Snoop.Brushes.Default.ControlDarkDark}"
-                                        BorderThickness="1 1 1 1"
-                                        CornerRadius="4,4,4,4" />
+                                        BorderThickness="1 1 1 1" />
                                 <ContentPresenter Margin="2 2 2 2" />
                             </Grid>
                             <ControlTemplate.Triggers>
