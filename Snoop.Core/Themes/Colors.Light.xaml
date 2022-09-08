@@ -277,54 +277,6 @@
     <SolidColorBrush x:Key="ComboBoxItem.ItemsviewHoverFocus.Background" Color="#5426A0DA" options:Freeze="True" />
     <SolidColorBrush x:Key="ComboBoxItem.ItemsviewHoverFocus.Border" Color="#FF26A0DA" options:Freeze="True" />
 
-    <!--
-        Brushes : These are used to define the color for background, foreground, selection, enabled etc of all controls
-        If you want to change the color of a control you can just change the brush; if you want to add a new shape or change arrangement then also edit the template
-    -->
-
-    <!-- NormalBrush is used as the Background for SimpleButton, SimpleRepeatButton -->
-    <LinearGradientBrush x:Key="NormalBrush" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
-        <GradientStop Color="#EEEE" Offset="0.0" />
-        <GradientStop Color="#CCCC" Offset="1.0" />
-    </LinearGradientBrush>
-    <LinearGradientBrush x:Key="NormalBorderBrush" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
-        <GradientStop Color="#CCCC" Offset="0.0" />
-        <GradientStop Color="#4444" Offset="1.0" />
-    </LinearGradientBrush>
-
-    <!-- LightBrush is used for content areas such as Menu, Tab Control background -->
-    <LinearGradientBrush x:Key="LightBrush" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
-        <GradientStop Color="#FFFF" Offset="0.0" />
-        <GradientStop Color="#EEEE" Offset="1.0" />
-    </LinearGradientBrush>
-
-
-    <!-- Style and Template pairs are used to define each control Part -->
-    <!-- The Style provides default values on the control; the Template gives the elements for each control -->
-
-    <LinearGradientBrush x:Key="MouseOverBrush" StartPoint="0,0.5" EndPoint="1,0.5" options:Freeze="True">
-        <GradientStop Color="#FFFFFFFF" Offset="0.48" />
-        <GradientStop Color="#FFB2E2FF" Offset="1" />
-        <GradientStop Color="#FFBAE5FF" Offset="0" />
-    </LinearGradientBrush>
-
-    <!-- PressedBrush is used for Pressed in Button, Radio Button, CheckBox -->
-    <LinearGradientBrush x:Key="PressedBrush" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
-        <GradientStop Color="#BBBB" Offset="0.0" />
-        <GradientStop Color="#EEEE" Offset="0.1" />
-        <GradientStop Color="#EEEE" Offset="0.9" />
-        <GradientStop Color="#FFFF" Offset="1.0" />
-    </LinearGradientBrush>
-    <LinearGradientBrush x:Key="PressedBorderBrush" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
-        <GradientStop Color="#4444" Offset="0.0" />
-        <GradientStop Color="#8888" Offset="1.0" />
-    </LinearGradientBrush>
-
-    <!-- Disabled Brushes are used for the Disabled look of each control -->
-    <SolidColorBrush x:Key="DisabledForegroundBrush" Color="#8888" options:Freeze="True" />
-    <SolidColorBrush x:Key="DisabledBackgroundBrush" Color="#EEEE" options:Freeze="True" />
-    <SolidColorBrush x:Key="DisabledBorderBrush" Color="#AAAA" options:Freeze="True" />
-
     <!-- Used for background of ScrollViewer, TreeView, ListBox, Expander, TextBox, Tab Control -->
     <SolidColorBrush x:Key="Snoop.Brushes.Default.Background" Color="#FFFFFFFF" options:Freeze="True" />
     <SolidColorBrush x:Key="Snoop.Brushes.Default.LightDarkBackground" Color="#FFF1EDED" options:Freeze="True" />
@@ -350,28 +302,4 @@
 
     <SolidColorBrush x:Key="Snoop.Brushes.EventsView.Handled.Background" Color="LightGreen" options:Freeze="True" />
     <SolidColorBrush x:Key="Snoop.Brushes.EventsView.Handled.Foreground" Color="Black" options:Freeze="True" />
-
-    <!-- DefaultedBorderBrush is used to show KeyBoardFocus -->
-    <LinearGradientBrush x:Key="DefaultedBorderBrush" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
-        <GradientStop Color="#7777" Offset="0.0" />
-        <GradientStop Color="#0000" Offset="1.0" />
-    </LinearGradientBrush>
-
-    <SolidColorBrush x:Key="SolidBorderBrush" Color="#8888" options:Freeze="True" />
-
-    <LinearGradientBrush x:Key="DarkBlue" StartPoint="0.498,0.038" EndPoint="0.498,0.952" options:Freeze="True">
-        <GradientStop Color="#FF021122" Offset="0" />
-        <GradientStop Color="#FF052941" Offset="1" />
-    </LinearGradientBrush>
-    <LinearGradientBrush x:Key="ShineBrush1" StartPoint="0.503,0.925" EndPoint="0.503,0" options:Freeze="True">
-        <GradientStop Color="#0C5BBCFF" Offset="0" />
-        <GradientStop Color="#3365C0FF" Offset="1" />
-    </LinearGradientBrush>
-
-    <SolidColorBrush x:Key="DeepBlueColorBrush" Color="#FF142947" options:Freeze="True" />
-
-    <LinearGradientBrush x:Key="MetalGrad" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
-        <GradientStop Color="#FFEEEEEE" Offset="0" />
-        <GradientStop Color="#FF596F7E" Offset="1" />
-    </LinearGradientBrush>
 </ResourceDictionary>
