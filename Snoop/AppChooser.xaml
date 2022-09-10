@@ -40,6 +40,39 @@
             <GradientStop Color="#FFB2E3FF" Offset="1" />
         </RadialGradientBrush>
 
+        <!-- PressedBrush is used for Pressed in Button, Radio Button, CheckBox -->
+        <LinearGradientBrush x:Key="PressedBrush" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
+            <GradientStop Color="#BBBB" Offset="0.0" />
+            <GradientStop Color="#EEEE" Offset="0.1" />
+            <GradientStop Color="#EEEE" Offset="0.9" />
+            <GradientStop Color="#FFFF" Offset="1.0" />
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="PressedBorderBrush" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
+            <GradientStop Color="#4444" Offset="0.0" />
+            <GradientStop Color="#8888" Offset="1.0" />
+        </LinearGradientBrush>
+
+        <!-- Disabled Brushes are used for the Disabled look of each control -->
+        <SolidColorBrush x:Key="DisabledForegroundBrush" Color="#8888" options:Freeze="True" />
+        <SolidColorBrush x:Key="DisabledBackgroundBrush" Color="#EEEE" options:Freeze="True" />
+        <SolidColorBrush x:Key="DisabledBorderBrush" Color="#AAAA" options:Freeze="True" />
+
+        <LinearGradientBrush x:Key="DarkBlue" StartPoint="0.498,0.038" EndPoint="0.498,0.952" options:Freeze="True">
+            <GradientStop Color="#FF021122" Offset="0" />
+            <GradientStop Color="#FF052941" Offset="1" />
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="ShineBrush1" StartPoint="0.503,0.925" EndPoint="0.503,0" options:Freeze="True">
+            <GradientStop Color="#0C5BBCFF" Offset="0" />
+            <GradientStop Color="#3365C0FF" Offset="1" />
+        </LinearGradientBrush>
+
+        <SolidColorBrush x:Key="DeepBlueColorBrush" Color="#FF142947" options:Freeze="True" />
+
+        <LinearGradientBrush x:Key="MetalGrad" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
+            <GradientStop Color="#FFEEEEEE" Offset="0" />
+            <GradientStop Color="#FF596F7E" Offset="1" />
+        </LinearGradientBrush>
+
         <!-- glassyGradientBrush -->
         <LinearGradientBrush x:Key="glassyGradientBrush" StartPoint="0.75,0.933" EndPoint="0.25,0.067" options:Freeze="True">
             <GradientStop Color="#FF329CA5" Offset="0" />
@@ -279,6 +312,7 @@
         <Style x:Key="SimpleComboBox"
                TargetType="{x:Type ComboBox}">
             <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="Foreground" Value="White" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ComboBox}">
