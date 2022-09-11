@@ -27,9 +27,8 @@ public class LocalResourceDefinitionsDiagnosticProvider : DiagnosticProvider
             }
 
             var dpd = DependencyPropertyDescriptor.FromProperty(property);
-
             if (dpd is null
-                || dpd.IsReadOnly)
+                || dpd.DependencyProperty.ReadOnly)
             {
                 continue;
             }
@@ -37,12 +36,13 @@ public class LocalResourceDefinitionsDiagnosticProvider : DiagnosticProvider
             if (typeof(Color).IsAssignableFrom(dpd.PropertyType)
                 || typeof(Brush).IsAssignableFrom(dpd.PropertyType))
             {
-                var localValue = dependencyObject.ReadLocalValue(dpd.DependencyProperty);
                 var valueSource = DependencyPropertyHelper.GetValueSource(dependencyObject, dpd.DependencyProperty);
 
-                if (valueSource.BaseValueSource == BaseValueSource.Local
-                    && valueSource.IsExpression == false)
+                if (valueSource.BaseValueSource is BaseValueSource.Local
+                    && valueSource.IsExpression is false)
                 {
+                    var localValue = dependencyObject.GetValue(dpd.DependencyProperty);
+
                     switch (localValue)
                     {
                         case Brush brush when brush != Brushes.Transparent:
@@ -50,8 +50,7 @@ public class LocalResourceDefinitionsDiagnosticProvider : DiagnosticProvider
                                 new(this,
                                     "Local brush",
                                     $"Property '{dpd.DisplayName}' contains the local brush '{localValue}'. Prevent local brushes to keep the design maintainable.",
-                                    DiagnosticArea.Maintainability,
-                                    DiagnosticLevel.Info)
+                                    DiagnosticArea.Maintainability)
                                 {
                                     TreeItem = treeItem,
                                     Dispatcher = dependencyObject.Dispatcher,
@@ -64,8 +63,7 @@ public class LocalResourceDefinitionsDiagnosticProvider : DiagnosticProvider
                                 new(this,
                                     "Local color",
                                     $"Property '{dpd.DisplayName}' contains the local color '{localValue}'. Prevent local colors to keep the design maintainable.",
-                                    DiagnosticArea.Maintainability,
-                                    DiagnosticLevel.Info)
+                                    DiagnosticArea.Maintainability)
                                 {
                                     TreeItem = treeItem,
                                     Dispatcher = dependencyObject.Dispatcher,

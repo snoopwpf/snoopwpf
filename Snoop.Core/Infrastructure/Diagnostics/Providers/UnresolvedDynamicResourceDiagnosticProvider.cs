@@ -45,7 +45,7 @@ public class UnresolvedDynamicResourceDiagnosticProvider : DiagnosticProvider
             }
 
             var localValue = frameworkElement.ReadLocalValue(dpd.DependencyProperty);
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
             if (localValue is null)
             {
                 continue;
