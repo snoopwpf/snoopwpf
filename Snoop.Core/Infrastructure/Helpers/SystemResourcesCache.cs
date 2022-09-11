@@ -24,7 +24,7 @@ public class SystemResourcesCache : ICacheManaged
     {
         this.Reset();
 
-                var type = typeof(ResourceDictionary).Assembly.GetType("System.Windows.SystemResources");
+        var type = typeof(ResourceDictionary).Assembly.GetType("System.Windows.SystemResources");
 
         if (type is null)
         {
