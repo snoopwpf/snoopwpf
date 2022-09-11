@@ -15,26 +15,12 @@
              d:DesignWidth="300"
              mc:Ignorable="d">
     <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/Snoop.Core;component/Styles.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
-        <Style x:Key="MouseWheelText"
-               BasedOn="{StaticResource {x:Type TextBlock}}"
-               TargetType="{x:Type TextBlock}">
-            <!--<Setter Property="local:PropertyEditor.SupportMouseWheel" Value="True"/>-->
-            <Setter Property="FontSize" Value="12" />
-            <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="Margin" Value="0 0 5 0" />
-        </Style>
-
         <DataTemplate x:Key="DefaultEmptyTemplate">
             <Border />
         </DataTemplate>
 
         <DataTemplate x:Key="CustomEditSingleField">
-            <TextBlock Style="{StaticResource MouseWheelText}"
+            <TextBlock Style="{DynamicResource MouseWheelText}"
                        d:DataContext="{d:DesignInstance infrastructure:PropertyInformation}"
                        Tag="1"
                        Text="{Binding Value}" />
@@ -44,16 +30,16 @@
                       DataType="{x:Type Thickness}">
             <StackPanel d:DataContext="{d:DesignInstance infrastructure:PropertyInformation}"
                         Orientation="Horizontal">
-                <TextBlock Style="{StaticResource MouseWheelText}"
+                <TextBlock Style="{DynamicResource MouseWheelText}"
                            Tag="1"
                            Text="{Binding Value.Left}" />
-                <TextBlock Style="{StaticResource MouseWheelText}"
+                <TextBlock Style="{DynamicResource MouseWheelText}"
                            Tag="2"
                            Text="{Binding Value.Top}" />
-                <TextBlock Style="{StaticResource MouseWheelText}"
+                <TextBlock Style="{DynamicResource MouseWheelText}"
                            Tag="3"
                            Text="{Binding Value.Right}" />
-                <TextBlock Style="{StaticResource MouseWheelText}"
+                <TextBlock Style="{DynamicResource MouseWheelText}"
                            Tag="4"
                            Text="{Binding Value.Bottom}" />
             </StackPanel>
@@ -63,21 +49,20 @@
                       DataType="{x:Type Brush}">
             <StackPanel d:DataContext="{d:DesignInstance infrastructure:PropertyInformation}"
                         Orientation="Horizontal">
-                <TextBlock Style="{StaticResource MouseWheelText}"
+                <TextBlock Style="{DynamicResource MouseWheelText}"
                            Tag="1"
                            Text="{Binding Path=Value, Converter={x:Static converters:ArgbToPartsConverter.Default}, ConverterParameter=0}" />
-                <TextBlock Style="{StaticResource MouseWheelText}"
+                <TextBlock Style="{DynamicResource MouseWheelText}"
                            Tag="2"
                            Text="{Binding Path=Value, Converter={x:Static converters:ArgbToPartsConverter.Default}, ConverterParameter=1}" />
-                <TextBlock Style="{StaticResource MouseWheelText}"
+                <TextBlock Style="{DynamicResource MouseWheelText}"
                            Tag="3"
                            Text="{Binding Path=Value, Converter={x:Static converters:ArgbToPartsConverter.Default}, ConverterParameter=2}" />
-                <TextBlock Style="{StaticResource MouseWheelText}"
+                <TextBlock Style="{DynamicResource MouseWheelText}"
                            Tag="4"
                            Text="{Binding Path=Value, Converter={x:Static converters:ArgbToPartsConverter.Default}, ConverterParameter=3}" />
             </StackPanel>
         </DataTemplate>
-            </ResourceDictionary>
     </UserControl.Resources>
 
     <!-- DataContext: PropertyInformation -->
