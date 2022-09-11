@@ -69,13 +69,14 @@ public abstract class TreeService : IDisposable, INotifyPropertyChanged
     {
         TreeItem treeItem = target switch
         {
-            AutomationPeer automationPeer => new AutomationPeerTreeItem(automationPeer, parent, this),
-            ResourceDictionaryWrapper resourceDictionary => new ResourceDictionaryTreeItem(resourceDictionary, parent, this),
-            ResourceDictionary resourceDictionary => new ResourceDictionaryTreeItem(resourceDictionary, parent, this),
-            Application application => new ApplicationTreeItem(application, parent, this),
-            Window window => new WindowTreeItem(window, parent, this),
-            Popup popup => new PopupTreeItem(popup, parent, this),
-            DependencyObject dependencyObject => this.ConstructFromDependencyObject(parent, dependencyObject),
+            AutomationPeer typedTarget => new AutomationPeerTreeItem(typedTarget, parent, this),
+            ResourceDictionaryWrapper typedTarget => new ResourceDictionaryTreeItem(typedTarget, parent, this),
+            ResourceDictionary typedTarget => new ResourceDictionaryTreeItem(typedTarget, parent, this),
+            Application typedTarget => new ApplicationTreeItem(typedTarget, parent, this),
+            Window typedTarget => new WindowTreeItem(typedTarget, parent, this),
+            Popup typedTarget => new PopupTreeItem(typedTarget, parent, this),
+            Image typedTarget => new ImageTreeItem(typedTarget, parent, this),
+            DependencyObject typedTarget => this.ConstructFromDependencyObject(parent, typedTarget),
             _ => new TreeItem(target, parent, this)
         };
 

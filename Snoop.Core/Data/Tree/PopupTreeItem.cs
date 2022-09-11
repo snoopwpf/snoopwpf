@@ -8,18 +8,18 @@ public class PopupTreeItem : DependencyObjectTreeItem
     public PopupTreeItem(Popup target, TreeItem? parent, TreeService treeService)
         : base(target, parent, treeService)
     {
-        this.PopupTarget = target;
+        this.TypedTarget = target;
     }
 
-    public Popup PopupTarget { get; }
+    public Popup TypedTarget { get; }
 
     protected override void ReloadCore()
     {
         base.ReloadCore();
 
-        if (this.TreeService.TreeType == TreeType.Visual)
+        if (this.TreeService.TreeType is TreeType.Visual)
         {
-            foreach (var child in LogicalTreeHelper.GetChildren(this.PopupTarget))
+            foreach (var child in LogicalTreeHelper.GetChildren(this.TypedTarget))
             {
                 if (child is null)
                 {
