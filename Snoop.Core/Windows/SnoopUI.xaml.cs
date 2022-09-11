@@ -179,6 +179,11 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
                 this.CurrentSelection.IsSelected = true;
             }
 
+            if (this.isShuttingDown)
+            {
+                return;
+            }
+
             this.OnPropertyChanged(nameof(this.CurrentSelection));
 
             if (this.TreeItems.Count > 1
@@ -403,6 +408,7 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
 
     protected override void OnClosed(EventArgs e)
     {
+        this.isShuttingDown = true;
         this.CurrentSelection = null;
 
         this.TreeService?.Dispose();
@@ -869,6 +875,8 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
     private bool returnPreviousFocus;
 
     private TreeService treeService = null!;
+
+    private bool isShuttingDown;
 
     #endregion
 
