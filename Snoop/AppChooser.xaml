@@ -1,4 +1,4 @@
-﻿<!--
+<!--
     (c) Copyright Cory Plotts.
     This source is subject to the Microsoft Public License (Ms-PL).
     Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
@@ -311,8 +311,8 @@
 
         <Style x:Key="SimpleComboBox"
                TargetType="{x:Type ComboBox}">
-            <Setter Property="SnapsToDevicePixels" Value="true" />
             <Setter Property="Foreground" Value="White" />
+            <Setter Property="SnapsToDevicePixels" Value="true" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ComboBox}">

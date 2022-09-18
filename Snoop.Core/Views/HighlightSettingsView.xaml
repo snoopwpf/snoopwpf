@@ -35,8 +35,8 @@
             </ResourceDictionary>
         </Grid.Resources>
 
-        <ListView x:Name="ListView"
-                  Style="{StaticResource GridView.GridViewStyle}"
+        <ListView Style="{StaticResource GridView.GridViewStyle}"
+                  x:Name="ListView"
                   Grid.Row="0"
                   MinWidth="0"
                   MinHeight="0"

@@ -98,8 +98,8 @@
         <ListView Style="{DynamicResource GridView.GridViewStyle}"
                   x:Name="diagnostics"
                   Grid.Row="1"
-                  ItemsSource="{Binding ElementName=self, Path=DiagnosticsItemsView}"
                   AlternationCount="2"
+                  ItemsSource="{Binding ElementName=self, Path=DiagnosticsItemsView}"
                   KeyUp="Diagnostics_OnKeyUp"
                   MouseDoubleClick="Control_OnMouseDoubleClick">
             <ListView.ItemContainerStyle>

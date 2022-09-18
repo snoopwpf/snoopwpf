@@ -4,28 +4,28 @@
     Licensed to the .NET Foundation under one or more agreements.
     The .NET Foundation licenses this file to you under the MIT license.
     See the LICENSE file in the project root for more information.
-
+    
     This file was generated from individual xaml files found
     in WPF\src\Themes\XAML\, please do not edit it directly.
-
+    
     To generate this file, bcz in WPF\src\Themes\Generator and copy
     the generated theme files from the output directory to
     the corresponding themes\ folder.
-
+    
     To automatically copy the files, set the environment variable
     set THEMEXAML_AUTOUPDATE=1
-
+    
     ==================================================================
 -->
 
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:Snoop.Controls"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                     xmlns:options="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
-                    xmlns:themes="clr-namespace:Snoop.Themes"
                     xmlns:system="clr-namespace:System;assembly=mscorlib"
-                    xmlns:controls="clr-namespace:Snoop.Controls"
+                    xmlns:themes="clr-namespace:Snoop.Themes"
                     mc:Ignorable="options d">
 
     <!-- <ResourceDictionary.MergedDictionaries> -->
@@ -1166,8 +1166,8 @@
     </Style>
 
     <Style x:Key="{x:Type GridViewColumnHeader}"
-           TargetType="{x:Type GridViewColumnHeader}"
-           BasedOn="{StaticResource GridViewColumnHeaderStyle}" />
+           BasedOn="{StaticResource GridViewColumnHeaderStyle}"
+           TargetType="{x:Type GridViewColumnHeader}" />
 
     <!-- GridView Style -->
     <Style x:Key="GridView.GridViewStyle"
@@ -3192,14 +3192,14 @@
         <Setter Property="Background" Value="{DynamicResource Snoop.Brushes.Default.Background}" />
         <Setter Property="BorderBrush" Value="{DynamicResource TextBox.Static.Border}" />
         <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CaretBrush" Value="{Binding Foreground, RelativeSource={RelativeSource Self}}" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.Foreground}" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="KeyboardNavigation.TabNavigation" Value="None" />
         <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst" />
-        <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
-        <Setter Property="CaretBrush" Value="{Binding Foreground, RelativeSource={RelativeSource Self}}" />
         <Setter Property="SelectionBrush" Value="{DynamicResource Snoop.Brushes.Default.Highlight}" />
+        <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TextBoxBase}">
@@ -3678,8 +3678,8 @@
     </Style>
 
     <Style x:Key="{x:Type TreeViewItem}"
-           TargetType="{x:Type TreeViewItem}"
-           BasedOn="{StaticResource TreeViewItemStyle}" />
+           BasedOn="{StaticResource TreeViewItemStyle}"
+           TargetType="{x:Type TreeViewItem}" />
 
     <!--
         =================================================================
@@ -3970,14 +3970,14 @@
         <Setter Property="AutomationProperties.HelpText" Value="{Binding Path=(AutomationProperties.HelpText), Mode=OneWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ComboBox}}}" />
         <Setter Property="AutomationProperties.LabeledBy" Value="{Binding Path=(AutomationProperties.LabeledBy), Mode=OneWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ComboBox}}}" />
         <Setter Property="AutomationProperties.Name" Value="{Binding Path=(AutomationProperties.Name), Mode=OneWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ComboBox}}}" />
+        <Setter Property="CaretBrush" Value="{Binding Foreground, RelativeSource={RelativeSource Self}}" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="MinHeight" Value="0" />
         <Setter Property="MinWidth" Value="0" />
         <Setter Property="OverridesDefaultStyle" Value="true" />
         <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst" />
-        <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
-        <Setter Property="CaretBrush" Value="{Binding Foreground, RelativeSource={RelativeSource Self}}" />
         <Setter Property="SelectionBrush" Value="{DynamicResource Snoop.Brushes.Default.Highlight}" />
+        <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TextBox}">
