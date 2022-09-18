@@ -5,6 +5,16 @@ using System.Windows.Automation;
 
 public static class UIObjectNameHelper
 {
+    public static string GetNameAndType(DependencyObject? dependencyObject)
+    {
+        if (dependencyObject is null)
+        {
+            return string.Empty;
+        }
+
+        return $"{GetName(dependencyObject)} ({dependencyObject.GetType().Name})";
+    }
+
     public static string GetName(DependencyObject? dependencyObject)
     {
         var result = string.Empty;

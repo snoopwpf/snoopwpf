@@ -10,12 +10,13 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Media;
 using Snoop.Infrastructure;
+using Snoop.Infrastructure.Helpers;
 
 public class InheritedValueSourceHelper : INotifyPropertyChanged
 {
     public static readonly InheritedValueSourceHelper Instance = new();
 
-    private static readonly PropertyInfo? inheritanceParentPropertyInfo = typeof(DependencyObject).GetProperty("InheritanceParent", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+    //private static readonly PropertyInfo? inheritanceParentPropertyInfo = typeof(DependencyObject).GetProperty("InheritanceParent", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -40,19 +41,21 @@ public class InheritedValueSourceHelper : INotifyPropertyChanged
 
         var sources = GetInheritedValueSources(currentTarget, property);
 
-        MessageBox.Show(string.Join(Environment.NewLine, sources.Select(x => $"{UIObjectNameHelper.GetName(x)}")));
+        MessageBox.Show(string.Join(Environment.NewLine, sources.Select(x => $"{UIObjectNameHelper.GetNameAndType(x)}")));
     }
 
-    private static ObservableCollection<DependencyObject> GetInheritedValueSources(DependencyObject? currentTarget, DependencyProperty property)
+    private static ObservableCollection<DependencyObject> GetInheritedValueSources(DependencyObject? toInspect, DependencyProperty property)
     {
         var sources = new ObservableCollection<DependencyObject>();
+        var currentTarget = toInspect;
 
         if (currentTarget is not null)
         {
             sources.Add(currentTarget);
         }
 
-        while ((currentTarget = inheritanceParentPropertyInfo?.GetValue(currentTarget) as DependencyObject) is not null)
+        //while ((currentTarget = inheritanceParentPropertyInfo?.GetValue(currentTarget) as DependencyObject) is not null)
+        while (currentTarget is not null)
         {
             sources.Add(currentTarget);
 
@@ -60,6 +63,9 @@ public class InheritedValueSourceHelper : INotifyPropertyChanged
             {
                 break;
             }
+
+            currentTarget = LogicalTreeHelper.GetParent(currentTarget)
+                            ?? VisualTreeHelper.GetParent(currentTarget);
         }
 
         return sources;
