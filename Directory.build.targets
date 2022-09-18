@@ -1,33 +1,4 @@
 ﻿<Project>
-  <!-- Assembly info -->
-  <PropertyGroup>
-    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-
-    <Company>https://github.com/snoopwpf/snoopwpf</Company>
-    <Product>Snoop</Product>
-    <Copyright>Copyright © Cory Plotts, Bastian Schmidt 2010 - $([System.DateTime]::Today.ToString(yyyy))</Copyright>
-  </PropertyGroup>
-
-  <!-- SourceLink -->
-  <PropertyGroup>
-    <!-- Optional: Declare that the Repository URL can be published to NuSpec -->
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <!-- Optional: Embed source files that are not tracked by the source control manager to the PDB -->
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <!-- Optional: Include PDB in the built .nupkg -->
-    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-    <!-- By using EmbedAllSources we don't need SourceLink itself -->
-    <!-- https://github.com/dotnet/sourcelink/blob/master/docs/README.md#embedallsources -->
-    <EmbedAllSources>True</EmbedAllSources>
-  </PropertyGroup>
-
-  <!-- PDB-Options -->
-  <PropertyGroup>
-    <!-- We should switch "DebugType" to "portable" in the future -->
-    <!-- "Full" and "pdbonly" are the same according to https://github.com/dotnet/roslyn/blob/master/docs/compilers/CSharp/CommandLine.md -->
-    <DebugType>full</DebugType>
-  </PropertyGroup>
-
   <!-- Build references -->
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" IncludeAssets="build; native" />
@@ -45,6 +16,4 @@
     <PackageReference Include="WpfAnalyzers" PrivateAssets="all" IncludeAssets="build;analyzers" />
     <!--<PackageReference Include="PropertyChangedAnalyzers" PrivateAssets="all" IncludeAssets="build;analyzers" />-->
   </ItemGroup>
-
-  <Target Name="ForceRestore" BeforeTargets="ResolvePackageAssets" DependsOnTargets="Restore" />
 </Project>
