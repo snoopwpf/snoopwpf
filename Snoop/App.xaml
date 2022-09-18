@@ -70,8 +70,8 @@
 
             <!-- appChooserMinimizeCloseButtonStyle -->
             <Style x:Key="appChooserMinimizeCloseButtonStyle"
-                   BasedOn="{StaticResource appChooserButtonStyle}"
-                   TargetType="{x:Type Button}">
+                   TargetType="{x:Type Button}"
+                   BasedOn="{StaticResource appChooserButtonStyle}">
                 <Setter Property="Background" Value="#FF5B0000" />
                 <Setter Property="Foreground" Value="White" />
                 <Style.Triggers>

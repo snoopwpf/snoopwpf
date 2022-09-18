@@ -8,8 +8,8 @@
                    TargetType="{x:Type RichTextBox}" />
             <!-- ReSharper disable once Xaml.StyleInvalidTargetType -->
             <Style x:Key="BlahBlahStyle"
-                   BasedOn="{StaticResource BlahStyle}"
-                   TargetType="{x:Type TextBoxBase}" />
+                   TargetType="{x:Type TextBoxBase}"
+                   BasedOn="{StaticResource BlahStyle}" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

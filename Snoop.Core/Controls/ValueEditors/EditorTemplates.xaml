@@ -134,8 +134,8 @@
         </Setter>
     </Style>
 
-    <Style BasedOn="{StaticResource {x:Type valueEditors:StandardValueEditor}}"
-           TargetType="{x:Type valueEditors:StringValueEditor}">
+    <Style TargetType="{x:Type valueEditors:StringValueEditor}"
+           BasedOn="{StaticResource {x:Type valueEditors:StandardValueEditor}}">
         <Style.Setters>
             <Setter Property="DetailsEditorTemplate">
                 <Setter.Value>
@@ -153,8 +153,8 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource {x:Type valueEditors:StandardValueEditor}}"
-           TargetType="{x:Type valueEditors:BrushValueEditor}">
+    <Style TargetType="{x:Type valueEditors:BrushValueEditor}"
+           BasedOn="{StaticResource {x:Type valueEditors:StandardValueEditor}}">
         <Style.Resources>
             <DrawingBrush x:Key="CheckerboardBrush"
                           Stretch="Fill"
@@ -297,8 +297,8 @@
         </Style.Resources>
     </Style>
 
-    <Style BasedOn="{StaticResource {x:Type valueEditors:StandardValueEditor}}"
-           TargetType="{x:Type valueEditors:ColorValueEditor}">
+    <Style TargetType="{x:Type valueEditors:ColorValueEditor}"
+           BasedOn="{StaticResource {x:Type valueEditors:StandardValueEditor}}">
         <Style.Resources>
             <DrawingBrush x:Key="CheckerboardBrush"
                           Stretch="Fill"

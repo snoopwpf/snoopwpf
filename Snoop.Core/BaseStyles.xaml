@@ -98,8 +98,8 @@
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}">
-                            <ScrollViewer Style="{DynamicResource {ComponentResourceKey TypeInTargetAssembly={x:Type FrameworkElement}, ResourceId=MenuScrollViewer}}"
-                                          Name="ContextMenuScrollViewer"
+                            <ScrollViewer Name="ContextMenuScrollViewer"
+                                          Style="{DynamicResource {ComponentResourceKey TypeInTargetAssembly={x:Type FrameworkElement}, ResourceId=MenuScrollViewer}}"
                                           Grid.ColumnSpan="2"
                                           Margin="1 0">
                                 <Grid RenderOptions.ClearTypeHint="Enabled">
@@ -447,8 +447,8 @@
                             CornerRadius="3"
                             SnapsToDevicePixels="true">
                         <DockPanel>
-                            <ToggleButton Style="{StaticResource ExpanderDownHeaderStyle}"
-                                          x:Name="HeaderSite"
+                            <ToggleButton x:Name="HeaderSite"
+                                          Style="{StaticResource ExpanderDownHeaderStyle}"
                                           MinWidth="0"
                                           MinHeight="0"
                                           Margin="1"
@@ -1100,8 +1100,8 @@
                                 Margin="1 0 0 1"
                                 BorderThickness="1 1 1 0" />
                         <Canvas>
-                            <Thumb Style="{StaticResource GridViewColumnHeaderGripper}"
-                                   x:Name="PART_HeaderGripper" />
+                            <Thumb x:Name="PART_HeaderGripper"
+                                   Style="{StaticResource GridViewColumnHeaderGripper}" />
                         </Canvas>
                     </Grid>
                     <ControlTemplate.Triggers>
@@ -1166,8 +1166,8 @@
     </Style>
 
     <Style x:Key="{x:Type GridViewColumnHeader}"
-           BasedOn="{StaticResource GridViewColumnHeaderStyle}"
-           TargetType="{x:Type GridViewColumnHeader}" />
+           TargetType="{x:Type GridViewColumnHeader}"
+           BasedOn="{StaticResource GridViewColumnHeaderStyle}" />
 
     <!-- GridView Style -->
     <Style x:Key="GridView.GridViewStyle"
@@ -1377,8 +1377,8 @@
         ==================================================================
     -->
     <Style x:Key="MenuScrollButton"
-           BasedOn="{x:Null}"
-           TargetType="{x:Type RepeatButton}">
+           TargetType="{x:Type RepeatButton}"
+           BasedOn="{x:Null}">
         <Setter Property="ClickMode" Value="Hover" />
         <Setter Property="Template">
             <Setter.Value>
@@ -1398,8 +1398,8 @@
     </Style>
 
     <Style x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type FrameworkElement}, ResourceId=MenuScrollViewer}"
-           BasedOn="{x:Null}"
-           TargetType="{x:Type ScrollViewer}">
+           TargetType="{x:Type ScrollViewer}"
+           BasedOn="{x:Null}">
         <Setter Property="HorizontalScrollBarVisibility" Value="Hidden" />
         <Setter Property="Template">
             <Setter.Value>
@@ -1599,8 +1599,8 @@
                             Background="{DynamicResource Menu.Static.Background}"
                             BorderBrush="{DynamicResource Menu.Static.Border}"
                             BorderThickness="1">
-                        <ScrollViewer Style="{DynamicResource {ComponentResourceKey ResourceId=MenuScrollViewer, TypeInTargetAssembly={x:Type FrameworkElement}}}"
-                                      x:Name="SubMenuScrollViewer">
+                        <ScrollViewer x:Name="SubMenuScrollViewer"
+                                      Style="{DynamicResource {ComponentResourceKey ResourceId=MenuScrollViewer, TypeInTargetAssembly={x:Type FrameworkElement}}}">
                             <Grid RenderOptions.ClearTypeHint="Enabled">
                                 <Canvas Width="0"
                                         Height="0"
@@ -1815,8 +1815,8 @@
                             Background="{DynamicResource Menu.Static.Background}"
                             BorderBrush="{DynamicResource Menu.Static.Border}"
                             BorderThickness="1">
-                        <ScrollViewer Style="{DynamicResource {ComponentResourceKey ResourceId=MenuScrollViewer, TypeInTargetAssembly={x:Type FrameworkElement}}}"
-                                      x:Name="SubMenuScrollViewer">
+                        <ScrollViewer x:Name="SubMenuScrollViewer"
+                                      Style="{DynamicResource {ComponentResourceKey ResourceId=MenuScrollViewer, TypeInTargetAssembly={x:Type FrameworkElement}}}">
                             <Grid RenderOptions.ClearTypeHint="Enabled">
                                 <Canvas Width="0"
                                         Height="0"
@@ -2230,8 +2230,8 @@
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}" />
-                        <RepeatButton Style="{StaticResource ScrollBarButton}"
-                                      x:Name="PART_LineUpButton"
+                        <RepeatButton x:Name="PART_LineUpButton"
+                                      Style="{StaticResource ScrollBarButton}"
                                       Command="{x:Static ScrollBar.LineUpCommand}"
                                       IsEnabled="{TemplateBinding IsMouseOver}">
                             <Path x:Name="ArrowTop"
@@ -2256,8 +2256,8 @@
                                 <Thumb Style="{StaticResource ScrollBarThumbVertical}" />
                             </Track.Thumb>
                         </Track>
-                        <RepeatButton Style="{StaticResource ScrollBarButton}"
-                                      x:Name="PART_LineDownButton"
+                        <RepeatButton x:Name="PART_LineDownButton"
+                                      Style="{StaticResource ScrollBarButton}"
                                       Grid.Row="2"
                                       Command="{x:Static ScrollBar.LineDownCommand}"
                                       IsEnabled="{TemplateBinding IsMouseOver}">
@@ -2326,8 +2326,8 @@
                                         Background="{TemplateBinding Background}"
                                         BorderBrush="{TemplateBinding BorderBrush}"
                                         BorderThickness="{TemplateBinding BorderThickness}" />
-                                <RepeatButton Style="{StaticResource ScrollBarButton}"
-                                              x:Name="PART_LineLeftButton"
+                                <RepeatButton x:Name="PART_LineLeftButton"
+                                              Style="{StaticResource ScrollBarButton}"
                                               Command="{x:Static ScrollBar.LineLeftCommand}"
                                               IsEnabled="{TemplateBinding IsMouseOver}">
                                     <Path x:Name="ArrowLeft"
@@ -2351,8 +2351,8 @@
                                         <Thumb Style="{StaticResource ScrollBarThumbHorizontal}" />
                                     </Track.Thumb>
                                 </Track>
-                                <RepeatButton Style="{StaticResource ScrollBarButton}"
-                                              x:Name="PART_LineRightButton"
+                                <RepeatButton x:Name="PART_LineRightButton"
+                                              Style="{StaticResource ScrollBarButton}"
                                               Grid.Column="2"
                                               Command="{x:Static ScrollBar.LineRightCommand}"
                                               IsEnabled="{TemplateBinding IsMouseOver}">
@@ -3320,28 +3320,28 @@
         ==================================================================
     -->
     <Style x:Key="{x:Type TextBox}"
-           BasedOn="{StaticResource {x:Type TextBoxBase}}"
-           TargetType="{x:Type TextBox}" />
+           TargetType="{x:Type TextBox}"
+           BasedOn="{StaticResource {x:Type TextBoxBase}}" />
 
     <Style x:Key="{x:Type controls:EditTextBox}"
-           BasedOn="{StaticResource {x:Type TextBoxBase}}"
-           TargetType="{x:Type controls:EditTextBox}" />
+           TargetType="{x:Type controls:EditTextBox}"
+           BasedOn="{StaticResource {x:Type TextBoxBase}}" />
     <!--
         =================================================================
         RichTextBox
         ==================================================================
     -->
     <Style x:Key="{x:Type RichTextBox}"
-           BasedOn="{StaticResource {x:Type TextBoxBase}}"
-           TargetType="{x:Type RichTextBox}">
+           TargetType="{x:Type RichTextBox}"
+           BasedOn="{StaticResource {x:Type TextBoxBase}}">
         <Style.Resources>
             <Style x:Key="{x:Type FlowDocument}"
                    TargetType="{x:Type FlowDocument}">
                 <Setter Property="OverridesDefaultStyle" Value="true" />
             </Style>
             <Style x:Key="{x:Type Hyperlink}"
-                   BasedOn="{StaticResource {x:Type Hyperlink}}"
-                   TargetType="{x:Type Hyperlink}">
+                   TargetType="{x:Type Hyperlink}"
+                   BasedOn="{StaticResource {x:Type Hyperlink}}">
                 <Style.Triggers>
                     <Trigger Property="IsMouseOver" Value="true">
                         <Setter Property="Foreground" Value="Blue" />
@@ -3616,8 +3616,8 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition />
                         </Grid.RowDefinitions>
-                        <ToggleButton Style="{StaticResource ExpandCollapseToggleStyle}"
-                                      x:Name="Expander"
+                        <ToggleButton x:Name="Expander"
+                                      Style="{StaticResource ExpandCollapseToggleStyle}"
                                       ClickMode="Press"
                                       IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" />
                         <Border Name="Bd"
@@ -3678,8 +3678,8 @@
     </Style>
 
     <Style x:Key="{x:Type TreeViewItem}"
-           BasedOn="{StaticResource TreeViewItemStyle}"
-           TargetType="{x:Type TreeViewItem}" />
+           TargetType="{x:Type TreeViewItem}"
+           BasedOn="{StaticResource TreeViewItemStyle}" />
 
     <!--
         =================================================================
@@ -3827,8 +3827,8 @@
 
 
     <Style x:Key="{x:Type ToggleButton}"
-           BasedOn="{StaticResource BaseButtonStyle}"
-           TargetType="{x:Type ToggleButton}">
+           TargetType="{x:Type ToggleButton}"
+           BasedOn="{StaticResource BaseButtonStyle}">
         <Style.Triggers>
             <MultiDataTrigger>
                 <MultiDataTrigger.Conditions>
@@ -3850,14 +3850,14 @@
     </Style>
 
     <Style x:Key="{x:Type RepeatButton}"
-           BasedOn="{StaticResource BaseButtonStyle}"
-           TargetType="{x:Type RepeatButton}">
+           TargetType="{x:Type RepeatButton}"
+           BasedOn="{StaticResource BaseButtonStyle}">
         <Setter Property="Stylus.IsPressAndHoldEnabled" Value="false" />
     </Style>
 
     <Style x:Key="{x:Type Button}"
-           BasedOn="{StaticResource BaseButtonStyle}"
-           TargetType="{x:Type Button}" />
+           TargetType="{x:Type Button}"
+           BasedOn="{StaticResource BaseButtonStyle}" />
 
     <Style TargetType="{x:Type CheckBox}">
         <Setter Property="Background" Value="{DynamicResource OptionMark.Static.Background}" />
@@ -4147,8 +4147,8 @@
                     </Border>
                 </themes:SystemDropShadowChrome>
             </Popup>
-            <ToggleButton Style="{StaticResource ComboBoxToggleButton}"
-                          x:Name="toggleButton"
+            <ToggleButton x:Name="toggleButton"
+                          Style="{StaticResource ComboBoxToggleButton}"
                           Grid.ColumnSpan="2"
                           Background="{TemplateBinding Background}"
                           BorderBrush="{TemplateBinding BorderBrush}"
@@ -4157,8 +4157,8 @@
             <Border x:Name="Border"
                     Margin="{TemplateBinding BorderThickness}"
                     Background="{DynamicResource TextBox.Static.Background}">
-                <TextBox Style="{StaticResource ComboBoxEditableTextBox}"
-                         x:Name="PART_EditableTextBox"
+                <TextBox x:Name="PART_EditableTextBox"
+                         Style="{StaticResource ComboBoxEditableTextBox}"
                          Margin="{TemplateBinding Padding}"
                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
@@ -4238,8 +4238,8 @@
                     </Border>
                 </themes:SystemDropShadowChrome>
             </Popup>
-            <ToggleButton Style="{StaticResource ComboBoxToggleButton}"
-                          x:Name="toggleButton"
+            <ToggleButton x:Name="toggleButton"
+                          Style="{StaticResource ComboBoxToggleButton}"
                           Grid.ColumnSpan="2"
                           Background="{TemplateBinding Background}"
                           BorderBrush="{TemplateBinding BorderBrush}"

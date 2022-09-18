@@ -12,8 +12,8 @@
                 <ResourceDictionary Source="pack://application:,,,/Snoop.Core;component/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <Style BasedOn="{StaticResource {x:Type TextBox}}"
-                   TargetType="TextBox">
+            <Style TargetType="TextBox"
+                   BasedOn="{StaticResource {x:Type TextBox}}">
                 <Setter Property="FontFamily" Value="Consolas" />
             </Style>
         </ResourceDictionary>

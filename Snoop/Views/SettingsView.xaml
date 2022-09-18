@@ -25,8 +25,8 @@
         <Grid.Resources>
             <ResourceDictionary>
                 <Style x:Key="Snoop.Styles.Button.Large"
-                       BasedOn="{StaticResource {x:Type Button}}"
-                       TargetType="Button">
+                       TargetType="Button"
+                       BasedOn="{StaticResource {x:Type Button}}">
                     <Setter Property="Height" Value="30" />
                     <Setter Property="Margin" Value="5" />
                     <Setter Property="MinWidth" Value="100" />
@@ -47,8 +47,8 @@
                   IsSynchronizedWithCurrentItem="True"
                   ItemsSource="{Binding ElementName=Control, Path=Properties}">
             <ListView.ItemContainerStyle>
-                <Style BasedOn="{StaticResource GridView.GridViewItemContainerStyle}"
-                       TargetType="{x:Type ListViewItem}">
+                <Style TargetType="{x:Type ListViewItem}"
+                       BasedOn="{StaticResource GridView.GridViewItemContainerStyle}">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                     <Style.Triggers>
                         <Trigger Property="ItemsControl.AlternationIndex" Value="0">
@@ -100,18 +100,18 @@
 
         <StackPanel Grid.Row="1"
                     Orientation="Horizontal">
-            <Button Style="{StaticResource Snoop.Styles.Button.Large}"
-                    x:Name="SaveSettingsAndClose"
+            <Button x:Name="SaveSettingsAndClose"
+                    Style="{StaticResource Snoop.Styles.Button.Large}"
                     Click="SaveSettingsAndClose_OnClick">
                 Save &amp; close
             </Button>
-            <Button Style="{StaticResource Snoop.Styles.Button.Large}"
-                    x:Name="DiscardSettings"
+            <Button x:Name="DiscardSettings"
+                    Style="{StaticResource Snoop.Styles.Button.Large}"
                     Click="DiscardSettings_OnClick">
                 Discard changes
             </Button>
-            <Button Style="{StaticResource Snoop.Styles.Button.Large}"
-                    x:Name="ResetAllSettings"
+            <Button x:Name="ResetAllSettings"
+                    Style="{StaticResource Snoop.Styles.Button.Large}"
                     Click="ResetAllSettings_OnClick">
                 Reset all settings
             </Button>

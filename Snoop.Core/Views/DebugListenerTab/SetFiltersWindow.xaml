@@ -44,8 +44,8 @@
                     </ContextMenu>
                 </ListBox.ContextMenu>
                 <ListBox.ItemContainerStyle>
-                    <Style BasedOn="{StaticResource {x:Type ListBoxItem}}"
-                           TargetType="{x:Type ListBoxItem}">
+                    <Style TargetType="{x:Type ListBoxItem}"
+                           BasedOn="{StaticResource {x:Type ListBoxItem}}">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding Path=IsGrouped}" Value="True">
                                 <Setter Property="Background" Value="{DynamicResource Snoop.Brushes.Default.LightDarkBackground}" />

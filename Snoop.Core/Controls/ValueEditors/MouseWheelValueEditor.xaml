@@ -71,8 +71,8 @@
                     d:DataContext="{d:DesignInstance infrastructure:PropertyInformation}"
                     Content="{Binding}">
         <ContentControl.Style>
-            <Style BasedOn="{StaticResource {x:Type ContentControl}}"
-                   TargetType="{x:Type ContentControl}">
+            <Style TargetType="{x:Type ContentControl}"
+                   BasedOn="{StaticResource {x:Type ContentControl}}">
                 <!--
                     ugh! couldn't get a ContentControl binding to Value and using implicit DataTemplates. Keep getting error
                     about element is already in the visual tree.

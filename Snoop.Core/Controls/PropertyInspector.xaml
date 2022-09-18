@@ -92,8 +92,8 @@
                     Command="{x:Static controls:PropertyInspector.PopTargetCommand}"
                     ToolTipService.ShowOnDisabled="True">
                 <Button.Style>
-                    <Style BasedOn="{StaticResource BaseButtonStyle}"
-                           TargetType="{x:Type Button}">
+                    <Style TargetType="{x:Type Button}"
+                           BasedOn="{StaticResource BaseButtonStyle}">
                         <Style.Triggers>
                             <Trigger Property="Button.IsEnabled" Value="False">
                                 <Setter Property="Button.Opacity" Value=".5" />

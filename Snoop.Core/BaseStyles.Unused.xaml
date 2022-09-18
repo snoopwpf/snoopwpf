@@ -60,8 +60,8 @@
                 <ControlTemplate TargetType="Calendar">
                     <StackPanel Name="PART_Root"
                                 HorizontalAlignment="Center">
-                        <CalendarItem Style="{TemplateBinding CalendarItemStyle}"
-                                      Name="PART_CalendarItem"
+                        <CalendarItem Name="PART_CalendarItem"
+                                      Style="{TemplateBinding CalendarItemStyle}"
                                       Background="{TemplateBinding Background}"
                                       BorderBrush="{TemplateBinding BorderBrush}"
                                       BorderThickness="{TemplateBinding BorderThickness}" />

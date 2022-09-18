@@ -20,12 +20,12 @@
     <Style TargetType="{x:Type Rectangle}" />
 
     <Style x:Key="Snoop.Styles.ProperTreeView"
-           BasedOn="{StaticResource Snoop.Styles.TreeView}"
-           TargetType="TreeView" />
+           TargetType="TreeView"
+           BasedOn="{StaticResource Snoop.Styles.TreeView}" />
 
     <Style x:Key="{x:Type TreeView}"
-           BasedOn="{StaticResource Snoop.Styles.TreeView}"
-           TargetType="TreeView" />
+           TargetType="TreeView"
+           BasedOn="{StaticResource Snoop.Styles.TreeView}" />
 
     <!-- This is the area which contains the selected item in the ComboBox -->
 
@@ -146,8 +146,8 @@
     </ControlTemplate>
 
     <Style x:Key="{x:Type controls:NoSelectionComboBox}"
-           BasedOn="{StaticResource {x:Type ComboBox}}"
-           TargetType="{x:Type controls:NoSelectionComboBox}">
+           TargetType="{x:Type controls:NoSelectionComboBox}"
+           BasedOn="{StaticResource {x:Type ComboBox}}">
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
@@ -159,15 +159,15 @@
     </Style>
 
     <Style x:Key="{x:Type controls:NoFocusHyperlink}"
-           BasedOn="{StaticResource {x:Type Hyperlink}}"
-           TargetType="{x:Type controls:NoFocusHyperlink}" />
+           TargetType="{x:Type controls:NoFocusHyperlink}"
+           BasedOn="{StaticResource {x:Type Hyperlink}}" />
 
     <!-- TreeView -->
     <controls:IndentToMarginConverter x:Key="IndentToMarginConverter" />
 
     <Style x:Key="TreeViewToggleStyle"
-           BasedOn="{StaticResource {x:Type ToggleButton}}"
-           TargetType="{x:Type ToggleButton}">
+           TargetType="{x:Type ToggleButton}"
+           BasedOn="{StaticResource {x:Type ToggleButton}}">
         <Setter Property="Focusable" Value="False" />
         <Setter Property="Height" Value="13" />
         <Setter Property="Template">
@@ -208,8 +208,8 @@
     </Style>
 
     <Style x:Key="ProperTreeViewItemStyle"
-           BasedOn="{StaticResource TreeViewItemStyle}"
-           TargetType="{x:Type TreeViewItem}">
+           TargetType="{x:Type TreeViewItem}"
+           BasedOn="{StaticResource TreeViewItemStyle}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}, AncestorLevel=1}, FallbackValue=Left}" />
         <Setter Property="ItemsPanel">
@@ -236,8 +236,8 @@
                                 BorderThickness="{TemplateBinding BorderThickness}">
                             <StackPanel Margin="{Binding Indent, Converter={StaticResource IndentToMarginConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:ProperTreeViewItem}}}"
                                         Orientation="Horizontal">
-                                <ToggleButton Style="{StaticResource TreeViewToggleStyle}"
-                                              x:Name="Expander"
+                                <ToggleButton x:Name="Expander"
+                                              Style="{StaticResource TreeViewToggleStyle}"
                                               ClickMode="Press"
                                               IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" />
                                 <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
@@ -298,8 +298,8 @@
     </Style>
 
     <Style x:Key="MouseWheelText"
-           BasedOn="{StaticResource {x:Type TextBlock}}"
-           TargetType="{x:Type TextBlock}">
+           TargetType="{x:Type TextBlock}"
+           BasedOn="{StaticResource {x:Type TextBlock}}">
         <!--<Setter Property="local:PropertyEditor.SupportMouseWheel" Value="True"/>-->
         <Setter Property="FontSize" Value="12" />
         <Setter Property="FontWeight" Value="Bold" />

@@ -11,8 +11,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d">
     <StackPanel>
-        <Button Style="{DynamicResource appChooserButtonStyle}"
-                x:Name="btnStartWindowsSearch"
+        <Button x:Name="btnStartWindowsSearch"
+                Style="{DynamicResource appChooserButtonStyle}"
                 Width="20"
                 Height="20">
             <Path x:Name="snoopCrosshairsImage"

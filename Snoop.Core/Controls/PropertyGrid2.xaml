@@ -78,8 +78,8 @@
                 </MenuItem>
             </ContextMenu>
 
-            <Style BasedOn="{StaticResource GridViewColumnHeaderStyle}"
-                   TargetType="{x:Type GridViewColumnHeader}">
+            <Style TargetType="{x:Type GridViewColumnHeader}"
+                   BasedOn="{StaticResource GridViewColumnHeaderStyle}">
                 <Setter Property="Command" Value="{x:Static controls:PropertyGrid2.SortCommand}" />
             </Style>
 
@@ -114,8 +114,8 @@
         <RowDefinition Height="*" />
     </Grid.RowDefinitions>
 
-    <ListView Style="{DynamicResource GridView.GridViewStyle}"
-              x:Name="ListView"
+    <ListView x:Name="ListView"
+              Style="{DynamicResource GridView.GridViewStyle}"
               Grid.RowSpan="2"
               MinWidth="0"
               MinHeight="0"
@@ -136,8 +136,8 @@
 		-->
 
         <ListView.ItemContainerStyle>
-            <Style BasedOn="{StaticResource GridView.GridViewItemContainerStyle}"
-                   TargetType="{x:Type ListViewItem}">
+            <Style TargetType="{x:Type ListViewItem}"
+                   BasedOn="{StaticResource GridView.GridViewItemContainerStyle}">
                 <Setter Property="ContextMenu" Value="{StaticResource PropertyMenu}" />
                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                 <Style.Triggers>

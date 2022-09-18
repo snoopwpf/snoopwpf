@@ -95,16 +95,16 @@
             </controls:NoSelectionComboBox>
         </StackPanel>
 
-        <ListView Style="{DynamicResource GridView.GridViewStyle}"
-                  x:Name="diagnostics"
+        <ListView x:Name="diagnostics"
+                  Style="{DynamicResource GridView.GridViewStyle}"
                   Grid.Row="1"
                   AlternationCount="2"
                   ItemsSource="{Binding ElementName=self, Path=DiagnosticsItemsView}"
                   KeyUp="Diagnostics_OnKeyUp"
                   MouseDoubleClick="Control_OnMouseDoubleClick">
             <ListView.ItemContainerStyle>
-                <Style BasedOn="{StaticResource GridView.GridViewItemContainerStyle}"
-                       TargetType="{x:Type ListViewItem}">
+                <Style TargetType="{x:Type ListViewItem}"
+                       BasedOn="{StaticResource GridView.GridViewItemContainerStyle}">
                     <Style.Triggers>
                         <Trigger Property="ItemsControl.AlternationIndex" Value="0">
                             <Setter Property="Background" Value="Transparent" />
