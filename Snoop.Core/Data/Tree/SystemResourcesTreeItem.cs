@@ -1,6 +1,8 @@
 ﻿namespace Snoop.Data.Tree;
 
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Windows;
 
@@ -44,11 +46,31 @@ public sealed class SystemResourcesTreeItem : TreeItem
             }
         }
 
+        foreach (var systemResourceTreeItem in this.GetSystemResourceDictionaries())
+        {
+            this.AddChild(systemResourceTreeItem);
+        }
+    }
+
+#if NET5_0_OR_GREATER && NEVER
+    private IEnumerable<SystemResourceTreeItem> GetSystemResourceDictionaries()
+    {
+        var dictionaryInfos = System.Windows.Diagnostics.ResourceDictionaryDiagnostics.GenericResourceDictionaries
+            .Concat(System.Windows.Diagnostics.ResourceDictionaryDiagnostics.ThemedResourceDictionaries);
+
+        foreach (var dictionaryInfo in dictionaryInfos)
+        {
+            yield return (SystemResourceTreeItem)new SystemResourceTreeItem(dictionaryInfo.Assembly, dictionaryInfo.ResourceDictionary, this, this.TreeService).Reload();
+        }
+    }
+#else
+    private IEnumerable<SystemResourceTreeItem> GetSystemResourceDictionaries()
+    {
         var type = typeof(ResourceDictionary).Assembly.GetType("System.Windows.SystemResources");
 
         if (type is null)
         {
-            return;
+            yield break;
         }
 
         var dictionariesField = type.GetField("_dictionaries", BindingFlags.Static | BindingFlags.NonPublic)
@@ -58,7 +80,7 @@ public sealed class SystemResourcesTreeItem : TreeItem
 
         if (dictionaries is null)
         {
-            return;
+            yield break;
         }
 
 #pragma warning disable CS8605
@@ -80,7 +102,7 @@ public sealed class SystemResourcesTreeItem : TreeItem
 
             if (genericDictionary is not null)
             {
-                this.AddChild(new SystemResourceTreeItem(assembly, genericDictionary, this, this.TreeService).Reload());
+                yield return (SystemResourceTreeItem)new SystemResourceTreeItem(assembly, genericDictionary, this, this.TreeService).Reload();
             }
 
             var themedDictionaryField = resourceDictionaries.GetType().GetField("_themedDictionary", BindingFlags.Instance | BindingFlags.NonPublic)
@@ -90,10 +112,11 @@ public sealed class SystemResourcesTreeItem : TreeItem
 
             if (themedDictionary is not null)
             {
-                this.AddChild(new SystemResourceTreeItem(assembly, themedDictionary, this, this.TreeService).Reload());
+                yield return (SystemResourceTreeItem)new SystemResourceTreeItem(assembly, themedDictionary, this, this.TreeService).Reload();
             }
         }
     }
+#endif
 
     protected override void OnPropertyChanged(string propertyName)
     {
