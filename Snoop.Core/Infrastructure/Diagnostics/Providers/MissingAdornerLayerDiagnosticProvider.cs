@@ -6,5 +6,5 @@ public class MissingAdornerLayerDiagnosticProvider : DiagnosticProvider
 
     public override string Name => "Missing adorner layer";
 
-    public override string Description => "No adorner layer for the element could be found";
+    public override string Description => "No adorner layer for the selected element could be found";
 }
