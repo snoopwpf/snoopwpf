@@ -22,7 +22,7 @@ jobs:
         run: Invoke-WebRequest 'https://dot.net/v1/dotnet-install.ps1' -OutFile 'dotnet-install.ps1'
       - name: Install correct .NET SDK
         shell: pwsh
-        run: ./dotnet-install.ps1 -Version 6.0.100 -InstallDir "C:\Program Files\dotnet"
+        run: ./dotnet-install.ps1 -Version 6.0.400 -InstallDir "C:\Program Files\dotnet"
       - name: Run './build.cmd CI'
         run: ./build.cmd CI
       - uses: actions/upload-artifact@v2
