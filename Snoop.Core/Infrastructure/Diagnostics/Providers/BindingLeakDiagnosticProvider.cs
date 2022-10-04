@@ -129,7 +129,7 @@ public class BindingLeakDiagnosticProvider : DiagnosticProvider
 
             foreach (PropertyDescriptor pd in pds)
             {
-                var valueChangedHandlers = (Hashtable?)valueChangedHandlersFieldInfo.GetValue(pd);
+                var valueChangedHandlers = (IDictionary?)valueChangedHandlersFieldInfo.GetValue(pd);
                 if (valueChangedHandlers is not null
                     && valueChangedHandlers.Count != 0)
                 {
@@ -147,7 +147,7 @@ public class BindingLeakDiagnosticProvider : DiagnosticProvider
     [PublicAPI]
     public sealed class ReflectPropertyDescriptorInfo : IEquatable<ReflectPropertyDescriptorInfo>, IComparable<ReflectPropertyDescriptorInfo>
     {
-        public ReflectPropertyDescriptorInfo(string typeName, string propertyName, Hashtable valueChangedHandlers)
+        public ReflectPropertyDescriptorInfo(string typeName, string propertyName, IDictionary valueChangedHandlers)
         {
             this.TypeName = typeName;
             this.PropertyName = propertyName;
@@ -158,7 +158,7 @@ public class BindingLeakDiagnosticProvider : DiagnosticProvider
 
         public string PropertyName { get; }
 
-        public Hashtable ValueChangedHandlers { get; }
+        public IDictionary ValueChangedHandlers { get; }
 
         public string DisplayHandlerCount => string.Format(CultureInfo.InvariantCulture, " ({0:n0} handlers)", this.ValueChangedHandlers.Count);
 
