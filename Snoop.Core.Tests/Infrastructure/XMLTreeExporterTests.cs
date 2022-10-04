@@ -30,7 +30,7 @@ public class XMLTreeExporterTests
         var textWriter = new StringWriter();
 
         var exporter = new XMLTreeExporter();
-        exporter.Export(GetTestTreeItem(), textWriter, null, true);
+        exporter.Export(GetTestTreeItem(), textWriter, new(string.Empty, false), true);
 
         var result = textWriter.ToString();
 
@@ -56,7 +56,7 @@ public class XMLTreeExporterTests
         var textWriter = new StringWriter();
 
         var exporter = new XMLTreeExporter();
-        exporter.Export(GetTestTreeItem(), textWriter, null, false);
+        exporter.Export(GetTestTreeItem(), textWriter, new(string.Empty, false), false);
 
         var result = textWriter.ToString();
 
