@@ -18,6 +18,10 @@ public class XMLTreeExporterTests
     {
         // Assert correct expected formatting
         Assert.That(default(Point).ToString(), Is.EqualTo("0,0"), CultureInfo.CurrentCulture.NativeName);
+
+        // Required to ensure ScrollViewer attached properties are initialized
+        // ReSharper disable once UnusedVariable
+        var scrollViewer = new ScrollViewer();
     }
 
     [Test]
