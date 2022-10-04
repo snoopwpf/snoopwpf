@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-16" standalone="yes"?>
+<?xml version="1.0" encoding="utf-16" standalone="yes"?>
 <node name="" displayName=" (StackPanel)" targetType="System.Windows.Controls.StackPanel">
   <properties>
     <property displayName="ActualHeight" value="0" />
@@ -133,6 +133,13 @@
     <property displayName="RenderTransformOrigin" value="0,0" />
     <property displayName="Resources" value="System.Windows.ResourceDictionary" />
     <property displayName="ScrollOwner" value="null" />
+    <property displayName="ScrollViewer.CanContentScroll" value="False" />
+    <property displayName="ScrollViewer.HorizontalScrollBarVisibility" value="Disabled" />
+    <property displayName="ScrollViewer.IsDeferredScrollingEnabled" value="False" />
+    <property displayName="ScrollViewer.PanningDeceleration" value="0.001" />
+    <property displayName="ScrollViewer.PanningMode" value="None" />
+    <property displayName="ScrollViewer.PanningRatio" value="1" />
+    <property displayName="ScrollViewer.VerticalScrollBarVisibility" value="Visible" />
     <property displayName="SnapsToDevicePixels" value="False" />
     <property displayName="Storyboard.Target" value="null" />
     <property displayName="Storyboard.TargetName" value="null" />
