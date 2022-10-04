@@ -1,236 +1,41 @@
 ﻿<?xml version="1.0" encoding="utf-16" standalone="yes"?>
 <node name="" displayName=" (StackPanel)" targetType="System.Windows.Controls.StackPanel">
   <properties>
-    <property displayName="ActualHeight" value="0" />
-    <property displayName="ActualWidth" value="0" />
-    <property displayName="AllowDrop" value="False" />
-    <property displayName="AreAnyTouchesCaptured" value="False" />
-    <property displayName="AreAnyTouchesCapturedWithin" value="False" />
-    <property displayName="AreAnyTouchesDirectlyOver" value="False" />
-    <property displayName="AreAnyTouchesOver" value="False" />
-    <property displayName="AutomationProperties.AcceleratorKey" value="" />
-    <property displayName="AutomationProperties.AccessKey" value="" />
-    <property displayName="AutomationProperties.AutomationId" value="" />
-    <property displayName="AutomationProperties.HelpText" value="" />
-    <property displayName="AutomationProperties.IsColumnHeader" value="False" />
-    <property displayName="AutomationProperties.IsOffscreenBehavior" value="Default" />
-    <property displayName="AutomationProperties.IsRequiredForForm" value="False" />
-    <property displayName="AutomationProperties.IsRowHeader" value="False" />
-    <property displayName="AutomationProperties.ItemStatus" value="" />
-    <property displayName="AutomationProperties.ItemType" value="" />
-    <property displayName="AutomationProperties.LabeledBy" value="null" />
-    <property displayName="AutomationProperties.LiveSetting" value="Off" />
-    <property displayName="AutomationProperties.Name" value="" />
-    <property displayName="AutomationProperties.PositionInSet" value="-1" />
-    <property displayName="AutomationProperties.SizeOfSet" value="-1" />
-    <property displayName="Background" value="null" />
-    <property displayName="BaseUriHelper.BaseUri" value="null" />
-    <property displayName="Binding.XmlNamespaceManager" value="null" />
-    <property displayName="BindingGroup" value="null" />
-    <property displayName="BitmapEffect" value="null" />
-    <property displayName="BitmapEffectInput" value="null" />
-    <property displayName="Block.IsHyphenationEnabled" value="False" />
-    <property displayName="Block.LineHeight" value="NaN" />
-    <property displayName="Block.LineStackingStrategy" value="MaxHeight" />
-    <property displayName="Block.TextAlignment" value="Left" />
-    <property displayName="CacheMode" value="null" />
     <property displayName="CanHorizontallyScroll" value="False" />
     <property displayName="CanVerticallyScroll" value="False" />
     <property displayName="Children" value="System.Windows.Controls.UIElementCollection" />
-    <property displayName="Clip" value="null" />
-    <property displayName="ClipToBounds" value="False" />
     <property displayName="CommandBindings" value="System.Windows.Input.CommandBindingCollection" />
-    <property displayName="ContextMenu" value="null" />
-    <property displayName="ContextMenuService.HasDropShadow" value="False" />
-    <property displayName="ContextMenuService.HorizontalOffset" value="0" />
-    <property displayName="ContextMenuService.IsEnabled" value="True" />
-    <property displayName="ContextMenuService.Placement" value="MousePoint" />
-    <property displayName="ContextMenuService.PlacementRectangle" value="Empty" />
-    <property displayName="ContextMenuService.PlacementTarget" value="null" />
-    <property displayName="ContextMenuService.ShowOnDisabled" value="False" />
-    <property displayName="ContextMenuService.VerticalOffset" value="0" />
-    <property displayName="Cursor" value="null" />
-    <property displayName="DataContext" value="null" />
     <property displayName="DefaultStyleKey" value="null" />
     <property displayName="DependencyObjectType" value="System.Windows.DependencyObjectType" />
     <property displayName="DesiredSize" value="0,0" />
     <property displayName="Dispatcher" value="System.Windows.Threading.Dispatcher" />
-    <property displayName="Effect" value="null" />
     <property displayName="ExtentHeight" value="0" />
     <property displayName="ExtentWidth" value="0" />
-    <property displayName="FlowDirection" value="LeftToRight" />
-    <property displayName="FocusManager.FocusedElement" value="null" />
-    <property displayName="FocusManager.IsFocusScope" value="False" />
-    <property displayName="FocusVisualStyle" value="System.Windows.Style" />
-    <property displayName="Focusable" value="False" />
-    <property displayName="ForceCursor" value="False" />
-    <property displayName="Grid.IsSharedSizeScope" value="False" />
     <property displayName="HasAnimatedProperties" value="False" />
     <property displayName="HasLogicalOrientationPublic" value="True" />
-    <property displayName="Height" value="NaN" />
-    <property displayName="HorizontalAlignment" value="Stretch" />
     <property displayName="HorizontalOffset" value="0" />
     <property displayName="InputBindings" value="System.Windows.Input.InputBindingCollection" />
-    <property displayName="InputMethod.IsInputMethodEnabled" value="True" />
-    <property displayName="InputMethod.IsInputMethodSuspended" value="False" />
-    <property displayName="InputMethod.PreferredImeConversionMode" value="DoNotCare" />
-    <property displayName="InputMethod.PreferredImeSentenceMode" value="DoNotCare" />
-    <property displayName="InputMethod.PreferredImeState" value="DoNotCare" />
-    <property displayName="InputScope" value="null" />
     <property displayName="IsArrangeValid" value="True" />
-    <property displayName="IsEnabled" value="True" />
-    <property displayName="IsFocused" value="False" />
-    <property displayName="IsHitTestVisible" value="True" />
     <property displayName="IsInitialized" value="True" />
     <property displayName="IsInputMethodEnabled" value="True" />
-    <property displayName="IsItemsHost" value="False" />
-    <property displayName="IsKeyboardFocusWithin" value="False" />
-    <property displayName="IsKeyboardFocused" value="False" />
     <property displayName="IsLoaded" value="False" />
-    <property displayName="IsManipulationEnabled" value="False" />
     <property displayName="IsMeasureValid" value="False" />
-    <property displayName="IsMouseCaptureWithin" value="False" />
-    <property displayName="IsMouseCaptured" value="False" />
-    <property displayName="IsMouseDirectlyOver" value="False" />
-    <property displayName="IsMouseOver" value="False" />
     <property displayName="IsSealed" value="False" />
-    <property displayName="IsStylusCaptureWithin" value="False" />
-    <property displayName="IsStylusCaptured" value="False" />
-    <property displayName="IsStylusDirectlyOver" value="False" />
-    <property displayName="IsStylusOver" value="False" />
     <property displayName="IsVisible" value="False" />
-    <property displayName="ItemsControl.AlternationIndex" value="0" />
-    <property displayName="KeyboardNavigation.AcceptsReturn" value="False" />
-    <property displayName="KeyboardNavigation.ControlTabNavigation" value="Continue" />
-    <property displayName="KeyboardNavigation.DirectionalNavigation" value="Continue" />
-    <property displayName="KeyboardNavigation.IsTabStop" value="True" />
-    <property displayName="KeyboardNavigation.TabIndex" value="2147483647" />
-    <property displayName="KeyboardNavigation.TabNavigation" value="Continue" />
-    <property displayName="Language" value="en-us" />
-    <property displayName="LayoutTransform" value="Identity" />
     <property displayName="LogicalOrientationPublic" value="Vertical" />
-    <property displayName="Margin" value="0,0,0,0" />
-    <property displayName="MaxHeight" value="∞" />
-    <property displayName="MaxWidth" value="∞" />
-    <property displayName="MinHeight" value="0" />
-    <property displayName="MinWidth" value="0" />
-    <property displayName="Name" value="" />
-    <property displayName="NumberSubstitution.CultureOverride" value="null" />
-    <property displayName="NumberSubstitution.CultureSource" value="User" />
-    <property displayName="NumberSubstitution.Substitution" value="AsCulture" />
-    <property displayName="Opacity" value="1" />
-    <property displayName="OpacityMask" value="null" />
-    <property displayName="Orientation" value="Vertical" />
-    <property displayName="OverridesDefaultStyle" value="False" />
-    <property displayName="Panel.ZIndex" value="0" />
     <property displayName="Parent" value="null" />
     <property displayName="PersistId" value="0" />
-    <property displayName="RenderOptions.BitmapScalingMode" value="Unspecified" />
-    <property displayName="RenderOptions.ClearTypeHint" value="Auto" />
-    <property displayName="RenderOptions.EdgeMode" value="Unspecified" />
     <property displayName="RenderSize" value="0,0" />
-    <property displayName="RenderTransform" value="Identity" />
-    <property displayName="RenderTransformOrigin" value="0,0" />
     <property displayName="Resources" value="System.Windows.ResourceDictionary" />
     <property displayName="ScrollOwner" value="null" />
-    <property displayName="SnapsToDevicePixels" value="False" />
-    <property displayName="Storyboard.Target" value="null" />
-    <property displayName="Storyboard.TargetName" value="null" />
-    <property displayName="Storyboard.TargetProperty" value="null" />
-    <property displayName="Style" value="null" />
-    <property displayName="Tag" value="null" />
     <property displayName="TemplatedParent" value="null" />
-    <property displayName="TextBlock.BaselineOffset" value="NaN" />
-    <property displayName="TextElement.FontFamily" value="Segoe UI" />
-    <property displayName="TextElement.FontSize" value="12" />
-    <property displayName="TextElement.FontStretch" value="Normal" />
-    <property displayName="TextElement.FontStyle" value="Normal" />
-    <property displayName="TextElement.FontWeight" value="Normal" />
-    <property displayName="TextElement.Foreground" value="#FF000000" />
-    <property displayName="TextOptions.TextFormattingMode" value="Ideal" />
-    <property displayName="TextOptions.TextRenderingMode" value="Auto" />
-    <property displayName="TextOptionsInternal.TextHintingMode" value="Auto" />
-    <property displayName="Timeline.DesiredFrameRate" value="null" />
-    <property displayName="ToolBar.IsOverflowItem" value="False" />
-    <property displayName="ToolTip" value="null" />
-    <property displayName="ToolTipService.BetweenShowDelay" value="100" />
-    <property displayName="ToolTipService.HasDropShadow" value="False" />
-    <property displayName="ToolTipService.HorizontalOffset" value="0" />
-    <property displayName="ToolTipService.InitialShowDelay" value="400" />
-    <property displayName="ToolTipService.IsEnabled" value="True" />
-    <property displayName="ToolTipService.IsOpen" value="False" />
-    <property displayName="ToolTipService.Placement" value="Mouse" />
-    <property displayName="ToolTipService.PlacementRectangle" value="Empty" />
-    <property displayName="ToolTipService.PlacementTarget" value="null" />
-    <property displayName="ToolTipService.ShowDuration" value="5000" />
-    <property displayName="ToolTipService.ShowOnDisabled" value="False" />
-    <property displayName="ToolTipService.VerticalOffset" value="0" />
     <property displayName="TouchesCaptured" value="System.Collections.Generic.List`1[System.Windows.Input.TouchDevice]" />
     <property displayName="TouchesCapturedWithin" value="System.Collections.Generic.List`1[System.Windows.Input.TouchDevice]" />
     <property displayName="TouchesDirectlyOver" value="System.Collections.Generic.List`1[System.Windows.Input.TouchDevice]" />
     <property displayName="TouchesOver" value="System.Collections.Generic.List`1[System.Windows.Input.TouchDevice]" />
     <property displayName="Triggers" value="System.Windows.TriggerCollection" />
-    <property displayName="Typography.AnnotationAlternates" value="0" />
-    <property displayName="Typography.CapitalSpacing" value="False" />
-    <property displayName="Typography.Capitals" value="Normal" />
-    <property displayName="Typography.CaseSensitiveForms" value="False" />
-    <property displayName="Typography.ContextualAlternates" value="True" />
-    <property displayName="Typography.ContextualLigatures" value="True" />
-    <property displayName="Typography.ContextualSwashes" value="0" />
-    <property displayName="Typography.DiscretionaryLigatures" value="False" />
-    <property displayName="Typography.EastAsianExpertForms" value="False" />
-    <property displayName="Typography.EastAsianLanguage" value="Normal" />
-    <property displayName="Typography.EastAsianWidths" value="Normal" />
-    <property displayName="Typography.Fraction" value="Normal" />
-    <property displayName="Typography.HistoricalForms" value="False" />
-    <property displayName="Typography.HistoricalLigatures" value="False" />
-    <property displayName="Typography.Kerning" value="True" />
-    <property displayName="Typography.MathematicalGreek" value="False" />
-    <property displayName="Typography.NumeralAlignment" value="Normal" />
-    <property displayName="Typography.NumeralStyle" value="Normal" />
-    <property displayName="Typography.SlashedZero" value="False" />
-    <property displayName="Typography.StandardLigatures" value="True" />
-    <property displayName="Typography.StandardSwashes" value="0" />
-    <property displayName="Typography.StylisticAlternates" value="0" />
-    <property displayName="Typography.StylisticSet1" value="False" />
-    <property displayName="Typography.StylisticSet10" value="False" />
-    <property displayName="Typography.StylisticSet11" value="False" />
-    <property displayName="Typography.StylisticSet12" value="False" />
-    <property displayName="Typography.StylisticSet13" value="False" />
-    <property displayName="Typography.StylisticSet14" value="False" />
-    <property displayName="Typography.StylisticSet15" value="False" />
-    <property displayName="Typography.StylisticSet16" value="False" />
-    <property displayName="Typography.StylisticSet17" value="False" />
-    <property displayName="Typography.StylisticSet18" value="False" />
-    <property displayName="Typography.StylisticSet19" value="False" />
-    <property displayName="Typography.StylisticSet2" value="False" />
-    <property displayName="Typography.StylisticSet20" value="False" />
-    <property displayName="Typography.StylisticSet3" value="False" />
-    <property displayName="Typography.StylisticSet4" value="False" />
-    <property displayName="Typography.StylisticSet5" value="False" />
-    <property displayName="Typography.StylisticSet6" value="False" />
-    <property displayName="Typography.StylisticSet7" value="False" />
-    <property displayName="Typography.StylisticSet8" value="False" />
-    <property displayName="Typography.StylisticSet9" value="False" />
-    <property displayName="Typography.Variants" value="Normal" />
-    <property displayName="Uid" value="" />
-    <property displayName="UseLayoutRounding" value="False" />
-    <property displayName="VerticalAlignment" value="Stretch" />
     <property displayName="VerticalOffset" value="0" />
     <property displayName="ViewportHeight" value="0" />
     <property displayName="ViewportWidth" value="0" />
-    <property displayName="VirtualizingPanel.CacheLength" value="1,1" />
-    <property displayName="VirtualizingPanel.CacheLengthUnit" value="Page" />
-    <property displayName="VirtualizingPanel.IsContainerVirtualizable" value="True" />
-    <property displayName="VirtualizingPanel.IsVirtualizing" value="True" />
-    <property displayName="VirtualizingPanel.IsVirtualizingWhenGrouping" value="False" />
-    <property displayName="VirtualizingPanel.ScrollUnit" value="Item" />
-    <property displayName="VirtualizingPanel.VirtualizationMode" value="Standard" />
-    <property displayName="Visibility" value="Visible" />
-    <property displayName="Width" value="NaN" />
-    <property displayName="XmlAttributeProperties.XmlNamespaceMaps" value="null" />
-    <property displayName="XmlAttributeProperties.XmlSpace" value="default" />
-    <property displayName="XmlAttributeProperties.XmlnsDefinition" value="http://schemas.microsoft.com/winfx/2006/xaml" />
-    <property displayName="XmlAttributeProperties.XmlnsDictionary" value="null" />
   </properties>
 </node>
