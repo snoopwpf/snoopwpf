@@ -387,8 +387,11 @@
                 <ComboBox Height="16"
                           Padding="2 -2 2 0"
                           IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}"
-                          IsSynchronizedWithCurrentItem="True"
-                          ItemsSource="{Binding Values}" />
+                          IsSynchronizedWithCurrentItem="False"
+                          ItemsSource="{Binding Values}"
+                          DisplayMemberPath="Text"
+                          SelectedValuePath="Value"
+                          SelectedValue="{Binding Value}" />
             </DataTemplate>
         </Style.Resources>
 
