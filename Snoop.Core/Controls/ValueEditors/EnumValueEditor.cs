@@ -28,6 +28,8 @@ public class EnumValueEditor : ValueEditor
                 && Nullable.GetUnderlyingType(enumType) is { IsEnum: true } underlyingType)
             {
                 enumType = underlyingType;
+
+                this.Values.Add(new EnumValueWrapper(null, "<NULL>"));
             }
 
             var values = Enum.GetValues(enumType);
@@ -36,11 +38,6 @@ public class EnumValueEditor : ValueEditor
             for (var i = 0; i < values.Length; i++)
             {
                 var value = values.GetValue(i);
-                if (value is null)
-                {
-                    continue;
-                }
-
                 this.Values.Add(new EnumValueWrapper(value, names[i]));
             }
         }
@@ -52,8 +49,7 @@ public class EnumValueEditor : ValueEditor
 
         // sneaky trick here. only if both are non-null is this a change
         // caused by the user. If so, set the bool to track it.
-        if (this.PropertyInfo is not null
-            && newValue is not null)
+        if (this.PropertyInfo is not null)
         {
             this.PropertyInfo.IsValueChangedByUser = true;
         }
@@ -67,13 +63,13 @@ public class EnumValueWrapper : INotifyPropertyChanged
     public event PropertyChangedEventHandler? PropertyChanged;
 #pragma warning restore CS0067
 
-    public EnumValueWrapper(object value, string text)
+    public EnumValueWrapper(object? value, string text)
     {
         this.Value = value;
         this.Text = text;
     }
 
-    public object Value { get; }
+    public object? Value { get; }
 
     public string Text { get; }
 }
