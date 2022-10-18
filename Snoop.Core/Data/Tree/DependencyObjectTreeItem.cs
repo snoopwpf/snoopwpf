@@ -158,7 +158,8 @@ public class DependencyObjectTreeItem : ResourceContainerTreeItem
                 this.selectionHighlight = SelectionHighlightFactory.CreateAndAttachSelectionHighlight(dependencyObject);
 
                 if (this.selectionHighlight is null
-                    && this.missingAdornerLayerDiagnosticItem is null)
+                    && this.missingAdornerLayerDiagnosticItem is null
+                    && this.Target is not Window)
                 {
                     this.missingAdornerLayerDiagnosticItem = new DiagnosticItem(MissingAdornerLayerDiagnosticProvider.Instance, area: DiagnosticArea.Highlight, level: DiagnosticLevel.Critical)
                     {
