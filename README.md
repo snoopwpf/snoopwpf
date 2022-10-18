@@ -7,8 +7,8 @@ You can change property values, view triggers, set breakpoints on property chang
 
 [![Build status for master branch](https://img.shields.io/appveyor/ci/batzen/snoopwpf/master?style=flat-square&&label=master)](https://ci.appveyor.com/project/batzen/snoopwpf/branch/master)
 [![Build status for develop branch](https://img.shields.io/appveyor/ci/batzen/snoopwpf/develop?style=flat-square&&label=develop)](https://ci.appveyor.com/project/batzen/snoopwpf/branch/develop)
-[![chocolatey version](http://img.shields.io/chocolatey/v/snoop.svg?style=flat-square)](https://chocolatey.org/packages/snoop)
-[![chocolatey download count](http://img.shields.io/chocolatey/dt/snoop.svg?style=flat-square)](https://chocolatey.org/packages/snoop)
+[![Chocolatey version](http://img.shields.io/chocolatey/v/snoop.svg?style=flat-square)](https://chocolatey.org/packages/snoop)
+[![Chocolatey download count](http://img.shields.io/chocolatey/dt/snoop.svg?style=flat-square)](https://chocolatey.org/packages/snoop)
 
 ## Contact
 
@@ -17,9 +17,9 @@ You can change property values, view triggers, set breakpoints on property chang
 
 ## Where can i download Snoop?/How can i install Snoop?
 
-- [chocolatey](https://chocolatey.org/packages/snoop) for stable and some preview versions
-- [github releases](https://github.com/snoopwpf/snoopwpf/releases) for stable versions
-- [appveyor](https://ci.appveyor.com/project/batzen/snoopwpf/build/artifacts) for the latest preview versions (built on every code change)
+- [Chocolatey](https://chocolatey.org/packages/snoop) for stable and some preview versions
+- [GitHub releases](https://github.com/snoopwpf/snoopwpf/releases) for stable versions
+- [AppVeyor](https://ci.appveyor.com/project/batzen/snoopwpf/build/artifacts) for the latest preview versions (built on every code change)
 - You need at least .NET Framework 4.5.2 to run Snoop
 
 ## Supported .NET versions
