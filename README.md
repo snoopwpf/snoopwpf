@@ -48,7 +48,7 @@ Breaking:
 - Dropped support for .NET 3.0
 - Added support for .NET versions > 6.0 (by not explicitly blocking versions greater than 6.0)
 
-### [4.0.0]
+### [4.0.0](../../releases/tag/v4.0.0)
 
 Highlights:
 
