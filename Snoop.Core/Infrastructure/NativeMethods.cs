@@ -874,7 +874,7 @@ public static class LogHelper
     public static string WriteError(string message)
     {
         Trace.TraceError(message);
-        Console.Error.WriteLine(message);
+        Console.WriteLine(message);
 
         return message;
     }

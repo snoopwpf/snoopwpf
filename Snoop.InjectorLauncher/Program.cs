@@ -35,7 +35,7 @@ public static class Program
             ConsoleHelper.AttachConsoleToParentProcessOrAllocateNewOne();
         }
 
-        Injector.LogMessage("Starting the injection process...", false);
+        Injector.LogMessage($"Starting the injection process for PID '{commandLineOptions.TargetPID}' and HWND '{commandLineOptions.TargetHwnd}'...", false);
 
         try
         {
@@ -43,7 +43,7 @@ public static class Program
 
             if (processWrapper is null)
             {
-                Injector.LogMessage($"Could not find process with ID \"{commandLineOptions.TargetPID}\".");
+                Injector.LogMessage($"Could not find process with ID \"{commandLineOptions.TargetPID}\" or something else wrent wrong while getting it's details.");
                 return 1;
             }
 

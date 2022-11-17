@@ -40,7 +40,7 @@ public class ProcessWrapper
         }
         catch (Exception exception)
         {
-            LogHelper.WriteError(exception);
+            Injector.LogMessage(exception.ToString());
             return null;
         }
     }
@@ -93,10 +93,10 @@ public class ProcessWrapper
         foreach (var module in modules)
         {
 #if DEBUG
-            //LogHelper.WriteLine(module.szExePath);
-            //var fileVersionInfo = FileVersionInfo.GetVersionInfo(module.szExePath);
-            //LogHelper.WriteLine($"File: {fileVersionInfo.FileMajorPart}.{fileVersionInfo.FileMinorPart}");
-            //LogHelper.WriteLine($"Prod: {fileVersionInfo.ProductMajorPart}.{fileVersionInfo.ProductMinorPart}");
+            Injector.LogMessage(module.szExePath);
+            var fileVersionInfo = FileVersionInfo.GetVersionInfo(module.szExePath);
+            Injector.LogMessage($"File: {fileVersionInfo.FileMajorPart}.{fileVersionInfo.FileMinorPart}");
+            Injector.LogMessage($"Prod: {fileVersionInfo.ProductMajorPart}.{fileVersionInfo.ProductMinorPart}");
 #endif
 
             if (module.szModule.StartsWith("hostpolicy.dll", StringComparison.OrdinalIgnoreCase))
