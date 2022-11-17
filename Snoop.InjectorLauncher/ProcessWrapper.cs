@@ -87,8 +87,7 @@ public class ProcessWrapper
 
         // ReSharper disable once IdentifierTypo
         // ReSharper disable once InconsistentNaming
-        var wpfGfxForCoreFrameworkFound = false;
-        FileVersionInfo? hostPolicyVersionInfo = null;
+        FileVersionInfo? wpfFrameworkVersion = null;
 
         foreach (var module in modules)
         {
@@ -99,40 +98,23 @@ public class ProcessWrapper
             Injector.LogMessage($"Prod: {fileVersionInfo.ProductMajorPart}.{fileVersionInfo.ProductMinorPart}");
 #endif
 
-            if (module.szModule.StartsWith("hostpolicy.dll", StringComparison.OrdinalIgnoreCase))
+            if (module.szModule.StartsWith("wpfgfx_", StringComparison.OrdinalIgnoreCase))
             {
-                hostPolicyVersionInfo = FileVersionInfo.GetVersionInfo(module.szExePath);
-            }
-
-            if (module.szModule.StartsWith("wpfgfx_cor3.dll", StringComparison.OrdinalIgnoreCase)
-                || module.szModule.StartsWith("wpfgfx_net6.dll", StringComparison.OrdinalIgnoreCase))
-            {
-                wpfGfxForCoreFrameworkFound = true;
-            }
-
-            if (wpfGfxForCoreFrameworkFound
-                && hostPolicyVersionInfo is not null)
-            {
-                break;
+                wpfFrameworkVersion = FileVersionInfo.GetVersionInfo(module.szExePath);
             }
         }
 
-        if (wpfGfxForCoreFrameworkFound
-            && hostPolicyVersionInfo is not null)
+        if (wpfFrameworkVersion is null)
         {
-            switch (hostPolicyVersionInfo.ProductMajorPart)
-            {
-                case >= 5:
-                    return "net5.0-windows";
-
-                case 3 when hostPolicyVersionInfo.ProductMinorPart >= 1:
-                    return "netcoreapp3.1";
-
-                default:
-                    throw new NotSupportedException($".NET Core version {hostPolicyVersionInfo.ProductVersion} is not supported.");
-            }
+            return "net452";
         }
 
-        return "net452";
+        return wpfFrameworkVersion.ProductMajorPart switch
+        {
+            >= 5 => "net5.0-windows",
+            4 => "net452",
+            3 when wpfFrameworkVersion.ProductMinorPart >= 1 => "netcoreapp3.1",
+            _ => throw new NotSupportedException($".NET Core version {wpfFrameworkVersion.ProductVersion} is not supported.")
+        };
     }
 }

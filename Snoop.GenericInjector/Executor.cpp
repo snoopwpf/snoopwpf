@@ -13,8 +13,7 @@ std::unique_ptr<FrameworkExecutor> GetExecutor(const std::wstring& framework)
 	LogHelper::WriteLine(L"Trying to get executor for framework '%s'...", framework.c_str());
 
 	if (icase_cmp(framework, L"netcoreapp3.1")
-		|| icase_cmp(framework, L"net5.0-windows")
-		|| icase_cmp(framework, L"net6.0-windows"))
+		|| icase_cmp(framework, L"net5.0-windows"))
 	{
 		return std::make_unique<NetCoreApp3_0Executor>();
 	}

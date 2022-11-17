@@ -101,28 +101,16 @@ public class WindowInfo
 
                     if (this.isValidProcess == false)
                     {
-                        // a process is valid to snoop if it contains a dependency on PresentationFramework, PresentationCore, or milcore (wpfgfx).
+                        // a process is valid to snoop if it contains a dependency on milcore (wpfgfx).
                         // this includes the files:
-                        // PresentationFramework.dll, PresentationFramework.ni.dll
-                        // PresentationCore.dll, PresentationCore.ni.dll
                         // wpfgfx_v0300.dll (WPF 3.0/3.5 Full)
                         // wpfgrx_v0400.dll (WPF 4.0 Full)
                         // wpfgfx_cor3.dll (WPF 3.0/3.1 Core)
                         // wpfgfx_cor3.dll (WPF 5.0 Core)
                         // wpfgfx_net6.dll (WPF 6.0 Core)
-
-                        // note: sometimes PresentationFramework.dll doesn't show up in the list of modules.
-                        // so, it makes sense to also check for the unmanaged milcore component (wpfgfx_vxxxx.dll).
-                        // see for more info: http://snoopwpf.codeplex.com/Thread/View.aspx?ThreadId=236335
-
-                        // sometimes the module names aren't always the same case. compare case insensitive.
-                        // see for more info: http://snoopwpf.codeplex.com/workitem/6090
-
                         foreach (var module in NativeMethods.GetModulesFromWindowHandle(this.HWnd))
                         {
-                            if (module.szModule.StartsWith("PresentationFramework", StringComparison.OrdinalIgnoreCase)
-                                || module.szModule.StartsWith("PresentationCore", StringComparison.OrdinalIgnoreCase)
-                                || module.szModule.StartsWith("wpfgfx", StringComparison.OrdinalIgnoreCase))
+                            if (module.szModule.StartsWith("wpfgfx_", StringComparison.OrdinalIgnoreCase))
                             {
                                 this.isValidProcess = true;
                                 break;
