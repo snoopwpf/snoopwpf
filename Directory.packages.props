@@ -11,7 +11,7 @@
 
     <ItemGroup Label="Test">
       <PackageVersion Include="NUnit" Version="3.13.3" />
-      <PackageVersion Include="NUnit3TestAdapter" Version="4.3.0-alpha-net7.4" />
+      <PackageVersion Include="NUnit3TestAdapter" Version="4.3.0" />
 
       <PackageVersion Include="Verify.NUnit" Version="17.10.2" />
 
