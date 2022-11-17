@@ -43,13 +43,13 @@ resharper_enforce_while_statement_braces_highlighting=warning
 # SA0001: XML comment analysis is disabled due to project configuration
 dotnet_diagnostic.SA0001.severity = none
 
-# INPC001: The class DependencyPropertyNameValuePair should notify for:
+# INPC001: The class XXXXX should notify for:
 dotnet_diagnostic.INPC001.severity = none
 
-# INPC002: Property 'IsValueChangedByUser' should notify when value changes.
+# INPC002: Property 'XXXXX' should notify when value changes.
 dotnet_diagnostic.INPC002.severity = none
 
-# INPC003: Notify that property 'SelectedFilterSet' changes.
+# INPC003: Notify that property 'XXXXX' changes.
 dotnet_diagnostic.INPC003.severity = none
 
 # INPC004: Use [CallerMemberName]

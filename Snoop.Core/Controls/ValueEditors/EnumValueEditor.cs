@@ -7,26 +7,16 @@ namespace Snoop.Controls.ValueEditors;
 
 using System;
 using System.Collections.ObjectModel;
-using System.Windows.Data;
+using System.ComponentModel;
+using JetBrains.Annotations;
 
 public class EnumValueEditor : ValueEditor
 {
-    private readonly ListCollectionView valuesView;
-    private bool isValid;
-
-    public EnumValueEditor()
-    {
-        this.valuesView = (ListCollectionView)CollectionViewSource.GetDefaultView(this.Values);
-        this.valuesView.CurrentChanged += this.HandleSelectionChanged;
-    }
-
-    public ObservableCollection<object> Values { get; } = new();
+    public ObservableCollection<EnumValueWrapper> Values { get; } = new();
 
     protected override void OnPropertyTypeChanged()
     {
         base.OnPropertyTypeChanged();
-
-        this.isValid = false;
 
         this.Values.Clear();
 
@@ -38,53 +28,48 @@ public class EnumValueEditor : ValueEditor
                 && Nullable.GetUnderlyingType(enumType) is { IsEnum: true } underlyingType)
             {
                 enumType = underlyingType;
+
+                this.Values.Add(new EnumValueWrapper(null, "<NULL>"));
             }
 
             var values = Enum.GetValues(enumType);
-            foreach (var value in values)
+            var names = Enum.GetNames(enumType);
+
+            for (var i = 0; i < values.Length; i++)
             {
-                if (value is null)
-                {
-                    continue;
-                }
-
-                this.Values.Add(value);
-
-                if (this.Value is not null
-                    && this.Value.Equals(value))
-                {
-                    this.valuesView.MoveCurrentTo(value);
-                }
+                var value = values.GetValue(i);
+                this.Values.Add(new EnumValueWrapper(value, names[i]));
             }
         }
-
-        this.isValid = true;
     }
 
     protected override void OnValueChanged(object? newValue)
     {
         base.OnValueChanged(newValue);
 
-        this.valuesView.MoveCurrentTo(newValue);
-
         // sneaky trick here. only if both are non-null is this a change
         // caused by the user. If so, set the bool to track it.
-        if (this.PropertyInfo is not null
-            && newValue is not null)
+        if (this.PropertyInfo is not null)
         {
             this.PropertyInfo.IsValueChangedByUser = true;
         }
     }
+}
 
-    private void HandleSelectionChanged(object? sender, EventArgs e)
+[PublicAPI]
+public class EnumValueWrapper : INotifyPropertyChanged
+{
+#pragma warning disable CS0067
+    public event PropertyChangedEventHandler? PropertyChanged;
+#pragma warning restore CS0067
+
+    public EnumValueWrapper(object? value, string text)
     {
-        if (this.isValid
-            && this.Value is not null)
-        {
-            if (!this.Value.Equals(this.valuesView.CurrentItem))
-            {
-                this.Value = this.valuesView.CurrentItem;
-            }
-        }
+        this.Value = value;
+        this.Text = text;
     }
+
+    public object? Value { get; }
+
+    public string Text { get; }
 }

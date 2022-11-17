@@ -115,12 +115,21 @@ public class PropertyFilter
         if (this.hasFilterString
             && this.filterRegex is not null)
         {
-            return this.filterRegex.IsMatch(property.DisplayName)
-                   || (property.Property is not null && this.filterRegex.IsMatch(property.Property.PropertyType.Name));
+            if (this.filterRegex.IsMatch(property.DisplayName))
+            {
+                return true;
+            }
+
+            if (property.Property is not null
+                && this.filterRegex.IsMatch(property.Property.PropertyType.Name))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         // else just check for containment if we don't have a regular expression but we do have a filter string.
-
         if (this.hasFilterString)
         {
             if (property.DisplayName.ContainsIgnoreCase(this.FilterString))
@@ -138,7 +147,6 @@ public class PropertyFilter
         }
 
         // else use the filter set if we have one of those.
-
         if (this.IsPropertyFilterSet)
         {
             if (this.SelectedFilterSet!.IsPropertyInFilter(property))
@@ -152,7 +160,6 @@ public class PropertyFilter
         // finally, if none of the above applies
         // just check to see if we're not showing properties at their default values
         // and this property is actually set to its default value
-
         if (this.ShowDefaults == false
             && property.ValueSource.BaseValueSource == BaseValueSource.Default)
         {

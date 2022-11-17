@@ -2,7 +2,7 @@
   <Import Project="../Directory.build.props" />
 
   <PropertyGroup>
-    <OutputPath>$(MSBuildThisFileDirectory)\bin\$(MSBuildProjectName)\$(Configuration)\$(TargetFramework)</OutputPath>
+    <OutputPath>$(MSBuildThisFileDirectory)\bin\$(MSBuildProjectName)\$(Configuration)\</OutputPath>
     <DebugType>embedded</DebugType>
   </PropertyGroup>
 </Project>
