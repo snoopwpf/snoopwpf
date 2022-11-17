@@ -26,7 +26,7 @@ std::unique_ptr<FrameworkExecutor> GetExecutor(const std::wstring& framework)
 #endif
 
 	LogHelper::WriteLine(L"Framework '%s' is not supported.", framework.c_str());
-	
+
 	return nullptr;
 }
 
@@ -52,7 +52,7 @@ extern "C" __declspec(dllexport) int STDMETHODVCALLTYPE ExecuteInDefaultAppDomai
 
 		LogHelper::SetLogFile(logFile);
 		LogHelper::WriteLine(input);
-		
+
 		const auto executor = GetExecutor(framework);
 
 		if (!executor)
@@ -60,10 +60,10 @@ extern "C" __declspec(dllexport) int STDMETHODVCALLTYPE ExecuteInDefaultAppDomai
 			LogHelper::WriteLine(L"No executor found.");
 			return E_NOTIMPL;
 		}
-		
+
 		DWORD* retVal = nullptr;
 		const auto hr = executor->Execute(assemblyPath.c_str(), className.c_str(), method.c_str(), parameter.c_str(), retVal);
-			
+
 		if (FAILED(hr))
 		{
 			const _com_error err(hr);
@@ -73,7 +73,7 @@ extern "C" __declspec(dllexport) int STDMETHODVCALLTYPE ExecuteInDefaultAppDomai
 			LogHelper::WriteLine(L"Message: %s", err.ErrorMessage());
 			LogHelper::WriteLine(L"Description: %s", std::wstring(err.Description(), SysStringLen(err.Description())).c_str());
 		}
-		
+
 		return hr;
 	}
 	catch (std::exception& exception)
