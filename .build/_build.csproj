@@ -16,8 +16,4 @@
     <PackageDownload Include="Nuget.CommandLine" Version="[5.8.1]" />
     <PackageDownload Include="wix" Version="[3.11.2]" />
   </ItemGroup>
-
-  <ItemGroup>
-    <None Include="../**/Directory.*.*" LinkBase="Directory.*.*" />
-  </ItemGroup>
 </Project>
