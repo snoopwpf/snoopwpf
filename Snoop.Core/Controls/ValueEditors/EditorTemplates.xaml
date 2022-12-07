@@ -386,12 +386,12 @@
                           DataType="valueEditors:EnumValueEditor">
                 <ComboBox Height="16"
                           Padding="2 -2 2 0"
+                          DisplayMemberPath="Text"
                           IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}"
                           IsSynchronizedWithCurrentItem="False"
                           ItemsSource="{Binding Values}"
-                          DisplayMemberPath="Text"
-                          SelectedValuePath="Value"
-                          SelectedValue="{Binding Value}" />
+                          SelectedValue="{Binding Value}"
+                          SelectedValuePath="Value" />
             </DataTemplate>
         </Style.Resources>
 
