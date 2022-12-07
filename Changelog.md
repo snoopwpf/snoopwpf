@@ -28,7 +28,9 @@
   - Added dark theme
   - [#278](../../issues/278) - Adorner Layer not visible on certain controls (Snoop now reports a diagnostic error when there is no adorner layer for the selected element)
   - [#283](../../issues/283) - [Feature Request] Be able to import filters or make them available across applications. (solved by [#316](../../issues/316))
-  - [#314](../../issues/314) - Hide properties from Snoop?
+  - [#314](../../issues/314) - Hide properties from Snoop?  
+    You can now hide properties from Snoop by adding `[System.ComponentModel.BrowsableAttribute(false)]` to your property.  
+    It's only shown then if the "Show uncommon properties" is enabled.
   - [#320](../../issues/320) - System resources are not shown in the tree
   - [#326](../../issues/326) - Enable Snoop to show the dev tools of browser controls
   - [#339](../../issues/339) - Value selector when dependency property type is a nullable enum.
