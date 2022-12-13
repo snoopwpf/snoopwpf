@@ -69,13 +69,14 @@ public static class ResourceDictionaryKeyHelpers
                 }
             }
 
-            {
-                var resourceKey = GetKeyInResourceDictionary(cacheEntry.Generic, resourceItem);
-                if (resourceKey is not null)
-                {
-                    return resourceKey;
-                }
-            }
+            // Searching in .Generic causes a lot of exceptions...
+            // {
+            //     var resourceKey = GetKeyInResourceDictionary(cacheEntry.Generic, resourceItem);
+            //     if (resourceKey is not null)
+            //     {
+            //         return resourceKey;
+            //     }
+            // }
         }
 
         return DependencyProperty.UnsetValue;
