@@ -79,8 +79,8 @@ public class NoSelectionComboBox : ComboBox
 
     private static ItemsPanelTemplate CreateDefaultItemsPanelTemplate()
     {
-        var frameworkElementFactory = new FrameworkElementFactory(typeof(VirtualizingStackPanel));
-        frameworkElementFactory.SetValue(StyleProperty, new Style(typeof(VirtualizingPanel), null));
+        var frameworkElementFactory = new FrameworkElementFactory(typeof(StackPanel));
+        frameworkElementFactory.SetValue(StyleProperty, new Style(typeof(StackPanel), null));
 
         var template = new ItemsPanelTemplate(frameworkElementFactory);
         template.Seal();
