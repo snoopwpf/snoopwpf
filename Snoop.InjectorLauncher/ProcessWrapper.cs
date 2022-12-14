@@ -85,9 +85,8 @@ public class ProcessWrapper
     {
         var modules = NativeMethods.GetModules(process);
 
-        // ReSharper disable once IdentifierTypo
-        // ReSharper disable once InconsistentNaming
-        FileVersionInfo? wpfFrameworkVersion = null;
+        FileVersionInfo? systemRuntimeVersion = null;
+        FileVersionInfo? wpfGFXVersion = null;
 
         foreach (var module in modules)
         {
@@ -100,21 +99,28 @@ public class ProcessWrapper
 
             if (module.szModule.StartsWith("wpfgfx_", StringComparison.OrdinalIgnoreCase))
             {
-                wpfFrameworkVersion = FileVersionInfo.GetVersionInfo(module.szExePath);
+                wpfGFXVersion = FileVersionInfo.GetVersionInfo(module.szExePath);
+            }
+            else if (module.szModule.StartsWith("System.Runtime.dll", StringComparison.OrdinalIgnoreCase))
+            {
+                systemRuntimeVersion = FileVersionInfo.GetVersionInfo(module.szExePath);
             }
         }
 
-        if (wpfFrameworkVersion is null)
+        var relevantVersionInfo = systemRuntimeVersion
+            ?? wpfGFXVersion;
+
+        if (relevantVersionInfo is null)
         {
             return "net452";
         }
 
-        return wpfFrameworkVersion.ProductMajorPart switch
+        return relevantVersionInfo.ProductMajorPart switch
         {
             >= 5 => "net5.0-windows",
             4 => "net452",
-            3 when wpfFrameworkVersion.ProductMinorPart >= 1 => "netcoreapp3.1",
-            _ => throw new NotSupportedException($".NET Core version {wpfFrameworkVersion.ProductVersion} is not supported.")
+            3 when relevantVersionInfo.ProductMinorPart >= 1 => "netcoreapp3.1",
+            _ => throw new NotSupportedException($".NET version {relevantVersionInfo.ProductVersion} is not supported.")
         };
     }
 }
