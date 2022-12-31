@@ -80,7 +80,10 @@ public class SnoopBaseWindow : Window
         {
             try
             {
-                InputManager.Current.PopMenuMode(presentationSource);
+                while (InputManager.Current.IsInMenuMode)
+                {
+                    InputManager.Current.PopMenuMode(presentationSource);
+                }
             }
             catch
             {
