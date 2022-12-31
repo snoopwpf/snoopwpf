@@ -1,10 +1,9 @@
-﻿namespace Snoop.Views.DebugListenerTab
+﻿namespace Snoop.Views.DebugListenerTab;
+
+public enum FilterType
 {
-    public enum FilterType
-    {
-        StartsWith,
-        EndsWith,
-        Contains,
-        RegularExpression
-    }
+    StartsWith,
+    EndsWith,
+    Contains,
+    RegularExpression
 }

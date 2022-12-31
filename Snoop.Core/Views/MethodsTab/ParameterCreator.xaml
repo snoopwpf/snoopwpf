@@ -4,8 +4,7 @@
     Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
     All other rights reserved.
 -->
-<windows:SnoopBaseWindow Style="{x:Null}"
-                         x:Class="Snoop.Views.MethodsTab.ParameterCreator"
+<windows:SnoopBaseWindow x:Class="Snoop.Views.MethodsTab.ParameterCreator"
                          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                          xmlns:controls="clr-namespace:Snoop.Controls"
@@ -18,7 +17,7 @@
                          Width="700"
                          Height="350"
                          mc:Ignorable="d">
-    <Grid Style="{x:Null}">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -27,8 +26,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <TextBlock Style="{x:Null}"
-                   Name="TextBlockDescription"
+        <TextBlock Name="TextBlockDescription"
                    Grid.Column="0"
                    HorizontalAlignment="Left"
                    x:FieldModifier="public"
@@ -39,8 +37,7 @@
                                     NameValueOnly="True"
                                     RootTarget="{Binding Path=RootTarget, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type methodsTab:ParameterCreator}}}" />
 
-        <StackPanel Style="{x:Null}"
-                    Grid.Row="2"
+        <StackPanel Grid.Row="2"
                     Margin="15 15 0 15"
                     Orientation="Horizontal">
             <Button Name="btnOK"

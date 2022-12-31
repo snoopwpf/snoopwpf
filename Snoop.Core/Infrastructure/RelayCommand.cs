@@ -3,54 +3,44 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop.Infrastructure
+namespace Snoop.Infrastructure;
+
+using System;
+using System.Diagnostics;
+using System.Windows.Input;
+
+public class RelayCommand : ICommand
 {
-    using System;
-    using System.Diagnostics;
-    using System.Windows.Input;
+    private readonly Action<object?> execute;
+    private readonly Predicate<object?>? canExecute;
 
-    public class RelayCommand : ICommand
+    public RelayCommand(Action<object?> execute, Predicate<object?>? canExecute = null)
     {
-        #region Fields
+        this.execute = execute ?? throw new ArgumentNullException(nameof(execute));
+        this.canExecute = canExecute;
+    }
 
-        private readonly Action<object?> execute;
-        private readonly Predicate<object?>? canExecute;
+    [DebuggerStepThrough]
+    public bool CanExecute(object? parameter)
+    {
+        return this.canExecute?.Invoke(parameter) ?? true;
+    }
 
-        #endregion // Fields
-
-        #region Constructors
-
-        public RelayCommand(Action<object?> execute)
-            : this(execute, null)
+    public event EventHandler? CanExecuteChanged
+    {
+        add
         {
+            if (this.canExecute is not null)
+            {
+                CommandManager.RequerySuggested += value;
+            }
         }
 
-        public RelayCommand(Action<object?> execute, Predicate<object?>? canExecute)
-        {
-            this.execute = execute ?? throw new ArgumentNullException(nameof(execute));
-            this.canExecute = canExecute;
-        }
-        #endregion // Constructors
+        remove => CommandManager.RequerySuggested -= value;
+    }
 
-        #region ICommand Members
-
-        [DebuggerStepThrough]
-        public bool CanExecute(object? parameter)
-        {
-            return this.canExecute is null ? true : this.canExecute(parameter);
-        }
-
-        public event EventHandler? CanExecuteChanged
-        {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
-        }
-
-        public void Execute(object? parameter)
-        {
-            this.execute(parameter);
-        }
-
-        #endregion // ICommand Members
+    public void Execute(object? parameter)
+    {
+        this.execute(parameter);
     }
 }

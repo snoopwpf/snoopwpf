@@ -1,6 +1,5 @@
-namespace Snoop.Controls.ValueEditors
+namespace Snoop.Controls.ValueEditors;
+
+public class ColorValueEditor : StandardValueEditor
 {
-    public class ColorValueEditor : StandardValueEditor
-    {
-    }
 }

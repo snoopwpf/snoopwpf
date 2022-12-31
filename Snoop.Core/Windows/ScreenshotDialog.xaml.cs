@@ -3,88 +3,87 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop.Windows
+namespace Snoop.Windows;
+
+using System;
+using System.IO;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
+using Microsoft.Win32;
+using Snoop.Infrastructure;
+
+/// <summary>
+/// Interaction logic for ScreenShotDialog.xaml
+/// </summary>
+public partial class ScreenshotDialog
 {
-    using System;
-    using System.IO;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Input;
-    using System.Windows.Media;
-    using Microsoft.Win32;
-    using Snoop.Infrastructure;
+    private static string lastSaveDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
-    /// <summary>
-    /// Interaction logic for ScreenShotDialog.xaml
-    /// </summary>
-    public partial class ScreenshotDialog
+    public static readonly RoutedCommand SaveCommand = new(nameof(SaveCommand), typeof(ScreenshotDialog));
+    public static readonly RoutedCommand CancelCommand = new(nameof(CancelCommand), typeof(ScreenshotDialog));
+
+    public ScreenshotDialog()
     {
-        private static string lastSaveDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+        this.InitializeComponent();
 
-        public static readonly RoutedCommand SaveCommand = new(nameof(SaveCommand), typeof(ScreenshotDialog));
-        public static readonly RoutedCommand CancelCommand = new(nameof(CancelCommand), typeof(ScreenshotDialog));
+        this.CommandBindings.Add(new CommandBinding(SaveCommand, this.HandleSave, this.HandleCanSave));
+        this.CommandBindings.Add(new CommandBinding(CancelCommand, this.HandleCancel, (_, y) => y.CanExecute = true));
+    }
 
-        public ScreenshotDialog()
+    private void HandleCanSave(object sender, CanExecuteRoutedEventArgs e)
+    {
+        e.CanExecute = this.DataContext is Visual;
+    }
+
+    private void HandleSave(object sender, ExecutedRoutedEventArgs e)
+    {
+        var dpiText = ((TextBlock)((ComboBoxItem)this.dpiBox.SelectedItem).Content).Text;
+
+        var filename = "SnoopScreenshot";
+
+        if (this.DataContext is FrameworkElement element
+            && string.IsNullOrEmpty(element.Name) == false)
         {
-            this.InitializeComponent();
-
-            this.CommandBindings.Add(new CommandBinding(SaveCommand, this.HandleSave, this.HandleCanSave));
-            this.CommandBindings.Add(new CommandBinding(CancelCommand, this.HandleCancel, (_, y) => y.CanExecute = true));
+            filename = $"SnoopScreenshot_{element.Name}";
         }
 
-        private void HandleCanSave(object sender, CanExecuteRoutedEventArgs e)
+        filename += "_" + dpiText;
+
+        filename += ".png";
+
+        var filePath = Path.Combine(lastSaveDirectory, filename);
+
+        var fileDialog = new SaveFileDialog
         {
-            e.CanExecute = this.DataContext is Visual;
-        }
+            AddExtension = true,
+            CheckPathExists = true,
+            DefaultExt = "png",
+            InitialDirectory = Path.GetDirectoryName(filePath),
+            FileName = Path.GetFileNameWithoutExtension(filePath),
+            Filter = "Image File (*.png)|*.png",
+            FilterIndex = 0
+        };
 
-        private void HandleSave(object sender, ExecutedRoutedEventArgs e)
+        if (fileDialog.ShowDialog(this) == true)
         {
-            var dpiText = ((TextBlock)((ComboBoxItem)this.dpiBox.SelectedItem).Content).Text;
-
-            var filename = "SnoopScreenshot";
-
-            if (this.DataContext is FrameworkElement element
-                && string.IsNullOrEmpty(element.Name) == false)
+            var directoryName = Path.GetDirectoryName(fileDialog.FileName);
+            if (string.IsNullOrEmpty(directoryName) == false)
             {
-                filename = $"SnoopScreenshot_{element.Name}";
+                lastSaveDirectory = directoryName;
             }
 
-            filename += "_" + dpiText;
+            VisualCaptureUtil.SaveVisual(this.DataContext as Visual,
+                int.Parse(dpiText),
+                filePath);
 
-            filename += ".png";
-
-            var filePath = Path.Combine(lastSaveDirectory, filename);
-
-            var fileDialog = new SaveFileDialog
-            {
-                AddExtension = true,
-                CheckPathExists = true,
-                DefaultExt = "png",
-                InitialDirectory = Path.GetDirectoryName(filePath),
-                FileName = Path.GetFileNameWithoutExtension(filePath),
-                Filter = "Image File (*.png)|*.png",
-                FilterIndex = 0
-            };
-
-            if (fileDialog.ShowDialog(this) == true)
-            {
-                var directoryName = Path.GetDirectoryName(fileDialog.FileName);
-                if (string.IsNullOrEmpty(directoryName) == false)
-                {
-                    lastSaveDirectory = directoryName;
-                }
-
-                VisualCaptureUtil.SaveVisual(this.DataContext as Visual,
-                    int.Parse(dpiText),
-                    filePath);
-
-                this.Close();
-            }
-        }
-
-        private void HandleCancel(object sender, ExecutedRoutedEventArgs e)
-        {
             this.Close();
         }
+    }
+
+    private void HandleCancel(object sender, ExecutedRoutedEventArgs e)
+    {
+        this.Close();
     }
 }

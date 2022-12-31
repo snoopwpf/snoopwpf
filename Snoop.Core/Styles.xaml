@@ -12,388 +12,35 @@
                     xmlns:options="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
                     mc:Ignorable="options d">
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="BaseStyles.xaml" />
-        <ResourceDictionary Source="Controls/ProperTreeViewResources.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Snoop.Core;component/Icons.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Snoop.Core;component/BaseStyles.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Snoop.Core;component/Controls/ValueEditors/EditorTemplates.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <!-- SimpleStyles.XAML defines a set of control styles which are simplified starting points for creating your own controls -->
-
-    <!--
-        Brushes : These are used to define the color for background, foreground, selection, enabled etc of all controls
-        If you want to change the color of a control you can just change the brush; if you want to add a new shape or change arrangement then also edit the template
-    -->
-
-    <!-- NormalBrush is used as the Background for SimpleButton, SimpleRepeatButton -->
-    <LinearGradientBrush x:Key="NormalBrush" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
-        <GradientStop Color="#EEEE" Offset="0.0" />
-        <GradientStop Color="#CCCC" Offset="1.0" />
-    </LinearGradientBrush>
-    <LinearGradientBrush x:Key="NormalBorderBrush" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
-        <GradientStop Color="#CCCC" Offset="0.0" />
-        <GradientStop Color="#4444" Offset="1.0" />
-    </LinearGradientBrush>
-
-    <!-- LightBrush is used for content areas such as Menu, Tab Control background -->
-    <LinearGradientBrush x:Key="LightBrush" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
-        <GradientStop Color="#FFFF" Offset="0.0" />
-        <GradientStop Color="#EEEE" Offset="1.0" />
-    </LinearGradientBrush>
-
-
-    <!-- Style and Template pairs are used to define each control Part -->
-    <!-- The Style provides default values on the control; the Template gives the elements for each control -->
-
-    <LinearGradientBrush x:Key="MouseOverBrush" StartPoint="0,0.5" EndPoint="1,0.5" options:Freeze="True">
-        <GradientStop Color="#FFFFFFFF" Offset="0.48" />
-        <GradientStop Color="#FFB2E2FF" Offset="1" />
-        <GradientStop Color="#FFBAE5FF" Offset="0" />
-    </LinearGradientBrush>
-
-    <!-- PressedBrush is used for Pressed in Button, Radio Button, CheckBox -->
-    <LinearGradientBrush x:Key="PressedBrush" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
-        <GradientStop Color="#BBBB" Offset="0.0" />
-        <GradientStop Color="#EEEE" Offset="0.1" />
-        <GradientStop Color="#EEEE" Offset="0.9" />
-        <GradientStop Color="#FFFF" Offset="1.0" />
-    </LinearGradientBrush>
-    <LinearGradientBrush x:Key="PressedBorderBrush" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
-        <GradientStop Color="#4444" Offset="0.0" />
-        <GradientStop Color="#8888" Offset="1.0" />
-    </LinearGradientBrush>
-
-    <!-- SelectedBackgroundBrush is used for the Selected item in ListBoxItem, ComboBoxItem -->
-    <SolidColorBrush x:Key="SelectedBackgroundBrush" Color="#DDDD" options:Freeze="True" />
-
-    <!-- Disabled Brushes are used for the Disabled look of each control -->
-    <SolidColorBrush x:Key="DisabledForegroundBrush" Color="#8888" options:Freeze="True" />
-    <SolidColorBrush x:Key="DisabledBackgroundBrush" Color="#EEEE" options:Freeze="True" />
-    <SolidColorBrush x:Key="DisabledBorderBrush" Color="#AAAA" options:Freeze="True" />
-
-    <!-- Used for background of ScrollViewer, TreeView, ListBox, Expander, TextBox, Tab Control -->
-    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#FFFF" options:Freeze="True" />
-
-    <!-- DefaultedBorderBrush is used to show KeyBoardFocus -->
-    <LinearGradientBrush x:Key="DefaultedBorderBrush" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
-        <GradientStop Color="#7777" Offset="0.0" />
-        <GradientStop Color="#0000" Offset="1.0" />
-    </LinearGradientBrush>
-
-    <SolidColorBrush x:Key="SolidBorderBrush" Color="#8888" options:Freeze="True" />
-    <SolidColorBrush x:Key="LightBorderBrush" Color="#AAAA" options:Freeze="True" />
-    <SolidColorBrush x:Key="LightColorBrush" Color="#DDDD" options:Freeze="True" />
+    <Style TargetType="{x:Type Rectangle}" />
 
     <Style x:Key="Snoop.Styles.ProperTreeView"
-           BasedOn="{StaticResource Snoop.Styles.TreeView}"
-           TargetType="TreeView" />
+           TargetType="TreeView"
+           BasedOn="{StaticResource Snoop.Styles.TreeView}" />
 
     <Style x:Key="{x:Type TreeView}"
-           BasedOn="{StaticResource Snoop.Styles.TreeView}"
-           TargetType="TreeView" />
-
-    <!-- <Style x:Key="{x:Type StackPanel}" -->
-    <!-- TargetType="{x:Type StackPanel}"> -->
-    <!-- <Setter Property="Background" -->
-    <!-- Value="Transparent" /> -->
-    <!-- <Setter Property="Margin" -->
-    <!-- Value="0" /> -->
-    <!-- <Setter Property="OverridesDefaultStyle" -->
-    <!-- Value="True" /> -->
-    <!-- </Style> -->
-
-    <!-- Simple Repeat Button - This is used by Simple ScrollBar for the up and down buttons -->
-    <Style x:Key="SimpleRepeatButton"
-           d:IsControlPart="True"
-           BasedOn="{x:Null}"
-           TargetType="{x:Type RepeatButton}">
-        <Setter Property="Background" Value="{DynamicResource NormalBrush}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type RepeatButton}">
-                    <Grid Style="{x:Null}">
-                        <Border Style="{x:Null}"
-                                x:Name="Border"
-                                Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}" />
-                        <ContentPresenter Style="{x:Null}"
-                                          x:Name="ContentPresenter"
-                                          HorizontalAlignment="Center"
-                                          VerticalAlignment="Center"
-                                          Content="{TemplateBinding Content}"
-                                          ContentTemplate="{TemplateBinding ContentTemplate}"
-                                          ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}" />
-                    </Grid>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsKeyboardFocused" Value="true">
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource DefaultedBorderBrush}" />
-                        </Trigger>
-                        <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource MouseOverBrush}" />
-                        </Trigger>
-                        <Trigger Property="IsPressed" Value="true">
-                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource PressedBrush}" />
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource PressedBorderBrush}" />
-                        </Trigger>
-                        <Trigger Property="IsEnabled" Value="false">
-                            <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}" />
-                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource DisabledBackgroundBrush}" />
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource DisabledBorderBrush}" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <!-- Simple Thumb - The Thumb is the draggable part of the Scrollbar -->
-    <Style x:Key="SimpleThumbStyle"
-           d:IsControlPart="True"
-           BasedOn="{x:Null}"
-           TargetType="{x:Type Thumb}">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type Thumb}">
-                    <Grid Style="{x:Null}"
-                          x:Name="Grid"
-                          Margin="0 0 0 0">
-                        <Rectangle Style="{x:Null}"
-                                   x:Name="Rectangle"
-                                   Width="Auto"
-                                   Height="Auto"
-                                   HorizontalAlignment="Stretch"
-                                   VerticalAlignment="Stretch"
-                                   Fill="{DynamicResource NormalBrush}"
-                                   RadiusX="2"
-                                   RadiusY="2"
-                                   Stroke="{DynamicResource NormalBorderBrush}" />
-                    </Grid>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsFocused" Value="True" />
-                        <Trigger Property="IsMouseOver" Value="True" />
-                        <Trigger Property="IsEnabled" Value="False" />
-                        <Trigger Property="IsDragging" Value="True" />
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <!-- Simple ScrollRepeatButton Style - This RepeatButton is used above and below the Thumb in the Scrollbar. They are set to transparent si that they do not show over the scrollbar -->
-    <Style x:Key="SimpleScrollRepeatButtonStyle"
-           d:IsControlPart="True"
-           TargetType="{x:Type RepeatButton}">
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="BorderBrush" Value="Transparent" />
-        <Setter Property="Focusable" Value="false" />
-        <Setter Property="IsTabStop" Value="false" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type RepeatButton}">
-                    <Grid Style="{x:Null}">
-                        <Rectangle Style="{x:Null}"
-                                   Fill="{TemplateBinding Background}"
-                                   Stroke="{TemplateBinding BorderBrush}"
-                                   StrokeThickness="{TemplateBinding BorderThickness}" />
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <!-- Simple ScrollBar  This makes use of SimpleThumb, SimpleRepeatButton and SimpleScrollRepeatButton -->
-
-    <Style x:Key="SimpleScrollBar"
-           TargetType="{x:Type ScrollBar}">
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
-        <Setter Property="Stylus.IsFlicksEnabled" Value="false" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ScrollBar}">
-                    <Grid Style="{x:Null}"
-                          x:Name="GridRoot"
-                          Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}"
-                          Background="{TemplateBinding Background}">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Style="{x:Null}"
-                                           MaxHeight="18" />
-                            <RowDefinition Style="{x:Null}"
-                                           Height="0.00001*" />
-                            <RowDefinition Style="{x:Null}"
-                                           MaxHeight="18" />
-                        </Grid.RowDefinitions>
-
-                        <RepeatButton Style="{DynamicResource SimpleRepeatButton}"
-                                      x:Name="DecreaseRepeat"
-                                      Command="ScrollBar.LineUpCommand">
-                            <Grid Style="{x:Null}">
-                                <Path Style="{x:Null}"
-                                      x:Name="DecreaseArrow"
-                                      Data="M 0 4 L 8 4 L 4 0 Z"
-                                      Stroke="{TemplateBinding Foreground}"
-                                      StrokeThickness="1" />
-                            </Grid>
-                        </RepeatButton>
-
-                        <!-- Track is a special layout container which sizes the thumb and the repeat button which do jump scrolling either side of it -->
-                        <Track Style="{x:Null}"
-                               x:Name="PART_Track"
-                               Grid.Row="1"
-                               IsDirectionReversed="true"
-                               Orientation="Vertical">
-                            <Track.Thumb>
-                                <Thumb Style="{DynamicResource SimpleThumbStyle}" />
-                            </Track.Thumb>
-                            <Track.IncreaseRepeatButton>
-                                <RepeatButton Style="{DynamicResource SimpleScrollRepeatButtonStyle}"
-                                              x:Name="PageUp"
-                                              Command="ScrollBar.PageDownCommand" />
-                            </Track.IncreaseRepeatButton>
-                            <Track.DecreaseRepeatButton>
-                                <RepeatButton Style="{DynamicResource SimpleScrollRepeatButtonStyle}"
-                                              x:Name="PageDown"
-                                              Command="ScrollBar.PageUpCommand" />
-                            </Track.DecreaseRepeatButton>
-                        </Track>
-
-                        <RepeatButton Style="{DynamicResource SimpleRepeatButton}"
-                                      x:Name="IncreaseRepeat"
-                                      Grid.Row="2"
-                                      Command="ScrollBar.LineDownCommand">
-                            <Grid Style="{x:Null}">
-                                <Path Style="{x:Null}"
-                                      x:Name="IncreaseArrow"
-                                      Data="M 0 0 L 4 4 L 8 0 Z"
-                                      Stroke="{TemplateBinding Foreground}"
-                                      StrokeThickness="1" />
-                            </Grid>
-                        </RepeatButton>
-                    </Grid>
-
-                    <!--
-                        This uses a single template for ScrollBar and rotate it to be Horizontal
-                        It also changes the commands so that the it does Left and Right instead of Up and Down Commands
-                    -->
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="Orientation" Value="Horizontal">
-
-                            <!-- Change the commands to do Horizontal commands -->
-                            <Setter TargetName="DecreaseRepeat" Property="Command" Value="ScrollBar.LineLeftCommand" />
-
-                            <!-- Rotate the ScrollBar from Vertical to Horizontal -->
-                            <Setter TargetName="GridRoot" Property="LayoutTransform">
-                                <Setter.Value>
-                                    <RotateTransform Angle="-90" />
-                                </Setter.Value>
-                            </Setter>
-                            <Setter TargetName="IncreaseRepeat" Property="Command" Value="ScrollBar.LineRightCommand" />
-
-                            <!-- Track is bound to Orientation internally, so we need to rotate it back to Vertical -->
-                            <Setter TargetName="PART_Track" Property="Orientation" Value="Vertical" />
-                            <Setter TargetName="PageDown" Property="Command" Value="ScrollBar.PageLeftCommand" />
-                            <Setter TargetName="PageUp" Property="Command" Value="ScrollBar.PageRightCommand" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <!--
-        Simple ScrollViewer
-        ScrollViewer is a Grid control which has a ContentPresenter and a Horizontal and Vertical ScrollBar
-        It is used by ListBox, MenuItem, ComboBox, and TreeView
-    -->
-    <Style x:Key="SimpleScrollViewer"
-           BasedOn="{x:Null}"
-           TargetType="{x:Type ScrollViewer}">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ScrollViewer}">
-                    <Grid Style="{x:Null}"
-                          Background="{TemplateBinding Background}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Style="{x:Null}"
-                                              Width="*" />
-                            <ColumnDefinition Style="{x:Null}"
-                                              Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Style="{x:Null}"
-                                           Height="*" />
-                            <RowDefinition Style="{x:Null}"
-                                           Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <ScrollContentPresenter Style="{x:Null}"
-                                                Grid.Row="0"
-                                                Grid.Column="0"
-                                                Margin="{TemplateBinding Padding}"
-                                                CanContentScroll="{TemplateBinding CanContentScroll}"
-                                                Content="{TemplateBinding Content}"
-                                                ContentTemplate="{TemplateBinding ContentTemplate}" />
-
-                        <!-- The visibility of the ScrollBars is controlled by the implementation fo the control -->
-                        <ScrollBar Style="{DynamicResource SimpleScrollBar}"
-                                   x:Name="PART_HorizontalScrollBar"
-                                   Grid.Row="1"
-                                   Grid.Column="0"
-                                   AutomationProperties.AutomationId="HorizontalScrollBar"
-                                   Maximum="{TemplateBinding ScrollableWidth}"
-                                   Minimum="0"
-                                   Orientation="Horizontal"
-                                   ViewportSize="{TemplateBinding ViewportWidth}"
-                                   Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"
-                                   Value="{Binding Path=HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" />
-                        <ScrollBar Style="{DynamicResource SimpleScrollBar}"
-                                   x:Name="PART_VerticalScrollBar"
-                                   Grid.Row="0"
-                                   Grid.Column="1"
-                                   AutomationProperties.AutomationId="VerticalScrollBar"
-                                   Maximum="{TemplateBinding ScrollableHeight}"
-                                   Minimum="0"
-                                   Orientation="Vertical"
-                                   ViewportSize="{TemplateBinding ViewportHeight}"
-                                   Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
-                                   Value="{Binding Path=VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" />
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <LinearGradientBrush x:Key="DarkBlue" StartPoint="0.498,0.038" EndPoint="0.498,0.952" options:Freeze="True">
-        <GradientStop Color="#FF021122" Offset="0" />
-        <GradientStop Color="#FF052941" Offset="1" />
-    </LinearGradientBrush>
-    <LinearGradientBrush x:Key="ShineBrush1" StartPoint="0.503,0.925" EndPoint="0.503,0" options:Freeze="True">
-        <GradientStop Color="#0C5BBCFF" Offset="0" />
-        <GradientStop Color="#3365C0FF" Offset="1" />
-    </LinearGradientBrush>
-
-    <SolidColorBrush x:Key="DeepBlueColorBrush" Color="#FF142947" options:Freeze="True" />
-
-    <LinearGradientBrush x:Key="MetalGrad" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
-        <GradientStop Color="#FFEEEEEE" Offset="0" />
-        <GradientStop Color="#FF596F7E" Offset="1" />
-    </LinearGradientBrush>
+           TargetType="TreeView"
+           BasedOn="{StaticResource Snoop.Styles.TreeView}" />
 
     <!-- This is the area which contains the selected item in the ComboBox -->
 
     <ControlTemplate x:Key="ComboBoxTextBox"
                      TargetType="{x:Type TextBox}">
         <!-- This must be named as PART_ContentHost -->
-        <Border Style="{x:Null}"
-                x:Name="PART_ContentHost"
+        <Border x:Name="PART_ContentHost"
                 Background="{TemplateBinding Background}"
                 Focusable="False" />
     </ControlTemplate>
 
     <ControlTemplate x:Key="Snoop.Templates.NoSelectionComboBox"
                      TargetType="{x:Type controls:NoSelectionComboBox}">
-        <Grid Style="{x:Null}"
-              x:Name="Grid">
-            <Border Style="{x:Null}"
-                    x:Name="Border"
+        <Grid x:Name="Grid">
+            <Border x:Name="Border"
                     Background="{TemplateBinding Background}"
                     BorderBrush="{TemplateBinding BorderBrush}"
                     BorderThickness="{TemplateBinding BorderThickness}">
@@ -402,12 +49,9 @@
                               Focusable="False"
                               IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
                     <ToggleButton.Content>
-                        <StackPanel Style="{x:Null}"
-                                    Orientation="Horizontal">
-                            <TextBlock Style="{x:Null}"
-                                       Text="{TemplateBinding Header}" />
-                            <Image Style="{x:Null}"
-                                   Width="8"
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{TemplateBinding Header}" />
+                            <Image Width="8"
                                    Height="6"
                                    Margin="3 0 0 0"
                                    Source="{DynamicResource downDrawingImage}" />
@@ -416,47 +60,39 @@
                 </ToggleButton>
             </Border>
 
-            <Popup Style="{x:Null}"
-                   x:Name="PART_Popup"
+            <Popup x:Name="PART_Popup"
                    AllowsTransparency="True"
                    Focusable="False"
                    IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource Mode=TemplatedParent, AncestorType={x:Null}}}"
                    Placement="Bottom"
                    PopupAnimation="Slide">
-                <Grid Style="{x:Null}"
-                      x:Name="DropDown"
+                <Grid x:Name="DropDown"
                       MinWidth="{TemplateBinding ActualWidth}"
                       MaxHeight="{TemplateBinding MaxDropDownHeight}">
-                    <Border Style="{x:Null}"
-                            x:Name="DropDownBorder"
-                            Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                            BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}"
+                    <Border x:Name="DropDownBorder"
+                            Background="{DynamicResource Snoop.Brushes.Default.Background}"
+                            BorderBrush="{DynamicResource Snoop.Brushes.Window.Frame}"
                             BorderThickness="1 1 1 1" />
-                    <Grid Style="{x:Null}"
-                          Margin="1 1 1 1">
+                    <Grid Margin="1 1 1 1">
                         <Grid.RowDefinitions>
-                            <RowDefinition Style="{x:Null}"
-                                           Height="Auto" />
-                            <RowDefinition Style="{x:Null}"
-                                           Height="*" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
                         <Button Grid.Row="0"
                                 Command="{TemplateBinding ResetSettingsCommand}">
-                            <TextBlock Style="{x:Null}">
+                            <TextBlock>
                                 Reset to default settings
                             </TextBlock>
                             <Button.ToolTip>
-                                <TextBlock Style="{x:Null}"
-                                           Text="{TemplateBinding ResetSettingsToolTip}" />
+                                <TextBlock Text="{TemplateBinding ResetSettingsToolTip}" />
                             </Button.ToolTip>
                         </Button>
 
                         <ScrollViewer x:Name="ScrollViewer"
                                       Grid.Row="1"
                                       Margin="0 2 0 0">
-                            <ItemsControl Style="{x:Null}"
-                                          x:Name="PART_ItemsControl"
+                            <ItemsControl x:Name="PART_ItemsControl"
                                           ItemsPanel="{TemplateBinding ItemsPanel}"
                                           ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource TemplatedParent}}"
                                           KeyboardNavigation.DirectionalNavigation="Contained">
@@ -478,7 +114,7 @@
                     <Condition Property="IsKeyboardFocusWithin" Value="True" />
                     <Condition Property="IsDropDownOpen" Value="False" />
                 </MultiTrigger.Conditions>
-                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
+                <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.HighlightForeground}" />
             </MultiTrigger>
             <Trigger SourceName="PART_Popup" Property="Popup.HasDropShadow" Value="True">
                 <Setter TargetName="DropDown" Property="Margin" Value="0 0 3 3" />
@@ -494,8 +130,8 @@
                 <Setter TargetName="DropDownBorder" Property="MinHeight" Value="95" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
-                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                <Setter Property="Background" Value="{DynamicResource Snoop.Brushes.Default.Control}" />
+                <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.GrayForeground}" />
             </Trigger>
             <Trigger Property="IsGrouping" Value="True">
                 <Setter Property="ScrollViewer.CanContentScroll" Value="False" />
@@ -510,15 +146,163 @@
     </ControlTemplate>
 
     <Style x:Key="{x:Type controls:NoSelectionComboBox}"
-           BasedOn="{x:Null}"
-           TargetType="{x:Type controls:NoSelectionComboBox}">
+           TargetType="{x:Type controls:NoSelectionComboBox}"
+           BasedOn="{StaticResource {x:Type ComboBox}}">
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <VirtualizingStackPanel Style="{x:Null}" />
+                    <VirtualizingStackPanel />
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
         <Setter Property="Template" Value="{StaticResource Snoop.Templates.NoSelectionComboBox}" />
+    </Style>
+
+    <Style x:Key="{x:Type controls:NoFocusHyperlink}"
+           TargetType="{x:Type controls:NoFocusHyperlink}"
+           BasedOn="{StaticResource {x:Type Hyperlink}}" />
+
+    <!-- TreeView -->
+    <controls:IndentToMarginConverter x:Key="IndentToMarginConverter" />
+
+    <Style x:Key="TreeViewToggleStyle"
+           TargetType="{x:Type ToggleButton}"
+           BasedOn="{StaticResource {x:Type ToggleButton}}">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Height" Value="13" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border x:Name="Border"
+                            Width="19"
+                            Height="13"
+                            Background="#00FFFFFF">
+                        <Border x:Name="Border1"
+                                Width="9"
+                                Height="9"
+                                BorderBrush="#FF9495A2"
+                                BorderThickness="1 1 1 1"
+                                CornerRadius="1,1,1,1"
+                                SnapsToDevicePixels="True">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#FFFFFFFF" Offset="0.4" />
+                                    <GradientStop Color="#FFC6CEDA" Offset="1" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <Path x:Name="ExpandPath"
+                                  Margin="1 1 1 1"
+                                  Data="M0,2L0,3 2,3 2,5 3,5 3,3 5,3 5,2 3,2 3,0 2,0 2,2z"
+                                  Fill="#FF000000" />
+                        </Border>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="ExpandPath" Property="Data" Value="M0,2L0,3 5,3 5,2z" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Width" Value="19" />
+    </Style>
+
+    <Style x:Key="ProperTreeViewItemStyle"
+           TargetType="{x:Type TreeViewItem}"
+           BasedOn="{StaticResource TreeViewItemStyle}">
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}, AncestorLevel=1}, FallbackValue=Left}" />
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <StackPanel />
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Padding" Value="1 0 0 0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TreeViewItem}">
+                    <Grid x:Name="Grid">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Border x:Name="PART_Header"
+                                Grid.Column="1"
+                                Padding="{TemplateBinding Padding}"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <StackPanel Margin="{Binding Indent, Converter={StaticResource IndentToMarginConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:ProperTreeViewItem}}}"
+                                        Orientation="Horizontal">
+                                <ToggleButton x:Name="Expander"
+                                              Style="{StaticResource TreeViewToggleStyle}"
+                                              ClickMode="Press"
+                                              IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" />
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  Content="{TemplateBinding Header}"
+                                                  ContentSource="Header"
+                                                  ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                                  ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}"
+                                                  DataContext="{x:Null}" />
+                            </StackPanel>
+                        </Border>
+                        <ItemsPresenter x:Name="ItemsHost"
+                                        Grid.Row="1"
+                                        Grid.Column="1"
+                                        Grid.ColumnSpan="2" />
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsExpanded" Value="False">
+                            <Setter TargetName="ItemsHost" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="HasItems" Value="False">
+                            <Setter TargetName="Expander" Property="Visibility" Value="Hidden" />
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="HasHeader" Value="False" />
+                                <Condition Property="Width" Value="Auto" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="PART_Header" Property="MinWidth" Value="75" />
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="HasHeader" Value="False" />
+                                <Condition Property="Height" Value="Auto" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="PART_Header" Property="MinHeight" Value="19" />
+                        </MultiTrigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.HighlightForeground}" />
+                            <Setter TargetName="PART_Header" Property="Background" Value="{DynamicResource Snoop.Brushes.Default.Highlight}" />
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsSelected" Value="True" />
+                                <Condition Property="IsSelectionActive" Value="False" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.Foreground}" />
+                            <Setter TargetName="PART_Header" Property="Background" Value="{DynamicResource Snoop.Brushes.Default.Control}" />
+                        </MultiTrigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.GrayForeground}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}, AncestorLevel=1}, FallbackValue=Top}" />
+    </Style>
+
+    <Style x:Key="MouseWheelText"
+           TargetType="{x:Type TextBlock}"
+           BasedOn="{StaticResource {x:Type TextBlock}}">
+        <!--<Setter Property="local:PropertyEditor.SupportMouseWheel" Value="True"/>-->
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Margin" Value="0 0 5 0" />
     </Style>
 </ResourceDictionary>

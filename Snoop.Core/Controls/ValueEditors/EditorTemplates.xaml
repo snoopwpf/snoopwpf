@@ -22,8 +22,7 @@
         <Setter Property="ToolTip">
             <Setter.Value>
                 <DataTemplate>
-                    <TextBlock Style="{x:Null}"
-                               Text="Scroll mouse wheel here to edit value" />
+                    <TextBlock Text="Scroll mouse wheel here to edit value" />
                 </DataTemplate>
             </Setter.Value>
         </Setter>
@@ -43,14 +42,12 @@
         <Style.Resources>
             <DataTemplate x:Key="EmptyValueTemplate"
                           DataType="valueEditors:ValueEditor">
-                <TextBlock Style="{x:Null}"
-                           Text="{Binding DescriptiveValue}" />
+                <TextBlock Text="{Binding DescriptiveValue}" />
             </DataTemplate>
 
             <DataTemplate x:Key="UnselectedValueTemplate"
                           DataType="valueEditors:ValueEditor">
-                <TextBlock Style="{x:Null}"
-                           Text="{Binding DescriptiveValue}" />
+                <TextBlock Text="{Binding DescriptiveValue}" />
             </DataTemplate>
 
             <DataTemplate x:Key="SelectedValueTemplate"
@@ -59,7 +56,6 @@
                                       Padding="1"
                                       HorizontalAlignment="Stretch"
                                       VerticalContentAlignment="Center"
-                                      Background="White"
                                       BorderThickness="0"
                                       IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}"
                                       IsReadOnlyCaretVisible="True"
@@ -70,27 +66,24 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type valueEditors:StandardValueEditor}">
-                    <StackPanel Style="{x:Null}"
-                                Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal">
                         <Button x:Name="OpenDetailsEditor"
                                 Command="{x:Static valueEditors:ValueEditor.OpenDetailsEditorCommand}"
                                 Content=" ... "
                                 DockPanel.Dock="Left"
                                 Visibility="Collapsed">
                             <Button.ToolTip>
-                                <TextBlock Style="{x:Null}">
-                                    Opens an editor window where you can see and edit the full value.<LineBreak Style="{x:Null}" />
+                                <TextBlock>
+                                    Opens an editor window where you can see and edit the full value.<LineBreak />
                                     Editing is only possible if the property is not read only.</TextBlock>
                             </Button.ToolTip>
                         </Button>
 
-                        <ContentPresenter Style="{x:Null}"
-                                          Name="ValueHolder"
+                        <ContentPresenter Name="ValueHolder"
                                           Content="{Binding RelativeSource={RelativeSource TemplatedParent}}"
                                           ContentTemplate="{DynamicResource UnselectedValueTemplate}">
                             <ContentPresenter.ToolTip>
-                                <TextBlock Style="{x:Null}"
-                                           Text="{TemplateBinding DescriptiveValue}" />
+                                <TextBlock Text="{TemplateBinding DescriptiveValue}" />
                             </ContentPresenter.ToolTip>
                         </ContentPresenter>
                     </StackPanel>
@@ -123,8 +116,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type valueEditors:BoolValueEditor}">
-                    <StackPanel Style="{x:Null}"
-                                d:DataContext="{d:DesignInstance infrastructure:PropertyInformation,
+                    <StackPanel d:DataContext="{d:DesignInstance infrastructure:PropertyInformation,
                                                                  IsDesignTimeCreatable=False}"
                                 Orientation="Horizontal">
                         <CheckBox x:Name="PART_CheckBox"
@@ -132,8 +124,7 @@
                                   IsChecked="{Binding Value, Mode=TwoWay}"
                                   IsEnabled="{TemplateBinding IsEditable}"
                                   IsThreeState="{Binding IsNullableValueType}" />
-                        <TextBlock Style="{x:Null}"
-                                   Margin="3 0"
+                        <TextBlock Margin="3 0"
                                    VerticalAlignment="Center"
                                    Text="{Binding Path=DescriptiveValue}"
                                    Visibility="{Binding Path=IsExpression, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}}" />
@@ -143,14 +134,13 @@
         </Setter>
     </Style>
 
-    <Style BasedOn="{StaticResource {x:Type valueEditors:StandardValueEditor}}"
-           TargetType="{x:Type valueEditors:StringValueEditor}">
+    <Style TargetType="{x:Type valueEditors:StringValueEditor}"
+           BasedOn="{StaticResource {x:Type valueEditors:StandardValueEditor}}">
         <Style.Setters>
             <Setter Property="DetailsEditorTemplate">
                 <Setter.Value>
                     <DataTemplate DataType="valueEditors:StringValueEditor">
-                        <TextBox Style="{x:Null}"
-                                 AcceptsReturn="True"
+                        <TextBox AcceptsReturn="True"
                                  HorizontalScrollBarVisibility="Disabled"
                                  IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}"
                                  IsReadOnlyCaretVisible="True"
@@ -163,8 +153,8 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource {x:Type valueEditors:StandardValueEditor}}"
-           TargetType="{x:Type valueEditors:BrushValueEditor}">
+    <Style TargetType="{x:Type valueEditors:BrushValueEditor}"
+           BasedOn="{StaticResource {x:Type valueEditors:StandardValueEditor}}">
         <Style.Resources>
             <DrawingBrush x:Key="CheckerboardBrush"
                           Stretch="Fill"
@@ -199,20 +189,18 @@
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="40" />
                                             </Grid.ColumnDefinitions>
-                                            <TextBlock Style="{x:Null}"
-                                                       Grid.Column="0"
+                                            <TextBlock Grid.Column="0"
                                                        Margin="4"
-                                                       Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+                                                       Foreground="{DynamicResource Snoop.Brushes.Default.Foreground}"
                                                        Text="{Binding Offset}" />
-                                            <TextBlock Style="{x:Null}"
-                                                       Grid.Column="1"
+                                            <TextBlock Grid.Column="1"
                                                        Margin="4"
-                                                       Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+                                                       Foreground="{DynamicResource Snoop.Brushes.Default.Foreground}"
                                                        Text="{Binding ColorText}" />
                                             <Border Grid.Column="2"
                                                     HorizontalAlignment="Stretch"
                                                     VerticalAlignment="Stretch"
-                                                    BorderBrush="{DynamicResource SolidBorderBrush}"
+                                                    BorderBrush="{DynamicResource Snoop.Brushes.Default.ControlDark}"
                                                     BorderThickness="1">
                                                 <Border.Background>
                                                     <SolidColorBrush Color="{Binding Color}" />
@@ -235,8 +223,7 @@
                                Fill="{Binding Value}"
                                Stroke="{TemplateBinding TextElement.Foreground}"
                                StrokeThickness="1" />
-                    <TextBlock Style="{x:Null}"
-                               Grid.Column="1"
+                    <TextBlock Grid.Column="1"
                                Margin="5 0 0 0"
                                Text="{Binding DescriptiveValue}" />
                 </Grid>
@@ -259,20 +246,18 @@
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="40" />
                                             </Grid.ColumnDefinitions>
-                                            <TextBlock Style="{x:Null}"
-                                                       Grid.Column="0"
+                                            <TextBlock Grid.Column="0"
                                                        Margin="4"
-                                                       Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+                                                       Foreground="{DynamicResource Snoop.Brushes.Default.Foreground}"
                                                        Text="{Binding Offset}" />
-                                            <TextBlock Style="{x:Null}"
-                                                       Grid.Column="1"
+                                            <TextBlock Grid.Column="1"
                                                        Margin="4"
-                                                       Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+                                                       Foreground="{DynamicResource Snoop.Brushes.Default.Foreground}"
                                                        Text="{Binding ColorText}" />
                                             <Border Grid.Column="2"
                                                     HorizontalAlignment="Stretch"
                                                     VerticalAlignment="Stretch"
-                                                    BorderBrush="{DynamicResource SolidBorderBrush}"
+                                                    BorderBrush="{DynamicResource Snoop.Brushes.Default.ControlDark}"
                                                     BorderThickness="1">
                                                 <Border.Background>
                                                     <SolidColorBrush Color="{Binding Color}" />
@@ -301,7 +286,6 @@
                                           Padding="1"
                                           HorizontalAlignment="Stretch"
                                           VerticalContentAlignment="Center"
-                                          Background="White"
                                           BorderThickness="0"
                                           IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}"
                                           IsReadOnlyCaretVisible="True"
@@ -313,8 +297,8 @@
         </Style.Resources>
     </Style>
 
-    <Style BasedOn="{StaticResource {x:Type valueEditors:StandardValueEditor}}"
-           TargetType="{x:Type valueEditors:ColorValueEditor}">
+    <Style TargetType="{x:Type valueEditors:ColorValueEditor}"
+           BasedOn="{StaticResource {x:Type valueEditors:StandardValueEditor}}">
         <Style.Resources>
             <DrawingBrush x:Key="CheckerboardBrush"
                           Stretch="Fill"
@@ -350,8 +334,7 @@
                             <SolidColorBrush Color="{Binding Value}" />
                         </Rectangle.Fill>
                     </Rectangle>
-                    <TextBlock Style="{x:Null}"
-                               Grid.Column="1"
+                    <TextBlock Grid.Column="1"
                                Margin="5 0 0 0"
                                Text="{Binding DescriptiveValue}" />
                 </Grid>
@@ -381,7 +364,6 @@
                                           Padding="1"
                                           HorizontalAlignment="Stretch"
                                           VerticalContentAlignment="Center"
-                                          Background="White"
                                           BorderThickness="0"
                                           IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}"
                                           IsReadOnlyCaretVisible="True"
@@ -397,25 +379,26 @@
         <Style.Resources>
             <DataTemplate x:Key="UnselectedValueTemplate"
                           DataType="valueEditors:ValueEditor">
-                <TextBlock Style="{x:Null}"
-                           Text="{Binding DescriptiveValue}" />
+                <TextBlock Text="{Binding DescriptiveValue}" />
             </DataTemplate>
 
             <DataTemplate x:Key="SelectedValueTemplate"
                           DataType="valueEditors:EnumValueEditor">
                 <ComboBox Height="16"
                           Padding="2 -2 2 0"
+                          DisplayMemberPath="Text"
                           IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}"
-                          IsSynchronizedWithCurrentItem="True"
-                          ItemsSource="{Binding Values}" />
+                          IsSynchronizedWithCurrentItem="False"
+                          ItemsSource="{Binding Values}"
+                          SelectedValue="{Binding Value}"
+                          SelectedValuePath="Value" />
             </DataTemplate>
         </Style.Resources>
 
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type valueEditors:EnumValueEditor}">
-                    <ContentPresenter Style="{x:Null}"
-                                      Name="ValueHolder"
+                    <ContentPresenter Name="ValueHolder"
                                       Content="{Binding RelativeSource={RelativeSource TemplatedParent}}"
                                       ContentTemplate="{DynamicResource UnselectedValueTemplate}" />
 

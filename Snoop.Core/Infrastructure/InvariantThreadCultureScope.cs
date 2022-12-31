@@ -1,23 +1,22 @@
-﻿namespace Snoop.Infrastructure
+﻿namespace Snoop.Infrastructure;
+
+using System;
+using System.Globalization;
+using System.Threading;
+
+public class InvariantThreadCultureScope : IDisposable
 {
-    using System;
-    using System.Globalization;
-    using System.Threading;
+    private readonly CultureInfo fallbackCulture;
 
-    public class InvariantThreadCultureScope : IDisposable
+    public InvariantThreadCultureScope()
     {
-        private readonly CultureInfo fallbackCulture;
+        this.fallbackCulture = Thread.CurrentThread.CurrentCulture;
 
-        public InvariantThreadCultureScope()
-        {
-            this.fallbackCulture = Thread.CurrentThread.CurrentCulture;
+        Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+    }
 
-            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-        }
-
-        public void Dispose()
-        {
-            Thread.CurrentThread.CurrentCulture = this.fallbackCulture;
-        }
+    public void Dispose()
+    {
+        Thread.CurrentThread.CurrentCulture = this.fallbackCulture;
     }
 }

@@ -15,12 +15,10 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <ContentPresenter Style="{x:Null}"
-                          Content="{Binding ValueEditor, RelativeSource={RelativeSource AncestorType=details:ValueEditorDetailsWindow}}"
+        <ContentPresenter Content="{Binding ValueEditor, RelativeSource={RelativeSource AncestorType=details:ValueEditorDetailsWindow}}"
                           ContentTemplate="{Binding ValueEditor.DetailsEditorTemplate, RelativeSource={RelativeSource AncestorType=details:ValueEditorDetailsWindow}}" />
 
-        <StackPanel Style="{x:Null}"
-                    Grid.Row="1"
+        <StackPanel Grid.Row="1"
                     Margin="2"
                     Orientation="Horizontal">
             <Button Margin="2"

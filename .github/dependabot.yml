@@ -3,7 +3,7 @@ updates:
 - package-ecosystem: nuget
   directory: "/"
   schedule:
-    interval: daily
+    interval: monthly
   open-pull-requests-limit: 10
   ignore:
   - dependency-name: System.Management.Automation
@@ -15,19 +15,6 @@ updates:
   - dependency-name: Verify.NUnit
     versions:
     - "> 11.0.3"
-  - dependency-name: Verify.NUnit
-    versions:
-    - 10.0.0
-    - 10.5.1
-    - 10.7.0
-    - 10.8.0
-    - 10.9.0
-    - 11.0.0
-    - 11.0.1
-    - 11.0.2
-  - dependency-name: Microsoft.CodeAnalysis.CSharp
-    versions:
-    - 3.9.0
-  - dependency-name: NUnit
-    versions:
-    - 3.13.0
+  - dependency-name: CefSharp.Common.NETCore
+  - dependency-name: CefSharp.Wpf.NETCore
+  - dependency-name: Microsoft.Web.WebView2

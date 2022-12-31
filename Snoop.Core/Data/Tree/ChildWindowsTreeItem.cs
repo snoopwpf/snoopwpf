@@ -1,45 +1,44 @@
-﻿namespace Snoop.Data.Tree
+﻿namespace Snoop.Data.Tree;
+
+using System.Windows;
+using Snoop.Infrastructure;
+
+public class ChildWindowsTreeItem : TreeItem
 {
-    using System.Windows;
-    using Snoop.Infrastructure;
+    private readonly Window targetWindow;
 
-    public class ChildWindowsTreeItem : TreeItem
+    public ChildWindowsTreeItem(Window target, TreeItem parent, TreeService treeService)
+        : base(target, parent, treeService)
     {
-        private readonly Window targetWindow;
+        this.targetWindow = target;
 
-        public ChildWindowsTreeItem(Window target, TreeItem parent, TreeService treeService)
-            : base(target, parent, treeService)
+        this.ShouldBeAnalyzed = false;
+    }
+
+    protected override void ReloadCore()
+    {
+        base.ReloadCore();
+
+        foreach (Window? ownedWindow in this.targetWindow.OwnedWindows)
         {
-            this.targetWindow = target;
-
-            this.ShouldBeAnalyzed = false;
-        }
-
-        protected override void ReloadCore()
-        {
-            base.ReloadCore();
-
-            foreach (Window? ownedWindow in this.targetWindow.OwnedWindows)
+            if (ownedWindow is null)
             {
-                if (ownedWindow is null)
-                {
-                    continue;
-                }
-
-                if (ownedWindow.IsInitialized == false
-                    || ownedWindow.CheckAccess() == false
-                    || ownedWindow.IsPartOfSnoopVisualTree())
-                {
-                    continue;
-                }
-
-                this.AddChild(this.TreeService.Construct(ownedWindow, this));
+                continue;
             }
-        }
 
-        public override string ToString()
-        {
-            return $"{this.Children.Count} child windows";
+            if (ownedWindow.IsInitialized == false
+                || ownedWindow.CheckAccess() == false
+                || ownedWindow.IsPartOfSnoopVisualTree())
+            {
+                continue;
+            }
+
+            this.AddChild(this.TreeService.Construct(ownedWindow, this));
         }
+    }
+
+    public override string ToString()
+    {
+        return $"{this.Children.Count} child windows";
     }
 }

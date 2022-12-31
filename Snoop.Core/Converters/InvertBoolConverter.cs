@@ -1,21 +1,20 @@
-﻿namespace Snoop.Converters
+﻿namespace Snoop.Converters;
+
+using System;
+using System.Globalization;
+using System.Windows.Data;
+
+public class InvertBoolConverter : IValueConverter
 {
-    using System;
-    using System.Globalization;
-    using System.Windows.Data;
+    public static readonly InvertBoolConverter DefaultInstance = new();
 
-    public class InvertBoolConverter : IValueConverter
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        public static readonly InvertBoolConverter DefaultInstance = new();
+        return !(bool)value;
+    }
 
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return !(bool)value;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -1,16 +1,15 @@
 ﻿// ReSharper disable once CheckNamespace
-namespace Snoop
-{
-    using System.Windows;
+namespace Snoop;
 
-    public static class FreezableExtensions
+using System.Windows;
+
+public static class FreezableExtensions
+{
+    public static void FreezeIfPossible(this Freezable freezable)
     {
-        public static void FreezeIfPossible(this Freezable freezable)
+        if (freezable.CanFreeze)
         {
-            if (freezable.CanFreeze)
-            {
-                freezable.Freeze();
-            }
+            freezable.Freeze();
         }
     }
 }

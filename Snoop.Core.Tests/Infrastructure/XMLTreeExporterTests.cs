@@ -1,85 +1,88 @@
-namespace Snoop.Core.Tests.Infrastructure
+namespace Snoop.Core.Tests.Infrastructure;
+
+using System.Globalization;
+using System.IO;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using NUnit.Framework;
+using Snoop.Data.Tree;
+using Snoop.Infrastructure;
+using VerifyNUnit;
+
+[TestFixture]
+public class XMLTreeExporterTests
 {
-    using System.Globalization;
-    using System.IO;
-    using System.Threading.Tasks;
-    using System.Windows;
-    using System.Windows.Controls;
-    using NUnit.Framework;
-    using Snoop.Data.Tree;
-    using Snoop.Infrastructure;
-    using VerifyNUnit;
-
-    [TestFixture]
-    public class XMLTreeExporterTests
+    [OneTimeSetUp]
+    public void OneTimeSetUp()
     {
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
-        {
-            // Assert correct expected formatting
-            Assert.That(default(Point).ToString(), Is.EqualTo("0,0"), CultureInfo.CurrentCulture.NativeName);
-        }
+        // Assert correct expected formatting
+        Assert.That(default(Point).ToString(), Is.EqualTo("0,0"), CultureInfo.CurrentCulture.NativeName);
 
-        [Test]
-        public Task TestTreeWithoutPropertyFilter()
-        {
-            var textWriter = new StringWriter();
+        // Required to ensure ScrollViewer attached properties are initialized
+        // ReSharper disable once UnusedVariable
+        var scrollViewer = new ScrollViewer();
+    }
 
-            var exporter = new XMLTreeExporter();
-            exporter.Export(GetTestTreeItem(), textWriter, null, true);
+    [Test]
+    public Task TestTreeWithoutPropertyFilter()
+    {
+        var textWriter = new StringWriter();
 
-            var result = textWriter.ToString();
+        var exporter = new XMLTreeExporter();
+        exporter.Export(GetTestTreeItem(), textWriter, new(string.Empty, false), true);
 
-            return Verifier.Verify(result);
-        }
+        var result = textWriter.ToString();
 
-        [Test]
-        public Task TestTreeWithPropertyFilter()
-        {
-            var textWriter = new StringWriter();
+        return Verifier.Verify(result);
+    }
 
-            var exporter = new XMLTreeExporter();
-            exporter.Export(GetTestTreeItem(), textWriter, new("Height", false), true);
+    [Test]
+    public Task TestTreeWithPropertyFilter()
+    {
+        var textWriter = new StringWriter();
 
-            var result = textWriter.ToString();
+        var exporter = new XMLTreeExporter();
+        exporter.Export(GetTestTreeItem(), textWriter, new("Height", false), true);
 
-            return Verifier.Verify(result);
-        }
+        var result = textWriter.ToString();
 
-        [Test]
-        public Task TestElementWithoutPropertyFilter()
-        {
-            var textWriter = new StringWriter();
+        return Verifier.Verify(result);
+    }
 
-            var exporter = new XMLTreeExporter();
-            exporter.Export(GetTestTreeItem(), textWriter, null, false);
+    [Test]
+    public Task TestElementWithoutPropertyFilter()
+    {
+        var textWriter = new StringWriter();
 
-            var result = textWriter.ToString();
+        var exporter = new XMLTreeExporter();
+        exporter.Export(GetTestTreeItem(), textWriter, new(string.Empty, false), false);
 
-            return Verifier.Verify(result);
-        }
+        var result = textWriter.ToString();
 
-        [Test]
-        public Task TestElementWithPropertyFilter()
-        {
-            var textWriter = new StringWriter();
+        return Verifier.Verify(result);
+    }
 
-            var exporter = new XMLTreeExporter();
-            exporter.Export(GetTestTreeItem(), textWriter, new("Height", false), false);
+    [Test]
+    public Task TestElementWithPropertyFilter()
+    {
+        var textWriter = new StringWriter();
 
-            var result = textWriter.ToString();
+        var exporter = new XMLTreeExporter();
+        exporter.Export(GetTestTreeItem(), textWriter, new("Height", false), false);
 
-            return Verifier.Verify(result);
-        }
+        var result = textWriter.ToString();
 
-        private static TreeItem GetTestTreeItem()
-        {
-            var target = new StackPanel();
-            target.Children.Add(new TextBlock { Text = "test" });
-            target.Children.Add(new Border { Child = new CheckBox { Content = "check" } });
+        return Verifier.Verify(result);
+    }
 
-            using var treeService = TreeService.From(TreeType.Visual);
-            return treeService.Construct(target, null);
-        }
+    private static TreeItem GetTestTreeItem()
+    {
+        var target = new StackPanel();
+        target.Children.Add(new TextBlock { Text = "test" });
+        target.Children.Add(new Border { Child = new CheckBox { Content = "check" } });
+
+        using var treeService = TreeService.From(TreeType.Visual);
+        return treeService.Construct(target, null);
     }
 }

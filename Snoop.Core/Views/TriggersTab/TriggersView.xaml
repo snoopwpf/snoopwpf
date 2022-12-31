@@ -12,14 +12,15 @@
     <Grid.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../../Controls/ValueEditors/EditorTemplates.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Snoop.Core;component/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <Style x:Key="Snoop.TriggerControlStyle"
-                   TargetType="{x:Type HeaderedContentControl}">
-                <Setter Property="Background" Value="#f7f7f7" />
-                <Setter Property="BorderBrush" Value="#d4d4d4" />
-                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+                   TargetType="{x:Type HeaderedContentControl}"
+                   BasedOn="{StaticResource {x:Type HeaderedContentControl}}">
+                <Setter Property="Background" Value="{DynamicResource Snoop.Brushes.Default.Control}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource Snoop.Brushes.Default.ControlDark}" />
+                <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.Foreground}" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type HeaderedContentControl}">
@@ -32,23 +33,20 @@
                                     <Border Height="18"
                                             VerticalAlignment="Top"
                                             Background="#0F000000" />
-                                    <ContentPresenter Style="{x:Null}"
-                                                      Margin="20 0 0 0"
+                                    <ContentPresenter Margin="20 0 0 0"
                                                       VerticalAlignment="Top"
                                                       Content="{TemplateBinding Header}"
                                                       TextBlock.FontSize="11"
                                                       TextBlock.FontWeight="Bold"
-                                                      TextBlock.Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
-                                    <Image Style="{x:Null}"
-                                           x:Name="icon"
+                                                      TextBlock.Foreground="{DynamicResource Snoop.Brushes.Default.Foreground}" />
+                                    <Image x:Name="icon"
                                            Width="12"
                                            Height="12"
                                            Margin="4 2 0 0"
                                            HorizontalAlignment="Left"
                                            VerticalAlignment="Top"
                                            Source="{DynamicResource triggerItemDrawingImage}" />
-                                    <ContentPresenter Style="{x:Null}"
-                                                      Margin="4 16 4 4"
+                                    <ContentPresenter Margin="4 16 4 4"
                                                       Content="{TemplateBinding Content}" />
                                 </Grid>
                             </Border>
@@ -65,12 +63,11 @@
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
                         SnapsToDevicePixels="true">
-                    <ItemsPresenter Style="{x:Null}"
-                                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                    <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                 </Border>
                 <ControlTemplate.Triggers>
                     <Trigger Property="IsEnabled" Value="false">
-                        <Setter TargetName="Bd" Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
+                        <Setter TargetName="Bd" Property="Background" Value="{DynamicResource Snoop.Brushes.Default.Control}" />
                     </Trigger>
                     <Trigger Property="IsGrouping" Value="true">
                         <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
@@ -90,17 +87,15 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Style="{x:Null}"
-                               x:Name="key"
+                    <TextBlock x:Name="key"
                                Grid.Column="0"
                                Background="Transparent"
                                Text="{Binding Value.DisplayName, Mode=OneWay}" />
-                    <ContentPresenter Style="{x:Null}"
-                                      x:Name="value"
+                    <ContentPresenter x:Name="value"
                                       Grid.Column="1"
                                       Margin="4 0 0 0"
                                       Content="{Binding Value}"
-                                      ContentTemplateSelector="{StaticResource EditorSelector}" />
+                                      ContentTemplateSelector="{DynamicResource EditorSelector}" />
                 </Grid>
 
                 <DataTemplate.Triggers>
@@ -121,8 +116,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Style="{x:Null}"
-                               x:Name="key"
+                    <TextBlock x:Name="key"
                                Grid.Column="0"
                                Background="Transparent"
                                Text="{Binding DescriptiveValue, Mode=OneWay}"
@@ -137,15 +131,13 @@
             <!-- ========================= -->
 
             <DataTemplate DataType="{x:Type triggers:TriggerItemBase}">
-                <HeaderedContentControl Style="{StaticResource Snoop.TriggerControlStyle}"
-                                        x:Name="triggerControl"
-                                        Header="{Binding TriggerType}">
-                    <StackPanel Style="{x:Null}">
-                        <TextBlock Style="{x:Null}"
-                                   Margin="4 4 4 0"
+                <HeaderedContentControl x:Name="triggerControl"
+                                        Header="{Binding TriggerType}"
+                                        Style="{StaticResource Snoop.TriggerControlStyle}">
+                    <StackPanel>
+                        <TextBlock Margin="4 4 4 0"
                                    Text="Conditions" />
-                        <ItemsControl Style="{x:Null}"
-                                      Margin="8 4"
+                        <ItemsControl Margin="8 4"
                                       ItemsSource="{Binding Conditions}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate DataType="{x:Type triggers:ConditionItem}">
@@ -154,36 +146,29 @@
                                             <RowDefinition />
                                             <RowDefinition />
                                         </Grid.RowDefinitions>
-                                        <StackPanel Style="{x:Null}"
-                                                    Orientation="Horizontal">
-                                            <Image Style="{x:Null}"
-                                                   x:Name="image"
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image x:Name="image"
                                                    Width="16"
                                                    Height="16"
                                                    Source="{DynamicResource inActiveDrawingImage}" />
-                                            <TextBlock Style="{x:Null}"
-                                                       x:Name="conditionText"
+                                            <TextBlock x:Name="conditionText"
                                                        Margin="2 0 0 0"
                                                        Text="{Binding Condition}" />
                                         </StackPanel>
 
-                                        <Border Style="{x:Null}"
-                                                x:Name="errorPane"
+                                        <Border x:Name="errorPane"
                                                 Grid.Row="1"
                                                 Background="Red"
                                                 TextElement.Foreground="White"
                                                 Visibility="Collapsed">
-                                            <StackPanel Style="{x:Null}"
-                                                        Orientation="Horizontal">
-                                                <Image Style="{x:Null}"
-                                                       x:Name="warningImage"
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image x:Name="warningImage"
                                                        Width="16"
                                                        Height="16"
                                                        Source="{DynamicResource warningDrawingImage}"
                                                        ToolTip="{Binding Error}" />
 
-                                                <TextBlock Style="{x:Null}"
-                                                           x:Name="errorText"
+                                                <TextBlock x:Name="errorText"
                                                            Margin="2 0 0 0"
                                                            Text="{Binding Error}" />
                                             </StackPanel>
@@ -202,8 +187,7 @@
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
-                        <TextBlock Style="{x:Null}"
-                                   Margin="4 4 4 0"
+                        <TextBlock Margin="4 4 4 0"
                                    Text="Setters" />
                         <ListBox Margin="8 4"
                                  Grid.IsSharedSizeScope="True"
@@ -212,14 +196,12 @@
                                  SelectedItem="{Binding SelectedSetterItem, RelativeSource={RelativeSource AncestorType=triggersTab:TriggersView}, Mode=TwoWay}"
                                  Template="{StaticResource Snoop.TriggersView.ListBoxControlTemplate}"
                                  Visibility="{Binding Setters.IsEmpty, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}, ConverterParameter=True}" />
-                        <TextBlock Style="{x:Null}"
-                                   Margin="8 4"
+                        <TextBlock Margin="8 4"
                                    Text="The trigger has no setters"
                                    Visibility="{Binding Setters.IsEmpty, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}}"
                                    Opacity="0.6" />
 
-                        <TextBlock Style="{x:Null}"
-                                   Margin="4 4 4 0"
+                        <TextBlock Margin="4 4 4 0"
                                    Text="EnterActions"
                                    Visibility="{Binding EnterActions.IsEmpty, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}, ConverterParameter=True}" />
                         <ListBox Margin="8 4"
@@ -229,8 +211,7 @@
                                  Template="{StaticResource Snoop.TriggersView.ListBoxControlTemplate}"
                                  Visibility="{Binding EnterActions.IsEmpty, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}, ConverterParameter=True}" />
 
-                        <TextBlock Style="{x:Null}"
-                                   Margin="4 4 4 0"
+                        <TextBlock Margin="4 4 4 0"
                                    Text="ExitActions"
                                    Visibility="{Binding ExitActions.IsEmpty, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}, ConverterParameter=True}" />
                         <ListBox Margin="8 4"
@@ -243,7 +224,7 @@
                 </HeaderedContentControl>
                 <DataTemplate.Triggers>
                     <DataTrigger Binding="{Binding IsActive}" Value="True">
-                        <Setter TargetName="triggerControl" Property="Background" Value="{DynamicResource ActiveTriggerBrush}" />
+                        <Setter TargetName="triggerControl" Property="Background" Value="{DynamicResource Snoop.Brushes.Default.InactiveSelectionHighlight}" />
                     </DataTrigger>
                 </DataTemplate.Triggers>
             </DataTemplate>
@@ -258,30 +239,27 @@
 
         <ScrollViewer Grid.Row="0"
                       HorizontalScrollBarVisibility="Disabled">
-            <ItemsControl Style="{x:Null}"
-                          ItemsSource="{Binding TriggerItems, ElementName=triggerView}">
+            <ItemsControl ItemsSource="{Binding TriggerItems, ElementName=triggerView}">
                 <ItemsControl.GroupStyle>
                     <GroupStyle>
                         <GroupStyle.Panel>
                             <ItemsPanelTemplate>
-                                <StackPanel Style="{x:Null}" />
+                                <StackPanel />
                             </ItemsPanelTemplate>
                         </GroupStyle.Panel>
                         <GroupStyle.ContainerStyle>
-                            <Style TargetType="{x:Type GroupItem}">
+                            <Style TargetType="{x:Type GroupItem}"
+                                   BasedOn="{StaticResource {x:Type GroupItem}}">
                                 <Setter Property="Margin" Value="0 0 0 2" />
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="{x:Type GroupItem}">
-                                            <StackPanel Style="{x:Null}"
-                                                        Margin="8">
-                                                <TextBlock Style="{x:Null}"
-                                                           VerticalAlignment="Center"
+                                            <StackPanel Margin="8">
+                                                <TextBlock VerticalAlignment="Center"
                                                            FontWeight="Bold"
-                                                           Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+                                                           Foreground="{DynamicResource Snoop.Brushes.Default.Foreground}"
                                                            Text="{Binding Path=Name}" />
-                                                <ItemsPresenter Style="{x:Null}"
-                                                                Margin="0 4 0 0" />
+                                                <ItemsPresenter Margin="0 4 0 0" />
                                             </StackPanel>
                                         </ControlTemplate>
                                     </Setter.Value>
@@ -305,8 +283,7 @@
         </Grid>-->
     </Grid>
 
-    <TextBlock Style="{x:Null}"
-               HorizontalAlignment="Center"
+    <TextBlock HorizontalAlignment="Center"
                VerticalAlignment="Center"
                Text="The element has no triggers"
                Visibility="{Binding HasTriggerItems, ElementName=triggerView, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}}"

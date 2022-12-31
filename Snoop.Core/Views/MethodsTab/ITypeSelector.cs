@@ -3,20 +3,19 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop.Views.MethodsTab
+namespace Snoop.Views.MethodsTab;
+
+using System.Windows;
+
+public interface ITypeSelector
 {
-    using System.Windows;
+    bool? ShowDialog();
 
-    public interface ITypeSelector
-    {
-        bool? ShowDialog();
+    bool? DialogResult { get; }
 
-        bool? DialogResult { get; }
+    object? Instance { get; }
 
-        object? Instance { get; }
+    WindowStartupLocation WindowStartupLocation { get; set; }
 
-        WindowStartupLocation WindowStartupLocation { get; set; }
-
-        string Title { get; set; }
-    }
+    string Title { get; set; }
 }

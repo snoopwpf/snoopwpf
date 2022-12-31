@@ -4,8 +4,7 @@
     Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
     All other rights reserved.
 -->
-<windows:SnoopBaseWindow Style="{x:Null}"
-                         x:Class="Snoop.Windows.ScreenshotDialog"
+<windows:SnoopBaseWindow x:Class="Snoop.Windows.ScreenshotDialog"
                          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -19,13 +18,13 @@
                          mc:Ignorable="d">
     <Window.Resources>
         <Style x:Key="PhotoFrameStyle"
-               TargetType="{x:Type ContentControl}">
+               TargetType="{x:Type ContentControl}"
+               BasedOn="{StaticResource {x:Type ContentControl}}">
             <Style.Setters>
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ContentControl}">
-                            <Border Style="{x:Null}"
-                                    Margin="10"
+                            <Border Margin="10"
                                     Padding="8"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
@@ -37,16 +36,12 @@
                                                       Opacity="0.6" />
                                 </Border.Effect>
 
-                                <Border Style="{x:Null}"
-                                        BorderBrush="#55000000"
+                                <Border BorderBrush="#55000000"
                                         BorderThickness="1 1 0 0">
-                                    <Border Style="{x:Null}"
-                                            BorderBrush="White"
+                                    <Border BorderBrush="White"
                                             BorderThickness="1 1 0 0">
-                                        <Viewbox Style="{x:Null}"
-                                                 Stretch="Uniform">
-                                            <Border Style="{x:Null}"
-                                                    Width="{Binding RenderSize.Width}"
+                                        <Viewbox Stretch="Uniform">
+                                            <Border Width="{Binding RenderSize.Width}"
                                                     Height="{Binding RenderSize.Height}">
                                                 <Border.Background>
                                                     <VisualBrush Stretch="Uniform"
@@ -64,7 +59,7 @@
         </Style>
     </Window.Resources>
 
-    <Grid Style="{x:Null}">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
@@ -73,11 +68,9 @@
         <ContentControl Style="{StaticResource PhotoFrameStyle}"
                         DataContext="{Binding}" />
 
-        <Grid Style="{x:Null}"
-              Grid.Row="1"
+        <Grid Grid.Row="1"
               Margin="0 15 0 0">
-            <StackPanel Style="{x:Null}"
-                        Margin="5 0 0 5"
+            <StackPanel Margin="5 0 0 5"
                         HorizontalAlignment="Left"
                         Orientation="Horizontal">
                 <ComboBox x:Name="dpiBox"
@@ -86,55 +79,44 @@
                           Margin="0 0 5 0"
                           IsEditable="False">
                     <ComboBoxItem>
-                        <TextBlock Style="{x:Null}"
-                                   Text="96" />
+                        <TextBlock Text="96" />
                     </ComboBoxItem>
                     <ComboBoxItem>
-                        <TextBlock Style="{x:Null}"
-                                   Text="150" />
+                        <TextBlock Text="150" />
                     </ComboBoxItem>
                     <ComboBoxItem IsSelected="True">
-                        <TextBlock Style="{x:Null}"
-                                   Text="300" />
+                        <TextBlock Text="300" />
                     </ComboBoxItem>
                     <ComboBoxItem>
-                        <TextBlock Style="{x:Null}"
-                                   Text="600" />
+                        <TextBlock Text="600" />
                     </ComboBoxItem>
                     <ComboBoxItem>
-                        <TextBlock Style="{x:Null}"
-                                   Text="1200" />
+                        <TextBlock Text="1200" />
                     </ComboBoxItem>
                     <ComboBoxItem>
-                        <TextBlock Style="{x:Null}"
-                                   Text="2400" />
+                        <TextBlock Text="2400" />
                     </ComboBoxItem>
                     <ComboBoxItem>
-                        <TextBlock Style="{x:Null}"
-                                   Text="4800" />
+                        <TextBlock Text="4800" />
                     </ComboBoxItem>
                 </ComboBox>
-                <TextBlock Style="{x:Null}"
-                           VerticalAlignment="Center"
+                <TextBlock VerticalAlignment="Center"
                            Text="DPI" />
             </StackPanel>
 
-            <StackPanel Style="{x:Null}"
-                        HorizontalAlignment="Right"
+            <StackPanel HorizontalAlignment="Right"
                         Orientation="Horizontal">
                 <Button Width="75"
                         Margin="0 0 5 5"
                         Command="{x:Static windows:ScreenshotDialog.SaveCommand}"
                         IsDefault="True">
-                    <TextBlock Style="{x:Null}"
-                               Text="Save" />
+                    <TextBlock Text="Save" />
                 </Button>
                 <Button Width="75"
                         Margin="0 0 5 5"
                         Command="{x:Static windows:ScreenshotDialog.CancelCommand}"
                         IsCancel="True">
-                    <TextBlock Style="{x:Null}"
-                               Text="Cancel" />
+                    <TextBlock Text="Cancel" />
                 </Button>
             </StackPanel>
         </Grid>

@@ -27,16 +27,20 @@
 
     <Compile Include="..\Shared\InjectorData.cs" Link="InjectorData.cs" />
     <Compile Include="..\Snoop.Core\Data\TransientSettingsData.cs" Link="Data\TransientSettingsData.cs" />
+    <Compile Include="..\Snoop.Core\EnvironmentEx.cs">
+      <Link>EnvironmentEx.cs</Link>
+    </Compile>
     <Compile Include="..\Snoop.Core\Infrastructure\NativeMethods.cs" Link="NativeMethods.cs" />
+    <Compile Include="..\Snoop.Core\SettingsHelper.cs">
+      <Link>SettingsHelper.cs</Link>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CommandLineParser" />
   </ItemGroup>
    
-  <Target Name="CompileOtherArches" 
-          AfterTargets="Build" 
-          Condition="'$(RootBuild)' == 'True'">
+  <Target Name="CompileOtherArches" AfterTargets="Build" Condition="'$(RootBuild)' == 'True'">
     <Message Text="Building injector launcher for x64..." Importance="High" />
     <MSBuild Projects="$(MSBuildProjectFile)" Targets="Restore;Build" Properties="RootBuild=False;Configuration=$(Configuration);PlatformTarget=x64" RunEachTargetSeparately="false" />
     <Message Text="Building injector launcher for ARM..." Importance="High" />

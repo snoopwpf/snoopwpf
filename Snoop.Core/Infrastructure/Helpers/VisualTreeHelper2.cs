@@ -3,96 +3,95 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop.Infrastructure.Helpers
+namespace Snoop.Infrastructure.Helpers;
+
+using System;
+using System.Windows;
+using System.Windows.Media;
+
+public static class VisualTreeHelper2
 {
-    using System;
-    using System.Windows;
-    using System.Windows.Media;
+    public delegate HitTestFilterBehavior EnumerateTreeFilterCallback(DependencyObject input, object? misc);
 
-    public static class VisualTreeHelper2
+    public delegate HitTestResultBehavior EnumerateTreeResultCallback(DependencyObject input, object? misc);
+
+    public static T? GetAncestor<T>(DependencyObject input, Predicate<T>? predicate = null)
+        where T : DependencyObject
     {
-        public delegate HitTestFilterBehavior EnumerateTreeFilterCallback(DependencyObject input, object? misc);
+        var current = input;
 
-        public delegate HitTestResultBehavior EnumerateTreeResultCallback(DependencyObject input, object? misc);
-
-        public static T? GetAncestor<T>(DependencyObject input, Predicate<T>? predicate = null)
-            where T : DependencyObject
         {
-            var current = input;
-
+            if (current is T result
+                && predicate?.Invoke(result) != false)
             {
-                if (current is T result
-                    && predicate?.Invoke(result) != false)
-                {
-                    return result;
-                }
+                return result;
             }
-
-            while (current is not null)
-            {
-                current = VisualTreeHelper.GetParent(current);
-
-                if (current is T result
-                    && predicate?.Invoke(result) != false)
-                {
-                    return result;
-                }
-            }
-
-            return null;
         }
 
-        public static void EnumerateTree(Visual reference, EnumerateTreeFilterCallback? filterCallback, EnumerateTreeResultCallback? enumeratorCallback, object? misc)
+        while (current is not null)
         {
-            if (reference is null)
-            {
-                throw new ArgumentNullException(nameof(reference));
-            }
+            current = VisualTreeHelper.GetParent(current);
 
-            DoEnumerateTree(reference, filterCallback, enumeratorCallback, misc);
+            if (current is T result
+                && predicate?.Invoke(result) != false)
+            {
+                return result;
+            }
         }
 
-        private static bool DoEnumerateTree(DependencyObject reference, EnumerateTreeFilterCallback? filterCallback, EnumerateTreeResultCallback? enumeratorCallback, object? misc)
+        return null;
+    }
+
+    public static void EnumerateTree(Visual reference, EnumerateTreeFilterCallback? filterCallback, EnumerateTreeResultCallback? enumeratorCallback, object? misc)
+    {
+        if (reference is null)
         {
-            for (var i = 0; i < VisualTreeHelper.GetChildrenCount(reference); ++i)
+            throw new ArgumentNullException(nameof(reference));
+        }
+
+        DoEnumerateTree(reference, filterCallback, enumeratorCallback, misc);
+    }
+
+    private static bool DoEnumerateTree(DependencyObject reference, EnumerateTreeFilterCallback? filterCallback, EnumerateTreeResultCallback? enumeratorCallback, object? misc)
+    {
+        for (var i = 0; i < VisualTreeHelper.GetChildrenCount(reference); ++i)
+        {
+            var child = VisualTreeHelper.GetChild(reference, i);
+
+            var filterResult = filterCallback?.Invoke(child, misc) ?? HitTestFilterBehavior.Continue;
+
+            var enumerateSelf = true;
+            var enumerateChildren = true;
+
+            switch (filterResult)
             {
-                var child = VisualTreeHelper.GetChild(reference, i);
+                case HitTestFilterBehavior.Continue:
+                    break;
 
-                var filterResult = filterCallback?.Invoke(child, misc) ?? HitTestFilterBehavior.Continue;
+                case HitTestFilterBehavior.ContinueSkipChildren:
+                    enumerateChildren = false;
+                    break;
 
-                var enumerateSelf = true;
-                var enumerateChildren = true;
+                case HitTestFilterBehavior.ContinueSkipSelf:
+                    enumerateSelf = false;
+                    break;
 
-                switch (filterResult)
-                {
-                    case HitTestFilterBehavior.Continue:
-                        break;
+                case HitTestFilterBehavior.ContinueSkipSelfAndChildren:
+                    enumerateChildren = false;
+                    enumerateSelf = false;
+                    break;
 
-                    case HitTestFilterBehavior.ContinueSkipChildren:
-                        enumerateChildren = false;
-                        break;
-
-                    case HitTestFilterBehavior.ContinueSkipSelf:
-                        enumerateSelf = false;
-                        break;
-
-                    case HitTestFilterBehavior.ContinueSkipSelfAndChildren:
-                        enumerateChildren = false;
-                        enumerateSelf = false;
-                        break;
-
-                    default:
-                        return false;
-                }
-
-                if ((enumerateSelf && enumeratorCallback?.Invoke(child, misc) == HitTestResultBehavior.Stop)
-                    || (enumerateChildren && DoEnumerateTree(child, filterCallback, enumeratorCallback, misc) == false))
-                {
+                default:
                     return false;
-                }
             }
 
-            return true;
+            if ((enumerateSelf && enumeratorCallback?.Invoke(child, misc) == HitTestResultBehavior.Stop)
+                || (enumerateChildren && DoEnumerateTree(child, filterCallback, enumeratorCallback, misc) == false))
+            {
+                return false;
+            }
         }
+
+        return true;
     }
 }

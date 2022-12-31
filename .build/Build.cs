@@ -1,5 +1,3 @@
-#pragma warning disable IDE0051 // Remove unused private members
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -37,7 +35,6 @@ using static Nuke.Common.Tools.MSBuild.MSBuildTasks;
     InvokedTargets = new[] { nameof(CI) },
     AutoGenerate = false
 )]
-[CheckBuildProjectConfigurations]
 [UnsetVisualStudioEnvironmentVariables]
 class Build : NukeBuild
 {
@@ -66,13 +63,13 @@ class Build : NukeBuild
             throw new Exception("Could not initialize GitVersion.");
         }
 
-        Console.WriteLine("IsLocalBuild           : {0}", IsLocalBuild.ToString());
+        Serilog.Log.Information("IsLocalBuild           : {0}", IsLocalBuild.ToString());
 
-        Console.WriteLine("Informational   Version: {0}", InformationalVersion);
-        Console.WriteLine("SemVer          Version: {0}", SemVer);
-        Console.WriteLine("AssemblySemVer  Version: {0}", AssemblySemVer);
-        Console.WriteLine("MajorMinorPatch Version: {0}", MajorMinorPatch);
-        Console.WriteLine("NuGet           Version: {0}", NuGetVersion);
+        Serilog.Log.Information("Informational   Version: {0}", InformationalVersion);
+        Serilog.Log.Information("SemVer          Version: {0}", SemVer);
+        Serilog.Log.Information("AssemblySemVer  Version: {0}", AssemblySemVer);
+        Serilog.Log.Information("MajorMinorPatch Version: {0}", MajorMinorPatch);
+        Serilog.Log.Information("NuGet           Version: {0}", NuGetVersion);
     }
 
     string ProjectName = "Snoop";
@@ -210,7 +207,7 @@ class Build : NukeBuild
         .DependsOn(Restore)
         .Executes(() =>
         {
-            DotNet($"xstyler -r -d \"{RootDirectory}\"");
+            DotNet($"xstyler --recursive --directory \"{RootDirectory}\"");
         });
 
     Target Test => _ => _
@@ -302,13 +299,13 @@ class Build : NukeBuild
             foreach (var item in CheckSumFiles)
             {
                 var checkSum = FileHelper.SHA256CheckSum(item);
-                Logger.Info(FenceOutput);
-                Logger.Info($"CheckSum for \"{item}\".");
-                Logger.Info($"SHA256 \"{checkSum}\".");
+                Serilog.Log.Information(FenceOutput);
+                Serilog.Log.Information($"CheckSum for \"{item}\".");
+                Serilog.Log.Information($"SHA256 \"{checkSum}\".");
                 var checkSumFile = item + ".sha256";
                 File.WriteAllText(checkSumFile, checkSum);
                 AppVeyor.Instance?.PushArtifact(checkSumFile);
-                Logger.Info(FenceOutput);
+                Serilog.Log.Information(FenceOutput);
             }
         });
 
@@ -339,7 +336,7 @@ class Build : NukeBuild
             //     .AssertWaitForExit();
 
             var result = await SignPathTasks.GetSigningRequestUrlViaAppVeyor(SignPathAuthToken, SignPathOrganizationId, SignPathProjectSlug, SignPathSigningPolicySlug);
-            Logger.Info(result);
+            Serilog.Log.Information(result);
         });
 
     bool ShouldSign()
@@ -354,7 +351,7 @@ class Build : NukeBuild
 
         return GitRepository.IsOnMainOrMasterBranch()
                // Pre-Release or not?
-               || GitVersion.NuGetVersion.Contains("-") == false;
+               || GitVersion.NuGetVersion.Contains('-') == false;
     }
 
     // ReSharper disable once InconsistentNaming

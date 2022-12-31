@@ -7,8 +7,8 @@ You can change property values, view triggers, set breakpoints on property chang
 
 [![Build status for master branch](https://img.shields.io/appveyor/ci/batzen/snoopwpf/master?style=flat-square&&label=master)](https://ci.appveyor.com/project/batzen/snoopwpf/branch/master)
 [![Build status for develop branch](https://img.shields.io/appveyor/ci/batzen/snoopwpf/develop?style=flat-square&&label=develop)](https://ci.appveyor.com/project/batzen/snoopwpf/branch/develop)
-[![chocolatey version](http://img.shields.io/chocolatey/v/snoop.svg?style=flat-square)](https://chocolatey.org/packages/snoop)
-[![chocolatey download count](http://img.shields.io/chocolatey/dt/snoop.svg?style=flat-square)](https://chocolatey.org/packages/snoop)
+[![Chocolatey version](http://img.shields.io/chocolatey/v/snoop.svg?style=flat-square)](https://chocolatey.org/packages/snoop)
+[![Chocolatey download count](http://img.shields.io/chocolatey/dt/snoop.svg?style=flat-square)](https://chocolatey.org/packages/snoop)
 
 ## Contact
 
@@ -17,16 +17,38 @@ You can change property values, view triggers, set breakpoints on property chang
 
 ## Where can i download Snoop?/How can i install Snoop?
 
-- [chocolatey](https://chocolatey.org/packages/snoop) for stable and some preview versions
-- [github releases](https://github.com/snoopwpf/snoopwpf/releases) for stable versions
-- [appveyor](https://ci.appveyor.com/project/batzen/snoopwpf/build/artifacts) for the latest preview versions (built on every code change)
-- You need at least .NET Framework 4.0 to run Snoop
+- [Chocolatey](https://chocolatey.org/packages/snoop) for stable and some preview versions
+- [GitHub releases](https://github.com/snoopwpf/snoopwpf/releases) for stable versions
+- [AppVeyor](https://ci.appveyor.com/project/batzen/snoopwpf/build/artifacts) for the latest preview versions (built on every code change)
+- You need at least .NET Framework 4.5.2 to run Snoop
+
+## Supported .NET versions
+
+- .NET Framework >= 4.5.2
+- .NET >= 3.1
 
 ## Versions
 
 You can read the [changelog](Changelog.md) for details on what changed in which version.
 
-### [4.0.0]
+### [5.0.0]
+
+Highlights:
+
+- Improved settings system that does not rely on `System.Configuration`
+- It's now possible to hide properties from Snoop in it's default view.  
+  Just annotate your properties with `[System.ComponentModel.BrowsableAttribute(false)]`.
+- Added the ability to show browser dev tools on browser controls.  
+  `WebView2` and `CefSharp` are currently supported.
+- Added dark theme
+
+Breaking:
+
+- Dropped support for all .NET Framework versions prior to .NET 4.5.2
+- Dropped support for .NET 3.0
+- Added support for .NET versions > 6.0 (by not explicitly blocking versions greater than 6.0)
+
+### [4.0.0](../../releases/tag/v4.0.0)
 
 Highlights:
 
@@ -116,14 +138,14 @@ Requirements:
 
 - Visual Studio 2022 (including C++ payloads (x86/x64/ARM/ARM64))
   - You can import the `.vsconfig` file in the Visual Studio installer to let it install all required components
-- .NET Core SDK 5.0.400 or later
-- .NET 4.5.1 targeting pack [download](https://dotnet.microsoft.com/download/dotnet-framework/net451)
+- .NET Core SDK 6.0.300 or later
+- .NET 4.5.2 targeting pack [download](https://dotnet.microsoft.com/download/dotnet-framework/net452)
 
 ## Contributors
 
 Over time contributions have been added by several people, most notably:
 
-- [Bastian Schmidt](https://github.com/batzen), [batzendev.de](https://batzendev.de) (current maintainer)
+- [Bastian Schmidt](https://github.com/batzen), [batzen.dev](https://batzen.dev) (current maintainer)
 - [Cory Plotts](https://github.com/cplotts), [cplotts.com](https://cplotts.com)
 - [Dan Hanan](http://blogs.interknowlogy.com/author/danhanan/)
 - [Andrei Kashcha](http://blog.yasiv.com/)

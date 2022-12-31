@@ -3,20 +3,19 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop.Views.MethodsTab
+namespace Snoop.Views.MethodsTab;
+
+using System;
+using System.Collections.Generic;
+
+public class TypeComparerByName : IComparer<Type>
 {
-    using System;
-    using System.Collections.Generic;
+    #region IComparer<Type> Members
 
-    public class TypeComparerByName : IComparer<Type>
+    public int Compare(Type? x, Type? y)
     {
-        #region IComparer<Type> Members
-
-        public int Compare(Type? x, Type? y)
-        {
-            return string.Compare(x?.Name, y?.Name, StringComparison.Ordinal);
-        }
-
-        #endregion
+        return string.Compare(x?.Name, y?.Name, StringComparison.Ordinal);
     }
+
+    #endregion
 }

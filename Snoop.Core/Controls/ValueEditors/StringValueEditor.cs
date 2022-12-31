@@ -3,38 +3,37 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop.Controls.ValueEditors
+namespace Snoop.Controls.ValueEditors;
+
+using System.Windows;
+
+public class StringValueEditor : StandardValueEditor
 {
-    using System.Windows;
+    public static readonly DependencyProperty StringValueForDetailsEditorProperty = DependencyProperty.Register(
+        nameof(StringValueForDetailsEditor), typeof(string), typeof(StringValueEditor), new PropertyMetadata(default(string)));
 
-    public class StringValueEditor : StandardValueEditor
+    public StringValueEditor()
     {
-        public static readonly DependencyProperty StringValueForDetailsEditorProperty = DependencyProperty.Register(
-            nameof(StringValueForDetailsEditor), typeof(string), typeof(StringValueEditor), new PropertyMetadata(default(string)));
+        this.SupportsDetailsEditor = true;
+    }
 
-        public StringValueEditor()
-        {
-            this.SupportsDetailsEditor = true;
-        }
+    public string? StringValueForDetailsEditor
+    {
+        get => (string?)this.GetValue(StringValueForDetailsEditorProperty);
+        set => this.SetValue(StringValueForDetailsEditorProperty, value);
+    }
 
-        public string? StringValueForDetailsEditor
-        {
-            get => (string?)this.GetValue(StringValueForDetailsEditorProperty);
-            set => this.SetValue(StringValueForDetailsEditorProperty, value);
-        }
+    public override void PrepareForDetailsEditor()
+    {
+        base.PrepareForDetailsEditor();
 
-        public override void PrepareForDetailsEditor()
-        {
-            base.PrepareForDetailsEditor();
+        this.StringValueForDetailsEditor = this.StringValue;
+    }
 
-            this.StringValueForDetailsEditor = this.StringValue;
-        }
+    public override void AcceptValueFromDetailsEditor()
+    {
+        base.AcceptValueFromDetailsEditor();
 
-        public override void AcceptValueFromDetailsEditor()
-        {
-            base.AcceptValueFromDetailsEditor();
-
-            this.StringValue = this.StringValueForDetailsEditor;
-        }
+        this.StringValue = this.StringValueForDetailsEditor;
     }
 }

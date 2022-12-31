@@ -3,9 +3,8 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop.Controls.ValueEditors
+namespace Snoop.Controls.ValueEditors;
+
+public class BrushValueEditor : StandardValueEditor
 {
-    public class BrushValueEditor : StandardValueEditor
-    {
-    }
 }

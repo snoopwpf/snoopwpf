@@ -1,18 +1,20 @@
-﻿namespace Snoop.Core.Tests
-{
-    using System.Globalization;
-    using NUnit.Framework;
+﻿namespace Snoop.Core.Tests;
 
-    [SetUpFixture]
-    public class AssemblySetup
+using System.Diagnostics;
+using System.Globalization;
+using NUnit.Framework;
+
+[SetUpFixture]
+public class AssemblySetup
+{
+    [OneTimeSetUp]
+    public void SetUp()
     {
-        [OneTimeSetUp]
-        public void SetUp()
-        {
-            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
-            CultureInfo.CurrentUICulture = CultureInfo.CurrentCulture;
-            CultureInfo.DefaultThreadCurrentCulture = CultureInfo.CurrentCulture;
-            CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.CurrentCulture;
-        }
+        CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
+        CultureInfo.CurrentUICulture = CultureInfo.CurrentCulture;
+        CultureInfo.DefaultThreadCurrentCulture = CultureInfo.CurrentCulture;
+        CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.CurrentCulture;
+
+        DiffEngine.DiffRunner.Disabled = Debugger.IsAttached == false;
     }
 }

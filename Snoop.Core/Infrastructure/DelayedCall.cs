@@ -3,42 +3,41 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop.Infrastructure
+namespace Snoop.Infrastructure;
+
+using System.Windows.Threading;
+
+public delegate void DelayedHandler();
+
+public class DelayedCall
 {
-    using System.Windows.Threading;
+    private readonly DelayedHandler handler;
+    private readonly DispatcherPriority priority;
 
-    public delegate void DelayedHandler();
+    private bool queued;
 
-    public class DelayedCall
+    public DelayedCall(DelayedHandler handler, DispatcherPriority priority)
     {
-        private readonly DelayedHandler handler;
-        private readonly DispatcherPriority priority;
+        this.handler = handler;
+        this.priority = priority;
+    }
 
-        private bool queued;
-
-        public DelayedCall(DelayedHandler handler, DispatcherPriority priority)
+    public void Enqueue(Dispatcher dispatcher)
+    {
+        if (this.queued)
         {
-            this.handler = handler;
-            this.priority = priority;
+            return;
         }
 
-        public void Enqueue(Dispatcher dispatcher)
-        {
-            if (this.queued)
-            {
-                return;
-            }
+        this.queued = true;
 
-            this.queued = true;
+        dispatcher.RunInDispatcherAsync(this.Process, this.priority);
+    }
 
-            dispatcher.RunInDispatcherAsync(this.Process, this.priority);
-        }
+    private void Process()
+    {
+        this.queued = false;
 
-        private void Process()
-        {
-            this.queued = false;
-
-            this.handler();
-        }
+        this.handler();
     }
 }

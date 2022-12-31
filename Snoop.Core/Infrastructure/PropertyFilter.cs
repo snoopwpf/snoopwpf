@@ -5,308 +5,207 @@
 
 #pragma warning disable CA1819
 
-namespace Snoop.Infrastructure
+namespace Snoop.Infrastructure;
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Text.RegularExpressions;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Markup;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Navigation;
+
+public class PropertyFilter
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Diagnostics;
-    using System.Runtime.CompilerServices;
-    using System.Runtime.Serialization;
-    using System.Text.RegularExpressions;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Documents;
-    using System.Windows.Input;
-    using System.Windows.Markup;
-    using System.Windows.Media;
-    using System.Windows.Media.Animation;
-    using System.Windows.Navigation;
-    using JetBrains.Annotations;
-    using Snoop.AttachedProperties;
-
-    public class PropertyFilter
+    private static readonly List<Type> uncommonTypes = new()
     {
-        private static readonly List<Type> uncommonTypes = new()
+        typeof(BaseUriHelper),
+        typeof(Block),
+        typeof(ContextMenuService),
+        typeof(DesignerProperties),
+        typeof(InputLanguageManager),
+        typeof(InputMethod),
+        typeof(NameScope),
+        typeof(NavigationService),
+        typeof(NumberSubstitution),
+        typeof(SpellCheck),
+        typeof(Stylus),
+        typeof(TextSearch),
+        typeof(Timeline),
+        typeof(ToolBar),
+        typeof(ToolTipService),
+        typeof(Typography),
+        typeof(VirtualizingPanel),
+        typeof(VisualStateManager),
+        typeof(XmlAttributeProperties)
+    };
+
+    private static readonly List<PropertyDescriptor> nonUncommonProperties = new()
+    {
+    };
+
+    private static readonly List<DependencyProperty> nonUncommonDependencyProperties = new()
+    {
+        ContextMenuService.ContextMenuProperty,
+        ToolTipService.ToolTipProperty
+    };
+
+    private static readonly List<string> uncommonPropertyNames = new()
+    {
+        "Binding.XmlNamespaceManager"
+    };
+
+    private Regex? filterRegex;
+    private string? filterString;
+    private bool hasFilterString;
+
+    public PropertyFilter(string filterString, bool showDefaults)
+    {
+        this.FilterString = filterString;
+        this.ShowDefaults = showDefaults;
+    }
+
+    public string? FilterString
+    {
+        get => this.filterString;
+        set
         {
-            typeof(BaseUriHelper),
-            typeof(Block),
-            typeof(ContextMenuService),
-            typeof(DesignerProperties),
-            typeof(InputLanguageManager),
-            typeof(InputMethod),
-            typeof(NameScope),
-            typeof(NavigationService),
-            typeof(NumberSubstitution),
-            typeof(SpellCheck),
-            typeof(Stylus),
-            typeof(TextSearch),
-            typeof(Timeline),
-            typeof(ToolBar),
-            //typeof(ToolTipService),
-            typeof(Typography),
-            typeof(VirtualizingPanel),
-            typeof(VisualStateManager),
-            typeof(XmlAttributeProperties),
+            this.filterString = value;
+            this.hasFilterString = string.IsNullOrEmpty(this.filterString) == false;
 
-            // Snoops own attached properties
-            typeof(AttachedPropertyManager),
-            typeof(BringIntoViewBehavior),
-            typeof(ComboBoxSettings),
-            typeof(SnoopAttachedProperties)
-        };
+            if (this.hasFilterString == false)
+            {
+                this.filterRegex = null;
+                return;
+            }
 
-        private static readonly List<string> uncommonPropertyNames = new()
+            try
+            {
+                this.filterRegex = new Regex(this.FilterString!, RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
+            }
+            catch
+            {
+                this.filterRegex = null;
+            }
+        }
+    }
+
+    public bool ShowDefaults { get; set; }
+
+    public bool ShowUncommonProperties { get; set; }
+
+    public PropertyFilterSet? SelectedFilterSet { get; set; }
+
+    public bool IsPropertyFilterSet => this.SelectedFilterSet?.Properties is not null;
+
+    public bool ShouldShow(PropertyInformation property)
+    {
+        if (this.ShowUncommonProperties == false
+            && IsUncommonProperty(property))
         {
-            "Binding.XmlNamespaceManager"
-        };
-
-        private Regex? filterRegex;
-        private string? filterString;
-        private bool hasFilterString;
-
-        public PropertyFilter(string filterString, bool showDefaults)
-        {
-            this.FilterString = filterString;
-            this.ShowDefaults = showDefaults;
+            return false;
         }
 
-        public string? FilterString
+        // use a regular expression if we have one and we also have a filter string.
+        if (this.hasFilterString
+            && this.filterRegex is not null)
         {
-            get => this.filterString;
-            set
-            {
-                this.filterString = value;
-                this.hasFilterString = string.IsNullOrEmpty(this.filterString) == false;
-
-                if (this.hasFilterString == false)
-                {
-                    this.filterRegex = null;
-                    return;
-                }
-
-                try
-                {
-                    this.filterRegex = new Regex(this.FilterString!, RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
-                }
-                catch
-                {
-                    this.filterRegex = null;
-                }
-            }
-        }
-
-        public bool ShowDefaults { get; set; }
-
-        public bool ShowPropertiesFromUncommonTypes { get; set; }
-
-        public PropertyFilterSet? SelectedFilterSet { get; set; }
-
-        public bool IsPropertyFilterSet => this.SelectedFilterSet?.Properties is not null;
-
-        public bool Show(PropertyInformation property)
-        {
-            if (this.ShowPropertiesFromUncommonTypes == false
-                && IsUncommonProperty(property))
-            {
-                return false;
-            }
-
-            // use a regular expression if we have one and we also have a filter string.
-            if (this.hasFilterString
-                && this.filterRegex is not null)
-            {
-                return this.filterRegex.IsMatch(property.DisplayName)
-                       || (property.Property is not null && this.filterRegex.IsMatch(property.Property.PropertyType.Name));
-            }
-
-            // else just check for containment if we don't have a regular expression but we do have a filter string.
-
-            if (this.hasFilterString)
-            {
-                if (property.DisplayName.ContainsIgnoreCase(this.FilterString))
-                {
-                    return true;
-                }
-
-                if (property.Property is not null
-                    && property.Property.PropertyType.Name.ContainsIgnoreCase(this.FilterString))
-                {
-                    return true;
-                }
-
-                return false;
-            }
-
-            // else use the filter set if we have one of those.
-
-            if (this.IsPropertyFilterSet)
-            {
-                if (this.SelectedFilterSet!.IsPropertyInFilter(property.DisplayName))
-                {
-                    return true;
-                }
-
-                return false;
-            }
-
-            // finally, if none of the above applies
-            // just check to see if we're not showing properties at their default values
-            // and this property is actually set to its default value
-
-            if (this.ShowDefaults == false
-                && property.ValueSource.BaseValueSource == BaseValueSource.Default)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        private static bool IsUncommonProperty(PropertyInformation property)
-        {
-            if (property.Property is null)
-            {
-                return false;
-            }
-
-            if (uncommonPropertyNames.Contains(property.Property.Name))
+            if (this.filterRegex.IsMatch(property.DisplayName))
             {
                 return true;
             }
 
-            if (property.DependencyProperty is null)
+            if (property.Property is not null
+                && this.filterRegex.IsMatch(property.Property.PropertyType.Name))
             {
-                return false;
-            }
-
-            return uncommonTypes.Contains(property.DependencyProperty.OwnerType);
-        }
-    }
-
-    [DebuggerDisplay("{" + nameof(DisplayName) + "}")]
-    [Serializable]
-    public class PropertyFilterSet : INotifyPropertyChanged
-    {
-        private string? displayName;
-        private bool isDefault;
-        private bool isEditCommand;
-        private bool isReadOnly;
-        private string[]? properties;
-
-        public string? DisplayName
-        {
-            get => this.displayName;
-            set
-            {
-                if (value == this.displayName)
-                {
-                    return;
-                }
-
-                this.displayName = value;
-                this.OnPropertyChanged();
-            }
-        }
-
-        public bool IsDefault
-        {
-            get => this.isDefault;
-            set
-            {
-                if (value == this.isDefault)
-                {
-                    return;
-                }
-
-                this.isDefault = value;
-                this.OnPropertyChanged();
-            }
-        }
-
-        public bool IsEditCommand
-        {
-            get => this.isEditCommand;
-            set
-            {
-                if (value == this.isEditCommand)
-                {
-                    return;
-                }
-
-                this.isEditCommand = value;
-                this.OnPropertyChanged();
-            }
-        }
-
-        [IgnoreDataMember]
-        public bool IsReadOnly
-        {
-            get => this.isReadOnly;
-            set
-            {
-                if (value == this.isReadOnly)
-                {
-                    return;
-                }
-
-                this.isReadOnly = value;
-                this.OnPropertyChanged();
-            }
-        }
-
-        public string[]? Properties
-        {
-            get => this.properties;
-            set
-            {
-                if (Equals(value, this.properties))
-                {
-                    return;
-                }
-
-                this.properties = value;
-                this.OnPropertyChanged();
-            }
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        public bool IsPropertyInFilter(string property)
-        {
-            if (this.Properties is null)
-            {
-                return false;
-            }
-
-            foreach (var filterProp in this.Properties)
-            {
-                if (property.StartsWith(filterProp, StringComparison.OrdinalIgnoreCase))
-                {
-                    return true;
-                }
+                return true;
             }
 
             return false;
         }
 
-        public PropertyFilterSet Clone()
+        // else just check for containment if we don't have a regular expression but we do have a filter string.
+        if (this.hasFilterString)
         {
-            var src = this;
-            return new PropertyFilterSet
+            if (property.DisplayName.ContainsIgnoreCase(this.FilterString))
             {
-                DisplayName = src.DisplayName,
-                IsDefault = src.IsDefault,
-                IsEditCommand = src.IsEditCommand,
-                IsReadOnly = src.IsReadOnly,
-                Properties = (string[]?)src.Properties?.Clone()
-            };
+                return true;
+            }
+
+            if (property.Property is not null
+                && property.Property.PropertyType.Name.ContainsIgnoreCase(this.FilterString))
+            {
+                return true;
+            }
+
+            return false;
         }
 
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        // else use the filter set if we have one of those.
+        if (this.IsPropertyFilterSet)
         {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            if (this.SelectedFilterSet!.IsPropertyInFilter(property))
+            {
+                return true;
+            }
+
+            return false;
         }
+
+        // finally, if none of the above applies
+        // just check to see if we're not showing properties at their default values
+        // and this property is actually set to its default value
+        if (this.ShowDefaults == false
+            && property.ValueSource.BaseValueSource == BaseValueSource.Default)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private static bool IsUncommonProperty(PropertyInformation property)
+    {
+        if (property.Property is null)
+        {
+            return false;
+        }
+
+        if (property.Property.IsBrowsable == false)
+        {
+            return false;
+        }
+
+        if (nonUncommonProperties.Contains(property.Property))
+        {
+            return false;
+        }
+
+        if (uncommonPropertyNames.Contains(property.Property.Name))
+        {
+            return true;
+        }
+
+        if (property.DependencyProperty is null)
+        {
+            return false;
+        }
+
+        if (nonUncommonDependencyProperties.Contains(property.DependencyProperty))
+        {
+            return false;
+        }
+
+        if (property.DependencyProperty.OwnerType.Namespace?.StartsWith("Snoop", StringComparison.Ordinal) == true)
+        {
+            return true;
+        }
+
+        return uncommonTypes.Contains(property.DependencyProperty.OwnerType);
     }
 }

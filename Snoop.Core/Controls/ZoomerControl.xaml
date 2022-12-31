@@ -27,8 +27,7 @@
                      Path="Value" />
         </Grid.Background>
 
-        <Viewbox Style="{x:Null}"
-                 x:Name="Viewbox" />
+        <Viewbox x:Name="Viewbox" />
 
         <Slider x:Name="ColorSlider"
                 Width="100"
@@ -42,8 +41,7 @@
                 Opacity=".5"
                 Value=".75">
             <Slider.ToolTip>
-                <TextBlock Style="{x:Null}"
-                           Text="Use this slider to adjust the Background from white to black." />
+                <TextBlock Text="Use this slider to adjust the Background from white to black." />
             </Slider.ToolTip>
         </Slider>
     </Grid>

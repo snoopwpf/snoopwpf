@@ -1,97 +1,96 @@
-﻿namespace Snoop.Infrastructure
+﻿namespace Snoop.Infrastructure;
+
+using System;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
+public class LowLevelMouseHook
 {
-    using System;
-    using System.Diagnostics;
-    using System.Runtime.CompilerServices;
-    using System.Runtime.InteropServices;
+    private IntPtr hookId = IntPtr.Zero;
 
-    public class LowLevelMouseHook
+    // We need to place this on a field/member.
+    // Otherwise the delegate will be garbage collected and our hook crashes.
+    private readonly NativeMethods.HookProc cachedProc;
+
+    public LowLevelMouseHook()
     {
-        private IntPtr hookId = IntPtr.Zero;
+        this.cachedProc = this.HookCallback;
+    }
 
-        // We need to place this on a field/member.
-        // Otherwise the delegate will be garbage collected and our hook crashes.
-        private readonly NativeMethods.HookProc cachedProc;
-
-        public LowLevelMouseHook()
+    public class LowLevelMouseMoveEventArgs : EventArgs
+    {
+        public LowLevelMouseMoveEventArgs(POINT point)
         {
-            this.cachedProc = this.HookCallback;
+            this.Point = point;
         }
 
-        public class LowLevelMouseMoveEventArgs : EventArgs
-        {
-            public LowLevelMouseMoveEventArgs(POINT point)
-            {
-                this.Point = point;
-            }
+        public POINT Point { get; }
+    }
 
-            public POINT Point { get; }
+    public event EventHandler<LowLevelMouseMoveEventArgs>? LowLevelMouseMove;
+
+    public bool IsRunning => this.hookId != IntPtr.Zero;
+
+    public void Start()
+    {
+        if (this.hookId != IntPtr.Zero)
+        {
+            return;
         }
 
-        public event EventHandler<LowLevelMouseMoveEventArgs>? LowLevelMouseMove;
+        this.hookId = CreateHook(this.cachedProc);
+    }
 
-        public bool IsRunning => this.hookId != IntPtr.Zero;
-
-        public void Start()
+    public void Stop()
+    {
+        if (this.hookId == IntPtr.Zero)
         {
-            if (this.hookId != IntPtr.Zero)
-            {
-                return;
-            }
-
-            this.hookId = CreateHook(this.cachedProc);
+            return;
         }
 
-        public void Stop()
-        {
-            if (this.hookId == IntPtr.Zero)
-            {
-                return;
-            }
+        NativeMethods.UnhookWindowsHookEx(this.hookId);
+        this.hookId = IntPtr.Zero;
+    }
 
-            NativeMethods.UnhookWindowsHookEx(this.hookId);
-            this.hookId = IntPtr.Zero;
+    private static IntPtr CreateHook(NativeMethods.HookProc proc)
+    {
+        using var curProcess = Process.GetCurrentProcess();
+        using var curModule = curProcess.MainModule;
+
+        return NativeMethods.SetWindowsHookEx(NativeMethods.HookType.WH_MOUSE_LL, proc, NativeMethods.GetModuleHandle(curModule.ModuleName), 0);
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
+    {
+        if (nCode < 0)
+        {
+            //you need to call CallNextHookEx without further processing
+            //and return the value returned by CallNextHookEx
+            return NativeMethods.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
         }
 
-        private static IntPtr CreateHook(NativeMethods.HookProc proc)
-        {
-            using var curProcess = Process.GetCurrentProcess();
-            using var curModule = curProcess.MainModule;
+        var hookStruct = (MSLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(MSLLHOOKSTRUCT));
 
-            return NativeMethods.SetWindowsHookEx(NativeMethods.HookType.WH_MOUSE_LL, proc, NativeMethods.GetModuleHandle(curModule.ModuleName), 0);
-        }
+        this.LowLevelMouseMove?.Invoke(this, new LowLevelMouseMoveEventArgs(hookStruct.Point));
 
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        private IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
-        {
-            if (nCode < 0)
-            {
-                //you need to call CallNextHookEx without further processing
-                //and return the value returned by CallNextHookEx
-                return NativeMethods.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
-            }
+        return NativeMethods.CallNextHookEx(this.hookId, nCode, wParam, lParam);
+    }
 
-            var hookStruct = (MSLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(MSLLHOOKSTRUCT));
+    [StructLayout(LayoutKind.Sequential)]
+    // ReSharper disable once InconsistentNaming
+    // ReSharper disable once IdentifierTypo
+    private struct MSLLHOOKSTRUCT
+    {
+        public readonly POINT Point;
 
-            this.LowLevelMouseMove?.Invoke(this, new LowLevelMouseMoveEventArgs(hookStruct.Point));
+        public readonly int MouseData;
 
-            return NativeMethods.CallNextHookEx(this.hookId, nCode, wParam, lParam);
-        }
+        public readonly int Flags;
 
-        [StructLayout(LayoutKind.Sequential)]
-        // ReSharper disable once InconsistentNaming
-        // ReSharper disable once IdentifierTypo
-        private struct MSLLHOOKSTRUCT
-        {
-            public readonly POINT Point;
+        public readonly int Time;
 
-            public readonly int MouseData;
-
-            public readonly int Flags;
-
-            public readonly int Time;
-
-            public readonly IntPtr ExtraInfo;
-        }
+        public readonly IntPtr ExtraInfo;
     }
 }

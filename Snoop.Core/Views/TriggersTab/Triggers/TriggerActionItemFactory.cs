@@ -1,19 +1,18 @@
-﻿namespace Snoop.Views.TriggersTab.Triggers
+﻿namespace Snoop.Views.TriggersTab.Triggers;
+
+using System.Windows;
+
+public static class TriggerActionItemFactory
 {
-    using System.Windows;
-
-    public static class TriggerActionItemFactory
+    public static TriggerActionItem GetTriggerActionItem(TriggerAction triggerAction, DependencyObject source, TriggerSource triggerSource)
     {
-        public static TriggerActionItem GetTriggerActionItem(TriggerAction triggerAction, DependencyObject source, TriggerSource triggerSource)
+        var triggerActionItem = new TriggerActionItem(triggerAction, source)
         {
-            var triggerActionItem = new TriggerActionItem(triggerAction, source)
-            {
-                TriggerSource = triggerSource
-            };
+            TriggerSource = triggerSource
+        };
 
-            triggerActionItem.Initialize();
+        triggerActionItem.Initialize();
 
-            return triggerActionItem;
-        }
+        return triggerActionItem;
     }
 }

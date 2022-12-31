@@ -3,83 +3,82 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop.Views.MethodsTab
+namespace Snoop.Views.MethodsTab;
+
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+
+public partial class TypeSelector : ITypeSelector
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-
-    public partial class TypeSelector : ITypeSelector
+    public TypeSelector()
     {
-        public TypeSelector()
+        this.InitializeComponent();
+
+        this.Loaded += this.TypeSelector_Loaded;
+    }
+
+    //TODO: MOVE SOMEWHERE ELSE. MACIEK
+    public static List<Type> GetDerivedTypes(Type baseType)
+    {
+        var typesAssignable = new List<Type>();
+
+        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
         {
-            this.InitializeComponent();
-
-            this.Loaded += this.TypeSelector_Loaded;
-        }
-
-        //TODO: MOVE SOMEWHERE ELSE. MACIEK
-        public static List<Type> GetDerivedTypes(Type baseType)
-        {
-            var typesAssignable = new List<Type>();
-
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            foreach (var type in assembly.GetTypes())
             {
-                foreach (var type in assembly.GetTypes())
+                if (baseType.IsAssignableFrom(type))
                 {
-                    if (baseType.IsAssignableFrom(type))
-                    {
-                        typesAssignable.Add(type);
-                    }
+                    typesAssignable.Add(type);
                 }
             }
-
-            if (!baseType.IsAbstract)
-            {
-                typesAssignable.Add(baseType);
-            }
-
-            typesAssignable.Sort(new TypeComparerByName());
-
-            return typesAssignable;
         }
 
-        public ObservableCollection<Type>? DerivedTypes { get; private set; }
-
-        private void TypeSelector_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        if (!baseType.IsAbstract)
         {
-            if (this.BaseType is null)
-            {
-                return;
-            }
-
-            if (this.DerivedTypes is null)
-            {
-                this.DerivedTypes = new(GetDerivedTypes(this.BaseType));
-            }
-
-            this.comboBoxTypes.ItemsSource = this.DerivedTypes;
+            typesAssignable.Add(baseType);
         }
 
-        public BindableType? BaseType { get; set; }
+        typesAssignable.Sort(new TypeComparerByName());
 
-        public object? Instance
+        return typesAssignable;
+    }
+
+    public ObservableCollection<Type>? DerivedTypes { get; private set; }
+
+    private void TypeSelector_Loaded(object sender, System.Windows.RoutedEventArgs e)
+    {
+        if (this.BaseType is null)
         {
-            get;
-            private set;
+            return;
         }
 
-        private void ButtonCreateInstance_Click(object sender, System.Windows.RoutedEventArgs e)
+        if (this.DerivedTypes is null)
         {
-            this.DialogResult = true;
-            this.Instance = Activator.CreateInstance((Type)this.comboBoxTypes.SelectedItem);
-            this.Close();
+            this.DerivedTypes = new(GetDerivedTypes(this.BaseType));
         }
 
-        private void ButtonCancel_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            this.DialogResult = false;
-            this.Close();
-        }
+        this.comboBoxTypes.ItemsSource = this.DerivedTypes;
+    }
+
+    public BindableType? BaseType { get; set; }
+
+    public object? Instance
+    {
+        get;
+        private set;
+    }
+
+    private void ButtonCreateInstance_Click(object sender, System.Windows.RoutedEventArgs e)
+    {
+        this.DialogResult = true;
+        this.Instance = Activator.CreateInstance((Type)this.comboBoxTypes.SelectedItem);
+        this.Close();
+    }
+
+    private void ButtonCancel_Click(object sender, System.Windows.RoutedEventArgs e)
+    {
+        this.DialogResult = false;
+        this.Close();
     }
 }

@@ -1,42 +1,39 @@
 <Project>
     <ItemGroup>
-        <PackageVersion Include="CommandLineParser" Version="2.8.0" />
+        <PackageVersion Include="CommandLineParser" Version="2.9.1" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(TargetFramework)' == '$(MinTargetFramework)'">
-        <PackageVersion Include="microsoft.powershell.3.referenceassemblies" Version="1.0.0" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
-        <PackageVersion Include="System.Management.Automation" Version="6.2.3" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
-        <PackageVersion Include="System.Management.Automation" Version="7.0.0" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)' == 'net5.0-windows'">
-      <PackageVersion Include="System.Management.Automation" Version="7.1.0" />
+    <ItemGroup Label="PowerShell">
+        <PackageVersion Include="microsoft.powershell.3.referenceassemblies" Version="1.0.0" Condition="'$(TargetFramework)' == '$(MinTargetFramework)'" />
+        <PackageVersion Include="System.Management.Automation" Version="7.0.0" Condition="'$(TargetFramework)' == 'netcoreapp3.1'" />
+        <PackageVersion Include="System.Management.Automation" Version="7.1.0" Condition="'$(TargetFramework)' == 'net5.0-windows'" />
     </ItemGroup>
 
     <ItemGroup Label="Test">
-      <PackageVersion Include="NUnit" Version="3.13.2" />
-      <PackageVersion Include="NUnit3TestAdapter" Version="4.1.0" />
+      <PackageVersion Include="NUnit" Version="3.13.3" />
+      <PackageVersion Include="NUnit3TestAdapter" Version="4.3.1" />
 
-      <PackageVersion Include="Verify.NUnit" Version="11.0.3" />
+      <PackageVersion Include="Verify.NUnit" Version="17.10.2" />
 
-      <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+      <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
     </ItemGroup>
 
     <ItemGroup Label="Build">
         <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.1.1" />
 
-        <PackageVersion Include="JetBrains.Annotations" Version="2021.3.0" />
+        <PackageVersion Include="JetBrains.Annotations" Version="2022.3.1" />
         
-        <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" version="4.0.1" />
-        <PackageVersion Include="StyleCop.Analyzers" version="1.2.0-beta.333" />
+        <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" version="4.4.0" />
+        <PackageVersion Include="StyleCop.Analyzers" version="1.2.0-beta.435" />
 
-        <PackageVersion Include="WpfAnalyzers" version="3.5.4" />
-        <PackageVersion Include="PropertyChangedAnalyzers" Version="3.2.3" />
+        <PackageVersion Include="WpfAnalyzers" version="4.1.1" />
+        <PackageVersion Include="PropertyChangedAnalyzers" Version="4.0.0" />
+    </ItemGroup>
+    
+    <ItemGroup Label="Test-Projects">
+        <PackageVersion Include="CefSharp.Common.NETCore" Version="103.0.90" />
+        <PackageVersion Include="CefSharp.Wpf.NETCore" Version="103.0.90" />
+
+        <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.1264.42" />
     </ItemGroup>
 </Project>

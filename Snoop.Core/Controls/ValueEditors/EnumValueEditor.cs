@@ -3,82 +3,73 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
-namespace Snoop.Controls.ValueEditors
+namespace Snoop.Controls.ValueEditors;
+
+using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using JetBrains.Annotations;
+
+public class EnumValueEditor : ValueEditor
 {
-    using System;
-    using System.Collections.ObjectModel;
-    using System.Windows.Data;
+    public ObservableCollection<EnumValueWrapper> Values { get; } = new();
 
-    public class EnumValueEditor : ValueEditor
+    protected override void OnPropertyTypeChanged()
     {
-        private readonly ListCollectionView valuesView;
-        private bool isValid;
+        base.OnPropertyTypeChanged();
 
-        public EnumValueEditor()
+        this.Values.Clear();
+
+        var enumType = this.PropertyType?.Type;
+
+        if (enumType is not null)
         {
-            this.valuesView = (ListCollectionView)CollectionViewSource.GetDefaultView(this.Values);
-            this.valuesView.CurrentChanged += this.HandleSelectionChanged;
-        }
-
-        public ObservableCollection<object> Values { get; } = new();
-
-        protected override void OnPropertyTypeChanged()
-        {
-            base.OnPropertyTypeChanged();
-
-            this.isValid = false;
-
-            this.Values.Clear();
-
-            var propertyType = this.PropertyType?.Type;
-            if (propertyType is not null)
+            if (enumType.IsEnum == false
+                && Nullable.GetUnderlyingType(enumType) is { IsEnum: true } underlyingType)
             {
-                var values = Enum.GetValues(propertyType);
-                foreach (var value in values)
-                {
-                    if (value is null)
-                    {
-                        continue;
-                    }
+                enumType = underlyingType;
 
-                    this.Values.Add(value);
-
-                    if (this.Value is not null
-                        && this.Value.Equals(value))
-                    {
-                        this.valuesView.MoveCurrentTo(value);
-                    }
-                }
+                this.Values.Add(new EnumValueWrapper(null, "<NULL>"));
             }
 
-            this.isValid = true;
-        }
+            var values = Enum.GetValues(enumType);
+            var names = Enum.GetNames(enumType);
 
-        protected override void OnValueChanged(object? newValue)
-        {
-            base.OnValueChanged(newValue);
-
-            this.valuesView.MoveCurrentTo(newValue);
-
-            // sneaky trick here. only if both are non-null is this a change
-            // caused by the user. If so, set the bool to track it.
-            if (this.PropertyInfo is not null
-                && newValue is not null)
+            for (var i = 0; i < values.Length; i++)
             {
-                this.PropertyInfo.IsValueChangedByUser = true;
-            }
-        }
-
-        private void HandleSelectionChanged(object? sender, EventArgs e)
-        {
-            if (this.isValid
-                && this.Value is not null)
-            {
-                if (!this.Value.Equals(this.valuesView.CurrentItem))
-                {
-                    this.Value = this.valuesView.CurrentItem;
-                }
+                var value = values.GetValue(i);
+                this.Values.Add(new EnumValueWrapper(value, names[i]));
             }
         }
     }
+
+    protected override void OnValueChanged(object? newValue)
+    {
+        base.OnValueChanged(newValue);
+
+        // sneaky trick here. only if both are non-null is this a change
+        // caused by the user. If so, set the bool to track it.
+        if (this.PropertyInfo is not null)
+        {
+            this.PropertyInfo.IsValueChangedByUser = true;
+        }
+    }
+}
+
+[PublicAPI]
+public class EnumValueWrapper : INotifyPropertyChanged
+{
+#pragma warning disable CS0067
+    public event PropertyChangedEventHandler? PropertyChanged;
+#pragma warning restore CS0067
+
+    public EnumValueWrapper(object? value, string text)
+    {
+        this.Value = value;
+        this.Text = text;
+    }
+
+    public object? Value { get; }
+
+    public string Text { get; }
 }

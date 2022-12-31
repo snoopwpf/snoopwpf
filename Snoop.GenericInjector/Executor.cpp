@@ -11,24 +11,22 @@
 std::unique_ptr<FrameworkExecutor> GetExecutor(const std::wstring& framework)
 {
 	LogHelper::WriteLine(L"Trying to get executor for framework '%s'...", framework.c_str());
-	
-	if (icase_cmp(framework, L"netcoreapp3.0")
-		|| icase_cmp(framework, L"netcoreapp3.1")
-		|| icase_cmp(framework, L"net5.0-windows")
-		|| icase_cmp(framework, L"net6.0-windows"))
+
+	if (icase_cmp(framework, L"netcoreapp3.1")
+		|| icase_cmp(framework, L"net5.0-windows"))
 	{
 		return std::make_unique<NetCoreApp3_0Executor>();
 	}
 
 #ifndef NO_FULL_FRAMEWORK
-	if (icase_cmp(framework, L"net451"))
+	if (icase_cmp(framework, L"net452"))
 	{
 		return std::make_unique<NetFull4_0Executor>();
 	}
 #endif
 
 	LogHelper::WriteLine(L"Framework '%s' is not supported.", framework.c_str());
-	
+
 	return nullptr;
 }
 
@@ -54,7 +52,7 @@ extern "C" __declspec(dllexport) int STDMETHODVCALLTYPE ExecuteInDefaultAppDomai
 
 		LogHelper::SetLogFile(logFile);
 		LogHelper::WriteLine(input);
-		
+
 		const auto executor = GetExecutor(framework);
 
 		if (!executor)
@@ -62,10 +60,10 @@ extern "C" __declspec(dllexport) int STDMETHODVCALLTYPE ExecuteInDefaultAppDomai
 			LogHelper::WriteLine(L"No executor found.");
 			return E_NOTIMPL;
 		}
-		
+
 		DWORD* retVal = nullptr;
 		const auto hr = executor->Execute(assemblyPath.c_str(), className.c_str(), method.c_str(), parameter.c_str(), retVal);
-			
+
 		if (FAILED(hr))
 		{
 			const _com_error err(hr);
@@ -75,7 +73,7 @@ extern "C" __declspec(dllexport) int STDMETHODVCALLTYPE ExecuteInDefaultAppDomai
 			LogHelper::WriteLine(L"Message: %s", err.ErrorMessage());
 			LogHelper::WriteLine(L"Description: %s", std::wstring(err.Description(), SysStringLen(err.Description())).c_str());
 		}
-		
+
 		return hr;
 	}
 	catch (std::exception& exception)

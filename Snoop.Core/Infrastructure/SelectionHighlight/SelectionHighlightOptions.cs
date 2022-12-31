@@ -1,111 +1,110 @@
-namespace Snoop.Infrastructure.SelectionHighlight
+namespace Snoop.Infrastructure.SelectionHighlight;
+
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Windows.Media;
+using JetBrains.Annotations;
+
+public sealed class SelectionHighlightOptions : INotifyPropertyChanged
 {
-    using System.ComponentModel;
-    using System.Runtime.CompilerServices;
-    using System.Windows.Media;
-    using JetBrains.Annotations;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
-    public sealed class SelectionHighlightOptions : INotifyPropertyChanged
+    public static readonly SelectionHighlightOptions Default = new();
+
+    private double borderThickness;
+
+    private Brush borderBrush = null!;
+
+    private bool highlightSelectedItem = true;
+
+    private Pen? pen;
+    private Brush? background;
+
+    public SelectionHighlightOptions()
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
+        this.Reset();
+    }
 
-        public static readonly SelectionHighlightOptions Default = new();
-
-        private double borderThickness;
-
-        private Brush borderBrush = null!;
-
-        private bool highlightSelectedItem = true;
-
-        private Pen? pen;
-        private Brush? background;
-
-        public SelectionHighlightOptions()
+    public Brush? Background
+    {
+        get => this.background;
+        set
         {
-            this.Reset();
-        }
-
-        public Brush? Background
-        {
-            get => this.background;
-            set
+            if (Equals(value, this.background))
             {
-                if (Equals(value, this.background))
-                {
-                    return;
-                }
-
-                this.background = value;
-                this.OnPropertyChanged();
+                return;
             }
+
+            this.background = value;
+            this.OnPropertyChanged();
         }
+    }
 
-        public Brush BorderBrush
+    public Brush BorderBrush
+    {
+        get => this.borderBrush;
+        set
         {
-            get => this.borderBrush;
-            set
+            if (Equals(value, this.borderBrush))
             {
-                if (Equals(value, this.borderBrush))
-                {
-                    return;
-                }
-
-                this.pen = null;
-                this.borderBrush = value;
-                this.OnPropertyChanged();
+                return;
             }
+
+            this.pen = null;
+            this.borderBrush = value;
+            this.OnPropertyChanged();
         }
+    }
 
-        public double BorderThickness
+    public double BorderThickness
+    {
+        get => this.borderThickness;
+        set
         {
-            get => this.borderThickness;
-            set
+            if (value.Equals(this.borderThickness))
             {
-                if (value.Equals(this.borderThickness))
-                {
-                    return;
-                }
-
-                this.pen = null;
-                this.borderThickness = value;
-                this.OnPropertyChanged();
+                return;
             }
+
+            this.pen = null;
+            this.borderThickness = value;
+            this.OnPropertyChanged();
         }
+    }
 
-        public bool HighlightSelectedItem
+    public bool HighlightSelectedItem
+    {
+        get => this.highlightSelectedItem;
+        set
         {
-            get => this.highlightSelectedItem;
-            set
+            if (value == this.highlightSelectedItem)
             {
-                if (value == this.highlightSelectedItem)
-                {
-                    return;
-                }
-
-                this.highlightSelectedItem = value;
-                this.OnPropertyChanged();
+                return;
             }
+
+            this.highlightSelectedItem = value;
+            this.OnPropertyChanged();
         }
+    }
 
-        public Pen Pen => this.pen ??= new Pen(this.BorderBrush, this.BorderThickness);
+    public Pen Pen => this.pen ??= new Pen(this.BorderBrush, this.BorderThickness);
 
-        public void Reset()
+    public void Reset()
+    {
+        this.Background = null;
+        this.BorderThickness = 3D;
+        var borderColor = new Color
         {
-            this.Background = null;
-            this.BorderThickness = 3D;
-            var borderColor = new Color
-            {
-                ScA = .3f,
-                ScR = 1
-            };
-            this.BorderBrush = new SolidColorBrush(borderColor);
-            this.BorderBrush.Freeze();
-        }
+            ScA = .3f,
+            ScR = 1
+        };
+        this.BorderBrush = new SolidColorBrush(borderColor);
+        this.BorderBrush.Freeze();
+    }
 
-        [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+    [NotifyPropertyChangedInvocator]
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

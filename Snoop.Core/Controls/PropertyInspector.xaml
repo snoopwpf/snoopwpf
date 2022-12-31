@@ -16,13 +16,12 @@
     <Grid.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ValueEditors\EditorTemplates.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Snoop.Core;component/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <DataTemplate x:Key="stylelessTextBlockDataTemplate"
                           DataType="infrastructure:PropertyFilterSet">
-                <TextBlock Style="{x:Null}"
-                           Margin="0"
+                <TextBlock Margin="0"
                            Padding="0"
                            Text="{Binding DisplayName}" />
             </DataTemplate>
@@ -36,8 +35,7 @@
         <RowDefinition Height="*" />
     </Grid.RowDefinitions>
 
-    <TextBox Style="{x:Null}"
-             Grid.Row="0"
+    <TextBox Grid.Row="0"
              Margin="2"
              AcceptsReturn="False"
              Background="Transparent"
@@ -47,37 +45,33 @@
              Text="{Binding ElementName=propertyInspector, Path=DelvePath, Mode=OneWay}"
              TextWrapping="Wrap">
         <TextBox.ToolTip>
-            <TextBlock Style="{x:Null}"
-                       Text="This is the delve path of the currently selected object" />
+            <TextBlock Text="This is the delve path of the currently selected object" />
         </TextBox.ToolTip>
     </TextBox>
 
-    <TextBlock Style="{x:Null}"
-               Grid.Row="1"
+    <TextBlock Grid.Row="1"
                Margin="2"
                Background="Transparent"
                TextWrapping="Wrap">
         <Hyperlink Command="{x:Static controls:PropertyInspector.NavigateToAssemblyInExplorerCommand}"
                    CommandParameter="{Binding ElementName=propertyInspector, Path=DelveType, Mode=OneWay}">
-            <TextBlock Style="{x:Null}"
-                       Text="{Binding ElementName=propertyInspector, Path=DelveType.FullName, Mode=OneWay}" />
+            <TextBlock Text="{Binding ElementName=propertyInspector, Path=DelveType.FullName, Mode=OneWay}" />
         </Hyperlink>
 
         <TextBlock.ToolTip>
-            <TextBlock Style="{x:Null}"
-                       Text="This is the type of the currently selected object" />
+            <TextBlock Text="This is the type of the currently selected object" />
         </TextBlock.ToolTip>
 
         <TextBlock.ContextMenu>
             <ContextMenu x:Name="delveTypeContextMenu">
-                <MenuItem Command="{x:Static controls:PropertyInspector.NavigateToAssemblyInExplorerCommand}"
+                <MenuItem Header="Open in Explorer"
+                          Command="{x:Static controls:PropertyInspector.NavigateToAssemblyInExplorerCommand}"
                           CommandParameter="{Binding Path=DelveType, Mode=OneWay}"
-                          CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                          Header="Open in Explorer" />
-                <MenuItem Command="{x:Static controls:PropertyInspector.OpenTypeInILSpyCommand}"
+                          CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" />
+                <MenuItem Header="Open in ILSpy"
+                          Command="{x:Static controls:PropertyInspector.OpenTypeInILSpyCommand}"
                           CommandParameter="{Binding Path=DelveType, Mode=OneWay}"
-                          CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                          Header="Open in ILSpy" />
+                          CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" />
             </ContextMenu>
         </TextBlock.ContextMenu>
     </TextBlock>
@@ -85,8 +79,7 @@
     <DockPanel Grid.Row="2"
                Margin="0 0 0 2"
                LastChildFill="True">
-        <StackPanel Style="{x:Null}"
-                    DockPanel.Dock="Right"
+        <StackPanel DockPanel.Dock="Right"
                     Orientation="Horizontal">
             <CheckBox x:Name="checkBoxClearAfterDelve"
                       Margin="0 2 2 0"
@@ -99,7 +92,8 @@
                     Command="{x:Static controls:PropertyInspector.PopTargetCommand}"
                     ToolTipService.ShowOnDisabled="True">
                 <Button.Style>
-                    <Style>
+                    <Style TargetType="{x:Type Button}"
+                           BasedOn="{StaticResource BaseButtonStyle}">
                         <Style.Triggers>
                             <Trigger Property="Button.IsEnabled" Value="False">
                                 <Setter Property="Button.Opacity" Value=".5" />
@@ -107,15 +101,12 @@
                         </Style.Triggers>
                     </Style>
                 </Button.Style>
-                <Image Style="{x:Null}"
-                       Margin="3"
+                <Image Margin="3"
                        Source="{DynamicResource upDrawingImage}" />
                 <Button.ToolTip>
-                    <StackPanel Style="{x:Null}">
-                        <TextBlock Style="{x:Null}"
-                                   Text="Click this button to pop up 1 level in scope" />
-                        <TextBlock Style="{x:Null}"
-                                   Text="(after you have delved into something)." />
+                    <StackPanel>
+                        <TextBlock Text="Click this button to pop up 1 level in scope" />
+                        <TextBlock Text="(after you have delved into something)." />
                     </StackPanel>
                 </Button.ToolTip>
             </Button>
@@ -128,11 +119,9 @@
                       ItemsSource="{Binding Path=AllFilterSets, ElementName=propertyInspector}"
                       SelectedItem="{Binding Path=SelectedFilterSet, ElementName=propertyInspector, Mode=TwoWay}">
                 <ComboBox.ToolTip>
-                    <StackPanel Style="{x:Null}">
-                        <TextBlock Style="{x:Null}"
-                                   Text="With this combo box, you can select" />
-                        <TextBlock Style="{x:Null}"
-                                   Text="a certain set of properties to view." />
+                    <StackPanel>
+                        <TextBlock Text="With this combo box, you can select" />
+                        <TextBlock Text="a certain set of properties to view." />
                     </StackPanel>
                 </ComboBox.ToolTip>
             </ComboBox>
@@ -141,16 +130,13 @@
                           Margin="0 0 2 0"
                           Padding="0"
                           IsChecked="{Binding ElementName=propertyInspector, Path=ShowDefaults}">
-                <TextBlock Style="{x:Null}"
-                           FontWeight="Bold">
+                <TextBlock FontWeight="Bold">
                     D
                 </TextBlock>
                 <ToggleButton.ToolTip>
-                    <StackPanel Style="{x:Null}">
-                        <TextBlock Style="{x:Null}"
-                                   Text="Toggle this button ON to show properties" />
-                        <TextBlock Style="{x:Null}"
-                                   Text="that are unchanged from their default values." />
+                    <StackPanel>
+                        <TextBlock Text="Toggle this button ON to show properties" />
+                        <TextBlock Text="that are unchanged from their default values." />
                     </StackPanel>
                 </ToggleButton.ToolTip>
             </ToggleButton>
@@ -158,30 +144,25 @@
                           Height="18"
                           Margin="0 0 2 0"
                           Padding="0"
-                          IsChecked="{Binding ElementName=propertyInspector, Path=ShowPropertiesFromUncommonTypes}">
-                <TextBlock Style="{x:Null}"
-                           FontWeight="Bold">
+                          IsChecked="{Binding ElementName=propertyInspector, Path=ShowUncommonProperties}">
+                <TextBlock FontWeight="Bold">
                     U
                 </TextBlock>
                 <ToggleButton.ToolTip>
-                    <StackPanel Style="{x:Null}">
-                        <TextBlock Style="{x:Null}"
-                                   Text="Toggle this button ON to show properties" />
-                        <TextBlock Style="{x:Null}"
-                                   Text="that are not commonly used in WPF applications." />
+                    <StackPanel>
+                        <TextBlock Text="Toggle this button ON to show properties" />
+                        <TextBlock Text="that are not commonly used in WPF applications." />
                     </StackPanel>
                 </ToggleButton.ToolTip>
             </ToggleButton>
         </StackPanel>
 
-        <TextBox Style="{x:Null}"
-                 x:Name="PropertiesFilter"
+        <TextBox x:Name="PropertiesFilter"
                  Margin="0 0 2 0"
                  DockPanel.Dock="Left"
                  Text="{Binding ElementName=propertyInspector, Path=StringFilter, UpdateSourceTrigger=PropertyChanged}">
             <TextBox.ToolTip>
-                <TextBlock Style="{x:Null}"
-                           Text="Type in this text box to filter properties. The filter is applied to property names and property type names." />
+                <TextBlock Text="Type in this text box to filter properties. The filter is applied to property names and property type names." />
             </TextBox.ToolTip>
         </TextBox>
     </DockPanel>

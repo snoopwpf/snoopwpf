@@ -8,6 +8,14 @@
              d:DesignHeight="450"
              d:DesignWidth="800"
              mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Snoop.Core;component/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -17,8 +25,8 @@
         <Grid.Resources>
             <ResourceDictionary>
                 <Style x:Key="Snoop.Styles.Button.Large"
-                       BasedOn="{x:Null}"
-                       TargetType="Button">
+                       TargetType="Button"
+                       BasedOn="{StaticResource {x:Type Button}}">
                     <Setter Property="Height" Value="30" />
                     <Setter Property="Margin" Value="5" />
                     <Setter Property="MinWidth" Value="100" />
@@ -28,31 +36,29 @@
             </ResourceDictionary>
         </Grid.Resources>
 
-        <ListView Style="{x:Null}"
-                  x:Name="ListView"
+        <ListView x:Name="ListView"
                   Grid.Row="0"
                   MinWidth="0"
                   MinHeight="0"
                   HorizontalContentAlignment="Stretch"
                   AlternationCount="2"
+                  Background="{DynamicResource Snoop.Brushes.Default.Background}"
+                  Foreground="{DynamicResource Snoop.Brushes.Default.Foreground}"
                   IsSynchronizedWithCurrentItem="True"
                   ItemsSource="{Binding ElementName=Control, Path=Properties}">
             <ListView.ItemContainerStyle>
-                <Style TargetType="{x:Type ListViewItem}">
+                <Style TargetType="{x:Type ListViewItem}"
+                       BasedOn="{StaticResource GridView.GridViewItemContainerStyle}">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                     <Style.Triggers>
                         <Trigger Property="ItemsControl.AlternationIndex" Value="0">
                             <Setter Property="Background" Value="Transparent" />
                         </Trigger>
                         <Trigger Property="ItemsControl.AlternationIndex" Value="1">
-                            <Setter Property="Background" Value="#FFEAEAEA" />
+                            <Setter Property="Background" Value="{DynamicResource Snoop.Brushes.ItemsControl.AlternationBackground}" />
                         </Trigger>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="LightGray" />
-                        </Trigger>
-
                         <DataTrigger Binding="{Binding HasChangedRecently}" Value="True">
-                            <Setter Property="Background" Value="Yellow" />
+                            <Setter Property="Background" Value="{DynamicResource Snoop.Brushes.PropertyGrid.HasChangedRecently}" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
@@ -61,21 +67,17 @@
                 <GridView>
                     <GridViewColumn Width="200">
                         <GridViewColumn.Header>
-                            <TextBlock Style="{x:Null}"
-                                       Text="Name">
+                            <TextBlock Text="Name">
                                 <TextBlock.ToolTip>
-                                    <TextBlock Style="{x:Null}"
-                                               Text="The name of the property" />
+                                    <TextBlock Text="The name of the property" />
                                 </TextBlock.ToolTip>
                             </TextBlock>
                         </GridViewColumn.Header>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate DataType="snoop:PropertyInformation">
-                                <TextBlock Style="{x:Null}"
-                                           Text="{Binding DisplayName}">
+                                <TextBlock Text="{Binding DisplayName}">
                                     <TextBlock.ToolTip>
-                                        <TextBlock Style="{x:Null}"
-                                                   Text="{Binding DisplayName}" />
+                                        <TextBlock Text="{Binding DisplayName}" />
                                     </TextBlock.ToolTip>
                                 </TextBlock>
                             </DataTemplate>
@@ -83,13 +85,11 @@
                     </GridViewColumn>
 
                     <GridViewColumn Width="175"
-                                    CellTemplateSelector="{StaticResource EditorSelector}">
+                                    CellTemplateSelector="{DynamicResource EditorSelector}">
                         <GridViewColumn.Header>
-                            <TextBlock Style="{x:Null}"
-                                       Text="Value">
+                            <TextBlock Text="Value">
                                 <TextBlock.ToolTip>
-                                    <TextBlock Style="{x:Null}"
-                                               Text="The value of the property" />
+                                    <TextBlock Text="The value of the property" />
                                 </TextBlock.ToolTip>
                             </TextBlock>
                         </GridViewColumn.Header>
@@ -100,18 +100,18 @@
 
         <StackPanel Grid.Row="1"
                     Orientation="Horizontal">
-            <Button Style="{StaticResource Snoop.Styles.Button.Large}"
-                    x:Name="SaveSettingsAndClose"
+            <Button x:Name="SaveSettingsAndClose"
+                    Style="{StaticResource Snoop.Styles.Button.Large}"
                     Click="SaveSettingsAndClose_OnClick">
                 Save &amp; close
             </Button>
-            <Button Style="{StaticResource Snoop.Styles.Button.Large}"
-                    x:Name="DiscardSettings"
+            <Button x:Name="DiscardSettings"
+                    Style="{StaticResource Snoop.Styles.Button.Large}"
                     Click="DiscardSettings_OnClick">
                 Discard changes
             </Button>
-            <Button Style="{StaticResource Snoop.Styles.Button.Large}"
-                    x:Name="ResetAllSettings"
+            <Button x:Name="ResetAllSettings"
+                    Style="{StaticResource Snoop.Styles.Button.Large}"
                     Click="ResetAllSettings_OnClick">
                 Reset all settings
             </Button>

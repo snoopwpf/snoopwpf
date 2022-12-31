@@ -1,56 +1,43 @@
-﻿namespace Snoop.Infrastructure.Diagnostics
+﻿namespace Snoop.Infrastructure.Diagnostics;
+
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Windows.Threading;
+using JetBrains.Annotations;
+using Snoop.Data.Tree;
+
+public class DiagnosticItem : INotifyPropertyChanged
 {
-    using System.ComponentModel;
-    using System.Runtime.CompilerServices;
-    using System.Windows.Threading;
-    using JetBrains.Annotations;
-    using Snoop.Data.Tree;
-
-    public class DiagnosticItem : INotifyPropertyChanged
+    public DiagnosticItem(DiagnosticProvider diagnosticProvider, string? name = null, string? description = null, DiagnosticArea area = DiagnosticArea.Misc, DiagnosticLevel level = DiagnosticLevel.Info)
     {
-        public DiagnosticItem(DiagnosticProvider diagnosticProvider)
-        {
-            this.DiagnosticProvider = diagnosticProvider;
-            this.Name = string.Empty;
-            this.Description = string.Empty;
-        }
+        this.DiagnosticProvider = diagnosticProvider;
+        this.Name = name ?? diagnosticProvider.Name;
+        this.Description = description ?? diagnosticProvider.Description;
+        this.Area = area;
+        this.Level = level;
+    }
 
-        public DiagnosticItem(DiagnosticProvider diagnosticProvider, string name, string description)
-        {
-            this.DiagnosticProvider = diagnosticProvider;
-            this.Name = name;
-            this.Description = description;
-        }
+    public DiagnosticProvider DiagnosticProvider { get; }
 
-        public DiagnosticItem(DiagnosticProvider diagnosticProvider, string name, string description, DiagnosticArea area, DiagnosticLevel level)
-            : this(diagnosticProvider, name, description)
-        {
-            this.Area = area;
-            this.Level = level;
-        }
+    public DiagnosticArea Area { get; set; }
 
-        public DiagnosticProvider DiagnosticProvider { get; }
+    public DiagnosticLevel Level { get; set; }
 
-        public DiagnosticArea Area { get; set; }
+    public string Name { get; }
 
-        public DiagnosticLevel Level { get; set; }
+    public string Description { get; }
 
-        public string Name { get; }
+    public object? SourceObject { get; set; }
 
-        public string Description { get; }
+    public TreeItem? TreeItem { get; set; }
 
-        public object? SourceObject { get; set; }
+    public Dispatcher? Dispatcher { get; set; }
 
-        public TreeItem? TreeItem { get; set; }
+    public event PropertyChangedEventHandler? PropertyChanged;
 
-        public Dispatcher? Dispatcher { get; set; }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+    [NotifyPropertyChangedInvocator]
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

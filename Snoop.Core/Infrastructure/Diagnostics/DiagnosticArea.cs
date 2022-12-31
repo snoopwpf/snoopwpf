@@ -1,10 +1,11 @@
-namespace Snoop.Infrastructure.Diagnostics
+namespace Snoop.Infrastructure.Diagnostics;
+
+public enum DiagnosticArea
 {
-    public enum DiagnosticArea
-    {
-        Binding,
-        Resource,
-        Performance,
-        Maintainability
-    }
+    Binding,
+    Resource,
+    Performance,
+    Maintainability,
+    Misc,
+    Highlight
 }

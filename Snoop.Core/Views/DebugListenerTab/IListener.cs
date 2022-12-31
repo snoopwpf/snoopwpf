@@ -1,7 +1,6 @@
-﻿namespace Snoop.Views.DebugListenerTab
+﻿namespace Snoop.Views.DebugListenerTab;
+
+public interface IListener
 {
-    public interface IListener
-    {
-        void Write(string? str);
-    }
+    void Write(string? str);
 }

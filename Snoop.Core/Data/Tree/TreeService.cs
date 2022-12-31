@@ -1,271 +1,274 @@
-﻿namespace Snoop.Data.Tree
+namespace Snoop.Data.Tree;
+
+using System;
+using System.Collections;
+using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Windows;
+using System.Windows.Automation;
+using System.Windows.Automation.Peers;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Media;
+using System.Windows.Media.Media3D;
+using JetBrains.Annotations;
+using Snoop.Infrastructure.Diagnostics;
+
+public enum TreeType
 {
-    using System;
-    using System.Collections;
-    using System.ComponentModel;
-    using System.Linq;
-    using System.Runtime.CompilerServices;
-    using System.Windows;
-    using System.Windows.Automation;
-    using System.Windows.Automation.Peers;
-    using System.Windows.Controls.Primitives;
-    using System.Windows.Media;
-    using System.Windows.Media.Media3D;
-    using JetBrains.Annotations;
-    using Snoop.Infrastructure.Diagnostics;
+    Visual,
 
-    public enum TreeType
+    Logical,
+
+    Automation
+}
+
+public abstract class TreeService : IDisposable, INotifyPropertyChanged
+{
+    private TreeItem? rootTreeItem;
+
+    public TreeService()
     {
-        Visual,
-
-        Logical,
-
-        Automation
+        this.DiagnosticContext = new DiagnosticContext(this);
     }
 
-    public abstract class TreeService : IDisposable, INotifyPropertyChanged
-    {
-        private TreeItem? rootTreeItem;
+    public abstract TreeType TreeType { get; }
 
-        public TreeService()
+    public TreeItem? RootTreeItem
+    {
+        get => this.rootTreeItem;
+        set
         {
-            this.DiagnosticContext = new DiagnosticContext(this);
+            if (Equals(value, this.rootTreeItem))
+            {
+                return;
+            }
+
+            this.rootTreeItem = value;
+
+            this.OnPropertyChanged();
+        }
+    }
+
+    public DiagnosticContext DiagnosticContext { get; }
+
+    public IEnumerable GetChildren(TreeItem treeItem)
+    {
+        if (treeItem.OmitChildren)
+        {
+            return Enumerable.Empty<object>();
         }
 
-        public abstract TreeType TreeType { get; }
+        return this.GetChildren(treeItem.Target);
+    }
 
-        public TreeItem? RootTreeItem
+    public abstract IEnumerable GetChildren(object target);
+
+    public virtual TreeItem Construct(object target, TreeItem? parent, bool omitChildren = false)
+    {
+        TreeItem treeItem = target switch
         {
-            get => this.rootTreeItem;
-            set
+            AutomationPeer typedTarget => new AutomationPeerTreeItem(typedTarget, parent, this),
+            ResourceDictionaryWrapper typedTarget => new ResourceDictionaryTreeItem(typedTarget, parent, this),
+            ResourceDictionary typedTarget => new ResourceDictionaryTreeItem(typedTarget, parent, this),
+            Application typedTarget => new ApplicationTreeItem(typedTarget, parent, this),
+            Window typedTarget => new WindowTreeItem(typedTarget, parent, this),
+            Popup typedTarget => new PopupTreeItem(typedTarget, parent, this),
+            Image typedTarget => new ImageTreeItem(typedTarget, parent, this),
+            DependencyObject typedTarget => this.ConstructFromDependencyObject(parent, typedTarget),
+            _ => new TreeItem(target, parent, this)
+        };
+
+        treeItem.OmitChildren = omitChildren;
+
+        treeItem.Reload();
+
+        if (parent is null)
+        {
+            // If the parent is null this should be our new root element
+            this.RootTreeItem = treeItem;
+
+            foreach (var child in treeItem.Children)
             {
-                if (Equals(value, this.rootTreeItem))
+                if (child is ResourceDictionaryTreeItem)
                 {
-                    return;
+                    continue;
                 }
 
-                this.rootTreeItem = value;
-
-                this.OnPropertyChanged();
+                child.ExpandTo();
             }
+
+            return this.RootTreeItem;
         }
 
-        public DiagnosticContext DiagnosticContext { get; }
+        return treeItem;
+    }
 
-        public IEnumerable GetChildren(TreeItem treeItem)
+    private DependencyObjectTreeItem ConstructFromDependencyObject(TreeItem? parent, DependencyObject dependencyObject)
+    {
+        if (WebBrowserTreeItem.IsWebBrowserWithDevToolsSupport(dependencyObject))
         {
-            if (treeItem.OmitChildren)
-            {
-                return Enumerable.Empty<object>();
-            }
-
-            return this.GetChildren(treeItem.Target);
+            return new WebBrowserTreeItem(dependencyObject, parent, this);
         }
 
-        public abstract IEnumerable GetChildren(object target);
+        return new DependencyObjectTreeItem(dependencyObject, parent, this);
+    }
 
-        public virtual TreeItem Construct(object target, TreeItem? parent, bool omitChildren = false)
+    public static TreeService From(TreeType treeType)
+    {
+        return treeType switch
         {
-            TreeItem treeItem;
+            TreeType.Visual => new VisualTreeService(),
+            TreeType.Logical => new LogicalTreeService(),
+            TreeType.Automation => new AutomationPeerTreeService(),
+            _ => throw new ArgumentOutOfRangeException(nameof(treeType), treeType, null)
+        };
+    }
 
-            switch (target)
+    public void Dispose()
+    {
+        this.DiagnosticContext.Dispose();
+    }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    [NotifyPropertyChangedInvocator]
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+}
+
+public sealed class VisualTreeService : TreeService
+{
+    public override TreeType TreeType { get; } = TreeType.Visual;
+
+    public override IEnumerable GetChildren(object target)
+    {
+        if (target is not DependencyObject dependencyObject
+            || (target is Visual == false && target is Visual3D == false))
+        {
+            yield break;
+        }
+
+        var childrenCount = VisualTreeHelper.GetChildrenCount(dependencyObject);
+
+        for (var i = 0; i < childrenCount; i++)
+        {
+            var child = VisualTreeHelper.GetChild(dependencyObject, i);
+            yield return child;
+        }
+    }
+}
+
+public sealed class LogicalTreeService : TreeService
+{
+    public override TreeType TreeType { get; } = TreeType.Logical;
+
+    public override IEnumerable GetChildren(object target)
+    {
+        if (target is not DependencyObject dependencyObject)
+        {
+            yield break;
+        }
+
+        foreach (var child in LogicalTreeHelper.GetChildren(dependencyObject))
+        {
+            yield return child;
+        }
+
+        if (target is ItemsControl itemsControl)
+        {
+            foreach (var item in itemsControl.Items)
             {
-                case AutomationPeer automationPeer:
-                    treeItem = new AutomationPeerTreeItem(automationPeer, parent, this);
-                    break;
-
-                case ResourceDictionary resourceDictionary:
-                    treeItem = new ResourceDictionaryTreeItem(resourceDictionary, parent, this);
-                    break;
-
-                case Application application:
-                    treeItem = new ApplicationTreeItem(application, parent, this);
-                    break;
-
-                case Window window:
-                    treeItem = new WindowTreeItem(window, parent, this);
-                    break;
-
-                case Popup popup:
-                    treeItem = new PopupTreeItem(popup, parent, this);
-                    break;
-
-                case DependencyObject dependencyObject:
-                    treeItem = new DependencyObjectTreeItem(dependencyObject, parent, this);
-                    break;
-
-                default:
-                    treeItem = new TreeItem(target, parent, this);
-                    break;
-            }
-
-            treeItem.OmitChildren = omitChildren;
-
-            treeItem.Reload();
-
-            if (parent is null)
-            {
-                // If the parent is null this should be our new root element
-                this.RootTreeItem = treeItem;
-
-                foreach (var child in treeItem.Children)
+                if (item is DependencyObject)
                 {
-                    if (child is ResourceDictionaryTreeItem)
-                    {
-                        continue;
-                    }
+                    continue;
+                }
 
-                    child.ExpandTo();
+                var container = itemsControl.ItemContainerGenerator.ContainerFromItem(item);
+
+                if (container is not null)
+                {
+                    yield return container;
                 }
             }
-
-            return treeItem;
-        }
-
-        public static TreeService From(TreeType treeType)
-        {
-            switch (treeType)
-            {
-                case TreeType.Visual:
-                    return new VisualTreeService();
-
-                case TreeType.Logical:
-                    return new LogicalTreeService();
-
-                case TreeType.Automation:
-                    return new AutomationPeerTreeService();
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(treeType), treeType, null);
-            }
-        }
-
-        public void Dispose()
-        {
-            this.DiagnosticContext.Dispose();
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
+}
 
-    public sealed class VisualTreeService : TreeService
+public sealed class AutomationPeerTreeService : TreeService
+{
+    public override TreeType TreeType { get; } = TreeType.Automation;
+
+    public override TreeItem Construct(object target, TreeItem? parent, bool omitChildren = false)
     {
-        public override TreeType TreeType { get; } = TreeType.Visual;
-
-        public override IEnumerable GetChildren(object target)
+        if (omitChildren == false
+            && target is not AutomationPeer
+            && target is UIElement element)
         {
-            if (target is not DependencyObject dependencyObject
-                || (target is Visual == false && target is Visual3D == false))
-            {
-                yield break;
-            }
-
-            var childrenCount = VisualTreeHelper.GetChildrenCount(dependencyObject);
-
-            for (var i = 0; i < childrenCount; i++)
-            {
-                var child = VisualTreeHelper.GetChild(dependencyObject, i);
-                yield return child;
-            }
+            target = UIElementAutomationPeer.CreatePeerForElement(element);
         }
+
+        return base.Construct(target, parent, omitChildren: omitChildren);
     }
 
-    public sealed class LogicalTreeService : TreeService
+    public override IEnumerable GetChildren(object target)
     {
-        public override TreeType TreeType { get; } = TreeType.Logical;
-
-        public override IEnumerable GetChildren(object target)
+        if (target is not AutomationPeer automationPeer)
         {
-            if (target is not DependencyObject dependencyObject)
-            {
-                yield break;
-            }
+            yield break;
+        }
 
-            foreach (var child in LogicalTreeHelper.GetChildren(dependencyObject))
-            {
-                yield return child;
-            }
+        var children = automationPeer.GetChildren();
+
+        if (children is null)
+        {
+            yield break;
+        }
+
+        foreach (var child in children)
+        {
+            yield return child;
         }
     }
+}
 
-    public sealed class AutomationPeerTreeService : TreeService
+public sealed class AutomationElementTreeService : TreeService
+{
+    private static readonly TreeWalker treeWalker = TreeWalker.ControlViewWalker;
+
+    public override TreeType TreeType { get; } = TreeType.Automation;
+
+    public override IEnumerable GetChildren(object target)
     {
-        public override TreeType TreeType { get; } = TreeType.Automation;
-
-        public override TreeItem Construct(object target, TreeItem? parent, bool omitChildren = false)
+        if (target is not AutomationElement automationElement)
         {
-            if (omitChildren == false
-                && target is not AutomationPeer
-                && target is UIElement element)
-            {
-                target = UIElementAutomationPeer.CreatePeerForElement(element);
-            }
-
-            return base.Construct(target, parent, omitChildren: omitChildren);
+            yield break;
         }
 
-        public override IEnumerable GetChildren(object target)
+        AutomationElement? child;
+        try
         {
-            if (target is not AutomationPeer automationPeer)
-            {
-                yield break;
-            }
-
-            var children = automationPeer.GetChildren();
-
-            if (children is null)
-            {
-                yield break;
-            }
-
-            foreach (var child in children)
-            {
-                yield return child;
-            }
+            child = treeWalker.GetFirstChild(automationElement);
         }
-    }
-
-    public sealed class AutomationElementTreeService : TreeService
-    {
-        private static readonly TreeWalker treeWalker = TreeWalker.ControlViewWalker;
-
-        public override TreeType TreeType { get; } = TreeType.Automation;
-
-        public override IEnumerable GetChildren(object target)
+        catch (Exception)
         {
-            if (target is not AutomationElement automationElement)
-            {
-                yield break;
-            }
+            yield break;
+        }
 
-            AutomationElement? child;
+        while (child is not null)
+        {
+            yield return child;
+
             try
             {
-                child = treeWalker.GetFirstChild(automationElement);
+                child = treeWalker.GetNextSibling(child);
             }
             catch (Exception)
             {
-                yield break;
-            }
-
-            while (child is not null)
-            {
-                yield return child;
-
-                try
-                {
-                    child = treeWalker.GetNextSibling(child);
-                }
-                catch (Exception)
-                {
-                    child = null;
-                }
+                child = null;
             }
         }
     }

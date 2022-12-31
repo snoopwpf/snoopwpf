@@ -214,15 +214,14 @@
     </DrawingImage>
 
     <!-- upDrawingImage -->
-    <DrawingImage x:Key="upDrawingImage"
-                  options:Freeze="True">
+    <DrawingImage x:Key="upDrawingImage">
         <DrawingImage.Drawing>
             <DrawingGroup>
                 <DrawingGroup.Children>
-                    <GeometryDrawing Brush="#FF000000"
+                    <GeometryDrawing Brush="{DynamicResource Snoop.Brushes.Default.Foreground}"
                                      Geometry="F1 M 288,384L 384,240L 480,384L 384,336L 288,384 Z ">
                         <GeometryDrawing.Pen>
-                            <Pen Brush="#FF000000" LineJoin="Round" Thickness="13.3333" />
+                            <Pen Brush="{DynamicResource Snoop.Brushes.Default.Foreground}" LineJoin="Round" Thickness="13.3333" />
                         </GeometryDrawing.Pen>
                     </GeometryDrawing>
                 </DrawingGroup.Children>
@@ -231,8 +230,7 @@
     </DrawingImage>
 
     <!-- downDrawingImage -->
-    <DrawingImage x:Key="downDrawingImage"
-                  options:Freeze="True">
+    <DrawingImage x:Key="downDrawingImage">
         <DrawingImage.Drawing>
             <DrawingGroup>
                 <DrawingGroup.Transform>
@@ -241,10 +239,10 @@
                     </TransformGroup>
                 </DrawingGroup.Transform>
                 <DrawingGroup.Children>
-                    <GeometryDrawing Brush="#FF000000"
+                    <GeometryDrawing Brush="{DynamicResource Snoop.Brushes.Default.Foreground}"
                                      Geometry="F1 M 288,384L 384,240L 480,384L 384,336L 288,384 Z ">
                         <GeometryDrawing.Pen>
-                            <Pen Brush="#FF000000" LineJoin="Round" Thickness="13.3333" />
+                            <Pen Brush="{DynamicResource Snoop.Brushes.Default.Foreground}" LineJoin="Round" Thickness="13.3333" />
                         </GeometryDrawing.Pen>
                     </GeometryDrawing>
                 </DrawingGroup.Children>

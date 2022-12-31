@@ -1,5 +1,40 @@
 ﻿# Changelog for Snoop
 
+## 5.0.0
+
+- ### Breaking changes
+
+  - Dropped support for all .NET Framework versions prior to .NET 4.5.2
+  - Dropped support for .NET 3.0
+  - Added support for .NET versions > 6.0 (by not explicitly blocking versions greater than 6.0)
+  - [#316](../../issues/316) - Improved settings management and storage  
+    Settings do not rely on `System.Configuration` anymore.  
+    The new system allows sharing of settings between different snooped applications.  
+    It also allows to define settings for whole directory trees.
+
+- ### Bug fixes
+
+  - [#300](../../issues/300) - An error has occured in developing .NET 6 Desktop App
+  - [#313](../../issues/313) - Error: Collection was modified; enumeration operation may not execute.
+  - [#318](../../issues/318) - Styles from application apply to Snoop UI if DefaultStyleKey is overwritten by application
+  - [#319](../../issues/319) - Wrong style being displayed in property inspector if DefaultStyleKey is overwritten.
+  - [#333](../../issues/333) - Dual Monitor high dpi window sizes and positions broken (thanks @Algorithman)
+  - [#374](../../issues/374) - Unhandled InvalidCastException when running on .NET 7
+
+- ### Improvements
+
+  - Editing `Color?` and `Enum?` values works now
+  - Improved resource lookup (used to get resource keys from resources)
+  - Added dark theme
+  - [#278](../../issues/278) - Adorner Layer not visible on certain controls (Snoop now reports a diagnostic error when there is no adorner layer for the selected element)
+  - [#283](../../issues/283) - [Feature Request] Be able to import filters or make them available across applications. (solved by [#316](../../issues/316))
+  - [#314](../../issues/314) - Hide properties from Snoop?  
+    You can now hide properties from Snoop by adding `[System.ComponentModel.BrowsableAttribute(false)]` to your property.  
+    It's only shown then if the "Show uncommon properties" is enabled.
+  - [#320](../../issues/320) - System resources are not shown in the tree
+  - [#326](../../issues/326) - Enable Snoop to show the dev tools of browser controls
+  - [#339](../../issues/339) - Value selector when dependency property type is a nullable enum.
+
 ## 4.0.1
 
 - ### Bug fixes

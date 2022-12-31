@@ -44,11 +44,13 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snoop.Core.Tests", "Snoop.Core.Tests\Snoop.Core.Tests.csproj", "{7ABD1C31-D98A-43D8-8420-3498C4B51ED3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{50CC90EC-2B3B-447B-9490-4FFAD3790E49}"
+	ProjectSection(SolutionItems) = preProject
+		.github\dependabot.yml = .github\dependabot.yml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{357FE096-4AA8-4FBA-B134-AB3C297346BC}"
 ProjectSection(SolutionItems) = preProject
 	.github\workflows\continuous.yml = .github\workflows\continuous.yml
-	.github\workflows\deployment.yml = .github\workflows\deployment.yml
 EndProjectSection
 EndProject
 Global
