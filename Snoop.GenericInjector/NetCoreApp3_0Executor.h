@@ -13,5 +13,12 @@ public:
 	
 	int Execute(LPCWSTR pwzAssemblyPath, LPCWSTR pwzTypeName, LPCWSTR pwzMethodName, LPCWSTR pwzArgument, DWORD* pReturnValue) override;
 private:
+	typedef HRESULT(STDAPICALLTYPE* FnGetNETCoreCLRRuntimeHost)(REFIID riid, void** pUnk);
+
 	ICLRRuntimeHost* GetNETCoreCLRRuntimeHost();
+
+	HINSTANCE GetModuleHandleForCoreClrDll();
+	bool TryGetHandleForGetCLRRuntimeHostFromModule(const HINSTANCE moduleHandle, FnGetNETCoreCLRRuntimeHost &pfnGetCLRRuntimeHost);
+	bool IsSelfContained();
+	bool TryGetHandleForGetCLRRuntimeHostFromSelfContainedProcess(FnGetNETCoreCLRRuntimeHost &pfnGetCLRRuntimeHost);
 };
