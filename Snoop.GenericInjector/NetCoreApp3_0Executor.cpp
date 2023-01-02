@@ -4,6 +4,7 @@
 #include "mscoree.h"
 
 typedef HRESULT(STDAPICALLTYPE* FnGetNETCoreCLRRuntimeHost)(REFIID riid, IUnknown** pUnk);
+typedef HRESULT(STDAPICALLTYPE* FnStartSnoop)(LPCWSTR className, LPCWSTR methodName, LPCWSTR settingsFile);
 
 // Returns the ICLRRuntimeHost instance or nullptr on failure.
 ICLRRuntimeHost* NetCoreApp3_0Executor::GetNETCoreCLRRuntimeHost()
@@ -48,20 +49,26 @@ ICLRRuntimeHost* NetCoreApp3_0Executor::GetNETCoreCLRRuntimeHost()
 
 int NetCoreApp3_0Executor::Execute(LPCWSTR pwzAssemblyPath, LPCWSTR pwzTypeName, LPCWSTR pwzMethodName,	LPCWSTR pwzArgument, DWORD* pReturnValue)
 {
-	auto* host = GetNETCoreCLRRuntimeHost();
+	// todo: dynamically find path to native dll
+	const auto lib = LoadLibrary(L"C:\\DEV\\OSS_Own\\snoopwpf\\bin\\Debug\\net5.0-windows\\Snoop.CoreNE.dll");
+	const auto funcAddress = GetProcAddress(lib, "StartSnoop");
+	const auto startSnoop = reinterpret_cast<FnStartSnoop>(funcAddress);
+	return startSnoop(pwzTypeName, pwzMethodName, pwzArgument);
 
-	if (!host)
-	{
-		return E_FAIL;
-	}
+	//auto* host = GetNETCoreCLRRuntimeHost();
 
-	this->Log(L"Trying to run ExecuteInDefaultAppDomain...");
+	//if (!host)
+	//{
+	//	return E_FAIL;
+	//}
 
-	const auto hr = host->ExecuteInDefaultAppDomain(pwzAssemblyPath, pwzTypeName, pwzMethodName, pwzArgument, pReturnValue);
+	//this->Log(L"Trying to run ExecuteInDefaultAppDomain...");
 
-	this->Log(L"ExecuteInDefaultAppDomain finished.");
+	//const auto hr = host->ExecuteInDefaultAppDomain(pwzAssemblyPath, pwzTypeName, pwzMethodName, pwzArgument, pReturnValue);
 
-	host->Release();
+	//this->Log(L"ExecuteInDefaultAppDomain finished.");
 
-	return hr;
+	//host->Release();
+
+	//return hr;
 }

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <TargetFrameworks>net5.0-windows;netcoreapp3.1;$(MinTargetFramework)</TargetFrameworks>
 
@@ -6,6 +6,10 @@
 
     <UseWpf>true</UseWpf>
     <UseWindowsForms>true</UseWindowsForms>
+
+    <RollForward>Major</RollForward>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <DnneAddGeneratedBinaryToProject>true</DnneAddGeneratedBinaryToProject>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,4 +35,8 @@
   <PropertyGroup Condition="'$(TargetFramework)' == 'net5.0-windows'">
     <DefineConstants>$(DefineConstants);USE_WPF_BINDING_DIAG</DefineConstants>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DNNE"  PrivateAssets="All" Condition="'$(TargetFramework)' == 'net5.0-windows'" />
+  </ItemGroup>
 </Project>
