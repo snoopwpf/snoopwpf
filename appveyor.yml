@@ -3,7 +3,7 @@ branches:
   only:
     - master
     - develop
-    - /\d*\.\d*\.\d*/
+    - /v\d*\.\d*\.\d*/
 
 image: Visual Studio 2022
 test: false
