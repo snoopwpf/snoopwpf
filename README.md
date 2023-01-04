@@ -26,16 +26,20 @@ You can change property values, view triggers, set breakpoints on property chang
 
 - .NET Framework >= 4.5.2
 - .NET >= 3.1
+  - Tested with 3.1, 5, 6 and 7. Future versions might just work.
+  - **Restrictions:** Self-Contained single file applications are not supported as there is no reliable way to get a handle to the .NET runtime
 
 ## Versions
 
 You can read the [changelog](Changelog.md) for details on what changed in which version.
 
-### [5.0.0]
+### [5.0.0](../../releases/tag/v5.0.0)
 
 Highlights:
 
-- Improved settings system that does not rely on `System.Configuration`
+- Improved settings system that does not rely on `System.Configuration`  
+  The new system allows sharing of settings between different snooped applications.  
+  It also allows to define settings for whole directory trees.
 - It's now possible to hide properties from Snoop in it's default view.  
   Just annotate your properties with `[System.ComponentModel.BrowsableAttribute(false)]`.
 - Added the ability to show browser dev tools on browser controls.  
@@ -46,7 +50,7 @@ Breaking:
 
 - Dropped support for all .NET Framework versions prior to .NET 4.5.2
 - Dropped support for .NET 3.0
-- Added support for .NET versions > 6.0 (by not explicitly blocking versions greater than 6.0)
+- Added support for .NET versions >= 6.0 (by not explicitly blocking versions greater than 6.0)
 
 ### [4.0.0](../../releases/tag/v4.0.0)
 

@@ -6,7 +6,7 @@
 
   - Dropped support for all .NET Framework versions prior to .NET 4.5.2
   - Dropped support for .NET 3.0
-  - Added support for .NET versions > 6.0 (by not explicitly blocking versions greater than 6.0)
+  - Added support for .NET versions >= 6 (by not explicitly blocking versions greater than 6)
   - [#316](../../issues/316) - Improved settings management and storage  
     Settings do not rely on `System.Configuration` anymore.  
     The new system allows sharing of settings between different snooped applications.  
@@ -24,7 +24,7 @@
 - ### Improvements
 
   - Editing `Color?` and `Enum?` values works now
-  - Improved resource lookup (used to get resource keys from resources)
+  - Improved resource lookup (used to get resource keys for resources)
   - Added dark theme
   - [#278](../../issues/278) - Adorner Layer not visible on certain controls (Snoop now reports a diagnostic error when there is no adorner layer for the selected element)
   - [#283](../../issues/283) - [Feature Request] Be able to import filters or make them available across applications. (solved by [#316](../../issues/316))
