@@ -139,10 +139,10 @@ public class ThemeManager
     private static Color Invert(Color original)
     {
         var invertedColor = default(Color);
-        invertedColor.ScR = 1.0F - original.ScR;
-        invertedColor.ScG = 1.0F - original.ScG;
-        invertedColor.ScB = 1.0F - original.ScB;
-        invertedColor.ScA = original.ScA;
+        invertedColor.R = (byte)(255 - original.R);
+        invertedColor.G = (byte)(255 - original.G);
+        invertedColor.B = (byte)(255 - original.B);
+        invertedColor.A = original.A;
         return invertedColor;
     }
 }
