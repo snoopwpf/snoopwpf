@@ -45,7 +45,7 @@ public class SetterItem : IDisposable
 
         if (binding is not null)
         {
-            var propertyInformation = new PropertyInformation(targetForPropertyInformation, propertyDescriptor, binding, GetDisplayName(this.Setter, propertyDescriptor));
+            var propertyInformation = new PropertyInformation(targetForPropertyInformation, propertyDescriptor, this.Setter.Property, binding, GetDisplayName(this.Setter, propertyDescriptor));
 
             this.Value = propertyInformation;
         }
