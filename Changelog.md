@@ -1,5 +1,11 @@
 ﻿# Changelog for Snoop
 
+## 5.0.1
+
+- ### Bug fixes
+
+  - [#399](../../issues/399) - Save the Current Preview to file does not work all the time
+
 ## 5.0.0
 
 - ### Breaking changes
