@@ -91,6 +91,10 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
             this.EnqueueAfterSettingFilter();
             this.filterTimer.Stop();
         };
+
+        {
+            this.snoopVersion.Header = $"Version: {this.GetType().Assembly.GetName().Version}";
+        }
     }
 
     #region Public Properties
@@ -978,6 +982,11 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
             WindowStyle = WindowStyle.ToolWindow
         };
         window.ShowDialog();
+    }
+
+    private void HandleSnoopVersion_OnClick(object sender, RoutedEventArgs e)
+    {
+        ClipboardHelper.SetText((string)this.snoopVersion.Header);
     }
 }
 
