@@ -120,11 +120,7 @@ public static class SnoopWindowUtils
 
         try
         {
-            if (windowPlacementValue.ShowCmd == NativeMethods.SW_SHOWMAXIMIZED)
-            {
-                window.WindowState = WindowState.Maximized;
-            }
-            else if (windowPlacementValue.NormalPosition.Width is not 0
+            if (windowPlacementValue.NormalPosition.Width is not 0
                      && windowPlacementValue.NormalPosition.Height is not 0
                      && IsVisibleOnAnyScreen(windowPlacementValue.NormalPosition, out var screen))
             {
@@ -137,6 +133,11 @@ public static class SnoopWindowUtils
                 var logicalScreenSize = DPIHelper.DevicePixelsToLogical(new Point(screen.Bounds.Width, screen.Bounds.Height), hwnd);
                 window.Width = Math.Max(100, Math.Min(logicalScreenSize.X, logicalWindowSize.X));
                 window.Height = Math.Max(26, Math.Min(logicalScreenSize.Y, logicalWindowSize.Y));
+            }
+
+            if (windowPlacementValue.ShowCmd == NativeMethods.SW_SHOWMAXIMIZED)
+            {
+                window.WindowState = WindowState.Maximized;
             }
         }
         catch (Exception exception)
