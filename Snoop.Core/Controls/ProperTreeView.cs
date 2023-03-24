@@ -18,6 +18,8 @@ public class ProperTreeView : TreeView
 {
     private const int MaxExtentWidth = 1200;
     private const int MaxDepth = 70;
+    private const int MaxAboveOnReduce = 10;
+    private const int MaxAboveOnWiden = 20;
 
     private SnoopUI? snoopUI;
     private ScrollViewer? scrollViewer;
@@ -67,7 +69,8 @@ public class ProperTreeView : TreeView
             return false;
         }
 
-        var shouldReduce = this.scrollViewer is { ExtentWidth: >= MaxExtentWidth } || (item.Depth - rootItem.Depth) > MaxDepth;
+        var currentDepthFromCurrentRoot = item.Depth - rootItem.Depth;
+        var shouldReduce = this.scrollViewer is { ExtentWidth: >= MaxExtentWidth } || currentDepthFromCurrentRoot > MaxDepth;
         var shouldWiden = shouldReduce == false && curNode.IsSelected && curItem == rootItem;
 
         if (shouldReduce == false
@@ -78,11 +81,18 @@ public class ProperTreeView : TreeView
 
         // Try to show some items above new root, that way we can keep a bit of context
         var newRoot = shouldWiden ? curItem.Parent : item.Parent;
-        var itemsToShowAboveNewRoot = shouldReduce
-            ? 10
-            : 20;
+        var levelsToShowAboveNewRoot = shouldWiden
+            ? MaxAboveOnWiden
+            : MaxAboveOnReduce;
 
-        for (var i = 0; i < itemsToShowAboveNewRoot; ++i)
+        if (shouldWiden
+            && newRoot is not null)
+        {
+            var maxExpandedDepth = Math.Max(0, newRoot.Depth - MaxAboveOnWiden) + MaxDepth - 10;
+            CollapseIfNeeded(newRoot, maxExpandedDepth);
+        }
+
+        for (var i = 0; i < levelsToShowAboveNewRoot; ++i)
         {
             if (newRoot?.Parent is null)
             {
@@ -100,6 +110,20 @@ public class ProperTreeView : TreeView
         this.snoopUI.ApplyReduceDepthFilter(newRoot);
 
         return true;
+
+        static void CollapseIfNeeded(TreeItem item, int maxExpandedDepth)
+        {
+            if (item.Depth >= maxExpandedDepth)
+            {
+                item.IsExpanded = false;
+                return;
+            }
+
+            foreach (var child in item.Children)
+            {
+                CollapseIfNeeded(child, maxExpandedDepth);
+            }
+        }
     }
 
     private TreeItem? GetRootItem()
