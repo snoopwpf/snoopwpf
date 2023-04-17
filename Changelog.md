@@ -1,5 +1,16 @@
 ﻿# Changelog for Snoop
 
+## 5.1.0
+
+- ### Bug fixes
+
+  - [#399](../../issues/399) - Save the Current Preview to file does not work all the time
+  - [#405](../../issues/405) - After upgrading my app to .net 8 snoop no longer works with it
+
+- ### Improvements
+
+  - [#404](../../issues/404) - Snoop does not show version
+
 ## 5.0.0
 
 - ### Breaking changes

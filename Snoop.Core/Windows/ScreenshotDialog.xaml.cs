@@ -68,15 +68,15 @@ public partial class ScreenshotDialog
 
         if (fileDialog.ShowDialog(this) == true)
         {
-            var directoryName = Path.GetDirectoryName(fileDialog.FileName);
+            filePath = fileDialog.FileName;
+
+            var directoryName = Path.GetDirectoryName(filePath);
             if (string.IsNullOrEmpty(directoryName) == false)
             {
                 lastSaveDirectory = directoryName;
             }
 
-            VisualCaptureUtil.SaveVisual(this.DataContext as Visual,
-                int.Parse(dpiText),
-                filePath);
+            VisualCaptureUtil.SaveVisual(this.DataContext as Visual, int.Parse(dpiText), filePath);
 
             this.Close();
         }

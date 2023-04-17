@@ -160,13 +160,34 @@ public class PropertyFilter
         // finally, if none of the above applies
         // just check to see if we're not showing properties at their default values
         // and this property is actually set to its default value
-        if (this.ShowDefaults == false
-            && property.ValueSource.BaseValueSource == BaseValueSource.Default)
+        if (this.ShouldShowDefaultValueFilter(property) == false)
         {
             return false;
         }
 
         return true;
+    }
+
+    private bool ShouldShowDefaultValueFilter(PropertyInformation property)
+    {
+        if (this.ShowDefaults)
+        {
+            return true;
+        }
+
+        if (property.ValueSource.BaseValueSource != BaseValueSource.Default)
+        {
+            return true;
+        }
+
+        // Always show common properties
+        if (property.DependencyProperty == ColumnDefinition.WidthProperty
+            || property.DependencyProperty == RowDefinition.HeightProperty)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     private static bool IsUncommonProperty(PropertyInformation property)

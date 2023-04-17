@@ -159,6 +159,10 @@
                     <MenuItem Header="Snoop Snoop"
                               Click="HandleSnoopSnoop_OnClick" />
                 </MenuItem>
+                <MenuItem Header="?">
+                    <MenuItem x:Name="snoopVersion"
+                              Click="HandleSnoopVersion_OnClick" />
+                </MenuItem>
             </Menu>
             <StackPanel HorizontalAlignment="Right"
                         Orientation="Horizontal">
