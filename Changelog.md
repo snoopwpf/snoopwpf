@@ -5,6 +5,7 @@
 - ### Bug fixes
 
   - [#399](../../issues/399) - Save the Current Preview to file does not work all the time
+  - [#405](../../issues/405) - After upgrading my app to .net 8 snoop no longer works with it
 
 - ### Improvements
 

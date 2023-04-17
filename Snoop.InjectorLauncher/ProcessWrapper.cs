@@ -93,8 +93,8 @@ public class ProcessWrapper
 #if DEBUG
             Injector.LogMessage(module.szExePath);
             var fileVersionInfo = FileVersionInfo.GetVersionInfo(module.szExePath);
-            Injector.LogMessage($"File: {fileVersionInfo.FileMajorPart}.{fileVersionInfo.FileMinorPart}");
-            Injector.LogMessage($"Prod: {fileVersionInfo.ProductMajorPart}.{fileVersionInfo.ProductMinorPart}");
+            Injector.LogMessage($"File: {fileVersionInfo.FileVersion}");
+            Injector.LogMessage($"Prod: {fileVersionInfo.ProductVersion}");
 #endif
 
             if (module.szModule.StartsWith("wpfgfx_", StringComparison.OrdinalIgnoreCase))
@@ -115,12 +115,31 @@ public class ProcessWrapper
             return "net452";
         }
 
-        return relevantVersionInfo.ProductMajorPart switch
+        var productVersion = TryParseVersion(relevantVersionInfo.ProductVersion ?? string.Empty);
+        return productVersion.Major switch
         {
             >= 5 => "net5.0-windows",
             4 => "net452",
-            3 when relevantVersionInfo.ProductMinorPart >= 1 => "netcoreapp3.1",
+            3 when productVersion.Minor >= 1 => "netcoreapp3.1",
             _ => throw new NotSupportedException($".NET version {relevantVersionInfo.ProductVersion} is not supported.")
         };
+    }
+
+    private static Version TryParseVersion(string version)
+    {
+        var versionToParse = version;
+
+        var previewVersionMarkerIndex = versionToParse.IndexOf("-", StringComparison.Ordinal);
+        if (previewVersionMarkerIndex > -1)
+        {
+            versionToParse = version.Substring(0, previewVersionMarkerIndex);
+        }
+
+        if (Version.TryParse(versionToParse, out var parsedVersion))
+        {
+            return parsedVersion;
+        }
+
+        return new Version();
     }
 }
