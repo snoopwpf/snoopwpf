@@ -61,7 +61,7 @@
                                     <ControlTemplate>
                                         <Rectangle Margin="3 3 3 3"
                                                    SnapsToDevicePixels="True"
-                                                   Stroke="#FF000000"
+                                                   Stroke="{DynamicResource Snoop.Brushes.Default.Foreground}"
                                                    StrokeDashArray="1 2"
                                                    StrokeThickness="1" />
                                     </ControlTemplate>
