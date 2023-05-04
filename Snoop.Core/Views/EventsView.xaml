@@ -131,11 +131,11 @@
         <Grid>
             <Path Data="M18.33996,8.7972167 L1.8622991,25.274878"
                   Stretch="Fill"
-                  Stroke="Black"
+                  Stroke="{DynamicResource Snoop.Brushes.Default.Foreground}"
                   StrokeThickness="2" />
             <Path Data="M19.831014,18.751491 L4.5959764,3.5164535"
                   Stretch="Fill"
-                  Stroke="Black"
+                  Stroke="{DynamicResource Snoop.Brushes.Default.Foreground}"
                   StrokeThickness="2" />
         </Grid>
         <Button.ToolTip>
