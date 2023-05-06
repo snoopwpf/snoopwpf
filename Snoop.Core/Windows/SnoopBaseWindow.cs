@@ -3,7 +3,6 @@ namespace Snoop.Windows;
 using System;
 using System.Diagnostics;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using Snoop.Core;
 using Snoop.Infrastructure;
@@ -44,51 +43,10 @@ public class SnoopBaseWindow : Window
         base.OnInitialized(e);
     }
 
-    /// <inheritdoc />
-    protected override void OnActivated(EventArgs e)
-    {
-        base.OnActivated(e);
-
-        var presentationSource = PresentationSource.FromVisual(this);
-        if (presentationSource is not null)
-        {
-            InputManager.Current.PushMenuMode(presentationSource);
-        }
-    }
-
-    /// <inheritdoc />
-    protected override void OnDeactivated(EventArgs e)
-    {
-        this.PopMenuModeSafe();
-
-        base.OnDeactivated(e);
-    }
-
     protected override void OnClosed(EventArgs e)
     {
-        this.PopMenuModeSafe();
-
         SnoopPartsRegistry.RemoveSnoopVisualTreeRoot(this);
 
         base.OnClosed(e);
-    }
-
-    private void PopMenuModeSafe()
-    {
-        var presentationSource = PresentationSource.FromVisual(this);
-        if (presentationSource is not null)
-        {
-            try
-            {
-                while (InputManager.Current.IsInMenuMode)
-                {
-                    InputManager.Current.PopMenuMode(presentationSource);
-                }
-            }
-            catch
-            {
-                // ignored because we might have already popped the menu mode
-            }
-        }
     }
 }
