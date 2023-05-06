@@ -1,6 +1,6 @@
 ﻿# Changelog for Snoop
 
-## 5.1.0
+## 5.0.1
 
 - ### Bug fixes
 
