@@ -1,5 +1,11 @@
 ﻿# Changelog for Snoop
 
+## 5.0.2
+
+- ### Bug fixes
+
+  - [#405](../../issues/405) - After upgrading my app to .net 8 snoop no longer works with it
+
 ## 5.0.1
 
 - ### Bug fixes
