@@ -199,6 +199,7 @@ public class PropertyInformation : DependencyObject, IComparable, INotifyPropert
         if (this.isRunning == false
             || this.ignoreUpdate)
         {
+            this.UpdateValueSource();
             return;
         }
 
@@ -518,9 +519,9 @@ public class PropertyInformation : DependencyObject, IComparable, INotifyPropert
 
     public bool IsDatabound => this.isDatabound;
 
-    public bool IsExpression => this.valueSource.IsExpression || this.Binding is not null;
+    public bool IsExpression => this.ValueSource.IsExpression || this.Binding is not null;
 
-    public bool IsAnimated => this.valueSource.IsAnimated;
+    public bool IsAnimated => this.ValueSource.IsAnimated;
 
     public int Index
     {
@@ -600,7 +601,18 @@ public class PropertyInformation : DependencyObject, IComparable, INotifyPropert
         }
     }
 
-    public ValueSource ValueSource => this.valueSource;
+    public ValueSource ValueSource
+    {
+        get => this.valueSource;
+        set
+        {
+            this.valueSource = value;
+            this.OnPropertyChanged(nameof(this.ValueSource));
+            this.OnPropertyChanged(nameof(this.ValueSourceBaseValueSource));
+            this.OnPropertyChanged(nameof(this.IsExpression));
+            this.OnPropertyChanged(nameof(this.IsAnimated));
+        }
+    }
 
     // Required to prevent binding leaks
     public BaseValueSource ValueSourceBaseValueSource => this.ValueSource.BaseValueSource;
@@ -668,7 +680,6 @@ public class PropertyInformation : DependencyObject, IComparable, INotifyPropert
         if (dp is not null
             && d is not null)
         {
-            //Debugger.Launch();
             if (d.ReadLocalValue(dp) != DependencyProperty.UnsetValue)
             {
                 this.isLocallySet = true;
@@ -693,7 +704,7 @@ public class PropertyInformation : DependencyObject, IComparable, INotifyPropert
                 }
             }
 
-            this.valueSource = DependencyPropertyHelper.GetValueSource(d, dp);
+            this.UpdateValueSource();
         }
 
         this.OnPropertyChanged(nameof(this.IsLocallySet));
@@ -706,6 +717,26 @@ public class PropertyInformation : DependencyObject, IComparable, INotifyPropert
         this.OnPropertyChanged(nameof(this.IsExpression));
         this.OnPropertyChanged(nameof(this.IsAnimated));
         this.OnPropertyChanged(nameof(this.ValueSource));
+    }
+
+    private void UpdateValueSource()
+    {
+        var dp = this.DependencyProperty;
+        var d = this.Target as DependencyObject;
+
+        if (dp is null
+            || d is null)
+        {
+            return;
+        }
+
+        if (SnoopModes.MultipleDispatcherMode
+            && d.Dispatcher != this.Dispatcher)
+        {
+            return;
+        }
+
+        this.ValueSource = DependencyPropertyHelper.GetValueSource(d, dp);
     }
 
     public void UpdateBindingError()
