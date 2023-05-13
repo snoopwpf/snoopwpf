@@ -12,7 +12,17 @@
     <RevisionVersion>$([System.Version]::Parse($(AssemblyVersion)).Revision)</RevisionVersion>
     <ResolveNuGetPackages>false</ResolveNuGetPackages>
   </PropertyGroup>
+  <!-- start: Dotnet SDK build workarounds -->
   <Target Name="Build" />
+  <Target Name="VSTest" />
+  <!-- prevents NU1503 -->
+  <Target Name="_IsProjectRestoreSupported" Returns="@(_ValidProjectsForRestore)">
+    <ItemGroup>
+      <_ValidProjectsForRestore Include="$(MSBuildProjectFullPath)" />
+    </ItemGroup>
+  </Target>
+  <Target Name="Restore" />
+  <!-- end: Dotnet SDK build workarounds -->
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>

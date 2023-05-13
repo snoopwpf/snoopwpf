@@ -16,7 +16,6 @@ using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Tools.MSBuild;
 using Nuke.Common.Tools.NuGet;
 using Nuke.Common.Tools.SignPath;
-using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 using static Nuke.Common.Tools.MSBuild.MSBuildTasks;
 
@@ -81,7 +80,8 @@ class Build : NukeBuild
     [Solution(GenerateProjects = true)] readonly TestHarnessSolution TestHarnessSolution = null!;
 
     [GitRepository] GitRepository? GitRepository;
-    [GitVersion(Framework = "netcoreapp3.1", NoFetch = true, NoCache = true)] readonly GitVersion? GitVersion;
+    [GitVersion(Framework = "netcoreapp3.1", NoFetch = true, NoCache = true)]
+    readonly GitVersion? GitVersion;
 
     string AssemblySemVer => GitVersion?.AssemblySemVer ?? "1.0.0";
     string SemVer => GitVersion?.SemVer ?? "1.0.0";
@@ -89,7 +89,8 @@ class Build : NukeBuild
     string NuGetVersion => GitVersion?.NuGetVersion ?? "1.0.0";
     string MajorMinorPatch => GitVersion?.MajorMinorPatch ?? "1.0.0";
 
-    [CI] readonly GitHubActions? GitHubActions;
+    [CI]
+    readonly GitHubActions? GitHubActions;
 
     readonly List<string> CheckSumFiles = new();
 
@@ -106,16 +107,16 @@ class Build : NukeBuild
 
     AbsolutePath TestResultDirectory => OutputDirectory / "test-results";
 
-    string CandleExecutable => ToolPathResolver.GetPackageExecutable("wix", "candle.exe");
+    string CandleExecutable => NuGetToolPathResolver.GetPackageExecutable("wix", "candle.exe");
 
-    string LightExecutable => ToolPathResolver.GetPackageExecutable("wix", "light.exe");
+    string LightExecutable => NuGetToolPathResolver.GetPackageExecutable("wix", "light.exe");
 
     readonly string FenceOutput = "".PadLeft(30, '#');
 
     Target CleanOutput => _ => _
         .Executes(() =>
         {
-            EnsureCleanDirectory(ArtifactsDirectory);
+            ArtifactsDirectory.CreateOrCleanDirectory();
         });
 
     Target Restore => _ => _
@@ -247,7 +248,7 @@ class Build : NukeBuild
 
             var tempDirectory = TemporaryDirectory / $"{ProjectName}{nameof(Pack)}";
 
-            EnsureCleanDirectory(tempDirectory);
+            tempDirectory.CreateOrCleanDirectory();
 
             var nupkg = ArtifactsDirectory / $"{ProjectName}.{NuGetVersion}.nupkg";
 
@@ -255,10 +256,10 @@ class Build : NukeBuild
             AppVeyor.Instance?.PushArtifact(nupkg);
 
             {
-                CompressionTasks.UncompressZip(nupkg, tempDirectory);
+                nupkg.UnZipTo(tempDirectory);
 
                 var outputFile = ArtifactsDirectory / $"{ProjectName}.{NuGetVersion}.zip";
-                CompressionTasks.Compress(tempDirectory / "tools", outputFile, info => info.Name.Contains("chocolatey") == false && info.Name != "VERIFICATION.txt");
+                (tempDirectory / "tools").CompressTo(outputFile, info => info.Name.Contains("chocolatey") == false && info.Name != "VERIFICATION.txt");
                 CheckSumFiles.Add(outputFile);
                 AppVeyor.Instance?.PushArtifact(outputFile);
             }
@@ -273,7 +274,7 @@ class Build : NukeBuild
         {
             var tempDirectory = TemporaryDirectory / $"{ProjectName}{nameof(Setup)}";
 
-            EnsureCleanDirectory(tempDirectory);
+            tempDirectory.CreateOrCleanDirectory();
 
             var candleProcess = ProcessTasks.StartProcess(CandleExecutable,
                 $"{ProjectName}.wxs -ext WixUIExtension -o \"{tempDirectory / $"{ProjectName}.wixobj"}\" -dProductVersion=\"{MajorMinorPatch}\" -nologo");
@@ -327,7 +328,7 @@ class Build : NukeBuild
         {
             {
                 var outputFile = ArtifactsDirectory / $"{ProjectName}.Sign.{NuGetVersion}.zip";
-                CompressionTasks.Compress(ArtifactsDirectory, outputFile);
+                ArtifactsDirectory.CompressTo(outputFile);
                 CheckSumFiles.Add(outputFile);
                 AppVeyor.Instance?.PushArtifact(outputFile);
             }

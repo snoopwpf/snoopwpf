@@ -129,7 +129,8 @@ public class ProcessWrapper
     {
         var versionToParse = version;
 
-        var previewVersionMarkerIndex = versionToParse.IndexOf("-", StringComparison.Ordinal);
+        var previewVersionMarkerIndex = versionToParse.IndexOfAny(new[] { '-', '+' });
+
         if (previewVersionMarkerIndex > -1)
         {
             versionToParse = version.Substring(0, previewVersionMarkerIndex);
