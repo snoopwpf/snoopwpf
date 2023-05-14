@@ -14,57 +14,6 @@
              d:DesignHeight="300"
              d:DesignWidth="300"
              mc:Ignorable="d">
-    <UserControl.Resources>
-        <DataTemplate x:Key="DefaultEmptyTemplate">
-            <Border />
-        </DataTemplate>
-
-        <DataTemplate x:Key="CustomEditSingleField">
-            <TextBlock Style="{DynamicResource MouseWheelText}"
-                       d:DataContext="{d:DesignInstance infrastructure:PropertyInformation}"
-                       Tag="1"
-                       Text="{Binding Value}" />
-        </DataTemplate>
-
-        <DataTemplate x:Key="CustomEditThickness"
-                      DataType="{x:Type Thickness}">
-            <StackPanel d:DataContext="{d:DesignInstance infrastructure:PropertyInformation}"
-                        Orientation="Horizontal">
-                <TextBlock Style="{DynamicResource MouseWheelText}"
-                           Tag="1"
-                           Text="{Binding Value.Left}" />
-                <TextBlock Style="{DynamicResource MouseWheelText}"
-                           Tag="2"
-                           Text="{Binding Value.Top}" />
-                <TextBlock Style="{DynamicResource MouseWheelText}"
-                           Tag="3"
-                           Text="{Binding Value.Right}" />
-                <TextBlock Style="{DynamicResource MouseWheelText}"
-                           Tag="4"
-                           Text="{Binding Value.Bottom}" />
-            </StackPanel>
-        </DataTemplate>
-
-        <DataTemplate x:Key="CustomEditBrush"
-                      DataType="{x:Type Brush}">
-            <StackPanel d:DataContext="{d:DesignInstance infrastructure:PropertyInformation}"
-                        Orientation="Horizontal">
-                <TextBlock Style="{DynamicResource MouseWheelText}"
-                           Tag="1"
-                           Text="{Binding Path=Value, Converter={x:Static converters:ArgbToPartsConverter.Default}, ConverterParameter=0}" />
-                <TextBlock Style="{DynamicResource MouseWheelText}"
-                           Tag="2"
-                           Text="{Binding Path=Value, Converter={x:Static converters:ArgbToPartsConverter.Default}, ConverterParameter=1}" />
-                <TextBlock Style="{DynamicResource MouseWheelText}"
-                           Tag="3"
-                           Text="{Binding Path=Value, Converter={x:Static converters:ArgbToPartsConverter.Default}, ConverterParameter=2}" />
-                <TextBlock Style="{DynamicResource MouseWheelText}"
-                           Tag="4"
-                           Text="{Binding Path=Value, Converter={x:Static converters:ArgbToPartsConverter.Default}, ConverterParameter=3}" />
-            </StackPanel>
-        </DataTemplate>
-    </UserControl.Resources>
-
     <!-- DataContext: PropertyInformation -->
 
     <ContentControl VerticalAlignment="Center"
@@ -79,37 +28,37 @@
                     So instead, we manually describe which template to use based on Type.Name
                     Add more templates here for other data types.
                 -->
-                <Setter Property="ContentTemplate" Value="{StaticResource DefaultEmptyTemplate}" />
+                <Setter Property="ContentTemplate" Value="{DynamicResource DefaultEmptyTemplate}" />
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding Path=PropertyType.Name}" Value="Int32">
-                        <Setter Property="ContentTemplate" Value="{StaticResource CustomEditSingleField}" />
+                        <Setter Property="ContentTemplate" Value="{DynamicResource CustomEditSingleField}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Path=PropertyType.Name}" Value="Int16">
-                        <Setter Property="ContentTemplate" Value="{StaticResource CustomEditSingleField}" />
+                        <Setter Property="ContentTemplate" Value="{DynamicResource CustomEditSingleField}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Path=PropertyType.Name}" Value="Double">
-                        <Setter Property="ContentTemplate" Value="{StaticResource CustomEditSingleField}" />
+                        <Setter Property="ContentTemplate" Value="{DynamicResource CustomEditSingleField}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Path=PropertyType.Name}" Value="Boolean">
-                        <Setter Property="ContentTemplate" Value="{StaticResource CustomEditSingleField}" />
+                        <Setter Property="ContentTemplate" Value="{DynamicResource CustomEditSingleField}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Path=PropertyType.Name}" Value="Visibility">
-                        <Setter Property="ContentTemplate" Value="{StaticResource CustomEditSingleField}" />
+                        <Setter Property="ContentTemplate" Value="{DynamicResource CustomEditSingleField}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Path=PropertyType.Name}" Value="HorizontalAlignment">
-                        <Setter Property="ContentTemplate" Value="{StaticResource CustomEditSingleField}" />
+                        <Setter Property="ContentTemplate" Value="{DynamicResource CustomEditSingleField}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Path=PropertyType.Name}" Value="VerticalAlignment">
-                        <Setter Property="ContentTemplate" Value="{StaticResource CustomEditSingleField}" />
+                        <Setter Property="ContentTemplate" Value="{DynamicResource CustomEditSingleField}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Path=PropertyType.Name}" Value="Thickness">
-                        <Setter Property="ContentTemplate" Value="{StaticResource CustomEditThickness}" />
+                        <Setter Property="ContentTemplate" Value="{DynamicResource CustomEditThickness}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Path=PropertyType.Name}" Value="Brush">
-                        <Setter Property="ContentTemplate" Value="{StaticResource CustomEditBrush}" />
+                        <Setter Property="ContentTemplate" Value="{DynamicResource CustomEditBrush}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Path=PropertyType.Name}" Value="Color">
-                        <Setter Property="ContentTemplate" Value="{StaticResource CustomEditBrush}" />
+                        <Setter Property="ContentTemplate" Value="{DynamicResource CustomEditBrush}" />
                     </DataTrigger>
 
                     <!--
@@ -120,7 +69,7 @@
                         Since this is last in the list, this will override any satisfying trigger above here
                     -->
                     <DataTrigger Binding="{Binding Path=Value, Converter={x:Static converters:IsSupportedRuntimeTypeConverter.Default}}" Value="False">
-                        <Setter Property="ContentTemplate" Value="{StaticResource DefaultEmptyTemplate}" />
+                        <Setter Property="ContentTemplate" Value="{DynamicResource DefaultEmptyTemplate}" />
                     </DataTrigger>
                 </Style.Triggers>
             </Style>

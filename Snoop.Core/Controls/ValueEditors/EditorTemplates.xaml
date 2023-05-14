@@ -80,6 +80,7 @@
                         </Button>
 
                         <ContentPresenter Name="ValueHolder"
+                                          MinHeight="18"
                                           Content="{Binding RelativeSource={RelativeSource TemplatedParent}}"
                                           ContentTemplate="{DynamicResource UnselectedValueTemplate}">
                             <ContentPresenter.ToolTip>
@@ -384,8 +385,7 @@
 
             <DataTemplate x:Key="SelectedValueTemplate"
                           DataType="valueEditors:EnumValueEditor">
-                <ComboBox Height="16"
-                          Padding="2 -2 2 0"
+                <ComboBox Padding="2 -2 2 0"
                           DisplayMemberPath="Text"
                           IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}"
                           IsSynchronizedWithCurrentItem="False"
@@ -399,6 +399,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type valueEditors:EnumValueEditor}">
                     <ContentPresenter Name="ValueHolder"
+                                      MinHeight="18"
                                       Content="{Binding RelativeSource={RelativeSource TemplatedParent}}"
                                       ContentTemplate="{DynamicResource UnselectedValueTemplate}" />
 
