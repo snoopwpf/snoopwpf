@@ -292,10 +292,10 @@ public class PropertyInformation : DependencyObject, IComparable, INotifyPropert
 
             switch (value)
             {
-                case DynamicResourceExtension { ResourceKey: { } } dynamicResourceExtension:
+                case DynamicResourceExtension { ResourceKey: not null } dynamicResourceExtension:
                     return dynamicResourceExtension.ResourceKey.ToString();
 
-                case StaticResourceExtension { ResourceKey: { } } staticResourceExtension:
+                case StaticResourceExtension { ResourceKey: not null } staticResourceExtension:
                     return staticResourceExtension.ResourceKey.ToString();
 
                 default:
