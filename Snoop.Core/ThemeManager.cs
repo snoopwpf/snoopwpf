@@ -1,4 +1,4 @@
-﻿namespace Snoop.Core;
+namespace Snoop.Core;
 
 using System;
 using System.Collections;
@@ -138,11 +138,19 @@ public class ThemeManager
 
     private static Color Invert(Color original)
     {
-        var invertedColor = default(Color);
-        invertedColor.ScR = 1.0F - original.ScR;
-        invertedColor.ScG = 1.0F - original.ScG;
-        invertedColor.ScB = 1.0F - original.ScB;
-        invertedColor.ScA = original.ScA;
-        return invertedColor;
+        System.Drawing.Color fromColor = System.Drawing.Color.FromArgb(original.A, original.R, original.G, original.B);
+
+        var invertedColor = System.Drawing.Color.FromArgb(fromColor.ToArgb() ^ 0xffffff);
+
+        if (invertedColor.R is > 110 and < 150 &&
+            invertedColor.G is > 110 and < 150 &&
+            invertedColor.B is > 110 and < 150)
+        {
+            var avg = (invertedColor.R + invertedColor.G + invertedColor.B) / 3;
+            avg = avg > 128 ? 200 : 60;
+            invertedColor = System.Drawing.Color.FromArgb(fromColor.A, avg, avg, avg);
+        }
+
+        return Color.FromArgb(invertedColor.A, invertedColor.R, invertedColor.G, invertedColor.B);
     }
 }

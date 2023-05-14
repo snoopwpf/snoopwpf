@@ -1,6 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:options="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options">
+    <SolidColorBrush x:Key="Snoop.Brushes.Default.Background">#FF2e2e2e</SolidColorBrush>
+
     <LinearGradientBrush x:Key="GridViewColumnHeaderHoverBackground" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
         <LinearGradientBrush.GradientStops>
             <GradientStop Color="#2F4D5F" Offset="0" />
