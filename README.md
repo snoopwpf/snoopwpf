@@ -155,3 +155,7 @@ Over time contributions have been added by several people, most notably:
 - [Andrei Kashcha](http://blog.yasiv.com/)
 - [Maciek Rakowski](https://github.com/MaciekRakowski)
 - [Bailey Ling](https://github.com/bling)
+
+## Code Signing
+
+Snoop uses free code signing provided by [SignPath.io](https://signpath.io?utm_source=foundation&utm_medium=github&utm_campaign=snoopwpf) and a free code signing certificate by the [SignPath Foundation](https://signpath.org?utm_source=foundation&utm_medium=github&utm_campaign=snoopwpf)
