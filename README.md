@@ -131,8 +131,9 @@ The minimum supported .NET version is 4.0 as of Snoop version 3.0.
 ## Why can't I snoop .NET 4.0 and 4.5.0 applications?
 
 Well, you can! You will just need to use Snoop 3.0.0 and earlier, in order to do so.
-As part of the process of moving to Visual Studio 2022, we have dropped support for .NET 4.0 and 4.5.0 applications.
-The minimum supported .NET version is 4.5.1 as of Snoop version 4.0.
+As part of the process of moving to Visual Studio 2022, support for .NET 4.0 and 4.5.0 applications was dropped.
+The minimum supported .NET version is 4.5.1 as of Snoop 4.0.
+The minimum supported .NET version is 4.5.2 as of Snoop 5.0.
 
 ## How do i build Snoop?
 
