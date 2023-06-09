@@ -142,9 +142,9 @@ public class ThemeManager
 
         var invertedColor = System.Drawing.Color.FromArgb(fromColor.ToArgb() ^ 0xffffff);
 
-        if (invertedColor.R is > 110 and < 150 &&
-            invertedColor.G is > 110 and < 150 &&
-            invertedColor.B is > 110 and < 150)
+        if (invertedColor.R is > 110 and < 150
+            && invertedColor.G is > 110 and < 150
+            && invertedColor.B is > 110 and < 150)
         {
             var avg = (invertedColor.R + invertedColor.G + invertedColor.B) / 3;
             avg = avg > 128 ? 200 : 60;
