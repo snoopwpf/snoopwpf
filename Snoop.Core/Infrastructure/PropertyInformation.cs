@@ -607,15 +607,33 @@ public class PropertyInformation : DependencyObject, IComparable, INotifyPropert
         set
         {
             this.valueSource = value;
+
             this.OnPropertyChanged(nameof(this.ValueSource));
-            this.OnPropertyChanged(nameof(this.ValueSourceBaseValueSource));
+            this.OnPropertyChanged(nameof(this.ValueSourceText));
             this.OnPropertyChanged(nameof(this.IsExpression));
             this.OnPropertyChanged(nameof(this.IsAnimated));
         }
     }
 
     // Required to prevent binding leaks
-    public BaseValueSource ValueSourceBaseValueSource => this.ValueSource.BaseValueSource;
+    public string ValueSourceText
+    {
+        get
+        {
+            var text = this.ValueSource.BaseValueSource.ToString();
+
+            if (this.IsExpression)
+            {
+                text += " (Binding)";
+            }
+            else if (this.ResourceKey is not null)
+            {
+                text += " (Resource)";
+            }
+
+            return text;
+        }
+    }
 
     public bool IsVisible => this.filter?.ShouldShow(this) != false;
 
