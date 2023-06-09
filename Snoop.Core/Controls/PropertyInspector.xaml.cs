@@ -719,6 +719,7 @@ public partial class PropertyInspector : INotifyPropertyChanged
                 "desiredsize", "rendersize", "availablesize",
                 "margin", "padding",
                 "left", "top",
+                "borderthickness",
                 "horizontalalignment", "verticalalignment",
                 "horizontalcontentalignment", "verticalcontentalignment",
                 "visibility"
