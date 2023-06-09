@@ -2,6 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:options="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options">
     <SolidColorBrush x:Key="Snoop.Brushes.Default.Background">#FF2e2e2e</SolidColorBrush>
+    <SolidColorBrush x:Key="TabItem.Selected.Background">#FF282c34</SolidColorBrush>
 
     <LinearGradientBrush x:Key="GridViewColumnHeaderHoverBackground" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
         <LinearGradientBrush.GradientStops>
@@ -10,7 +11,7 @@
         </LinearGradientBrush.GradientStops>
     </LinearGradientBrush>
 
-    <SolidColorBrush x:Key="Snoop.Brushes.PropertyGrid.IsExpression" Color="#4A3D4F" options:Freeze="True" />
+    <SolidColorBrush x:Key="Snoop.Brushes.PropertyGrid.IsExpression" Color="#023e19" options:Freeze="True" />
     <SolidColorBrush x:Key="Snoop.Brushes.EventsView.Handled.Background" Color="LightGreen" options:Freeze="True" />
     <SolidColorBrush x:Key="Snoop.Brushes.EventsView.Handled.Foreground" Color="Black" options:Freeze="True" />
 </ResourceDictionary>
