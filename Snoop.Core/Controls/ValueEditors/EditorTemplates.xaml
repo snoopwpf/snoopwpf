@@ -42,12 +42,12 @@
         <Style.Resources>
             <DataTemplate x:Key="EmptyValueTemplate"
                           DataType="valueEditors:ValueEditor">
-                <TextBlock Text="{Binding DescriptiveValue}" />
+                <TextBlock Text="{Binding DescriptiveValue}" TextTrimming="CharacterEllipsis" />
             </DataTemplate>
 
             <DataTemplate x:Key="UnselectedValueTemplate"
                           DataType="valueEditors:ValueEditor">
-                <TextBlock Text="{Binding DescriptiveValue}" />
+                <TextBlock Text="{Binding DescriptiveValue}" TextTrimming="CharacterEllipsis" />
             </DataTemplate>
 
             <DataTemplate x:Key="SelectedValueTemplate"
@@ -66,7 +66,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type valueEditors:StandardValueEditor}">
-                    <StackPanel Orientation="Horizontal">
+                    <DockPanel LastChildFill="True">
                         <Button x:Name="OpenDetailsEditor"
                                 Command="{x:Static valueEditors:ValueEditor.OpenDetailsEditorCommand}"
                                 Content=" ... "
@@ -87,7 +87,7 @@
                                 <TextBlock Text="{TemplateBinding DescriptiveValue}" />
                             </ContentPresenter.ToolTip>
                         </ContentPresenter>
-                    </StackPanel>
+                    </DockPanel>
 
                     <ControlTemplate.Triggers>
                         <DataTrigger Binding="{Binding Value}" Value="{x:Null}">
@@ -117,9 +117,9 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type valueEditors:BoolValueEditor}">
-                    <StackPanel d:DataContext="{d:DesignInstance infrastructure:PropertyInformation,
+                    <DockPanel d:DataContext="{d:DesignInstance infrastructure:PropertyInformation,
                                                                  IsDesignTimeCreatable=False}"
-                                Orientation="Horizontal">
+                                LastChildFill="True">
                         <CheckBox x:Name="PART_CheckBox"
                                   VerticalAlignment="Center"
                                   IsChecked="{Binding Value, Mode=TwoWay}"
@@ -128,8 +128,9 @@
                         <TextBlock Margin="3 0"
                                    VerticalAlignment="Center"
                                    Text="{Binding Path=DescriptiveValue}"
-                                   Visibility="{Binding Path=IsExpression, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}}" />
-                    </StackPanel>
+                                   Visibility="{Binding Path=IsExpression, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}}"
+                                   TextTrimming="CharacterEllipsis" />
+                    </DockPanel>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -175,9 +176,8 @@
 
             <DataTemplate x:Key="UnselectedValueTemplate"
                           DataType="valueEditors:ValueEditor">
-                <Grid Height="Auto"
-                      HorizontalAlignment="Left">
-                    <Grid.ToolTip>
+                <DockPanel LastChildFill="True">
+                    <DockPanel.ToolTip>
                         <ToolTip>
                             <ListBox Width="200"
                                      Height="200"
@@ -212,22 +212,25 @@
                                 </ItemsControl.ItemTemplate>
                             </ListBox>
                         </ToolTip>
-                    </Grid.ToolTip>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="48" />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
+                    </DockPanel.ToolTip>
 
-                    <Rectangle Grid.Column="0"
-                               Fill="{StaticResource CheckerboardBrush}" />
-                    <Rectangle Grid.Column="0"
-                               Fill="{Binding Value}"
-                               Stroke="{TemplateBinding TextElement.Foreground}"
-                               StrokeThickness="1" />
-                    <TextBlock Grid.Column="1"
-                               Margin="5 0 0 0"
-                               Text="{Binding DescriptiveValue}" />
-                </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="24" />
+                        </Grid.ColumnDefinitions>
+
+                        <Rectangle Grid.Column="0"
+                                   Fill="{StaticResource CheckerboardBrush}" />
+                        <Rectangle Grid.Column="0"
+                                   Fill="{Binding Value}"
+                                   Stroke="{TemplateBinding TextElement.Foreground}"
+                                   StrokeThickness="1" />
+                    </Grid>
+
+                    <TextBlock Margin="5 0 0 0"
+                               Text="{Binding DescriptiveValue}"
+                               TextTrimming="CharacterEllipsis" />
+                </DockPanel>
             </DataTemplate>
 
             <DataTemplate x:Key="SelectedValueTemplate"
@@ -270,6 +273,7 @@
                             </ListBox>
                         </ToolTip>
                     </Grid.ToolTip>
+
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="24" />
                         <ColumnDefinition />
@@ -283,8 +287,7 @@
                                StrokeThickness="1" />
 
                     <controls:EditTextBox Grid.Column="1"
-                                          Height="Auto"
-                                          Padding="1"
+                                          Margin="3 0 0 0"
                                           HorizontalAlignment="Stretch"
                                           VerticalContentAlignment="Center"
                                           BorderThickness="0"
@@ -337,7 +340,8 @@
                     </Rectangle>
                     <TextBlock Grid.Column="1"
                                Margin="5 0 0 0"
-                               Text="{Binding DescriptiveValue}" />
+                               Text="{Binding DescriptiveValue}"
+                               TextTrimming="CharacterEllipsis" />
                 </Grid>
             </DataTemplate>
 
@@ -380,7 +384,7 @@
         <Style.Resources>
             <DataTemplate x:Key="UnselectedValueTemplate"
                           DataType="valueEditors:ValueEditor">
-                <TextBlock Text="{Binding DescriptiveValue}" />
+                <TextBlock Text="{Binding DescriptiveValue}" TextTrimming="CharacterEllipsis" />
             </DataTemplate>
 
             <DataTemplate x:Key="SelectedValueTemplate"
