@@ -72,6 +72,11 @@
                           Command="{x:Static controls:PropertyInspector.OpenTypeInILSpyCommand}"
                           CommandParameter="{Binding Path=DelveType, Mode=OneWay}"
                           CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" />
+                <Separator />
+                <MenuItem Header="Copy FQ Name"
+                          Command="{x:Static controls:PropertyInspector.CopyFQNameCommand}"
+                          CommandParameter="{Binding Path=DelveType, Mode=OneWay}"
+                          CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" />
             </ContextMenu>
         </TextBlock.ContextMenu>
     </TextBlock>
