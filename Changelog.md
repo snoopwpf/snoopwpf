@@ -1,5 +1,11 @@
 ﻿# Changelog for Snoop
 
+## 5.1.0
+
+- ### Improvements
+
+  - [#416](../../issues/416) - Copy delve type name into clipboard (thanks @miloush)
+
 ## 5.0.2
 
 - ### Bug fixes
