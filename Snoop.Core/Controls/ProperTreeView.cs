@@ -20,6 +20,7 @@ public class ProperTreeView : TreeView
     private const int MaxDepth = 70;
     private const int MaxAboveOnReduce = 10;
     private const int MaxAboveOnWiden = 20;
+    private const int MaxIndent = 500;
 
     private SnoopUI? snoopUI;
     private ScrollViewer? scrollViewer;
@@ -70,7 +71,7 @@ public class ProperTreeView : TreeView
         }
 
         var currentDepthFromCurrentRoot = item.Depth - rootItem.Depth;
-        var shouldReduce = this.scrollViewer is { ExtentWidth: >= MaxExtentWidth } || currentDepthFromCurrentRoot > MaxDepth;
+        var shouldReduce = this.scrollViewer is { ExtentWidth: >= MaxExtentWidth } || currentDepthFromCurrentRoot > MaxDepth || curNode.Indent > MaxIndent;
         var shouldWiden = shouldReduce == false && curNode.IsSelected && curItem == rootItem;
 
         if (shouldReduce == false
