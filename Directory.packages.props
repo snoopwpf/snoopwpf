@@ -19,7 +19,7 @@
     </ItemGroup>
 
     <ItemGroup Label="Build">
-        <PackageVersion Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" />
+        <PackageVersion Include="Microsoft.NETFramework.ReferenceAssemblies.net452" Version="1.0.3" />
         <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.1.1" />
 
         <PackageVersion Include="JetBrains.Annotations" Version="2022.3.1" />

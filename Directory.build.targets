@@ -1,7 +1,7 @@
 ﻿<Project>
   <!-- Build references -->
   <ItemGroup>
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net452" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" IncludeAssets="build; native" />
   </ItemGroup>
 
