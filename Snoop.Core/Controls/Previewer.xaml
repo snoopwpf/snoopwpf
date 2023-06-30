@@ -21,7 +21,7 @@
                 <DrawingBrush.Drawing>
                     <DrawingGroup>
                         <DrawingGroup.Children>
-                            <GeometryDrawing Brush="#FFE8E8E8"
+                            <GeometryDrawing Brush="#DEDEDE"
                                              Geometry="{DynamicResource snoopDogStreamGeometry}" />
                         </DrawingGroup.Children>
                     </DrawingGroup>
@@ -42,9 +42,9 @@
                     </Border.BorderBrush>
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                            <GradientStop Color="#FFFFFFFF" Offset="0" />
-                            <GradientStop Color="#FFE3E5F0" Offset="0.5" />
-                            <GradientStop Color="#FFC6C5D7" Offset="1" />
+                            <GradientStop Color="#35363A" Offset="0" />
+                            <GradientStop Color="#35363A" Offset="0.5" />
+                            <GradientStop Color="#35363A" Offset="1" />
                         </LinearGradientBrush>
                     </Border.Background>
                     <Border x:Name="Border1"
@@ -79,9 +79,9 @@
                         <Setter Property="Background">
                             <Setter.Value>
                                 <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                                    <GradientStop Color="#FFADAABD" Offset="0" />
-                                    <GradientStop Color="#FFDEDBE7" Offset="0.5" />
-                                    <GradientStop Color="#FFFFFFFF" Offset="1" />
+                                    <GradientStop Color="#35363A" Offset="0" />
+                                    <GradientStop Color="#35363A" Offset="0.5" />
+                                    <GradientStop Color="#35363A" Offset="1" />
                                 </LinearGradientBrush>
                             </Setter.Value>
                         </Setter>

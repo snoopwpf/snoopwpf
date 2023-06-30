@@ -287,7 +287,7 @@
                                 <Condition Property="IsSelectionActive" Value="False" />
                             </MultiTrigger.Conditions>
                             <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.Foreground}" />
-                            <Setter TargetName="PART_Header" Property="Background" Value="{DynamicResource Snoop.Brushes.Default.Control}" />
+                            <Setter TargetName="PART_Header" Property="Background" Value="{DynamicResource Snoop.Brushes.Default.Highlight}" />
                         </MultiTrigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.GrayForeground}" />

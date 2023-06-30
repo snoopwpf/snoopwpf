@@ -19,7 +19,7 @@ public class ThemeManager
     public ThemeManager()
     {
         this.lightResourceDictionary = (ResourceDictionary)Application.LoadComponent(new Uri("/Snoop.Core;component/Themes/Colors.Light.xaml", UriKind.Relative));
-        this.darkResourceDictionary = Invert(this.lightResourceDictionary, (ResourceDictionary)Application.LoadComponent(new Uri("/Snoop.Core;component/Themes/Colors.Dark.xaml", UriKind.Relative)));
+        this.darkResourceDictionary = (ResourceDictionary)Application.LoadComponent(new Uri("/Snoop.Core;component/Themes/Colors.Dark.xaml", UriKind.Relative));
     }
 
     public void ApplyTheme(ThemeMode themeMode)

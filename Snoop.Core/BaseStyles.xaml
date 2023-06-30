@@ -3815,7 +3815,7 @@
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
                             <Setter Property="TextElement.Foreground" Value="{DynamicResource Button.Disabled.Foreground}" />
-                            <Setter TargetName="border" Property="Background" Value="{DynamicResource Button.Disabled.Background}" />
+                            <Setter TargetName="border" Property="Background" Value="Transparent" />
                             <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource Button.Disabled.Border}" />
                         </Trigger>
                     </ControlTemplate.Triggers>

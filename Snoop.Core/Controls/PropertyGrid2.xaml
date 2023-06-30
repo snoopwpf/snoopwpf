@@ -153,7 +153,8 @@
                         <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.PropertyGrid.IsLocallySetForeground}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding IsExpression}" Value="True">
-                        <Setter Property="Background" Value="{DynamicResource Snoop.Brushes.PropertyGrid.IsExpression}" />
+                      <Setter Property="Background" Value="{DynamicResource Snoop.Brushes.PropertyGrid.IsExpression}" />
+                      <Setter Property="Foreground" Value="Gray" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding IsAnimated}" Value="True">
                         <Setter Property="Background" Value="{DynamicResource Snoop.Brushes.PropertyGrid.IsAnimated}" />
