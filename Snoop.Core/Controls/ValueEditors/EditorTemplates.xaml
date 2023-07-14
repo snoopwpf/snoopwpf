@@ -42,12 +42,14 @@
         <Style.Resources>
             <DataTemplate x:Key="EmptyValueTemplate"
                           DataType="valueEditors:ValueEditor">
-                <TextBlock Text="{Binding DescriptiveValue}" TextTrimming="CharacterEllipsis" />
+                <TextBlock Text="{Binding DescriptiveValue}"
+                           TextTrimming="CharacterEllipsis" />
             </DataTemplate>
 
             <DataTemplate x:Key="UnselectedValueTemplate"
                           DataType="valueEditors:ValueEditor">
-                <TextBlock Text="{Binding DescriptiveValue}" TextTrimming="CharacterEllipsis" />
+                <TextBlock Text="{Binding DescriptiveValue}"
+                           TextTrimming="CharacterEllipsis" />
             </DataTemplate>
 
             <DataTemplate x:Key="SelectedValueTemplate"
@@ -118,8 +120,8 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type valueEditors:BoolValueEditor}">
                     <DockPanel d:DataContext="{d:DesignInstance infrastructure:PropertyInformation,
-                                                                 IsDesignTimeCreatable=False}"
-                                LastChildFill="True">
+                                                                IsDesignTimeCreatable=False}"
+                               LastChildFill="True">
                         <CheckBox x:Name="PART_CheckBox"
                                   VerticalAlignment="Center"
                                   IsChecked="{Binding Value, Mode=TwoWay}"
@@ -128,8 +130,8 @@
                         <TextBlock Margin="3 0"
                                    VerticalAlignment="Center"
                                    Text="{Binding Path=DescriptiveValue}"
-                                   Visibility="{Binding Path=IsExpression, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}}"
-                                   TextTrimming="CharacterEllipsis" />
+                                   TextTrimming="CharacterEllipsis"
+                                   Visibility="{Binding Path=IsExpression, Converter={x:Static converters:BoolToVisibilityConverter.DefaultInstance}}" />
                     </DockPanel>
                 </ControlTemplate>
             </Setter.Value>
@@ -384,7 +386,8 @@
         <Style.Resources>
             <DataTemplate x:Key="UnselectedValueTemplate"
                           DataType="valueEditors:ValueEditor">
-                <TextBlock Text="{Binding DescriptiveValue}" TextTrimming="CharacterEllipsis" />
+                <TextBlock Text="{Binding DescriptiveValue}"
+                           TextTrimming="CharacterEllipsis" />
             </DataTemplate>
 
             <DataTemplate x:Key="SelectedValueTemplate"
