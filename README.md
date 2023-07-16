@@ -141,10 +141,10 @@ Just open `Snoop.sln` with Visual Studio and build it.
 
 Requirements:
 
-- Visual Studio 2022 (including C++ payloads (x86/x64/ARM/ARM64))
-  - You can import the `.vsconfig` file in the Visual Studio installer to let it install all required components
+- Visual Studio 2022
+  - C++ payloads (x86/x64 and optionally ARM/ARM64)
+  - You can import the [.vsconfig](.vsconfig) file in the Visual Studio installer to let it install all required components
 - .NET Core SDK 6.0.300 or later
-- .NET 4.5.2 targeting pack [download](https://dotnet.microsoft.com/download/dotnet-framework/net452)
 
 ## Contributors
 
