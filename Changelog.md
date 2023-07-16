@@ -7,6 +7,7 @@
 
 - ### Improvements
 
+  - Improved colors in dark theme
   - [#416](../../issues/416) - Copy delve type name into clipboard (thanks @miloush)
 
 ## 5.0.2
