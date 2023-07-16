@@ -80,7 +80,7 @@ class Build : NukeBuild
     [Solution(GenerateProjects = true)] readonly TestHarnessSolution TestHarnessSolution = null!;
 
     [GitRepository] GitRepository? GitRepository;
-    [GitVersion(Framework = "netcoreapp3.1", NoFetch = true, NoCache = true)]
+    [GitVersion(Framework = "net6.0", NoFetch = true, NoCache = true)]
     readonly GitVersion? GitVersion;
 
     string AssemblySemVer => GitVersion?.AssemblySemVer ?? "1.0.0";

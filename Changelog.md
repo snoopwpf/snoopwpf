@@ -2,8 +2,12 @@
 
 ## 5.1.0
 
+- ### Bug fixes
+  - [#417](../../issues/417) - StackOverflowException on Ctrl+Shift (thanks @miloush)
+
 - ### Improvements
 
+  - Improved colors in dark theme
   - [#416](../../issues/416) - Copy delve type name into clipboard (thanks @miloush)
 
 ## 5.0.2

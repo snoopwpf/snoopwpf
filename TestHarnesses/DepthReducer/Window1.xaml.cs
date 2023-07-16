@@ -30,6 +30,7 @@
                 b.Padding = padding;
                 b.Background = (Brush)info[i].GetValue(null, null);
                 Border b2 = new();
+                b2.Name = "border_" + i + "_" + b.Background.ToString().Replace("#", string.Empty);
                 b.Child = b2;
                 b = b2;
             }
