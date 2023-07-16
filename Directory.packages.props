@@ -11,7 +11,7 @@
 
     <ItemGroup Label="Test">
       <PackageVersion Include="NUnit" Version="3.13.3" />
-      <PackageVersion Include="NUnit3TestAdapter" Version="4.4.2" />
+      <PackageVersion Include="NUnit3TestAdapter" Version="4.5.0" />
 
       <PackageVersion Include="Verify.NUnit" Version="17.10.2" />
 
@@ -24,8 +24,8 @@
 
         <PackageVersion Include="JetBrains.Annotations" Version="2022.3.1" />
         
-        <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" version="4.5.0" />
-        <PackageVersion Include="StyleCop.Analyzers" version="1.2.0-beta.435" />
+        <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" version="4.6.0" />
+        <PackageVersion Include="StyleCop.Analyzers" version="1.2.0-beta.507" />
 
         <PackageVersion Include="WpfAnalyzers" version="4.1.1" />
         <PackageVersion Include="PropertyChangedAnalyzers" Version="4.0.0" />
