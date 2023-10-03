@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Nuke.Common" Version="7.0.2" />
+    <PackageReference Include="Nuke.Common" Version="7.0.6" />
     <PackageDownload Include="GitVersion.Tool" Version="[5.12.0]" />
     <PackageDownload Include="Nuget.CommandLine" Version="[6.6.1]" />
     <PackageDownload Include="wix" Version="[3.11.2]" />
