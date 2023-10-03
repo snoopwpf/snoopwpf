@@ -8,6 +8,7 @@
 - ### Improvements
 
   - Improved colors in dark theme
+  - [#414](../../issues/414) - Feature Request: Option to snoop without activating snoop on global shortcut
   - [#416](../../issues/416) - Copy delve type name into clipboard (thanks @miloush)
 
 ## 5.0.2

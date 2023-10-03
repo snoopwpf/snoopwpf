@@ -32,6 +32,8 @@ public sealed class TransientSettingsData
 
     public bool SetOwnerWindow { get; set; }
 
+    public bool ShowActivated { get; set; } = true;
+
     public long TargetWindowHandle { get; set; }
 
     public string? ILSpyPath { get; set; }

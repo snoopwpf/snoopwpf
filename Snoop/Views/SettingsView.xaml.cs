@@ -14,6 +14,7 @@ public partial class SettingsView
         nameof(Settings.Default.MultipleAppDomainMode),
         nameof(Settings.Default.MultipleDispatcherMode),
         nameof(Settings.Default.SetOwnerWindow),
+        nameof(Settings.Default.ShowActivated),
         nameof(Settings.Default.EnableDiagnostics),
         nameof(Settings.Default.GlobalHotKey),
         nameof(Settings.Default.ILSpyPath),
