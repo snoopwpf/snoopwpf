@@ -131,8 +131,9 @@ The minimum supported .NET version is 4.0 as of Snoop version 3.0.
 ## Why can't I snoop .NET 4.0 and 4.5.0 applications?
 
 Well, you can! You will just need to use Snoop 3.0.0 and earlier, in order to do so.
-As part of the process of moving to Visual Studio 2022, we have dropped support for .NET 4.0 and 4.5.0 applications.
-The minimum supported .NET version is 4.5.1 as of Snoop version 4.0.
+As part of the process of moving to Visual Studio 2022, support for .NET 4.0 and 4.5.0 applications was dropped.
+The minimum supported .NET version is 4.5.1 as of Snoop 4.0.
+The minimum supported .NET version is 4.5.2 as of Snoop 5.0.
 
 ## How do i build Snoop?
 
@@ -140,10 +141,10 @@ Just open `Snoop.sln` with Visual Studio and build it.
 
 Requirements:
 
-- Visual Studio 2022 (including C++ payloads (x86/x64/ARM/ARM64))
-  - You can import the `.vsconfig` file in the Visual Studio installer to let it install all required components
+- Visual Studio 2022
+  - C++ payloads (x86/x64 and optionally ARM/ARM64)
+  - You can import the [.vsconfig](.vsconfig) file in the Visual Studio installer to let it install all required components
 - .NET Core SDK 6.0.300 or later
-- .NET 4.5.2 targeting pack [download](https://dotnet.microsoft.com/download/dotnet-framework/net452)
 
 ## Contributors
 
@@ -155,3 +156,7 @@ Over time contributions have been added by several people, most notably:
 - [Andrei Kashcha](http://blog.yasiv.com/)
 - [Maciek Rakowski](https://github.com/MaciekRakowski)
 - [Bailey Ling](https://github.com/bling)
+
+## Code Signing
+
+Snoop uses free code signing provided by [SignPath.io](https://signpath.io?utm_source=foundation&utm_medium=github&utm_campaign=snoopwpf) and a free code signing certificate by the [SignPath Foundation](https://signpath.org?utm_source=foundation&utm_medium=github&utm_campaign=snoopwpf)

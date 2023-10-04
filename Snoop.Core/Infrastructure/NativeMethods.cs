@@ -507,6 +507,9 @@ public static class NativeMethods
     [DllImport("kernel32.dll", SetLastError = true)]
     public static extern bool CloseHandle(IntPtr hHandle);
 
+    [DllImport("kernel32.dll")]
+    public static extern void GetCurrentThreadStackLimits(out IntPtr lowLimit, out IntPtr highLimit);
+
     [DllImport("user32.dll")]
     public static extern IntPtr LoadImage(IntPtr hinst, string lpszName, uint uType, int cxDesired, int cyDesired, uint fuLoad);
 

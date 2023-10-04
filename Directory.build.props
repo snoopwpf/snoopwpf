@@ -10,6 +10,8 @@
     -->
     <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
     <MinTargetFramework>net452</MinTargetFramework>
+    <CheckEolTargetFramework>false</CheckEolTargetFramework>
+    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
   </PropertyGroup>
 
   <PropertyGroup>

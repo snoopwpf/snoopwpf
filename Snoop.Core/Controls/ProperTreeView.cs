@@ -16,13 +16,36 @@ using Snoop.Windows;
 
 public class ProperTreeView : TreeView
 {
-    private const int MaxExtentWidth = 1200;
-    private const int MaxDepth = 70;
     private const int MaxAboveOnReduce = 10;
     private const int MaxAboveOnWiden = 20;
 
+    // A depth increase costs almost 4k of stack in a process under debugger
+    private const int MinStackRequired = 0x10000; // 64k
+
     private SnoopUI? snoopUI;
     private ScrollViewer? scrollViewer;
+
+    [ThreadStatic]
+    private static IntPtr stackLimitLow;
+
+    private static IntPtr StackLimitLow
+    {
+        get
+        {
+            if (stackLimitLow == IntPtr.Zero)
+            {
+                NativeMethods.GetCurrentThreadStackLimits(out stackLimitLow, out _);
+            }
+
+            return stackLimitLow;
+        }
+    }
+
+    private static unsafe long GetRemainingStackSize()
+    {
+        var stackVar = stackalloc int[1];
+        return stackVar - (int*)StackLimitLow;
+    }
 
     // We need this method and what it does because:
     // If we have a tree which causes the scroll viewer to exceed a certain extent width we might get an StackOverflowException during measure/arrange.
@@ -69,8 +92,7 @@ public class ProperTreeView : TreeView
             return false;
         }
 
-        var currentDepthFromCurrentRoot = item.Depth - rootItem.Depth;
-        var shouldReduce = this.scrollViewer is { ExtentWidth: >= MaxExtentWidth } || currentDepthFromCurrentRoot > MaxDepth;
+        var shouldReduce = GetRemainingStackSize() < MinStackRequired;
         var shouldWiden = shouldReduce == false && curNode.IsSelected && curItem == rootItem;
 
         if (shouldReduce == false
@@ -84,13 +106,6 @@ public class ProperTreeView : TreeView
         var levelsToShowAboveNewRoot = shouldWiden
             ? MaxAboveOnWiden
             : MaxAboveOnReduce;
-
-        if (shouldWiden
-            && newRoot is not null)
-        {
-            var maxExpandedDepth = Math.Max(0, newRoot.Depth - MaxAboveOnWiden) + MaxDepth - 10;
-            CollapseIfNeeded(newRoot, maxExpandedDepth);
-        }
 
         for (var i = 0; i < levelsToShowAboveNewRoot; ++i)
         {
@@ -110,20 +125,6 @@ public class ProperTreeView : TreeView
         this.snoopUI.ApplyReduceDepthFilter(newRoot);
 
         return true;
-
-        static void CollapseIfNeeded(TreeItem item, int maxExpandedDepth)
-        {
-            if (item.Depth >= maxExpandedDepth)
-            {
-                item.IsExpanded = false;
-                return;
-            }
-
-            foreach (var child in item.Children)
-            {
-                CollapseIfNeeded(child, maxExpandedDepth);
-            }
-        }
     }
 
     private TreeItem? GetRootItem()

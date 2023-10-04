@@ -14,6 +14,7 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/Snoop.Core;component/Icons.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Snoop.Core;component/BaseStyles.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Snoop.Core;component/Controls/ValueEditors/MouseWheelValueEditorTemplates.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Snoop.Core;component/Controls/ValueEditors/EditorTemplates.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
@@ -210,6 +211,7 @@
     <Style x:Key="ProperTreeViewItemStyle"
            TargetType="{x:Type TreeViewItem}"
            BasedOn="{StaticResource TreeViewItemStyle}">
+        <Setter Property="BorderThickness" Value="1" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}, AncestorLevel=1}, FallbackValue=Left}" />
         <Setter Property="ItemsPanel">
@@ -289,6 +291,9 @@
                         </MultiTrigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.GrayForeground}" />
+                        </Trigger>
+                        <Trigger SourceName="PART_Header" Property="IsMouseOver" Value="true">
+                            <Setter TargetName="PART_Header" Property="BorderBrush" Value="{DynamicResource Item.MouseOver.Border}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

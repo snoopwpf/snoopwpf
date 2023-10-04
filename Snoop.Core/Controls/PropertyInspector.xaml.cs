@@ -33,6 +33,7 @@ public partial class PropertyInspector : INotifyPropertyChanged
     public static readonly RoutedCommand DelveBindingExpressionCommand = new(nameof(DelveBindingExpressionCommand), typeof(PropertyInspector));
     public static readonly RoutedCommand CopyResourceNameCommand = new(nameof(CopyResourceNameCommand), typeof(PropertyInspector));
     public static readonly RoutedCommand CopyXamlCommand = new(nameof(CopyXamlCommand), typeof(PropertyInspector));
+    public static readonly RoutedCommand CopyFQNameCommand = new(nameof(CopyFQNameCommand), typeof(PropertyInspector));
 
     public static readonly RoutedCommand NavigateToAssemblyInExplorerCommand = new(nameof(NavigateToAssemblyInExplorerCommand), typeof(PropertyInspector));
     public static readonly RoutedCommand OpenTypeInILSpyCommand = new(nameof(OpenTypeInILSpyCommand), typeof(PropertyInspector));
@@ -57,6 +58,7 @@ public partial class PropertyInspector : INotifyPropertyChanged
         this.CommandBindings.Add(new CommandBinding(DelveBindingExpressionCommand, this.HandleDelveBindingExpression, CanDelveBindingExpression));
         this.CommandBindings.Add(new CommandBinding(CopyResourceNameCommand, this.HandleCopyResourceName, this.CanCopyResourceName));
         this.CommandBindings.Add(new CommandBinding(CopyXamlCommand, this.HandleCopyXaml, this.CanCopyXaml));
+        this.CommandBindings.Add(new CommandBinding(CopyFQNameCommand, this.HandleCopyFQName, this.CanCopyFQName));
 
         this.CommandBindings.Add(new CommandBinding(NavigateToAssemblyInExplorerCommand, this.HandleNavigateToAssemblyInExplorer, this.CanNavigateToAssemblyInExplorer));
         this.CommandBindings.Add(new CommandBinding(OpenTypeInILSpyCommand, this.HandleOpenTypeInILSpy, this.CanOpenTypeInILSpy));
@@ -130,6 +132,25 @@ public partial class PropertyInspector : INotifyPropertyChanged
             e.CanExecute = true;
         }
 
+        e.Handled = true;
+    }
+
+    private void HandleCopyFQName(object sender, ExecutedRoutedEventArgs e)
+    {
+        try
+        {
+            var type = (e.Parameter as Type) ?? (BindableType)e.Parameter;
+            ClipboardHelper.SetText(type.FullName ?? string.Empty);
+        }
+        catch (Exception exception)
+        {
+            ErrorDialog.ShowExceptionMessageBox(exception);
+        }
+    }
+
+    private void CanCopyFQName(object sender, CanExecuteRoutedEventArgs e)
+    {
+        e.CanExecute = e.Parameter is System.Type or BindableType;
         e.Handled = true;
     }
 
@@ -719,6 +740,7 @@ public partial class PropertyInspector : INotifyPropertyChanged
                 "desiredsize", "rendersize", "availablesize",
                 "margin", "padding",
                 "left", "top",
+                "borderthickness",
                 "horizontalalignment", "verticalalignment",
                 "horizontalcontentalignment", "verticalcontentalignment",
                 "visibility"

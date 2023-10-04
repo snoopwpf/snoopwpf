@@ -101,9 +101,10 @@
             <DataTemplate x:Key="ValueSourceTemplate"
                           DataType="infrastructure:PropertyInformation">
                 <TextBlock Height="16"
-                           Text="{Binding ValueSourceBaseValueSource}">
+                           Text="{Binding ValueSourceText}"
+                           TextTrimming="CharacterEllipsis">
                     <TextBlock.ToolTip>
-                        <TextBlock Text="{Binding ValueSourceBaseValueSource}" />
+                        <TextBlock Text="{Binding ValueSourceText}" />
                     </TextBlock.ToolTip>
                 </TextBlock>
             </DataTemplate>

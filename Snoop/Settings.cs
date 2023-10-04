@@ -18,6 +18,7 @@ public sealed class Settings : SettingsBase<Settings>
     private MultipleAppDomainMode multipleAppDomainMode = MultipleAppDomainMode.Ask;
     private MultipleDispatcherMode multipleDispatcherMode = MultipleDispatcherMode.Ask;
     private bool setOwnerWindow = true;
+    private bool showActivated = true;
 
     public Settings()
     {
@@ -41,6 +42,21 @@ public sealed class Settings : SettingsBase<Settings>
             }
 
             this.setOwnerWindow = value;
+            this.OnPropertyChanged();
+        }
+    }
+
+    public bool ShowActivated
+    {
+        get => this.showActivated;
+        set
+        {
+            if (value == this.showActivated)
+            {
+                return;
+            }
+
+            this.showActivated = value;
             this.OnPropertyChanged();
         }
     }

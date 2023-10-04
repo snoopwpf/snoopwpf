@@ -41,11 +41,21 @@
   </ItemGroup>
    
   <Target Name="CompileOtherArches" AfterTargets="Build" Condition="'$(RootBuild)' == 'True'">
+    <!--
+    Need to force re-evaluate after Restore, such that obj\x64\Snoop.InjectorLauncher.csproj.nuget.g.targets gets imported after it's created by Restore.
+    If we reuse the previous evaluation used by Restore, it won't be imported there as it didn't exist yet.
+    Setting a dummy property forces a new evaluation as it can't reuse the previous eval with a different set of properties.
+    -->
     <Message Text="Building injector launcher for x64..." Importance="High" />
-    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Restore;Build" Properties="RootBuild=False;Configuration=$(Configuration);PlatformTarget=x64" RunEachTargetSeparately="false" />
+    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Restore" Properties="RootBuild=False;Configuration=$(Configuration);PlatformTarget=x64" />
+    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Build" Properties="RootBuild=False;Configuration=$(Configuration);PlatformTarget=x64;DummyPropertyToForceReevaluateAfterRestore=true" />
+
     <Message Text="Building injector launcher for ARM..." Importance="High" />
-    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Restore;Build" Properties="RootBuild=False;Configuration=$(Configuration);PlatformTarget=ARM;TargetFramework=net5.0-windows" RunEachTargetSeparately="false" />
+    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Restore" Properties="RootBuild=False;Configuration=$(Configuration);PlatformTarget=ARM;TargetFramework=net5.0-windows" />
+    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Build" Properties="RootBuild=False;Configuration=$(Configuration);PlatformTarget=ARM;TargetFramework=net5.0-windows;DummyPropertyToForceReevaluateAfterRestore=true" />
+
     <Message Text="Building injector launcher for ARM64..." Importance="High" />
-    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Restore;Build" Properties="RootBuild=False;Configuration=$(Configuration);PlatformTarget=ARM64;TargetFramework=net5.0-windows" RunEachTargetSeparately="false" />
+    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Restore" Properties="RootBuild=False;Configuration=$(Configuration);PlatformTarget=ARM64;TargetFramework=net5.0-windows" />
+    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Build" Properties="RootBuild=False;Configuration=$(Configuration);PlatformTarget=ARM64;TargetFramework=net5.0-windows;DummyPropertyToForceReevaluateAfterRestore=true" />
   </Target>
 </Project>

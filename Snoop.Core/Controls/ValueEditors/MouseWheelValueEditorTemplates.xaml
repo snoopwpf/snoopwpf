@@ -1,0 +1,56 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:Snoop.Converters"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:infrastructure="clr-namespace:Snoop.Infrastructure"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    mc:Ignorable="d">
+    <DataTemplate x:Key="DefaultEmptyTemplate">
+        <Border />
+    </DataTemplate>
+
+    <DataTemplate x:Key="CustomEditSingleField">
+        <TextBlock Style="{DynamicResource MouseWheelText}"
+                   d:DataContext="{d:DesignInstance infrastructure:PropertyInformation}"
+                   Tag="1"
+                   Text="{Binding Value}" />
+    </DataTemplate>
+
+    <DataTemplate x:Key="CustomEditThickness"
+                  DataType="{x:Type Thickness}">
+        <StackPanel d:DataContext="{d:DesignInstance infrastructure:PropertyInformation}"
+                    Orientation="Horizontal">
+            <TextBlock Style="{DynamicResource MouseWheelText}"
+                       Tag="1"
+                       Text="{Binding Value.Left}" />
+            <TextBlock Style="{DynamicResource MouseWheelText}"
+                       Tag="2"
+                       Text="{Binding Value.Top}" />
+            <TextBlock Style="{DynamicResource MouseWheelText}"
+                       Tag="3"
+                       Text="{Binding Value.Right}" />
+            <TextBlock Style="{DynamicResource MouseWheelText}"
+                       Tag="4"
+                       Text="{Binding Value.Bottom}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="CustomEditBrush"
+                  DataType="{x:Type Brush}">
+        <StackPanel d:DataContext="{d:DesignInstance infrastructure:PropertyInformation}"
+                    Orientation="Horizontal">
+            <TextBlock Style="{DynamicResource MouseWheelText}"
+                       Tag="1"
+                       Text="{Binding Path=Value, Converter={x:Static converters:ArgbToPartsConverter.Default}, ConverterParameter=0}" />
+            <TextBlock Style="{DynamicResource MouseWheelText}"
+                       Tag="2"
+                       Text="{Binding Path=Value, Converter={x:Static converters:ArgbToPartsConverter.Default}, ConverterParameter=1}" />
+            <TextBlock Style="{DynamicResource MouseWheelText}"
+                       Tag="3"
+                       Text="{Binding Path=Value, Converter={x:Static converters:ArgbToPartsConverter.Default}, ConverterParameter=2}" />
+            <TextBlock Style="{DynamicResource MouseWheelText}"
+                       Tag="4"
+                       Text="{Binding Path=Value, Converter={x:Static converters:ArgbToPartsConverter.Default}, ConverterParameter=3}" />
+        </StackPanel>
+    </DataTemplate>
+</ResourceDictionary>

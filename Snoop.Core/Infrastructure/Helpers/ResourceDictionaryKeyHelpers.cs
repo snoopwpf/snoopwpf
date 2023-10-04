@@ -20,7 +20,15 @@ public static class ResourceDictionaryKeyHelpers
             return DependencyProperty.UnsetValue;
         }
 
-        // Walk up the visual tree, looking for the resourceItem in each frameworkElement's resource dictionary.
+        return GetKeyOfResourceItemFromElement(dependencyObject, resourceItem)
+               ?? GetKeyOfResourceItemFromApplicationResources(resourceItem)
+               ?? GetKeyOfResourceItemFromSystemResources(resourceItem)
+               ?? DependencyProperty.UnsetValue;
+    }
+
+    // Walk up the visual tree, looking for the resourceItem in each frameworkElement's resource dictionary.
+    private static object? GetKeyOfResourceItemFromElement(DependencyObject dependencyObject, object resourceItem)
+    {
         while (dependencyObject is Visual or Visual3D)
         {
             if (dependencyObject is FrameworkElement fe)
@@ -48,7 +56,12 @@ public static class ResourceDictionaryKeyHelpers
             dependencyObject = VisualTreeHelper.GetParent(dependencyObject) ?? LogicalTreeHelper.GetParent(dependencyObject);
         }
 
-        // Check application resources
+        return null;
+    }
+
+    // Check application resources
+    private static object? GetKeyOfResourceItemFromApplicationResources(object? resourceItem)
+    {
         if (Application.Current is not null)
         {
             var resourceKey = GetKeyInResourceDictionary(Application.Current.Resources, resourceItem);
@@ -58,7 +71,12 @@ public static class ResourceDictionaryKeyHelpers
             }
         }
 
-        // Check system resources
+        return null;
+    }
+
+    // Check system resources
+    private static object? GetKeyOfResourceItemFromSystemResources(object? resourceItem)
+    {
         foreach (var cacheEntry in SystemResourcesCache.Instance.SystemResources.Reverse())
         {
             {
@@ -79,7 +97,7 @@ public static class ResourceDictionaryKeyHelpers
             // }
         }
 
-        return DependencyProperty.UnsetValue;
+        return null;
     }
 
     public static object? GetKeyInResourceDictionary(ResourceDictionary? dictionary, object? resourceItem)

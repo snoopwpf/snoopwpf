@@ -46,10 +46,10 @@ public abstract class SnoopMainBaseWindow : SnoopBaseWindow
             ElementHost.EnableModelessKeyboardInterop(this);
         }
 
+        this.ShowActivated = TransientSettingsData.Current?.ShowActivated is not false;
         this.Show();
-        this.Activate();
 
-        LogHelper.WriteLine("Shown and activated snoop UI.");
+        LogHelper.WriteLine("Shown snoop UI.");
 
         return this;
     }

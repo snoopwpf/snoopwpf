@@ -89,6 +89,7 @@ public class ProcessInfo
             MultipleAppDomainMode = settings.MultipleAppDomainMode,
             MultipleDispatcherMode = settings.MultipleDispatcherMode,
             SetOwnerWindow = settings.SetOwnerWindow,
+            ShowActivated = settings.ShowActivated,
             EnableDiagnostics = settings.EnableDiagnostics,
             ILSpyPath = settings.ILSpyPath
         };
