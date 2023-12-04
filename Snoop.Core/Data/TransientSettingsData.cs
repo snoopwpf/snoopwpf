@@ -40,6 +40,8 @@ public sealed class TransientSettingsData
 
     public bool EnableDiagnostics { get; set; }
 
+    public bool StartMinimized { get; set; }
+
     public string? SnoopInstallPath { get; set; } = Environment.GetEnvironmentVariable(SettingsHelper.SNOOP_INSTALL_PATH_ENV_VAR);
 
     public string WriteToFile()
