@@ -1,7 +1,6 @@
 ﻿namespace Snoop;
 
 using System;
-using System.Configuration;
 using System.Windows.Input;
 using System.Xml.Serialization;
 using Snoop.Core;
