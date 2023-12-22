@@ -1,5 +1,11 @@
 ﻿# Changelog for Snoop
 
+## 5.2.0
+
+- ### Improvements
+
+  - [#435](../../issues/435) - Add "StartMinimized" Setting + Functionality (thanks @BButner)
+
 ## 5.1.0
 
 - ### Bug fixes
