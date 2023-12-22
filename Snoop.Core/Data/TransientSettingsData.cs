@@ -13,32 +13,23 @@ public sealed class TransientSettingsData
 {
     private static readonly XmlSerializer serializer = new(typeof(TransientSettingsData));
 
-    public TransientSettingsData()
-    {
-        this.MultipleAppDomainMode = MultipleAppDomainMode.Ask;
-        this.MultipleDispatcherMode = MultipleDispatcherMode.Ask;
-        this.SetOwnerWindow = true;
-        this.ILSpyPath = "%path%";
-        this.EnableDiagnostics = true;
-    }
-
     public static TransientSettingsData? Current { get; private set; }
 
     public SnoopStartTarget StartTarget { get; set; } = SnoopStartTarget.SnoopUI;
 
-    public MultipleAppDomainMode MultipleAppDomainMode { get; set; }
+    public MultipleAppDomainMode MultipleAppDomainMode { get; set; } = MultipleAppDomainMode.Ask;
 
-    public MultipleDispatcherMode MultipleDispatcherMode { get; set; }
+    public MultipleDispatcherMode MultipleDispatcherMode { get; set; } = MultipleDispatcherMode.Ask;
 
-    public bool SetOwnerWindow { get; set; }
+    public bool SetOwnerWindow { get; set; } = true;
 
     public bool ShowActivated { get; set; } = true;
 
     public long TargetWindowHandle { get; set; }
 
-    public string? ILSpyPath { get; set; }
+    public string? ILSpyPath { get; set; } = "%path%";
 
-    public bool EnableDiagnostics { get; set; }
+    public bool EnableDiagnostics { get; set; } = true;
 
     public string? SnoopInstallPath { get; set; } = Environment.GetEnvironmentVariable(SettingsHelper.SNOOP_INSTALL_PATH_ENV_VAR);
 
