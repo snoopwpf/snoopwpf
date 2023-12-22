@@ -12,6 +12,7 @@ public sealed class Settings : SettingsBase<Settings>
 {
     private static readonly XmlSerializer serializer = new(typeof(Settings));
 
+    private bool mStartAppChooserMinimized;
     private bool enableDiagnostics = true;
     private KeyGestureEx? globalHotKey = new(Key.F12, ModifierKeys.Control | ModifierKeys.Windows | ModifierKeys.Alt);
     private string? ilSpyPath = "%path%";
@@ -137,6 +138,21 @@ public sealed class Settings : SettingsBase<Settings>
         }
     }
 
+    public bool StartAppChooserMinimized
+    {
+        get => this.mStartAppChooserMinimized;
+        set
+        {
+            if (value == this.mStartAppChooserMinimized)
+            {
+                return;
+            }
+
+            this.mStartAppChooserMinimized = value;
+            this.OnPropertyChanged();
+        }
+    }
+
     protected override void UpdateWith(Settings settings)
     {
         this.SetOwnerWindow = settings.SetOwnerWindow;
@@ -150,5 +166,7 @@ public sealed class Settings : SettingsBase<Settings>
         this.GlobalHotKey = settings.GlobalHotKey;
 
         this.ILSpyPath = settings.ILSpyPath;
+
+        this.StartAppChooserMinimized = settings.StartAppChooserMinimized;
     }
 }

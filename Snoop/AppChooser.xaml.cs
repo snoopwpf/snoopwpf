@@ -55,6 +55,11 @@ public partial class AppChooser
         this.CommandBindings.Add(new CommandBinding(SettingsCommand, this.HandleSettingsCommand));
         this.CommandBindings.Add(new CommandBinding(MinimizeCommand, this.HandleMinimizeCommand));
         this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, this.HandleCloseCommand));
+
+        if (Settings.Default.StartAppChooserMinimized)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
     }
 
     public ICollectionView WindowInfos { get; }
