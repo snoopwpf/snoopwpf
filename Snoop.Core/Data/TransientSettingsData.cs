@@ -39,7 +39,7 @@ public sealed class TransientSettingsData
     public string? ILSpyPath { get; set; }
 
     public bool EnableDiagnostics { get; set; }
-    
+
     public string? SnoopInstallPath { get; set; } = Environment.GetEnvironmentVariable(SettingsHelper.SNOOP_INSTALL_PATH_ENV_VAR);
 
     public string WriteToFile()
