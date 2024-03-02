@@ -969,22 +969,22 @@ public class PropertyInformation : DependencyObject, IComparable, INotifyPropert
     {
         var propertiesToReturn = new List<PropertyDescriptor>();
 
-        object? currentObj = obj;
+        var currentObjType = obj.GetType();
 
         // keep looping until you don't have an AmbiguousMatchException exception
         // and you normally won't have an exception, so the loop will typically executes only once.
-        var noException = false;
-        while (!noException && currentObj is not null)
+        var onlyUseTypeForProperties = false;
+        while (currentObjType is not null)
         {
             try
             {
                 // try to get the properties using the GetProperties method that takes an instance
-                var properties = TypeDescriptor.GetProperties(currentObj, attributes);
-                noException = true;
+                var properties = onlyUseTypeForProperties ? TypeDescriptor.GetProperties(currentObjType, attributes) : TypeDescriptor.GetProperties(obj, attributes);
 
                 MergeProperties(properties, propertiesToReturn);
+                return propertiesToReturn;
             }
-            catch (System.Reflection.AmbiguousMatchException)
+            catch (AmbiguousMatchException)
             {
                 // if we get an AmbiguousMatchException, the user has probably declared a property that hides a property in an ancestor
                 // see issue 6258 (http://snoopwpf.codeplex.com/workitem/6258)
@@ -998,55 +998,16 @@ public class PropertyInformation : DependencyObject, IComparable, INotifyPropert
                 //     }
                 // }
 
-                var t = currentObj.GetType();
-                var properties = TypeDescriptor.GetProperties(t, attributes);
+                onlyUseTypeForProperties = true;
+                var properties = TypeDescriptor.GetProperties(currentObjType, attributes);
 
                 MergeProperties(properties, propertiesToReturn);
 
-                var nextBaseTypeWithDefaultConstructor = GetNextTypeWithDefaultConstructor(t);
-
-                if (nextBaseTypeWithDefaultConstructor is null)
-                {
-                    break;
-                }
-
-                currentObj = Activator.CreateInstance(nextBaseTypeWithDefaultConstructor);
+                currentObjType = currentObjType.BaseType;
             }
         }
 
         return propertiesToReturn;
-    }
-
-    public static bool HasDefaultConstructor(Type? type)
-    {
-        var constructors = type?.GetConstructors();
-
-        if (constructors is null)
-        {
-            return false;
-        }
-
-        foreach (var constructor in constructors)
-        {
-            if (constructor.GetParameters().Length == 0)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public static Type? GetNextTypeWithDefaultConstructor(Type type)
-    {
-        var t = type.BaseType;
-
-        while (!HasDefaultConstructor(t))
-        {
-            t = t?.BaseType;
-        }
-
-        return t;
     }
 
     private static void MergeProperties(IEnumerable newProperties, ICollection<PropertyDescriptor> allProperties)
