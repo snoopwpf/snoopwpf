@@ -2,6 +2,10 @@
 
 ## 5.2.0
 
+- ### Bug fixes
+
+  - [#397](../../issues/397) - Light mode broken
+
 - ### Improvements
 
   - [#435](../../issues/435) - Add "StartMinimized" Setting + Functionality (thanks @BButner)
