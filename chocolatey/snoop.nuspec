@@ -35,20 +35,15 @@
 
     <file src="..\bin\$Configuration$\CommandLine.dll" target="tools\" />
     
-    <file src="..\bin\$Configuration$\net452\Snoop.Core*.config" target="tools\net452\" />
-    <file src="..\bin\$Configuration$\net452\Snoop.Core*.dll" target="tools\net452\" />
-    <file src="..\bin\$Configuration$\net452\Snoop.Core*.pdb" target="tools\net452\" />
-    <file src="..\bin\$Configuration$\net452\System.Management.Automation.dll" target="tools\net452\" />
+    <file src="..\bin\$Configuration$\net462\Snoop.Core*.config" target="tools\net462\" />
+    <file src="..\bin\$Configuration$\net462\Snoop.Core*.dll" target="tools\net462\" />
+    <file src="..\bin\$Configuration$\net462\Snoop.Core*.pdb" target="tools\net462\" />
+    <file src="..\bin\$Configuration$\net462\System.Management.Automation.dll" target="tools\net462\" />
 
-    <file src="..\bin\$Configuration$\netcoreapp3.1\Snoop.Core*.config" target="tools\netcoreapp3.1\" />
-    <file src="..\bin\$Configuration$\netcoreapp3.1\Snoop.Core*.dll" target="tools\netcoreapp3.1\" />
-    <file src="..\bin\$Configuration$\netcoreapp3.1\Snoop.Core*.pdb" target="tools\netcoreapp3.1\" />
-    <file src="..\bin\$Configuration$\netcoreapp3.1\Snoop.Core*.json" target="tools\netcoreapp3.1\" />
-
-    <file src="..\bin\$Configuration$\net5.0-windows\Snoop.Core*.config" target="tools\net5.0-windows\" />
-    <file src="..\bin\$Configuration$\net5.0-windows\Snoop.Core*.dll" target="tools\net5.0-windows\" />
-    <file src="..\bin\$Configuration$\net5.0-windows\Snoop.Core*.pdb" target="tools\net5.0-windows\" />
-    <file src="..\bin\$Configuration$\net5.0-windows\Snoop.Core*.json" target="tools\net5.0-windows\" />
+    <file src="..\bin\$Configuration$\net6.0-windows\Snoop.Core*.config" target="tools\net6.0-windows\" />
+    <file src="..\bin\$Configuration$\net6.0-windows\Snoop.Core*.dll" target="tools\net6.0-windows\" />
+    <file src="..\bin\$Configuration$\net6.0-windows\Snoop.Core*.pdb" target="tools\net6.0-windows\" />
+    <file src="..\bin\$Configuration$\net6.0-windows\Snoop.Core*.json" target="tools\net6.0-windows\" />
 
     <file src="..\bin\$Configuration$\Snoop.GenericInjector.*.dll" target="tools\" />
     <file src="..\bin\$Configuration$\Snoop.GenericInjector.*.pdb" target="tools\" />

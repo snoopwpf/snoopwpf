@@ -940,7 +940,7 @@ public class PropertyInformation : DependencyObject, IComparable, INotifyPropert
                 new(obj, null, "ItemStatus", automationPeer.GetItemStatus(), isCopyable: true),
                 new(obj, null, "ItemType", automationPeer.GetItemType(), isCopyable: true),
                 new(obj, null, "LabeledBy", automationPeer.GetLabeledBy(), isCopyable: true),
-#if !NET452
+#if !NET462
                 new(obj, null, "LiveSetting", automationPeer.GetLiveSetting(), isCopyable: true),
 #endif
                 new(obj, null, "LocalizedControlType", automationPeer.GetLocalizedControlType(), isCopyable: true),

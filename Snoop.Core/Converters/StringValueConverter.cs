@@ -19,8 +19,8 @@ public static class StringValueConverter
         }
 
         var converter = TypeDescriptor.GetConverter(targetType);
-        // ReSharper disable ConditionIsAlwaysTrueOrFalse
-        // ReSharper disable HeuristicUnreachableCode
+
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         if (converter is null)
         {
             return false;
@@ -47,8 +47,8 @@ public static class StringValueConverter
         }
 
         var converter = TypeDescriptor.GetConverter(targetType);
-        // ReSharper disable ConditionIsAlwaysTrueOrFalse
-        // ReSharper disable HeuristicUnreachableCode
+
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         if (converter is null)
         {
             return null;
@@ -104,8 +104,8 @@ public static class StringValueConverter
         }
 
         var converter = TypeDescriptor.GetConverter(sourceType);
-        // ReSharper disable ConditionIsAlwaysTrueOrFalse
-        // ReSharper disable HeuristicUnreachableCode
+
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         if (converter is null)
         {
             return null;
@@ -147,10 +147,10 @@ public static class StringValueConverter
     {
         if (invariant)
         {
-            return converter.ConvertFromInvariantString(value);
+            return converter.ConvertFromInvariantString(value!);
         }
 
-        return converter.ConvertFromString(value);
+        return converter.ConvertFromString(value!);
     }
 
     private static string? GetStringValueFromConverter(object? value, TypeConverter converter, bool invariant)

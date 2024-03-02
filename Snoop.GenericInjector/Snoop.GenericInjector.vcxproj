@@ -128,8 +128,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="FrameworkExecutor.h" />
-    <ClInclude Include="NetCoreApp3_0Executor.h" />
-    <ClInclude Condition="'$(Platform)' != 'ARM' And '$(Platform)' != 'ARM64'" Include="NetFull4_0Executor.h" />
+    <ClInclude Include="NetExecutor.h" />
+    <ClInclude Condition="'$(Platform)' != 'ARM' And '$(Platform)' != 'ARM64'" Include="NetFrameworkExecutor.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="LogHelper.h" />
     <ClInclude Include="pch.h" />
@@ -139,8 +139,8 @@
   <ItemGroup>
     <ClCompile Include="Executor.cpp" />
     <ClCompile Include="LogHelper.cpp" />
-    <ClCompile Include="NetCoreApp3_0Executor.cpp" />
-    <ClCompile Condition="'$(Platform)' != 'ARM' And '$(Platform)' != 'ARM64'" Include="NetFull4_0Executor.cpp" />
+    <ClCompile Include="NetExecutor.cpp" />
+    <ClCompile Condition="'$(Platform)' != 'ARM' And '$(Platform)' != 'ARM64'" Include="NetFrameworkExecutor.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="pch.cpp" />
   </ItemGroup>

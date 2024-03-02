@@ -65,16 +65,14 @@ internal static class ShellConstants
     {
         get
         {
-#if NETCOREAPP3_0
-            return false;
-#elif NETCOREAPP3_1 || NET5_0_OR_GREATER
+#if NET6_0_OR_GREATER
                 if (TryGetPowerShellCoreInstallPath(out _))
                 {
                     return true;
                 }
 
                 return false;
-#elif NET452
+#elif NET462
                 var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\PowerShell\3\PowerShellEngine");
                 if (key is not null)
                 {
@@ -93,12 +91,10 @@ internal static class ShellConstants
         }
     }
 
-#if NETCOREAPP3_1 || NET5_0_OR_GREATER
+#if NET6_0_OR_GREATER
         public static bool TryGetPowerShellCoreInstallPath([NotNullWhen(true)] out string? path)
         {
-#if NETCOREAPP3_1
-            var powerShellVersion = new Version(6, 0);
-#elif NET5_0_OR_GREATER
+#if NET6_0_OR_GREATER
             var powerShellVersion = new Version(7, 0);
 #endif
             return TryGetPowerShellCoreInstallPath(powerShellVersion, out path);

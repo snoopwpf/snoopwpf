@@ -112,15 +112,14 @@ public class ProcessWrapper
 
         if (relevantVersionInfo is null)
         {
-            return "net452";
+            return "net462";
         }
 
         var productVersion = TryParseVersion(relevantVersionInfo.ProductVersion ?? string.Empty);
         return productVersion.Major switch
         {
-            >= 5 => "net5.0-windows",
-            4 => "net452",
-            3 when productVersion.Minor >= 1 => "netcoreapp3.1",
+            >= 6 => "net6.0-windows",
+            4 => "net462",
             _ => throw new NotSupportedException($".NET version {relevantVersionInfo.ProductVersion} is not supported.")
         };
     }

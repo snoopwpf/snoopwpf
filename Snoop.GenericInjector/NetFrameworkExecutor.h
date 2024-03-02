@@ -1,17 +1,19 @@
 #pragma once
 
 #include "pch.h"
-#include "mscoree.h"
+
+#include <metahost.h>
 
 #include "FrameworkExecutor.h"
 
-class NetCoreApp3_0Executor final : public FrameworkExecutor
+class NetFrameworkExecutor final : public FrameworkExecutor
 {
 public:
-	NetCoreApp3_0Executor() : FrameworkExecutor(L"NetCoreApp3_0Executor")
+	NetFrameworkExecutor() : FrameworkExecutor(L"NetFull4_0Executor")
 	{}
 	
 	int Execute(LPCWSTR pwzAssemblyPath, LPCWSTR pwzTypeName, LPCWSTR pwzMethodName, LPCWSTR pwzArgument, DWORD* pReturnValue) override;
+
 private:
-	ICLRRuntimeHost* GetNETCoreCLRRuntimeHost();
+	ICLRRuntimeHost* GetNETFullCLRRuntimeHost();
 };

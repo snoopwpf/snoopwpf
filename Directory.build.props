@@ -9,7 +9,7 @@
     See: https://docs.microsoft.com/en-us/dotnet/standard/assembly/reference-assemblies
     -->
     <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
-    <MinTargetFramework>net452</MinTargetFramework>
+    <MinTargetFramework>net462</MinTargetFramework>
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
     <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
   </PropertyGroup>

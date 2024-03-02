@@ -1,11 +1,11 @@
 #include "pch.h"
-#include "NetFull4_0Executor.h"
+#include "NetFrameworkExecutor.h"
 
 #include <metahost.h>
 #include "mscoree.h"
 #pragma comment(lib, "mscoree.lib")
 
-ICLRRuntimeHost* NetFull4_0Executor::GetNETFullCLRRuntimeHost()
+ICLRRuntimeHost* NetFrameworkExecutor::GetNETFullCLRRuntimeHost()
 {
 	ICLRMetaHost* metaHost = nullptr;
 	ICLRRuntimeInfo* runtimeInfo = nullptr;
@@ -40,7 +40,6 @@ ICLRRuntimeHost* NetFull4_0Executor::GetNETFullCLRRuntimeHost()
 		{
 			this->Log(L"Could not get runtime info.");
 		}
-		
 
 		runtimeInfo->Release();
 		metaHost->Release();
@@ -53,7 +52,7 @@ ICLRRuntimeHost* NetFull4_0Executor::GetNETFullCLRRuntimeHost()
 	return runtimeHost;
 }
 
-int NetFull4_0Executor::Execute(LPCWSTR pwzAssemblyPath, LPCWSTR pwzTypeName, LPCWSTR pwzMethodName, LPCWSTR pwzArgument, DWORD* pReturnValue)
+int NetFrameworkExecutor::Execute(LPCWSTR pwzAssemblyPath, LPCWSTR pwzTypeName, LPCWSTR pwzMethodName, LPCWSTR pwzArgument, DWORD* pReturnValue)
 {
 	auto host = GetNETFullCLRRuntimeHost();
 

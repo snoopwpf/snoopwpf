@@ -52,7 +52,7 @@ public sealed class SystemResourcesTreeItem : TreeItem
         }
     }
 
-#if NET5_0_OR_GREATER && NEVER
+#if NET6_0_OR_GREATER && NEVER
     private IEnumerable<SystemResourceTreeItem> GetSystemResourceDictionaries()
     {
         var dictionaryInfos = System.Windows.Diagnostics.ResourceDictionaryDiagnostics.GenericResourceDictionaries

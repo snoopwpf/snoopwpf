@@ -104,7 +104,7 @@ public partial class EmbeddedShellView
             this.runspace = RunspaceFactory.CreateRunspace(this.host, iis);
             this.runspace.ThreadOptions = PSThreadOptions.UseCurrentThread;
 
-#if NET452
+#if NET462
                 this.runspace.ApartmentState = System.Threading.ApartmentState.STA;
 #endif
 

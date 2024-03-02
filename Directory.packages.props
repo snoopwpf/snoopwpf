@@ -5,27 +5,26 @@
 
     <ItemGroup Label="PowerShell">
         <PackageVersion Include="microsoft.powershell.3.referenceassemblies" Version="1.0.0" Condition="'$(TargetFramework)' == '$(MinTargetFramework)'" />
-        <PackageVersion Include="System.Management.Automation" Version="7.0.0" Condition="'$(TargetFramework)' == 'netcoreapp3.1'" />
-        <PackageVersion Include="System.Management.Automation" Version="7.1.0" Condition="'$(TargetFramework)' == 'net5.0-windows'" />
+        <PackageVersion Include="System.Management.Automation" Version="7.2.0" Condition="'$(TargetFramework)' == 'net6.0-windows'" />
     </ItemGroup>
 
     <ItemGroup Label="Test">
-      <PackageVersion Include="NUnit" Version="3.13.3" />
+      <PackageVersion Include="NUnit" Version="4.1.0" />
       <PackageVersion Include="NUnit3TestAdapter" Version="4.5.0" />
 
-      <PackageVersion Include="Verify.NUnit" Version="17.10.2" />
+      <PackageVersion Include="Verify.NUnit" Version="23.2.2" />
 
-      <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
+      <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
     </ItemGroup>
 
     <ItemGroup Label="Build">
-        <PackageVersion Include="Microsoft.NETFramework.ReferenceAssemblies.net452" Version="1.0.3" />
-        <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.1.1" />
+        <PackageVersion Include="Microsoft.NETFramework.ReferenceAssemblies.net462" Version="1.0.3" />
+        <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
 
-        <PackageVersion Include="JetBrains.Annotations" Version="2023.2.0" />
+        <PackageVersion Include="JetBrains.Annotations" Version="2023.3.0" />
         
-        <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" version="4.7.0" />
-        <PackageVersion Include="StyleCop.Analyzers" version="1.2.0-beta.507" />
+        <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" version="4.9.2" />
+        <PackageVersion Include="StyleCop.Analyzers" version="1.2.0-beta.556" />
 
         <PackageVersion Include="WpfAnalyzers" version="4.1.1" />
         <PackageVersion Include="PropertyChangedAnalyzers" Version="4.0.0" />
