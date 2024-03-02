@@ -178,7 +178,7 @@ class Build : NukeBuild
                 .SetAssemblyVersion(AssemblySemVer)
                 .SetFileVersion(AssemblySemVer)
                 .SetInformationalVersion(InformationalVersion)
-                .SetVerbosity(DotNetVerbosity.Minimal));
+                .SetVerbosity(DotNetVerbosity.minimal));
         });
 
     [PublicAPI]
@@ -192,7 +192,7 @@ class Build : NukeBuild
                 .SetAssemblyVersion(AssemblySemVer)
                 .SetInformationalVersion(InformationalVersion)
                 .EnableNoRestore()
-                .SetVerbosity(DotNetVerbosity.Minimal));
+                .SetVerbosity(DotNetVerbosity.minimal));
 
             MSBuild(s => s
                 .SetProjectFile(TestHarnessSolution.Win32ToWPFInterop.win32clock)
@@ -221,7 +221,7 @@ class Build : NukeBuild
             DotNetTest(s => s
                 .SetProjectFile(Solution.Snoop_Core_Tests)
                 .SetConfiguration(Configuration)
-                .SetVerbosity(DotNetVerbosity.Normal)
+                .SetVerbosity(DotNetVerbosity.normal)
                 .AddLoggers("trx")
                 .EnableNoBuild()
                 .SetResultsDirectory(TestResultDirectory));
