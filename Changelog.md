@@ -10,6 +10,8 @@
 - ### Bug fixes
 
   - [#397](../../issues/397) - Light mode broken
+  - Color values are now displayed with the width as brushes
+  - Instances of classes are no longer created during property discovery
 
 - ### Improvements
 
