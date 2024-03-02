@@ -307,7 +307,7 @@ public class PropertyInformation : DependencyObject, IComparable, INotifyPropert
                         {
                             var resourceKey = ResourceKeyCache.Instance.GetOrAddKey(dependencyObject, value);
 
-                            return resourceKey;
+                            return resourceKey == DependencyProperty.UnsetValue ? null : resourceKey;
                         }
                     }
 
