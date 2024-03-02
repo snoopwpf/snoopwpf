@@ -327,7 +327,7 @@
                 <Grid Height="Auto"
                       HorizontalAlignment="Left">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="48" />
+                        <ColumnDefinition Width="24" />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
@@ -348,7 +348,7 @@
             </DataTemplate>
 
             <DataTemplate x:Key="SelectedValueTemplate"
-                          DataType="valueEditors:BrushValueEditor">
+                          DataType="valueEditors:ColorValueEditor">
                 <Grid Height="Auto"
                       HorizontalAlignment="Left">
                     <Grid.ColumnDefinitions>
