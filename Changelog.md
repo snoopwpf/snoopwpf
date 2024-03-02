@@ -14,6 +14,7 @@
 - ### Improvements
 
   - [#435](../../issues/435) - Add "StartMinimized" Setting + Functionality (thanks @BButner)
+  - [#436](../../issues/436) - [Feature request] show current version
 
 ## 5.1.0
 

@@ -1,6 +1,7 @@
 ﻿namespace Snoop;
 
 using System;
+using System.Runtime.Serialization;
 using System.Windows.Input;
 using System.Xml.Serialization;
 using Snoop.Core;
@@ -29,6 +30,9 @@ public sealed class Settings : SettingsBase<Settings>
     public static Settings Default { get; } = new Settings().Load();
 
     protected override XmlSerializer Serializer => serializer;
+
+    [IgnoreDataMember]
+    public string Version { get; } = typeof(Settings).Assembly.GetName().Version.ToString();
 
     public WINDOWPLACEMENT? AppChooserWindowPlacement { get; set; }
 

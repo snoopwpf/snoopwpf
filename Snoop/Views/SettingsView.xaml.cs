@@ -11,6 +11,7 @@ public partial class SettingsView
 {
     private static readonly HashSet<string> realSettingsProperties = new()
     {
+        nameof(Settings.Default.Version),
         nameof(Settings.Default.MultipleAppDomainMode),
         nameof(Settings.Default.MultipleDispatcherMode),
         nameof(Settings.Default.SetOwnerWindow),
