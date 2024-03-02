@@ -20,15 +20,6 @@ jobs:
       - name: Download .NET install
         shell: pwsh
         run: Invoke-WebRequest 'https://dot.net/v1/dotnet-install.ps1' -OutFile 'dotnet-install.ps1'
-      - name: Install .NET 3.1 SDK
-        shell: pwsh
-        run: ./dotnet-install.ps1 -Version 3.1.426 -InstallDir "C:\Program Files\dotnet"
-      - name: Install .NET 5 SDK
-        shell: pwsh
-        run: ./dotnet-install.ps1 -Version 5.0.408 -InstallDir "C:\Program Files\dotnet"
-      - name: Install .NET 6 SDK
-        shell: pwsh
-        run: ./dotnet-install.ps1 -Version 6.0.400 -InstallDir "C:\Program Files\dotnet"
       - name: Install .NET 8 SDK
         shell: pwsh
         run: ./dotnet-install.ps1 -Version 8.0.100 -InstallDir "C:\Program Files\dotnet"
