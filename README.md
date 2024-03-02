@@ -26,7 +26,7 @@ You can change property values, view triggers, set breakpoints on property chang
 
 - .NET Framework >= 4.5.2
 - .NET >= 3.1
-  - Tested with 3.1, 5, 6 and 7. Future versions might just work.
+  - Tested with 3.1, 5, 6, 7 and 8. Future versions might just work.
   - **Restrictions:** Self-Contained single file applications are not supported as there is no reliable way to get a handle to the .NET runtime
 
 ## Versions
@@ -144,7 +144,7 @@ Requirements:
 - Visual Studio 2022
   - C++ payloads (x86/x64 and optionally ARM/ARM64)
   - You can import the [.vsconfig](.vsconfig) file in the Visual Studio installer to let it install all required components
-- .NET Core SDK 6.0.300 or later
+- .NET SDK 8.0.100 or later
 
 ## Contributors
 
