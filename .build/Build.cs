@@ -124,6 +124,9 @@ class Build : NukeBuild
         {
             DotNetToolRestore();
 
+            ProcessTasks.StartProcess("dotnet", "wix extension add WixToolset.UI.wixext")
+                .AssertZeroExitCode();
+
             DotNetRestore(s => s
                 .SetProjectFile(Solution));
 
@@ -272,23 +275,11 @@ class Build : NukeBuild
         .Produces(ArtifactsDirectory / "*.msi")
         .Executes(() =>
         {
-            var tempDirectory = TemporaryDirectory / $"{ProjectName}{nameof(Setup)}";
-
-            tempDirectory.CreateOrCleanDirectory();
-
-            var candleProcess = ProcessTasks.StartProcess(CandleExecutable,
-                $"{ProjectName}.wxs -ext WixUIExtension -o \"{tempDirectory / $"{ProjectName}.wixobj"}\" -dProductVersion=\"{MajorMinorPatch}\" -nologo");
-            candleProcess.AssertZeroExitCode();
-
-            {
-                var outputFile = $"{ArtifactsDirectory / $"{ProjectName}.{NuGetVersion}.msi"}";
-                var lightProcess = ProcessTasks.StartProcess(LightExecutable,
-                    $"-out \"{outputFile}\" -b \"{CurrentBuildOutputDirectory}\" \"{tempDirectory / $"{ProjectName}.wixobj"}\" -ext WixUIExtension -dProductVersion=\"{MajorMinorPatch}\" -pdbout \"{tempDirectory / $"{ProjectName}.wixpdb"}\" -nologo -sice:ICE61");
-                lightProcess.AssertZeroExitCode();
-
-                CheckSumFiles.Add(outputFile);
-                AppVeyor.Instance?.PushArtifact(outputFile);
-            }
+            var outputFile = $"{ArtifactsDirectory / $"{ProjectName}.{NuGetVersion}.msi"}";
+            ProcessTasks.StartProcess("dotnet", $"wix build -bindpath \"{CurrentBuildOutputDirectory}\" -define ProductVersion=\"{MajorMinorPatch}\" -ext WixToolset.UI.wixext -o \"{outputFile}\" -nologo {ProjectName}.wxs")
+                .AssertZeroExitCode();
+            CheckSumFiles.Add(outputFile);
+            AppVeyor.Instance?.PushArtifact(outputFile);
         });
 
     [PublicAPI]

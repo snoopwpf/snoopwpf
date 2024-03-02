@@ -14,6 +14,5 @@
     <PackageReference Include="Nuke.Common" Version="8.0.0" />
     <PackageDownload Include="GitVersion.Tool" Version="[5.12.0]" />
     <PackageDownload Include="Nuget.CommandLine" Version="[6.9.1]" />
-    <PackageDownload Include="wix" Version="[3.14.0]" />
   </ItemGroup>
 </Project>

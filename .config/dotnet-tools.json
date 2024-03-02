@@ -7,6 +7,12 @@
       "commands": [
         "xstyler"
       ]
+    },
+    "wix": {
+      "version": "4.0.4",
+      "commands": [
+        "wix"
+      ]
     }
   }
 }
