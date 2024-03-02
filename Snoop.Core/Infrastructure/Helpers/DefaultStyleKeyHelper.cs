@@ -75,6 +75,7 @@ public class DefaultStyleKeyFixer : DependencyObject
 
             if (fe.Style is not null
                 && DependencyPropertyHelper.GetValueSource(fe, FrameworkElement.StyleProperty).BaseValueSource is BaseValueSource.ImplicitStyleReference
+                && Application.Current?.TryFindResource(defaultStyleKey) == fe.Style
                 && fe.TryFindResource(defaultStyleKey) is Style feStyle)
             {
                 fe.Style = feStyle;
@@ -86,6 +87,7 @@ public class DefaultStyleKeyFixer : DependencyObject
 
             if (fce.Style is not null
                 && DependencyPropertyHelper.GetValueSource(fce, FrameworkContentElement.StyleProperty).BaseValueSource is BaseValueSource.ImplicitStyleReference
+                && Application.Current?.TryFindResource(defaultStyleKey) == fce.Style
                 && fce.TryFindResource(defaultStyleKey) is Style fceStyle)
             {
                 fce.Style = fceStyle;
