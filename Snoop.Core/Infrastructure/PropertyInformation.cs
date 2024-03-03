@@ -42,7 +42,6 @@ public class PropertyInformation : DependencyObject, IComparable, INotifyPropert
     private bool isLocallySet;
 
     private bool isInvalidBinding;
-    private int index;
 
     private bool isDatabound;
 
@@ -523,20 +522,6 @@ public class PropertyInformation : DependencyObject, IComparable, INotifyPropert
     public bool IsExpression => this.ValueSource.IsExpression || this.Binding is not null;
 
     public bool IsAnimated => this.ValueSource.IsAnimated;
-
-    public int Index
-    {
-        get => this.index;
-
-        set
-        {
-            if (this.index != value)
-            {
-                this.index = value;
-                this.OnPropertyChanged(nameof(this.Index));
-            }
-        }
-    }
 
     public BindingBase? Binding
     {
