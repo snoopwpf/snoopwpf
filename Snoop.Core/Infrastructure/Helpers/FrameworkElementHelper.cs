@@ -16,8 +16,7 @@ public static class FrameworkElementHelper
             return fe.Style;
         }
 
-        var defaultStyleKey = DefaultStyleKeyHelper.GetDefaultStyleKey(fe) ?? fe.GetType();
-        return fe.TryFindResource(defaultStyleKey) as Style;
+        return GetThemeStyle(fe);
     }
 
     public static Style? GetStyle(FrameworkContentElement fce)
@@ -27,8 +26,7 @@ public static class FrameworkElementHelper
             return fce.Style;
         }
 
-        var defaultStyleKey = DefaultStyleKeyHelper.GetDefaultStyleKey(fce) ?? fce.GetType();
-        return fce.TryFindResource(defaultStyleKey) as Style;
+        return GetThemeStyle(fce);
     }
 
     public static FrameworkTemplate? GetTemplate(FrameworkElement fe)

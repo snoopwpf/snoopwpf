@@ -18,6 +18,7 @@
   - [#435](../../issues/435) - Add "StartMinimized" Setting + Functionality (thanks @BButner)
   - [#436](../../issues/436) - [Feature request] show current version
   - Improved performance for attached properties
+  - Improved performance of style retrieval
 
 ## 5.1.0
 
