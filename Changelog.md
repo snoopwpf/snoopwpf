@@ -1,4 +1,4 @@
-﻿# Changelog for Snoop
+# Changelog for Snoop
 
 ## 6.0.0
 
@@ -17,6 +17,7 @@
 
   - [#435](../../issues/435) - Add "StartMinimized" Setting + Functionality (thanks @BButner)
   - [#436](../../issues/436) - [Feature request] show current version
+  - Improved performance for attached properties
 
 ## 5.1.0
 

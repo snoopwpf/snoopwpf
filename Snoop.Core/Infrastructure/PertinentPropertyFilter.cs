@@ -20,6 +20,11 @@ public static class PertinentPropertyFilter
             return true;
         }
 
+        if (DependencyPropertyDescriptor.FromProperty(property) is not { IsAttached: true })
+        {
+            return true;
+        }
+
         var attachedPropertyForChildren = (AttachedPropertyBrowsableForChildrenAttribute?)property.Attributes[typeof(AttachedPropertyBrowsableForChildrenAttribute)];
 
         if (attachedPropertyForChildren is not null)
