@@ -1,4 +1,4 @@
-# Changelog for Snoop
+﻿# Changelog for Snoop
 
 ## 6.0.0
 
@@ -19,6 +19,7 @@
   - [#436](../../issues/436) - [Feature request] show current version
   - Improved performance for attached properties
   - Improved performance of style retrieval
+  - Improved performance of resource key retrieval
 
 ## 5.1.0
 
