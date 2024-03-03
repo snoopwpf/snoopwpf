@@ -109,6 +109,7 @@ public class PropertyInformation : DependencyObject, IComparable, INotifyPropert
         this.Update();
 
         this.isRunning = true;
+        return;
 
         BindingMode GetBindingMode()
         {
