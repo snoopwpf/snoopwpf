@@ -126,6 +126,11 @@ public class PropertyFilter
                 return true;
             }
 
+            if (property.Value?.GetType().Name is { } valueTypeName && this.filterRegex.IsMatch(valueTypeName))
+            {
+                return true;
+            }
+
             return false;
         }
 
@@ -139,6 +144,11 @@ public class PropertyFilter
 
             if (property.Property is not null
                 && property.Property.PropertyType.Name.ContainsIgnoreCase(this.FilterString))
+            {
+                return true;
+            }
+
+            if (property.Value?.GetType().Name is { } valueTypeName && valueTypeName.ContainsIgnoreCase(valueTypeName))
             {
                 return true;
             }
