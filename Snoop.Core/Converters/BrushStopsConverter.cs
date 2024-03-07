@@ -22,6 +22,9 @@ public class BrushStop
     public string ColorText { get; }
 }
 
+[ValueConversion(typeof(SolidColorBrush), typeof(List<BrushStop>))]
+[ValueConversion(typeof(GradientBrush), typeof(List<BrushStop>))]
+[ValueConversion(typeof(Brush), typeof(Brush[]))]
 public class BrushStopsConverter : IValueConverter
 {
     public static readonly BrushStopsConverter DefaultInstance = new();
@@ -29,7 +32,12 @@ public class BrushStopsConverter : IValueConverter
     /// <inheritdoc />
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        return BuildStops((Brush)value);
+        if (value is SolidColorBrush or GradientBrush)
+        {
+            return BuildStops((Brush)value);
+        }
+
+        return new[] { value };
     }
 
     /// <inheritdoc />

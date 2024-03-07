@@ -181,38 +181,10 @@
                 <DockPanel LastChildFill="True">
                     <DockPanel.ToolTip>
                         <ToolTip>
-                            <ListBox Width="200"
-                                     Height="200"
-                                     ItemsSource="{Binding Value, Converter={x:Static converters:BrushStopsConverter.DefaultInstance}}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate DataType="converters:BrushStop">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="40" />
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Grid.Column="0"
-                                                       Margin="4"
-                                                       Foreground="{DynamicResource Snoop.Brushes.Default.Foreground}"
-                                                       Text="{Binding Offset}" />
-                                            <TextBlock Grid.Column="1"
-                                                       Margin="4"
-                                                       Foreground="{DynamicResource Snoop.Brushes.Default.Foreground}"
-                                                       Text="{Binding ColorText}" />
-                                            <Border Grid.Column="2"
-                                                    HorizontalAlignment="Stretch"
-                                                    VerticalAlignment="Stretch"
-                                                    BorderBrush="{DynamicResource Snoop.Brushes.Default.ControlDark}"
-                                                    BorderThickness="1">
-                                                <Border.Background>
-                                                    <SolidColorBrush Color="{Binding Color}" />
-                                                </Border.Background>
-                                            </Border>
-                                        </Grid>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ListBox>
+                            <ItemsControl Width="200"
+                                          Height="200"
+                                          ItemsSource="{Binding Value, Converter={x:Static converters:BrushStopsConverter.DefaultInstance}}"
+                                          ItemTemplateSelector="{Binding Source={x:Static valueEditors:BrushValueEditorToolTipItemTemplateSelector.Instance}}" />
                         </ToolTip>
                     </DockPanel.ToolTip>
 
@@ -241,38 +213,10 @@
                       HorizontalAlignment="Left">
                     <Grid.ToolTip>
                         <ToolTip>
-                            <ListBox Width="200"
-                                     Height="200"
-                                     ItemsSource="{Binding Value, Converter={x:Static converters:BrushStopsConverter.DefaultInstance}}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate DataType="converters:BrushStop">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="40" />
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Grid.Column="0"
-                                                       Margin="4"
-                                                       Foreground="{DynamicResource Snoop.Brushes.Default.Foreground}"
-                                                       Text="{Binding Offset}" />
-                                            <TextBlock Grid.Column="1"
-                                                       Margin="4"
-                                                       Foreground="{DynamicResource Snoop.Brushes.Default.Foreground}"
-                                                       Text="{Binding ColorText}" />
-                                            <Border Grid.Column="2"
-                                                    HorizontalAlignment="Stretch"
-                                                    VerticalAlignment="Stretch"
-                                                    BorderBrush="{DynamicResource Snoop.Brushes.Default.ControlDark}"
-                                                    BorderThickness="1">
-                                                <Border.Background>
-                                                    <SolidColorBrush Color="{Binding Color}" />
-                                                </Border.Background>
-                                            </Border>
-                                        </Grid>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ListBox>
+                            <ItemsControl Width="200"
+                                          Height="200"
+                                          ItemsSource="{Binding Value, Converter={x:Static converters:BrushStopsConverter.DefaultInstance}}"
+                                          ItemTemplateSelector="{Binding Source={x:Static valueEditors:BrushValueEditorToolTipItemTemplateSelector.Instance}}" />
                         </ToolTip>
                     </Grid.ToolTip>
 
@@ -553,4 +497,43 @@
             </DataTemplate>
         </valueEditors:ValueEditorTemplateSelector.WithResourceKeyTemplate>
     </valueEditors:ValueEditorTemplateSelector>
+
+    <DataTemplate x:Key="Snoop.DataTemplates.ToolTip.BrushStop"
+                  DataType="converters:BrushStop">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0"
+                       Margin="4"
+                       Foreground="{DynamicResource Snoop.Brushes.Default.Foreground}"
+                       Text="{Binding Offset}" />
+            <TextBlock Grid.Column="1"
+                       Margin="4"
+                       Foreground="{DynamicResource Snoop.Brushes.Default.Foreground}"
+                       Text="{Binding ColorText}" />
+            <Border Grid.Column="2"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    BorderBrush="{DynamicResource Snoop.Brushes.Default.ControlDark}"
+                    BorderThickness="1">
+                <Border.Background>
+                    <SolidColorBrush Color="{Binding Color}" />
+                </Border.Background>
+            </Border>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="Snoop.DataTemplates.ToolTip.Brush"
+                  DataType="{x:Type Brush}">
+        <Border HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                BorderBrush="{DynamicResource Snoop.Brushes.Default.ControlDark}"
+                BorderThickness="1"
+                Background="{Binding}" />
+    </DataTemplate>
 </ResourceDictionary>
