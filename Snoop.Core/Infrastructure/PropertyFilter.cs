@@ -10,6 +10,7 @@ namespace Snoop.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,7 +21,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Navigation;
 
-public class PropertyFilter
+public class PropertyFilter : INotifyPropertyChanged
 {
     private static readonly List<Type> uncommonTypes = new()
     {
@@ -60,9 +61,12 @@ public class PropertyFilter
         "Binding.XmlNamespaceManager"
     };
 
-    private Regex? filterRegex;
-    private string? filterString;
-    private bool hasFilterString;
+    private MatcherBase? matcher;
+    private string filterString = string.Empty;
+    private bool useRegex;
+    private string? error;
+
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public PropertyFilter(string filterString, bool showDefaults)
     {
@@ -70,28 +74,26 @@ public class PropertyFilter
         this.ShowDefaults = showDefaults;
     }
 
-    public string? FilterString
+    public string FilterString
     {
         get => this.filterString;
         set
         {
-            this.filterString = value;
-            this.hasFilterString = string.IsNullOrEmpty(this.filterString) == false;
+            // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
+            this.filterString = value ?? string.Empty;
 
-            if (this.hasFilterString == false)
-            {
-                this.filterRegex = null;
-                return;
-            }
+            this.UpdateMatcher();
+        }
+    }
 
-            try
-            {
-                this.filterRegex = new Regex(this.FilterString!, RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
-            }
-            catch
-            {
-                this.filterRegex = null;
-            }
+    public bool UseRegex
+    {
+        get => this.useRegex;
+        set
+        {
+            this.useRegex = value;
+
+            this.UpdateMatcher();
         }
     }
 
@@ -101,7 +103,18 @@ public class PropertyFilter
 
     public PropertyFilterSet? SelectedFilterSet { get; set; }
 
-    public bool IsPropertyFilterSet => this.SelectedFilterSet?.Properties is not null;
+    public bool HasError => string.IsNullOrEmpty(this.Error) is false;
+
+    public string? Error
+    {
+        get => this.error;
+        set
+        {
+            this.error = value;
+            this.OnPropertyChanged();
+            this.OnPropertyChanged(nameof(this.HasError));
+        }
+    }
 
     public bool ShouldShow(PropertyInformation property)
     {
@@ -111,50 +124,15 @@ public class PropertyFilter
             return false;
         }
 
-        // use a regular expression if we have one and we also have a filter string.
-        if (this.hasFilterString
-            && this.filterRegex is not null)
+        if (this.matcher is not null)
         {
-            if (this.filterRegex.IsMatch(property.DisplayName))
-            {
-                return true;
-            }
-
-            if (property.Property is not null
-                && this.filterRegex.IsMatch(property.Property.PropertyType.Name))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        // else just check for containment if we don't have a regular expression but we do have a filter string.
-        if (this.hasFilterString)
-        {
-            if (property.DisplayName.ContainsIgnoreCase(this.FilterString))
-            {
-                return true;
-            }
-
-            if (property.Property is not null
-                && property.Property.PropertyType.Name.ContainsIgnoreCase(this.FilterString))
-            {
-                return true;
-            }
-
-            return false;
+            return this.matcher.Matches(property);
         }
 
         // else use the filter set if we have one of those.
-        if (this.IsPropertyFilterSet)
+        if (this.SelectedFilterSet?.Properties is not null)
         {
-            if (this.SelectedFilterSet!.IsPropertyInFilter(property))
-            {
-                return true;
-            }
-
-            return false;
+            return this.SelectedFilterSet!.IsPropertyInFilter(property);
         }
 
         // finally, if none of the above applies
@@ -166,6 +144,33 @@ public class PropertyFilter
         }
 
         return true;
+    }
+
+    private void UpdateMatcher()
+    {
+        this.Error = null;
+
+        if (string.IsNullOrEmpty(this.FilterString))
+        {
+            this.matcher = null;
+            return;
+        }
+
+        if (this.UseRegex)
+        {
+            try
+            {
+                this.matcher = new RegexMatcher(this.FilterString);
+            }
+            catch (Exception e)
+            {
+                this.Error = e.Message;
+            }
+        }
+        else
+        {
+            this.matcher = new StringContainsMatcher(this.FilterString);
+        }
     }
 
     private bool ShouldShowDefaultValueFilter(PropertyInformation property)
@@ -188,6 +193,11 @@ public class PropertyFilter
         }
 
         return false;
+    }
+
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
     private static bool IsUncommonProperty(PropertyInformation property)
@@ -228,5 +238,67 @@ public class PropertyFilter
         }
 
         return uncommonTypes.Contains(property.DependencyProperty.OwnerType);
+    }
+
+    private abstract class MatcherBase
+    {
+        protected MatcherBase(string filter)
+        {
+            this.Filter = filter;
+        }
+
+        public string Filter { get; }
+
+        public bool Matches(PropertyInformation propertyInformation)
+        {
+            if (this.Matches(propertyInformation.DisplayName))
+            {
+                return true;
+            }
+
+            if (propertyInformation.Property is not null
+                && this.Matches(propertyInformation.Property.PropertyType.Name))
+            {
+                return true;
+            }
+
+            if (this.Matches(propertyInformation.DescriptiveValue))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        protected abstract bool Matches(string value);
+    }
+
+    private class StringContainsMatcher : MatcherBase
+    {
+        public StringContainsMatcher(string filter)
+            : base(filter)
+        {
+        }
+
+        protected override bool Matches(string value)
+        {
+            return value.ContainsIgnoreCase(this.Filter);
+        }
+    }
+
+    private class RegexMatcher : MatcherBase
+    {
+        private readonly Regex regex;
+
+        public RegexMatcher(string filter)
+            : base(filter)
+        {
+            this.regex = new Regex(filter, RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
+        }
+
+        protected override bool Matches(string value)
+        {
+            return this.regex.IsMatch(value);
+        }
     }
 }

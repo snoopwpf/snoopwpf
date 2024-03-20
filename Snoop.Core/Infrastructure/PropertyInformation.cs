@@ -331,7 +331,8 @@ public class PropertyInformation : DependencyObject, IComparable, INotifyPropert
 
             var stringValue = value.ToString() ?? string.Empty;
 
-            var stringValueIsTypeToString = stringValue.Equals(value.GetType().ToString(), StringComparison.Ordinal);
+            var valueType = value.GetType();
+            var stringValueIsTypeToString = stringValue.Equals(valueType.ToString(), StringComparison.Ordinal);
 
             // Add brackets around types to distinguish them from values.
             // Replace long type names with short type names for some specific types, for easier readability.
@@ -346,13 +347,13 @@ public class PropertyInformation : DependencyObject, IComparable, INotifyPropert
                     case StaticResourceExtension staticResourceExtension:
                         return $"[StaticResource] {staticResourceExtension.ResourceKey}";
 
-                    case ResourceDictionary { Source: { } } rd:
+                    case ResourceDictionary { Source: not null } rd:
                         return $"[ResourceDictionary] {rd.Source}";
                 }
 
                 // Try to use a short type name
-                stringValue = ShouldWeDisplayShortTypeName(value.GetType())
-                    ? $"[{value.GetType().Name}]"
+                stringValue = ShouldWeDisplayShortTypeName(valueType)
+                    ? $"[{valueType.Name}]"
                     : $"[{stringValue}]";
             }
 

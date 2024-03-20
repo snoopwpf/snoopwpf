@@ -17,6 +17,9 @@
 
   - [#435](../../issues/435) - Add "StartMinimized" Setting + Functionality (thanks @BButner)
   - [#436](../../issues/436) - [Feature request] show current version
+  - Improved property filter
+    - Property values are now used when filtering
+    - Regex is now explicit instead of implicit
   - Improved performance for attached properties
   - Improved performance of style retrieval
   - Improved performance of resource key retrieval

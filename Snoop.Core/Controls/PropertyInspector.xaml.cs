@@ -533,7 +533,7 @@ public partial class PropertyInspector : INotifyPropertyChanged
 
     private readonly PropertyFilter propertyFilter = new(string.Empty, true);
 
-    public string? StringFilter
+    public string FilterString
     {
         get { return this.propertyFilter.FilterString; }
 
@@ -543,7 +543,21 @@ public partial class PropertyInspector : INotifyPropertyChanged
 
             this.inspector.Filter = this.propertyFilter;
 
-            this.OnPropertyChanged(nameof(this.StringFilter));
+            this.OnPropertyChanged(nameof(this.FilterString));
+        }
+    }
+
+    public bool UseRegex
+    {
+        get { return this.propertyFilter.UseRegex; }
+
+        set
+        {
+            this.propertyFilter.UseRegex = value;
+
+            this.inspector.Filter = this.propertyFilter;
+
+            this.OnPropertyChanged(nameof(this.UseRegex));
         }
     }
 

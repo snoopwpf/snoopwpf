@@ -595,7 +595,7 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
 
     private void ClearSearchFilterHandler(object sender, ExecutedRoutedEventArgs e)
     {
-        this.PropertyGrid.StringFilter = string.Empty;
+        this.PropertyGrid.FilterString = string.Empty;
     }
 
     private void CopyPropertyChangesHandler(object sender, ExecutedRoutedEventArgs e)
