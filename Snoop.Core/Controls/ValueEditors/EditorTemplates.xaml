@@ -183,8 +183,8 @@
                         <ToolTip>
                             <ItemsControl Width="200"
                                           Height="200"
-                                          ItemsSource="{Binding Value, Converter={x:Static converters:BrushStopsConverter.DefaultInstance}}"
-                                          ItemTemplateSelector="{Binding Source={x:Static valueEditors:BrushValueEditorToolTipItemTemplateSelector.Instance}}" />
+                                          ItemTemplateSelector="{Binding Source={x:Static valueEditors:BrushValueEditorToolTipItemTemplateSelector.Instance}}"
+                                          ItemsSource="{Binding Value, Converter={x:Static converters:BrushStopsConverter.DefaultInstance}}" />
                         </ToolTip>
                     </DockPanel.ToolTip>
 
@@ -215,8 +215,8 @@
                         <ToolTip>
                             <ItemsControl Width="200"
                                           Height="200"
-                                          ItemsSource="{Binding Value, Converter={x:Static converters:BrushStopsConverter.DefaultInstance}}"
-                                          ItemTemplateSelector="{Binding Source={x:Static valueEditors:BrushValueEditorToolTipItemTemplateSelector.Instance}}" />
+                                          ItemTemplateSelector="{Binding Source={x:Static valueEditors:BrushValueEditorToolTipItemTemplateSelector.Instance}}"
+                                          ItemsSource="{Binding Value, Converter={x:Static converters:BrushStopsConverter.DefaultInstance}}" />
                         </ToolTip>
                     </Grid.ToolTip>
 
@@ -528,12 +528,12 @@
 
     <DataTemplate x:Key="Snoop.DataTemplates.ToolTip.Brush"
                   DataType="{x:Type Brush}">
-        <Border HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+        <Border Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                 Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Background="{Binding}"
                 BorderBrush="{DynamicResource Snoop.Brushes.Default.ControlDark}"
-                BorderThickness="1"
-                Background="{Binding}" />
+                BorderThickness="1" />
     </DataTemplate>
 </ResourceDictionary>
