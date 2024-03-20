@@ -107,9 +107,7 @@ class Build : NukeBuild
 
     AbsolutePath TestResultDirectory => OutputDirectory / "test-results";
 
-    string CandleExecutable => NuGetToolPathResolver.GetPackageExecutable("wix", "candle.exe");
-
-    string LightExecutable => NuGetToolPathResolver.GetPackageExecutable("wix", "light.exe");
+    readonly string WixUIExtension = "WixToolset.UI.wixext/4.0.4";
 
     readonly string FenceOutput = "".PadLeft(30, '#');
 
@@ -124,7 +122,7 @@ class Build : NukeBuild
         {
             DotNetToolRestore();
 
-            ProcessTasks.StartProcess("dotnet", "wix extension add WixToolset.UI.wixext")
+            ProcessTasks.StartProcess("dotnet", $"wix extension add {WixUIExtension}")
                 .AssertZeroExitCode();
 
             DotNetRestore(s => s
@@ -276,7 +274,7 @@ class Build : NukeBuild
         .Executes(() =>
         {
             var outputFile = $"{ArtifactsDirectory / $"{ProjectName}.{NuGetVersion}.msi"}";
-            ProcessTasks.StartProcess("dotnet", $"wix build -bindpath \"{CurrentBuildOutputDirectory}\" -define ProductVersion=\"{MajorMinorPatch}\" -ext WixToolset.UI.wixext -o \"{outputFile}\" -nologo {ProjectName}.wxs")
+            ProcessTasks.StartProcess("dotnet", $"wix build -bindpath \"{CurrentBuildOutputDirectory}\" -define ProductVersion=\"{MajorMinorPatch}\" -ext {WixUIExtension} -o \"{outputFile}\" -nologo {ProjectName}.wxs")
                 .AssertZeroExitCode();
             CheckSumFiles.Add(outputFile);
             AppVeyor.Instance?.PushArtifact(outputFile);
