@@ -8,19 +8,20 @@ namespace Snoop.Controls.ValueEditors;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows;
 using JetBrains.Annotations;
 
 public class EnumValueEditor : ValueEditor
 {
     public ObservableCollection<EnumValueWrapper> Values { get; } = new();
 
-    protected override void OnPropertyTypeChanged()
+    protected override void OnPropertyInfoChanged(DependencyPropertyChangedEventArgs e)
     {
-        base.OnPropertyTypeChanged();
+        base.OnPropertyInfoChanged(e);
 
         this.Values.Clear();
 
-        var enumType = this.PropertyType?.Type;
+        var enumType = this.PropertyInfo?.PropertyType.Type;
 
         if (enumType is not null)
         {

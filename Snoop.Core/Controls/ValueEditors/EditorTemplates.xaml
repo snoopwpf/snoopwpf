@@ -1,4 +1,4 @@
-<!--
+﻿<!--
     (c) Copyright Cory Plotts.
     This source is subject to the Microsoft Public License (Ms-PL).
     Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
@@ -379,7 +379,6 @@
                                                       IsEditable="{Binding CanEdit}"
                                                       IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
                                                       PropertyInfo="{Binding}"
-                                                      PropertyType="{Binding PropertyType}"
                                                       Value="{Binding Value, Mode=TwoWay}" />
 
                     <!-- to allow ValueEditor to live on the left and not stretch -->
@@ -398,7 +397,6 @@
                                                   IsEditable="{Binding CanEdit}"
                                                   IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
                                                   PropertyInfo="{Binding}"
-                                                  PropertyType="{Binding PropertyType}"
                                                   Value="{Binding Value, Mode=TwoWay}" />
 
                     <!-- to allow ValueEditor to live on the left and not stretch -->
@@ -417,7 +415,6 @@
                                                   IsEditable="{Binding CanEdit}"
                                                   IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
                                                   PropertyInfo="{Binding}"
-                                                  PropertyType="{Binding PropertyType}"
                                                   Value="{Binding Value, Mode=TwoWay}" />
 
                     <!-- to allow ValueEditor to live on the left and not stretch -->
@@ -433,7 +430,6 @@
                                                     IsEditable="{Binding CanEdit}"
                                                     IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
                                                     PropertyInfo="{Binding}"
-                                                    PropertyType="{Binding PropertyType}"
                                                     Value="{Binding Value, Mode=TwoWay}" />
 
                     <!-- to allow ValueEditor to live on the left and not stretch -->
@@ -452,7 +448,6 @@
                                                    IsEditable="{Binding CanEdit}"
                                                    IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
                                                    PropertyInfo="{Binding}"
-                                                   PropertyType="{Binding PropertyType}"
                                                    Value="{Binding Value, Mode=TwoWay}" />
 
                     <!-- to allow ValueEditor to live on the left and not stretch -->
@@ -471,7 +466,6 @@
                                                    IsEditable="{Binding CanEdit}"
                                                    IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
                                                    PropertyInfo="{Binding}"
-                                                   PropertyType="{Binding PropertyType}"
                                                    Value="{Binding Value, Mode=TwoWay}" />
 
                     <!-- to allow ValueEditor to live on the left and not stretch -->
@@ -487,7 +481,6 @@
                                                       IsEditable="False"
                                                       IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
                                                       PropertyInfo="{Binding}"
-                                                      PropertyType="{Binding PropertyType}"
                                                       Value="{Binding ResourceKey, Mode=OneWay}" />
 
                     <!-- to allow ValueEditor to live on the left and not stretch -->

@@ -43,7 +43,7 @@ public class StandardValueEditor : ValueEditor
             this.PropertyInfo.IsValueChangedByUser = true;
         }
 
-        var targetType = this.PropertyType?.Type;
+        var targetType = this.PropertyInfo?.PropertyType.Type;
 
         this.Value = StringValueConverter.ConvertFromString(targetType, newValue);
     }
@@ -62,10 +62,11 @@ public class StandardValueEditor : ValueEditor
         binding?.UpdateSource();
     }
 
-    protected override void OnPropertyTypeChanged()
+    protected override void OnPropertyInfoChanged(DependencyPropertyChangedEventArgs e)
     {
-        base.OnPropertyTypeChanged();
+        base.OnPropertyInfoChanged(e);
 
-        this.IsEditable = StringValueConverter.CanConvertFromString(this.PropertyType?.Type);
+        this.IsEditable = this.PropertyInfo?.CanEdit is true
+                          && StringValueConverter.CanConvertFromString(this.PropertyInfo?.PropertyType.Type);
     }
 }
