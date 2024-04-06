@@ -1,4 +1,4 @@
-﻿<!--
+<!--
     (c) Copyright Cory Plotts.
     This source is subject to the Microsoft Public License (Ms-PL).
     Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
@@ -123,7 +123,6 @@
                                                                 IsDesignTimeCreatable=False}"
                                LastChildFill="True">
                         <CheckBox x:Name="PART_CheckBox"
-                                  VerticalAlignment="Center"
                                   IsChecked="{Binding Value, Mode=TwoWay}"
                                   IsEnabled="{TemplateBinding IsEditable}"
                                   IsThreeState="{Binding IsNullableValueType}" />

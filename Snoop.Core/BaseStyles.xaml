@@ -4,17 +4,17 @@
     Licensed to the .NET Foundation under one or more agreements.
     The .NET Foundation licenses this file to you under the MIT license.
     See the LICENSE file in the project root for more information.
-    
+
     This file was generated from individual xaml files found
     in WPF\src\Themes\XAML\, please do not edit it directly.
-    
+
     To generate this file, bcz in WPF\src\Themes\Generator and copy
     the generated theme files from the output directory to
     the corresponding themes\ folder.
-    
+
     To automatically copy the files, set the environment variable
     set THEMEXAML_AUTOUPDATE=1
-    
+
     ==================================================================
 -->
 
@@ -3868,6 +3868,8 @@
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
         <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.Foreground}" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type CheckBox}">
