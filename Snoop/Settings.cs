@@ -160,6 +160,7 @@ public sealed class Settings : SettingsBase<Settings>
     protected override void UpdateWith(Settings settings)
     {
         this.SetOwnerWindow = settings.SetOwnerWindow;
+        this.ShowActivated = settings.ShowActivated;
         this.EnableDiagnostics = settings.EnableDiagnostics;
 
         this.MultipleDispatcherMode = settings.MultipleDispatcherMode;
