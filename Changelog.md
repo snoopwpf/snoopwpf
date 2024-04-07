@@ -10,15 +10,17 @@
 - ### Bug fixes
 
   - [#397](../../issues/397) - Light mode broken
-  - Color values are now displayed with the width as brushes
+  - Color values are now displayed with the same width as brushes
   - Instances of classes are no longer created during property discovery
+  - Fixed detection of read only properties
+  - Fixed loaded of settings
 
 - ### Improvements
 
   - [#435](../../issues/435) - Add "StartMinimized" Setting + Functionality (thanks @BButner)
   - [#436](../../issues/436) - [Feature request] show current version
   - Improved property filter
-    - Property values are now used when filtering
+    - Property values are now included when filtering
     - Regex is now explicit instead of implicit
   - Improved performance for attached properties
   - Improved performance of style retrieval
