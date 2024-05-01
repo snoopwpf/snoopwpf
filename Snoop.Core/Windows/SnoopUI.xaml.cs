@@ -12,6 +12,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -112,7 +113,7 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
             }
 
             this.treeService = value;
-            this.OnPropertyChanged(nameof(this.TreeService));
+            this.OnPropertyChanged();
         }
     }
 
@@ -120,6 +121,21 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
     /// This is the collection the TreeView binds to.
     /// </summary>
     public ObservableCollection<TreeItem> TreeItems { get; } = new();
+
+    public FlatTree FlatTree
+    {
+        get => this.flatTree ??= new FlatTree(this.TreeItems);
+        private set
+        {
+            if (Equals(value, this.flatTree))
+            {
+                return;
+            }
+
+            this.flatTree = value;
+            this.OnPropertyChanged();
+        }
+    }
 
     #endregion
 
@@ -137,7 +153,7 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
         private set
         {
             this.rootTreeItem = value;
-            this.OnPropertyChanged(nameof(this.RootTreeItem));
+            this.OnPropertyChanged();
         }
     }
 
@@ -188,7 +204,12 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
                 return;
             }
 
-            this.OnPropertyChanged(nameof(this.CurrentSelection));
+            this.OnPropertyChanged();
+
+            if (this.currentSelection is null)
+            {
+                return;
+            }
 
             if (this.TreeItems.Count > 1
                 || (this.TreeItems.Count == 1 && this.TreeItems[0] != this.RootTreeItem)
@@ -228,6 +249,11 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
 
         set
         {
+            if (this.filter == value)
+            {
+                return;
+            }
+
             this.filter = value;
 
             if (!this.fromTextBox)
@@ -239,6 +265,8 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
                 this.filterTimer.Stop();
                 this.filterTimer.Start();
             }
+
+            this.OnPropertyChanged();
         }
     }
 
@@ -424,7 +452,7 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
 
         InputManager.Current.PreProcessInput -= this.HandlePreProcessInput;
 
-        this.filterTimer?.Stop();
+        this.filterTimer.Stop();
 
         // persist whether all properties are shown by default
         Settings.Default.ShowDefaults = this.PropertyGrid.ShowDefaults;
@@ -889,7 +917,7 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
     public event PropertyChangedEventHandler? PropertyChanged;
 
     [NotifyPropertyChangedInvocator]
-    private void OnPropertyChanged(string propertyName)
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
