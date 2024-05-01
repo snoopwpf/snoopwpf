@@ -4,17 +4,17 @@
     Licensed to the .NET Foundation under one or more agreements.
     The .NET Foundation licenses this file to you under the MIT license.
     See the LICENSE file in the project root for more information.
-
+    
     This file was generated from individual xaml files found
     in WPF\src\Themes\XAML\, please do not edit it directly.
-
+    
     To generate this file, bcz in WPF\src\Themes\Generator and copy
     the generated theme files from the output directory to
     the corresponding themes\ folder.
-
+    
     To automatically copy the files, set the environment variable
     set THEMEXAML_AUTOUPDATE=1
-
+    
     ==================================================================
 -->
 
@@ -844,10 +844,10 @@
         <Setter Property="VerticalContentAlignment" Value="Top" />
     </Style>
 
-    <Style x:Key="{x:Type ListBox}"
+    <Style x:Key="Snoop.Styles.ListBox"
            TargetType="{x:Type ListBox}">
-        <Setter Property="Background" Value="{DynamicResource ListBox.Static.Background}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource ListBox.Static.Border}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Snoop.Brushes.Default.Border}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.Foreground}" />
         <Setter Property="ItemsPanel">
@@ -857,6 +857,7 @@
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
+        <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="ScrollViewer.CanContentScroll" Value="true" />
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
         <Setter Property="ScrollViewer.PanningMode" Value="Both" />
@@ -895,12 +896,17 @@
         <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
 
-    <Style TargetType="{x:Type ListBoxItem}">
+    <Style TargetType="{x:Type ListBox}"
+           BasedOn="{StaticResource Snoop.Styles.ListBox}" />
+
+    <Style x:Key="ListBoxItemStyle"
+           TargetType="{x:Type ListBoxItem}">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
         <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="Padding" Value="4 1" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Template">
@@ -949,6 +955,10 @@
         </Setter>
         <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
     </Style>
+
+    <Style x:Key="{x:Type ListBoxItem}"
+           TargetType="{x:Type ListBoxItem}"
+           BasedOn="{StaticResource ListBoxItemStyle}" />
 
     <!--
         =================================================================
@@ -3868,8 +3878,6 @@
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
         <Setter Property="Foreground" Value="{DynamicResource Snoop.Brushes.Default.Foreground}" />
-        <Setter Property="VerticalAlignment" Value="Stretch" />
-        <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type CheckBox}">
@@ -3944,6 +3952,8 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
 
 
