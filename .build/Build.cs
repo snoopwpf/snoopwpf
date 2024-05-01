@@ -107,7 +107,7 @@ class Build : NukeBuild
 
     AbsolutePath TestResultDirectory => OutputDirectory / "test-results";
 
-    readonly string WixUIExtension = "WixToolset.UI.wixext/4.0.4";
+    readonly string WixUIExtension = "WixToolset.UI.wixext/5.0.0";
 
     readonly string FenceOutput = "".PadLeft(30, '#');
 
