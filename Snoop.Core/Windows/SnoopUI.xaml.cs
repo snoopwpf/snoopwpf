@@ -234,14 +234,9 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
 
         set
         {
-            if (this.filter == value)
-            {
-                return;
-            }
-
             this.filter = value;
 
-            if (!this.fromTextBox)
+            if (this.fromTextBox is false)
             {
                 this.EnqueueAfterSettingFilter();
             }
