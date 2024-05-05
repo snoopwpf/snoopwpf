@@ -122,21 +122,6 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
     /// </summary>
     public ObservableCollection<TreeItem> TreeItems { get; } = new();
 
-    public FlatTree FlatTree
-    {
-        get => this.flatTree ??= new FlatTree(this.TreeItems);
-        private set
-        {
-            if (Equals(value, this.flatTree))
-            {
-                return;
-            }
-
-            this.flatTree = value;
-            this.OnPropertyChanged();
-        }
-    }
-
     #endregion
 
     #region RootTreeItem
