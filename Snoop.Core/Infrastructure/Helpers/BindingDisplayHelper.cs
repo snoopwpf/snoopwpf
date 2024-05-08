@@ -1,5 +1,6 @@
 ﻿namespace Snoop.Infrastructure.Helpers;
 
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Data;
@@ -19,31 +20,38 @@ public static class BindingDisplayHelper
     /// </summary>
     public static string BuildBindingDescriptiveString(BindingBase binding, params string[] propertyNames)
     {
-        if (binding is MultiBinding multiBinding)
+        try
         {
-            return BuildMultiBindingDescriptiveString(multiBinding.Bindings, propertyNames);
-        }
-
-        if (binding is PriorityBinding priorityBinding)
-        {
-            return BuildMultiBindingDescriptiveString(priorityBinding.Bindings, propertyNames);
-        }
-
-        var propertyValues = new List<string>(propertyNames.Length);
-
-        var xaml = XamlWriterHelper.GetXamlAsXElement(binding).RemoveNamespaces();
-
-        foreach (var propertyName in propertyNames)
-        {
-            var attribute = xaml.Attribute(propertyName);
-
-            if (attribute is not null)
+            if (binding is MultiBinding multiBinding)
             {
-                propertyValues.Add($"{propertyName}={attribute.Value}");
+                return BuildMultiBindingDescriptiveString(multiBinding.Bindings, propertyNames);
             }
-        }
 
-        return string.Join(", ", propertyValues);
+            if (binding is PriorityBinding priorityBinding)
+            {
+                return BuildMultiBindingDescriptiveString(priorityBinding.Bindings, propertyNames);
+            }
+
+            var propertyValues = new List<string>(propertyNames.Length);
+
+            var xaml = XamlWriterHelper.GetXamlAsXElement(binding).RemoveNamespaces();
+
+            foreach (var propertyName in propertyNames)
+            {
+                var attribute = xaml.Attribute(propertyName);
+
+                if (attribute is not null)
+                {
+                    propertyValues.Add($"{propertyName}={attribute.Value}");
+                }
+            }
+
+            return string.Join(", ", propertyValues);
+        }
+        catch (Exception exception)
+        {
+            return $"Failed to build binding text.\n{exception}";
+        }
     }
 
     /// <summary>
