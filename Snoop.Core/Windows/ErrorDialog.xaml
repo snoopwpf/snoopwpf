@@ -27,7 +27,8 @@
         <TextBlock x:Name="captionTextBlock"
                    Grid.Row="0"
                    FontSize="16"
-                   TextWrapping="Wrap" />
+                   TextWrapping="Wrap"
+                   Foreground="{DynamicResource Snoop.Brushes.Default.Foreground}" />
         <TextBlock Grid.Row="1"
                    Margin="0 10 0 0"
                    Text="Error details:" />
