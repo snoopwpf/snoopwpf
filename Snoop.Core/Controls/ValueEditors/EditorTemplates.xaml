@@ -501,12 +501,11 @@
                        Foreground="{DynamicResource Snoop.Brushes.Default.Foreground}"
                        Text="{Binding ColorText}" />
             <Border Grid.Column="2"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
                     Background="{Binding Color, Converter={x:Static converters:ColorToSolidColorBrushConverter.DefaultInstance}}"
                     BorderBrush="{DynamicResource Snoop.Brushes.Default.ControlDark}"
-                    BorderThickness="1"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch">
-            </Border>
+                    BorderThickness="1" />
         </Grid>
     </DataTemplate>
 
