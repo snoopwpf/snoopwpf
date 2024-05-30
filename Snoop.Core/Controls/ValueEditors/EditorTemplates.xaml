@@ -277,12 +277,9 @@
                     <Rectangle Grid.Column="0"
                                Fill="{StaticResource CheckerboardBrush}" />
                     <Rectangle Grid.Column="0"
+                               Fill="{Binding Value, Converter={x:Static converters:ColorToSolidColorBrushConverter.DefaultInstance}}"
                                Stroke="{TemplateBinding TextElement.Foreground}"
-                               StrokeThickness="1">
-                        <Rectangle.Fill>
-                            <SolidColorBrush Color="{Binding Value}" />
-                        </Rectangle.Fill>
-                    </Rectangle>
+                               StrokeThickness="1" />
                     <TextBlock Grid.Column="1"
                                Margin="5 0 0 0"
                                Text="{Binding DescriptiveValue}"
@@ -302,12 +299,9 @@
                     <Rectangle Grid.Column="0"
                                Fill="{StaticResource CheckerboardBrush}" />
                     <Rectangle Grid.Column="0"
+                               Fill="{Binding Value, Converter={x:Static converters:ColorToSolidColorBrushConverter.DefaultInstance}}"
                                Stroke="{TemplateBinding TextElement.Foreground}"
-                               StrokeThickness="1">
-                        <Rectangle.Fill>
-                            <SolidColorBrush Color="{Binding Value}" />
-                        </Rectangle.Fill>
-                    </Rectangle>
+                               StrokeThickness="1" />
 
                     <controls:EditTextBox Grid.Column="1"
                                           Height="Auto"
@@ -507,13 +501,11 @@
                        Foreground="{DynamicResource Snoop.Brushes.Default.Foreground}"
                        Text="{Binding ColorText}" />
             <Border Grid.Column="2"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
+                    Background="{Binding Color, Converter={x:Static converters:ColorToSolidColorBrushConverter.DefaultInstance}}"
                     BorderBrush="{DynamicResource Snoop.Brushes.Default.ControlDark}"
-                    BorderThickness="1">
-                <Border.Background>
-                    <SolidColorBrush Color="{Binding Color}" />
-                </Border.Background>
+                    BorderThickness="1"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch">
             </Border>
         </Grid>
     </DataTemplate>
