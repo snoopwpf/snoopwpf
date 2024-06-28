@@ -91,7 +91,9 @@ public partial class AppChooser
                         continue;
                     }
 
-                    var windowInfoCollection = windows.Select(h => WindowInfo.GetWindowInfo(h));
+                    var windowInfoCollection = windows
+                        .OrderByDescending(NativeMethods.IsWindowVisible)
+                        .Select(h => WindowInfo.GetWindowInfo(h));
 
                     foreach (var windowInfo in windowInfoCollection)
                     {
