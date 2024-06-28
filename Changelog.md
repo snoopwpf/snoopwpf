@@ -21,6 +21,7 @@
 
   - [#435](../../issues/435) - Add "StartMinimized" Setting + Functionality (thanks @BButner)
   - [#436](../../issues/436) - [Feature request] show current version
+  - [#453](../../issues/453) - Better target windows titles (thanks @miloush)
   - Improved property filter
     - Property values are now included when filtering
     - Regex is now explicit instead of implicit
