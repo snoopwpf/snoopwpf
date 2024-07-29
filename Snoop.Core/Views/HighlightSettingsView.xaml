@@ -82,7 +82,7 @@
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
 
-                    <GridViewColumn Width="175"
+                    <GridViewColumn Width="200"
                                     CellTemplateSelector="{DynamicResource EditorSelector}">
                         <GridViewColumn.Header>
                             <TextBlock Text="Value">

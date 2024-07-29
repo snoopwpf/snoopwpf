@@ -114,7 +114,7 @@ public partial class AppChooser
                     this.windowInfos.Add(windowInfo);
                 }
 
-                if (this.windowInfos.Count > 0)
+                if (this.windowInfos.Count is 1)
                 {
                     this.WindowInfos.MoveCurrentTo(this.windowInfos[0]);
                 }
@@ -240,9 +240,9 @@ public partial class AppChooser
             Title = "Settings",
             Owner = this,
             MinWidth = 480,
-            MinHeight = 320,
+            MinHeight = 360,
             Width = 480,
-            Height = 320,
+            Height = 360,
             WindowStartupLocation = WindowStartupLocation.CenterScreen,
             WindowStyle = WindowStyle.ToolWindow
         };

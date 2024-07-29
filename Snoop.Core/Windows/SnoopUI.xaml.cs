@@ -983,9 +983,9 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
             Title = "Highlight options",
             Owner = this,
             MinWidth = 480,
-            MinHeight = 320,
+            MinHeight = 360,
             Width = 480,
-            Height = 320,
+            Height = 360,
             WindowStartupLocation = WindowStartupLocation.CenterScreen,
             WindowStyle = WindowStyle.ToolWindow
         };
