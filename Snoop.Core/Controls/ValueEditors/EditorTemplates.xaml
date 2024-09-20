@@ -38,8 +38,8 @@
         </Style.Triggers>
     </Style>
 
-    <Style TargetType="{x:Type valueEditors:ValueEditor}"
-           x:Key="Snoop.Styles.ValueEditor">
+    <Style x:Key="Snoop.Styles.ValueEditor"
+           TargetType="{x:Type valueEditors:ValueEditor}">
         <Setter Property="MinHeight" Value="20" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
@@ -79,11 +79,11 @@
                 <ControlTemplate TargetType="{x:Type valueEditors:StandardValueEditor}">
                     <DockPanel LastChildFill="True">
                         <Button x:Name="OpenDetailsEditor"
+                                MinHeight="0"
                                 Command="{x:Static valueEditors:ValueEditor.OpenDetailsEditorCommand}"
                                 Content=" ... "
                                 DockPanel.Dock="Left"
-                                Visibility="Collapsed"
-                                MinHeight="0">
+                                Visibility="Collapsed">
                             <Button.ToolTip>
                                 <TextBlock>
                                     Opens an editor window where you can see and edit the full value.<LineBreak />
@@ -92,9 +92,9 @@
                         </Button>
 
                         <ContentPresenter Name="ValueHolder"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                           Content="{Binding RelativeSource={RelativeSource TemplatedParent}}"
-                                          ContentTemplate="{DynamicResource UnselectedValueTemplate}"
-                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                          ContentTemplate="{DynamicResource UnselectedValueTemplate}">
                             <ContentPresenter.ToolTip>
                                 <TextBlock Text="{TemplateBinding DescriptiveValue}" />
                             </ContentPresenter.ToolTip>
@@ -342,23 +342,22 @@
             <DataTemplate x:Key="SelectedValueTemplate"
                           DataType="valueEditors:EnumValueEditor">
                 <ComboBox Padding="2 -2 2 0"
+                          VerticalContentAlignment="Center"
                           DisplayMemberPath="Text"
                           IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}"
                           IsSynchronizedWithCurrentItem="False"
                           ItemsSource="{Binding Values}"
                           SelectedValue="{Binding Value}"
-                          SelectedValuePath="Value"
-                          VerticalContentAlignment="Center" />
+                          SelectedValuePath="Value" />
             </DataTemplate>
         </Style.Resources>
-        <Setter Property="VerticalContentAlignment" Value="Stretch" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type valueEditors:EnumValueEditor}">
                     <ContentPresenter Name="ValueHolder"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                       Content="{Binding RelativeSource={RelativeSource TemplatedParent}}"
-                                      ContentTemplate="{DynamicResource UnselectedValueTemplate}"
-                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                      ContentTemplate="{DynamicResource UnselectedValueTemplate}" />
 
                     <ControlTemplate.Triggers>
                         <MultiTrigger>
@@ -373,6 +372,7 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
     </Style>
 
     <valueEditors:ValueEditorTemplateSelector x:Key="EditorSelector">
