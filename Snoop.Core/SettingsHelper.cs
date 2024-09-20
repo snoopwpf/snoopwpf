@@ -91,20 +91,23 @@ public static class SettingsHelper
             var startPath = EnvironmentEx.CurrentProcessPath;
             var currentPath = startPath;
 
-            while (true)
+            if (string.IsNullOrEmpty(currentPath) is false)
             {
-                var path = Path.Combine(currentPath, SNOOP_SETTINGS_DIRECTORY_NAME);
-
-                if (Directory.Exists(path))
+                while (true)
                 {
-                    yield return path;
-                }
+                    var path = Path.Combine(currentPath, SNOOP_SETTINGS_DIRECTORY_NAME);
 
-                currentPath = Path.GetDirectoryName(currentPath);
+                    if (Directory.Exists(path))
+                    {
+                        yield return path;
+                    }
 
-                if (string.IsNullOrEmpty(currentPath))
-                {
-                    break;
+                    currentPath = Path.GetDirectoryName(currentPath);
+
+                    if (string.IsNullOrEmpty(currentPath))
+                    {
+                        break;
+                    }
                 }
             }
         }

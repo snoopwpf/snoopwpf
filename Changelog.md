@@ -12,6 +12,7 @@
   - [#397](../../issues/397) - Light mode broken
   - [#449](../../issues/449) - Cannot serialize a non-public type 'System.Windows.Controls.DataGridHeadersVisibilityToVisibilityConverter'.
   - [#450](../../issues/450) - Fix brush binding errors (thanks @Garzuuhl)
+  - [#459](../../issues/459) - Issue with debugging applications that do not have an process path.
   - Color values are now displayed with the same width as brushes
   - Instances of classes are no longer created during property discovery
   - Fixed detection of read only properties
