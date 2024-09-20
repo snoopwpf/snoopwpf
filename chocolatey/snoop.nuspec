@@ -56,13 +56,6 @@
     <file src="..\bin\$Configuration$\Snoop.InjectorLauncher.x64.exe.config" target="tools\" />
     <file src="..\bin\$Configuration$\Snoop.InjectorLauncher.x64.pdb" target="tools\" />
 
-    <file src="..\bin\$Configuration$\Snoop.InjectorLauncher.ARM.dll" target="tools\" />
-    <file src="..\bin\$Configuration$\Snoop.InjectorLauncher.ARM.dll.config" target="tools\" />
-    <file src="..\bin\$Configuration$\Snoop.InjectorLauncher.ARM.deps.json" target="tools\" />
-    <file src="..\bin\$Configuration$\Snoop.InjectorLauncher.ARM.runtimeconfig.json" target="tools\" />
-    <file src="..\bin\$Configuration$\Snoop.InjectorLauncher.ARM.exe" target="tools\" />
-    <file src="..\bin\$Configuration$\Snoop.InjectorLauncher.ARM.pdb" target="tools\" />
-
     <file src="..\bin\$Configuration$\Snoop.InjectorLauncher.ARM64.dll" target="tools\" />
     <file src="..\bin\$Configuration$\Snoop.InjectorLauncher.ARM64.dll.config" target="tools\" />
     <file src="..\bin\$Configuration$\Snoop.InjectorLauncher.ARM64.deps.json" target="tools\" />

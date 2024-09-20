@@ -152,7 +152,6 @@
   <Import Condition="Exists('$(VCTargetsPath)\Microsoft.Cpp.targets')" Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <Target Name="AfterBuild" Condition="'$(RootBuild)' == 'True'">
     <MSBuild Projects="$(MSBuildProjectFile)" Properties="RootBuild=False;Configuration=$(Configuration);Platform=x64;PlatFormTarget=x64" />
-    <!-- <MSBuild Projects="$(MSBuildProjectFile)" Properties="RootBuild=False;Configuration=$(Configuration);Platform=ARM;PlatFormTarget=ARM" Condition="Exists('$(VC_ExecutablePath_x86_ARM)')" /> -->
     <MSBuild Projects="$(MSBuildProjectFile)" Properties="RootBuild=False;Configuration=$(Configuration);Platform=ARM64;PlatFormTarget=ARM64" Condition="Exists('$(VC_ExecutablePath_x86_ARM64)')" />
   </Target>
 </Project>
