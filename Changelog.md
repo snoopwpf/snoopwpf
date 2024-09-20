@@ -6,6 +6,7 @@
 
   - Dropped support for all .NET Framework versions prior to .NET 4.6.2
   - Dropped support for .NET 3.1 and 5
+  - Dropped support for ARM (ARM64 is still supported)
 
 - ### Bug fixes
 

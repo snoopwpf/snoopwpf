@@ -21,12 +21,10 @@
 
             <ComponentRef Id="Snoop.GenericInjector.x86.dll"/>
             <ComponentRef Id="Snoop.GenericInjector.x64.dll"/>
-            <ComponentRef Id="Snoop.GenericInjector.ARM.dll"/>
             <ComponentRef Id="Snoop.GenericInjector.ARM64.dll"/>
 
             <ComponentRef Id="Snoop.InjectorLauncher.x86.exe"/>
             <ComponentRef Id="Snoop.InjectorLauncher.x64.exe"/>
-            <ComponentRef Id="Snoop.InjectorLauncher.ARM.exe"/>
             <ComponentRef Id="Snoop.InjectorLauncher.ARM64.exe"/>
 
             <ComponentRef Id="Snoop.exe"/>
@@ -81,11 +79,6 @@
                           Source="SourceDir\Snoop.GenericInjector.x64.dll"/>
                     <File Id="Snoop.GenericInjector.x64.pdb" Source="SourceDir\Snoop.GenericInjector.x64.pdb"/>
                 </Component>
-                <Component Id="Snoop.GenericInjector.ARM.dll" Guid="{1073A862-6FAD-4014-82E4-36C9450B418E}">
-                    <File Id="Snoop.GenericInjector.ARM.dll" KeyPath="yes"
-                          Source="SourceDir\Snoop.GenericInjector.ARM.dll"/>
-                    <File Id="Snoop.GenericInjector.ARM.pdb" Source="SourceDir\Snoop.GenericInjector.ARM.pdb"/>
-                </Component>
                 <Component Id="Snoop.GenericInjector.ARM64.dll" Guid="{AA6110B0-8B3E-4F86-BF6D-5285F924604F}">
                     <File Id="Snoop.GenericInjector.ARM64.dll" KeyPath="yes"
                           Source="SourceDir\Snoop.GenericInjector.ARM64.dll"/>
@@ -105,18 +98,6 @@
                     <File Id="Snoop.InjectorLauncher.x64.exe.config"
                           Source="SourceDir\Snoop.InjectorLauncher.x64.exe.config"/>
                     <File Id="Snoop.InjectorLauncher.x64.pdb" Source="SourceDir\Snoop.InjectorLauncher.x64.pdb"/>
-                </Component>
-                <Component Id="Snoop.InjectorLauncher.ARM.exe" Guid="{41E6F29B-0F05-4132-A980-587C347F50D9}">
-                    <File Id="Snoop.InjectorLauncher.ARM.exe" KeyPath="yes"
-                          Source="SourceDir\Snoop.InjectorLauncher.ARM.exe"/>
-                    <File Id="Snoop.InjectorLauncher.ARM.dll" Source="SourceDir\Snoop.InjectorLauncher.ARM.dll"/>
-                    <File Id="Snoop.InjectorLauncher.ARM.deps.json"
-                          Source="SourceDir\Snoop.InjectorLauncher.ARM.deps.json"/>
-                    <File Id="Snoop.InjectorLauncher.ARM.runtimeconfig.json"
-                          Source="SourceDir\Snoop.InjectorLauncher.ARM.runtimeconfig.json"/>
-                    <File Id="Snoop.InjectorLauncher.ARM.dll.config"
-                          Source="SourceDir\Snoop.InjectorLauncher.ARM.dll.config"/>
-                    <File Id="Snoop.InjectorLauncher.ARM.pdb" Source="SourceDir\Snoop.InjectorLauncher.ARM.pdb"/>
                 </Component>
                 <Component Id="Snoop.InjectorLauncher.ARM64.exe" Guid="{DCEAE30B-072B-4B39-9A1E-E9AADAED41B1}">
                     <File Id="Snoop.InjectorLauncher.ARM64.exe" KeyPath="yes"

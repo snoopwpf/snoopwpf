@@ -50,12 +50,8 @@
     <MSBuild Projects="$(MSBuildProjectFile)" Targets="Restore" Properties="RootBuild=False;Configuration=$(Configuration);PlatformTarget=x64" />
     <MSBuild Projects="$(MSBuildProjectFile)" Targets="Build" Properties="RootBuild=False;Configuration=$(Configuration);PlatformTarget=x64;DummyPropertyToForceReevaluateAfterRestore=true" />
 
-    <Message Text="Building injector launcher for ARM..." Importance="High" />
-    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Restore" Properties="RootBuild=False;Configuration=$(Configuration);PlatformTarget=ARM;TargetFramework=net5.0-windows" />
-    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Build" Properties="RootBuild=False;Configuration=$(Configuration);PlatformTarget=ARM;TargetFramework=net5.0-windows;DummyPropertyToForceReevaluateAfterRestore=true" />
-
     <Message Text="Building injector launcher for ARM64..." Importance="High" />
-    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Restore" Properties="RootBuild=False;Configuration=$(Configuration);PlatformTarget=ARM64;TargetFramework=net5.0-windows" />
-    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Build" Properties="RootBuild=False;Configuration=$(Configuration);PlatformTarget=ARM64;TargetFramework=net5.0-windows;DummyPropertyToForceReevaluateAfterRestore=true" />
+    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Restore" Properties="RootBuild=False;Configuration=$(Configuration);PlatformTarget=ARM64;TargetFramework=net6.0-windows" />
+    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Build" Properties="RootBuild=False;Configuration=$(Configuration);PlatformTarget=ARM64;TargetFramework=net6.0-windows;DummyPropertyToForceReevaluateAfterRestore=true" />
   </Target>
 </Project>
