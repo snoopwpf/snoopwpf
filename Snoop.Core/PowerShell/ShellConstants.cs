@@ -72,7 +72,7 @@ internal static class ShellConstants
                 }
 
                 return false;
-#elif NET462
+#else
                 var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\PowerShell\3\PowerShellEngine");
                 if (key is not null)
                 {
@@ -85,8 +85,6 @@ internal static class ShellConstants
                 }
 
                 return false;
-#else
-                invalid target framework
 #endif
         }
     }
