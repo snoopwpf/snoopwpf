@@ -11,7 +11,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using Snoop.Infrastructure.Diagnostics;
 
-public partial class DiagnosticsView : UserControl
+public partial class DiagnosticsView
 {
     public static readonly DependencyProperty DiagnosticContextProperty =
         DependencyProperty.Register(nameof(DiagnosticContext), typeof(DiagnosticContext), typeof(DiagnosticsView), new PropertyMetadata(default(DiagnosticContext), OnDiagnosticContextChanged));
@@ -186,7 +186,7 @@ public partial class DiagnosticsView : UserControl
 
     private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        this.ErrorCount = this.DiagnosticItems!.Count(x => x.Level == DiagnosticLevel.Critical || x.Level == DiagnosticLevel.Error);
+        this.ErrorCount = this.DiagnosticItems!.Count(x => x.Level is DiagnosticLevel.Critical or DiagnosticLevel.Error);
         this.WarningCount = this.DiagnosticItems!.Count(x => x.Level == DiagnosticLevel.Warning);
         this.InformationCount = this.DiagnosticItems!.Count(x => x.Level == DiagnosticLevel.Info);
     }
@@ -209,7 +209,9 @@ public partial class DiagnosticsView : UserControl
             DiagnosticLevel.Warning => this.ShowWarnings,
             DiagnosticLevel.Error => this.ShowErrors,
             DiagnosticLevel.Critical => true,
+#pragma warning disable CA2208
             _ => throw new ArgumentOutOfRangeException(nameof(diagnosticItem.Level), diagnosticItem.Level, "Unknown diagnostic level.")
+#pragma warning restore CA2208
         };
     }
 

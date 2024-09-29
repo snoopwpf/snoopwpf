@@ -34,13 +34,6 @@ public abstract class ValueEditor : ContentControl
             typeof(string),
             typeof(ValueEditor));
 
-    public static readonly DependencyProperty PropertyTypeProperty =
-        DependencyProperty.Register(
-            nameof(PropertyType),
-            typeof(BindableType),
-            typeof(ValueEditor),
-            new PropertyMetadata(OnPropertyTypeChanged));
-
     public static readonly DependencyProperty IsEditableProperty =
         DependencyProperty.Register(
             nameof(IsEditable),
@@ -97,12 +90,6 @@ public abstract class ValueEditor : ContentControl
         set => this.SetValue(DescriptiveValueProperty, value);
     }
 
-    public BindableType? PropertyType
-    {
-        get => (BindableType?)this.GetValue(PropertyTypeProperty);
-        set => this.SetValue(PropertyTypeProperty, value);
-    }
-
     public bool IsEditable
     {
         get => (bool)this.GetValue(IsEditableProperty);
@@ -127,15 +114,6 @@ public abstract class ValueEditor : ContentControl
     }
 
     protected virtual void OnValueChanged(object? newValue)
-    {
-    }
-
-    private static void OnPropertyTypeChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-    {
-        ((ValueEditor)sender).OnPropertyTypeChanged();
-    }
-
-    protected virtual void OnPropertyTypeChanged()
     {
     }
 

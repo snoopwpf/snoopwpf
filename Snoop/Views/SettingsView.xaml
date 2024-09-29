@@ -50,6 +50,7 @@
                 <Style TargetType="{x:Type ListViewItem}"
                        BasedOn="{StaticResource GridView.GridViewItemContainerStyle}">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <Setter Property="MinHeight" Value="24" />
                     <Style.Triggers>
                         <Trigger Property="ItemsControl.AlternationIndex" Value="0">
                             <Setter Property="Background" Value="Transparent" />
@@ -84,7 +85,7 @@
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
 
-                    <GridViewColumn Width="175"
+                    <GridViewColumn Width="200"
                                     CellTemplateSelector="{DynamicResource EditorSelector}">
                         <GridViewColumn.Header>
                             <TextBlock Text="Value">

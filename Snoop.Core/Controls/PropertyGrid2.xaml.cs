@@ -26,8 +26,12 @@ public partial class PropertyGrid2 : INotifyPropertyChanged
 
     public PropertyGrid2()
     {
+        this.propertiesView = CollectionViewSource.GetDefaultView(this.Properties);
+        this.propertiesView.Filter = item => ((PropertyInformation)item).IsVisible;
+        this.Sort(".", ListSortDirection.Ascending);
+
         this.processIncrementalCall = new DelayedCall(this.ProcessIncrementalPropertyAdd, DispatcherPriority.Background);
-        this.filterCall = new DelayedCall(this.ProcessFilter, DispatcherPriority.Background);
+        this.filterCall = new DelayedCall(this.propertiesView.Refresh, DispatcherPriority.Background);
 
         this.InitializeComponent();
 
@@ -74,8 +78,6 @@ public partial class PropertyGrid2 : INotifyPropertyChanged
     private bool nameValueOnly;
 
     public ObservableCollection<PropertyInformation> Properties { get; } = new();
-
-    private readonly ObservableCollection<PropertyInformation> allProperties = new();
 
     public object? Target
     {
@@ -171,18 +173,7 @@ public partial class PropertyGrid2 : INotifyPropertyChanged
             var property = this.propertiesToAdd.Current;
             property.Filter = this.Filter;
 
-            if (property.IsVisible)
-            {
-                this.Properties.Add(property);
-            }
-
-            this.allProperties.Add(property);
-
-            // checking whether a property is visible ... actually runs the property filtering code
-            if (property.IsVisible)
-            {
-                property.Index = this.visiblePropertyCount++;
-            }
+            this.Properties.Add(property);
         }
 
         if (i == numberToAdd)
@@ -191,6 +182,7 @@ public partial class PropertyGrid2 : INotifyPropertyChanged
         }
         else
         {
+            this.propertiesToAdd?.Dispose();
             this.propertiesToAdd = null;
         }
     }
@@ -253,7 +245,7 @@ public partial class PropertyGrid2 : INotifyPropertyChanged
     {
         if (columnHeader.Tag is not ListSortDirection sortDirection)
         {
-            return (ListSortDirection)(columnHeader.Tag = ListSortDirection.Descending);
+            return (ListSortDirection)(columnHeader.Tag = ListSortDirection.Ascending);
         }
 
         return (ListSortDirection)(columnHeader.Tag = (ListSortDirection)(((int)sortDirection + 1) % 2));
@@ -278,83 +270,14 @@ public partial class PropertyGrid2 : INotifyPropertyChanged
         switch (columnHeader.Text)
         {
             case "Name":
-                this.Sort(CompareNames, this.direction);
+                this.Sort(".", this.direction);
                 break;
             case "Value":
-                this.Sort(CompareValues, this.direction);
+                this.Sort(nameof(PropertyInformation.StringValue), this.direction);
                 break;
             case "Value Source":
-                this.Sort(CompareValueSources, this.direction);
+                this.Sort(nameof(PropertyInformation.ValueSourceText), this.direction);
                 break;
-        }
-    }
-
-    private void ProcessFilter()
-    {
-        foreach (var property in this.allProperties)
-        {
-            if (property.IsVisible)
-            {
-                if (!this.Properties.Contains(property))
-                {
-                    this.InsertInPropertOrder(property);
-                }
-            }
-            else
-            {
-                if (this.Properties.Contains(property))
-                {
-                    this.Properties.Remove(property);
-                }
-            }
-        }
-
-        this.SetIndexesOfProperties();
-    }
-
-    private void InsertInPropertOrder(PropertyInformation property)
-    {
-        if (this.Properties.Count == 0)
-        {
-            this.Properties.Add(property);
-            return;
-        }
-
-        if (this.PropertiesAreInOrder(property, this.Properties[0]))
-        {
-            this.Properties.Insert(0, property);
-            return;
-        }
-
-        for (var i = 0; i < this.Properties.Count - 1; i++)
-        {
-            if (this.PropertiesAreInOrder(this.Properties[i], property) && this.PropertiesAreInOrder(property, this.Properties[i + 1]))
-            {
-                this.Properties.Insert(i + 1, property);
-                return;
-            }
-        }
-
-        this.Properties.Add(property);
-    }
-
-    private bool PropertiesAreInOrder(PropertyInformation first, PropertyInformation last)
-    {
-        if (this.direction == ListSortDirection.Ascending)
-        {
-            return first.CompareTo(last) <= 0;
-        }
-        else
-        {
-            return last.CompareTo(first) <= 0;
-        }
-    }
-
-    private void SetIndexesOfProperties()
-    {
-        for (var i = 0; i < this.Properties.Count; i++)
-        {
-            this.Properties[i].Index = i;
         }
     }
 
@@ -385,15 +308,15 @@ public partial class PropertyGrid2 : INotifyPropertyChanged
 
             object? newTarget = null;
 
-            if (Keyboard.Modifiers == ModifierKeys.Shift)
+            if (Keyboard.Modifiers is ModifierKeys.Shift)
             {
                 newTarget = property.Binding;
             }
-            else if (Keyboard.Modifiers == ModifierKeys.Control)
+            else if (Keyboard.Modifiers is ModifierKeys.Control)
             {
                 newTarget = property.BindingExpression;
             }
-            else if (Keyboard.Modifiers == ModifierKeys.None)
+            else if (Keyboard.Modifiers is ModifierKeys.None)
             {
                 newTarget = property.Value;
             }
@@ -405,34 +328,18 @@ public partial class PropertyGrid2 : INotifyPropertyChanged
         }
     }
 
-    private void Sort(Comparison<PropertyInformation> comparison, ListSortDirection newDirection)
+    private void Sort(string propertyPath, ListSortDirection newDirection)
     {
-        this.Sort(comparison, newDirection, this.Properties);
-        this.Sort(comparison, newDirection, this.allProperties);
-    }
-
-    private void Sort(Comparison<PropertyInformation> comparison, ListSortDirection newDirection, ObservableCollection<PropertyInformation> propertiesToSort)
-    {
-        var sorter = new List<PropertyInformation>(propertiesToSort);
-        sorter.Sort(comparison);
-
-        if (newDirection == ListSortDirection.Descending)
+        using (this.propertiesView.DeferRefresh())
         {
-            sorter.Reverse();
-        }
-
-        propertiesToSort.Clear();
-        foreach (var property in sorter)
-        {
-            propertiesToSort.Add(property);
+            this.propertiesView.SortDescriptions.Clear();
+            this.propertiesView.SortDescriptions.Add(new SortDescription(propertyPath, newDirection));
         }
     }
 
     public void RefreshPropertyGrid()
     {
-        this.allProperties.Clear();
         this.Properties.Clear();
-        this.visiblePropertyCount = 0;
 
         this.propertiesToAdd = null;
         this.processIncrementalCall.Enqueue(this.Dispatcher);
@@ -443,28 +350,11 @@ public partial class PropertyGrid2 : INotifyPropertyChanged
     private IEnumerator<PropertyInformation>? propertiesToAdd;
     private readonly DelayedCall processIncrementalCall;
     private readonly DelayedCall filterCall;
-    private int visiblePropertyCount;
     private bool unloaded;
     private ListSortDirection direction = ListSortDirection.Ascending;
 
     private readonly DispatcherTimer filterTimer;
-
-    private static int CompareNames(PropertyInformation one, PropertyInformation two)
-    {
-        // use the PropertyInformation CompareTo method, instead of the string.Compare method
-        // so that collections get sorted correctly.
-        return one.CompareTo(two);
-    }
-
-    private static int CompareValues(PropertyInformation one, PropertyInformation two)
-    {
-        return string.Compare(one.StringValue, two.StringValue, StringComparison.Ordinal);
-    }
-
-    private static int CompareValueSources(PropertyInformation one, PropertyInformation two)
-    {
-        return string.Compare(one.ValueSource.BaseValueSource.ToString(), two.ValueSource.BaseValueSource.ToString(), StringComparison.Ordinal);
-    }
+    private readonly ICollectionView propertiesView;
 
     #region INotifyPropertyChanged Members
     public event PropertyChangedEventHandler? PropertyChanged;

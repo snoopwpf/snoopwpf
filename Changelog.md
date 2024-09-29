@@ -1,5 +1,36 @@
 ﻿# Changelog for Snoop
 
+## 6.0.0
+
+- ### Breaking changes
+
+  - Dropped support for all .NET Framework versions prior to .NET 4.6.2
+  - Dropped support for .NET 3.1 and 5
+  - Dropped support for ARM (ARM64 is still supported)
+
+- ### Bug fixes
+
+  - [#397](../../issues/397) - Light mode broken
+  - [#449](../../issues/449) - Cannot serialize a non-public type 'System.Windows.Controls.DataGridHeadersVisibilityToVisibilityConverter'.
+  - [#450](../../issues/450) - Fix brush binding errors (thanks @Garzuuhl)
+  - [#459](../../issues/459) - Issue with debugging applications that do not have an process path.
+  - Color values are now displayed with the same width as brushes
+  - Instances of classes are no longer created during property discovery
+  - Fixed detection of read only properties
+  - Fixed loaded of settings
+
+- ### Improvements
+
+  - [#435](../../issues/435) - Add "StartMinimized" Setting + Functionality (thanks @BButner)
+  - [#436](../../issues/436) - [Feature request] show current version
+  - [#453](../../issues/453) - Better target windows titles (thanks @miloush)
+  - Improved property filter
+    - Property values are now included when filtering
+    - Regex is now explicit instead of implicit
+  - Improved performance for attached properties
+  - Improved performance of style retrieval
+  - Improved performance of resource key retrieval
+
 ## 5.1.0
 
 - ### Bug fixes

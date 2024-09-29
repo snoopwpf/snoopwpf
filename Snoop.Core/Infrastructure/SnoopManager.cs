@@ -223,7 +223,7 @@ public class SnoopManager
             return Assembly.GetExecutingAssembly();
         }
 
-#if NETCOREAPP3_1 || NET5_0_OR_GREATER
+#if NET6_0_OR_GREATER
             if (args.Name?.StartsWith("System.Management.Automation,") == true
                 && PowerShell.ShellConstants.TryGetPowerShellCoreInstallPath(out var powershellCoreInstallPath))
             {

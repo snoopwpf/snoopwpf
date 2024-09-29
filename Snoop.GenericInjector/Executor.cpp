@@ -3,25 +3,24 @@
 
 #include <comdef.h>
 
-#include "NetCoreApp3_0Executor.h"
+#include "NetExecutor.h"
 #ifndef NO_FULL_FRAMEWORK
-#include "NetFull4_0Executor.h"
+#include "NetFrameworkExecutor.h"
 #endif
 
 std::unique_ptr<FrameworkExecutor> GetExecutor(const std::wstring& framework)
 {
 	LogHelper::WriteLine(L"Trying to get executor for framework '%s'...", framework.c_str());
 
-	if (icase_cmp(framework, L"netcoreapp3.1")
-		|| icase_cmp(framework, L"net5.0-windows"))
+	if (icase_cmp(framework, L"net6.0-windows"))
 	{
-		return std::make_unique<NetCoreApp3_0Executor>();
+		return std::make_unique<NetExecutor>();
 	}
 
 #ifndef NO_FULL_FRAMEWORK
-	if (icase_cmp(framework, L"net452"))
+	if (icase_cmp(framework, L"net462"))
 	{
-		return std::make_unique<NetFull4_0Executor>();
+		return std::make_unique<NetFrameworkExecutor>();
 	}
 #endif
 

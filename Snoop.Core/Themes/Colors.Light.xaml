@@ -281,6 +281,7 @@
     <SolidColorBrush x:Key="Snoop.Brushes.Default.Background" Color="#FFFFFFFF" options:Freeze="True" />
     <SolidColorBrush x:Key="Snoop.Brushes.Default.LightDarkBackground" Color="#FFF1EDED" options:Freeze="True" />
     <SolidColorBrush x:Key="Snoop.Brushes.Default.Foreground" Color="#FF000000" options:Freeze="True" />
+    <SolidColorBrush x:Key="Snoop.Brushes.Default.Border" Color="#ACACAC" options:Freeze="True" />
     <SolidColorBrush x:Key="Snoop.Brushes.Default.GrayForeground" Color="#FF6D6D6D" options:Freeze="True" />
     <SolidColorBrush x:Key="Snoop.Brushes.Default.Control" Color="#FFF0F0F0" options:Freeze="True" />
     <SolidColorBrush x:Key="Snoop.Brushes.Default.ControlDark" Color="#FFA0A0A0" options:Freeze="True" />

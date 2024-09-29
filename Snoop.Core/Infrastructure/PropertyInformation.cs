@@ -42,7 +42,6 @@ public class PropertyInformation : DependencyObject, IComparable, INotifyPropert
     private bool isLocallySet;
 
     private bool isInvalidBinding;
-    private int index;
 
     private bool isDatabound;
 
@@ -109,6 +108,7 @@ public class PropertyInformation : DependencyObject, IComparable, INotifyPropert
         this.Update();
 
         this.isRunning = true;
+        return;
 
         BindingMode GetBindingMode()
         {
@@ -307,7 +307,7 @@ public class PropertyInformation : DependencyObject, IComparable, INotifyPropert
                         {
                             var resourceKey = ResourceKeyCache.Instance.GetOrAddKey(dependencyObject, value);
 
-                            return resourceKey;
+                            return resourceKey == DependencyProperty.UnsetValue ? null : resourceKey;
                         }
                     }
 
@@ -331,7 +331,8 @@ public class PropertyInformation : DependencyObject, IComparable, INotifyPropert
 
             var stringValue = value.ToString() ?? string.Empty;
 
-            var stringValueIsTypeToString = stringValue.Equals(value.GetType().ToString(), StringComparison.Ordinal);
+            var valueType = value.GetType();
+            var stringValueIsTypeToString = stringValue.Equals(valueType.ToString(), StringComparison.Ordinal);
 
             // Add brackets around types to distinguish them from values.
             // Replace long type names with short type names for some specific types, for easier readability.
@@ -346,13 +347,13 @@ public class PropertyInformation : DependencyObject, IComparable, INotifyPropert
                     case StaticResourceExtension staticResourceExtension:
                         return $"[StaticResource] {staticResourceExtension.ResourceKey}";
 
-                    case ResourceDictionary { Source: { } } rd:
+                    case ResourceDictionary { Source: not null } rd:
                         return $"[ResourceDictionary] {rd.Source}";
                 }
 
                 // Try to use a short type name
-                stringValue = ShouldWeDisplayShortTypeName(value.GetType())
-                    ? $"[{value.GetType().Name}]"
+                stringValue = ShouldWeDisplayShortTypeName(valueType)
+                    ? $"[{valueType.Name}]"
                     : $"[{stringValue}]";
             }
 
@@ -522,20 +523,6 @@ public class PropertyInformation : DependencyObject, IComparable, INotifyPropert
     public bool IsExpression => this.ValueSource.IsExpression || this.Binding is not null;
 
     public bool IsAnimated => this.ValueSource.IsAnimated;
-
-    public int Index
-    {
-        get => this.index;
-
-        set
-        {
-            if (this.index != value)
-            {
-                this.index = value;
-                this.OnPropertyChanged(nameof(this.Index));
-            }
-        }
-    }
 
     public BindingBase? Binding
     {
@@ -940,7 +927,7 @@ public class PropertyInformation : DependencyObject, IComparable, INotifyPropert
                 new(obj, null, "ItemStatus", automationPeer.GetItemStatus(), isCopyable: true),
                 new(obj, null, "ItemType", automationPeer.GetItemType(), isCopyable: true),
                 new(obj, null, "LabeledBy", automationPeer.GetLabeledBy(), isCopyable: true),
-#if !NET452
+#if NET6_0_OR_GREATER
                 new(obj, null, "LiveSetting", automationPeer.GetLiveSetting(), isCopyable: true),
 #endif
                 new(obj, null, "LocalizedControlType", automationPeer.GetLocalizedControlType(), isCopyable: true),
@@ -969,22 +956,22 @@ public class PropertyInformation : DependencyObject, IComparable, INotifyPropert
     {
         var propertiesToReturn = new List<PropertyDescriptor>();
 
-        object? currentObj = obj;
+        var currentObjType = obj.GetType();
 
         // keep looping until you don't have an AmbiguousMatchException exception
         // and you normally won't have an exception, so the loop will typically executes only once.
-        var noException = false;
-        while (!noException && currentObj is not null)
+        var onlyUseTypeForProperties = false;
+        while (currentObjType is not null)
         {
             try
             {
                 // try to get the properties using the GetProperties method that takes an instance
-                var properties = TypeDescriptor.GetProperties(currentObj, attributes);
-                noException = true;
+                var properties = onlyUseTypeForProperties ? TypeDescriptor.GetProperties(currentObjType, attributes) : TypeDescriptor.GetProperties(obj, attributes);
 
                 MergeProperties(properties, propertiesToReturn);
+                return propertiesToReturn;
             }
-            catch (System.Reflection.AmbiguousMatchException)
+            catch (AmbiguousMatchException)
             {
                 // if we get an AmbiguousMatchException, the user has probably declared a property that hides a property in an ancestor
                 // see issue 6258 (http://snoopwpf.codeplex.com/workitem/6258)
@@ -998,55 +985,16 @@ public class PropertyInformation : DependencyObject, IComparable, INotifyPropert
                 //     }
                 // }
 
-                var t = currentObj.GetType();
-                var properties = TypeDescriptor.GetProperties(t, attributes);
+                onlyUseTypeForProperties = true;
+                var properties = TypeDescriptor.GetProperties(currentObjType, attributes);
 
                 MergeProperties(properties, propertiesToReturn);
 
-                var nextBaseTypeWithDefaultConstructor = GetNextTypeWithDefaultConstructor(t);
-
-                if (nextBaseTypeWithDefaultConstructor is null)
-                {
-                    break;
-                }
-
-                currentObj = Activator.CreateInstance(nextBaseTypeWithDefaultConstructor);
+                currentObjType = currentObjType.BaseType;
             }
         }
 
         return propertiesToReturn;
-    }
-
-    public static bool HasDefaultConstructor(Type? type)
-    {
-        var constructors = type?.GetConstructors();
-
-        if (constructors is null)
-        {
-            return false;
-        }
-
-        foreach (var constructor in constructors)
-        {
-            if (constructor.GetParameters().Length == 0)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public static Type? GetNextTypeWithDefaultConstructor(Type type)
-    {
-        var t = type.BaseType;
-
-        while (!HasDefaultConstructor(t))
-        {
-            t = t?.BaseType;
-        }
-
-        return t;
     }
 
     private static void MergeProperties(IEnumerable newProperties, ICollection<PropertyDescriptor> allProperties)

@@ -10,6 +10,7 @@
       xmlns:controls="clr-namespace:Snoop.Controls"
       xmlns:infrastructure="clr-namespace:Snoop.Infrastructure"
       xmlns:snoop="clr-namespace:Snoop"
+      xmlns:snoopwpf="clr-namespace:Snoop.Converters"
       x:Name="propertyInspector"
       MinWidth="0"
       MinHeight="0">
@@ -86,8 +87,32 @@
                LastChildFill="True">
         <StackPanel DockPanel.Dock="Right"
                     Orientation="Horizontal">
+            <Image Width="16"
+                   Height="16"
+                   Stretch="Uniform"
+                   ToolTip="{Binding Path=PropertyFilter.Error, ElementName=propertyInspector}"
+                   Visibility="{Binding Path=PropertyFilter.HasError, ElementName=propertyInspector, Converter={x:Static snoopwpf:BoolToVisibilityConverter.DefaultInstance}}">
+                <Image.Source>
+                    <DrawingImage>
+                        <DrawingImage.Drawing>
+                            <DrawingGroup ClipGeometry="M0,0 V426,667 H426,667 V0 H0 Z">
+                                <DrawingGroup.Children>
+                                    <GeometryDrawing Brush="Red"
+                                                     Geometry="F1 M426.667,426.667z M0,0z M213.333,0C95.514,0 0,95.514 0,213.333 0,331.152 95.514,426.666 213.333,426.666 331.152,426.666 426.666,331.152 426.666,213.333 426.666,95.514 331.153,0 213.333,0z M330.995,276.689L276.693,330.995 213.333,267.639 149.973,330.999 95.671,276.689 159.027,213.333 95.671,149.973 149.973,95.671 213.333,159.027 276.693,95.671 330.995,149.973 267.639,213.333 330.995,276.689z" />
+                                </DrawingGroup.Children>
+                            </DrawingGroup>
+                        </DrawingImage.Drawing>
+                    </DrawingImage>
+                </Image.Source>
+            </Image>
+            <ToggleButton Margin="2 0 2 0"
+                          Content=" .* "
+                          FontWeight="Bold"
+                          IsChecked="{Binding Path=UseRegex, ElementName=propertyInspector, Mode=TwoWay}"
+                          ToolTip="Use Regex for the filter." />
             <CheckBox x:Name="checkBoxClearAfterDelve"
-                      Margin="0 2 2 0"
+                      Margin="0 0 2 0"
+                      VerticalAlignment="Center"
                       Content="Clear after delve" />
             <Button Width="18"
                     Height="18"
@@ -165,7 +190,7 @@
         <TextBox x:Name="PropertiesFilter"
                  Margin="0 0 2 0"
                  DockPanel.Dock="Left"
-                 Text="{Binding ElementName=propertyInspector, Path=StringFilter, UpdateSourceTrigger=PropertyChanged}">
+                 Text="{Binding ElementName=propertyInspector, Path=FilterString, UpdateSourceTrigger=PropertyChanged}">
             <TextBox.ToolTip>
                 <TextBlock Text="Type in this text box to filter properties. The filter is applied to property names and property type names." />
             </TextBox.ToolTip>

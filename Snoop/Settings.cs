@@ -1,6 +1,7 @@
 ﻿namespace Snoop;
 
 using System;
+using System.Runtime.Serialization;
 using System.Windows.Input;
 using System.Xml.Serialization;
 using Snoop.Core;
@@ -19,6 +20,7 @@ public sealed class Settings : SettingsBase<Settings>
     private MultipleDispatcherMode multipleDispatcherMode = MultipleDispatcherMode.Ask;
     private bool setOwnerWindow = true;
     private bool showActivated = true;
+    private bool startAppChooserMinimized;
 
     public Settings()
     {
@@ -28,6 +30,9 @@ public sealed class Settings : SettingsBase<Settings>
     public static Settings Default { get; } = new Settings().Load();
 
     protected override XmlSerializer Serializer => serializer;
+
+    [IgnoreDataMember]
+    public string Version { get; } = typeof(Settings).Assembly.GetName().Version.ToString();
 
     public WINDOWPLACEMENT? AppChooserWindowPlacement { get; set; }
 
@@ -137,9 +142,25 @@ public sealed class Settings : SettingsBase<Settings>
         }
     }
 
+    public bool StartAppChooserMinimized
+    {
+        get => this.startAppChooserMinimized;
+        set
+        {
+            if (value == this.startAppChooserMinimized)
+            {
+                return;
+            }
+
+            this.startAppChooserMinimized = value;
+            this.OnPropertyChanged();
+        }
+    }
+
     protected override void UpdateWith(Settings settings)
     {
         this.SetOwnerWindow = settings.SetOwnerWindow;
+        this.ShowActivated = settings.ShowActivated;
         this.EnableDiagnostics = settings.EnableDiagnostics;
 
         this.MultipleDispatcherMode = settings.MultipleDispatcherMode;
@@ -150,5 +171,7 @@ public sealed class Settings : SettingsBase<Settings>
         this.GlobalHotKey = settings.GlobalHotKey;
 
         this.ILSpyPath = settings.ILSpyPath;
+
+        this.StartAppChooserMinimized = settings.StartAppChooserMinimized;
     }
 }

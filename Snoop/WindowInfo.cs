@@ -178,7 +178,7 @@ public class WindowInfo
         {
             var windowTitle = NativeMethods.GetText(this.HWnd);
 
-            if (string.IsNullOrEmpty(windowTitle))
+            if (string.IsNullOrEmpty(windowTitle) || windowTitle == "CiceroUIWndFrame")
             {
                 try
                 {

@@ -5,7 +5,9 @@
 
 namespace Snoop.Infrastructure.Helpers;
 
+using System.Collections;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
@@ -100,6 +102,9 @@ public static class ResourceDictionaryKeyHelpers
         return null;
     }
 
+    private static readonly FieldInfo? baseDictionaryFieldInfo = typeof(ResourceDictionary).GetField("_baseDictionary", BindingFlags.Instance | BindingFlags.NonPublic)
+                                                                 ?? typeof(ResourceDictionary).GetField("baseDictionary", BindingFlags.Instance | BindingFlags.NonPublic);
+
     public static object? GetKeyInResourceDictionary(ResourceDictionary? dictionary, object? resourceItem)
     {
         if (dictionary is null)
@@ -107,15 +112,30 @@ public static class ResourceDictionaryKeyHelpers
             return null;
         }
 
-        foreach (var key in dictionary.Keys)
+        // ReSharper disable once ReplaceWithSingleAssignment.True
+        // For performance reasons we first check the base storage of the dictionary for the value. That's way faster than iterating all resource keys.
+        // Default to true if, for whatever reason, we can't find the field.
+        var containsValue = true;
+
+        if (baseDictionaryFieldInfo?.GetValue(dictionary) is Hashtable hashtable
+            && hashtable.ContainsValue(resourceItem) is false)
         {
-            if (dictionary.TryGetValue(key, out var item)
-                && item == resourceItem)
+            containsValue = false;
+        }
+
+        if (containsValue)
+        {
+            foreach (var key in dictionary.Keys)
             {
-                return key;
+                if (dictionary.TryGetValue(key, out var item)
+                    && item == resourceItem)
+                {
+                    return key;
+                }
             }
         }
 
+        // Search the merged dictionaries in reverse order
         foreach (var dic in dictionary.MergedDictionaries.Reverse())
         {
             var key = GetKeyInResourceDictionary(dic, resourceItem);

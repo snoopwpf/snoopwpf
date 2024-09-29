@@ -27,6 +27,7 @@
         <TextBlock x:Name="captionTextBlock"
                    Grid.Row="0"
                    FontSize="16"
+                   Foreground="{DynamicResource Snoop.Brushes.Default.Foreground}"
                    TextWrapping="Wrap" />
         <TextBlock Grid.Row="1"
                    Margin="0 10 0 0"

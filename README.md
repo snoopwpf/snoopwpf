@@ -20,18 +20,25 @@ You can change property values, view triggers, set breakpoints on property chang
 - [Chocolatey](https://chocolatey.org/packages/snoop) for stable and some preview versions
 - [GitHub releases](https://github.com/snoopwpf/snoopwpf/releases) for stable versions
 - [AppVeyor](https://ci.appveyor.com/project/batzen/snoopwpf/build/artifacts) for the latest preview versions (built on every code change)
-- You need at least .NET Framework 4.5.2 to run Snoop
+- You need at least .NET Framework 4.6.2 to run Snoop
 
 ## Supported .NET versions
 
-- .NET Framework >= 4.5.2
-- .NET >= 3.1
-  - Tested with 3.1, 5, 6 and 7. Future versions might just work.
+- .NET Framework >= 4.6.2
+- .NET >= 6
+  - Tested with 6, 7 and 8. Future versions might just work.
   - **Restrictions:** Self-Contained single file applications are not supported as there is no reliable way to get a handle to the .NET runtime
 
 ## Versions
 
 You can read the [changelog](Changelog.md) for details on what changed in which version.
+
+### [6.0.0](../../releases/tag/v6.0.0)
+
+Breaking:
+
+- Dropped support for all .NET Framework versions prior to .NET 4.6.2
+- Dropped support for .NET 3.1 and NET 5
 
 ### [5.0.0](../../releases/tag/v5.0.0)
 
@@ -118,22 +125,21 @@ Unfortunately there isn't any exhaustive documentation on how to use Snoop and t
 
 Here are the links to the current Snoop Tips & Tricks:
 
-- http://www.cplotts.com/2011/02/10/snoop-tips-tricks-1-ctrl-shift-mouse-over
-- http://www.cplotts.com/2011/02/14/snoop-tips-tricks-2-snooping-transient-visuals
-- http://www.cplotts.com/2012/05/31/snoop-tips-tricks-3-the-crosshairs
+- https://www.youtube.com/watch?v=n8EdRR0Tc1k
+- https://www.youtube.com/watch?v=98UEVCQHmVA
+- https://www.youtube.com/watch?v=frXAgGzZnrU
 
-## Why can't I snoop .NET 3.5 applications?
+## Why can't I snoop my application?
 
-Well, you can! You will just need to use Snoop 2.9.0 and earlier, in order to do so.
-As part of the process of moving to Visual Studio 2019, we have dropped support for .NET 3.5 applications.
-The minimum supported .NET version is 4.0 as of Snoop version 3.0.
+Well, you can! You will just need to use an earlier version of Snoop, in order to do so.  
+The minimum versions are:
 
-## Why can't I snoop .NET 4.0 and 4.5.0 applications?
-
-Well, you can! You will just need to use Snoop 3.0.0 and earlier, in order to do so.
-As part of the process of moving to Visual Studio 2022, support for .NET 4.0 and 4.5.0 applications was dropped.
-The minimum supported .NET version is 4.5.1 as of Snoop 4.0.
-The minimum supported .NET version is 4.5.2 as of Snoop 5.0.
+| Snoop | .NET Framework | .NET |
+|-------|----------------|------|
+| 3.0   | 4.0            | 3.0  |
+| 4.0   | 4.5.1          | 3.0  |
+| 5.0   | 4.5.2          | 3.1  |
+| 6.0   | 4.6.2          | 6.0  |
 
 ## How do i build Snoop?
 
@@ -144,14 +150,14 @@ Requirements:
 - Visual Studio 2022
   - C++ payloads (x86/x64 and optionally ARM/ARM64)
   - You can import the [.vsconfig](.vsconfig) file in the Visual Studio installer to let it install all required components
-- .NET Core SDK 6.0.300 or later
+- .NET SDK 8.0.100 or later
 
 ## Contributors
 
 Over time contributions have been added by several people, most notably:
 
 - [Bastian Schmidt](https://github.com/batzen), [batzen.dev](https://batzen.dev) (current maintainer)
-- [Cory Plotts](https://github.com/cplotts), [cplotts.com](https://cplotts.com)
+- [Cory Plotts](https://github.com/cplotts)
 - [Dan Hanan](http://blogs.interknowlogy.com/author/danhanan/)
 - [Andrei Kashcha](http://blog.yasiv.com/)
 - [Maciek Rakowski](https://github.com/MaciekRakowski)

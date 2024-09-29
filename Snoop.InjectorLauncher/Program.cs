@@ -59,7 +59,7 @@ public static class Program
                     var originalProcessFileName = currentProcess.MainModule!.ModuleName!;
 #pragma warning disable CA1307
                     var correctArchitectureFileName = originalProcessFileName.Replace(currentProcessArchitecture, processWrapper.Architecture);
-                    var processStartInfo = new ProcessStartInfo(currentProcess!.MainModule!.FileName!.Replace(originalProcessFileName, correctArchitectureFileName), Parser.Default.FormatCommandLine(commandLineOptions))
+                    var processStartInfo = new ProcessStartInfo(currentProcess.MainModule.FileName!.Replace(originalProcessFileName, correctArchitectureFileName), Parser.Default.FormatCommandLine(commandLineOptions))
                     {
                         CreateNoWindow = true,
                         WorkingDirectory = currentProcess.StartInfo.WorkingDirectory

@@ -1,12 +1,12 @@
 #include "pch.h"
-#include "NetCoreApp3_0Executor.h"
+#include "NetExecutor.h"
 
 #include "mscoree.h"
 
 typedef HRESULT(STDAPICALLTYPE* FnGetNETCoreCLRRuntimeHost)(REFIID riid, IUnknown** pUnk);
 
 // Returns the ICLRRuntimeHost instance or nullptr on failure.
-ICLRRuntimeHost* NetCoreApp3_0Executor::GetNETCoreCLRRuntimeHost()
+ICLRRuntimeHost* NetExecutor::GetNETCoreCLRRuntimeHost()
 {
 	this->Log(L"Getting handle for coreclr.dll...");
 	auto* const coreCLRModule = ::GetModuleHandle(L"coreclr.dll");
@@ -34,7 +34,7 @@ ICLRRuntimeHost* NetCoreApp3_0Executor::GetNETCoreCLRRuntimeHost()
 
 	ICLRRuntimeHost* clrRuntimeHost = nullptr;
 	const auto hr = pfnGetCLRRuntimeHost(IID_ICLRRuntimeHost, reinterpret_cast<IUnknown**>(&clrRuntimeHost));
-	
+
 	if (FAILED(hr)) 
 	{
 		this->Log(L"Could not get runtime host.");
@@ -46,7 +46,7 @@ ICLRRuntimeHost* NetCoreApp3_0Executor::GetNETCoreCLRRuntimeHost()
 	return clrRuntimeHost;
 }
 
-int NetCoreApp3_0Executor::Execute(LPCWSTR pwzAssemblyPath, LPCWSTR pwzTypeName, LPCWSTR pwzMethodName,	LPCWSTR pwzArgument, DWORD* pReturnValue)
+int NetExecutor::Execute(LPCWSTR pwzAssemblyPath, LPCWSTR pwzTypeName, LPCWSTR pwzMethodName,	LPCWSTR pwzArgument, DWORD* pReturnValue)
 {
 	auto* host = GetNETCoreCLRRuntimeHost();
 

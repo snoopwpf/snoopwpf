@@ -29,6 +29,9 @@ jobs:
       - name: Install .NET 6 SDK
         shell: pwsh
         run: ./dotnet-install.ps1 -Version 6.0.400 -InstallDir "C:\Program Files\dotnet"
+      - name: Install .NET 8 SDK
+        shell: pwsh
+        run: ./dotnet-install.ps1 -Version 8.0.100 -InstallDir "C:\Program Files\dotnet"
       - name: Run './build.cmd CI'
         run: ./build.cmd CI
       - uses: actions/upload-artifact@v3

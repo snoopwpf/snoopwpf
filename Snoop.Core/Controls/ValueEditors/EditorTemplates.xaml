@@ -38,7 +38,17 @@
         </Style.Triggers>
     </Style>
 
-    <Style TargetType="{x:Type valueEditors:StandardValueEditor}">
+    <Style x:Key="Snoop.Styles.ValueEditor"
+           TargetType="{x:Type valueEditors:ValueEditor}">
+        <Setter Property="MinHeight" Value="20" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style TargetType="{x:Type valueEditors:ValueEditor}"
+           BasedOn="{StaticResource Snoop.Styles.ValueEditor}" />
+
+    <Style TargetType="{x:Type valueEditors:StandardValueEditor}"
+           BasedOn="{StaticResource Snoop.Styles.ValueEditor}">
         <Style.Resources>
             <DataTemplate x:Key="EmptyValueTemplate"
                           DataType="valueEditors:ValueEditor">
@@ -64,12 +74,12 @@
                                       Text="{Binding StringValue}" />
             </DataTemplate>
         </Style.Resources>
-
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type valueEditors:StandardValueEditor}">
                     <DockPanel LastChildFill="True">
                         <Button x:Name="OpenDetailsEditor"
+                                MinHeight="0"
                                 Command="{x:Static valueEditors:ValueEditor.OpenDetailsEditorCommand}"
                                 Content=" ... "
                                 DockPanel.Dock="Left"
@@ -82,7 +92,7 @@
                         </Button>
 
                         <ContentPresenter Name="ValueHolder"
-                                          MinHeight="18"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                           Content="{Binding RelativeSource={RelativeSource TemplatedParent}}"
                                           ContentTemplate="{DynamicResource UnselectedValueTemplate}">
                             <ContentPresenter.ToolTip>
@@ -115,7 +125,8 @@
         </Setter>
     </Style>
 
-    <Style TargetType="{x:Type valueEditors:BoolValueEditor}">
+    <Style TargetType="{x:Type valueEditors:BoolValueEditor}"
+           BasedOn="{StaticResource Snoop.Styles.ValueEditor}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type valueEditors:BoolValueEditor}">
@@ -123,7 +134,6 @@
                                                                 IsDesignTimeCreatable=False}"
                                LastChildFill="True">
                         <CheckBox x:Name="PART_CheckBox"
-                                  VerticalAlignment="Center"
                                   IsChecked="{Binding Value, Mode=TwoWay}"
                                   IsEnabled="{TemplateBinding IsEditable}"
                                   IsThreeState="{Binding IsNullableValueType}" />
@@ -181,38 +191,10 @@
                 <DockPanel LastChildFill="True">
                     <DockPanel.ToolTip>
                         <ToolTip>
-                            <ListBox Width="200"
-                                     Height="200"
-                                     ItemsSource="{Binding Value, Converter={x:Static converters:BrushStopsConverter.DefaultInstance}}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate DataType="converters:BrushStop">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="40" />
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Grid.Column="0"
-                                                       Margin="4"
-                                                       Foreground="{DynamicResource Snoop.Brushes.Default.Foreground}"
-                                                       Text="{Binding Offset}" />
-                                            <TextBlock Grid.Column="1"
-                                                       Margin="4"
-                                                       Foreground="{DynamicResource Snoop.Brushes.Default.Foreground}"
-                                                       Text="{Binding ColorText}" />
-                                            <Border Grid.Column="2"
-                                                    HorizontalAlignment="Stretch"
-                                                    VerticalAlignment="Stretch"
-                                                    BorderBrush="{DynamicResource Snoop.Brushes.Default.ControlDark}"
-                                                    BorderThickness="1">
-                                                <Border.Background>
-                                                    <SolidColorBrush Color="{Binding Color}" />
-                                                </Border.Background>
-                                            </Border>
-                                        </Grid>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ListBox>
+                            <ItemsControl Width="200"
+                                          Height="200"
+                                          ItemTemplateSelector="{Binding Source={x:Static valueEditors:BrushValueEditorToolTipItemTemplateSelector.Instance}}"
+                                          ItemsSource="{Binding Value, Converter={x:Static converters:BrushStopsConverter.DefaultInstance}}" />
                         </ToolTip>
                     </DockPanel.ToolTip>
 
@@ -241,38 +223,10 @@
                       HorizontalAlignment="Left">
                     <Grid.ToolTip>
                         <ToolTip>
-                            <ListBox Width="200"
-                                     Height="200"
-                                     ItemsSource="{Binding Value, Converter={x:Static converters:BrushStopsConverter.DefaultInstance}}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate DataType="converters:BrushStop">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="40" />
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Grid.Column="0"
-                                                       Margin="4"
-                                                       Foreground="{DynamicResource Snoop.Brushes.Default.Foreground}"
-                                                       Text="{Binding Offset}" />
-                                            <TextBlock Grid.Column="1"
-                                                       Margin="4"
-                                                       Foreground="{DynamicResource Snoop.Brushes.Default.Foreground}"
-                                                       Text="{Binding ColorText}" />
-                                            <Border Grid.Column="2"
-                                                    HorizontalAlignment="Stretch"
-                                                    VerticalAlignment="Stretch"
-                                                    BorderBrush="{DynamicResource Snoop.Brushes.Default.ControlDark}"
-                                                    BorderThickness="1">
-                                                <Border.Background>
-                                                    <SolidColorBrush Color="{Binding Color}" />
-                                                </Border.Background>
-                                            </Border>
-                                        </Grid>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ListBox>
+                            <ItemsControl Width="200"
+                                          Height="200"
+                                          ItemTemplateSelector="{Binding Source={x:Static valueEditors:BrushValueEditorToolTipItemTemplateSelector.Instance}}"
+                                          ItemsSource="{Binding Value, Converter={x:Static converters:BrushStopsConverter.DefaultInstance}}" />
                         </ToolTip>
                     </Grid.ToolTip>
 
@@ -327,19 +281,16 @@
                 <Grid Height="Auto"
                       HorizontalAlignment="Left">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="48" />
+                        <ColumnDefinition Width="24" />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
                     <Rectangle Grid.Column="0"
                                Fill="{StaticResource CheckerboardBrush}" />
                     <Rectangle Grid.Column="0"
+                               Fill="{Binding Value, Converter={x:Static converters:ColorToSolidColorBrushConverter.DefaultInstance}}"
                                Stroke="{TemplateBinding TextElement.Foreground}"
-                               StrokeThickness="1">
-                        <Rectangle.Fill>
-                            <SolidColorBrush Color="{Binding Value}" />
-                        </Rectangle.Fill>
-                    </Rectangle>
+                               StrokeThickness="1" />
                     <TextBlock Grid.Column="1"
                                Margin="5 0 0 0"
                                Text="{Binding DescriptiveValue}"
@@ -348,7 +299,7 @@
             </DataTemplate>
 
             <DataTemplate x:Key="SelectedValueTemplate"
-                          DataType="valueEditors:BrushValueEditor">
+                          DataType="valueEditors:ColorValueEditor">
                 <Grid Height="Auto"
                       HorizontalAlignment="Left">
                     <Grid.ColumnDefinitions>
@@ -359,12 +310,9 @@
                     <Rectangle Grid.Column="0"
                                Fill="{StaticResource CheckerboardBrush}" />
                     <Rectangle Grid.Column="0"
+                               Fill="{Binding Value, Converter={x:Static converters:ColorToSolidColorBrushConverter.DefaultInstance}}"
                                Stroke="{TemplateBinding TextElement.Foreground}"
-                               StrokeThickness="1">
-                        <Rectangle.Fill>
-                            <SolidColorBrush Color="{Binding Value}" />
-                        </Rectangle.Fill>
-                    </Rectangle>
+                               StrokeThickness="1" />
 
                     <controls:EditTextBox Grid.Column="1"
                                           Height="Auto"
@@ -382,7 +330,8 @@
         </Style.Resources>
     </Style>
 
-    <Style TargetType="{x:Type valueEditors:EnumValueEditor}">
+    <Style TargetType="{x:Type valueEditors:EnumValueEditor}"
+           BasedOn="{StaticResource Snoop.Styles.ValueEditor}">
         <Style.Resources>
             <DataTemplate x:Key="UnselectedValueTemplate"
                           DataType="valueEditors:ValueEditor">
@@ -393,6 +342,7 @@
             <DataTemplate x:Key="SelectedValueTemplate"
                           DataType="valueEditors:EnumValueEditor">
                 <ComboBox Padding="2 -2 2 0"
+                          VerticalContentAlignment="Center"
                           DisplayMemberPath="Text"
                           IsReadOnly="{Binding IsEditable, Converter={x:Static converters:InvertBoolConverter.DefaultInstance}}"
                           IsSynchronizedWithCurrentItem="False"
@@ -401,12 +351,11 @@
                           SelectedValuePath="Value" />
             </DataTemplate>
         </Style.Resources>
-
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type valueEditors:EnumValueEditor}">
                     <ContentPresenter Name="ValueHolder"
-                                      MinHeight="18"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                       Content="{Binding RelativeSource={RelativeSource TemplatedParent}}"
                                       ContentTemplate="{DynamicResource UnselectedValueTemplate}" />
 
@@ -423,6 +372,7 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
     </Style>
 
     <valueEditors:ValueEditorTemplateSelector x:Key="EditorSelector">
@@ -436,7 +386,6 @@
                                                       IsEditable="{Binding CanEdit}"
                                                       IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
                                                       PropertyInfo="{Binding}"
-                                                      PropertyType="{Binding PropertyType}"
                                                       Value="{Binding Value, Mode=TwoWay}" />
 
                     <!-- to allow ValueEditor to live on the left and not stretch -->
@@ -455,7 +404,6 @@
                                                   IsEditable="{Binding CanEdit}"
                                                   IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
                                                   PropertyInfo="{Binding}"
-                                                  PropertyType="{Binding PropertyType}"
                                                   Value="{Binding Value, Mode=TwoWay}" />
 
                     <!-- to allow ValueEditor to live on the left and not stretch -->
@@ -474,7 +422,6 @@
                                                   IsEditable="{Binding CanEdit}"
                                                   IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
                                                   PropertyInfo="{Binding}"
-                                                  PropertyType="{Binding PropertyType}"
                                                   Value="{Binding Value, Mode=TwoWay}" />
 
                     <!-- to allow ValueEditor to live on the left and not stretch -->
@@ -490,7 +437,6 @@
                                                     IsEditable="{Binding CanEdit}"
                                                     IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
                                                     PropertyInfo="{Binding}"
-                                                    PropertyType="{Binding PropertyType}"
                                                     Value="{Binding Value, Mode=TwoWay}" />
 
                     <!-- to allow ValueEditor to live on the left and not stretch -->
@@ -509,7 +455,6 @@
                                                    IsEditable="{Binding CanEdit}"
                                                    IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
                                                    PropertyInfo="{Binding}"
-                                                   PropertyType="{Binding PropertyType}"
                                                    Value="{Binding Value, Mode=TwoWay}" />
 
                     <!-- to allow ValueEditor to live on the left and not stretch -->
@@ -528,7 +473,6 @@
                                                    IsEditable="{Binding CanEdit}"
                                                    IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
                                                    PropertyInfo="{Binding}"
-                                                   PropertyType="{Binding PropertyType}"
                                                    Value="{Binding Value, Mode=TwoWay}" />
 
                     <!-- to allow ValueEditor to live on the left and not stretch -->
@@ -544,7 +488,6 @@
                                                       IsEditable="False"
                                                       IsSelected="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"
                                                       PropertyInfo="{Binding}"
-                                                      PropertyType="{Binding PropertyType}"
                                                       Value="{Binding ResourceKey, Mode=OneWay}" />
 
                     <!-- to allow ValueEditor to live on the left and not stretch -->
@@ -553,4 +496,40 @@
             </DataTemplate>
         </valueEditors:ValueEditorTemplateSelector.WithResourceKeyTemplate>
     </valueEditors:ValueEditorTemplateSelector>
+
+    <DataTemplate x:Key="Snoop.DataTemplates.ToolTip.BrushStop"
+                  DataType="converters:BrushStop">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0"
+                       Margin="4"
+                       Foreground="{DynamicResource Snoop.Brushes.Default.Foreground}"
+                       Text="{Binding Offset}" />
+            <TextBlock Grid.Column="1"
+                       Margin="4"
+                       Foreground="{DynamicResource Snoop.Brushes.Default.Foreground}"
+                       Text="{Binding ColorText}" />
+            <Border Grid.Column="2"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Background="{Binding Color, Converter={x:Static converters:ColorToSolidColorBrushConverter.DefaultInstance}}"
+                    BorderBrush="{DynamicResource Snoop.Brushes.Default.ControlDark}"
+                    BorderThickness="1" />
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="Snoop.DataTemplates.ToolTip.Brush"
+                  DataType="{x:Type Brush}">
+        <Border Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Background="{Binding}"
+                BorderBrush="{DynamicResource Snoop.Brushes.Default.ControlDark}"
+                BorderThickness="1" />
+    </DataTemplate>
 </ResourceDictionary>

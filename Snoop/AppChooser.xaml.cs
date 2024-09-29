@@ -55,6 +55,11 @@ public partial class AppChooser
         this.CommandBindings.Add(new CommandBinding(SettingsCommand, this.HandleSettingsCommand));
         this.CommandBindings.Add(new CommandBinding(MinimizeCommand, this.HandleMinimizeCommand));
         this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, this.HandleCloseCommand));
+
+        if (Settings.Default.StartAppChooserMinimized)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
     }
 
     public ICollectionView WindowInfos { get; }
@@ -86,7 +91,9 @@ public partial class AppChooser
                         continue;
                     }
 
-                    var windowInfoCollection = windows.Select(h => WindowInfo.GetWindowInfo(h));
+                    var windowInfoCollection = windows
+                        .OrderByDescending(NativeMethods.IsWindowVisible)
+                        .Select(h => WindowInfo.GetWindowInfo(h));
 
                     foreach (var windowInfo in windowInfoCollection)
                     {
@@ -107,7 +114,7 @@ public partial class AppChooser
                     this.windowInfos.Add(windowInfo);
                 }
 
-                if (this.windowInfos.Count > 0)
+                if (this.windowInfos.Count is 1)
                 {
                     this.WindowInfos.MoveCurrentTo(this.windowInfos[0]);
                 }
@@ -233,9 +240,9 @@ public partial class AppChooser
             Title = "Settings",
             Owner = this,
             MinWidth = 480,
-            MinHeight = 320,
+            MinHeight = 360,
             Width = 480,
-            Height = 320,
+            Height = 360,
             WindowStartupLocation = WindowStartupLocation.CenterScreen,
             WindowStyle = WindowStyle.ToolWindow
         };

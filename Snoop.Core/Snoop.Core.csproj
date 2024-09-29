@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <TargetFrameworks>net5.0-windows;netcoreapp3.1;$(MinTargetFramework)</TargetFrameworks>
+    <TargetFrameworks>net6.0-windows;$(MinTargetFramework)</TargetFrameworks>
 
     <RootNamespace>Snoop</RootNamespace>
 
@@ -25,11 +25,10 @@
     <Reference Include="System.Configuration" Condition="'$(TargetFramework)' == '$(MinTargetFramework)'" />
     <PackageReference Include="microsoft.powershell.3.referenceassemblies" PrivateAssets="All" Condition="'$(TargetFramework)' == '$(MinTargetFramework)'" />
 
-    <PackageReference Include="System.Management.Automation" PrivateAssets="All" Condition="'$(TargetFramework)' == 'netcoreapp3.1'" />
-    <PackageReference Include="System.Management.Automation" PrivateAssets="All" Condition="'$(TargetFramework)' == 'net5.0-windows'" />
+    <PackageReference Include="System.Management.Automation" PrivateAssets="All" Condition="'$(TargetFramework)' == 'net6.0-windows'" />
   </ItemGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net5.0-windows'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0-windows'">
     <DefineConstants>$(DefineConstants);USE_WPF_BINDING_DIAG</DefineConstants>
   </PropertyGroup>
 </Project>

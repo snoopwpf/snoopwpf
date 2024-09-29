@@ -107,9 +107,7 @@ class Build : NukeBuild
 
     AbsolutePath TestResultDirectory => OutputDirectory / "test-results";
 
-    string CandleExecutable => NuGetToolPathResolver.GetPackageExecutable("wix", "candle.exe");
-
-    string LightExecutable => NuGetToolPathResolver.GetPackageExecutable("wix", "light.exe");
+    readonly string WixUIExtension = "WixToolset.UI.wixext/5.0.0";
 
     readonly string FenceOutput = "".PadLeft(30, '#');
 
@@ -123,6 +121,9 @@ class Build : NukeBuild
         .Executes(() =>
         {
             DotNetToolRestore();
+
+            ProcessTasks.StartProcess("dotnet", $"wix extension add {WixUIExtension}")
+                .AssertZeroExitCode();
 
             DotNetRestore(s => s
                 .SetProjectFile(Solution));
@@ -178,7 +179,7 @@ class Build : NukeBuild
                 .SetAssemblyVersion(AssemblySemVer)
                 .SetFileVersion(AssemblySemVer)
                 .SetInformationalVersion(InformationalVersion)
-                .SetVerbosity(DotNetVerbosity.Minimal));
+                .SetVerbosity(DotNetVerbosity.minimal));
         });
 
     [PublicAPI]
@@ -192,7 +193,7 @@ class Build : NukeBuild
                 .SetAssemblyVersion(AssemblySemVer)
                 .SetInformationalVersion(InformationalVersion)
                 .EnableNoRestore()
-                .SetVerbosity(DotNetVerbosity.Minimal));
+                .SetVerbosity(DotNetVerbosity.minimal));
 
             MSBuild(s => s
                 .SetProjectFile(TestHarnessSolution.Win32ToWPFInterop.win32clock)
@@ -221,7 +222,7 @@ class Build : NukeBuild
             DotNetTest(s => s
                 .SetProjectFile(Solution.Snoop_Core_Tests)
                 .SetConfiguration(Configuration)
-                .SetVerbosity(DotNetVerbosity.Normal)
+                .SetVerbosity(DotNetVerbosity.normal)
                 .AddLoggers("trx")
                 .EnableNoBuild()
                 .SetResultsDirectory(TestResultDirectory));
@@ -272,23 +273,11 @@ class Build : NukeBuild
         .Produces(ArtifactsDirectory / "*.msi")
         .Executes(() =>
         {
-            var tempDirectory = TemporaryDirectory / $"{ProjectName}{nameof(Setup)}";
-
-            tempDirectory.CreateOrCleanDirectory();
-
-            var candleProcess = ProcessTasks.StartProcess(CandleExecutable,
-                $"{ProjectName}.wxs -ext WixUIExtension -o \"{tempDirectory / $"{ProjectName}.wixobj"}\" -dProductVersion=\"{MajorMinorPatch}\" -nologo");
-            candleProcess.AssertZeroExitCode();
-
-            {
-                var outputFile = $"{ArtifactsDirectory / $"{ProjectName}.{NuGetVersion}.msi"}";
-                var lightProcess = ProcessTasks.StartProcess(LightExecutable,
-                    $"-out \"{outputFile}\" -b \"{CurrentBuildOutputDirectory}\" \"{tempDirectory / $"{ProjectName}.wixobj"}\" -ext WixUIExtension -dProductVersion=\"{MajorMinorPatch}\" -pdbout \"{tempDirectory / $"{ProjectName}.wixpdb"}\" -nologo -sice:ICE61");
-                lightProcess.AssertZeroExitCode();
-
-                CheckSumFiles.Add(outputFile);
-                AppVeyor.Instance?.PushArtifact(outputFile);
-            }
+            var outputFile = $"{ArtifactsDirectory / $"{ProjectName}.{NuGetVersion}.msi"}";
+            ProcessTasks.StartProcess("dotnet", $"wix build -bindpath \"{CurrentBuildOutputDirectory}\" -define ProductVersion=\"{MajorMinorPatch}\" -ext {WixUIExtension} -o \"{outputFile}\" -nologo {ProjectName}.wxs")
+                .AssertZeroExitCode();
+            CheckSumFiles.Add(outputFile);
+            AppVeyor.Instance?.PushArtifact(outputFile);
         });
 
     [PublicAPI]
