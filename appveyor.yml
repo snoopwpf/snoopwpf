@@ -9,8 +9,19 @@ image: Visual Studio 2022
 test: false
 
 environment:
+  SIGNPATH_ORGANIZATION_ID: 622164c8-36db-41ab-b5fd-7967c501ce93
+  ARTIFACT_CONFIGURATION_SLUG: v1
+  SIGNPATH_PROJECT_SLUG: snoopwpf
   SignPathAuthToken:
     secure: 2zYYVqBWRInF5x5iO/jpFsIzQAx9AEt6Fas2LBnxMg2fbwPgeWH5CnF9Xy2LmlWVji+WP4eby2/k63dcz8JZ3g==
+for:
+  -
+    branches:
+      only:
+        - /release/.*/
+        - /master
+    environment:
+      SIGNPATH_SIGNING_POLICY_SLUG: release-signing
 
 install:
   # Appveyor uses git checkout -qf FETCH_HEAD but all GitVersion versions above 5.6.3 doesn't support this detached header
@@ -36,3 +47,8 @@ nuget:
 skip_commits:
   files:
     - '**/*.md'
+
+deploy:
+  - provider: Webhook
+    url: https://app.signpath.io/API/v1/%SIGNPATH_ORGANIZATION_ID%/Integrations/AppVeyor?ProjectSlug=%SIGNPATH_PROJECT_SLUG%&SigningPolicySlug=%SIGNPATH_SIGNING_POLICY_SLUG%&ArtifactConfigurationSlug=%ARTIFACT_CONFIGURATION_SLUG%
+    authorization: 'Bearer %SignPathAuthToken%'
