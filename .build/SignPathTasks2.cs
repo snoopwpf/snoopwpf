@@ -259,7 +259,7 @@ public static class SignPathTasks2
             }
             catch (Exception e)
             {
-                Log.Error(e, "Failed to convert content.\nContent:\n{Content}", content);
+                Log.Error(e, $"[{response.StatusCode}] Failed to convert content.\nContent:\n{{Content}}", content);
                 throw;
             }
         }
