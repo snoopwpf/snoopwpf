@@ -13,6 +13,14 @@ using System.Xml.Linq;
 
 public static class XamlWriterHelper
 {
+    private static readonly XmlWriterSettings writerSettings = new()
+        {
+            Indent = true,
+            OmitXmlDeclaration = true,
+            NamespaceHandling = NamespaceHandling.OmitDuplicates,
+            Encoding = Encoding.UTF8
+        };
+
     public static XElement GetXamlAsXElement(object obj)
     {
         var xaml = GetXamlAsString(obj);
@@ -26,14 +34,6 @@ public static class XamlWriterHelper
         {
             return string.Empty;
         }
-
-        var writerSettings = new XmlWriterSettings
-        {
-            Indent = true,
-            OmitXmlDeclaration = true,
-            NamespaceHandling = NamespaceHandling.OmitDuplicates,
-            Encoding = Encoding.UTF8
-        };
 
         var xamlString = new StringBuilder();
         var xamlDesignerSerializationManager = new XamlDesignerSerializationManager(XmlWriter.Create(xamlString, writerSettings))

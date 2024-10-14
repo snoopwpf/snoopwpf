@@ -349,6 +349,9 @@ public class PropertyInformation : DependencyObject, IComparable, INotifyPropert
 
                     case ResourceDictionary { Source: not null } rd:
                         return $"[ResourceDictionary] {rd.Source}";
+
+                    case PropertyPath propertyPath:
+                        return $"[PropertyPath] {XamlWriterHelper.GetXamlAsXElement(propertyPath).Value}";
                 }
 
                 // Try to use a short type name
