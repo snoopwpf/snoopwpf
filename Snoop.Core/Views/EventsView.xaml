@@ -59,11 +59,10 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal">
-                        <ContentControl Content="{Binding EventArgs}"
+                        <ContentControl Content="{Binding EventArgsText}"
                                         Focusable="False" />
                         <TextBlock Text=" on " />
-                        <TextBlock Grid.Column="1"
-                                   Text="{Binding Originator.Handler, Converter={x:Static converters:ObjectToStringConverter.Instance}}" />
+                        <TextBlock Text="{Binding Originator.Handler, Converter={x:Static converters:ObjectToStringConverter.Instance}}" />
                     </StackPanel>
                     <ContentControl x:Name="Handler"
                                     Grid.Row="1"
