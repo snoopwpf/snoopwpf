@@ -13,9 +13,9 @@ public static class MouseDeviceExtensions
 {
     private static readonly PropertyInfo? rawDirectlyOverPropertyInfo = typeof(MouseDevice).GetProperty("RawDirectlyOver", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
 
-    public static UIElement? GetDirectlyOver(this MouseDevice mouseDevice)
+    public static UIElement? GetDirectlyOver(this MouseDevice mouseDevice, bool ignoreHitTestVisibility)
     {
-        if (TryGetElementAtMousePos(mouseDevice.Dispatcher, out var elementFromFilter, out var elementFromResult))
+        if (TryGetElementAtMousePos(mouseDevice.Dispatcher, ignoreHitTestVisibility, out var elementFromFilter, out var elementFromResult))
         {
             return elementFromFilter
                    ?? elementFromResult;
@@ -28,7 +28,7 @@ public static class MouseDeviceExtensions
                ?? elementMouseDeviceDirectlyOver;
     }
 
-    private static bool TryGetElementAtMousePos(Dispatcher dispatcher, out UIElement? elementFromFilter, out UIElement? elementFromResult)
+    private static bool TryGetElementAtMousePos(Dispatcher dispatcher, bool ignoreHitTestVisibility, out UIElement? elementFromFilter, out UIElement? elementFromResult)
     {
         elementFromFilter = null;
         elementFromResult = null;
@@ -49,7 +49,7 @@ public static class MouseDeviceExtensions
 
         UIElement? elementFromFilterLocal = null;
         UIElement? elementFromResultLocal = null;
-        VisualTreeHelper.HitTest(windowUnderMouse, o => FilterCallback(o, ref elementFromFilterLocal), r => ResultCallback(r, ref elementFromResultLocal), pointHitTestParameters);
+        VisualTreeHelper.HitTest(windowUnderMouse, o => FilterCallback(o, ignoreHitTestVisibility, ref elementFromFilterLocal), r => ResultCallback(r, ref elementFromResultLocal), pointHitTestParameters);
 
         elementFromFilter = elementFromFilterLocal;
         elementFromResult = elementFromResultLocal;
@@ -58,12 +58,13 @@ public static class MouseDeviceExtensions
                || elementFromResult is not null;
     }
 
-    private static HitTestFilterBehavior FilterCallback(DependencyObject target, ref UIElement? element)
+    private static HitTestFilterBehavior FilterCallback(DependencyObject target, bool ignoreHitTestVisibility, ref UIElement? element)
     {
         var filterResult = target switch
         {
             UIElement { IsVisible: false } => HitTestFilterBehavior.ContinueSkipSelfAndChildren,
             UIElement uiElement when uiElement.IsPartOfSnoopVisualTree() => HitTestFilterBehavior.ContinueSkipSelfAndChildren,
+            UIElement { IsHitTestVisible: false } when !ignoreHitTestVisibility => HitTestFilterBehavior.ContinueSkipSelfAndChildren,
             _ => HitTestFilterBehavior.Continue
         };
 
