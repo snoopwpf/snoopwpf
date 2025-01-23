@@ -147,7 +147,7 @@
                               IsCheckable="True"
                               IsChecked="{Binding IsHandlingCTRL_SHIFT}"
                               ToolTip="When enabled and pressed tracks all parts of the UI." />
-                    <MenuItem Header="CTRL + Shift selects hit test invisible"
+                    <MenuItem Header="CTRL + SHIFT selects hit test invisible"
                               IsEnabled="{Binding ElementName=CtrlShiftMenuItem, Path=IsChecked}"
                               IsCheckable="True"
                               IsChecked="{Binding IgnoreHitTestVisibility}"
