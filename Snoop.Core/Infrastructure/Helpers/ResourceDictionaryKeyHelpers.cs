@@ -115,15 +115,16 @@ public static class ResourceDictionaryKeyHelpers
         // ReSharper disable once ReplaceWithSingleAssignment.True
         // For performance reasons we first check the base storage of the dictionary for the value. That's way faster than iterating all resource keys.
         // Default to true if, for whatever reason, we can't find the field.
-        var containsValue = true;
+        var mightContainValue = true;
 
         if (baseDictionaryFieldInfo?.GetValue(dictionary) is Hashtable hashtable
-            && hashtable.ContainsValue(resourceItem) is false)
+            // ignore errors because of potential bugs in third party implementations of Equals (see #469)
+            && Utils.IgnoreErrors(() => hashtable.ContainsValue(resourceItem), true) is false)
         {
-            containsValue = false;
+            mightContainValue = false;
         }
 
-        if (containsValue)
+        if (mightContainValue)
         {
             foreach (var key in dictionary.Keys)
             {
