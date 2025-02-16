@@ -236,7 +236,7 @@
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}">
-                            <StackPanel Margin="{Binding Indent, Converter={StaticResource IndentToMarginConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:ProperTreeViewItem}}}"
+                            <StackPanel Margin="{TemplateBinding controls:ProperTreeViewItem.Indent, Converter={StaticResource IndentToMarginConverter}}"
                                         Orientation="Horizontal">
                                 <ToggleButton x:Name="Expander"
                                               Style="{StaticResource TreeViewToggleStyle}"
