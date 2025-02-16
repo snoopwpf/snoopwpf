@@ -24,6 +24,7 @@
   - [#435](../../issues/435) - Add "StartMinimized" Setting + Functionality (thanks @BButner)
   - [#436](../../issues/436) - [Feature request] show current version
   - [#453](../../issues/453) - Better target windows titles (thanks @miloush)
+  - [#462](../../issues/462) - Optimize CurrentProcessPath for .NET (thanks @kasperk81)
   - Improved property filter
     - Property values are now included when filtering
     - Regex is now explicit instead of implicit
