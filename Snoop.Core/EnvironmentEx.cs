@@ -11,15 +11,15 @@ using System.Diagnostics;
 
 public static class EnvironmentEx
 {
-    public static readonly string CurrentProcessName;
+    public static readonly string? CurrentProcessName;
     public static readonly string? CurrentProcessPath;
 
     static EnvironmentEx()
     {
 #if NET
         CurrentProcessPath = Environment.ProcessPath;
-        CurrentProcessName = OperatingSystem.IsWindows() ?
-            Path.GetFileNameWithoutExtension(CurrentProcessPath) : Path.GetFileName(CurrentProcessPath);
+        CurrentProcessName = OperatingSystem.IsWindows()
+            ? Path.GetFileNameWithoutExtension(CurrentProcessPath) : Path.GetFileName(CurrentProcessPath);
 #else
         using var currentProcess = Process.GetCurrentProcess();
         CurrentProcessName = currentProcess.ProcessName;
