@@ -64,11 +64,11 @@ public static class MouseDeviceExtensions
         {
             UIElement { IsVisible: false } => HitTestFilterBehavior.ContinueSkipSelfAndChildren,
             UIElement uiElement when uiElement.IsPartOfSnoopVisualTree() => HitTestFilterBehavior.ContinueSkipSelfAndChildren,
-            UIElement { IsHitTestVisible: false } when !ignoreHitTestVisibility => HitTestFilterBehavior.ContinueSkipSelfAndChildren,
+            UIElement { IsHitTestVisible: false } when ignoreHitTestVisibility is false => HitTestFilterBehavior.ContinueSkipSelf,
             _ => HitTestFilterBehavior.Continue
         };
 
-        if (filterResult == HitTestFilterBehavior.Continue)
+        if (filterResult is HitTestFilterBehavior.Continue)
         {
             if (target is UIElement uiElement)
             {
