@@ -144,14 +144,14 @@
                               IsChecked="{Binding IsHandlingCTRL_SHIFT}"
                               ToolTip="When enabled and pressed tracks all parts of the UI." />
                     <MenuItem Header="Skip template parts"
-                              IsEnabled="{Binding ElementName=CtrlShiftMenuItem, Path=IsChecked}"
                               IsCheckable="True"
                               IsChecked="{Binding SkipTemplateParts}"
+                              IsEnabled="{Binding ElementName=CtrlShiftMenuItem, Path=IsChecked}"
                               ToolTip="When enabled: CTRL + SHIFT tries to skip template parts." />
                     <MenuItem Header="CTRL + SHIFT selects hit test invisible"
-                              IsEnabled="{Binding ElementName=CtrlShiftMenuItem, Path=IsChecked}"
                               IsCheckable="True"
                               IsChecked="{Binding IgnoreHitTestVisibility}"
+                              IsEnabled="{Binding ElementName=CtrlShiftMenuItem, Path=IsChecked}"
                               ToolTip="When enabled: CTRL + SHIFT also selects UI elements that are have IsHitTestVisible set to false" />
                     <Separator />
                     <MenuItem Header="Highlight selected item"
