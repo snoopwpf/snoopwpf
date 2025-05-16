@@ -6,11 +6,9 @@
 namespace Snoop.Infrastructure;
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -163,9 +161,19 @@ public class TrackedEvent : EventArgs, INotifyPropertyChanged
     public TrackedEvent(RoutedEventArgs routedEventArgs, EventEntry originator)
     {
         this.EventArgs = routedEventArgs;
-        this.EventArgsText = $"{this.EventArgs.RoutedEvent.Name} ({(this.EventArgs as InputEventArgs)?.Timestamp})";
+        this.EventArgsText = $"{this.EventArgs.RoutedEvent.Name} ({GetTimestamp(routedEventArgs)})";
 
         this.AddEventEntry(originator);
+        return;
+
+        static string GetTimestamp(RoutedEventArgs eventArgs)
+        {
+            var timestamp = (eventArgs as InputEventArgs)?.Timestamp;
+
+            return timestamp.HasValue is false
+                ? "unknown timestamp"
+                : timestamp.Value.ToString();
+        }
     }
 
     public RoutedEventArgs EventArgs { get; }
