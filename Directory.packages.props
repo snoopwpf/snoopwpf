@@ -28,6 +28,8 @@
 
         <PackageVersion Include="WpfAnalyzers" version="4.1.1" />
         <PackageVersion Include="PropertyChangedAnalyzers" Version="4.0.0" />
+
+        <PackageVersion Include="GitVersion.MsBuild" Version="6.3.0" />
     </ItemGroup>
     
     <ItemGroup Label="Test-Projects">

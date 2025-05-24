@@ -3,6 +3,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net462" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" IncludeAssets="build; native" />
+
+    <PackageReference Include="GitVersion.MsBuild" PrivateAssets="all" />
   </ItemGroup>
 
   <!-- Analyzer references -->
