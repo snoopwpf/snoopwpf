@@ -1,10 +1,11 @@
-﻿// Original code for viewing Triggers was taken from https://archive.codeplex.com/?p=wpfinspector which is written by Christian Moser
+// Original code for viewing Triggers was taken from https://archive.codeplex.com/?p=wpfinspector which is written by Christian Moser
 
 namespace Snoop.Views.TriggersTab;
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -173,7 +174,7 @@ public partial class TriggersView
         {
             this.AddTriggers(instance, currentStyle.Triggers, source);
 
-            currentStyle = currentStyle.BasedOn;
+            currentStyle = GetBaseStyle(instance, currentStyle);
         }
     }
 
@@ -188,4 +189,35 @@ public partial class TriggersView
             }
         }
     }
+
+    private static Style? GetBaseStyle(DependencyObject instance, Style style)
+    {
+        if (style.BasedOn is not null)
+        {
+            return style.BasedOn;
+        }
+
+        var value = Style_IsBasedOnModifiedPropertyInfo?.GetValue(style, null);
+        if (value is not null
+            && (bool)value == true)
+        {
+            return TryFindResource(instance, style.TargetType) as Style;
+        }
+
+        return null;
+    }
+
+    private static object? TryFindResource(DependencyObject instance, object resourceKey)
+    {
+        return instance switch
+        {
+            FrameworkElement element => element.TryFindResource(resourceKey),
+            FrameworkContentElement element => element.TryFindResource(resourceKey),
+            _ => null
+        };
+    }
+
+#pragma warning disable SA1310 // Field names should not contain underscore
+    private static readonly PropertyInfo? Style_IsBasedOnModifiedPropertyInfo = typeof(Style).GetProperty("IsBasedOnModified", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+#pragma warning restore SA1310 // Field names should not contain underscore
 }

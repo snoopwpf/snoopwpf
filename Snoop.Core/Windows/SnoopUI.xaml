@@ -138,14 +138,21 @@
                               Click="HandleResetSettings_OnClick" />
                 </MenuItem>
                 <MenuItem Header="_Tracking options">
-                    <MenuItem Header="Skip template parts"
-                              IsCheckable="True"
-                              IsChecked="{Binding SkipTemplateParts}"
-                              ToolTip="When enabled and pressed tries to skip template parts." />
-                    <MenuItem Header="Handle CTRL + _SHIFT"
+                    <MenuItem x:Name="CtrlShiftMenuItem"
+                              Header="Handle CTRL + _SHIFT"
                               IsCheckable="True"
                               IsChecked="{Binding IsHandlingCTRL_SHIFT}"
                               ToolTip="When enabled and pressed tracks all parts of the UI." />
+                    <MenuItem Header="Skip template parts"
+                              IsCheckable="True"
+                              IsChecked="{Binding SkipTemplateParts}"
+                              IsEnabled="{Binding ElementName=CtrlShiftMenuItem, Path=IsChecked}"
+                              ToolTip="When enabled: CTRL + SHIFT tries to skip template parts." />
+                    <MenuItem Header="CTRL + SHIFT selects hit test invisible"
+                              IsCheckable="True"
+                              IsChecked="{Binding IgnoreHitTestVisibility}"
+                              IsEnabled="{Binding ElementName=CtrlShiftMenuItem, Path=IsChecked}"
+                              ToolTip="When enabled: CTRL + SHIFT also selects UI elements that are have IsHitTestVisible set to false" />
                     <Separator />
                     <MenuItem Header="Highlight selected item"
                               IsCheckable="True"

@@ -71,7 +71,7 @@ public static class SignPathTasks2
                 new StringContent(content.ToJson(), Encoding.UTF8, contentType));
             response.AssertStatusCode(HttpStatusCode.Created);
 
-            Log.Information("Signing request created: {Url}", response.Headers.Location.AbsoluteUri.Replace("api/v1", "Web"));
+            Log.Information("Signing request created: {Url}", response.Headers.Location!.AbsoluteUri.Replace("api/v1", "Web"));
             return response.Headers.Location.AbsoluteUri;
         }
     }
@@ -139,18 +139,18 @@ public static class SignPathTasks2
 
     private static string GetSignedArtifactUrl(HttpClient httpClient, string signingRequestUrl)
     {
-        string signedArtifactUrl = null;
-        string signingRequestStatus = null;
+        string? signedArtifactUrl = null;
+        string? signingRequestStatus = null;
         ExecuteWithRetry(
             () =>
             {
                 var response = SendGetRequestWithRetry(httpClient, signingRequestUrl);
                 var rawContent = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
                 var jsonContent = rawContent.GetJson();
-                signingRequestStatus = jsonContent["status"].NotNull().Value<string>();
+                signingRequestStatus = jsonContent["status"].NotNull()!.Value<string>();
                 signedArtifactUrl = signingRequestStatus switch
                 {
-                    SigningRequestStatus.Completed => jsonContent["signedArtifactLink"].NotNull().Value<string>(),
+                    SigningRequestStatus.Completed => jsonContent["signedArtifactLink"].NotNull()!.Value<string>(),
                     SigningRequestStatus.Failed => null,
                     SigningRequestStatus.Denied => null,
                     SigningRequestStatus.Cancelled => null,
@@ -161,7 +161,7 @@ public static class SignPathTasks2
             retryAttempts: WaitForCompletionRetryAttempts,
             logAction: Log.Debug);
 
-        return signedArtifactUrl.NotNull($"Signing Request {signingRequestStatus}");
+        return signedArtifactUrl.NotNull($"Signing Request {signingRequestStatus}")!;
     }
 
     private static IDisposable SwitchSecurityProtocol()
@@ -186,7 +186,7 @@ public static class SignPathTasks2
         Func<HttpRequestMessage> requestFactory,
         HttpStatusCode expectedStatusCode)
     {
-        HttpResponseMessage response = null;
+        HttpResponseMessage? response = null;
         ExecuteWithRetry(
             () =>
             {
@@ -195,7 +195,7 @@ public static class SignPathTasks2
             },
             delay: ServiceUnavailableRetryTimeoutInSeconds,
             logAction: Log.Debug);
-        return response;
+        return response!;
     }
 
     private static HttpResponseMessage SendGetRequestWithRetry(HttpClient httpClient, string url)
@@ -206,12 +206,12 @@ public static class SignPathTasks2
     private static string SubmitVia(
         HttpClient httpClient,
         string url,
-        [CanBeNull] string projectSlug,
-        [CanBeNull] string signingPolicySlug,
-        [CanBeNull] string signingPolicyId,
+        string? projectSlug,
+        string? signingPolicySlug,
+        string? signingPolicyId,
         string description,
-        [CanBeNull] string artifactConfigurationId,
-        [CanBeNull] string artifactConfigurationSlug,
+        string? artifactConfigurationId,
+        string? artifactConfigurationSlug,
         string artifactFile)
     {
         StreamContent GetStreamContent()
@@ -237,14 +237,14 @@ public static class SignPathTasks2
                            (nameof(description), description)
                        }
                 .Where(x => x.Item2 != null).ToList();
-            data.ForEach(x => content.Add(new StringContent(x.Item2), x.Item1));
+            data.ForEach(x => content.Add(new StringContent(x.Item2!), x.Item1));
             content.Add(GetStreamContent(), "Artifact", artifactFile);
 
             return new HttpRequestMessage(HttpMethod.Post, url) { Content = content };
         }
 
         var response = SendRequestWithRetry(httpClient, CreateHttpRequest, HttpStatusCode.Created);
-        return response.Headers.Location.AbsoluteUri;
+        return response.Headers.Location!.AbsoluteUri;
     }
 
     private static HttpResponseMessage AssertStatusCode(this HttpResponseMessage response, HttpStatusCode statusCode)

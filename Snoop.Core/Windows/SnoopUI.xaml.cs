@@ -320,6 +320,8 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
     // ReSharper disable once InconsistentNaming
     public bool IsHandlingCTRL_SHIFT { get; set; } = true;
 
+    public bool IgnoreHitTestVisibility { get; set; } = true;
+
     // ReSharper disable once InconsistentNaming
     public bool SkipTemplateParts { get; set; } = false;
 
@@ -651,7 +653,7 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
             return;
         }
 
-        var itemToFind = Mouse.PrimaryDevice.GetDirectlyOver();
+        var itemToFind = Mouse.PrimaryDevice.GetDirectlyOver(this.IgnoreHitTestVisibility);
 
         switch (itemToFind)
         {

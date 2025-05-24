@@ -18,6 +18,7 @@ using Nuke.Common.Tools.NuGet;
 using Nuke.Common.Tools.SignPath;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 using static Nuke.Common.Tools.MSBuild.MSBuildTasks;
+// ReSharper disable AllUnderscoreLocalParameterName
 
 [GitHubActions(
     "deployment",
@@ -107,7 +108,7 @@ class Build : NukeBuild
 
     AbsolutePath TestResultDirectory => OutputDirectory / "test-results";
 
-    readonly string WixUIExtension = "WixToolset.UI.wixext/5.0.0";
+    readonly string WixUIExtension = "WixToolset.UI.wixext/6.0.0";
 
     readonly string FenceOutput = "".PadLeft(30, '#');
 
@@ -311,7 +312,7 @@ class Build : NukeBuild
 
     Target SignArtifacts => _ => _
         .Requires(() => SignPathAuthToken)
-        .OnlyWhenStatic(() => ShouldSign())
+        .OnlyWhenStatic(ShouldSign)
         .After(Setup)
         .Executes(async () =>
         {
@@ -325,7 +326,7 @@ class Build : NukeBuild
             // ProcessTasks.StartProcess("powershell", $"./.build/SignPath.ps1 {SignPathAuthToken} {SignPathOrganizationId} {SignPathProjectSlug} {SignPathSigningPolicySlug}")
             //     .AssertWaitForExit();
 
-            var result = await SignPathTasks2.GetSigningRequestUrlViaAppVeyor(SignPathAuthToken, SignPathOrganizationId, SignPathProjectSlug, SignPathSigningPolicySlug);
+            var result = await SignPathTasks2.GetSigningRequestUrlViaAppVeyor(SignPathAuthToken!, SignPathOrganizationId!, SignPathProjectSlug!, SignPathSigningPolicySlug!);
             Serilog.Log.Information(result);
         });
 

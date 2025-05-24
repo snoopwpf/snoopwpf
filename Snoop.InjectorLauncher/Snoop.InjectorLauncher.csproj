@@ -31,6 +31,7 @@
       <Link>EnvironmentEx.cs</Link>
     </Compile>
     <Compile Include="..\Snoop.Core\Infrastructure\NativeMethods.cs" Link="NativeMethods.cs" />
+    <Compile Include="..\Snoop.Core\Infrastructure\LogHelper.cs" Link="LogHelper.cs" />
     <Compile Include="..\Snoop.Core\SettingsHelper.cs">
       <Link>SettingsHelper.cs</Link>
     </Compile>

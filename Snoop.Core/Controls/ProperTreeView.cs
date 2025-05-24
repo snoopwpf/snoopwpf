@@ -156,16 +156,34 @@ public class ProperTreeViewItem : TreeViewItem
 
     public double Indent
     {
-        get => (double)this.GetValue(IndentProperty);
-        set => this.SetValue(IndentProperty, value);
+        get => GetIndent(this);
+        set => SetIndent(this, value);
     }
 
-    /// <summary>Identifies the <see cref="Indent"/> dependency property.</summary>
+    /// <summary>
+    ///   Identifies the <see cref="Indent" /> attached dependency property.
+    /// </summary>
     public static readonly DependencyProperty IndentProperty =
-        DependencyProperty.Register(
+        DependencyProperty.RegisterAttached(
             nameof(Indent),
             typeof(double),
             typeof(ProperTreeViewItem));
+
+    /// <summary>
+    ///   Sets the <see cref="Indent" /> property value on the target element.
+    /// </summary>
+    public static void SetIndent(DependencyObject element, double value)
+    {
+        element.SetValue(IndentProperty, value);
+    }
+
+    /// <summary>
+    ///   Gets the <see cref="Indent"/> property value of the target element.
+    /// </summary>
+    public static double GetIndent(DependencyObject element)
+    {
+        return (double)element.GetValue(IndentProperty);
+    }
 
     protected override DependencyObject GetContainerForItemOverride()
     {

@@ -1,21 +1,33 @@
 ﻿namespace Snoop.Core;
 
 using System;
-using System.Diagnostics;
 using Snoop.Infrastructure;
+
+#if NET
+using System.IO;
+#else
+using System.Diagnostics;
+#endif
 
 public static class EnvironmentEx
 {
-    public static readonly string CurrentProcessName;
+    public static readonly string? CurrentProcessName;
     public static readonly string? CurrentProcessPath;
 
     static EnvironmentEx()
     {
+#if NET
+        CurrentProcessPath = Environment.ProcessPath;
+        CurrentProcessName = OperatingSystem.IsWindows()
+            ? Path.GetFileNameWithoutExtension(CurrentProcessPath) : Path.GetFileName(CurrentProcessPath);
+#else
         using var currentProcess = Process.GetCurrentProcess();
         CurrentProcessName = currentProcess.ProcessName;
         CurrentProcessPath = GetProcessPath(currentProcess);
+#endif
     }
 
+#if !NET
     private static string? GetProcessPath(Process process)
     {
         try
@@ -29,4 +41,5 @@ public static class EnvironmentEx
 
         return string.Empty;
     }
+#endif
 }

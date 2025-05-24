@@ -31,15 +31,15 @@ jobs:
         run: ./dotnet-install.ps1 -Version 6.0.400 -InstallDir "C:\Program Files\dotnet"
       - name: Install .NET 8 SDK
         shell: pwsh
-        run: ./dotnet-install.ps1 -Version 8.0.100 -InstallDir "C:\Program Files\dotnet"
+        run: ./dotnet-install.ps1 -Version 8.0.401 -InstallDir "C:\Program Files\dotnet"
       - name: Run './build.cmd CI'
         run: ./build.cmd CI
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: test-results
           path: output/test-results
         if: ${{ always() }}
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: artifacts
           path: artifacts

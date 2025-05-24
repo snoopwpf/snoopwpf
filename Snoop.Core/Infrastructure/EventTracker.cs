@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Threading;
 using JetBrains.Annotations;
 
@@ -160,15 +161,28 @@ public class TrackedEvent : EventArgs, INotifyPropertyChanged
     public TrackedEvent(RoutedEventArgs routedEventArgs, EventEntry originator)
     {
         this.EventArgs = routedEventArgs;
+        this.EventArgsText = $"{this.EventArgs.RoutedEvent.Name} ({GetTimestamp(routedEventArgs)})";
+
         this.AddEventEntry(originator);
+        return;
+
+        static string GetTimestamp(RoutedEventArgs eventArgs)
+        {
+            var timestamp = (eventArgs as InputEventArgs)?.Timestamp;
+
+            return timestamp.HasValue is false
+                ? "unknown timestamp"
+                : timestamp.Value.ToString();
+        }
     }
 
     public RoutedEventArgs EventArgs { get; }
 
-    public EventEntry Originator
-    {
-        get { return this.Stack[0]; }
-    }
+    public string EventArgsText { get; }
+
+    public EventEntry Originator => this.Stack[0];
+
+    private bool handled;
 
     public bool Handled
     {
@@ -181,7 +195,7 @@ public class TrackedEvent : EventArgs, INotifyPropertyChanged
         }
     }
 
-    private bool handled;
+    private object? handledBy;
 
     public object? HandledBy
     {
@@ -193,8 +207,6 @@ public class TrackedEvent : EventArgs, INotifyPropertyChanged
             this.OnPropertyChanged(nameof(this.HandledBy));
         }
     }
-
-    private object? handledBy;
 
     public ObservableCollection<EventEntry> Stack { get; } = new();
 
@@ -219,25 +231,19 @@ public class TrackedEvent : EventArgs, INotifyPropertyChanged
     #endregion
 }
 
-public class EventEntry
+public class EventEntry : INotifyPropertyChanged
 {
+#pragma warning disable CS0067
+    public event PropertyChangedEventHandler? PropertyChanged;
+#pragma warning restore CS0067
+
     public EventEntry(object handler, bool handled)
     {
-        this.handler = handler;
-        this.handled = handled;
+        this.Handler = handler;
+        this.Handled = handled;
     }
 
-    public bool Handled
-    {
-        get { return this.handled; }
-    }
+    public bool Handled { get; }
 
-    private readonly bool handled;
-
-    public object Handler
-    {
-        get { return this.handler; }
-    }
-
-    private readonly object handler;
+    public object Handler { get; }
 }

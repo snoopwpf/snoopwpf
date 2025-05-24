@@ -785,6 +785,17 @@
         ItemsControl
         ==================================================================
     -->
+    <Style x:Key="{x:Type Image}"
+           TargetType="{x:Type Image}">
+        <Setter Property="Stretch" Value="Uniform" />
+        <Setter Property="StretchDirection" Value="Both" />
+    </Style>
+
+    <!--
+        =================================================================
+        ItemsControl
+        ==================================================================
+    -->
     <Style x:Key="{x:Type ItemsControl}"
            TargetType="{x:Type ItemsControl}">
         <Setter Property="ItemsPanel">
