@@ -11,28 +11,14 @@
 
         <Media Id="1" Cabinet="media1.cab" EmbedCab="yes" CompressionLevel="high"/>
 
-
         <Feature Id="ProductFeature" Title="Snoop" Description="Snoop, the WPF Spying Utility" Level="1"
                  ConfigurableDirectory="INSTALLDIR">
-            <ComponentRef Id="Snoop.Core.net462.dll"/>
-            <ComponentRef Id="System.Management.Automation.dll"/>
+            <Files Directory="net462" Include="net462/Snoop.*" />
+            <Files Directory="net462" Include="net462/System.Management.Automation.dll" />
 
-            <ComponentRef Id="Snoop.Core.net6.0_windows.dll"/>
+            <Files Directory="net60" Include="net6.0-windows/Snoop.*" />
 
-            <ComponentRef Id="Snoop.GenericInjector.x86.dll"/>
-            <ComponentRef Id="Snoop.GenericInjector.x64.dll"/>
-            <ComponentRef Id="Snoop.GenericInjector.ARM64.dll"/>
-
-            <ComponentRef Id="Snoop.InjectorLauncher.x86.exe"/>
-            <ComponentRef Id="Snoop.InjectorLauncher.x64.exe"/>
-            <ComponentRef Id="Snoop.InjectorLauncher.ARM64.exe"/>
-
-            <ComponentRef Id="Snoop.exe"/>
-            <ComponentRef Id="Snoop.exe.config"/>
-            <ComponentRef Id="Snoop.com"/>
-            <ComponentRef Id="Snoop.com.config"/>
-            <ComponentRef Id="CommandLine.dll"/>
-            <ComponentRef Id="Root.Snoop.Core.net462.dll"/>
+            <ComponentGroupRef Id="MainFiles"/>
 
             <ComponentRef Id="SnoopScriptsComponent"/>
             <ComponentRef Id="ProgramMenuDir"/>
@@ -46,101 +32,39 @@
         <Icon Id="icon.ico" SourceFile="..\..\Artwork\Snoop.ico"/>
         <Property Id="ARPPRODUCTICON" Value="icon.ico"/>
 
+        <ComponentGroup Id="MainFiles" Directory="INSTALLDIR">
+            <Files Include="Snoop.GenericInjector.*.dll" />
+            <Files Include="Snoop.GenericInjector.*.pdb" />
+            <Files Include="Snoop.InjectorLauncher.*.json" />
+            <Files Include="Snoop.InjectorLauncher.*.dll" />
+            <Files Include="Snoop.InjectorLauncher.*.dll.config" />
+            <Files Include="Snoop.InjectorLauncher.*.exe" />
+            <Files Include="Snoop.InjectorLauncher.*.exe.config" />
+            <Files Include="Snoop.InjectorLauncher.*.pdb" />
+
+            <Files Include="Snoop.Core.*" />
+
+            <Component Id="Snoop.exe" Guid="{82953F7E-F81D-44E9-8274-D80815109361}">
+                <File Id="Snoop.exe" KeyPath="yes" Source="SourceDir\Snoop.exe">
+                    <Shortcut Id="desktopSnoopShortcut" Directory="DesktopFolder" Name="Snoop"
+                            WorkingDirectory="INSTALLDIR" Icon="Snoop.exe" IconIndex="0" Advertise="yes"/>
+                    <Shortcut Id="startMenuSnoopShortcut" Directory="ProgramMenuDir" Name="Snoop"
+                            WorkingDirectory="INSTALLDIR" Icon="Snoop.exe" IconIndex="0" Advertise="yes"/>
+                </File>
+            </Component>
+
+            <Files Include="Snoop.exe.config" />
+            <Files Include="Snoop.pdb" />
+            <Files Include="Snoop.com" />
+            <Files Include="Snoop.com.config" />
+
+            <Files Include="CommandLine.dll" />
+        </ComponentGroup>
+
         <StandardDirectory Id="ProgramFilesFolder">
             <Directory Id="INSTALLDIR" Name="Snoop">
-                <Directory Id="net462" Name="net462">
-                    <Component Id="Snoop.Core.net462.dll" Guid="{71FAE20E-805A-4182-9860-7480BBD400BF}">
-                        <File Id="Snoop.Core.net462.dll" KeyPath="yes" Source="SourceDir\net462\Snoop.Core.dll"/>
-                        <File Id="Snoop.Core.net462.pdb" Source="SourceDir\net462\Snoop.Core.pdb"/>
-                    </Component>
-                    <Component Id="System.Management.Automation.dll" Guid="{77A47D45-F96D-41CF-BAAC-8CDE0B10350C}">
-                        <File Id="System.Management.Automation.dll" KeyPath="yes"
-                              Source="SourceDir\net462\System.Management.Automation.dll"/>
-                    </Component>
-                </Directory>
-
-                <Directory Id="net60" Name="net6.0-windows">
-                    <Component Id="Snoop.Core.net6.0_windows.dll" Guid="{96a6f0f7-00e7-4c66-9b01-93e07e5f6bd6}">
-                        <File Id="Snoop.Core.net6.0_windows.dll" KeyPath="yes"
-                              Source="SourceDir\net6.0-windows\Snoop.Core.dll"/>
-                        <File Id="Snoop.Core.net6.0_windows.deps.json"
-                              Source="SourceDir\net6.0-windows\Snoop.Core.deps.json"/>
-                        <File Id="Snoop.Core.net6.0_windows.pdb" Source="SourceDir\net6.0-windows\Snoop.Core.pdb"/>
-                    </Component>
-                </Directory>
-
-                <Component Id="Snoop.GenericInjector.x86.dll" Guid="{DCCFD1DE-F53E-428C-95F1-4435FA9AC0CD}">
-                    <File Id="Snoop.GenericInjector.x86.dll" KeyPath="yes"
-                          Source="SourceDir\Snoop.GenericInjector.x86.dll"/>
-                    <File Id="Snoop.GenericInjector.x86.pdb" Source="SourceDir\Snoop.GenericInjector.x86.pdb"/>
-                </Component>
-                <Component Id="Snoop.GenericInjector.x64.dll" Guid="{DF9AFA72-A1C6-48C5-9BF0-F00C284FA111}">
-                    <File Id="Snoop.GenericInjector.x64.dll" KeyPath="yes"
-                          Source="SourceDir\Snoop.GenericInjector.x64.dll"/>
-                    <File Id="Snoop.GenericInjector.x64.pdb" Source="SourceDir\Snoop.GenericInjector.x64.pdb"/>
-                </Component>
-                <Component Id="Snoop.GenericInjector.ARM64.dll" Guid="{AA6110B0-8B3E-4F86-BF6D-5285F924604F}">
-                    <File Id="Snoop.GenericInjector.ARM64.dll" KeyPath="yes"
-                          Source="SourceDir\Snoop.GenericInjector.ARM64.dll"/>
-                    <File Id="Snoop.GenericInjector.ARM64.pdb" Source="SourceDir\Snoop.GenericInjector.ARM64.pdb"/>
-                </Component>
-
-                <Component Id="Snoop.InjectorLauncher.x86.exe" Guid="{2D10FBCC-4F56-4CD7-A69B-42A2ADEA5065}">
-                    <File Id="Snoop.InjectorLauncher.x86.exe" KeyPath="yes"
-                          Source="SourceDir\Snoop.InjectorLauncher.x86.exe"/>
-                    <File Id="Snoop.InjectorLauncher.x86.exe.config"
-                          Source="SourceDir\Snoop.InjectorLauncher.x86.exe.config"/>
-                    <File Id="Snoop.InjectorLauncher.x86.pdb" Source="SourceDir\Snoop.InjectorLauncher.x86.pdb"/>
-                </Component>
-                <Component Id="Snoop.InjectorLauncher.x64.exe" Guid="{2B8C5745-FC92-4617-A7C8-3A2AC4AD6DC8}">
-                    <File Id="Snoop.InjectorLauncher.x64.exe" KeyPath="yes"
-                          Source="SourceDir\Snoop.InjectorLauncher.x64.exe"/>
-                    <File Id="Snoop.InjectorLauncher.x64.exe.config"
-                          Source="SourceDir\Snoop.InjectorLauncher.x64.exe.config"/>
-                    <File Id="Snoop.InjectorLauncher.x64.pdb" Source="SourceDir\Snoop.InjectorLauncher.x64.pdb"/>
-                </Component>
-                <Component Id="Snoop.InjectorLauncher.ARM64.exe" Guid="{DCEAE30B-072B-4B39-9A1E-E9AADAED41B1}">
-                    <File Id="Snoop.InjectorLauncher.ARM64.exe" KeyPath="yes"
-                          Source="SourceDir\Snoop.InjectorLauncher.ARM64.exe"/>
-                    <File Id="Snoop.InjectorLauncher.ARM64.dll" Source="SourceDir\Snoop.InjectorLauncher.ARM64.dll"/>
-                    <File Id="Snoop.InjectorLauncher.ARM64.deps.json"
-                          Source="SourceDir\Snoop.InjectorLauncher.ARM64.deps.json"/>
-                    <File Id="Snoop.InjectorLauncher.ARM64.runtimeconfig.json"
-                          Source="SourceDir\Snoop.InjectorLauncher.ARM64.runtimeconfig.json"/>
-                    <File Id="Snoop.InjectorLauncher.ARM64.dll.config"
-                          Source="SourceDir\Snoop.InjectorLauncher.ARM64.dll.config"/>
-                    <File Id="Snoop.InjectorLauncher.ARM64.pdb" Source="SourceDir\Snoop.InjectorLauncher.ARM64.pdb"/>
-                </Component>
-
-                <Component Id="Root.Snoop.Core.net462.dll" Guid="{3DAA043B-7FFB-4CB6-A3C3-D67DF9D0B3D2}">
-                    <File Id="Root.Snoop.Core.dll" KeyPath="yes" Source="SourceDir\Snoop.Core.dll"/>
-                    <File Id="Root.Snoop.Core.pdb" Source="SourceDir\Snoop.Core.pdb"/>
-                </Component>
-
-                <Component Id="Snoop.exe" Guid="{82953F7E-F81D-44E9-8274-D80815109361}">
-                    <File Id="Snoop.exe" KeyPath="yes" Source="SourceDir\Snoop.exe">
-                        <Shortcut Id="desktopSnoopShortcut" Directory="DesktopFolder" Name="Snoop"
-                                  WorkingDirectory="INSTALLDIR" Icon="Snoop.exe" IconIndex="0" Advertise="yes"/>
-                        <Shortcut Id="startMenuSnoopShortcut" Directory="ProgramMenuDir" Name="Snoop"
-                                  WorkingDirectory="INSTALLDIR" Icon="Snoop.exe" IconIndex="0" Advertise="yes"/>
-                    </File>
-                    <File Id="Snoop.pdb" Source="SourceDir\Snoop.pdb"/>
-                </Component>
-                <Component Id="Snoop.exe.config" Guid="{8BB4A7B2-F181-40E8-BCFF-FCC287DA8D06}">
-                    <File Id="Snoop.exe.config" KeyPath="yes" Source="SourceDir\Snoop.exe.config"/>
-                </Component>
-
-                <Component Id="Snoop.com" Guid="{cb40d877-92dc-452a-96c6-65f9a0d64439}">
-                    <File Id="Snoop.com" KeyPath="yes" Source="SourceDir\Snoop.com"/>
-                </Component>
-
-                <Component Id="Snoop.com.config" Guid="{e123e7d3-8371-43b8-b509-651c9cf0f158}">
-                    <File Id="Snoop.com.config" KeyPath="yes" Source="SourceDir\Snoop.com.config"/>
-                </Component>
-
-                <Component Id="CommandLine.dll" Guid="{a6e69fb8-8471-40a4-9a38-a4b31cac0e61}">
-                    <File Id="CommandLine.dll" KeyPath="yes" Source="SourceDir\CommandLine.dll"/>
-                </Component>
+                <Directory Id="net462" Name="net462" />
+                <Directory Id="net60" Name="net6.0-windows" />
 
                 <Directory Id="SnoopScriptsFolder" Name="Scripts">
                     <Component Id="SnoopScriptsComponent" Guid="65AD97C3-5B32-4020-892C-1D0E38656D6D">
