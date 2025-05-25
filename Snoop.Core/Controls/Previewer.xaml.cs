@@ -126,7 +126,13 @@ public partial class Previewer
 
     private void HandleMagnify(object sender, ExecutedRoutedEventArgs e)
     {
-        var zoomer = new Zoomer();
+        var zoomer = new Zoomer
+        {
+            ColorSlider =
+            {
+                Value = this.Zoomer.ColorSlider.Value
+            }
+        };
         zoomer.Inspect(this.Target);
         e.Handled = true;
     }

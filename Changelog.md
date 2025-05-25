@@ -1,5 +1,11 @@
 ﻿# Changelog for Snoop
 
+## 6.1.0 (preview)
+
+- ### Improvements
+
+  - [#457](../../issues/457) - [Quality of Life] Synchronize Zoomer instance background slider value.
+
 ## 6.0.0
 
 - ### Breaking changes
