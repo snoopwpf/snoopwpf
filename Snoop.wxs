@@ -1,15 +1,20 @@
 ﻿<Wix xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui" xmlns="http://wixtoolset.org/schemas/v4/wxs">
-    <!-- ID="*" will generate a new GUID for product code at time of build. -->
-    <!-- Product code changes AND version number changes (first 3 digits), then a major upgrade will be triggered. -->
-
     <Package Name="Snoop" Manufacturer="https://github.com/snoopwpf" Language="1033" Version="$(var.ProductVersion)"
              UpgradeCode="FBEC01D7-CE1B-46F4-9498-71A96FEA8A15" InstallerVersion="301">
         <MajorUpgrade AllowDowngrades="no" DowngradeErrorMessage="Newer version already installed."
                       AllowSameVersionUpgrades="yes"/>
 
         <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR"/>
+        <Property Id="ARPPRODUCTICON" Value="icon.ico"/>
 
-        <Media Id="1" Cabinet="media1.cab" EmbedCab="yes" CompressionLevel="high"/>
+        <ui:WixUI Id="WixUI_InstallDir"/>
+        <WixVariable Id="WixUILicenseRtf" Value="License.rtf"/>
+        <WixVariable Id="WixUIBannerBmp" Value="..\..\Artwork\Banner.bmp"/>
+        <WixVariable Id="WixUIDialogBmp" Value="..\..\Artwork\Dialog.bmp"/>
+        <Icon Id="Snoop.exe" SourceFile="Snoop.exe"/>
+        <Icon Id="icon.ico" SourceFile="..\..\Artwork\Snoop.ico"/>
+
+        <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
 
         <Feature Id="ProductFeature" Title="Snoop" Description="Snoop, the WPF Spying Utility" Level="1"
                  ConfigurableDirectory="INSTALLDIR">
@@ -24,14 +29,6 @@
             <ComponentRef Id="ProgramMenuDir"/>
         </Feature>
 
-        <ui:WixUI Id="WixUI_InstallDir"/>
-        <WixVariable Id="WixUILicenseRtf" Value="License.rtf"/>
-        <WixVariable Id="WixUIBannerBmp" Value="..\..\Artwork\Banner.bmp"/>
-        <WixVariable Id="WixUIDialogBmp" Value="..\..\Artwork\Dialog.bmp"/>
-        <Icon Id="Snoop.exe" SourceFile="Snoop.exe"/>
-        <Icon Id="icon.ico" SourceFile="..\..\Artwork\Snoop.ico"/>
-        <Property Id="ARPPRODUCTICON" Value="icon.ico"/>
-
         <ComponentGroup Id="MainFiles" Directory="INSTALLDIR">
             <Files Include="Snoop.GenericInjector.*.dll" />
             <Files Include="Snoop.GenericInjector.*.pdb" />
@@ -44,14 +41,12 @@
 
             <Files Include="Snoop.Core.*" />
 
-            <Component Id="Snoop.exe" Guid="{82953F7E-F81D-44E9-8274-D80815109361}">
-                <File Id="Snoop.exe" KeyPath="yes" Source="SourceDir\Snoop.exe">
-                    <Shortcut Id="desktopSnoopShortcut" Directory="DesktopFolder" Name="Snoop"
-                            WorkingDirectory="INSTALLDIR" Icon="Snoop.exe" IconIndex="0" Advertise="yes"/>
-                    <Shortcut Id="startMenuSnoopShortcut" Directory="ProgramMenuDir" Name="Snoop"
-                            WorkingDirectory="INSTALLDIR" Icon="Snoop.exe" IconIndex="0" Advertise="yes"/>
-                </File>
-            </Component>
+            <File Source="Snoop.exe">
+                <Shortcut Id="desktopSnoopShortcut" Directory="DesktopFolder" Name="Snoop"
+                          WorkingDirectory="INSTALLDIR" Icon="Snoop.exe" IconIndex="0" Advertise="yes"/>
+                <Shortcut Id="startMenuSnoopShortcut" Directory="ProgramMenuDir" Name="Snoop"
+                          WorkingDirectory="INSTALLDIR" Icon="Snoop.exe" IconIndex="0" Advertise="yes"/>
+            </File>
 
             <Files Include="Snoop.exe.config" />
             <Files Include="Snoop.pdb" />
@@ -68,7 +63,7 @@
 
                 <Directory Id="SnoopScriptsFolder" Name="Scripts">
                     <Component Id="SnoopScriptsComponent" Guid="65AD97C3-5B32-4020-892C-1D0E38656D6D">
-                        <File Id="SnoopScriptsFile" Name="Snoop.psm1" Source="Scripts\Snoop.psm1"/>
+                        <File Source="Scripts\Snoop.psm1"/>
                     </Component>
                 </Directory>
             </Directory>
