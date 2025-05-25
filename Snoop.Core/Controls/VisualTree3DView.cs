@@ -86,7 +86,7 @@ public class VisualTree3DView : Viewport3D
         }
 
         Model3D? model = null;
-        var bounds = VisualTreeHelper.GetContentBounds(visual);
+        var bounds = visual is UIElement { IsVisible: false } ? Rect.Empty : VisualTreeHelper.GetContentBounds(visual);
 
         if (visual is Viewport3D viewport3D)
         {
