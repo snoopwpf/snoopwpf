@@ -39,7 +39,7 @@ public static class InjectorLauncherManager
             var architecture = NativeMethods.GetArchitectureWithoutException(processInfo.Process);
             var injectorLauncherExe = Path.Combine(directory, $"Snoop.InjectorLauncher.{architecture}.exe");
 
-            if (File.Exists(injectorLauncherExe) == false)
+            if (File.Exists(injectorLauncherExe) is false)
             {
                 var message = @$"Could not find the injector launcher ""{injectorLauncherExe}"".
 Snoop requires this component, which is part of the Snoop project, to do it's job.
@@ -63,19 +63,53 @@ Snoop requires this component, which is part of the Snoop project, to do it's jo
             var commandLine = Parser.Default.FormatCommandLine(injectorLauncherCommandLineOptions);
             var processStartInfo = new ProcessStartInfo(injectorLauncherExe, commandLine)
             {
-                UseShellExecute = true,
+                UseShellExecute = false,
                 CreateNoWindow = true,
                 WindowStyle = Program.Debug ? ProcessWindowStyle.Normal : ProcessWindowStyle.Hidden,
                 Verb = processInfo.IsProcessElevated
                     ? "runas"
-                    : null
+                    : null,
+                RedirectStandardError = true,
+                RedirectStandardOutput = true
             };
 
             LogHelper.WriteLine($"Launching injector \"{processStartInfo.FileName}\".");
             LogHelper.WriteLine($"Arguments: {commandLine}.");
 
-            using var process = Process.Start(processStartInfo);
-            process?.WaitForExit();
+            using var process = new Process();
+            process.StartInfo = processStartInfo;
+
+            // Subscribe to output streams
+            process.OutputDataReceived += (_, args) =>
+            {
+                if (args.Data is not null)
+                {
+                    LogHelper.WriteLine($"[Injector Output] {args.Data}");
+                }
+            };
+
+            process.ErrorDataReceived += (_, args) =>
+            {
+                if (args.Data is not null)
+                {
+                    LogHelper.WriteLine($"[Injector Error] {args.Data}");
+                }
+            };
+
+            if (process.Start())
+            {
+                // Begin reading output/error streams asynchronously
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
+
+                process.WaitForExit();
+
+                LogHelper.WriteLine($"Injector returned exit code: {process.ExitCode}.");
+            }
+            else
+            {
+                LogHelper.WriteLine("Injector could not be started.");
+            }
         }
         finally
         {
