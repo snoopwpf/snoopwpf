@@ -36,7 +36,7 @@ public static class PresentationTraceSourcesHelper
     public static void EnsureRequiredLevel()
     {
         // to get all failed binding results we have to increase the trace level
-        const SourceLevels requiredLevel = SourceLevels.Warning;
+        const SourceLevels requiredLevel = SourceLevels.Information;
         if (PresentationTraceSources.DataBindingSource.Switch.Level < requiredLevel)
         {
             PresentationTraceSources.DataBindingSource.Switch.Level = requiredLevel;

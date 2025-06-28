@@ -2,6 +2,10 @@
 
 ## 6.1.0 (preview)
 
+- ### Bug fixes
+
+  - [#477](../../issues/477) - Binding Errors - Get error message
+
 - ### Improvements
 
   - [#457](../../issues/457) - [Quality of Life] Synchronize Zoomer instance background slider value.
