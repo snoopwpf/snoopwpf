@@ -4,7 +4,7 @@
     <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
     <Platform Condition="'$(Platform)' == ''">Win32</Platform>
     <RootBuild Condition="'$(RootBuild)' == ''">True</RootBuild>
-    <AssemblyVersion Condition="'$(AssemblyVersion)' == ''">3.0.0.0</AssemblyVersion>
+    <AssemblyVersion Condition="'$(AssemblyVersion)' == ''">6.0.0.0</AssemblyVersion>
     <InformationalVersion Condition="'$(InformationalVersion)' == ''">$(AssemblyVersion)</InformationalVersion>
     <MajorVersion>$([System.Version]::Parse($(AssemblyVersion)).Major)</MajorVersion>
     <MinorVersion>$([System.Version]::Parse($(AssemblyVersion)).Minor)</MinorVersion>
