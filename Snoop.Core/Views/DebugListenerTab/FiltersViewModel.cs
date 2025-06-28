@@ -137,7 +137,8 @@ public class FiltersViewModel : INotifyPropertyChanged
             }
         }
 
-        return false;
+        return this.filters.Count is 0
+            && this.multipleFilters.Count is 0;
     }
 
     private string GetFirstNonUsedGroupId()
