@@ -167,6 +167,12 @@
                     <MenuItem Header="Snoop Snoop"
                               Click="HandleSnoopSnoop_OnClick" />
                 </MenuItem>
+                <MenuItem Header="_Tools">
+                    <MenuItem x:Name="mcpServerMenuItem"
+                              Header="MCP Server..."
+                              Click="HandleMcpServer_OnClick"
+                              ToolTip="Start an MCP server to allow AI assistants to inspect this application" />
+                </MenuItem>
                 <MenuItem Header="?">
                     <MenuItem x:Name="snoopVersion"
                               Click="HandleSnoopVersion_OnClick" />

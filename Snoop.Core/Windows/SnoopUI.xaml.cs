@@ -25,6 +25,7 @@ using Snoop.Core;
 using Snoop.Data.Tree;
 using Snoop.Infrastructure;
 using Snoop.Infrastructure.Helpers;
+using Snoop.Infrastructure.MCP;
 using Snoop.Views;
 
 public sealed partial class SnoopUI : INotifyPropertyChanged
@@ -429,6 +430,8 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
 
         this.eventsView?.Dispose();
         this.debugListenerControl?.Dispose();
+
+        this.mcpServer?.Dispose();
 
         CacheManager.Instance.DecreaseUsageCount();
 
@@ -913,6 +916,8 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
 
     private bool isShuttingDown;
 
+    private McpServer? mcpServer;
+
     #endregion
 
     #region INotifyPropertyChanged Members
@@ -1018,6 +1023,29 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
     private void HandleSnoopVersion_OnClick(object sender, RoutedEventArgs e)
     {
         ClipboardHelper.SetText((string)this.snoopVersion.Header);
+    }
+
+    private async void HandleMcpServer_OnClick(object sender, RoutedEventArgs e)
+    {
+        // Create MCP server if it doesn't exist
+        this.mcpServer ??= new McpServer(
+            this.Dispatcher,
+            () => this.CurrentSelection,
+            () => this.RootTreeItem,
+            target => this.Target = target);
+
+        // Auto-start the server if not running
+        if (!this.mcpServer.IsRunning)
+        {
+            await this.mcpServer.StartAsync();
+        }
+
+        // Show the MCP server window
+        var window = new McpServerWindow(this.mcpServer)
+        {
+            Owner = this
+        };
+        window.Show();
     }
 }
 

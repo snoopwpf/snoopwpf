@@ -1,0 +1,109 @@
+<![CDATA[<!--
+    (c) Copyright Cory Plotts.
+    This source is subject to the Microsoft Public License (Ms-PL).
+    Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
+    All other rights reserved.
+-->
+<windows:SnoopBaseWindow x:Class="Snoop.Windows.McpServerWindow"
+                         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                         xmlns:windows="clr-namespace:Snoop.Windows"
+                         Title="MCP Server"
+                         Width="500"
+                         Height="400"
+                         MinWidth="400"
+                         MinHeight="300"
+                         WindowStartupLocation="CenterOwner"
+                         ShowInTaskbar="False">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Status -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,16">
+            <TextBlock Text="Status: " FontWeight="Bold" VerticalAlignment="Center" />
+            <Ellipse x:Name="StatusIndicator" Width="12" Height="12" Margin="4,0,8,0" VerticalAlignment="Center" />
+            <TextBlock x:Name="StatusText" VerticalAlignment="Center" />
+        </StackPanel>
+
+        <!-- Connection Info -->
+        <GroupBox Grid.Row="1" Header="Connection Information" Margin="0,0,0,16">
+            <Grid Margin="8">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="SSE Endpoint:" FontWeight="Bold" Margin="0,0,8,8" VerticalAlignment="Center" />
+                <TextBox x:Name="SseEndpointTextBox" Grid.Row="0" Grid.Column="1" IsReadOnly="True" Margin="0,0,8,8" VerticalAlignment="Center" />
+                <Button x:Name="CopySseButton" Grid.Row="0" Grid.Column="2" Content="Copy" Padding="12,4" Margin="0,0,0,8" Click="CopySseButton_Click" />
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Base URL:" FontWeight="Bold" Margin="0,0,8,8" VerticalAlignment="Center" />
+                <TextBox x:Name="BaseUrlTextBox" Grid.Row="1" Grid.Column="1" IsReadOnly="True" Margin="0,0,8,8" VerticalAlignment="Center" />
+                <Button x:Name="CopyBaseUrlButton" Grid.Row="1" Grid.Column="2" Content="Copy" Padding="12,4" Margin="0,0,0,8" Click="CopyBaseUrlButton_Click" />
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Port:" FontWeight="Bold" Margin="0,0,8,0" VerticalAlignment="Center" />
+                <TextBox x:Name="PortTextBox" Grid.Row="2" Grid.Column="1" IsReadOnly="True" Margin="0,0,8,0" VerticalAlignment="Center" />
+            </Grid>
+        </GroupBox>
+
+        <!-- Instructions -->
+        <GroupBox Grid.Row="2" Header="How to Connect" Margin="0,0,0,16">
+            <TextBlock Margin="8" TextWrapping="Wrap">
+                <Run FontWeight="Bold">To connect an AI assistant to this MCP server:</Run>
+                <LineBreak /><LineBreak />
+                <Run>1. Copy the SSE Endpoint URL above</Run>
+                <LineBreak />
+                <Run>2. Configure your MCP client to connect using SSE transport</Run>
+                <LineBreak />
+                <Run>3. The server provides tools to inspect the WPF visual tree</Run>
+                <LineBreak /><LineBreak />
+                <Run FontWeight="Bold">Available Tools:</Run>
+                <LineBreak />
+                <Run FontFamily="Consolas">  - get_visual_tree: Get the UI element hierarchy</Run>
+                <LineBreak />
+                <Run FontFamily="Consolas">  - get_selected_element: Get current selection details</Run>
+                <LineBreak />
+                <Run FontFamily="Consolas">  - get_element_properties: Get element properties</Run>
+                <LineBreak />
+                <Run FontFamily="Consolas">  - select_element: Select an element by path</Run>
+                <LineBreak />
+                <Run FontFamily="Consolas">  - find_elements: Search for elements</Run>
+                <LineBreak />
+                <Run FontFamily="Consolas">  - get_bindings: Get binding information</Run>
+            </TextBlock>
+        </GroupBox>
+
+        <!-- Available Tools (scrollable) -->
+        <GroupBox Grid.Row="3" Header="Example Claude Desktop Configuration" Margin="0,0,0,16">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <TextBox x:Name="ConfigExample"
+                         IsReadOnly="True"
+                         FontFamily="Consolas"
+                         FontSize="11"
+                         TextWrapping="Wrap"
+                         BorderThickness="0"
+                         Background="Transparent"
+                         Margin="8" />
+            </ScrollViewer>
+        </GroupBox>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="StartStopButton" Content="Start Server" Padding="16,8" Margin="0,0,8,0" Click="StartStopButton_Click" />
+            <Button Content="Close" Padding="16,8" Click="CloseButton_Click" />
+        </StackPanel>
+    </Grid>
+</windows:SnoopBaseWindow>
+]]>
