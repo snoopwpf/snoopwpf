@@ -1,12 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <TargetFrameworks>$(MinCoreTargetFramework);$(MinTargetFramework)</TargetFrameworks>
+    <TargetFrameworks>net8.0-windows;$(MinCoreTargetFramework);$(MinTargetFramework)</TargetFrameworks>
 
     <RootNamespace>Snoop</RootNamespace>
 
     <UseWpf>true</UseWpf>
     <UseWindowsForms>true</UseWindowsForms>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <!-- Define MCP_SDK for .NET 8+ where the official SDK is available -->
+  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
+    <DefineConstants>$(DefineConstants);MCP_SDK</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,4 +36,10 @@
   <PropertyGroup Condition="'$(TargetFramework)' != '$(MinTargetFramework)'">
     <DefineConstants>$(DefineConstants);USE_WPF_BINDING_DIAG</DefineConstants>
   </PropertyGroup>
+
+  <!-- MCP SDK packages for .NET 8+ -->
+  <ItemGroup Label="MCP" Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
+    <PackageReference Include="ModelContextProtocol" />
+    <PackageReference Include="ModelContextProtocol.AspNetCore" />
+  </ItemGroup>
 </Project>

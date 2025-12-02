@@ -6,22 +6,34 @@
 namespace Snoop.Infrastructure.MCP;
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Net;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Media;
 using System.Windows.Threading;
 using JetBrains.Annotations;
 using Snoop.Data.Tree;
+
+#if MCP_SDK
+using System.Linq;
+using System.Net;
+using System.Net.Sockets;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using ModelContextProtocol.AspNetCore;
+using ModelContextProtocol.Server;
+#else
+using System.Collections.Generic;
+using System.IO;
+using System.Net;
+using System.Linq;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Windows;
+using System.Windows.Media;
+#endif
 
 /// <summary>
 /// MCP (Model Context Protocol) server for exposing Snoop inspection capabilities to AI assistants.
@@ -29,14 +41,18 @@ using Snoop.Data.Tree;
 /// </summary>
 public sealed class McpServer : INotifyPropertyChanged, IDisposable
 {
-    private HttpListener? httpListener;
-    private CancellationTokenSource? cancellationTokenSource;
     private readonly Dispatcher dispatcher;
     private readonly Func<TreeItem?> getCurrentSelection;
     private readonly Func<TreeItem?> getRootTreeItem;
     private readonly Action<object?> selectItem;
     private int port;
     private bool isRunning;
+    private CancellationTokenSource? cancellationTokenSource;
+
+#if MCP_SDK
+    private WebApplication? webApplication;
+#else
+    private HttpListener? httpListener;
     private string? sessionId;
 
     private static readonly JsonSerializerOptions JsonOptions = new()
@@ -45,6 +61,7 @@ public sealed class McpServer : INotifyPropertyChanged, IDisposable
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
         WriteIndented = false
     };
+#endif
 
     public McpServer(
         Dispatcher dispatcher,
@@ -94,6 +111,142 @@ public sealed class McpServer : INotifyPropertyChanged, IDisposable
 
     public string SseEndpoint => $"{this.ConnectionUrl}/sse";
 
+#if MCP_SDK
+    public async Task<bool> StartAsync(int preferredPort = 0)
+    {
+        if (this.IsRunning)
+        {
+            return true;
+        }
+
+        this.cancellationTokenSource = new CancellationTokenSource();
+
+        // Find an available port
+        var portToUse = preferredPort > 0 ? preferredPort : FindAvailablePort();
+        if (portToUse == 0)
+        {
+            return false;
+        }
+
+        try
+        {
+            // Create the SnoopContext that will be injected into the tools
+            var snoopContext = new SnoopContext
+            {
+                GetCurrentSelection = () => this.dispatcher.Invoke(this.getCurrentSelection),
+                GetRootTreeItem = () => this.dispatcher.Invoke(this.getRootTreeItem),
+                SelectItem = target => this.dispatcher.Invoke(() => this.selectItem(target))
+            };
+
+            var builder = WebApplication.CreateSlimBuilder();
+
+            // Configure logging to reduce noise
+            builder.Logging.ClearProviders();
+            builder.Logging.AddDebug();
+            builder.Logging.SetMinimumLevel(LogLevel.Warning);
+
+            // Configure the server URL
+            builder.WebHost.UseUrls($"http://localhost:{portToUse}");
+
+            // Add MCP server with the Snoop tools
+            builder.Services.AddSingleton(snoopContext);
+            builder.Services
+                .AddMcpServer()
+                .WithHttpTransport()
+                .WithTools<SnoopMcpTools>();
+
+            this.webApplication = builder.Build();
+
+            // Map the MCP endpoints (/sse and /messages)
+            this.webApplication.MapMcp();
+
+            // Start the server
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await this.webApplication.RunAsync(this.cancellationTokenSource.Token);
+                }
+                catch (OperationCanceledException)
+                {
+                    // Expected when stopping
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"MCP Server error: {ex.Message}");
+                }
+            });
+
+            // Give the server a moment to start
+            await Task.Delay(100);
+
+            this.Port = portToUse;
+            this.IsRunning = true;
+            return true;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Failed to start MCP server: {ex.Message}");
+            return false;
+        }
+    }
+
+    private static int FindAvailablePort()
+    {
+        // Try ports in the range 47700-47799
+        foreach (var testPort in Enumerable.Range(47700, 100))
+        {
+            try
+            {
+                var listener = new TcpListener(IPAddress.Loopback, testPort);
+                listener.Start();
+                listener.Stop();
+                return testPort;
+            }
+            catch (SocketException)
+            {
+                // Port in use, try next
+            }
+        }
+
+        return 0;
+    }
+
+    public async void Stop()
+    {
+        if (!this.IsRunning)
+        {
+            return;
+        }
+
+        try
+        {
+            this.cancellationTokenSource?.Cancel();
+
+            if (this.webApplication is not null)
+            {
+                await this.webApplication.StopAsync();
+                await this.webApplication.DisposeAsync();
+                this.webApplication = null;
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error stopping MCP server: {ex.Message}");
+        }
+
+        this.IsRunning = false;
+        this.Port = 0;
+    }
+
+    public void Dispose()
+    {
+        this.Stop();
+        this.cancellationTokenSource?.Dispose();
+    }
+
+#else
+    // Fallback implementation for .NET Framework and .NET 6
     public async Task<bool> StartAsync(int preferredPort = 0)
     {
         if (this.IsRunning)
@@ -147,6 +300,12 @@ public sealed class McpServer : INotifyPropertyChanged, IDisposable
         this.httpListener = null;
         this.IsRunning = false;
         this.Port = 0;
+    }
+
+    public void Dispose()
+    {
+        this.Stop();
+        this.cancellationTokenSource?.Dispose();
     }
 
     private async Task ListenAsync(CancellationToken cancellationToken)
@@ -675,7 +834,6 @@ public sealed class McpServer : INotifyPropertyChanged, IDisposable
     private List<Dictionary<string, object?>> GetAllProperties(DependencyObject depObj, string? filter)
     {
         var properties = new List<Dictionary<string, object?>>();
-        var type = depObj.GetType();
 
         // Get dependency properties
         var dpDescriptors = System.ComponentModel.TypeDescriptor.GetProperties(depObj);
@@ -870,7 +1028,7 @@ public sealed class McpServer : INotifyPropertyChanged, IDisposable
                     bindingInfo["mode"] = b.Mode.ToString();
                     bindingInfo["source"] = b.Source?.GetType().Name;
                     bindingInfo["elementName"] = b.ElementName;
-                    bindingInfo["relativeSoure"] = b.RelativeSource?.Mode.ToString();
+                    bindingInfo["relativeSource"] = b.RelativeSource?.Mode.ToString();
                 }
 
                 var expression = System.Windows.Data.BindingOperations.GetBindingExpression(depObj, entry.Property);
@@ -937,12 +1095,7 @@ public sealed class McpServer : INotifyPropertyChanged, IDisposable
         await response.OutputStream.WriteAsync(buffer);
         response.Close();
     }
-
-    public void Dispose()
-    {
-        this.Stop();
-        this.cancellationTokenSource?.Dispose();
-    }
+#endif
 
     public event PropertyChangedEventHandler? PropertyChanged;
 

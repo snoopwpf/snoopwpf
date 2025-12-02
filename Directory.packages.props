@@ -3,6 +3,11 @@
         <PackageVersion Include="CommandLineParser" Version="2.9.1" />
     </ItemGroup>
 
+    <ItemGroup Label="MCP">
+        <PackageVersion Include="ModelContextProtocol" Version="0.4.1-preview.1" />
+        <PackageVersion Include="ModelContextProtocol.AspNetCore" Version="0.4.1-preview.1" />
+    </ItemGroup>
+
     <ItemGroup Label="PowerShell">
         <PackageVersion Include="microsoft.powershell.3.referenceassemblies" Version="1.0.0" Condition="'$(TargetFramework)' == '$(MinTargetFramework)'" />
         <PackageVersion Include="System.Management.Automation" Version="7.2.0" Condition="'$(TargetFramework)' != '$(MinTargetFramework)'" />
