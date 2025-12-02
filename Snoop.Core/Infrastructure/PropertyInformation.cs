@@ -1,4 +1,4 @@
-// (c) Copyright Cory Plotts.
+﻿// (c) Copyright Cory Plotts.
 // This source is subject to the Microsoft Public License (Ms-PL).
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
@@ -490,6 +490,10 @@ public class PropertyInformation : DependencyObject, IComparable, INotifyPropert
     public string? Name => this.name;
 
     public string DisplayName => this.displayName;
+
+    public string? DisplayTypeShort => (this.DependencyProperty?.PropertyType ?? this.Property?.PropertyType)?.Name;
+
+    public string? DisplayTypeFull => (this.DependencyProperty?.PropertyType ?? this.Property?.PropertyType)?.FullName;
 
     public bool IsCollectionEntry { get; private set; }
 

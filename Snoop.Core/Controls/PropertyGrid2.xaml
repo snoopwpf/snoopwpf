@@ -283,6 +283,25 @@
                         </DataTemplate>
                     </GridViewColumn.CellTemplate>
                 </GridViewColumn>
+
+                <GridViewColumn Width="80">
+                    <GridViewColumn.Header>
+                        <TextBlock Text="Type">
+                            <TextBlock.ToolTip>
+                                <TextBlock Text="The target type of the property" />
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                    </GridViewColumn.Header>
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="infrastructure:PropertyInformation">
+                            <TextBlock Text="{Binding DisplayTypeShort}">
+                                <TextBlock.ToolTip>
+                                    <TextBlock Text="{Binding DisplayTypeFull}" />
+                                </TextBlock.ToolTip>
+                            </TextBlock>
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
             </GridView>
         </ListView.View>
     </ListView>

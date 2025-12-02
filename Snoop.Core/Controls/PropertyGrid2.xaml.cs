@@ -1,4 +1,4 @@
-// (c) Copyright Cory Plotts.
+﻿// (c) Copyright Cory Plotts.
 // This source is subject to the Microsoft Public License (Ms-PL).
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
@@ -273,10 +273,13 @@ public partial class PropertyGrid2 : INotifyPropertyChanged
                 this.Sort(".", this.direction);
                 break;
             case "Value":
-                this.Sort(nameof(PropertyInformation.StringValue), this.direction);
+                this.Sort(nameof(PropertyInformation.StringValue), this.direction, ".", this.direction);
                 break;
             case "Value Source":
-                this.Sort(nameof(PropertyInformation.ValueSourceText), this.direction);
+                this.Sort(nameof(PropertyInformation.ValueSourceText), this.direction, ".", this.direction);
+                break;
+            case "Type":
+                this.Sort(nameof(PropertyInformation.DisplayTypeShort), this.direction, ".", this.direction);
                 break;
         }
     }
@@ -328,12 +331,16 @@ public partial class PropertyGrid2 : INotifyPropertyChanged
         }
     }
 
-    private void Sort(string propertyPath, ListSortDirection newDirection)
+    private void Sort(string propertyPath, ListSortDirection newDirection, string? propertyPath2 = null, ListSortDirection newDirection2 = ListSortDirection.Ascending)
     {
         using (this.propertiesView.DeferRefresh())
         {
             this.propertiesView.SortDescriptions.Clear();
             this.propertiesView.SortDescriptions.Add(new SortDescription(propertyPath, newDirection));
+            if (propertyPath2 is not null)
+            {
+                this.propertiesView.SortDescriptions.Add(new SortDescription(propertyPath2, newDirection2));
+            }
         }
     }
 
