@@ -29,6 +29,46 @@ You can change property values, view triggers, set breakpoints on property chang
   - Tested with 6, 7, 8, 9 and 10. Future versions might just work.
   - **Restrictions:** Self-Contained single file applications are not supported as there is no reliable way to get a handle to the .NET runtime
 
+## AI Assistant Integration (MCP Server)
+
+Snoop now includes an **MCP (Model Context Protocol) server** that allows AI assistants like Claude to interact with and inspect your WPF applications in real-time.
+
+### How to Use
+
+1. Open Snoop and attach to a WPF application
+2. Click the "MCP Server" button in the menu
+3. Start the server in the MCP Server window
+4. Configure your AI assistant (e.g., Claude Desktop) to connect to the server endpoint
+
+### Available MCP Tools
+
+The MCP server exposes 7 tools for AI assistants:
+
+- `get_visual_tree` - Get hierarchical structure of UI elements
+- `get_selected_element` - Get details of currently selected element
+- `get_element_properties` - Query properties of a specific element
+- `select_element` - Programmatically select elements in Snoop
+- `find_elements` - Search for elements by type or name
+- `get_bindings` - Analyze data bindings and binding errors
+- `get_element_preview` - Capture visual screenshots of elements
+
+### Use Cases
+
+- Debug WPF layout issues with AI assistance
+- Automated UI inspection and testing
+- Find binding errors quickly
+- Performance bottleneck analysis
+- Generate detailed bug reports with screenshots
+- Learn WPF patterns from real applications
+
+### Requirements
+
+- .NET 8.0+ for official MCP SDK support
+- .NET 6.0+ for fallback implementation
+- Works with both .NET Framework and .NET applications
+
+The MCP server runs on `localhost:47700-47799` using Server-Sent Events (SSE) transport.
+
 ## Versions
 
 You can read the [changelog](Changelog.md) for details on what changed in which version.

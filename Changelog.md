@@ -13,6 +13,13 @@
   - [#457](../../issues/457) - [Quality of Life] Synchronize Zoomer instance background slider value.
   - [#482](../../issues/482) - Add "Auto-track on click" option (thanks @Koichi-Kobayashi)
   - [#485](../../issues/485) - Snoop running on ARM hardware is using x64 emulation instead of the native Arm64
+  - **MCP (Model Context Protocol) Server Integration** - AI assistant integration for automated WPF inspection
+    - Added MCP server with 7 tools: get_visual_tree, get_selected_element, get_element_properties, select_element, find_elements, get_bindings, get_element_preview
+    - Integrated official MCP SDK for .NET 8+ builds with fallback implementation for .NET 6/Framework
+    - Server-Sent Events (SSE) transport on localhost:47700-47799
+    - Dedicated MCP Server window for server control and configuration
+    - Visual element screenshot capability using RenderTargetBitmap
+    - Enables AI assistants like Claude to debug, inspect, and analyze WPF applications in real-time
 
 ## 6.0.0
 
