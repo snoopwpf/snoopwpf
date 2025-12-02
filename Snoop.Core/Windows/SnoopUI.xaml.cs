@@ -1,4 +1,4 @@
-// (c) Copyright Cory Plotts.
+﻿// (c) Copyright Cory Plotts.
 // This source is subject to the Microsoft Public License (Ms-PL).
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
@@ -38,6 +38,7 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
     public static readonly RoutedCommand InspectCommand = new(nameof(InspectCommand), typeof(SnoopUI));
     public static readonly RoutedCommand SelectFocusCommand = new(nameof(SelectFocusCommand), typeof(SnoopUI));
     public static readonly RoutedCommand SelectFocusScopeCommand = new(nameof(SelectFocusScopeCommand), typeof(SnoopUI));
+    public static readonly RoutedCommand SelectMouseCaptureCommand = new(nameof(SelectMouseCaptureCommand), typeof(SnoopUI));
     public static readonly RoutedCommand ClearSearchFilterCommand = new(nameof(ClearSearchFilterCommand), typeof(SnoopUI));
     public static readonly RoutedCommand CopyPropertyChangesCommand = new(nameof(CopyPropertyChangesCommand), typeof(SnoopUI));
 
@@ -73,6 +74,7 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
 
         this.CommandBindings.Add(new CommandBinding(SelectFocusCommand, this.HandleSelectFocus));
         this.CommandBindings.Add(new CommandBinding(SelectFocusScopeCommand, this.HandleSelectFocusScope));
+        this.CommandBindings.Add(new CommandBinding(SelectMouseCaptureCommand, this.HandleSelectMouseCapture));
 
         //NOTE: this is up here in the outer UI layer so ESC will clear any typed filter regardless of where the focus is
         // (i.e. focus on a selected item in the tree, not in the property list where the search box is hosted)
@@ -313,6 +315,56 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
 
             return null;
         }
+    }
+
+    #endregion
+
+    #region Mouse Capture
+
+    private IInputElement? currentMouseCapture;
+    private IInputElement? previousMouseCapture;
+
+    /// <summary>
+    /// Indicates whether CurrentMouseCapture should return previously captured element.
+    /// This fixes problem where Snoop steals the capture from snooped app.
+    /// </summary>
+    private bool returnPreviousMouseCapture;
+
+    public IInputElement? CurrentMouseCapture
+    {
+        get
+        {
+            this.returnPreviousMouseCapture = false;
+
+            IInputElement? newMouseCapture = Mouse.Captured;
+
+            if (newMouseCapture == this.currentMouseCapture
+                || (newMouseCapture is null && this.IsActive))
+            {
+                return this.currentMouseCapture;
+            }
+
+            if (SnoopPartsRegistry.IsSnoopingSnoop == false
+                && newMouseCapture is DependencyObject dpo
+                && dpo.IsPartOfSnoopVisualTree())
+            {
+                return this.previousMouseCapture;
+            }
+
+            this.currentMouseCapture = newMouseCapture;
+
+            var result = this.returnPreviousMouseCapture ? this.previousMouseCapture : this.currentMouseCapture;
+
+            // Store reference to previously captured element only if captured element was changed.
+            this.previousMouseCapture = this.currentMouseCapture;
+
+            return result;
+        }
+    }
+
+    private void HandleSelectMouseCapture(object sender, ExecutedRoutedEventArgs e)
+    {
+        this.SelectItem(e.Parameter as DependencyObject);
     }
 
     #endregion
@@ -668,6 +720,7 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
     private void HandlePreProcessInputForTracking(object sender, PreProcessInputEventArgs e)
     {
         this.OnPropertyChanged(nameof(this.CurrentFocus));
+        this.OnPropertyChanged(nameof(this.CurrentMouseCapture));
 
         if (this.IsTrackingInput(e) is false)
         {

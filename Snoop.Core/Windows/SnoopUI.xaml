@@ -518,6 +518,7 @@
                                 <TextBlock Text="{Binding CurrentFocusScope, Converter={x:Static converters:ObjectToStringConverter.Instance}}" />
                             </controls:NoFocusHyperlink>
                         </TextBlock>
+                        <TextBlock Text="; " />
                         <StackPanel.ToolTip>
                             <StackPanel>
                                 <TextBlock Text="This is the object that is the root of the current focus scope." />
@@ -525,6 +526,24 @@
                             </StackPanel>
                         </StackPanel.ToolTip>
                     </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Mouse.Captured:" />
+                        <TextBlock Margin="3 0 0 0">
+                            <controls:NoFocusHyperlink Command="{x:Static windows:SnoopUI.SelectMouseCaptureCommand}"
+                                                       CommandParameter="{Binding MouseCapture}"
+                                                       Focusable="False">
+                                <TextBlock Text="{Binding CurrentMouseCapture, Converter={x:Static converters:ObjectToStringConverter.Instance}}" />
+                            </controls:NoFocusHyperlink>
+                        </TextBlock>
+                        <TextBlock Text="; " />
+                        <StackPanel.ToolTip>
+                            <StackPanel>
+                                <TextBlock Text="This is the object that has captured the mouse." />
+                                <TextBlock Text="Click the link to select this object." />
+                            </StackPanel>
+                        </StackPanel.ToolTip>
+                    </StackPanel>                    
                 </StackPanel>
             </StatusBar>
         </Grid>
