@@ -33,6 +33,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 #endif
 
 /// <summary>
@@ -615,6 +616,28 @@ public sealed class McpServer : INotifyPropertyChanged, IDisposable
                         type = "object",
                         properties = new { }
                     }
+                },
+                new
+                {
+                    name = "get_element_preview",
+                    description = "Capture a visual preview/screenshot of the currently selected element as a base64-encoded PNG image.",
+                    inputSchema = new
+                    {
+                        type = "object",
+                        properties = new
+                        {
+                            maxWidth = new
+                            {
+                                type = "integer",
+                                description = "Maximum width of the preview image (default: 400)"
+                            },
+                            maxHeight = new
+                            {
+                                type = "integer",
+                                description = "Maximum height of the preview image (default: 400)"
+                            }
+                        }
+                    }
                 }
             }
         };
@@ -638,6 +661,7 @@ public sealed class McpServer : INotifyPropertyChanged, IDisposable
                     "select_element" => this.ExecuteSelectElement(arguments),
                     "find_elements" => this.ExecuteFindElements(arguments),
                     "get_bindings" => this.ExecuteGetBindings(),
+                    "get_element_preview" => this.ExecuteGetElementPreview(arguments),
                     _ => throw new InvalidOperationException($"Unknown tool: {toolName}")
                 };
 
@@ -1052,6 +1076,114 @@ public sealed class McpServer : INotifyPropertyChanged, IDisposable
             bindingCount = bindings.Count,
             bindings
         };
+    }
+
+    private object ExecuteGetElementPreview(JsonElement arguments)
+    {
+        var maxWidth = 400;
+        var maxHeight = 400;
+
+        if (arguments.ValueKind != JsonValueKind.Undefined)
+        {
+            if (arguments.TryGetProperty("maxWidth", out var widthProp))
+            {
+                maxWidth = Math.Max(50, Math.Min(1920, widthProp.GetInt32()));
+            }
+
+            if (arguments.TryGetProperty("maxHeight", out var heightProp))
+            {
+                maxHeight = Math.Max(50, Math.Min(1080, heightProp.GetInt32()));
+            }
+        }
+
+        var selection = this.getCurrentSelection();
+        if (selection is null)
+        {
+            return new { error = "No element selected" };
+        }
+
+        if (selection.Target is not Visual visual)
+        {
+            return new { error = "Selected element is not a Visual and cannot be rendered" };
+        }
+
+        try
+        {
+            // Get the bounds of the visual
+            var bounds = VisualTreeHelper.GetDescendantBounds(visual);
+            if (bounds.IsEmpty || bounds.Width <= 0 || bounds.Height <= 0)
+            {
+                // Try to get actual size from FrameworkElement
+                if (visual is FrameworkElement fe && fe.ActualWidth > 0 && fe.ActualHeight > 0)
+                {
+                    bounds = new Rect(0, 0, fe.ActualWidth, fe.ActualHeight);
+                }
+                else
+                {
+                    return new { error = "Element has no visible bounds" };
+                }
+            }
+
+            // Calculate scale to fit within max dimensions while preserving aspect ratio
+            var scaleX = maxWidth / bounds.Width;
+            var scaleY = maxHeight / bounds.Height;
+            var scale = Math.Min(Math.Min(scaleX, scaleY), 1.0); // Don't upscale
+
+            var renderWidth = (int)Math.Ceiling(bounds.Width * scale);
+            var renderHeight = (int)Math.Ceiling(bounds.Height * scale);
+
+            // Create a RenderTargetBitmap
+            var dpi = 96.0 * scale;
+            var renderTarget = new RenderTargetBitmap(
+                renderWidth,
+                renderHeight,
+                dpi,
+                dpi,
+                PixelFormats.Pbgra32);
+
+            // Create a visual brush and draw it
+            var drawingVisual = new DrawingVisual();
+            using (var drawingContext = drawingVisual.RenderOpen())
+            {
+                var visualBrush = new VisualBrush(visual)
+                {
+                    Stretch = Stretch.Uniform,
+                    ViewboxUnits = BrushMappingMode.Absolute,
+                    Viewbox = bounds
+                };
+
+                drawingContext.DrawRectangle(
+                    visualBrush,
+                    null,
+                    new Rect(0, 0, renderWidth, renderHeight));
+            }
+
+            renderTarget.Render(drawingVisual);
+
+            // Encode as PNG
+            var encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(renderTarget));
+
+            using var memoryStream = new MemoryStream();
+            encoder.Save(memoryStream);
+            var base64 = Convert.ToBase64String(memoryStream.ToArray());
+
+            return new
+            {
+                elementType = selection.TargetType.Name,
+                elementName = selection.Name,
+                originalWidth = bounds.Width,
+                originalHeight = bounds.Height,
+                imageWidth = renderWidth,
+                imageHeight = renderHeight,
+                format = "png",
+                imageBase64 = base64
+            };
+        }
+        catch (Exception ex)
+        {
+            return new { error = $"Failed to capture preview: {ex.Message}" };
+        }
     }
 
     private TreeItem? FindElementByPath(string? path)

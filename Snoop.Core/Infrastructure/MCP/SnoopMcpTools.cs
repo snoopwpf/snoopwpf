@@ -9,10 +9,12 @@ namespace Snoop.Infrastructure.MCP;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using ModelContextProtocol.Server;
 using Snoop.Data.Tree;
 
@@ -223,6 +225,102 @@ public sealed class SnoopMcpTools
             bindingCount = bindings.Count,
             bindings
         }, JsonOptions);
+    }
+
+    [McpServerTool("get_element_preview"), Description("Capture a visual preview/screenshot of the currently selected element as a base64-encoded PNG image.")]
+    public static string GetElementPreview(
+        SnoopContext context,
+        [Description("Maximum width of the preview image (default: 400)")] int maxWidth = 400,
+        [Description("Maximum height of the preview image (default: 400)")] int maxHeight = 400)
+    {
+        var selection = context.GetCurrentSelection();
+        if (selection is null)
+        {
+            return JsonSerializer.Serialize(new { error = "No element selected" }, JsonOptions);
+        }
+
+        if (selection.Target is not Visual visual)
+        {
+            return JsonSerializer.Serialize(new { error = "Selected element is not a Visual and cannot be rendered" }, JsonOptions);
+        }
+
+        try
+        {
+            // Get the bounds of the visual
+            var bounds = VisualTreeHelper.GetDescendantBounds(visual);
+            if (bounds.IsEmpty || bounds.Width <= 0 || bounds.Height <= 0)
+            {
+                // Try to get actual size from FrameworkElement
+                if (visual is FrameworkElement fe && fe.ActualWidth > 0 && fe.ActualHeight > 0)
+                {
+                    bounds = new Rect(0, 0, fe.ActualWidth, fe.ActualHeight);
+                }
+                else
+                {
+                    return JsonSerializer.Serialize(new { error = "Element has no visible bounds" }, JsonOptions);
+                }
+            }
+
+            // Calculate scale to fit within max dimensions while preserving aspect ratio
+            var scaleX = maxWidth / bounds.Width;
+            var scaleY = maxHeight / bounds.Height;
+            var scale = Math.Min(Math.Min(scaleX, scaleY), 1.0); // Don't upscale
+
+            var renderWidth = (int)Math.Ceiling(bounds.Width * scale);
+            var renderHeight = (int)Math.Ceiling(bounds.Height * scale);
+
+            // Create a RenderTargetBitmap
+            var dpi = 96.0 * scale;
+            var renderTarget = new RenderTargetBitmap(
+                renderWidth,
+                renderHeight,
+                dpi,
+                dpi,
+                PixelFormats.Pbgra32);
+
+            // Create a visual brush and draw it
+            var drawingVisual = new DrawingVisual();
+            using (var drawingContext = drawingVisual.RenderOpen())
+            {
+                var visualBrush = new VisualBrush(visual)
+                {
+                    Stretch = Stretch.Uniform,
+                    ViewboxUnits = BrushMappingMode.Absolute,
+                    Viewbox = bounds
+                };
+
+                drawingContext.DrawRectangle(
+                    visualBrush,
+                    null,
+                    new Rect(0, 0, renderWidth, renderHeight));
+            }
+
+            renderTarget.Render(drawingVisual);
+
+            // Encode as PNG
+            var encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(renderTarget));
+
+            using var memoryStream = new MemoryStream();
+            encoder.Save(memoryStream);
+            var base64 = Convert.ToBase64String(memoryStream.ToArray());
+
+            return JsonSerializer.Serialize(new
+            {
+                elementType = selection.TargetType.Name,
+                elementName = selection.Name,
+                originalWidth = bounds.Width,
+                originalHeight = bounds.Height,
+                imageWidth = renderWidth,
+                imageHeight = renderHeight,
+                format = "png",
+                imageBase64 = base64
+            }, JsonOptions);
+        }
+        catch (Exception ex)
+        {
+            return JsonSerializer.Serialize(new { error = $"Failed to capture preview: {ex.Message}" }, JsonOptions);
+        }
     }
 
     #region Helper Methods
