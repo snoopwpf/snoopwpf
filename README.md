@@ -69,95 +69,9 @@ The MCP server exposes 7 tools for AI assistants:
 
 The MCP server runs on `localhost:47700-47799` using Server-Sent Events (SSE) transport.
 
-## Versions
+## Changelog
 
-You can read the [changelog](Changelog.md) for details on what changed in which version.
-
-### [6.0.0](../../releases/tag/v6.0.0)
-
-Breaking:
-
-- Dropped support for all .NET Framework versions prior to .NET 4.6.2
-- Dropped support for .NET 3.1 and NET 5
-
-### [5.0.0](../../releases/tag/v5.0.0)
-
-Highlights:
-
-- Improved settings system that does not rely on `System.Configuration`  
-  The new system allows sharing of settings between different snooped applications.  
-  It also allows to define settings for whole directory trees.
-- It's now possible to hide properties from Snoop in it's default view.  
-  Just annotate your properties with `[System.ComponentModel.BrowsableAttribute(false)]`.
-- Added the ability to show browser dev tools on browser controls.  
-  `WebView2` and `CefSharp` are currently supported.
-- Added dark theme
-
-Breaking:
-
-- Dropped support for all .NET Framework versions prior to .NET 4.5.2
-- Dropped support for .NET 3.0
-- Added support for .NET versions >= 6.0 (by not explicitly blocking versions greater than 6.0)
-
-### [4.0.0](../../releases/tag/v4.0.0)
-
-Highlights:
-
-- Support for .NET 6.0
-- Support for ARM/ARM64
-- New "Diagnostics" view
-- Settings for highlighting
-- Artifacts are digitally signed thanks to SignPath.io (MSI, Chocolatey NUPKG and zip)
-
-Breaking:
-
-- Dropped support for all .NET versions prior to .NET 4.5.1
-
-### [3.0.0](../../releases/tag/v3.0.0)
-
-Highlights:
-
-- Support for .NET Core (3.0, 3.1 and 5.0) (including self contained and single file applications)
-- Rewritten injector code
-- You no longer have to have installed any Microsoft Visual C++ Redistributable(s)
-- Snooping disabled controls when holding `CTRL + SHIFT` works now
-- Snoop now filters uncommon properties by default
-- Snoop is now able to show `MergedDictionaries` from `ResourceDictionary`
-- Snoop now has two tracking modes.
-  - Holding `CTRL` tries to skip template parts => this is changed to `CTRL + ALT` in newer versions
-  - Holding `CTRL + SHIFT` does not skip template parts
-- Drastically improved performance of `AppChooser.Refresh()` (thanks @mikel785)
-- Usability improvements for process dropdown (thanks @mikel785)
-- Support for displaying the logical tree and the tree of WPF automation peers
-- Ability to inspect `Popup` without opening it
-- `Snoop.exe` and the injector launcher now support commandline args
-- Global hotkey support (just start snoop, focus a WPF application and hit `CTRL + WIN + ALT + F12`)
-
-Known issues:
-
-- Trying to snoop a trimmed single file application might not work as trimming might have removed things Snoop relies on
-
-### [2.11.0](../../releases/tag/2.11.0)
-
-Highlights:
-
-- Support for multiple app domains
-- Auto elevation to enable spying of elevated processes without running Snoop as administrator
-- Persistent settings for various settings
-- Improved error dialog and issue reporting
-- Rewritten window finder
-
-### [2.10.0](../../releases/tag/2.10.0)
-
-Was released on September 19th, 2018.
-In this version we finally got rid of support for snooping WPF 3.5 applications.
-This allowed us to move the Snoop projects forward to Visual Studio 2017 which should make it much easier to work with Snoop's source code.
-
-### [2.9.0](../../releases/tag/2.9.0)
-
-Was released on July 27th, 2018.
-The big addition in this version was the inclusion of the triggers tab which was a useful feature of another WPF spying utility called WPF Inspector (written by [Christan Moser](https://github.com/ChristianMoser)).
-It was ported to Snoop by Bastian Schmidt.
+You can read the [changelog](Changelog.md) for details on what changed in each version.
 
 ## Documentation on how to use Snoop
 

@@ -2,24 +2,14 @@
 
 ## 6.1.0 (preview)
 
-- ### Bug fixes
+- ### New Features
 
-  - [#477](../../issues/477) - Binding Errors - Get error message
-  - [#483](../../issues/483) - Error when I try to GetBindingExpression from TextProperty
-  - [#484](../../issues/484) - Snoop fails to attach to application running on .NET Framework on ARM64
-
-- ### Improvements
-
-  - [#457](../../issues/457) - [Quality of Life] Synchronize Zoomer instance background slider value.
-  - [#482](../../issues/482) - Add "Auto-track on click" option (thanks @Koichi-Kobayashi)
-  - [#485](../../issues/485) - Snoop running on ARM hardware is using x64 emulation instead of the native Arm64
-  - **MCP (Model Context Protocol) Server Integration** - AI assistant integration for automated WPF inspection
-    - Added MCP server with 7 tools: get_visual_tree, get_selected_element, get_element_properties, select_element, find_elements, get_bindings, get_element_preview
-    - Integrated official MCP SDK for .NET 8+ builds with fallback implementation for .NET 6/Framework
+  - **MCP (Model Context Protocol) Server Integration** - Added AI assistant integration for automated WPF inspection and debugging
+    - Enables AI assistants like Claude to interact with and inspect WPF applications in real-time
+    - 7 MCP tools: get_visual_tree, get_selected_element, get_element_properties, select_element, find_elements, get_bindings, get_element_preview
+    - Official MCP SDK support for .NET 8+ with fallback implementation for .NET 6/Framework
     - Server-Sent Events (SSE) transport on localhost:47700-47799
-    - Dedicated MCP Server window for server control and configuration
-    - Visual element screenshot capability using RenderTargetBitmap
-    - Enables AI assistants like Claude to debug, inspect, and analyze WPF applications in real-time
+    - Dedicated MCP Server window for easy configuration and control
 
 ## 6.0.0
 
