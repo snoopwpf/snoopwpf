@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -241,21 +242,10 @@ public partial class PropertyGrid2 : INotifyPropertyChanged
         ((PropertyInformation)e.Parameter).Clear();
     }
 
-    private ListSortDirection GetNewSortDirection(GridViewColumnHeader columnHeader)
-    {
-        if (columnHeader.Tag is not ListSortDirection sortDirection)
-        {
-            return (ListSortDirection)(columnHeader.Tag = ListSortDirection.Ascending);
-        }
-
-        return (ListSortDirection)(columnHeader.Tag = (ListSortDirection)(((int)sortDirection + 1) % 2));
-    }
-
     private void HandleSort(object sender, ExecutedRoutedEventArgs args)
     {
         var headerClicked = (GridViewColumnHeader)args.OriginalSource;
 
-        this.direction = this.GetNewSortDirection(headerClicked);
         if (headerClicked.Column is null)
         {
             return;
@@ -270,13 +260,13 @@ public partial class PropertyGrid2 : INotifyPropertyChanged
         switch (columnHeader.Text)
         {
             case "Name":
-                this.Sort(".", this.direction);
+                this.Sort(".");
                 break;
             case "Value":
-                this.Sort(nameof(PropertyInformation.StringValue), this.direction);
+                this.Sort(nameof(PropertyInformation.StringValue));
                 break;
             case "Value Source":
-                this.Sort(nameof(PropertyInformation.ValueSourceText), this.direction);
+                this.Sort(nameof(PropertyInformation.ValueSourceText));
                 break;
         }
     }
@@ -328,12 +318,30 @@ public partial class PropertyGrid2 : INotifyPropertyChanged
         }
     }
 
-    private void Sort(string propertyPath, ListSortDirection newDirection)
+    private void Sort(string propertyPath, ListSortDirection? newDirection = null)
     {
         using (this.propertiesView.DeferRefresh())
         {
-            this.propertiesView.SortDescriptions.Clear();
-            this.propertiesView.SortDescriptions.Add(new SortDescription(propertyPath, newDirection));
+            var doesSortExist = this.propertiesView.SortDescriptions.Any(x => x.PropertyName == propertyPath);
+            var existingSort = this.propertiesView.SortDescriptions.FirstOrDefault(x => x.PropertyName == propertyPath);
+
+            newDirection ??= doesSortExist is false
+                ? ListSortDirection.Ascending
+                : existingSort.Direction is ListSortDirection.Descending
+                    ? ListSortDirection.Ascending
+                    : ListSortDirection.Descending;
+
+            var clearExistingSortDescriptions = (Keyboard.Modifiers & ModifierKeys.Shift) is not ModifierKeys.Shift;
+            if (clearExistingSortDescriptions)
+            {
+                this.propertiesView.SortDescriptions.Clear();
+            }
+            else if (doesSortExist)
+            {
+                this.propertiesView.SortDescriptions.Remove(existingSort);
+            }
+
+            this.propertiesView.SortDescriptions.Add(new SortDescription(propertyPath, newDirection.Value));
         }
     }
 
@@ -351,7 +359,6 @@ public partial class PropertyGrid2 : INotifyPropertyChanged
     private readonly DelayedCall processIncrementalCall;
     private readonly DelayedCall filterCall;
     private bool unloaded;
-    private ListSortDirection direction = ListSortDirection.Ascending;
 
     private readonly DispatcherTimer filterTimer;
     private readonly ICollectionView propertiesView;
