@@ -608,7 +608,11 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
 
     private void ClearSearchFilterHandler(object sender, ExecutedRoutedEventArgs e)
     {
-        this.PropertyInspector.FilterString = string.Empty;
+        if (this.PropertyInspector.PropertiesFilter.IsFocused
+            || this.PropertyInspector.PropertiesFilter.IsKeyboardFocusWithin)
+        {
+            this.PropertyInspector.FilterString = string.Empty;
+        }
     }
 
     private void CopyPropertyChangesHandler(object sender, ExecutedRoutedEventArgs e)

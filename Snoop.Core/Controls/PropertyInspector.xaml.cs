@@ -391,7 +391,8 @@ public partial class PropertyInspector : INotifyPropertyChanged
             this.OnPropertyChanged(nameof(this.DelveType));
         }
 
-        if (this.checkBoxClearAfterDelve.IsChecked.HasValue && this.checkBoxClearAfterDelve.IsChecked.Value)
+        if (this.checkBoxClearAfterDelve.IsChecked.HasValue
+            && this.checkBoxClearAfterDelve.IsChecked.Value)
         {
             this.PropertiesFilter.Focus();
         }
