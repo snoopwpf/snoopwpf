@@ -611,6 +611,17 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
 
     private void ClearSearchFilterHandler(object sender, ExecutedRoutedEventArgs e)
     {
+        // I was initially quite hesitant about unconditionally clearing the filter string,
+        // especially since the ESC shortcut clears the filter regardless of where the focus is.
+        // Given the large number of dependency properties, filtering is essential for
+        // efficient navigation. However, since this behavior was already designed that way,
+        // I didn't want to dismiss it outright. As a compromise, I've added a condition to
+        // preserve the filter when regular expression mode is enabled.
+        if (this.PropertyGrid.UseRegex)
+        {
+            return;
+        }
+
         this.PropertyGrid.FilterString = string.Empty;
     }
 
