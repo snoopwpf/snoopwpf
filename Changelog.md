@@ -9,6 +9,7 @@
 - ### Improvements
 
   - [#504](../../issues/504) - Allow to scope the treeview to an element (thanks @Laniusexcubitor)
+  - [#508](../../issues/508) - Persist UseRegex in settings (thanks @corvinsz)
 
 ## 6.1.1
 
