@@ -11,8 +11,12 @@
         <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
 
         <PlatformTarget>AnyCPU</PlatformTarget>
+
         <MinTargetFramework>net462</MinTargetFramework>
         <MinCoreTargetFramework>net6.0-windows</MinCoreTargetFramework>
+        <SnoopTestTargetFrameworks>$(MinCoreTargetFramework);net8.0-windows;net10.0-windows</SnoopTestTargetFrameworks>
+        <SnoopTestHarnessTargetFrameworks>$(MinCoreTargetFramework);$(MinTargetFramework)</SnoopTestHarnessTargetFrameworks>
+
         <CheckEolTargetFramework>false</CheckEolTargetFramework>
         <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
     </PropertyGroup>

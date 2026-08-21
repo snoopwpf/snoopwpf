@@ -138,13 +138,13 @@ public class BindingLeakDiagnosticProvider : DiagnosticProvider
                 continue;
             }
 
-            foreach (PropertyDescriptor pd in pds)
+            foreach (var pd in pds)
             {
                 var valueChangedHandlers = (IDictionary?)valueChangedHandlersFieldInfo.GetValue(pd);
                 if (valueChangedHandlers is not null
                     && valueChangedHandlers.Count != 0)
                 {
-                    listInfo.Add(new ReflectPropertyDescriptorInfo(entry.Key.ToString()!, pd.Name, valueChangedHandlers!));
+                    listInfo.Add(new ReflectPropertyDescriptorInfo(entry.Key.ToString()!, pd.Name, valueChangedHandlers));
                 }
             }
         }
@@ -156,20 +156,14 @@ public class BindingLeakDiagnosticProvider : DiagnosticProvider
     // Code idea, for looking into ReflectTypeDescriptionProvider, taken from https://faithlife.codes/blog/2008/10/detecting_bindings_that_should_be_onetime/
     // Credit goes to Bradley Grainger (https://github.com/bgrainger)
     [PublicAPI]
-    public sealed class ReflectPropertyDescriptorInfo : IEquatable<ReflectPropertyDescriptorInfo>, IComparable<ReflectPropertyDescriptorInfo>
+    public sealed class ReflectPropertyDescriptorInfo(string typeName, string propertyName, IDictionary valueChangedHandlers)
+        : IEquatable<ReflectPropertyDescriptorInfo>, IComparable<ReflectPropertyDescriptorInfo>
     {
-        public ReflectPropertyDescriptorInfo(string typeName, string propertyName, IDictionary valueChangedHandlers)
-        {
-            this.TypeName = typeName;
-            this.PropertyName = propertyName;
-            this.ValueChangedHandlers = valueChangedHandlers;
-        }
+        public string TypeName { get; } = typeName;
 
-        public string TypeName { get; }
+        public string PropertyName { get; } = propertyName;
 
-        public string PropertyName { get; }
-
-        public IDictionary ValueChangedHandlers { get; }
+        public IDictionary ValueChangedHandlers { get; } = valueChangedHandlers;
 
         public string DisplayHandlerCount => string.Format(CultureInfo.InvariantCulture, " ({0:n0} handlers)", this.ValueChangedHandlers.Count);
 
