@@ -72,6 +72,7 @@ public partial class PropertyInspector : INotifyPropertyChanged
         this.checkBoxClearAfterDelve.Unchecked += (_, _) => Settings.Default.ClearAfterDelve = this.checkBoxClearAfterDelve.IsChecked.HasValue && this.checkBoxClearAfterDelve.IsChecked.Value;
 
         this.checkBoxClearAfterDelve.IsChecked = Settings.Default.ClearAfterDelve;
+        this.UseRegex = Settings.Default.UseRegex;
     }
 
     public bool NameValueOnly
@@ -562,6 +563,8 @@ public partial class PropertyInspector : INotifyPropertyChanged
             this.propertyFilter.UseRegex = value;
 
             this.inspector.Filter = this.propertyFilter;
+
+            Settings.Default.UseRegex = value;
 
             this.OnPropertyChanged(nameof(this.UseRegex));
         }
