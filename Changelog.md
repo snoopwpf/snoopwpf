@@ -10,6 +10,7 @@
 
   - [#504](../../issues/504) - Allow to scope the treeview to an element (thanks @Laniusexcubitor)
   - [#508](../../issues/508) - Persist UseRegex in settings (thanks @corvinsz)
+  - Improving clear filter handling and keyboard focus for property edits
 
 ## 6.1.1
 
