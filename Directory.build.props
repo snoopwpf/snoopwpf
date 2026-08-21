@@ -48,6 +48,8 @@
         <Company>https://github.com/snoopwpf/snoopwpf</Company>
         <Product>Snoop</Product>
         <Copyright>Copyright © Cory Plotts, Bastian Schmidt 2010 - $([System.DateTime]::Today.ToString(yyyy))</Copyright>
+
+        <DeterministicTimestamp>false</DeterministicTimestamp>
     </PropertyGroup>
 
     <!-- SourceLink -->
