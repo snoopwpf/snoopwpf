@@ -8,6 +8,7 @@ namespace Snoop.Controls;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
@@ -42,6 +43,11 @@ public partial class PropertyGrid2 : INotifyPropertyChanged
         this.CommandBindings.Add(new CommandBinding(ShowBindingErrorsCommand, this.HandleShowBindingErrors, this.CanShowBindingErrors));
         this.CommandBindings.Add(new CommandBinding(ClearCommand, this.HandleClear, this.CanClear));
         this.CommandBindings.Add(new CommandBinding(SortCommand, this.HandleSort));
+
+        // The sort descriptions of propertiesView are the single source of truth for sorting,
+        // so the sort indicators in the column headers just follow them.
+        ((INotifyCollectionChanged)this.propertiesView.SortDescriptions).CollectionChanged += this.HandleSortDescriptionsChanged;
+        this.UpdateSortIndicators();
 
         this.filterTimer = new DispatcherTimer
         {
@@ -251,24 +257,24 @@ public partial class PropertyGrid2 : INotifyPropertyChanged
             return;
         }
 
-        var columnHeader = headerClicked.Column.Header as TextBlock;
-        if (columnHeader is null)
+        var propertyName = GridViewSort.GetPropertyName(headerClicked.Column);
+
+        if (string.IsNullOrEmpty(propertyName))
         {
             return;
         }
 
-        switch (columnHeader.Text)
-        {
-            case "Name":
-                this.Sort(".");
-                break;
-            case "Value":
-                this.Sort(nameof(PropertyInformation.StringValue));
-                break;
-            case "Value Source":
-                this.Sort(nameof(PropertyInformation.ValueSourceText));
-                break;
-        }
+        this.Sort(propertyName!);
+    }
+
+    private void HandleSortDescriptionsChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        this.UpdateSortIndicators();
+    }
+
+    private void UpdateSortIndicators()
+    {
+        GridViewSort.UpdateSortIndicators(this.ListView?.View as GridView, this.propertiesView.SortDescriptions);
     }
 
     private void HandleLoaded(object sender, EventArgs e)

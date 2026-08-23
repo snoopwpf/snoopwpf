@@ -81,6 +81,8 @@
             <Style TargetType="{x:Type GridViewColumnHeader}"
                    BasedOn="{StaticResource GridViewColumnHeaderStyle}">
                 <Setter Property="Command" Value="{x:Static controls:PropertyGrid2.SortCommand}" />
+                <!-- Forward the sort direction of the column to the header, as only the header knows how to display the sort indicator. -->
+                <Setter Property="infrastructure:GridViewSort.Direction" Value="{Binding Column.(infrastructure:GridViewSort.Direction), RelativeSource={RelativeSource Self}}" />
             </Style>
 
             <ControlTemplate x:Key="BreakpointTemplate"
@@ -171,7 +173,8 @@
         </ListView.ItemContainerStyle>
         <ListView.View>
             <GridView>
-                <GridViewColumn Width="25">
+                <GridViewColumn Width="25"
+                                infrastructure:GridViewSort.PropertyName="BreakOnChange">
                     <GridViewColumn.CellTemplate>
                         <DataTemplate DataType="infrastructure:PropertyInformation">
                             <CheckBox IsChecked="{Binding BreakOnChange}"
@@ -184,7 +187,8 @@
                     </GridViewColumn.CellTemplate>
                 </GridViewColumn>
 
-                <GridViewColumn Width="200">
+                <GridViewColumn Width="200"
+                                infrastructure:GridViewSort.PropertyName=".">
                     <GridViewColumn.Header>
                         <TextBlock Text="Name">
                             <TextBlock.ToolTip>
@@ -205,6 +209,7 @@
                 </GridViewColumn>
 
                 <GridViewColumn Width="250"
+                                infrastructure:GridViewSort.PropertyName="StringValue"
                                 CellTemplateSelector="{DynamicResource EditorSelector}">
                     <GridViewColumn.Header>
                         <TextBlock Text="Value">
@@ -215,7 +220,8 @@
                     </GridViewColumn.Header>
                 </GridViewColumn>
 
-                <GridViewColumn Width="140">
+                <GridViewColumn Width="140"
+                                infrastructure:GridViewSort.PropertyName="ValueSourceText">
                     <GridViewColumn.Header>
                         <TextBlock Text="Value Source">
                             <TextBlock.ToolTip>
@@ -235,7 +241,8 @@
                     </GridViewColumn.CellTemplate>
                 </GridViewColumn>
 
-                <GridViewColumn Width="200">
+                <GridViewColumn Width="200"
+                                infrastructure:GridViewSort.PropertyName="BindingError">
                     <GridViewColumn.Header>
                         <TextBlock Text="Binding Errors">
                             <TextBlock.ToolTip>

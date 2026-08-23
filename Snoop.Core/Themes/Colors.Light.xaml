@@ -62,6 +62,8 @@
         </LinearGradientBrush.GradientStops>
     </LinearGradientBrush>
 
+    <SolidColorBrush x:Key="Snoop.Brushes.GridViewColumnHeader.SortIndicator" Color="#FF767676" options:Freeze="True" />
+
     <LinearGradientBrush x:Key="ListItemHoverFill" StartPoint="0,0" EndPoint="0,1" options:Freeze="True">
         <LinearGradientBrush.GradientStops>
             <GradientStop Color="#FFF1FBFF" Offset="0" />
