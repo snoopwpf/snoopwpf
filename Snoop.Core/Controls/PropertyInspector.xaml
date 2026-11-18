@@ -192,8 +192,7 @@
                  DockPanel.Dock="Left"
                  Text="{Binding ElementName=propertyInspector, Path=FilterString, UpdateSourceTrigger=PropertyChanged}">
             <TextBox.ToolTip>
-                <TextBlock Text="Type in this text box to filter properties. The filter is applied to property names and property type names.
-                &#x0a;Press ESC to clear this text box." />
+                <TextBlock Text="Type in this text box to filter properties. The filter is applied to property names and property type names.                 &#x0a;Press ESC to clear this text box." />
             </TextBox.ToolTip>
         </TextBox>
     </DockPanel>
