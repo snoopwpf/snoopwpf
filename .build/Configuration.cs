@@ -9,6 +9,11 @@ public class Configuration : Enumeration
 
     public static implicit operator string(Configuration configuration)
     {
-        return configuration.Value;
+        return configuration.ToString();
+    }
+
+    public override string ToString()
+    {
+        return this.Value;
     }
 }

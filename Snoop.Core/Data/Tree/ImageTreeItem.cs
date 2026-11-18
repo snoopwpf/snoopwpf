@@ -1,13 +1,11 @@
 ﻿namespace Snoop.Data.Tree;
 
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 
 public class ImageTreeItem : DependencyObjectTreeItem
 {
-    public ImageTreeItem(Image target, TreeItem? parent, TreeService treeService)
-        : base(target, parent, treeService)
+    public ImageTreeItem(Image target, TreeItem? parent, TreeService treeService, bool isScoped)
+        : base(target, parent, treeService, isScoped)
     {
         this.TypedTarget = target;
     }

@@ -40,6 +40,7 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
     public static readonly RoutedCommand SelectFocusScopeCommand = new(nameof(SelectFocusScopeCommand), typeof(SnoopUI));
     public static readonly RoutedCommand ClearSearchFilterCommand = new(nameof(ClearSearchFilterCommand), typeof(SnoopUI));
     public static readonly RoutedCommand CopyPropertyChangesCommand = new(nameof(CopyPropertyChangesCommand), typeof(SnoopUI));
+    public static readonly RoutedCommand ScopeToCommand = new(nameof(ScopeToCommand), typeof(SnoopUI));
 
     #endregion
 
@@ -65,6 +66,7 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
         this.CommandBindings.Add(new CommandBinding(IntrospectCommand, this.HandleIntrospection));
         this.CommandBindings.Add(new CommandBinding(RefreshCommand, this.HandleRefresh));
         this.CommandBindings.Add(new CommandBinding(ExportTreeWithFilterCommand, this.HandleExport));
+        this.CommandBindings.Add(new CommandBinding(ScopeToCommand, this.HandleScopeTo));
         this.CommandBindings.Add(new CommandBinding(HelpCommand, this.HandleHelp));
 
         this.CommandBindings.Add(new CommandBinding(InspectCommand, this.HandleInspect));
@@ -72,8 +74,6 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
         this.CommandBindings.Add(new CommandBinding(SelectFocusCommand, this.HandleSelectFocus));
         this.CommandBindings.Add(new CommandBinding(SelectFocusScopeCommand, this.HandleSelectFocusScope));
 
-        //NOTE: this is up here in the outer UI layer so ESC will clear any typed filter regardless of where the focus is
-        // (i.e. focus on a selected item in the tree, not in the property list where the search box is hosted)
         this.CommandBindings.Add(new CommandBinding(ClearSearchFilterCommand, this.ClearSearchFilterHandler));
 
         this.CommandBindings.Add(new CommandBinding(CopyPropertyChangesCommand, this.CopyPropertyChangesHandler));
@@ -381,7 +381,7 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
     /// <param name="owningObject">currently selected object that owns the properties in the grid (before changing selection to the new object)</param>
     private void SaveEditedProperties(TreeItem owningObject)
     {
-        foreach (var property in this.PropertyGrid.PropertyGrid.Properties)
+        foreach (var property in this.PropertyInspector.PropertyGrid.Properties)
         {
             if (property.IsValueChangedByUser)
             {
@@ -401,7 +401,7 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
         CacheManager.Instance.IncreaseUsageCount();
 
         // load whether all properties are shown by default
-        this.PropertyGrid.ShowDefaults = Settings.Default.ShowDefaults;
+        this.PropertyInspector.ShowDefaults = Settings.Default.ShowDefaults;
 
         // load whether the previewer is shown by default
         this.PreviewArea.IsActive = Settings.Default.ShowPreviewer;
@@ -435,7 +435,7 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
         this.filterTimer.Stop();
 
         // persist whether all properties are shown by default
-        Settings.Default.ShowDefaults = this.PropertyGrid.ShowDefaults;
+        Settings.Default.ShowDefaults = this.PropertyInspector.ShowDefaults;
 
         // persist whether the previewer is shown by default
         Settings.Default.ShowPreviewer = this.PreviewArea?.IsActive == true;
@@ -480,7 +480,7 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
             this.SystemResourcesTreeItem = (SystemResourcesTreeItem)new SystemResourcesTreeItem(null, this.TreeService).Reload();
 
             this.RootTreeItem?.Dispose();
-            this.RootTreeItem = this.TreeService.Construct(this.RootObject!, null);
+            this.RootTreeItem = this.TreeService.Construct(this.ScopedRootObject ?? this.RootObject!, null, isScoped: this.ScopedRootObject is not null);
 
             this.TreeService.DiagnosticContext.AnalyzeTree();
 
@@ -490,7 +490,7 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
                 if (treeItem is not null)
                 {
                     this.CurrentSelection = treeItem;
-                    this.PropertyGrid.PropertyGrid.RefreshPropertyGrid();
+                    this.PropertyInspector.PropertyGrid.RefreshPropertyGrid();
 
                     if (previousSelection?.IsExpanded == true)
                     {
@@ -524,7 +524,7 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
         try
         {
             var options = (ExportOptions)e.Parameter;
-            var propertyFilter = options.UseFilter ? this.PropertyGrid.PropertyFilter : null;
+            var propertyFilter = options.UseFilter ? this.PropertyInspector.PropertyFilter : null;
 
             options.ExportXamlStyle = TreeItem.DefaultExportOptions.ExportXamlStyle;
             options.IncludeDefaultEmptyValues = TreeItem.DefaultExportOptions.IncludeDefaultEmptyValues;
@@ -555,6 +555,21 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
         }
     }
 
+    private void HandleScopeTo(object sender, ExecutedRoutedEventArgs e)
+    {
+        if (e.Parameter is not TreeItem treeItem)
+        {
+            this.Unscope();
+        }
+        else
+        {
+            this.ScopeTo(treeItem.Target);
+            this.CurrentSelection = treeItem;
+        }
+
+        this.Refresh();
+    }
+
     private void HandleHelp(object sender, ExecutedRoutedEventArgs e)
     {
         //Help help = new Help();
@@ -573,7 +588,7 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
         }
         else if (e.Parameter is not null)
         {
-            this.PropertyGrid.SetTarget(e.Parameter);
+            this.PropertyInspector.SetTarget(e.Parameter);
         }
     }
 
@@ -593,7 +608,11 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
 
     private void ClearSearchFilterHandler(object sender, ExecutedRoutedEventArgs e)
     {
-        this.PropertyGrid.FilterString = string.Empty;
+        if (this.PropertyInspector.PropertiesFilter.IsFocused
+            || this.PropertyInspector.PropertiesFilter.IsKeyboardFocusWithin)
+        {
+            this.PropertyInspector.FilterString = string.Empty;
+        }
     }
 
     private void CopyPropertyChangesHandler(object sender, ExecutedRoutedEventArgs e)
@@ -961,12 +980,12 @@ public sealed partial class SnoopUI : INotifyPropertyChanged
         Settings.Default.Reset();
 
         // load whether all properties are shown by default
-        this.PropertyGrid.ShowDefaults = Settings.Default.ShowDefaults;
+        this.PropertyInspector.ShowDefaults = Settings.Default.ShowDefaults;
 
         // load whether the previewer is shown by default
         this.PreviewArea.IsActive = Settings.Default.ShowPreviewer;
 
-        this.PropertyGrid.checkBoxClearAfterDelve.IsChecked = Settings.Default.ClearAfterDelve;
+        this.PropertyInspector.checkBoxClearAfterDelve.IsChecked = Settings.Default.ClearAfterDelve;
 
         this.eventsView.UpdateTrackers();
         this.eventsView.MaxEventsDisplayed = Settings.Default.MaximumTrackedEvents;

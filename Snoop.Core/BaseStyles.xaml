@@ -4,17 +4,17 @@
     Licensed to the .NET Foundation under one or more agreements.
     The .NET Foundation licenses this file to you under the MIT license.
     See the LICENSE file in the project root for more information.
-    
+
     This file was generated from individual xaml files found
     in WPF\src\Themes\XAML\, please do not edit it directly.
-    
+
     To generate this file, bcz in WPF\src\Themes\Generator and copy
     the generated theme files from the output directory to
     the corresponding themes\ folder.
-    
+
     To automatically copy the files, set the environment variable
     set THEMEXAML_AUTOUPDATE=1
-    
+
     ==================================================================
 -->
 
@@ -22,6 +22,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:controls="clr-namespace:Snoop.Controls"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:infrastructure="clr-namespace:Snoop.Infrastructure"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                     xmlns:options="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
                     xmlns:system="clr-namespace:System;assembly=mscorlib"
@@ -1061,6 +1062,9 @@
         </Setter>
     </Style>
 
+    <Geometry x:Key="GridViewColumnHeaderSortIndicatorAscending">M 0,4 L 4,0 L 8,4 Z</Geometry>
+    <Geometry x:Key="GridViewColumnHeaderSortIndicatorDescending">M 0,0 L 8,0 L 4,4 Z</Geometry>
+
     <Style x:Key="GridViewColumnHeaderGripper"
            TargetType="{x:Type Thumb}">
         <Setter Property="Background" Value="{DynamicResource GridViewColumnHeaderBorderBackground}" />
@@ -1100,10 +1104,21 @@
                                 BorderThickness="0 1 0 1">
                             <Grid>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition MaxHeight="7" />
+                                    <!-- Reserved for the sort indicator, so that all headers have the same layout, no matter whether they are sorted or not. -->
+                                    <RowDefinition Height="5" />
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
-                                <Border Grid.RowSpan="2"
+
+                                <Path Grid.Row="0"
+                                      Name="SortIndicator"
+                                      Margin="0 1 0 0"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Top"
+                                      Fill="{DynamicResource Snoop.Brushes.GridViewColumnHeader.SortIndicator}"
+                                      IsHitTestVisible="False"
+                                      Visibility="Collapsed" />
+
+                                <Border Grid.Row="1"
                                         Padding="{TemplateBinding Padding}">
                                     <ContentPresenter Name="HeaderContent"
                                                       Margin="0 0 0 1"
@@ -1126,6 +1141,14 @@
                         </Canvas>
                     </Grid>
                     <ControlTemplate.Triggers>
+                        <Trigger Property="infrastructure:GridViewSort.Direction" Value="Ascending">
+                            <Setter TargetName="SortIndicator" Property="Data" Value="{StaticResource GridViewColumnHeaderSortIndicatorAscending}" />
+                            <Setter TargetName="SortIndicator" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="infrastructure:GridViewSort.Direction" Value="Descending">
+                            <Setter TargetName="SortIndicator" Property="Data" Value="{StaticResource GridViewColumnHeaderSortIndicatorDescending}" />
+                            <Setter TargetName="SortIndicator" Property="Visibility" Value="Visible" />
+                        </Trigger>
                         <Trigger Property="IsMouseOver" Value="true">
                             <Setter TargetName="HeaderBorder" Property="Background" Value="{DynamicResource GridViewColumnHeaderHoverBackground}" />
                             <Setter TargetName="HeaderHoverBorder" Property="BorderBrush" Value="#FF88CBEB" />

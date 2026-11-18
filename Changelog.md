@@ -1,5 +1,19 @@
 ﻿# Changelog for Snoop
 
+## 6.2.0 (preview)
+
+- ### Bug fixes
+
+  - [#507](../../issues/507) - Snooping a .NET 11 app throws an error
+
+- ### Improvements
+
+  - [#492](../../issues/492) - Improve Property List (sort by multiple columns + add property type as column) (thanks @todor-dk)
+  - [#504](../../issues/504) - Allow to scope the treeview to an element (thanks @Laniusexcubitor)
+  - [#508](../../issues/508) - Persist UseRegex in settings (thanks @corvinsz)
+  - Improving clear filter handling and keyboard focus for property edits
+  - Showing sort indicators in the column headers of the property list
+
 ## 6.1.1
 
 - ### Bug fixes

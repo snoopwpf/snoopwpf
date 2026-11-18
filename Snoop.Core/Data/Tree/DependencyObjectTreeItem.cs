@@ -28,12 +28,14 @@ public class DependencyObjectTreeItem : ResourceContainerTreeItem
     private IDisposable? selectionHighlight;
     private DiagnosticItem? missingAdornerLayerDiagnosticItem;
 
-    public DependencyObjectTreeItem(DependencyObject target, TreeItem? parent, TreeService treeService)
-        : base(target, parent, treeService)
+    public DependencyObjectTreeItem(DependencyObject target, TreeItem? parent, TreeService treeService, bool isScoped)
+        : base(target, parent, treeService, isScoped)
     {
         this.DependencyObject = target;
         this.Visual = target as Visual;
     }
+
+    public override bool CanBeScoped => this.Parent is not null;
 
     public DependencyObject DependencyObject { get; }
 
@@ -97,50 +99,50 @@ public class DependencyObjectTreeItem : ResourceContainerTreeItem
                 case FrameworkElement fe:
                     yield return fe.Resources;
 
-                {
-                    var resources = FrameworkElementHelper.GetStyle(fe)?.Resources;
-                    if (resources is not null)
                     {
-                        yield return new ResourceDictionaryWrapper(resources, "style");
+                        var resources = FrameworkElementHelper.GetStyle(fe)?.Resources;
+                        if (resources is not null)
+                        {
+                            yield return new ResourceDictionaryWrapper(resources, "style");
+                        }
                     }
-                }
 
-                {
-                    var resources = FrameworkElementHelper.GetTemplate(fe)?.Resources;
-                    if (resources is not null)
                     {
-                        yield return new ResourceDictionaryWrapper(resources, "template");
+                        var resources = FrameworkElementHelper.GetTemplate(fe)?.Resources;
+                        if (resources is not null)
+                        {
+                            yield return new ResourceDictionaryWrapper(resources, "template");
+                        }
                     }
-                }
 
-                {
-                    var resources = FrameworkElementHelper.GetThemeStyle(fe)?.Resources;
-                    if (resources is not null)
                     {
-                        yield return new ResourceDictionaryWrapper(resources, "theme style");
+                        var resources = FrameworkElementHelper.GetThemeStyle(fe)?.Resources;
+                        if (resources is not null)
+                        {
+                            yield return new ResourceDictionaryWrapper(resources, "theme style");
+                        }
                     }
-                }
 
                     break;
 
                 case FrameworkContentElement fce:
                     yield return fce.Resources;
 
-                {
-                    var resources = FrameworkElementHelper.GetStyle(fce)?.Resources;
-                    if (resources is not null)
                     {
-                        yield return new ResourceDictionaryWrapper(resources, "style");
+                        var resources = FrameworkElementHelper.GetStyle(fce)?.Resources;
+                        if (resources is not null)
+                        {
+                            yield return new ResourceDictionaryWrapper(resources, "style");
+                        }
                     }
-                }
 
-                {
-                    var resources = FrameworkElementHelper.GetThemeStyle(fce)?.Resources;
-                    if (resources is not null)
                     {
-                        yield return new ResourceDictionaryWrapper(resources, "theme style");
+                        var resources = FrameworkElementHelper.GetThemeStyle(fce)?.Resources;
+                        if (resources is not null)
+                        {
+                            yield return new ResourceDictionaryWrapper(resources, "theme style");
+                        }
                     }
-                }
 
                     break;
             }

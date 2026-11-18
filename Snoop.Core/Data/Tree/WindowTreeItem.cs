@@ -5,8 +5,8 @@ using Snoop.Infrastructure;
 
 public class WindowTreeItem : DependencyObjectTreeItem
 {
-    public WindowTreeItem(Window target, TreeItem? parent, TreeService treeService)
-        : base(target, parent, treeService)
+    public WindowTreeItem(Window target, TreeItem? parent, TreeService treeService, bool isScoped)
+        : base(target, parent, treeService, isScoped)
     {
         this.WindowTarget = target;
     }

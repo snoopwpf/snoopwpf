@@ -17,6 +17,7 @@ public sealed class Settings : SettingsBase<Settings>
     private static readonly XmlSerializer serializer = new(typeof(Settings));
 
     private bool clearAfterDelve = true;
+    private bool useRegex = false;
     private int maximumTrackedEvents = 100;
     private bool showDefaults = true;
     private bool showPreviewer;
@@ -93,6 +94,21 @@ public sealed class Settings : SettingsBase<Settings>
         }
     }
 
+    public bool UseRegex
+    {
+        get => this.useRegex;
+        set
+        {
+            if (value == this.useRegex)
+            {
+                return;
+            }
+
+            this.useRegex = value;
+            this.OnPropertyChanged();
+        }
+    }
+
     public WINDOWPLACEMENT? SnoopUIWindowPlacement { get; set; }
 
     public WINDOWPLACEMENT? ZoomerWindowPlacement { get; set; }
@@ -135,6 +151,7 @@ public sealed class Settings : SettingsBase<Settings>
         this.ShowDefaults = settings.ShowDefaults;
         this.ShowPreviewer = settings.ShowPreviewer;
         this.ClearAfterDelve = settings.ClearAfterDelve;
+        this.UseRegex = settings.UseRegex;
         this.MaximumTrackedEvents = settings.MaximumTrackedEvents;
 
         this.SnoopUIWindowPlacement = settings.SnoopUIWindowPlacement;

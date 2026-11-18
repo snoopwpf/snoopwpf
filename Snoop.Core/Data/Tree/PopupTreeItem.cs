@@ -5,8 +5,8 @@ using System.Windows.Controls.Primitives;
 
 public class PopupTreeItem : DependencyObjectTreeItem
 {
-    public PopupTreeItem(Popup target, TreeItem? parent, TreeService treeService)
-        : base(target, parent, treeService)
+    public PopupTreeItem(Popup target, TreeItem? parent, TreeService treeService, bool isScoped)
+        : base(target, parent, treeService, isScoped)
     {
         this.TypedTarget = target;
     }

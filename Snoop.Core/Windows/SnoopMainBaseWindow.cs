@@ -12,6 +12,18 @@ public abstract class SnoopMainBaseWindow : SnoopBaseWindow
 
     public object? RootObject { get; private set; }
 
+    public object? ScopedRootObject { get; private set; }
+
+    public void ScopeTo(object scopeObject)
+    {
+        this.ScopedRootObject = scopeObject;
+    }
+
+    public void Unscope()
+    {
+        this.ScopedRootObject = null;
+    }
+
     public abstract object? Target { get; set; }
 
     public Window Inspect(object rootObject)

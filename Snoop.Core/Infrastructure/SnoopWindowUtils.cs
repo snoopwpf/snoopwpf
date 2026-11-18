@@ -161,7 +161,7 @@ public static class SnoopWindowUtils
 
         var rectangle = new Rectangle(rect.Left, rect.Top, rect.Width, rect.Height);
 
-        global::Windows.Win32.Foundation.RECT apiRect = new global::Windows.Win32.Foundation.RECT(rectangle);
+        var apiRect = new global::Windows.Win32.Foundation.RECT(rectangle);
 
         var monitor = PInvoke.MonitorFromRect(apiRect, MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONULL);
         if (monitor == HMONITOR.Null)
@@ -169,7 +169,7 @@ public static class SnoopWindowUtils
             return false;
         }
 
-        MONITORINFO monitorInfo = new MONITORINFO { cbSize = (uint)Marshal.SizeOf<MONITORINFO>() };
+        var monitorInfo = new MONITORINFO { cbSize = (uint)Marshal.SizeOf<MONITORINFO>() };
         if (PInvoke.GetMonitorInfo(monitor, ref monitorInfo) == false)
         {
             return false;

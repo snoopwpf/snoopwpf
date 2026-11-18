@@ -5,7 +5,6 @@
 
 namespace Snoop.Controls;
 
-using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -21,20 +20,9 @@ public class EditTextBox : TextBox
         DefaultStyleKeyProperty.OverrideMetadata(typeof(EditTextBox), new FrameworkPropertyMetadata(typeof(EditTextBox)));
     }
 
-    protected override void OnInitialized(EventArgs e)
-    {
-        base.OnInitialized(e);
-
-        // Take focus and select all the text by default.
-        // Great for in the property editor, so the text is quick to edit,
-        // but probably not useful in general.
-        this.Focus();
-        this.SelectAll();
-    }
-
     protected override void OnKeyDown(KeyEventArgs e)
     {
-        if (e.Key == Key.Return)
+        if (e.Key is Key.Return)
         {
             var expression = BindingOperations.GetBindingExpressionBase(this, TextProperty);
             expression?.UpdateSource();

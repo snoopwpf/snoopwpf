@@ -10,6 +10,6 @@ static class FileHelper
         using var fileStream = File.OpenRead(filePath);
         var checksum = sha256.ComputeHash(fileStream);
         return BitConverter.ToString(checksum)
-            .Replace("-", string.Empty);
+            .Replace("-", string.Empty, StringComparison.Ordinal);
     }
 }

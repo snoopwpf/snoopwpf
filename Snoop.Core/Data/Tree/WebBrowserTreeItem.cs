@@ -9,8 +9,8 @@ using Snoop.Infrastructure;
 
 public class WebBrowserTreeItem : DependencyObjectTreeItem
 {
-    public WebBrowserTreeItem(DependencyObject target, TreeItem? parent, TreeService treeService)
-        : base(target, parent, treeService)
+    public WebBrowserTreeItem(DependencyObject target, TreeItem? parent, TreeService treeService, bool isScoped)
+        : base(target, parent, treeService, isScoped)
     {
     }
 

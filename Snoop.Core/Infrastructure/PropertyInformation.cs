@@ -495,6 +495,10 @@ public class PropertyInformation : DependencyObject, IComparable, INotifyPropert
 
     public string DisplayName => this.displayName;
 
+    public string? DisplayTypeShort => (this.DependencyProperty?.PropertyType ?? this.Property?.PropertyType)?.Name;
+
+    public string? DisplayTypeFull => (this.DependencyProperty?.PropertyType ?? this.Property?.PropertyType)?.FullName;
+
     public bool IsCollectionEntry { get; private set; }
 
     public object? CollectionEntryIndexOrKey { get; private set; }

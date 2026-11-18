@@ -14,7 +14,6 @@ using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Tools.MSBuild;
-using Nuke.Common.Tools.NuGet;
 using Nuke.Common.Tools.SignPath;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 using static Nuke.Common.Tools.MSBuild.MSBuildTasks;
@@ -92,9 +91,6 @@ class Build : NukeBuild
     string AssemblySemFileVer => GitVersion?.AssemblySemFileVer ?? "1.0.0";
     string MajorMinorPatch => GitVersion?.MajorMinorPatch ?? "1.0.0";
 
-    [CI]
-    readonly GitHubActions? GitHubActions;
-
     readonly List<string> CheckSumFiles = new();
 
     AbsolutePath BuildBinDirectory => RootDirectory / "bin";
@@ -110,7 +106,7 @@ class Build : NukeBuild
 
     AbsolutePath TestResultDirectory => OutputDirectory / "test-results";
 
-    readonly string WixUIExtension = "WixToolset.UI.wixext/6.0.2";
+    readonly string WixUIExtension = "WixToolset.UI.wixext/7.0.0";
 
     readonly string FenceOutput = "".PadLeft(30, '#');
 
@@ -124,6 +120,9 @@ class Build : NukeBuild
         .Executes(() =>
         {
             DotNetToolRestore();
+
+            ProcessTasks.StartProcess("dotnet", $"wix eula accept wix7")
+                .AssertZeroExitCode();
 
             ProcessTasks.StartProcess("dotnet", $"wix extension add {WixUIExtension}")
                 .AssertZeroExitCode();
@@ -273,7 +272,7 @@ class Build : NukeBuild
                 nupkg.UnZipTo(tempDirectory);
 
                 var outputFile = ArtifactsDirectory / $"{ProjectName}.{SemVer}.zip";
-                (tempDirectory / "tools").CompressTo(outputFile, info => info.Name.Contains("chocolatey") == false && info.Name != "VERIFICATION.txt");
+                (tempDirectory / "tools").CompressTo(outputFile, info => info.Name.Contains("chocolatey", StringComparison.OrdinalIgnoreCase) == false && info.Name != "VERIFICATION.txt");
                 CheckSumFiles.Add(outputFile);
                 AppVeyor.Instance?.PushArtifact(outputFile);
             }
@@ -354,7 +353,7 @@ class Build : NukeBuild
 
         return GitRepository.IsOnMainOrMasterBranch()
                // Pre-Release or not?
-               || FullSemVer.Contains('-') == false;
+               || FullSemVer.Contains('-', StringComparison.Ordinal) == false;
     }
 
     // ReSharper disable once InconsistentNaming

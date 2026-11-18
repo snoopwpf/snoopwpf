@@ -320,7 +320,7 @@
                         </TextBlock>
                     </TabItem.Header>
 
-                    <controls:PropertyInspector x:Name="PropertyGrid"
+                    <controls:PropertyInspector x:Name="PropertyInspector"
                                                 RootTarget="{Binding CurrentSelection.Target}" />
                 </TabItem>
 

@@ -11,7 +11,12 @@ using System.Linq;
 public abstract class ResourceContainerTreeItem : TreeItem
 {
     protected ResourceContainerTreeItem(object target, TreeItem? parent, TreeService treeService)
-        : base(target, parent, treeService)
+        : this(target, parent, treeService, false)
+    {
+    }
+
+    protected ResourceContainerTreeItem(object target, TreeItem? parent, TreeService treeService, bool isScoped)
+        : base(target, parent, treeService, isScoped)
     {
     }
 

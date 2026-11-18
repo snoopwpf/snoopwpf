@@ -11,7 +11,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
-using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
@@ -41,7 +40,13 @@ public class TreeItem : INotifyPropertyChanged, IDisposable
     private ObservableCollection<MenuItem>? menuItems;
 
     public TreeItem(object target, TreeItem? parent, TreeService treeService)
+        : this(target, parent, treeService, false)
     {
+    }
+
+    public TreeItem(object target, TreeItem? parent, TreeService treeService, bool isScoped)
+    {
+        this.IsScoped = isScoped;
         this.Target = target ?? throw new ArgumentNullException(nameof(target));
         this.TargetType = this.Target.GetType();
 
@@ -62,6 +67,16 @@ public class TreeItem : INotifyPropertyChanged, IDisposable
     /// The WPF object that this instance is wrapping.
     /// </summary>
     public object Target { get; }
+
+    /// <summary>
+    /// Gets a value indicating if this is the treeitem we are currently scoped to
+    /// </summary>
+    public bool IsScoped { get; }
+
+    /// <summary>
+    /// Gets a value indicating if the user can scope the treeview to this item
+    /// </summary>
+    public virtual bool CanBeScoped { get; }
 
     public BindableType TargetType { get; }
 
@@ -143,6 +158,18 @@ public class TreeItem : INotifyPropertyChanged, IDisposable
                 }
             }
         };
+
+        if (this.CanBeScoped || this.IsScoped)
+        {
+            items.Add(new()
+            {
+                Header = "Scope to this",
+                IsCheckable = true,
+                IsChecked = this.IsScoped,
+                Command = SnoopUI.ScopeToCommand,
+                CommandParameter = this.IsScoped ? null : this
+            });
+        }
 
         return items;
     }

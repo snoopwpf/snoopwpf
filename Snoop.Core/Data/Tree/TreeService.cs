@@ -65,7 +65,7 @@ public abstract class TreeService : IDisposable, INotifyPropertyChanged
 
     public abstract IEnumerable GetChildren(object target);
 
-    public virtual TreeItem Construct(object target, TreeItem? parent, bool omitChildren = false)
+    public virtual TreeItem Construct(object target, TreeItem? parent, bool omitChildren = false, bool isScoped = false)
     {
         TreeItem treeItem = target switch
         {
@@ -73,11 +73,11 @@ public abstract class TreeService : IDisposable, INotifyPropertyChanged
             ResourceDictionaryWrapper typedTarget => new ResourceDictionaryTreeItem(typedTarget, parent, this),
             ResourceDictionary typedTarget => new ResourceDictionaryTreeItem(typedTarget, parent, this),
             Application typedTarget => new ApplicationTreeItem(typedTarget, parent, this),
-            Window typedTarget => new WindowTreeItem(typedTarget, parent, this),
-            Popup typedTarget => new PopupTreeItem(typedTarget, parent, this),
-            Image typedTarget => new ImageTreeItem(typedTarget, parent, this),
-            DependencyObject typedTarget => this.ConstructFromDependencyObject(parent, typedTarget),
-            _ => new TreeItem(target, parent, this)
+            Window typedTarget => new WindowTreeItem(typedTarget, parent, this, isScoped),
+            Popup typedTarget => new PopupTreeItem(typedTarget, parent, this, isScoped),
+            Image typedTarget => new ImageTreeItem(typedTarget, parent, this, isScoped),
+            DependencyObject typedTarget => this.ConstructFromDependencyObject(parent, typedTarget, isScoped),
+            _ => new TreeItem(target, parent, this, isScoped)
         };
 
         treeItem.OmitChildren = omitChildren;
@@ -105,14 +105,14 @@ public abstract class TreeService : IDisposable, INotifyPropertyChanged
         return treeItem;
     }
 
-    private DependencyObjectTreeItem ConstructFromDependencyObject(TreeItem? parent, DependencyObject dependencyObject)
+    private DependencyObjectTreeItem ConstructFromDependencyObject(TreeItem? parent, DependencyObject dependencyObject, bool isScoped)
     {
         if (WebBrowserTreeItem.IsWebBrowserWithDevToolsSupport(dependencyObject))
         {
-            return new WebBrowserTreeItem(dependencyObject, parent, this);
+            return new WebBrowserTreeItem(dependencyObject, parent, this, isScoped);
         }
 
-        return new DependencyObjectTreeItem(dependencyObject, parent, this);
+        return new DependencyObjectTreeItem(dependencyObject, parent, this, isScoped);
     }
 
     public static TreeService From(TreeType treeType)
@@ -202,7 +202,7 @@ public sealed class AutomationPeerTreeService : TreeService
 {
     public override TreeType TreeType { get; } = TreeType.Automation;
 
-    public override TreeItem Construct(object target, TreeItem? parent, bool omitChildren = false)
+    public override TreeItem Construct(object target, TreeItem? parent, bool omitChildren = false, bool isScoped = false)
     {
         if (omitChildren == false
             && target is not AutomationPeer
@@ -211,7 +211,7 @@ public sealed class AutomationPeerTreeService : TreeService
             target = UIElementAutomationPeer.CreatePeerForElement(element);
         }
 
-        return base.Construct(target, parent, omitChildren: omitChildren);
+        return base.Construct(target, parent, omitChildren: omitChildren, isScoped: isScoped);
     }
 
     public override IEnumerable GetChildren(object target)
